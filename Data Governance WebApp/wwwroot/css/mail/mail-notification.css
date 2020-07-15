@@ -1,0 +1,77 @@
+
+.mail-notification-container {
+	position: fixed;
+	top: 0;
+	right: 0;
+	width: auto;
+	height: auto;
+	z-index: 999999999999;
+}
+
+.mail-notification-outer {
+	background-color: rgb(255, 255, 255);
+	margin: 35px;
+	margin-right: -475px;
+	border: 1px solid rgb(208, 208, 208);
+	border-radius: 6px;
+	-moz-box-shadow: 0 0 30px 10px rgb(209, 209, 209);
+	-webkit-box-shadow: 0 0 30px 10px rgb(209, 209, 209);
+	box-shadow: 0 0 30px 10px rgb(209, 209, 209);
+	-moz-transition: all .5s;
+	-webkit-transition: all .5s; /* For Safari 3.1 to 6.0 */
+	transition: all .5s;
+	font-size: 14px;
+	font-family: sf, "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+}
+
+.mail-notification-liner {
+	border-radius: inherit;
+}
+
+.mail-notification-inner {
+	border-radius: inherit;
+}
+
+.mail-notification-body {
+	border-top: 1px solid rgb(244, 245, 246);
+	border-radius: inherit;
+	padding: 8px;
+	width: 350px;
+	min-height: 55px;
+	text-decoration: none;
+	display: block;
+	color: inherit;
+}
+
+.mail-notification-body:hover {
+	text-decoration: none;
+	color: inherit;
+}
+
+.mail-notification-body p {
+	margin: 0;
+}
+
+.mail-notification-body-sender {
+	font-size: 16px;
+	font-weight: 700;
+	letter-spacing: .4px;
+}
+
+.mail-notification-body-subject {
+	font-size: 14px;
+	font-weight: 600;
+	letter-spacing: .4px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.mail-notification-body-message {
+	font-size: 14px;
+	font-weight: 600;
+	letter-spacing: .4px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}

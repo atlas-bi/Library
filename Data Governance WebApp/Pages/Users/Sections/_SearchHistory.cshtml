@@ -1,0 +1,69 @@
+@*
+    Atlas of Information Management business intelligence library and documentation database.
+    Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*@
+
+@if (ViewBag.SearchHistory.Count > 0)
+{
+	<ul class="dropdown-menu bg-white shadow" role="menu" style="display:block;z-index:999999999999999;" aria-labelledby="menu1">
+
+    @foreach (var q in ViewBag.SearchHistory)
+    {
+
+        var SearchString = q.SearchUrl.Split("&")[0].Replace("%20", " ").Replace("+", " ").Replace("?s=", "").Replace("s=","");
+        var FilterString = q.SearchUrl.Contains("f=") ? q.SearchUrl.Split("f=")[1] : "";
+        /*
+         28 SSRS
+         20 Dashboard
+         21 Dash Component
+         3 Crystal
+         17 Workbench
+        */
+
+        <li>
+            <a class="atlas-blue" tabindex="-1" href="/Search@(q.SearchUrl)" search="@q.SearchUrl.Replace("?","")">
+                <i class="far fa-clock text-muted mr-3"></i>
+                <span class="searchString">@SearchString</span>@if (FilterString != "" && FilterString != "0")
+                {
+                    <span class="badge badge-secondary mx-3">@(FilterString == "28" ? "SSRS" : FilterString == "20" ? "Dashboard" : FilterString == "21" ? "Dash Component" : FilterString == "3" ? "Crystal" : FilterString == "17" ? "Workbench" : "")</span>
+                }
+            </a>
+
+
+        </li>
+    }
+
+    @foreach (var q in ViewBag.SearchFavorites)
+    {
+
+
+        var SearchString = q.SearchUrl.Split("&")[0].Replace("%20", " ").Replace("+", " ").Replace("?s=", "").Replace("s=","");
+        var FilterString = q.SearchUrl.Contains("f=") ? q.SearchUrl.Split("f=")[1] : "";
+
+      
+        <li>
+            <a class="atlas-blue" tabindex="-1" href="/Search@(q.SearchUrl)" search="@q.SearchUrl.Replace("?","")">
+                <i fav-type="search" object-name="@q.SearchUrl.Replace("?","")" object-id="@q.Id" class="favorite far fa-star yes mx-3"></i>
+                <span class="searchString">@SearchString</span>@if (FilterString != "" && FilterString != "0")
+                {
+                    <span class="badge badge-secondary mx-3">@(FilterString == "28" ? "SSRS" : FilterString == "20" ? "Dashboard" : FilterString == "21" ? "Dash Component" : FilterString == "3" ? "Crystal" : FilterString == "17" ? "Workbench" : "")</span>
+                }
+            </a>
+        </li>
+
+        }
+    </ul>
+}

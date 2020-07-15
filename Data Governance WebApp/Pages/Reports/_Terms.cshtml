@@ -1,0 +1,63 @@
+﻿@*
+    Atlas of Information Management business intelligence library and documentation database.
+    Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*@
+
+@model Data_Governance_WebApp.Pages.Reports.IndexModel
+@{
+    var m = Model ?? ViewBag;
+}
+@if(m.ReportTerms.Count > 0){
+<h2 class="pageSection-title">Terms</h2>
+}
+@foreach (var t in m.ReportTerms)
+{
+    <div class="panel panel-primary">
+        <div class="panel-heading" role="tab" id="headingFour">
+            <div class="row">
+                <div class="col-lg-10 col-md-9 col-sm-8 col-7">
+                    <h5 class="panel-title">
+                        <a class="atlas-blue" data-toggle="clps" data-target="collapseTerm@(t.Id)">
+                            @t.Name<span class="small glyphicon glyphicon-triangle-right rotate-90"></span>
+                        </a>
+                    </h5>
+                </div>
+                <div class="col-lg-2 col-md-3 col-sm-4 col-5 text-right">
+                    <a class="btn btn-link atlas-blue ajax" asp-page="../Terms/Index" asp-route-id="@(t.Id)"><i class="fas fa-external-link-alt"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <div id="collapseTerm@(t.Id)" class="clps" role="tabpanel" >
+            <div class="bg-light rounded-bottom border p-4 mb-4">
+                @if(t.Summary != null)
+                {
+                    <h4 class="pt-1">Summary</h4>
+                    <div class="markdown">
+                        @Html.Raw(@Helpers.HtmlHelpers.MarkdownToHtml(t.Summary))
+                    </div>
+                }
+                @if(t.Definition != null)
+                {
+                    <h4 class="pt-1">Technical Definition</h4>
+                    <div class="markdown">
+                        @Html.Raw(@Helpers.HtmlHelpers.MarkdownToHtml(t.Definition))
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+}

@@ -1,0 +1,79 @@
+@*
+    Atlas of Information Management business intelligence library and documentation database.
+    Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*@
+
+@model Data_Governance_WebApp.Pages.Projects.IndexModel
+
+
+<div class="pageTitle">
+	 <h2 class="pageTitle-head">
+		@ViewData["Title"]@if (Model.Permissions.Contains(26))
+    		{<button class="btn btn-link py-0 edit-button atlas-blue" type="button" data-toggle="clps" data-target="newClps"><span class="fas fa-plus fa-lg ml-2"></span></button>}</h2>
+</div>
+
+@if (Model.Permissions.Contains(26))
+{
+	<partial name="_New" />
+}
+
+<div class="card-columns" style="column-count: 2">
+
+	@foreach(var p in Model.AllProjects)
+	{
+		<div class="card mb-2 result mt-0">
+	        <div class="card-body card-body-favorite p-0">
+	            <div class="favorite-search">
+	                <i fav-type="project" object-id="@p.Id" class="far fa-star fa-lg @p.Favorite"></i>
+	            </div>
+	            <div class="favorite-search share ">
+                     <button class="btn btn-link p-0 atlas-blue" data-toggle="mdl" data-target="shareModal" data-name='@p.Name'  data-url="/projects?id=@p.Id"><i class="fas fa-share fa-lg darken share-object"></i></button>
+                </div>
+	            <form asp-page-handler="DeleteProject" method="post">
+		            <div class="p-3">
+		            	<div class="d-flex justify-content-between p-0 m-0 w-100">
+		                	<h5 class="mb-0 darken search-detail-collapse resize-header" style="cursor: pointer;white-space: nowrap;width:calc(100% - 30px)" data-toggle="clps" data-target="clps-@p.Id">
+		                    	<span>@p.Name</span>
+		                	</h5>
+		                	<div class="button-group" style="max-width:70px">
+								@if (Model.Permissions.Contains(27))
+								{
+									<input asp-for="DpDataProject.DataProjectId" type="hidden" value="@p.Id" />
+									<button class="btn btn-link" type="submit" onclick="return confirm('Are you sure you want to remove this?');" style="margin-top:-2px;">
+										<svg class="icon-sm" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M432 32H312l-9.4-18.7A24 24 0 0 0 281.1 0H166.8a23.72 23.72 0 0 0-21.4 13.3L136 32H16A16 16 0 0 0 0 48v32a16 16 0 0 0 16 16h416a16 16 0 0 0 16-16V48a16 16 0 0 0-16-16zM53.2 467a48 48 0 0 0 47.9 45h245.8a48 48 0 0 0 47.9-45L416 128H32z"/></svg>
+									</button>
+								}
+							</div>
+		            	</div>
+		            	<h5 class="pt-2 mb-0">
+	                        <a class="ajax atlas-blue" asp-page="/Projects/index" asp-route-id="@p.Id">Open Documentation</a>
+                        </h5>
+                    </div>
+				</form>
+	            @if (p.Description != null)
+	            {
+	                <div class="clps" id="clps-@p.Id">
+	                    <div class="p-3 border-top">
+                            <div class="markdown noleft">
+                                @Html.Raw(@Helpers.HtmlHelpers.MarkdownToHtml(p.Description))
+                            </div>
+	                    </div>
+	                </div>
+	            }
+	        </div>
+		</div>
+	}
+</div>

@@ -1,0 +1,114 @@
+﻿@*
+    Atlas of Information Management business intelligence library and documentation database.
+    Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*@
+
+<!DOCTYPE html>
+<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1" />
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="stylesheet" href="/css/main.min.css" />
+@if (ViewBag.Permissions.Contains(12))
+{
+    <link rel="stylesheet" href="/css/editor.min.css" media="print" onload="this.onload=null;this.removeAttribute('media')" />
+}
+<link rel="stylesheet" href="/css/mail.min.css" media="print" onload="this.onload=null;this.removeAttribute('media')" />
+<link rel="stylesheet" href="/css/differed.min.css" media="print" onload="this.onload=null;this.removeAttribute('media')" />
+
+@if (ViewData["Title"].ToString().Length > 0)
+{
+    <title>@ViewData["Title"] - Atlas</title>
+}
+else
+{
+    <title>Home - Atlas of Information Management</title>
+}
+<div class="ie-fixMinHeight">
+    <div class="ctn">
+        <partial name="_Nav" />
+        <div class="body">
+            <div class="body-main">
+
+
+                @if (@Model.Permissions.Contains(19))
+                {
+                    <div class='clps @if (@ViewData["Title"].ToString() == "" || @ViewData["Title"].ToString() == "Search"){ @("clps-o") }' id="sr-cls">
+                        <div class="sr-grp">
+                            <input type="text"
+                                   placeholder="type to search.."
+                                   value='@if(Model.GetType().GetProperty("SearchString") != null){ @Model.SearchString}' maxlength="80" required />
+                            <!--<icon class="sr-fav"><i class="far fa-star"></i></icon>-->
+                            <icon><svg class="icon-sm" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"/></svg></icon>
+                            <div class="sr-hst">
+                            </div>
+                        </div>
+                    </div>
+                }
+                <div class="body-mainCtn">
+                    @RenderBody()
+                </div>
+
+            </div>
+            <div class="body-side" id="AdColTwo">
+                @if (ViewBag.AdLists != null)
+                {
+                    @foreach (var ad in ViewBag.AdLists)
+                    {
+                        <div class="col" data-ajax="yes" data-url="@ad.Url"></div>
+                        <div class="w-100"></div>
+                    }
+                }
+            </div>
+        </div>
+
+        <!-- footer -->
+        <cache>
+            <partial name="_Footer" />
+            <a id="back-to-top" href="#" class="back-to-top" role="button"><i class="fas fa-chevron-up"></i></a>
+        </cache>
+
+    </div>
+</div>
+<div class="prg"><div class="prg-b" style="width: 0%"></div></div>
+<div class="mail-notification-container"></div>
+<partial name="_Messagebox" />
+<partial name="_Modals" />
+<div class="no-loader" data-ajax="yes" data-url="/index?Handler=WelcomeVideo" data-loadtag=".video" cache></div>
+
+
+<!-- text -->
+<link rel="preload" href="/lib/fonts/impmin/subset-NYTImperial-Regular.woff2" as="font" type="font/woff2" crossorigin />
+<link rel="preload" href="/lib/fonts/impmin/subset-NYTImperial-Bold.woff2" as="font" type="font/woff2" crossorigin />
+
+<!-- headings -->
+<link rel="preload" href="/lib/fonts/cheltmin/subset-NYTCheltenham-Medium.woff2" as="font" type="font/woff2" crossorigin />
+<link rel="preload" href="/lib/fonts/cheltmin/subset-NYTCheltenham-Bold.woff2" as="font" type="font/woff2" crossorigin />
+<link rel="preload" href="/lib/fonts/cheltmin/subset-NYTCheltenham-MediumItalic.woff2" as="font" type="font/woff2" crossorigin />
+
+<!-- san serif -->
+<link rel="preload" href="/lib/fonts/sfmin/subset-SFProDisplay-Regular.woff2" as="font" type="font/woff2" crossorigin />
+<link rel="preload" href="/lib/fonts/sfmin/subset-SFProDisplay-Medium.woff2" as="font" type="font/woff2" crossorigin />
+
+
+<!-- icon -->
+<!--<link rel="preload" href="/lib/fonts/fontawesome/webfonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin />-->
+<!--<link rel="preload" href="/lib/fonts/fontawesome/webfonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin />-->
+<!-- generated at fontello.comm -->
+<link rel="preload" href="/lib/fonts/farmin/font/far.woff2?4069908" as="font" type="font/woff2" crossorigin />
+<link rel="preload" href="/lib/fonts/fasmin/font/fas.woff2?1540027" as="font" type="font/woff2" crossorigin />
+
+<textarea id="postLoadScripts"><script src="/js/utility.min.js" async></script><script src="/js/extra.min.js" async></script><script src="/js/flowchart.min.js" async></script><script src="/js/code.min.js" async></script><script>hljs.initHighlightingOnLoad();</script>@if (ViewBag.Permissions.Contains(12)){<script src="/js/codemirror.min.js" async></script><script src="/js/reporteditor.min.js" async></script>}</textarea>
+<script src="/js/main.min.js"></script>

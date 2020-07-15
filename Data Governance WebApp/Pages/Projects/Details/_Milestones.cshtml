@@ -1,0 +1,209 @@
+@*
+    Atlas of Information Management business intelligence library and documentation database.
+    Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*@
+
+@model Data_Governance_WebApp.Pages.Projects.IndexModel
+<button class="atlas-blue btn btn-link float-right" data-toggle="mdl" data-target="MsDetails"><i class="far fa-question-circle"></i></button>
+<h2 class="pb-2 border-bottom border-2 darken">Milestones</h2>
+
+<div class="mdl" id="MsDetails" tabindex="-1">
+    <div class="mdl-d mdl-w" role="document">
+        <div class="mdl-c">
+            <div class="mdl-h">
+                <h5 class="mdl-t">Milestone Schedule Details</h5>
+                <button type="button" class="close" data-dismiss="mdl">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="mdl-b">
+                <div class="row">
+                    @foreach (var t in Model.DataProject.MilestoneTasks)
+                    {
+                        <div class="col">
+                            <h5><span class="pr-2">⏰️</span>@t.Description</h5>
+                            <p class="ml-4 pl-1">@t.Template<br><span>Scheduled from <strong>@t.StartDateString</strong> to <strong>@t.EndDateString</strong></span><br><span>Owned by @t.Owner</span></p>
+                        </div>
+                    }
+                </div>
+            </div>
+            <div class="mdl-f">
+                <button type="button" class="btn btn-secondary" data-dismiss="mdl">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<h3 class="schedule-head darken sticky-top">Upcoming Schedule</h3>
+
+@{
+    var year = 0;
+    var month = 0;
+}
+
+    @foreach(var task in Helpers.HtmlHelpers.GetMilestoneCalendar(Model.DataProject.MilestoneTasks.ToList()))
+    {
+        @if(@task.Year != year)
+        {
+            @if(year != 0)
+            {
+                        @:</div>
+                    @:</div >
+                @:</div >
+                month = task.Month;
+            }
+
+            @:<div class="task-year">
+                <h4 class="year sticky-top darken">@task.Year</h4>
+
+        }
+
+        @if(@task.Month != month || @task.Year != year )
+        {
+            @if(month != 0 && @task.Year == year )
+            {
+                    @:</div>
+                @:</div>
+            }
+
+            @:<div class="task-month">
+                <h4 class="sticky-top month darken" >@task.MonthName</h4>
+                    @:<div class="task-dates">
+        }
+
+        var details = Model.DataProject.MilestoneTasks.Where(x => x.Id == task.TaskId).FirstOrDefault();
+
+        <div class="w-100 ml-2">
+            <a class="darken" aria-controls="task-@task.TaskId@task.Day@task.Month@task.Year" data-toggle="clps" data-target="task-@task.TaskId@task.Day@task.Month@task.Year">
+                @if (Array.IndexOf(Model.DataProject.MilestoneTasksCompleted.Select(x => x.DueDate).ToArray(), task.Date) >= 0)
+                {
+                    <i class="fas fa-check atlas-blue"></i>
+                } else
+                {
+                    <i class="far fa-calendar-check atlas-blue"></i>
+                }
+                <strong class="ml-2">@task.Date</strong> · <span class="text-muted">@details.Description</span>
+            </a>
+        </div>
+
+                @if (Array.IndexOf(Model.DataProject.MilestoneTasksCompleted.Select(x => x.DueDate).ToArray(), task.Date) >= 0)
+                {
+                    @:<div class="clps" id="task-@task.TaskId@task.Day@task.Month@task.Year">
+                        @:<div class="card card-body my-2">
+
+                            @if(details.Checklist.Count() > 0)
+                            {
+                                <ul class="checkbox-list">
+                                    <select  style="display:none;" asp-for="CompletedChecklistItems"></select>
+                                    @foreach(var q in details.Checklist)
+                                    {
+                                        var completed = Model.DataProject.ChecklistCompleted.Where(x => x.TaskId == task.TaskId && x.Date == Convert.ToDateTime(task.Date) && x.ProjectId == Model.DataProject.Id && x.ChecklistId == q.Id).FirstOrDefault();
+                                        <li>
+                                            <label class="checkbox-container disabled" check-id="@q.Id">@if(q.Item != null && q.Item != "") {@Html.Raw(@Helpers.HtmlHelpers.MarkdownToHtml(q.Item))}
+                                                @if (completed != null)
+                                                {
+                                                    @: · <span class="text-muted completed">Completed by @completed.CompletedBy on @completed.CompletionDate</span>
+                                                }
+
+                                                <input type="checkbox" @if (completed != null) {<text>checked="checked"</text>} disabled />
+                                                <span class="checkmark"></span>
+                                            </label>
+                                        </li>
+                                    }
+                                </ul>
+                            }
+
+                                var me = Model.DataProject.MilestoneTasksCompleted.ToArray()[Array.IndexOf(Model.DataProject.MilestoneTasksCompleted.Select(x => x.DueDate).ToArray(), task.Date)];
+
+                            <span>Completed @me.CompletionDate by @me.CompletedBy</span>
+                            <p>@me.Comments</p>
+                        @:</div>
+                    @:</div>
+                } else if (Model.Permissions.Contains(29) || Model.Permissions.Contains(30) || details.Checklist.Count() > 0) {
+                    <div class="clps" id="task-@task.TaskId@task.Day@task.Month@task.Year">
+                        <div class="card card-body my-2">
+                        <h5 class="card-title">Mark This Milestone Complete</h5>
+
+                    @if(details.Checklist.Count() > 0)
+                    {
+                        @if(Model.Permissions.Contains(29))
+                        {
+                            <form method="post" asp-page-handler="CompleteChecklist" id="complete-checklist-form">
+                                <input type="hidden" asp-for="CompletedChecklist.DataProjectId" value="@Model.DataProject.Id" required />
+                                <input type="hidden" asp-for="CompletedChecklist.TaskDate"  value="@task.Date" required />
+                                <input type="hidden" asp-for="CompletedChecklist.TaskId"  value="@task.TaskId" required />
+                                <ul class="checkbox-list">
+                                    <select  style="display:none;" asp-for="CompletedChecklistItems"></select>
+                                    @foreach(var q in details.Checklist)
+                                    {
+                                        var completed = Model.DataProject.ChecklistCompleted.Where(x => x.TaskId == task.TaskId && x.Date == Convert.ToDateTime(task.Date) && x.ProjectId == Model.DataProject.Id && x.ChecklistId == q.Id).FirstOrDefault();
+                                        <li>
+                                            <label class="checkbox-container milestone-checklist" check-id="@q.Id">@if(q.Item != null && q.Item != "") {@Html.Raw(@Helpers.HtmlHelpers.MarkdownToHtml(q.Item))}
+                                                @if (completed != null)
+                                                {
+                                                    @: - <span class="text-muted completed">Completed by @completed.CompletedBy on @completed.CompletionDate</span>
+                                                }
+
+                                                <input type="checkbox" class="milestone" @if (completed != null) {<text>checked="checked"</text>} />
+                                                <span class="checkmark"></span>
+                                            </label>
+                                        </li>
+                                    }
+                                </ul>
+                            </form>
+                        } else {
+                            <ul class="checkbox-list">
+                                    @foreach(var q in details.Checklist)
+                                    {
+                                        var completed = Model.DataProject.ChecklistCompleted.Where(x => x.TaskId == task.TaskId && x.Date == Convert.ToDateTime(task.Date) && x.ProjectId == Model.DataProject.Id && x.ChecklistId == q.Id).FirstOrDefault();
+                                        <li>
+                                            <label class="checkbox-container disabled" check-id="@q.Id">@q.Item
+                                                @if (completed != null)
+                                                {
+                                                    @: - <span class="text-muted completed">Completed by @completed.CompletedBy on @completed.CompletionDate</span>
+                                                }
+
+                                                <input type="checkbox" @if (completed != null) {<text>checked="checked"</text>} disabled />
+                                                <span class="checkmark"></span>
+                                            </label>
+                                        </li>
+                                    }
+                                </ul>
+                        }
+
+                    }
+                    @if(Model.Permissions.Contains(30)){
+
+                    <form asp-page-handler="CompleteTask" method="post">
+                        <input type="hidden"  asp-for="MilestoneCompleteTask.Owner" value="@details.OwnerId" required />
+                        <input type="hidden" asp-for="MilestoneCompleteTask.DueDate" value="@task.Date" required />
+                        <input type="hidden" asp-for="MilestoneCompleteTask.DataProjectId" value="@Model.DataProject.Id" required />
+                        <div class="form-group">
+                            <label for="message-text" class="col-form-label">Comments</label>
+                            <textarea asp-for="MilestoneCompleteTask.Comments" rows="1" class="form-control"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Complete Milestone</button>
+                    </form>
+                }
+            </div>
+        </div>
+        }
+
+        year = task.Year;
+        month = task.Month;
+    }

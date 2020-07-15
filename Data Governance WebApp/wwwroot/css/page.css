@@ -1,0 +1,35 @@
+.pageTitle {
+	position: relative;
+	padding-top: 20px;
+	padding-bottom: 10px;
+	background-color: #fff;
+	max-width:100%;
+}
+
+.pageTitle-head {
+	padding: 0 50px 20px 50px;
+    z-index: 999;
+    white-space: nowrap;
+    text-align: center;
+    margin:0;
+}
+
+.pageTitle-head > span {
+	pointer-events: none;
+}
+
+.pageSection {
+	padding-top:20px;
+}
+
+.pageSection-title {
+	border-width: 2px;
+	border-bottom: 1px solid #dee2e6;
+	padding-bottom:20px;
+}
+
+.pageTitle--sticky {
+	position: fixed;
+	top: 0;
+	z-index: 1020;
+}

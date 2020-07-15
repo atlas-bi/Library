@@ -1,0 +1,86 @@
+.mlbx-menu {
+    height: 70px;
+    border-top: 1px solid rgb(242, 242, 242);
+    border-top-left-radius: inherit;
+    border-top-right-radius: inherit;
+    background: rgb(226, 226, 226);
+    background: linear-gradient(180deg, rgba(226, 226, 226, 1) 35%, rgba(208, 208, 208, 1) 100%);
+    position: relative;
+    user-select: none;
+    display: flex;
+    width: 100%;
+}
+
+.mlbx-menuTitle {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    text-align: center;
+    color: rgb(78, 78, 78);
+    font-weight: 600;
+    font-size: 14px;
+    letter-spacing: .4px;
+}
+
+.mlbx-menuNav {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+.mlbx-menuIcon {
+    margin-top: auto;
+    margin-bottom: auto;
+    cursor: default !important;
+    border: none !important;
+    background-color: inherit !important;
+    flex: 0 0 20%;
+    max-width: 20%;
+    vertical-align: middle;
+}
+
+.mlbx-menuLnkGrp {
+    display: inline-flex;
+    vertical-align: middle;
+    padding-top: 20px;
+    margin-top: auto;
+    margin-bottom: auto;
+    height: 45px;
+}
+
+.mlbx-menuBtn {
+    background: rgb(244, 244, 244);
+    border: 1px solid rgb(199, 199, 199);
+    border-bottom: 1px solid rgb(175, 175, 175);
+    outline: none;
+    text-decoration: none;
+    border-radius: 6px;
+    padding: 1px 10px;
+    margin-right: 10px;
+}
+
+.mlbx-menuBtnGrpS {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    margin-right: 0;
+}
+
+.mlbx-menuBtnGrpM {
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+    margin-right: 0;
+}
+
+.mlbx-menuBtnGrpE {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+.mlbx-menuBtn:focus,
+.mlbx-menuBtn:active,
+.mlbx-menuBtn:hover,
+.mlbx-menuBtn:visited {
+    outline: none;
+    text-decoration: none;
+}

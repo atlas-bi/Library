@@ -1,0 +1,70 @@
+@*
+    Atlas of Information Management business intelligence library and documentation database.
+    Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*@
+
+@model Data_Governance_WebApp.Pages.Parameters.IndexModel
+<div>
+<h4 class="pt-3">Contacts</h4>
+<ul class="list-group">
+    @if (ViewBag.Permissions.Contains(33))
+    {
+        <li class="list-group-item">
+            <h6>New Contact</h6>
+            <form asp-page-handler="CreateDpContact" method="post">
+
+                <input type="nice-input" class="" asp-for="DpContact.Name" data-initial-content="Name" required />
+
+                <input type="nice-input" class="" asp-for="DpContact.Phone" data-initial-content="Phone" required />
+
+                <input type="nice-input" class="" asp-for="DpContact.Email" data-initial-content="Email" required />
+
+                <input type="nice-input" class="" asp-for="DpContact.Company" data-initial-content="Company" required />
+
+                <button type="submit" class="btn btn-link fa-lg"><svg class="icon-sm" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M433.941 129.941l-83.882-83.882A48 48 0 0 0 316.118 32H48C21.49 32 0 53.49 0 80v352c0 26.51 21.49 48 48 48h352c26.51 0 48-21.49 48-48V163.882a48 48 0 0 0-14.059-33.941zM224 416c-35.346 0-64-28.654-64-64 0-35.346 28.654-64 64-64s64 28.654 64 64c0 35.346-28.654 64-64 64zm96-304.52V212c0 6.627-5.373 12-12 12H76c-6.627 0-12-5.373-12-12V108c0-6.627 5.373-12 12-12h228.52c3.183 0 6.235 1.264 8.485 3.515l3.48 3.48A11.996 11.996 0 0 1 320 111.48z"/></svg></button>
+            </form>
+        </li>
+    }
+    @if (ViewBag.DpContactList.Count < 1)
+    {
+        <li class="list-group-item">Add a contact to get started!</li>
+    } else {
+	    @foreach (var i in ViewBag.DpContactList)
+	    {
+	        <li class="list-group-item">
+	            <div class="row">
+	                <div class="col">
+	                    Name: @i.Name<br>
+	                    Phone: @i.Phone<br>
+	                    Email: @i.Email<br>
+	                    Company: @i.Company<br>
+	                    <span class="badge ml-2 atlas-blue">@i.Used</span>
+	                </div>
+	                <div class="col-auto text-right">
+	                    @if (ViewBag.Permissions.Contains(34))
+	                    {
+	                        <form asp-page-handler="DeleteDpContact" method="post">
+	                            <input type="hidden" asp-for="DpContact.ContactId" value="@i.Id" />
+	                            <button type="submit" class="btn btn-link py-0 atlas-blue"><svg class="icon-sm" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M432 32H312l-9.4-18.7A24 24 0 0 0 281.1 0H166.8a23.72 23.72 0 0 0-21.4 13.3L136 32H16A16 16 0 0 0 0 48v32a16 16 0 0 0 16 16h416a16 16 0 0 0 16-16V48a16 16 0 0 0-16-16zM53.2 467a48 48 0 0 0 47.9 45h245.8a48 48 0 0 0 47.9-45L416 128H32z"/></svg></button>
+	                        </form>
+	                    }
+	                </div>
+	            </div>
+	        </li>
+	    }
+	}
+</ul>
+</div>

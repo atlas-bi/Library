@@ -1,0 +1,72 @@
+.message-wrapper {
+	position: fixed;
+	top:0;
+	opacity:1;
+	width:350px;
+	left:calc(50% - 350px / 2);
+	height:auto;
+	z-index: 999;
+	background-color: rgb(255,255,255);
+	margin-top:10px;
+	border: 1px solid rgb(183,183,183);
+	border-top: 1px solid rgb(208,208,208);
+	border-radius: 6px;
+	-moz-box-shadow: 0 0 30px 10px rgb(209,209,209);
+    -webkit-box-shadow: 0 0 30px 10px rgb(209,209,209);
+    box-shadow: 0 0 30px 10px rgb(209,209,209);
+    -moz-transition: all .5s;
+	-webkit-transition: all .5s; /* For Safari 3.1 to 6.0 */
+	transition: all .5s;
+	font-size:14px;
+}
+
+.message-wrapper-inner {
+	border-top: 1px solid rgb(244,245,246);
+	border-radius: inherit;
+}
+.message-wrapper.hidden {
+	top:-200px;
+	opacity: 0;
+	-moz-transition: all 1s;
+	-webkit-transition: all 1s; /* For Safari 3.1 to 6.0 */
+	transition: all 1s;
+}
+.message-wrapper button {
+	-moz-transition: all .2s;
+	-webkit-transition: all .2s; /* For Safari 3.1 to 6.0 */
+	transition: all .2s;
+	position: absolute;
+	height:12px;
+	width:12px;
+	border-radius: 6px;
+	top:6px;
+}
+
+.message-wrapper .message-close {
+	left: 8px;
+	background-color: rgb(255,86,79);
+	border:1px solid rgb(220, 65, 58);
+}
+
+.message-container {
+	border-top: 22px solid rgb(230,227,229);
+	border-radius: inherit;
+}
+
+.message-container::before{
+	position: absolute;
+    top: 4px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: .4px;
+    content: "Message";
+    width: 54px;
+    left: 50%;
+    margin-left: -27px;
+    font-family: sf, "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+    color: rgb(57,57,57);
+}
+.message-container .message-inner {
+	border-top: 1px solid rgb(204,202,204);
+	padding: 8px;
+}

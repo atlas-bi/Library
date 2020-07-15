@@ -1,0 +1,86 @@
+body.b-mdl {
+  overflow: hidden;
+}
+
+.mdl {
+  display: block;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1050;
+  overflow: hidden;
+  outline: 0;
+  opacity: 0;
+  height: 0;
+  transition: opacity 0.3s ease-in-out;
+  background-color: rgb(0, 0, 0);
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.mdl.mdl-o {
+  opacity: 1;
+  height: auto;
+  overflow-y: auto;
+}
+
+.mdl .mdl-d {
+  max-width: 500px;
+  width: auto;
+  margin: 1.75rem auto;
+  position: relative;
+  pointer-events: none;
+}
+
+.mdl .mdl-new-mail {
+  max-width: 95%;
+  width: 800px;
+}
+
+.mdl .mdl-wide {
+  max-width: 95%;
+  width: 1050px;
+}
+
+.mdl .mdl-c {
+  position: relative;
+  width: 100%;
+  pointer-events: auto;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid rgba(0, 0, 0, .2);
+  border-radius: .3rem;
+  outline: 0;
+  height: 100%;
+  padding: 20px;
+}
+
+.mdl .mdl-h {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 1rem;
+  border-bottom: 1px solid #e9ecef;
+  border-top-left-radius: .3rem;
+  border-top-right-radius: .3rem;
+}
+
+.mdl .mdl-t {
+  margin-bottom: 0;
+  line-height: 1.5;
+}
+
+.mdl .mdl-b {
+  position: relative;
+  flex: 1 1 auto;
+  padding: 1rem;
+}
+
+.mdl .mdl-f {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 1rem;
+  border-top: 1px solid #e9ecef;
+}

@@ -1,0 +1,74 @@
+.tab {
+	display: block;
+    padding-left: 50px;
+    padding-right: 50px;
+    margin-bottom: 0;
+    list-style: none;
+    padding-bottom: 10px;
+    padding-top: 10px;
+    text-align: center;
+    width:100%;
+}
+
+.tab > .tab-lnk {
+    transition: all .3s;
+    position: relative;
+    margin-left: 18px;
+    margin-right: 15px;
+    font-size: 1.25rem;
+    line-height: 24px;
+    color: #575353;
+    color: var(--grey);
+    text-decoration: none;
+    cursor: pointer;
+    display:inline-block;
+    margin-bottom:10px;
+}
+
+.tab > .tab-lnk.active, .tab > .tab-lnk:hover {
+	color: #0084db;
+	text-decoration: none;
+    color: var(--active-link);
+}
+
+.tab > .tab-lnk::after {
+	content: '';
+	position: absolute;
+	background-color: #DBD7D8;
+	background-color: var(--light-grey);
+	width: 15px;
+	max-width: 75%;
+	height: 1px;
+	top: 25px;
+	left: 0;
+	transition: all .3s;
+}
+
+.tab > .tab-lnk.active::after {
+	background-color: #94bad4;
+	background-color: var(--light-link);
+	width: 75%;
+}
+
+.tab > .tab-lnk:hover::after {
+	position: absolute;
+	content: '';
+	background-color: #94bad4;
+	background-color: var(--light-link);
+	width: 75%;
+	max-width: 75%;
+}
+
+.tab-cnt {
+	padding-top:15px;
+	display: block;
+}
+
+.tab-cnt > .tab-dta {
+	display: none ;
+	animation: fadein .5s;
+	width:100%;
+}
+.tab-cnt > .tab-dta.active {
+	display: block;
+}

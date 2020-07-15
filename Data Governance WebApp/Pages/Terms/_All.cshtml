@@ -1,0 +1,131 @@
+@*
+    Atlas of Information Management business intelligence library and documentation database.
+    Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*@
+
+@model Data_Governance_WebApp.Pages.Terms.IndexModel
+
+@functions {
+	string ShortDescription(string description)
+	{
+		if (description != null)
+		{
+			return description.Substring(0,Math.Min(description.Length,125)) + "..";
+		} else {
+			return null;
+		}
+	}
+}
+
+<div class="pageTitle">
+	 <h2 class="pageTitle-head">Terms @if (Model.Permissions.Contains(7))
+    {<button class="btn btn-link py-0 edit-button atlas-blue" type="button" data-toggle="clps" data-target="newCollapse"><span class="fas fa-plus fa-lg ml-2"></span></button>}
+
+    </h2>
+    <div class="float-right">
+    	<label class="float-left mr-2">Show Unapproved Terms Only</label>
+    	<div class="switchToggle float-right toggle-terms" status="false">
+    		<input type="checkbox" id="switch1" >
+    		<label for="switch1">Toggle</label>
+		</div>
+	</div>
+	<script>
+		 if(document.readyState === 'complete') {
+    load()
+        }
+
+        window.addEventListener('load',function(){
+ load()
+  })
+		function load(){
+		document.getElementsByClassName('toggle-terms')[0].addEventListener('click', function(e){
+			if (e.target.tagName == 'INPUT'){
+				var s = document.querySelectorAll('span.badge-success');
+				for(var x=0;x<s.length;x++){
+					if(e.target.checked) {
+						s[x].closest('.result').style.display = 'none';
+						} else {
+							s[x].closest('.result').style.removeProperty('display');
+						}
+				}
+			}
+		})
+		}
+	</script>
+</div>
+
+@if (@Model.Permissions.Contains(7))
+{
+	<partial name="_New" />
+}
+
+<div class="card-columns" style="column-count: 2;width:100%">
+	@foreach(var t in Model.AllTerms)
+	{
+		@if (t.Approved == "N" && @Model.Permissions.Contains(17) || t.Approved == "Y")
+		{
+			<div class="card mb-2 result mt-0">
+		        <div class="card-body card-body-favorite p-0">
+		            <div class="favorite-search">
+		                <i fav-type="term" object-id="@t.Id" class="far fa-star fa-lg @t.Favorite"></i>
+		            </div>
+		            <div class="favorite-search share ">
+                         <button class="btn btn-link p-0 atlas-blue" data-toggle="mdl" data-target="shareModal" data-name='@t.Name'  data-url="/terms?id=@t.Id"><i class="fas fa-share fa-lg darken share-object"></i></button>
+                    </div>
+		            <form asp-page-handler="DeleteInitiative" method="post">
+			            <div class="p-3">
+			            	<div class="d-flex justify-content-between p-0 m-0 w-100">
+			                	<h5 class="mb-0 darken search-detail-collapse resize-header" style="cursor: pointer;white-space: nowrap;width:calc(100% - @if (t.Approved == "Y"){<text>100px</text>} else {<text>30px</text>})" data-toggle="clps" data-target="collapse-@t.Id">
+			                    	<span>@t.Name</span>
+			                	</h5>
+				                <h4>
+						            @if (t.Approved == "Y")
+						            {
+						                <span class="badge badge-success float-sm-right">Approved</span>
+						            }
+						        </h4>
+			                	<div class="button-group" style="max-width:70px">
+									@if ((@Model.Permissions.Contains(9) && t.Approved == "N") || (@Model.Permissions.Contains(8) && t.Approved == "Y"))
+									{
+										<input asp-for="NewTerm.TermId" type="hidden" value="@t.Id" />
+										<button class="btn btn-link" type="submit" onclick="return confirm('Are you sure you want to remove this?');" style="margin-top:-2px;">
+											<svg class="icon-sm" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M432 32H312l-9.4-18.7A24 24 0 0 0 281.1 0H166.8a23.72 23.72 0 0 0-21.4 13.3L136 32H16A16 16 0 0 0 0 48v32a16 16 0 0 0 16 16h416a16 16 0 0 0 16-16V48a16 16 0 0 0-16-16zM53.2 467a48 48 0 0 0 47.9 45h245.8a48 48 0 0 0 47.9-45L416 128H32z"/></svg>
+										</button>
+									}
+								</div>
+			            	</div>
+			            	<h5 class="pt-2 mb-0">
+		                        <a class="ajax atlas-blue" asp-page="/terms/index" asp-route-id="@t.Id">Open Documentation</a><span class="text-muted float-right" style="font-size:15px;">Last updated @t.UpdateDate</span>
+                            </h5>
+                        </div>
+					</form>
+		            @if (t.Summary != null)
+		            {
+		                <div class="clps border-top" id="collapse-@t.Id">
+		                    <div class="p-3">
+		                        <p class="card-text" style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis">
+		                            <div class="markdown noleft">
+		                                @Html.Raw(@Helpers.HtmlHelpers.MarkdownToHtml(t.Summary))
+		                            </div>
+		                        </p>
+		                    </div>
+		                </div>
+		            }
+		        </div>
+			</div>
+		}
+	}
+</div>

@@ -1,0 +1,48 @@
+@*
+    Atlas of Information Management business intelligence library and documentation database.
+    Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*@
+
+<div>
+    <span class="text-muted w-100">Reports with red outline have not been reviewed in the last 6 months.</span>
+    @if (ViewBag.RecommendRetire.Count == 0)
+    {
+        <p><br />No reports to show.</p>
+    }
+    <div class="card-columns" style="column-count:2">
+
+        @foreach (var t in ViewBag.RecommendRetire)
+        {
+            <div class="card @if(Convert.ToDateTime(t.MaintenanceDate) < DateTime.Now.AddMonths(-6)){<text>border-danger</text>} my-3">
+                <div class="card-body p-3">
+                    <h5 class="card-title">
+                        <a class="ajax atlas-blue" href="/reports?id=@t.ReportId">@t.Name</a>
+                    </h5>
+                    <hr />
+                    @if (t.Comment != null)
+                    {
+                        <div class="card-text pb-2">
+                            <div class="markdown noleft">
+                                @Html.Raw(@Helpers.HtmlHelpers.MarkdownToHtml(t.Comment))
+                            </div>
+                        </div>
+                    }
+                    <footer class="blockquote-footer">Recommended by @t.FullName on @t.MaintenanceDateString</footer>
+                </div>
+            </div>
+        }
+    </div>
+</div>

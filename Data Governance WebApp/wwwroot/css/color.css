@@ -1,0 +1,90 @@
+:root {
+	--off-white:  #f5f5f5;
+	--light-grey: #DBD7D8;
+	--medium-grey:#6c757d  ;
+	--grey:#575353;
+	--dark-grey:#212020;
+	--active-link: #0084db;
+	--light-link: #94bad4;
+	--active-link-green: #00db00;
+}
+
+.badge.atlas-blue {
+	background-color: #0084db;
+	background-color: var(--active-link);
+	color: #fff;
+	border-radius: .3rem;
+	font-size:90%;
+	font-family: sf;
+	font-weight: 600;
+	font-style: normal;
+}
+
+a.atlas-blue, button.atlas-blue, li.atlas-blue {
+	-webkit-transition: color .7s; /* For Safari 3.1 to 6.0 */
+  	transition: color .7s;
+  	color:  #0084db;
+  	color: var(--active-link);
+}
+
+a.atlas-blue:hover, button.atlas-blue:hover , a.atlas-green:hover, li.atlas-blue:hover{
+	text-decoration: none;
+	color:  #212020;
+  	color: var(--dark-grey);
+}
+
+button.atlas-blue:active, button.atlas-blue:focus, li.atlas-blue:focus {
+	text-decoration: none;
+}
+
+
+a i.atlas-blue, .atlas-blue{
+	-webkit-transition: color .3s; /* For Safari 3.1 to 6.0 */
+  	transition: color .3s;
+  	color:  #0084db;
+	color: var(--active-link);
+}
+
+a i.atlas-blue:hover, .atlas-blue:hover{
+	color:  inherit;
+}
+
+a.atlas-green, a i.atlas-green {
+	color:  #00db00;
+	color:  var(--active-link-green);
+	-webkit-transition: color .7s; /* For Safari 3.1 to 6.0 */
+  	transition: color .7s;
+}
+
+span.atlas-blue {
+	color:  #0084db;
+	color: var(--active-link);
+}
+
+
+.footer.darken {
+	color: #575353 !important;
+	color: var(--grey) !important;
+}
+
+.footer.darken:hover {
+	color: #575353 !important;
+	color: var(--grey) !important;
+}
+
+.page-title:hover, .darken:hover {
+	color: #212020 !important;
+	color: var(--dark-grey) !important;
+	fill: #212020 !important;
+	fill: var(--dark-grey) !important;
+}
+
+.page-title, .darken {
+	color: #575353 !important;
+	color: var(--grey) !important;
+	fill: #575353 !important;
+	fill: var(--grey) !important;
+	-webkit-transition: color .7s, fill .7s; /* For Safari 3.1 to 6.0 */
+	transition: color .7s, fill .7s;
+}
+

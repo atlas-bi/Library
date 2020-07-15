@@ -1,0 +1,18 @@
+.control-box {
+	position: absolute;
+	right: 15px;
+	top: 15px;
+	color: #0084db;
+    color: var(--active-link);
+    z-index: 1;
+}
+
+.control-list {
+	position: relative;
+	padding-right: 0px;
+	padding-left: 15px;
+}
+
+.control-item {
+	list-style: none;
+}

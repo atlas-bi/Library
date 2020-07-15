@@ -1,0 +1,79 @@
+@*
+    Atlas of Information Management business intelligence library and documentation database.
+    Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*@
+
+@model Data_Governance_WebApp.Pages.Projects.IndexModel	
+
+<div class="clps" id="newClps">
+    <div class="card card-body bg-light mb-4" id="">
+        <form asp-page-handler="NewDataProject" method="post">
+            <h3 class="d-flex justify-content-between">
+            	<span>New Data Project</span>
+            	<div class="button-group">
+            		<button class="btn btn-link" type="button" data-toggle="clps" data-target="newClps">
+                		<i class="fas fa-times fa-lg"></i>
+            		</button>
+            		<button class="btn btn-link" type="submit" name="submit" id="submitNewDocumentation">
+                		<i class="fas fa-save fa-lg"></i>
+            		</button>
+        		</div>
+            </h3>
+
+			<h5 class="pt-2">Name</h5>
+		    <input asp-for="DpDataProject.Name" class="form-control" required />
+
+		    <h5 class="pt-2">Purpose</h5>
+		    <input asp-for="DpDataProject.Purpose" class="form-control"></input>
+
+		    <h5 class="pt-2">Description</h5>
+		    <textarea rows="3" asp-for="DpDataProject.Description" class="form-control"></textarea>
+
+		    <div class="row pt-2">
+		    	<div class="col">
+			    	<h5 class="pt-2">Operations Owner</h5>
+			    	<input type="dynamic-dropdown" asp-for="DpDataProject.OperationOwnerId" value="" visible-value="" search-area="UserSearch" />
+				</div>
+				<div class="col">
+			    	<h5 class="pt-2">Executive Owner</h5>
+			    	<input type="dynamic-dropdown" asp-for="DpDataProject.ExecutiveOwnerId" value="" visible-value="" search-area="UserSearch" />
+				</div>
+			</div>
+		    <div class="row pt-2">
+				<div class="col">
+	        		<h5 class="pt-2">Analytics Owner</h5>
+	        		<input type="dynamic-dropdown" asp-for="DpDataProject.AnalyticsOwnerId" value="" visible-value="" search-area="UserSearch" />
+		     	</div>
+		     	<div class="col">
+	        		<h5 class="pt-2">Data Owner</h5>
+	        		<input type="dynamic-dropdown" asp-for="DpDataProject.DataManagerId" value="" visible-value="" search-area="UserSearch" />
+		     	</div>
+			</div>
+
+			<div class="row pt-2">
+		    	<div class="col">
+				    <h5 class="pt-2">Financial Impact</h5>
+				    <input type="dynamic-dropdown" asp-for="DpDataProject.FinancialImpact" search-area="financial-impact" method="fullList" />
+				</div>
+				<div class="col">
+				    <h5 class="pt-2">Strategic Importance</h5>
+				    <input type="dynamic-dropdown" asp-for="DpDataProject.StrategicImportance" search-area="strategic-importance" method="fullList" />
+				</div>
+			</div>
+        </form>
+    </div>
+</div>
+

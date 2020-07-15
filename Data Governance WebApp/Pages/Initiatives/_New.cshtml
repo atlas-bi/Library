@@ -1,0 +1,83 @@
+@*
+    Atlas of Information Management business intelligence library and documentation database.
+    Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*@
+
+@model Data_Governance_WebApp.Pages.Initiatives.IndexModel
+
+<div class="mdl" id="newModal" tabindex="-1">
+  	<div class="mdl-d mdl-wide">
+	    <div class="mdl-c p-3 bg-light">
+	        <form asp-page-handler="NewDataInitiative" method="post">
+	            <h3 class="d-flex justify-content-between">
+	            	<span>New Data Initiative</span>
+	            	<div class="button-group">
+	            		<button class="btn btn-link" type="button" data-toggle="clps" data-target="newCollapse">
+	                		<i class="fas fa-times fa-lg"></i>
+	            		</button>
+	            		<button class="btn btn-link" type="submit" name="submit" id="submitNewDocumentation">
+	                		<i class="fas fa-save fa-lg"></i>
+	            		</button>
+	        		</div>
+	            </h3>
+
+				<h5 class="pt-2">Name</h5>
+			    <input asp-for="DpDataInitiative.Name" class="form-control" required />
+
+			    <h5 class="pt-2">Description</h5>
+			    <textarea rows="3" asp-for="DpDataInitiative.Description" class="form-control"></textarea>
+
+			    <!-- external contact -->
+			    <h5 class="pt-2">External Contacts</h5>
+
+			    <select type="dynamic-dropdown" asp-for="LinkedContacts" search-area="ext-cont" method="fullList"></select>
+
+			    <!-- owners -->
+			    <div class="row pt-2">
+			    	<div class="col">
+				    	<h5 class="pt-2">Operations Owner</h5>
+				    	<input type="dynamic-dropdown" asp-for="DpDataInitiative.OperationOwnerId" value="" visible-value="" search-area="UserSearch" />
+
+					</div>
+					<div class="col">
+				    	<h5 class="pt-2">Executive Owner</h5>
+				    	<input type="dynamic-dropdown" asp-for="DpDataInitiative.ExecutiveOwnerId" value="" visible-value="" search-area="UserSearch" />
+					</div>
+				</div>
+
+				<!-- impact -->
+				<div class="row pt-2">
+			    	<div class="col">
+					    <h5 class="pt-2">Financial Impact</h5>
+					    <input type="dynamic-dropdown" asp-for="DpDataInitiative.FinancialImpact" search-area="financial-impact" method="fullList" />
+
+					</div>
+					<div class="col">
+					    <h5 class="pt-2">Strategic Importance</h5>
+					    <input type="dynamic-dropdown" asp-for="DpDataInitiative.StrategicImportance" search-area="strategic-importance" method="fullList" />
+					</div>
+				</div>
+
+				<!-- linked projects -->
+				<h5 class="pt-2">Linked Data Projects</h5>
+
+				<select type="dynamic-dropdown" asp-for="LinkedDataProjects" value="" visible-value="" search-area="ProjectSearch" ></select>
+
+	        </form>
+	    </div>
+	</div>
+</div>
+

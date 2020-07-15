@@ -1,0 +1,161 @@
+.ss-wrapper {
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  z-index: 1;
+  float: left;
+}
+
+.ss-content {
+  height: calc(100% + 18px);
+  width: calc(100% + 18px);
+  padding: 0 0 0 0;
+  position: relative;
+  overflow-x: scroll;
+  overflow-y: scroll;
+  box-sizing: border-box;
+}
+
+.ss-scroll {
+  position: absolute;
+  padding-right:2px;
+  top: 0;
+  right:0;
+  z-index: 2;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.25s linear 500ms;
+  padding-top:2px;
+  padding-bottom:2px;
+}
+
+.ss-hscroll {
+  position: absolute;
+  padding-bottom:2px;
+  padding-left:2px;
+  padding-right:2px;
+  left:0;
+  bottom:0;
+  z-index: 2;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.25s linear 500ms;
+}
+
+.ss-liner {
+  background: rgba(0, 0, 0, 0.4);
+  transition: background 0.25s linear;
+  border-radius: 4px;
+  height:100%;
+  width:100%;
+}
+.ss-scroll .ss-liner {
+  width:8px;
+  transition: width 0.15s linear;
+}
+
+.ss-hscroll .ss-liner {
+    height:8px;
+    transition: height 0.15s linear;
+}
+.ss-hscroll:hover .ss-liner,
+.ss-scroll:hover .ss-liner,
+.ss-grabbed .ss-liner {
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 6px;
+}
+
+.ss-scroll:hover .ss-liner,
+.ss-scroll.ss-grabbed .ss-liner {
+  width:12px;
+}
+
+.ss-hscroll:hover .ss-liner,
+.ss-hscroll.ss-grabbed .ss-liner
+ {
+    height:12px;
+}
+
+.ss-container.light .ss-liner {
+  background: rgba(255,255,255, 0.4);
+}
+
+
+.ss-container.light .ss-scroll:hover .ss-liner,
+.ss-container.light .ss-hscroll:hover .ss-liner,
+.ss-container.light .ss-grabbed .ss-liner {
+  background: rgba(255,255,255, 0.8);
+}
+
+.ss-hidden {
+  display: none;
+}
+
+.ss-container:hover > .ss-wrapper > .ss-scroll,
+.ss-container:active > .ss-wrapper > .ss-scroll,
+.ss-container:hover > .ss-wrapper > .ss-hscroll,
+.ss-container:active > .ss-wrapper > .ss-hscroll,
+.ss-container.ss-grabbed > .ss-wrapper > .ss-scroll,
+.ss-container.ss-grabbed > .ss-wrapper > .ss-hscroll
+{
+  opacity: 1;
+  transition: opacity 0.25s linear 0s;
+}
+
+.ss-grabbed {
+  -o-user-select: none;
+  -ms-user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+
+/*********** scroll preview **************/
+
+.sp-wrapper {
+  position: absolute;
+  top:0;
+  right:0;
+  height:100%;
+  width:0px;
+  opacity:0;
+ -moz-user-select: none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  transition: opacity 0.25s linear 500ms;
+
+}
+
+.sp-container:hover .sp-wrapper,
+.sp-wrapper > .sp-grabbed,
+.ss-grabbed ~ .sp-wrapper {
+  opacity: 1;
+  transition: opacity 0.25s linear 0s;
+}
+
+.sp-content {
+  transform-origin: 0px 0px;
+}
+
+.sp-scroll {
+  position: absolute;
+  width:100%;
+  background-image: linear-gradient(to left, rgba(255,255,255,0), rgba(255,255,255,.2));
+  opacity: 0;
+  left:-2px;
+  transition: opacity 0.25s linear 500ms;
+  border-left: 2px solid rgb(231,219,116);
+}
+
+.ss-scroll.ss-grabbed ~ .sp-wrapper .sp-scroll,
+.ss-scroll:hover ~ .sp-wrapper .sp-scroll,
+.sp-wrapper:hover .sp-scroll,
+.sp-wrapper.sp-hover .sp-scroll,
+.sp-wrapper .sp-scroll.sp-grabbed {
+  opacity: 1;
+  transition: opacity 0.25s linear 0s;
+}

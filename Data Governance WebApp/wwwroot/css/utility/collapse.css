@@ -1,0 +1,13 @@
+[data-toggle="clps"] {
+	cursor: pointer;
+}
+
+.clps {
+	transition: max-height 0.3s ease-in-out;
+	max-height: 0;
+	overflow: hidden !important;
+}
+
+.clps.clps-o {
+	max-height: 100vh;
+}

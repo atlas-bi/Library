@@ -1,0 +1,121 @@
+.projectDetails {
+    display: -ms-grid;
+    display: grid;
+    -ms-grid-columns: -webkit-max-content 1fr;
+    -ms-grid-columns: max-content 1fr;
+    grid-template-columns: -webkit-max-content 1fr;
+    grid-template-columns: max-content 1fr;
+}
+
+.projectDetails>* {
+    margin-bottom: 2px;
+    display: block;
+}
+
+.projectDetails>*:nth-child(odd) {
+    -ms-grid-column: 1;
+}
+
+.projectDetails>*:nth-child(even) {
+    -ms-grid-column: 2;
+}
+
+.projectDetails>*:nth-child(1),
+.projectDetails>*:nth-child(2) {
+    -ms-grid-row: 1;
+}
+
+.projectDetails>*:nth-child(3),
+.projectDetails>*:nth-child(4) {
+    -ms-grid-row: 2;
+}
+
+.projectDetails>*:nth-child(5),
+.projectDetails>*:nth-child(6) {
+    -ms-grid-row: 3;
+}
+
+.projectDetails>*:nth-child(7),
+.projectDetails>*:nth-child(8) {
+    -ms-grid-row: 4;
+}
+
+.projectDetails>*:nth-child(9),
+.projectDetails>*:nth-child(10) {
+    -ms-grid-row: 5;
+}
+
+.projectDetails>*:nth-child(11),
+.projectDetails>*:nth-child(12) {
+    -ms-grid-row: 6;
+}
+
+.projectDetails>*:nth-child(13),
+.projectDetails>*:nth-child(14) {
+    -ms-grid-row: 7;
+}
+
+.projectDetails>*:nth-child(15),
+.projectDetails>*:nth-child(16) {
+    -ms-grid-row: 8;
+}
+
+.projectDetails>*:nth-child(17),
+.projectDetails>*:nth-child(18) {
+    -ms-grid-row: 9;
+}
+
+.projectDetails>*:nth-child(19),
+.projectDetails>*:nth-child(20) {
+    -ms-grid-row: 10;
+}
+
+.projectDetails>*:nth-child(21),
+.projectDetails>*:nth-child(22) {
+    -ms-grid-row: 11;
+}
+
+.projectDetails>*:nth-child(23),
+.projectDetails>*:nth-child(24) {
+    -ms-grid-row: 12;
+}
+
+.projectDetails>*:nth-child(25),
+.projectDetails>*:nth-child(26) {
+    -ms-grid-row: 13;
+}
+
+.projectDetails>*:nth-child(27),
+.projectDetails>*:nth-child(28) {
+    -ms-grid-row: 14;
+}
+
+.projectDetails>*:nth-child(29),
+.projectDetails>*:nth-child(30) {
+    -ms-grid-row: 15;
+}
+
+.projectDetails>*:nth-child(31),
+.projectDetails>*:nth-child(32) {
+    -ms-grid-row: 16;
+}
+
+.projectDetails>*:nth-child(33),
+.projectDetails>*:nth-child(34) {
+    -ms-grid-row: 17;
+}
+
+.projectDetails>*:nth-child(35),
+.projectDetails>*:nth-child(36) {
+    -ms-grid-row: 18;
+}
+
+.projectDetails>* {
+    margin-bottom: 2px;
+}
+
+.projectDetails-title {
+    font-weight: 700;
+    margin-right: 20px;
+    text-align: right;
+}

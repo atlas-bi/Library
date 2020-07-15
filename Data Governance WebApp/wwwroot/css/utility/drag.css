@@ -1,0 +1,16 @@
+/* drag and drop */
+.drg-hdl {
+	cursor: move;
+}
+
+.drag {
+	position: fixed !important;
+	z-index: 999999 !important;
+	opacity: 0.9;
+	background: inherit;
+}
+
+.drag-source {
+	opacity: 0.4;
+	/*border: 1px solid black;*/
+}

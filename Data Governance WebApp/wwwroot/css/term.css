@@ -1,0 +1,121 @@
+.termDetails {
+    display: -ms-grid;
+    display: grid;
+    -ms-grid-columns: -webkit-max-content 1fr;
+    -ms-grid-columns: max-content 1fr;
+    grid-template-columns: -webkit-max-content 1fr;
+    grid-template-columns: max-content 1fr;
+}
+
+.termDetails>* {
+    margin-bottom: 2px;
+    display: block;
+}
+
+.termDetails>*:nth-child(odd) {
+    -ms-grid-column: 1;
+}
+
+.termDetails>*:nth-child(even) {
+    -ms-grid-column: 2;
+}
+
+.termDetails>*:nth-child(1),
+.termDetails>*:nth-child(2) {
+    -ms-grid-row: 1;
+}
+
+.termDetails>*:nth-child(3),
+.termDetails>*:nth-child(4) {
+    -ms-grid-row: 2;
+}
+
+.termDetails>*:nth-child(5),
+.termDetails>*:nth-child(6) {
+    -ms-grid-row: 3;
+}
+
+.termDetails>*:nth-child(7),
+.termDetails>*:nth-child(8) {
+    -ms-grid-row: 4;
+}
+
+.termDetails>*:nth-child(9),
+.termDetails>*:nth-child(10) {
+    -ms-grid-row: 5;
+}
+
+.termDetails>*:nth-child(11),
+.termDetails>*:nth-child(12) {
+    -ms-grid-row: 6;
+}
+
+.termDetails>*:nth-child(13),
+.termDetails>*:nth-child(14) {
+    -ms-grid-row: 7;
+}
+
+.termDetails>*:nth-child(15),
+.termDetails>*:nth-child(16) {
+    -ms-grid-row: 8;
+}
+
+.termDetails>*:nth-child(17),
+.termDetails>*:nth-child(18) {
+    -ms-grid-row: 9;
+}
+
+.termDetails>*:nth-child(19),
+.termDetails>*:nth-child(20) {
+    -ms-grid-row: 10;
+}
+
+.termDetails>*:nth-child(21),
+.termDetails>*:nth-child(22) {
+    -ms-grid-row: 11;
+}
+
+.termDetails>*:nth-child(23),
+.termDetails>*:nth-child(24) {
+    -ms-grid-row: 12;
+}
+
+.termDetails>*:nth-child(25),
+.termDetails>*:nth-child(26) {
+    -ms-grid-row: 13;
+}
+
+.termDetails>*:nth-child(27),
+.termDetails>*:nth-child(28) {
+    -ms-grid-row: 14;
+}
+
+.termDetails>*:nth-child(29),
+.termDetails>*:nth-child(30) {
+    -ms-grid-row: 15;
+}
+
+.termDetails>*:nth-child(31),
+.termDetails>*:nth-child(32) {
+    -ms-grid-row: 16;
+}
+
+.termDetails>*:nth-child(33),
+.termDetails>*:nth-child(34) {
+    -ms-grid-row: 17;
+}
+
+.termDetails>*:nth-child(35),
+.termDetails>*:nth-child(36) {
+    -ms-grid-row: 18;
+}
+
+.termDetails>* {
+    margin-bottom: 2px;
+}
+
+.termDetails-title {
+    font-weight: 700;
+    margin-right: 20px;
+    text-align: right;
+}

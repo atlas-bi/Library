@@ -1,0 +1,103 @@
+@*
+    Atlas of Information Management business intelligence library and documentation database.
+    Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*@
+
+@model Data_Governance_WebApp.Pages.Reports.IndexModel
+<form class="editor-form" asp-page-handler="NewDocumentation" method="post" id="report-edit-details-form">
+    <div class="editor-sectionTitle">
+        <h2 class="">Details</h2>
+        <button type="submit" class="editor-sectionSave atlas-blue"><i class="fas fa-save fa-lg"></i></button>
+    </div>
+    <input type="hidden" asp-for="ReportObject.ReportObjectId" value="@Model.Report.Id" />
+    <div class="editor-inputGrp">
+        <label>Operational Owner</label>
+        <input type="dynamic-dropdown" asp-for="ReportObjectDoc.OperationalOwnerUserId" value="@Model.Report.OpsOwnerId" visible-value="@Model.Report.OpsOwner" search-area="UserSearch" />
+        <label>Requester</label>
+        <input type="dynamic-dropdown" asp-for="ReportObjectDoc.Requester" value="@Model.Report.RequesterId" visible-value="@Model.Report.Requester" search-area="UserSearch" />
+        <label>GitLab Project Link</label>
+        <input asp-for="ReportObjectDoc.GitLabProjectUrl" class="form-control" value="@Model.Report.GitUrl" />
+        <label>Organizational Value</label>
+        <input type="dynamic-dropdown" asp-for="ReportObjectDoc.OrganizationalValueId" value="@Model.Report.ValueId" visible-value="@Model.Report.Value" search-area="org-value" method="fullList" />
+        <label>Estimated Run Frequency</label>
+        <input type="dynamic-dropdown" asp-for="ReportObjectDoc.EstimatedRunFrequencyId" value="@Model.Report.RunFreqId" visible-value="@Model.Report.RunFreq" search-area="run-freq" method="fullList" />
+        <label>Fragility</label>
+        <input type="dynamic-dropdown" asp-for="ReportObjectDoc.FragilityId" value="@Model.Report.FragilityId" visible-value="@Model.Report.Fragility" search-area="fragility" method="fullList" />
+        <label>Maintenance Schedule</label>
+        <input type="dynamic-dropdown" asp-for="ReportObjectDoc.MaintenanceScheduleId" value="@Model.Report.MaintSchedId" visible-value="@Model.Report.MaintSched" search-area="maint-sched" method="fullList" />
+        <label>Fragility Tags</label>
+        <select type="dynamic-dropdown" asp-for="@Model.SelectedFragilityTagIds" search-area="ro-fragility" method="fullList">
+            @foreach (var tag in @Model.ReportFragilityTags)
+            {
+            <option selected="selected" value="@tag.Id">@tag.Name</option>
+            }
+        </select>
+        <label>Executive Visibility?</label>
+        <label class='checkbox-container'  >
+            <input type="checkbox" id="ExecutiveVisibilityYn" />
+            <span class="checkmark"></span>
+        </label>
+       @Model.Report.ExecVisibitliy</textarea>
+        @if(Model.Report.Type == "SSRS Report")
+        {
+        <label>Enabled for Hyperspace?</label>
+        <label class='checkbox-container'  >
+            <input type="checkbox" id="EnabledForHyperspace" />
+            <span class="checkmark"></span>
+        </label>
+        
+        }
+        @if (Model.Permissions.Contains(35))
+        {
+        <label>Do not purge report?</label>
+        <label class='checkbox-container'  >
+            <input type="checkbox" id="DoNotPurge" />
+            <span class="checkmark"></span>
+        </label>
+        }
+        @if (Model.Permissions.Contains(43))
+        {
+        <label>Hide Report?</label>
+        <label class='checkbox-container'  >
+            <input type="checkbox" id="Hidden" />
+            <span class="checkmark"></span>
+        </label>
+        
+        }
+        <input type="hidden" class="HiddenReportHiddenTextArea" asp-for="ReportObjectDoc.Hidden" value="@Model.Report.Hidden">
+        <input type="hidden" class="EnabledForHyperspaceHiddenTextArea" asp-for="ReportObjectDoc.EnabledForHyperspace" value="@Model.Report.Hyperspace">
+        <textarea rows=2 class="form-control DoNotPurgeHiddenTextArea" id="ReportObjectDoc_DoNotPurge" name="ReportObjectDoc.DoNotPurge" style="display:none;">@Model.Report.DoNotPurge</textarea>
+        <textarea rows=2 class="form-control ExecutiveVisibilityYnHiddenTextArea" id="ReportObjectDoc_ExecutiveVisibilityYn" name="ReportObjectDoc.ExecutiveVisibilityYn" style="display:none;">
+    </div>
+</form>
+<div class="editor-sectionTitle">
+    <h2 class="">Manage Engine Tickets</h2>
+    <button type="submit" class="editor-sectionSave atlas-blue"  form="report-edit-new-meticket"><i class="fas fa-save fa-lg"></i></button>
+</div>
+<div id="report-editor-metickets-container">
+    <partial name="Editor/_MeTickets" />
+</div>
+<form class="editor-form" asp-page-handler="AddMeTicket" id="report-edit-new-meticket" method="post">
+    <div class="editor-inputGrp">
+        <label>Number</label>
+        <input asp-for="ManageEngineTicket.TicketNumber" class="form-control" />
+        <label>Url</label>
+        <textarea rows="1" asp-for="ManageEngineTicket.TicketUrl" class="form-control"></textarea>
+        <label>Description</label>
+        <textarea rows="1" asp-for="ManageEngineTicket.Description" class="form-control"></textarea>
+        <input asp-for="ManageEngineTicket.ReportObjectId" type="hidden" value="@Model.Report.Id" />
+    </div>
+</form>

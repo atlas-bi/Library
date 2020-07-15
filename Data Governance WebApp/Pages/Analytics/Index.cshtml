@@ -1,0 +1,148 @@
+﻿@*
+    Atlas of Information Management business intelligence library and documentation database.
+    Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*@
+
+@page
+@model Data_Governance_WebApp.Pages.Analytics.IndexModel
+@{
+    Layout = HttpContext.Request.Headers["x-requested-with"] == "XMLHttpRequest" ? "../Shared/_AjaxLayout.cshtml" : "../Shared/_Layout.cshtml";
+}
+@{
+ViewData["Title"] = "Analytics";
+
+}
+<div class="pageTitle">
+
+    <div id="active-users"></div>
+    <script>(function () {
+        if(document.readyState === 'complete') {
+    load()
+        }
+
+        window.addEventListener('load',function(){
+ load()
+  })
+        function load(){
+             var e = document,
+      t = null;
+
+  function getActiveUsers() {
+    if (t !== null) {
+      t.abort();
+    }
+
+    t = new XMLHttpRequest();
+    t.open("get", "/analytics?handler=LiveUsers", !0), t.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8"), t.send(), t.onload = function () {
+        if (e.getElementById("active-users")) {
+      e.getElementById("active-users").innerHTML = t.responseText, e.dispatchEvent(new CustomEvent("ajax"));
+  }
+    };
+  }
+
+  getActiveUsers(), setInterval(function () {
+    if (e.getElementById("active-users")) {
+      getActiveUsers();
+    }
+  }, 1e4);
+        }
+})();</script>
+
+    <h2 class="pageTitle-head">Last 7 Days - Top Ten</h2>
+    <h3>Most Active Users</h3>
+    <div class="atlas-chart" style="width:100%">
+        <div class="ajaxLoader"><img class="ajaxLoader-img" src="/img/loader.gif" /></div>
+        <script type="application/json">
+            @{
+                var TopTen = Model.TopUsers.Take(10);
+                var last = TopTen.Last();
+            }
+            {
+                "axis": {
+                    "0": {"title":"seconds"},
+                    "1": {"title":"visits"}
+                },
+                "type": "bar",
+                "height":"400",
+                "title": "Top Users",
+                "data": [{
+                    "title" : "Load Time (s)",
+                    "axis":"0",
+                    "type": "line",
+                    "units": "(s)",
+                    "data": [
+                            @foreach (var g in TopTen)
+                            { 
+                                <text>{ "title": "@g.Name", "data": "@g.Time"}</text> @if(g != last){<text>,</text>}
+                            }
+                        ]
+                   },{
+                    "title" : "Visits",
+                    "type": "bar",
+                    "axis": "1",
+                    "data": [
+                            @foreach (var g in TopTen)
+                            { 
+                                <text>{ "title": "@g.Name", "data": "@g.Count"}</text> @if(g != last){<text>,</text>}
+                            }
+                        ]
+                   }]
+                }
+        </script>
+    </div>
+    <h3>Most Popular Pages</h3>
+
+    <div class="atlas-chart" style="width:100%">
+        <div class="ajaxLoader"><img class="ajaxLoader-img" src="/img/loader.gif" /></div>
+        <script type="application/json">
+            @{
+                var TopTenTwo = Model.TopPages.Take(10);
+                var lastTwo = TopTenTwo.Last();
+            }
+            {
+                "axis": {
+                    "0": {"title":"seconds"},
+                    "1": {"title":"visits"}
+                },
+                "type": "bar",
+                "height":"400",
+                "title": "Top Pages",
+                "data": [{
+                    "title" : "Load Time (s)",
+                    "axis":"0",
+                    "type": "line",
+                    "units": "(s)",
+                    "data": [
+                            @foreach (var g in TopTenTwo)
+                            { 
+                                <text>{ "title": "@g.Name", "data": "@g.Time"}</text> @if(g != lastTwo){<text>,</text>}
+                            }
+                        ]
+                   },{
+                    "title" : "Visits",
+                    "type": "bar",
+                    "axis": "1",
+                    "data": [
+                            @foreach (var g in TopTenTwo)
+                            { 
+                                <text>{ "title": "@g.Name", "data": "@g.Count"}</text> @if(g != lastTwo){<text>,</text>}
+                            }
+                        ]
+                   }]
+                }
+        </script>
+    </div>
+</div>

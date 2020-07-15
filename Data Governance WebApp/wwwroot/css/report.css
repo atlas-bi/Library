@@ -1,0 +1,138 @@
+.reportDetails {
+    display: -ms-grid;
+    display: grid;
+    -ms-grid-columns: -webkit-max-content 1fr;
+    -ms-grid-columns: max-content 1fr;
+    grid-template-columns: -webkit-max-content 1fr;
+    grid-template-columns: max-content 1fr;
+}
+
+.reportDetails>* {
+    margin-bottom: 2px;
+    display: block;
+}
+
+.reportDetails>*:nth-child(odd) {
+    -ms-grid-column: 1;
+}
+
+.reportDetails>*:nth-child(even) {
+    -ms-grid-column: 2;
+}
+
+.reportDetails>*:nth-child(1),
+.reportDetails>*:nth-child(2) {
+    -ms-grid-row: 1;
+}
+
+.reportDetails>*:nth-child(3),
+.reportDetails>*:nth-child(4) {
+    -ms-grid-row: 2;
+}
+
+.reportDetails>*:nth-child(5),
+.reportDetails>*:nth-child(6) {
+    -ms-grid-row: 3;
+}
+
+.reportDetails>*:nth-child(7),
+.reportDetails>*:nth-child(8) {
+    -ms-grid-row: 4;
+}
+
+.reportDetails>*:nth-child(9),
+.reportDetails>*:nth-child(10) {
+    -ms-grid-row: 5;
+}
+
+.reportDetails>*:nth-child(11),
+.reportDetails>*:nth-child(12) {
+    -ms-grid-row: 6;
+}
+
+.reportDetails>*:nth-child(13),
+.reportDetails>*:nth-child(14) {
+    -ms-grid-row: 7;
+}
+
+.reportDetails>*:nth-child(15),
+.reportDetails>*:nth-child(16) {
+    -ms-grid-row: 8;
+}
+
+.reportDetails>*:nth-child(17),
+.reportDetails>*:nth-child(18) {
+    -ms-grid-row: 9;
+}
+
+.reportDetails>*:nth-child(19),
+.reportDetails>*:nth-child(20) {
+    -ms-grid-row: 10;
+}
+
+.reportDetails>*:nth-child(21),
+.reportDetails>*:nth-child(22) {
+    -ms-grid-row: 11;
+}
+
+.reportDetails>*:nth-child(23),
+.reportDetails>*:nth-child(24) {
+    -ms-grid-row: 12;
+}
+
+.reportDetails>*:nth-child(25),
+.reportDetails>*:nth-child(26) {
+    -ms-grid-row: 13;
+}
+
+.reportDetails>*:nth-child(27),
+.reportDetails>*:nth-child(28) {
+    -ms-grid-row: 14;
+}
+
+.reportDetails>*:nth-child(29),
+.reportDetails>*:nth-child(30) {
+    -ms-grid-row: 15;
+}
+
+.reportDetails>*:nth-child(31),
+.reportDetails>*:nth-child(32) {
+    -ms-grid-row: 16;
+}
+
+.reportDetails>*:nth-child(33),
+.reportDetails>*:nth-child(34) {
+    -ms-grid-row: 17;
+}
+
+.reportDetails>*:nth-child(35),
+.reportDetails>*:nth-child(36) {
+    -ms-grid-row: 18;
+}
+
+.reportDetails-title {
+    font-weight: 700;
+    margin-right: 20px;
+    text-align: right;
+}
+
+.query-box {
+    height: 500px;
+    overflow: hidden;
+    border-radius: 6px;
+}
+
+.query-box .query-box-inner {
+    height: 100%;
+}
+
+.query-box pre {
+    display: inline-block;
+    margin-bottom: -6px;
+    min-width: 100%;
+}
+
+.query-box .hljs {
+    padding-bottom: 1rem;
+    padding-right: 130px;
+}

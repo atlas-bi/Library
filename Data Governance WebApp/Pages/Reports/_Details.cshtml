@@ -1,0 +1,148 @@
+﻿@*
+    Atlas of Information Management business intelligence library and documentation database.
+    Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*@
+
+@model Data_Governance_WebApp.Pages.Reports.IndexModel
+@{
+    var m = Model ?? ViewBag;
+}
+
+<h2 class="pageSection-title">Details</h2>
+<div class="reportDetails">
+    <span class="reportDetails-title">Report Last Modified</span>
+    <span>@m.Report.LastModifiedDate @if (m.Report.LastUpdatedBy != null)
+    {<span class="text-muted">&middot; <a class="atlas-blue ajax" href="users?id=@m.Report.LastUpdatedById">@m.Report.LastUpdatedBy</a></span>}</span>
+
+
+    @if (@m.Report.DocLastUpdated != null)
+    {
+        <span class="reportDetails-title">Documenation Last Modified</span>
+
+        <span>@m.Report.DocLastUpdated @if (m.Report.DocLastUpdatedBy != null)
+        {<span class="text-muted">&middot; <a class="atlas-blue ajax" href="users?id=@m.Report.DocLastUpdatedById">@m.Report.DocLastUpdatedBy</a></span>}</span>
+    }
+
+    @if (m.Report.Author != null)
+    {
+        <span class="reportDetails-title">Report Author</span>
+        <a class="atlas-blue ajax" href="users?id=@m.Report.AuthorId">@m.Report.Author</a>
+    }
+
+
+    @if (m.Report.Requester != null)
+    {
+        <span class="reportDetails-title">Report Requester</span>
+        <a class="atlas-blue ajax" href="users?id=@m.Report.RequesterId">@m.Report.Requester</a>
+    }
+    @if (m.Report.OpsOwner != null)
+    {
+        <span class="reportDetails-title">Operational Owner</span>
+        <a class="atlas-blue ajax" href="users?id=@m.Report.OpsOwnerId">@m.Report.OpsOwner</a>
+    }
+
+    @if (m.Report.GitUrl != null)
+    {
+        <span class="reportDetails-title">Git Project Link</span>
+        <a target="_blank"  rel="noopener" class="atlas-blue" href="@m.Report.GitUrl">View Source</a>
+    }
+
+    @if (m.Report.EpicMasterFile != null)
+    {
+        <span class="reportDetails-title">Epic Identifier</span>
+        @if (m.Report.RecordViewerUrl != null)
+        {
+            @:<a href="@m.Report.RecordViewerUrl" class="atlas-blue">
+            }
+        <span><span id="epic-ini">@m.Report.EpicMasterFile</span>@if (m.Report.EpicId != null)
+        {<text> </text><span id="epic-id" data-epic-hgr="@m.Report.EpicTemplateId">@m.Report.EpicId</span>}</span>
+        @if (m.Report.RecordViewerUrl != null)
+        {
+        @:</a>
+        }
+    }
+        <span class="reportDetails-title">Atlas Id</span>
+        <span>@m.Report.Id</span>
+    @if (m.Report.Orphaned == "Y")
+    {
+        <span class="reportDetails-title">Orphaned?</span>
+        <span>@m.Report.Orphaned</span>
+    }
+
+    @if (m.Report.ExecVisibitliy == "Y")
+    {
+        <span class="reportDetails-title">Executive Visiblity</span>
+        <span>Yes</span>
+    }
+
+    @if (m.Report.Type == "SSRS Report" && m.Report.Hyperspace != null)
+    {
+        <span class="reportDetails-title">Enabled for Hyperspace</span>
+        <span>@if (m.Report.Hyperspace == "Y") {<text>Yes</text>} else {<text>No</text>}</span>
+    }
+
+    @if (m.Permissions.Contains(35) && m.Report.DoNotPurge == "Y")
+    {
+        <span class="reportDetails-title">Do Not Purge</span>
+        <span>Yes</span>
+    }
+
+    @if (m.Permissions.Contains(43) && m.Report.Hidden == "Y")
+    {
+       <span class="reportDetails-title">Hidden?</span>
+       <span>Yes</span>
+    }
+
+
+    @if (m.Report.RunFreq != null)
+    {
+        <span class="reportDetails-title">Estimated Run Frequency</span>
+        <span>@m.Report.RunFreq</span>
+    }
+
+    @if (m.Report.Fragility != null)
+    {
+        <span class="reportDetails-title">Fragility Rating</span>
+        <span>@m.Report.Fragility</span>
+    }
+
+    @if (m.Report.MaintSched != null)
+    {
+        <span class="reportDetails-title">Maintenance Schedule</span>
+        <span>@m.Report.MaintSched</span>
+    }
+
+    @if (m.Report.Value != null)
+    {
+        <span class="reportDetails-title">Organizational Value Rating</span>
+        <span>@m.Report.Value</span>
+    }
+
+    @if (m.ReportFragilityTags.Count > 0)
+    {
+        <span class="reportDetails-title">Fragility Tags</span>
+        <span>
+        @foreach (var tag in m.ReportFragilityTags)
+        {
+            <span class="badge badge-primary">@tag.Name</span>
+        }
+    </span>
+    }
+
+</div>
+<section id="report-meticket-container">
+    <partial name="Partials/_MeTickets" />
+</section>

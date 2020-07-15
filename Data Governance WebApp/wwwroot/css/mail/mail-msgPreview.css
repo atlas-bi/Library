@@ -1,0 +1,128 @@
+
+
+.mlbx-msgs {
+	background-color: rgb(255, 255, 255);
+	border-right: 1px solid rgb(210, 210, 210);
+	height: 100%;
+	overflow: hidden;
+	flex: 0 0 25%;
+	max-width:25%;
+	user-select: none;
+}
+
+
+.mlbx-msgsMsgSndr {
+	font-size: 14px;
+	font-weight: 700;
+	letter-spacing: .4px;
+	line-height: 15px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+
+.mlbx-msgsMsgSbj {
+	font-size: 14px;
+	font-weight: 600;
+	letter-spacing: .4px;
+	white-space: nowrap;	
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.mlbx-msgsMsgMsg {
+	font-size: 14px;
+	font-weight: 600;
+	letter-spacing: .4px;
+	color: rgb(128, 128, 128);
+	line-height: 14px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.mlbx-msgsSort {
+	background-color: rgb(245, 245, 245);
+	padding-top:2px;
+	height: 22px;
+	font-weight: 700;
+	letter-spacing: .3px;
+}
+
+.mlbx-msgsScroll {
+	height: calc(100% - 23px);
+	scroll-behavior: smooth;
+}
+
+.mlbx-msgsMsg {
+	padding-left: 15px;
+	padding-right: 15px;
+	padding-top: 6px;
+	padding-bottom: 6px;
+	transition: all .1s;
+	position: relative;
+	cursor: default;
+	background-color: rgb(255, 255, 255);
+}
+
+.mlbx-msgsMsgSndr .float-right {
+	font-weight: 600;
+	font-size: 12px;
+	color: rgb(150, 150, 150)
+}
+
+.mlbx-msgsMsgSbj {
+	font-size: 14px;
+	font-weight: 600;
+	letter-spacing: .4px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.mlbx-msgsMsgMsg {
+	font-size: 14px;
+	font-weight: 600;
+	letter-spacing: .4px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+
+.mlbx-msgsMsg.active {
+	background-color: rgb(0, 88, 221);
+}
+
+.mlbx-msgsMsg.active .mlbx-msgsMsgSndr {
+	color: rgb(255, 255, 255);
+	font-weight: 600;
+	letter-spacing: .8px;
+}
+
+.mlbx-msgsMsg.active .mlbx-msgsMsgSndr .float-right {
+	font-weight: 400;
+	letter-spacing: .8px;
+	color: rgb(255, 255, 255);
+}
+
+.mlbx-msgsMsg.active .mlbx-msgsMsgSbj {
+	color: rgb(255, 255, 255);
+	font-weight: 600;
+}
+
+.mlbx-msgsMsg.active .mlbx-msgsMsgMsg {
+	color: rgb(128, 171, 238);
+}
+
+.mlbx-msgsMsg.unread::before {
+	content: '';
+	position: absolute;
+	border-radius: 4px;
+	height: 8px;
+	width: 8px;
+	background-color: rgb(0, 88, 221);
+	left: 3px;
+	top: 9px;
+}

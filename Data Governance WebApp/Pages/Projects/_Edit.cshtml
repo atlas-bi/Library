@@ -1,0 +1,49 @@
+@*
+    Atlas of Information Management business intelligence library and documentation database.
+    Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*@
+
+@model Data_Governance_WebApp.Pages.Projects.IndexModel
+<div class="mdl" id="editModal" tabindex="-1">
+    <div class="mdl-d mdl-wide">
+        <div class="mdl-c py-3 bg-light">
+            <div class="tab">
+                <a class="tab-lnk active" href="detailstab">Details</a>
+                <a class="tab-lnk" href="linkstab">Linked Content</a>
+                <a class="tab-lnk" href="attachmentstab">Attachments</a>
+                <a class="tab-lnk" href="agreetab">Agreements</a>
+                <a class="tab-lnk" href="milestab">Milestones</a>
+            </div>
+            <div class="tab-cnt">
+                <div class="tab-dta active my-4" id="detailstab">
+                    <partial name="Edit/_Details.cshtml"></partial>
+                </div>
+                <div class="tab-dta my-4" id="linkstab">
+                    <partial name="Edit/_Links.cshtml"></partial>
+                </div>
+                <div class="tab-dta my-4" id="attachmentstab">
+                    <partial name="Edit/_Attachments.cshtml"></partial>
+                </div>
+                <div class="tab-dta my-4" id="agreetab">
+                    <partial name="Edit/_Agreements.cshtml"></partial>
+                </div>
+                <div class="tab-dta my-4" id="milestab">
+                    <partial name="Edit/_Milestones.cshtml"></partial>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,204 @@
+﻿@*
+    Atlas of Information Management business intelligence library and documentation database.
+    Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*@
+
+@page
+@model Data_Governance_WebApp.Pages.Reports.IndexModel
+
+@{
+    Layout = HttpContext.Request.Headers["x-requested-with"] == "XMLHttpRequest" ? "../Shared/_AjaxLayout.cshtml" : "../Shared/_Layout.cshtml";
+
+    ViewData["Title"] = "Report Details";
+    ViewData["Heading"] = "Report";
+
+    var imgs = ViewBag.ReportImages.Count > 0;
+    var parents = Model.ReportParents.Count() > 0;
+    var children = Model.ReportChildren.Count() > 0;
+    var query = Model.ReportQuery.Count() > 0;
+    var terms = Model.ReportTerms.Count() > 0;
+    var maintlog = Model.ReportMaintLogs.Count() > 0;
+}
+
+<div class="pageTitle">
+    <h2 class="pageTitle-head"><span>@Model.Report.Name.Replace("_"," ")</span> @if (Model.Permissions.Contains(12))
+                        {<button id="open-editor" class="btn btn-link pl-2 m-0 p-0 mb-1 atlas-blue editor-buttonHidden" type="button" data-toggle="mdl" data-target="editModal"><span class="far fa-edit fa-lg" style="pointer-events: none"></span></button><button class="btn btn-link pl-2 m-0 p-0 mb-1 atlas-blue profile-buttonHidden" data-toggle="mdl" data-target="profile-modal"><i class="far fa-chart-bar fa-lg"></i></button>}</h2>
+    <div class="control-box">
+        <ul class=control-list>
+
+            <li class="control-item" @if(Model.Report.RunReportUrl != null) {<text>data-tooltip="Run Report"</text>} else {<text>data-tooltip="Login to Hyperspace to run report."</text>}>
+                @if (Model.Report.RunReportUrl != null)
+                {
+                <a class="btn btn-link p-0 atlas-green" target="_blank" href="@Model.Report.RunReportUrl"><i class="fas fa-play"></i></a>
+                } else {
+                <i class="fas fa-play" style="color:grey;margin-left:3px;"></i>
+            }
+            </li>
+
+            <li class="control-item" data-tooltip="Favorite Report">
+                <i fav-type="report" object-id="@Model.Report.Id" class="favorite far fa-star @Model.Report.Favorite"></i>
+            </li>
+            <li class="control-item" data-tooltip="Request Access">
+                <button class="btn btn-link p-0 atlas-blue" data-toggle="mdl" data-target="requestAccessModal" data-name="@Model.Report.Name" data-name-clean='@Model.Report.Name.Replace("_"," ")'><i class="fas fa-universal-access"></i></button>
+            </li>
+            <li class="control-item" data-tooltip="Share">
+                <button class="btn btn-link p-0 atlas-blue" data-toggle="mdl" data-target="shareModal" data-name='@Model.Report.Name.Replace("_"," ")'><i class="fas fa-share"></i></button>
+            </li>
+            <style>.clps-o .control-list {position: absolute;}</style>
+            <li class="control-item" style="width:20px;position: relative;">
+                <button class="btn btn-link p-0 text-muted" data-toggle="clps" data-target="extra-nav"><i class="fas fa-ellipsis-h"></i></button>
+                <div class="clps" id="extra-nav">
+                    <ul class="control-list p-0" >
+                        <li class="control-item" data-tooltip="Report a Problem">
+                            <button class="btn btn-link p-0 atlas-blue" data-toggle="mdl" data-target="reportProblem" data-name="@Model.Report.Name"><i class="fas fa-exclamation-circle"></i></button>
+                        </li>
+
+                        @if (Model.Permissions.Contains(38) && Model.Report.EditReportUrl != null)
+                        {
+                            <li class="control-item p-0" data-tooltip="Edit Report">
+                                <a class="btn btn-link p-0 atlas-blue" rel="noopener" target="_blank" href="@Model.Report.EditReportUrl"><i class="fas fa-external-link-alt"></i></a>
+                            </li>
+                        }
+                        @if (Model.Permissions.Contains(38) && Model.Report.ManageReportUrl != null)
+                        {
+                            <li class="control-item p-0" data-tooltip="Manage Report">
+                                <a class="btn btn-link p-0 atlas-blue" rel="noopener" target="_blank" href="@Model.Report.ManageReportUrl"><i class="fas fa-cogs"></i></a>
+                            </li>
+                        }
+
+                    </ul>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    <div class="navLinks">
+
+        @if (imgs)
+        {
+            <a href="#images" class="navLinks-link">Images</a>
+        }
+
+        @if (Model.Report.Description != null || Model.Report.DeveloperDescription != null || Model.Report.KeyAssumptions != null || Model.Report.SystemDescription != null)
+        {
+            <a href="#description" class="navLinks-link">Description</a>
+        }
+
+        @if (terms)
+        {
+            <a href="#terms" class="navLinks-link">Terms</a>
+        }
+
+        <a href="#details" class="navLinks-link">Details</a>
+
+        @if (query)
+        {
+            <a href="#query" class="navLinks-link">Query</a>
+        }
+
+        @if (parents || children)
+        {
+            <a href="#relationships" class="navLinks-link">Relationships</a>
+        }
+
+        @if (maintlog)
+        {
+            <a href="#maintenance" class="navLinks-link">Maintenance</a>
+        }
+
+        <a href="#comments" class="navLinks-link">Comments</a>
+    </div>
+</div>
+
+
+
+
+    <section class="pageSection">
+        <span class="location" id="images"></span>
+        <div id="report-image-container">
+            @if (imgs)
+            {
+                <partial name="_Images" />
+            }
+        </div>
+    </section>
+
+    <section class="pageSection">
+        <span class="location" id="description"></span>
+        <div id="report-description-container">
+            @if (Model.Report.Description != null || Model.Report.DeveloperDescription != null || Model.Report.KeyAssumptions != null || Model.Report.SystemDescription != null)
+            {
+                <partial name="_Description" />
+            }
+        </div>
+    </section>
+
+    <section class="pageSection">
+        <span class="location" id="terms"></span>
+        <div id="report-terms-container">
+            @if (terms)
+            {
+                <partial name="_Terms" />
+            }
+        </div>
+    </section>
+
+    <section class="pageSection">
+        <span class="location" id="details"></span>
+        <div id="report-details-container">
+            <partial name="_Details" />
+        </div>
+    </section>
+
+    @if (query)
+    {
+        <section class="pageSection">
+            <span class="location" id="query"></span>
+            <partial name="_Query">
+        </section>
+    }
+
+    @if (parents || children)
+    {
+        <section class="pageSection">
+            <span class="location" id="relationships"></span>
+            <partial name="_Relationships">
+        </section>
+    }
+
+
+    <section class="pageSection">
+        <span class="location" id="maintenance"></span>
+        <div id="report-maintenance-container">
+            @if (maintlog)
+            {
+                <partial name="_Maintenance" />
+            }
+        </div>
+    </section>
+
+    <section class="pageSection">
+        <span class="location" id="comments"></span>
+        <div class="comments" data-ajax="yes" data-url="/reports?Handler=Comments&id=@Model.Report.Id"></div>
+    </section>
+
+
+@if (Model.Permissions.Contains(12))
+{
+    <partial name="_Edit" />
+}
+
+<script async src="/js/profile.min.js" inline></script>

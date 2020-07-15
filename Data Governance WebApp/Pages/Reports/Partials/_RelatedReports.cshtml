@@ -1,0 +1,40 @@
+@*
+    Atlas of Information Management business intelligence library and documentation database.
+    Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*@
+
+@if(ViewBag.RelatedReports.Count > 0){
+<div>
+    <h3>Related Reports</h3>
+    <ul class="home-list">
+        @foreach (var report in ViewBag.RelatedReports)
+        {
+            <li class="home-link">
+                <div>
+                    <i fav-type="report" object-id="@report.Id" class="favorite far fa-star @report.Favorite"></i>
+                     @if (report.ReportUrl != null)
+                    {
+                        <a class="atlas-green pr-1" rel="noopener"  target="_blank" href="@report.ReportUrl"><i class="fas fa-play"></i></a>
+                    }
+                    <a class="ajax" asp-page="../Reports/Index" asp-route-id="@report.Id">@report.Name.Replace('_', ' ')</a>
+                </div>
+            </li>
+        }
+    </ul>
+</div>
+} else {
+    <div></div>
+}

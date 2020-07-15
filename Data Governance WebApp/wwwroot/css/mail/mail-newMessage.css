@@ -1,0 +1,212 @@
+.new_message_template {
+    display: none;
+    height: 0;
+}
+
+.mlbx-newMsg {
+    padding: 25px;
+    height: 100%;
+}
+
+.mlbx-newMsgForm {
+    height: 100%;
+    display: -ms-grid;
+    display: grid;
+    -ms-grid-rows: -webkit-max-content 1fr;
+    -ms-grid-rows: max-content 1fr;
+    grid-template-rows: -webkit-max-content 1fr;
+    grid-template-rows: max-content 1fr;
+    -ms-grid-columns: 100%;
+}
+
+.mlbx-newMsgForm>div:nth-of-type(2) {
+    -ms-grid-row: 2;
+}
+
+.mlbx-newMsgSend {
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    border: 0;
+    outline: none;
+    background-color: transparent;
+    color: rgb(0, 88, 221);
+    cursor: default;
+}
+
+.mlbx-newMsgSubjIpt {
+    margin: 0;
+    padding: 0;
+    outline: none;
+    border: none;
+    box-shadow: none;
+    font-weight: inherit;
+    letter-spacing: inherit;
+    color: inherit;
+    resize: none;
+}
+
+.mlbx-newMsgSender,
+.mlbx-newMsgRecip,
+.mlbx-newMsgSubj {
+    display: -ms-grid;
+    display: grid;
+    -ms-grid-columns: -webkit-max-content minmax(0, 1fr);
+    -ms-grid-columns: max-content minmax(0, 1fr);
+    grid-template-columns: -webkit-max-content minmax(0, 1fr);
+    grid-template-columns: max-content minmax(0, 1fr);
+}
+
+.mlbx-newMsgSender>span,
+.mlbx-newMsgRecip>*,
+.mlbx-newMsgSubj>* {
+    padding-top: 2px;
+    padding-bottom: 2px;
+    margin-bottom: 2px;
+}
+
+.mlbx-newMsgSender>*:nth-child(2),
+.mlbx-newMsgRecip>*:nth-child(2),
+.mlbx-newMsgSubj>*:nth-child(2) {
+    -ms-grid-column: 2;
+}
+
+.mlbx-newMsgSender>span:first-of-type,
+.mlbx-newMsgRecip>span:first-of-type,
+.mlbx-newMsgSubj>span:first-of-type {
+    margin-left: 1px;
+    margin-right: 5px;
+    color: rgb(128, 128, 128);
+}
+
+.mlbx-newMsgSubjIpt:hover,
+.mlbx-newMsgSubjIpt:focus,
+.mlbx-newMsgSubjIpt:active {
+    outline: none;
+}
+
+.mlbx-newMsgSubjIpt::-ms-clear,
+{
+    display: none;
+    height: 0;
+    width: 0;
+}
+
+.mlbx-newMsgMsg {
+    padding: 0;
+    margin: 0;
+    border: none;
+    min-height: 100%;
+    border: none;
+    outline: none;
+    box-shadow: none;
+}
+
+.mlbx-newMsgMsg:active,
+.mlbx-newMsgMsg:hover,
+.mlbx-newMsgMsg:focus {
+    border: none;
+    outline: none;
+    resize: none;
+    box-shadow: none;
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
+}
+
+.mlbx-rdrHead .mailbox-new-message-recipient td:first-of-type {
+    width: 28px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+}
+
+.mlbx-rdrHead .mailbox-new-message-subject td:first-of-type {
+    width: 58px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+}
+
+.mailbox-new-message-subject input,
+.mailbox-new-message-subject input:focus,
+.mailbox-new-message-subject input:active {
+    border: none;
+    outline: none;
+    width: 100%;
+    font-style: inherit;
+    font-weight: inherit;
+    letter-spacing: inherit;
+    margin-bottom: 1px;
+}
+
+.mlbx-newMsgSend:active,
+.mlbx-newMsgSend:focus,
+.mlbx-newMsgSend:hover {
+    outline: none;
+}
+
+.mlbx-newMsgSend:active {
+    color: rgb(128, 171, 238);
+}
+
+.mailbox-sender-user,
+.mailbox-to-user {
+    padding-top: 3px;
+    border-radius: .25rem;
+    padding-left: 5px;
+    padding-right: 2px;
+    padding-bottom: 3px;
+    margin-left: -5px;
+    display: inline;
+    margin-right: 5px;
+    cursor: default;
+}
+
+.mailbox-sender-user:hover,
+.mailbox-to-user:hover {
+    background-color: rgb(178, 211, 255);
+    color: rgb(39, 39, 39) !important;
+}
+
+.message-reply .mailbox-sender-user:hover,
+.message-reply .mailbox-to-user:hover {
+    background-color: inherit;
+    color: inherit;
+}
+
+.mailbox-sender-user:hover .mailbox-user-dropdown,
+.mailbox-to-user:hover .mailbox-user-dropdown {
+    color: inherit;
+}
+
+.mailbox-to-user .comma {
+    display: inline-block;
+    width: 0px;
+}
+
+.mailbox-to-user:hover .comma {
+    opacity: 0;
+}
+
+.mailbox-reader-body .message-reply {
+    pointer-events: none !important;
+}
+
+
+/* email stuff*/
+
+.mail-new-email {
+    font-family: "sf", "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+    font-size: 14px;
+}
+
+.new-mail-email .form-control {
+    font-size: inherit !important;
+}
+
+
+/*
+.mlbx-msgsMsgSndr {
+	font-size: 16px;
+	font-weight: 700;
+	letter-spacing: .4px;
+}
+*/

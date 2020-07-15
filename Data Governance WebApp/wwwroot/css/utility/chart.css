@@ -1,0 +1,258 @@
+.atlas-chart {
+  border-radius: 6px;
+  background: rgba(0, 0, 0, .05);
+  text-align: center;
+  text-align: -webkit-center;
+  padding-top:1px;
+  padding-bottom: 1px;
+  min-height:652px;
+}
+
+.chart {
+  display: block;
+  height: 400px;
+  margin: 100px 0 0;
+  position: relative;
+  margin-bottom: 150px;
+}
+
+.chart-caption {
+  font-size: 20px;
+  letter-spacing: .5px;
+  position: absolute;
+  text-align: left;
+  top: -80px;
+  width: 100%;
+}
+
+.chart-head {
+  bottom: auto;
+  right: 0;
+  top: -46px;
+  display: inline-flex;
+  width: 100%;
+  justify-content: flex-end;
+  position: absolute;
+}
+
+.chart-headClr {
+  width: 15px;
+  height: 15px;
+  margin-right: 15px;
+  margin-left: 20px;
+  display: inline-block;
+  background: rgb(142, 142, 147);
+  border: 2px solid rgba(0, 0, 0, .1);
+}
+
+.chart-head th {
+  transition: filter .3s ease;
+  cursor: default;
+}
+
+.chart-head th:hover {
+  filter: brightness(80%);
+}
+
+.chart-headTitle {
+  height: auto;
+  font-weight: 500;
+  padding: 0;
+  width: auto;
+  position: relative;
+  padding-left: 15px;
+}
+
+.chart-body {
+  position: relative;
+  display: block;
+  height: 100%;
+}
+
+.chart-col {
+  bottom: 0;
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  position: absolute;
+  text-align: center;
+  z-index: 1;
+  transition: all .3s ease;
+}
+.chart-tooltip {
+  width:100%;
+  margin:0;
+  padding:0;
+  position: absolute !important;
+  bottom:0;
+}
+.chart-bar {
+  border-bottom: none;
+  color: #000;
+  width: calc(100% - 5px);
+  height: 100%;
+  bottom: 0;
+  margin: 0;
+  padding: 0;
+  position: absolute;
+}
+
+.chart-bar::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  border-top-left-radius: 2px;
+  border-top-right-radius: 2px;
+  border: 2px solid rgba(0, 0, 0, .1);
+  background-color: rgb(142, 142, 147);
+  transition: filter .3s ease;
+  z-index: 0;
+}
+
+.chart-bar:hover::after {
+  filter: brightness(80%);
+}
+
+.chart-bar p {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  z-index: 2;
+}
+
+.chart-line {
+  position: absolute;
+  width: 1px;
+  left: 50%;
+  bottom: 0;
+  margin: 0;
+  padding: 0;
+  transition: filter .3s ease;
+}
+
+.chart-line div {
+  height: 3px;
+  border-top: 1px solid rgba(0, 0, 0, .1);
+  border-bottom: 1px solid rgba(0, 0, 0, .1);
+  top: 0;
+  background-color: rgb(142, 142, 147);
+  transition: filter .3s ease;
+  position: absolute;
+  transform-origin: 0 0;
+  left: -2px;
+  z-index: 1;
+}
+
+.chart-line p {
+  padding: 0;
+  margin: 0;
+  position: absolute;
+  top: -12px;
+  left: -12px;
+  height: 20px;
+  width: 20px;
+  border-radius: 20px;
+  z-index: 3;
+}
+
+.chart-line::after {
+  content: "";
+  position: absolute;
+  height: 10px;
+  width: 10px;
+  border-radius: 10px;
+  border: 2px solid rgba(0, 0, 0, .1);
+  top: -8px;
+  left: -7px;
+  background-color: rgb(142, 142, 147);
+  transition: filter .3s ease;
+  position: absolute;
+  z-index: 2;
+}
+
+.chart-line div:hover, .chart-line:hover::after {
+  filter: brightness(80%);
+}
+
+.chart-xAxisTitle {
+  bottom: -80px;
+  font-weight: normal;
+  vertical-align: top;
+  transform: rotate(50deg);
+  text-align: left;
+  left: 20%;
+  position: absolute;
+  width: 150px;
+  white-space: nowrap;
+}
+
+.chart-ticks {
+  position: absolute;
+  top: 0;
+  z-index: 0;
+  height: 100%;
+  left: -10px;
+  right: 5px;
+}
+
+.chart-ticksTick {
+  border-bottom: 1px solid rgba(0, 0, 0, .2);
+  height: 50px;
+  position: relative;
+  width: 100%
+}
+
+.chart-ticksTick.first {
+  border-top: 1px solid rgba(0, 0, 0, .2);
+}
+
+.chart-ticksTick.last {
+  border: 0;
+}
+
+.chart-ticksTick p {
+  margin: 0 0 0 0.5em;
+  position: absolute;
+  top: -0.8em;
+}
+
+.chart-yAxisTitle {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 17px;
+}
+
+.chart-yAxisTitle p {
+  margin: 0;
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%) rotate(90deg)
+}
+
+.chart-yAxisTitle.left p {
+  transform: translateY(-50%) rotate(-90deg);
+}
+
+.chart-line.one::after, .chart-line.one div, .chart-headClr.one, .chart-bar.one::after {
+  background-color: rgb(0, 122, 255);
+}
+
+.chart-line.two::after, .chart-line.two div, .chart-headClr.two, .chart-bar.two::after {
+  background-color: rgb(162, 132, 94);
+}
+
+.chart-line.three::after, .chart-line.three div, .chart-headClr.three, .chart-bar.three::after {
+  background-color: rgb(142, 142, 147);
+}
+
+.chart-line.four::after, .chart-line.four div, .chart-headClr.four, .chart-bar.four::after {
+  background-color: rgb(88, 86, 214);
+}
+
+.chart-line.five::after, .chart-line.five div, .chart-headClr.five, .chart-bar.five::after {
+  background-color: rgb(255, 149, 0);
+}

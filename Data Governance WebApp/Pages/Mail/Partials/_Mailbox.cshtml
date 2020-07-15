@@ -1,0 +1,64 @@
+@*
+    Atlas of Information Management business intelligence library and documentation database.
+    Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*@
+
+<div class="mlbx">
+	<div class="mlbx-menu">
+        <partial name="Partials/Mailbox/_Menu" />
+	</div>
+	<div class="mlbx-dvdr dark"></div>
+	<!--<div class="mailbox-filters-outer row"></div>
+	<div class="mlbx-dvdr dark row"></div>-->
+	<div class="mlbx-bd">
+		<div class="mlbx-fldrs">
+			<partial name="Partials/Mailbox/_Folders" />
+		</div>
+		<div class="mlbx-msgs">
+			<partial name="Partials/Mailbox/_Messages" />
+		</div>
+		<div class="mlbx-rdr">
+			@if(ViewBag.AllMail.Count > 0){
+				<script>
+					(function(){
+        if(document.readyState === 'complete') {
+    load()
+        }
+
+        window.addEventListener('load',function(){
+ load()
+  })
+        function load(){
+						document.dispatchEvent(new CustomEvent("loadMessage",
+							{
+				      			cancelable: true,
+				      			detail: {
+				        			id: @ViewBag.AllMail[0].RepId
+				        		}
+						    }))
+						}
+					})()
+				</script>
+			}
+			else
+			{
+				<div class="ajaxLoader">No mail here! ¯\_(ツ)_/¯</div>
+			}
+		</div>
+	</div>
+<partial name="Partials/Mailbox/_NewMessage" />
+
+</div>

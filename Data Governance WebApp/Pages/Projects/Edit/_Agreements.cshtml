@@ -1,0 +1,102 @@
+@*
+    Atlas of Information Management business intelligence library and documentation database.
+    Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*@
+
+@model Data_Governance_WebApp.Pages.Projects.IndexModel
+
+<h5 class="pt-2">New Agreement</h5>
+<form asp-page-handler="AddAgreement" method="post">
+    <input asp-for="MyDpAgreement.DataProjectId" type="hidden" value='@Model.DataProject.Id' />
+    <div class="wrapper head-light" data-head="Description">
+        <textarea asp-for="MyDpAgreement.Description" required rows="2" type="text"  class="form-control" ></textarea>
+    </div>
+    <div class="wrapper head-light" data-head="Meeting Date">
+        <input asp-for="MyDpAgreement.MeetingDate" required type="date"  class="form-control" />
+    </div>
+    <div class="wrapper head-light" data-head="Effective Date">
+        <input asp-for="MyDpAgreement.EffectiveDate" required type="date"  class="form-control" />
+    </div>
+    <div class="wrapper head-light" data-head="Rank">
+        <input asp-for="MyDpAgreement.Rank"  type="number"  class="form-control" />
+    </div>
+    <div class="wrapper">
+        <select type="dynamic-dropdown" class="head-light" data-head="Participants" asp-for="DpAgreementUsers" value="" visible-value="" search-area="UserSearch" ></select>
+    </div>
+    <div class="wrapper">
+        <button type="submit" class="btn btn-link atlas-blue p-0"><i class="fas fa-save fa-lg"></i></button>
+    </div>
+</form>
+
+@if(Model.DataProject.Agreements.Count() > 0)
+{
+    <h5 class="pt-2">Existing Agreements</h5>
+
+    @foreach (var a in Model.DataProject.Agreements)
+    {
+        <div class="row">
+         <div class="col d-flex justify-content-start">
+            <form asp-page-handler="RemoveAgreement" method="post">
+                <input asp-for="MyDpAgreement.AgreementId" type="hidden" value="@a.Id" />
+                <input asp-for="MyDpAgreement.DataProjectId" type="hidden" value="@Model.DataProject.Id" />
+                <button class="btn btn-link" type="submit"><svg class="icon-sm" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M432 32H312l-9.4-18.7A24 24 0 0 0 281.1 0H166.8a23.72 23.72 0 0 0-21.4 13.3L136 32H16A16 16 0 0 0 0 48v32a16 16 0 0 0 16 16h416a16 16 0 0 0 16-16V48a16 16 0 0 0-16-16zM53.2 467a48 48 0 0 0 47.9 45h245.8a48 48 0 0 0 47.9-45L416 128H32z"/></svg></button>
+            </form>
+             <button class="btn btn-link atlas-blue"  type="button" data-toggle="clps" data-target="agreement-@a.Id">@a.Description</button>
+           </div>
+        </div>
+         <div class="row clps" id="agreement-@a.Id">
+            <div class="col">
+                <form asp-page-handler="EditAgreement" method="post">
+                    <input asp-for="MyDpAgreement.DataProjectId" type="hidden" value='@Model.DataProject.Id' />
+                    <input asp-for="MyDpAgreement.AgreementId" type="hidden" value="@a.Id" />
+                    <div class="wrapper head-light" data-head="Description">
+                        <textarea rows=2 class="form-control" id="MyDpAgreement_Description" name="MyDpAgreement.Description" required>@Model.DataProject.Description</textarea>
+                    </div>
+                    <div class="wrapper head-light" data-head="Meeting Date">
+                        <input asp-for="MyDpAgreement.MeetingDate" required type="date" value="@a.MeetingDate"  class="form-control" />
+                    </div>
+                    <div class="wrapper head-light" data-head="Effective Date">
+                        <input asp-for="MyDpAgreement.EffectiveDate" required type="date" value="@a.EffectiveDate" class="form-control" />
+                    </div>
+                    <div class="wrapper head-light" data-head="Rank">
+                        <input asp-for="MyDpAgreement.Rank"  type="number" value="@a.Rank"  class="form-control" />
+                    </div>
+                    <div class="wrapper">
+                        <div class="dynamic-dropdown-container">
+                            <div class="head-light dynamic-dropdown" data-head="Participants">
+                                <select class="head-light" id="DpAgreementUsers" name="DpAgreementUsers" dname="dropdown8" tabindex="-1" value="" multiple="multiple" style="display: none;">
+                                    @foreach(var t in a.Users){
+                                        <option selected="selected" value="@t.Id">@t.Name</option>
+                                    }
+                                </select>
+                                @foreach(var t in a.Users){
+                                        <span>@t.Name</span>
+                                    }
+                                <input class="dynamic-dropdown-input" search-area="UserSearch" dname="dropdown8" autocomplete="off" placeholder="" value="" style="width: 4px;">
+                                <div class="dynamic-dropdown-results" style="display: none;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="wrapper">
+                        <button type="submit" class="btn btn-link atlas-blue p-0"><i class="fas fa-save fa-lg"></i></button>
+                    </div>
+                </form>
+            </div>
+         </div>
+    }
+
+}

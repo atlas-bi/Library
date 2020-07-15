@@ -1,0 +1,214 @@
+.mlbx-rdr {
+    border-bottom-right-radius: inherit;
+    height: 100%;
+    scroll-behavior: smooth;
+    font-weight: 600;
+    letter-spacing: .4px;
+    color: rgb(78, 78, 78);
+    flex: 0 0 55%;
+    max-width: 55%;
+    -ms-user-select: text;
+    user-select: auto;
+}
+
+.mlbx-rdrHead {
+    padding-left: 25px;
+    padding-right: 25px;
+    padding-top: 25px;
+    padding-bottom: 8px;
+    position: relative;
+}
+
+.mlbx-rdrHead-controls {
+    position: absolute;
+    bottom: -13px;
+    width: 100%;
+    left: 0;
+    text-align: center;
+    cursor: default;
+    -moz-transition: all .5s;
+    -webkit-transition: all .5s;
+    /* For Safari 3.1 to 6.0 */
+    transition: all .5s;
+    opacity: 0;
+}
+
+.mlbx-rdrHead:hover .mlbx-rdrHead-controls {
+    opacity: 1;
+}
+
+.mlbx-rdrHead-controls:hover {
+    opacity: 1;
+}
+
+.mlbx-rdrHead-controls .btn-group {
+    border-radius: 6px;
+    border: 1px solid rgb(230, 230, 230);
+    background-color: rgb(255, 255, 255);
+}
+
+.mlbx-rdrHead-controls .btn-group button:first-of-type {
+    border-right: 1px solid rgb(230, 230, 230) !important;
+    border-top-left-radius: inherit;
+    border-bottom-left-radius: inherit;
+}
+
+.mlbx-rdrHead-controls .btn-group button:last-of-type {
+    border-right: 1px solid rgb(230, 230, 230) !important;
+    border-top-right-radius-radius: inherit;
+    border-bottom-right-radius: inherit;
+}
+
+.mlbx-rdrHead-controls button,
+.mlbx-rdrHead-controls button:hover,
+.mlbx-rdrHead-controls button:active {
+    color: rgb(150, 150, 150) !important;
+    padding: 0;
+    padding-left: 7px;
+    padding-right: 7px;
+    line-height: 20px;
+}
+
+.mlbx-rdrHead p,
+.mlbx-rdrHead div {
+    line-height: 22px;
+}
+
+.mailbox-mailing-list {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.mlbx-rdrHead p,
+.mailbox-mailing-list p,
+.mlbx-msgsMsg p {
+    margin: 0;
+}
+
+.mailbox-reader-body,
+.mailbox-reader-body-inner {
+    padding-left: 25px;
+    padding-right: 25px;
+    padding-top: 8px;
+    padding-bottom: 25px;
+    letter-spacing: .4px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.mlbx-rdrHead.new-message {
+    /*height:113px;*/
+    display: table-row;
+}
+
+.mlbx-rdrHead.new-message~.mailbox-reader-body {
+    padding-top: 0;
+    cursor: text;
+    display: table-row;
+    height: 100%;
+}
+
+.mailbox-reader-body .mailbox-reader-inner {
+    height: 100%;
+    width: 100%;
+    position: relative;
+}
+
+.mailbox-reader-body .mailbox-reader-inner .mailbox-reader-liner {
+    position: absolute;
+    top: 8px;
+    bottom: 25px;
+    left: 25px;
+    right: 25px;
+    overflow: auto;
+}
+
+.mlbx-rdrHead .mailbox-sender {
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: .4px;
+    line-height: 15px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.mlbx-rdrHead .mailbox-sender .mailbox-senderTime {
+    font-weight: 600;
+    font-size: 12px;
+    color: #969696;
+    float: right;
+}
+
+.mlbx-rdrHead .mailbox-subject,
+.mlbx-rdrHead .mailbox-to {
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: .4px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.mlbx-rdrHead .mailbox-to .mailbox-to-user {
+    display: inline;
+    color: rgb(128, 128, 128);
+    cursor: default;
+}
+
+.mlbx-rdrHead .mailbox-to .mailbox-to-user.group {
+    color: rgb(142, 77, 0);
+}
+
+.mlbx-rdrHead .mailbox-new-message-sender,
+.mlbx-rdrHead .mailbox-new-message-recipient,
+.mlbx-rdrHead .mailbox-new-message-subject,
+.mlbx-rdrHead .mailbox-new-message-message {
+    font-weight: 600;
+    letter-spacing: .4px;
+    margin: 0;
+}
+
+.mailbox-reader-body .message-reply .mlbx-rdrHead,
+.mailbox-reader-body .message-reply .mailbox-reader-body,
+.mailbox-reader-body .message-reply .mailbox-divider,
+.mailbox-new-message-message .message-reply .mlbx-rdrHead,
+.mailbox-new-message-message .message-reply .mailbox-reader-body,
+.mailbox-new-message-message .message-reply .mailbox-divider {
+    padding-right: 0px !important;
+    margin-right: 0px !important;
+}
+
+.mailbox-reader-body .message-reply,
+.mlbx-newMsg .message-reply {
+    border-left: 2px solid rgb(78, 76, 208);
+}
+
+.mailbox-reader-body .message-reply,
+.mailbox-reader-body .message-reply div,
+.mlbx-newMsg .message-reply,
+.mlbx-newMsg .message-reply div {
+    color: rgb(78, 76, 208) !important;
+}
+
+.mailbox-reader-body .message-reply .message-reply,
+.mlbx-newMsg .message-reply .message-reply {
+    border-left: 2px solid rgb(0, 166, 198);
+}
+
+.mailbox-reader-body .message-reply .message-reply,
+.mailbox-reader-body .message-reply .message-reply div,
+.mlbx-newMsg .message-reply .message-reply,
+.mlbx-newMsg .message-reply .message-reply div {
+    color: rgb(0, 166, 198) !important;
+}
+
+.mailbox-reader-body .message-reply .message-reply .message-reply,
+.mlbx-newMsg .message-reply .message-reply .message-reply {
+    border-left: 2px solid rgb(19, 184, 16);
+}
+
+.mailbox-reader-body .message-reply .message-reply .message-reply,
+.mailbox-reader-body .message-reply .message-reply .message-reply div,
+.mlbx-newMsg .message-reply .message-reply .message-reply,
+.mlbx-newMsg .message-reply .message-reply .message-reply div {
+    color: rgb(19, 184, 16) !important;
+}

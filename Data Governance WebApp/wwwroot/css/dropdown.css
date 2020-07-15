@@ -1,0 +1,224 @@
+/* before render */
+
+input[type=dynamic-dropdown] {
+    width: 100%;
+    padding: 3px 10px;
+    font-size: 14px;
+    font-family: sf;
+    font-weight: 600;
+    letter-spacing: .4px;
+    color: rgb(54, 54, 54);
+    border: 1px solid rgb(200, 200, 200);
+    border-radius: .4px;
+    overflow: visible;
+    position: relative;
+    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+    outline: none;
+    display: block;
+    height: 30px;
+    cursor: text;
+}
+
+
+/* after render */
+
+.dd-cntr {
+    cursor: text;
+    height: auto;
+    display: inline-flex;
+    width: 100%;
+    font-size: 14px;
+    font-family: sf;
+    font-weight: 600;
+    letter-spacing: .4px;
+    color: rgb(54, 54, 54);
+}
+
+.dd-cntr:focus {
+    outline: none;
+}
+
+.dd-wrp {
+    width: 100%;
+    padding: 3px 10px;
+    border: 1px solid rgb(200, 200, 200);
+    border-radius: 4px;
+    overflow: visible;
+    position: relative;
+    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.dd-wrp.slim {
+    border: none;
+    padding: 0;
+}
+
+.dd-wrp-show {
+    z-index: 99;
+}
+
+.dd-wrp-invalid {
+    border-color: #dc3545;
+}
+
+.dd-wrp-focus {
+    border-color: #80bdff;
+    outline: 0;
+    box-shadow: 0 0 0 .2rem rgba(0, 123, 255, .25);
+    z-index: 99;
+}
+
+.dd-wrp-focus.slim {
+    box-shadow: none;
+}
+
+.dd-hdn {
+    display: none;
+}
+
+.dd-rslts {
+    position: absolute;
+    top: 30px;
+    left: 0;
+    white-space: nowrap;
+    display: none;
+    padding: 3px 0;
+    border-radius: 6px;
+    border: 1px solid rgb(198, 198, 198);
+    background-color: rgb(237, 237, 237);
+    margin-left: -15px;
+    box-shadow: 0 10px 20px 2px rgb(225, 225, 225);
+    overflow: hidden;
+    z-index:999;
+}
+
+.dd-rsltsLnr {
+    height: 100%;
+}
+
+.dd-rslt {
+    padding: 1px .75rem;
+    transition: color .1s ease-in-out, background-color .1s ease-in-out;
+    cursor: pointer;
+    overflow: hidden;
+    position: relative;
+    background-color: transparent;
+    margin: 0;
+    cursor: default;
+    z-index: 999;
+}
+
+.dd-rslt.active {
+    background-color: rgb(63, 139, 246);
+    color: rgb(255, 255, 255);
+}
+
+.dd-rslt.hidden {
+    display: none !important;
+}
+
+.dd-rslt>i {
+    padding-right: .75rem;
+}
+
+.dd-rslt.disabled:hover {
+    background-color: inherit;
+    color: inherit;
+}
+
+.dd-rslts .dd-rslt.grp {
+    color: rgb(142, 77, 0);
+}
+
+.dd-rslts .dd-rslt.grp.active {
+    color: rgb(255, 181, 41);
+}
+
+.dd-vsbl {
+    color: rgb(39, 39, 39);
+    background: transparent;
+    border: none;
+    outline: none;
+    width: 1px;
+    max-width: 100%;
+    display: table-cell;
+    height: 22px;
+    /* must have font size */
+    font-size: 14px;
+    font-family: sf;
+    font-weight: 600;
+    letter-spacing: .4px;
+    -ms-user-select: text;
+}
+
+.dd-wrp input:invalid {
+    border: none;
+    box-shadow: none;
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
+}
+
+.dd-wrp>input::-ms-clear,
+.dd-inpt>.dd-vsbl::-ms-clear {
+    display: none;
+}
+
+.dd-wrp>input:focus,
+.dd-inpt>.dd-vsbl:focus {
+    border: none;
+    outline: none;
+}
+
+.dd-wrp>input::placeholder,
+.dd-wrp .dd-inpt>.dd-vsbl::placeholder {
+    color: #6c757d;
+    opacity: 1;
+    font-size: 14px;
+    font-family: sf;
+    font-weight: 600;
+    letter-spacing: .4px;
+}
+
+.dd-itm:first-of-type {
+    margin-left: 3px;
+}
+
+.dd-itm {
+    padding-left: 5px;
+    padding-right: 5px;
+    margin-left: 0px;
+    margin-right: 2.5px;
+    background-color: rgb(178, 211, 255);
+    color: rgb(39, 39, 39);
+    border-radius: .25rem;
+    display: inline-flex;
+    cursor: default;
+    white-space: nowrap;
+    margin-top: 2px;
+    -ms-user-select: text;
+}
+
+.dd-itm.group {
+    color: rgb(142, 77, 0) !important;
+}
+
+.dd-phdr {
+    content: 'data-placeholder';
+    opacity: 1;
+    flex: 1 1 auto;
+    color: rgb(170, 170, 170);
+    font-family: sf;
+    letter-spacing: .4px;
+    font-weight: 500;
+    overflow: hidden;
+    white-space: nowrap;
+    margin-left:-12px;
+}
+
+.dd-inpt {
+    display: inline-flex;
+    position: relative;
+}

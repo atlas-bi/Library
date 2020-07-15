@@ -1,0 +1,212 @@
+.nb {
+    position: relative;
+    padding: 10px 0;
+    margin-left:15px;
+    margin-right:15px;
+    max-width: 100%;
+}
+
+.nb-cf {
+    display: flex;
+    margin-top: 20px;
+}
+
+.nb::after {
+    content: '';
+    border-bottom: 1px solid #d2d7da;
+    width: 100%;
+    position: absolute;
+    z-index: -1;
+    left: 0;
+    top: 70px;
+    height: 12px;
+}
+
+.nb-cl {
+    display: flex;
+    width: 100%;
+}
+
+.nb-br {
+    font-family: "nytcheltenham", "Georgia", "Times New Roman", serif;
+    font-stretch: expanded;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    width: 100%;
+    text-align: center !important;
+    margin-top: -5px;
+    word-spacing: 3px;
+    cursor: default;
+}
+
+.nb-br:hover {
+    text-decoration: none
+}
+
+.nb-br h2, .nb-br h5 {
+    margin: 0;
+    padding: 0;
+    background-color: #fff !important;
+}
+
+.nb-br h5 {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.nb-br h5:first-of-type {
+    width: 60px
+}
+
+.nb-nv {
+    margin:0;
+    margin-left: auto !important;
+    display: flex;
+    list-style: none;
+}
+
+.nb-nl {
+    display: block;
+    padding: 8px 10px;
+    position: relative;
+    text-align: center;
+}
+
+.nb-brs {
+    position: absolute;
+    top: 0px;
+}
+
+.nb-brs #brs-b, .nb-brs #brs-f, .nb-brs #brs-h {
+    cursor: default;
+    padding: .5rem 1rem;
+    font-size: 1.25rem;
+    line-height: 1.5;
+    border-radius: .3rem;
+    background-color: transparent;
+    display: inline-block;
+    font-weight: 500;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    user-select: none;
+    border: 1px solid transparent;
+}
+
+.nb-brs #brs-b {
+    padding-left: 0px;
+}
+
+.nb-brs #brs-h {
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
+.nb-ni {
+    min-width: 39px;
+}
+
+.nb-ni.nb-dd {
+    position: relative;
+}
+
+.nb-dd-ddm {
+    position: absolute;
+    right: 0;
+    z-index: 1000;
+    display: none;
+    padding: .5rem 0;
+    background-color: #fff;
+    border: 1px solid rgba(0, 0, 0, .15);
+    border-radius: .25rem;
+    animation-name: fadein;
+    animation-duration: .2s;
+    -moz-box-shadow: 0 10px 20px 2px rgb(225, 225, 225);
+    -webkit-box-shadow: 0 10px 20px 2px rgb(225, 225, 225);
+    box-shadow: 0 10px 20px 2px rgb(225, 225, 225);
+}
+
+.dd-o.nb-dd-ddm {
+    display: block;
+}
+
+.dd-di {
+    display: block;
+    width: 100%;
+    padding: 5px 20px 5px 12px;
+    white-space: nowrap;
+    text-decoration: none;
+}
+
+.dd-di>i {
+    margin-right:10px;
+}
+
+.dd-di:hover {
+    text-decoration: none;
+}
+
+.nb-nl >i {
+    pointer-events: none;
+}
+
+.new-mail-badge {
+    position: absolute;
+    top: 1px;
+    right: 0px;
+    border-radius: 18px;
+    background-color: rgb(252, 67, 58);
+    color: rgb(255, 255, 255);
+    line-height: 16px;
+    min-width: 18px;
+    padding: 0 4px 0 5px;
+    font-family: sf, "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    display: none;
+    border: 1px solid rgb(244, 245, 246);
+}
+
+.nb-cmbs {
+    list-style: none;
+    display: inline-block;
+    overflow: hidden;
+    direction: rtl;
+    text-overflow: ellipsis;
+    margin:0;
+    padding:0;
+    padding-left:15px;
+    padding-right:15px;
+    max-width:100%;
+    opacity: 0;
+    transition: opacity .3s;
+    white-space: nowrap;
+    font-family: sf;
+    font-weight: 600;
+    letter-spacing: .3px;
+    font-size:14px;
+    margin-bottom:10px;
+    height:21px;
+}
+
+.nb-cmbs li {
+    display: inline;
+}
+.nb-cmbs li+li:before {
+    padding:8px;
+    content: "\203A\00a0";
+}
+
+.nb-cmbs li a, .nb-cmbs li a:hover {
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.nb-nl .icon-sm {
+    margin:0;
+    padding:0;
+}
+
+.dd-di .icon-sm {
+    width:25px;
+}

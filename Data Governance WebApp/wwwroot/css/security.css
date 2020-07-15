@@ -1,0 +1,22 @@
+.success-message {
+	top:20px;
+	left:20px;
+	position: fixed;
+	color: #0084db;
+	color: var(--active-link);
+}
+
+.border-after{
+	position: relative;
+}
+
+.border-after:not(:last-of-type)::after {
+	position: absolute;
+	content: '';
+	height:75%;
+	top:calc(25% / 2);
+	width: 1px;
+	background-color: #DBD7D8;
+	background-color: var(--light-grey);
+	right:-1px;
+}

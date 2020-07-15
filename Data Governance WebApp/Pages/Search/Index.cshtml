@@ -1,0 +1,131 @@
+﻿@*
+    Atlas of Information Management business intelligence library and documentation database.
+    Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*@
+
+@page
+@model Data_Governance_WebApp.Pages.Search.IndexModel
+@{
+    ViewData["Title"] = "Search " + Model.SearchString;
+    Layout = HttpContext.Request.Headers["x-requested-with"] == "XMLHttpRequest" ? null : "../Shared/_Layout.cshtml";
+}
+
+@{
+    // url w/out page #
+    var searchUrl = "s=" + Model.SearchString + "&f=" + Model.SearchFilter;
+    var searchFavorite = Model.Favorites.Any(x => x.ItemType.ToLower().Equals("search") && x.ItemName.Equals(searchUrl));
+}
+
+<div class="srch">
+    <div class="col-3 col-4-md">
+        <partial name="Partials/_Filters" />
+    </div>
+    <div class="col-9 col-8-md" id="results">
+        <div class="srch-results @if(!(ViewBag.UserId == ViewBag.MyId || ViewBag.Permissions.Contains(41))){<text>disabled</text>}" ss-container>
+            @if (Model.SearchResults != null && Model.SearchResults.Count > 0)
+            {
+                @foreach (var result in Model.SearchResults)
+                {
+                    var favorite = Model.Favorites.Any(x => x.ItemType.ToLower().Equals("report") && x.ItemId.Equals(result.Id));
+                    <div class="srch-result">
+                        <div class="fav-links">
+                            <div class="fav-star">
+                                <i fav-type="@result.ItemType.ToLower()" object-id="@result.Id" class="far fa-star @if(favorite == true) {<text>yes</text>} else {<text>no</text>}"></i>
+                            </div>
+                            <div class="fav-share darken" data-toggle="mdl" data-target="shareModal"  data-name='@result.Name' data-url="/Reports?id=@result.Id">
+                                <i class="fas fa-share"></i>
+                            </div>
+                             @if (result.ReportUrl != null && result.ReportUrl != "")
+                                {
+                                    <div class="fav-access" data-toggle="mdl" data-target="requestAccessModal" data-name="@result.Name" data-name-clean='@result.Name.Replace("_"," ")'>
+                                        <i class="fas fa-universal-access"></i>
+                                    </div>
+                                }
+                        </div>
+                        <div class="fav-body">
+
+                            <h5 class="fav-title"  data-toggle="clps" data-target="clps-@result.Id">
+                                <span>
+                                    @if (result.Documented > 0) {<span class="text-success mr-1"><i class="fas fa-check"></i></span>}<span class="badge badge-warning" style="margin-left:6px;margin-right:0px">@result.SearchField</span>
+                                     @result.Name @if (result.EpicRecordId != null && result.EpicRecordId != "")
+                                    {<text>&nbsp(@result.EpicMasterFile @result.EpicRecordId)</text>}
+                                </span>
+
+
+                                <div class="fav-type">
+                                    @if (result.Orphaned > 0) {<span class="badge badge-warning">Orphaned</span>}
+                                    @if (result.Hidden > 0) {<span class="badge badge-warning">Hidden</span>}<span class="badge badge-secondary">@if (@result.ReportType == "") {<text>Hidden Type</text>} else {@result.ReportType}</span>
+                                </div>
+                            </h5>
+                            <h5 class="fav-nav">
+                                <a class="ajax atlas-blue" href="Reports?id=@result.Id">Open In Atlas</a>
+                                @if (result.ReportUrl != null && result.ReportUrl != "")
+                                {
+                                    <a class="ml-3 atlas-blue" target="_blank" rel="noopener" href="@result.ReportUrl">Run Report</a>
+                                } else {
+                                    if(result.EditReportUrl != null){
+<div style="position: relative;"><span class="ml-3 tt-top" style="color:grey;position: relative;white-space: nowrap;cursor:default" data-tooltip="Open in report library.">Run Report</span></div>
+                                } else {
+                                    <div style="position: relative;"><span class="ml-3 tt-top" style="color:grey;position: relative;white-space: nowrap;cursor:default" data-tooltip="Login to Hyperspace to run report.">Run Report</span></div>
+                                }
+                                }
+                                @if (result.EditReportUrl != null && @Model.Permissions.Contains(38))
+                                {
+                                    <a class="ml-3 atlas-blue" target="_blank" rel="noopener" href="@result.EditReportUrl">Edit Report</a>
+                                }
+                                @if (result.ManageReportUrl != null && @Model.Permissions.Contains(38))
+                                {
+                                    <a class="ml-3 atlas-blue" target="_blank" rel="noopener" href="@result.ManageReportUrl">Manage Report</a>
+                                }
+                            </h5>
+                            <div class="clps fav-dtls" id="clps-@result.Id">
+                                <div class="markdown noleft">
+                                    @if (result.Description != null && result.Description != "")
+                                    {
+                                        @if(result.SearchField == "Query"){
+                                        @if(@Request.Headers["User-Agent"].ToString().Contains("Trident")){
+                                         @:Open in Atlas to view query.
+                                    } else {
+                                         <div class="query-box">
+                                            <div class="query-box-inner light ss-preview" id='query-@result.Id' ss-container>
+                                                <pre><code class="sql" id="code-@result.Id">@result.Description</code></pre>
+                                            </div>
+                                        </div>
+                        }
+                                        } else {
+                                        @Html.Raw(@Helpers.HtmlHelpers.MarkdownToHtml(@result.Description))
+                                    }
+                                    } else {
+                                        @:Open in Atlas to see details.
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+                 <partial name="Partials/_Pagination" />
+            }
+            else
+            {
+                <div class="srch-none">
+                    <h5>No results. Try changing your search. ¯\_(ツ)_/¯</h5><br>
+                </div>
+            }
+
+        </div>
+    </div>
+</div>

@@ -1,0 +1,55 @@
+
+.mlbx-fldrs {
+	flex: 0 0 20%;
+	max-width:20%;
+	background-color: rgb(227,230,232);
+	border-right: 1px solid rgb(186,191,195);
+	border-bottom-left-radius: inherit;
+	height: 100%;
+	overflow:hidden;
+	user-select: none;
+	padding:7px 0;
+}
+.mlbx-fldrsTitle {
+	font-size: 13px;
+	color:rgb(86,88,90);
+	margin: 5px 0;
+	padding:0 7px;
+}
+
+.mblx-fldrsNew {
+	float:right;
+	font-size: 17px;
+    line-height: 16px;
+    border-radius: 18px;
+    background: rgb(89,92,94);
+    color: rgb(227,230,232);
+    padding: 0 4px 3px 4px;
+    font-weight: 400;
+    opacity:0;
+    transition: opacity .3s;
+}
+.mlbx-fldrsTitle:hover .mblx-fldrsNew {
+	opacity: 1;
+}
+
+.mlbx-fldrsFldr {
+	margin: 3px 0;
+	padding: 2px 7px 0px 7px;
+	cursor: default;
+}
+
+.mlbx-fldrsFldr.active {
+	background-color: rgb(204,204,204)
+}
+
+.mlbx-fldrsNewMsgCnt {
+	   float: right;
+    font-size: 14px;
+    background: rgb(0, 88, 221);
+    color:rgb(255,255,255);
+    border-radius: 10px;
+    padding: 0 7px;
+    line-height:18px;
+}
+

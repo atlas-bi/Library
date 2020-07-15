@@ -1,0 +1,79 @@
+﻿@*
+    Atlas of Information Management business intelligence library and documentation database.
+    Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*@
+
+@{
+    var me = ViewBag.Message;
+
+}
+@if(me.RepId != null)
+{
+    int ToCounter = me.To.Count-1;
+
+    <div ss-container style="height:100%">
+    <div class="mlbx-rdrHead" data-rep-id="@me.RepId" data-conv-id="@me.ConvId">
+        <div class="mailbox-sender"><div class="mailbox-sender-user no-select" data-user-id="@me.FromId"><span>@me.From</span><div class="mlbx-usrDrp"><i class="fas fa-angle-down fa-sm"></i>
+        	<div class="mlbx-usrDrpCtr">
+        		<div class="mlbx-usrDrp-box-inner">
+        			<div class="mlbx-usrDrpItm mail-new-message" data-from="@me.From" data-fromid="@me.FromId">New Mail</div>
+        			<div class="separator"></div>
+        			<div class="mlbx-usrDrpItm"><a class="ajax" href="/users?id=@me.FromId">Open Profile</a></div>
+        		</div>
+        	</div>
+        </div></div><div class="mailbox-senderTime">@me.Sent_Read</div></div>
+        <p class="mailbox-subject">@me.Subject</p>
+        <div class="mailbox-to no-select">To: <div style="margin-left:5px;display:inline">@foreach (var t in @me.To){<div class="mailbox-to-user @t.Type" data-user-id="@t.Id"><span>@t.Fullname</span>@if(ToCounter > 0){<span class="comma">,</span>}<div class="mlbx-usrDrp"><i class="fas fa-angle-down fa-sm"></i>
+        	<div class="mlbx-usrDrpCtr">
+        		<div class="mlbx-usrDrp-box-inner">
+        			<div class="mlbx-usrDrpItm mail-new-message" data-from="@t.Fullname" data-fromid="@t.Id">New Mail</div>
+        			<div class="separator"></div>
+        			<div class="mlbx-usrDrpItm"><a class="ajax" href="@if(t.Type == "group"){<text>/groups</text>}else{<text>/users</text>}?id=@t.Id">Open Profile</a></div>
+        		</div>
+        	</div>
+        </div></div>ToCounter -= 1;}</div></div>
+    	<div class="mlbx-rdrHead-controls">
+    		<div class="btn-group">
+    			<button type="button" class="btn btn-link mail-delete-message"><i class="far fa-trash-alt fa-sm"></i></button>
+    			<button type="button" class="btn btn-link mail-reply"><i class="fas fa-reply fa-sm"></i></button>
+    			<button type="button" class="btn btn-link mail-reply-all"><i class="fas fa-reply-all fa-sm"></i></button>
+    			<button type="button" class="btn btn-link mail-forward"><i class="fas fa-share fa-sm"></i></button>
+    		</div>
+    	</div>
+    </div>
+    <div class="mlbx-dvdr" style="margin-left:25px;margin-right:25px"></div>
+    @if(me.Type != null && me.Type != "")
+    {
+    	<div class="mailbox-mailing-list">
+    	    <p>@me.Type</p>
+    	</div>
+    	<div class="mailbox-divider"></div>
+    }
+    <div class="mailbox-reader-body">
+        @Html.Raw(@me.Message)
+    </div>
+
+    </div>
+    <script>
+        if(document.readyState === 'complete') {
+            SimpleScrollbar.initAll();
+        }
+
+        window.addEventListener('load',function(){
+            SimpleScrollbar.initAll();
+        });
+    </script>
+}

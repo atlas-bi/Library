@@ -1,0 +1,140 @@
+.mlbx {
+    border-radius: 6px;
+    border: 1px solid rgb(202, 202, 200);
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    box-shadow: 0 0 30px 10px rgb(209, 209, 209);
+    font-family: sf, "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+    flex: 1;
+    margin-bottom: 50px;
+    margin-top: 30px;
+    position: relative;
+    color: rgb(39, 39, 39);
+    letter-spacing: .4px;
+    font-weight: 600;
+}
+
+.mlbx-dvdr {
+    height: 1px;
+    background-color: rgb(230, 230, 230);
+}
+
+.mlbx-dvdr.medium {
+    background-color: rgb(201, 201, 201);
+}
+
+.mlbx-dvdr.dark {
+    background-color: rgb(166, 166, 166);
+}
+
+.mlbx-bd::after {
+    position: absolute;
+    content: '';
+    bottom: -35px;
+    height: 35px;
+    background: #fff;
+    left: -30px;
+    right: -30px;
+    z-index: 1;
+}
+
+.mlbx-bd::before {
+    content: '';
+    height: 50px;
+    margin-top: -35px;
+    background: #fff;
+    z-index: 2;
+    background: linear-gradient(rgba(255, 255, 255, 0), #fff);
+    position: absolute;
+    bottom: 0;
+    left: -30px;
+    right: -30px;
+    border-bottom: 3px solid #fff;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.mlbx-bd {
+    background-color: rgb(255, 255, 255);
+    border-bottom-right-radius: inherit;
+    border-bottom-left-radius: inherit;
+    font-size: 14px;
+    height: 600px;
+    display: flex;
+    flex: 1;
+    flex-direction: row;
+    position: relative;
+}
+
+.mailbox-filters-outer {
+    height: 30px;
+    background: rgb(208, 208, 208);
+    background: -moz-linear-gradient(180deg, rgba(208, 208, 208, 1) 35%, rgba(201, 201, 201, 1) 100%);
+    background: -webkit-linear-gradient(180deg, rgba(208, 208, 208, 1) 35%, rgba(201, 201, 201, 1) 100%);
+    background: linear-gradient(180deg, rgba(208, 208, 208, 1) 35%, rgba(201, 201, 201, 1) 100%);
+    filter: progid: DXImageTransform.Microsoft.gradient(startColorstr="#d0d0d0", endColorstr="#c9c9c9", GradientType=1);
+}
+
+.mlbx-shareMsg {
+    height: 400px;
+    font-family: sf, "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: .4px;
+}
+
+.mlbx-shareMsg .mlbx-newMsgMsg {
+    margin-top: 10px;
+}
+
+.mlbx-usrDrp {
+    margin-left: 5px;
+    margin-right: 1px;
+    color: transparent;
+    display: inline;
+    position: relative;
+    transition: color .1s;
+}
+
+*:hover>.mlbx-usrDrp {
+    color: inherit;
+}
+
+.mlbx-usrDrpCtr {
+    display: none;
+    top: 5px;
+    left: 2px;
+    border: 1px solid rgb(198, 198, 198);
+    position: absolute;
+    width: 150px;
+    height: auto;
+    border-radius: 6px;
+    background-color: rgb(240, 239, 240);
+    z-index: 1;
+    box-shadow: 0 5px 20px 2px rgb(225, 225, 225);
+    padding: 3px 0;
+}
+
+.mlbx-usrDrpCtr .separator {
+    height: 2px;
+    margin: 3px 0;
+    background-color: rgb(223, 224, 223);
+}
+
+.mlbx-usrDrpItm {
+    height: 22px;
+    width: 100%;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.mlbx-usrDrpItm a {
+    text-decoration: none;
+    color: inherit;
+    cursor: default;
+}
+
+.mlbx-usrDrpItm:hover {
+    background-color: rgb(63, 139, 246);
+    color: rgb(255, 255, 255)
+}

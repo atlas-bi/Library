@@ -1,0 +1,229 @@
+/*!
+ * Font Awesome Free 5.10.2 by @fontawesome - https://fontawesome.com
+ * License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License)
+ */
+.fa, .fas, .far {
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  display: inline-block;
+  font-style: normal;
+  font-variant: normal;
+  text-rendering: auto;
+  line-height: 1;
+}
+
+.fa-sm {
+  font-size: .875em;
+}
+
+.fa-lg {
+  font-size: 1.33333em;
+  line-height: 0.75em;
+  vertical-align: -.0667em;
+}
+
+.fa-2x {
+  font-size: 2em;
+}
+
+.fa-3x {
+  font-size: 3em;
+}
+
+.fa-7x {
+  font-size: 7em; }
+
+
+.fa-trash:before {
+  content: "\f1f8";
+}
+
+.fa-inbox:before {
+  content: "\f01c"; }
+
+.fa-grip-lines:before {
+  content: "\f7a4";
+}
+
+.fa-universal-access:before {
+  content: "\f29a";
+}
+
+.fa-folder-open:before {
+  content: "\f07c";
+}
+
+.fa-ellipsis-h:before {
+  content: "\f141";
+}
+
+.fa-exclamation-circle:before {
+  content: "\f06a";
+}
+
+.fa-sort:before {
+  content: "\f0dc";
+}
+
+.fa-chevron-up:before {
+  content: "\f077";
+}
+
+.fa-angle-down:before {
+  content: "\f107";
+}
+
+.fa-home:before {
+  content: "\f015";
+}
+
+.fa-trash-alt:before {
+  content: "\f2ed";
+}
+
+.fa-save:before {
+  content: "\f0c7";
+}
+/*far*/
+.fa-file-upload:before {
+  content: "\f574";
+}
+/*far*/
+.fa-star:before {
+  content: "\f005";
+}
+
+.fa-play:before {
+  content: "\f04b";
+}
+
+.fa-check:before {
+  content: "\f00c";
+}
+
+.fa-edit:before {
+  content: "\f044";
+}
+
+.fa-times:before {
+  content: "\f00d";
+}
+
+.fa-paper-plane:before {
+  content: "\f1d8";
+}
+
+.fa-question-circle:before {
+  content: "\f059";
+}
+
+.fa-chevron-left:before {
+  content: "\f053";
+}
+
+.fa-chevron-right:before {
+  content: "\f054";
+}
+
+.fa-cogs:before {
+  content: "\f085";
+}
+
+.fa-lock:before {
+  content: "\f023";
+}
+
+.fa-chart-bar:before {
+  content: "\f080";
+}
+
+.fa-reply:before {
+  content: "\f3e5";
+}
+
+.fa-reply-all:before {
+  content: "\f122";
+}
+
+.fa-tasks:before {
+  content: "\f0ae";
+}
+
+.fa-layer-group:before {
+  content: "\f5fd";
+}
+
+.fa-share:before {
+  content: "\f064";
+}
+
+.fa-project-diagram:before {
+  content: "\f542";
+}
+
+.fa-italic:before {
+  content: "\f033";
+}
+
+.fa-bold:before {
+  content: "\f032";
+}
+
+.fa-heading:before {
+  content: "\f1dc";
+}
+
+.fa-quote-left:before {
+  content: "\f10d";
+}
+
+.fa-folder:before {
+  content: "\f07b";
+}
+
+.fa-edit:before {
+  content: "\f044";
+}
+
+.fa-folder-plus:before {
+  content: "\f65e";
+}
+
+.fa-plus:before {
+  content: "\f067";
+}
+
+.fa-list-ol:before {
+  content: "\f0cb";
+}
+
+.fa-list-ul:before {
+  content: "\f0ca";
+}
+
+.fa-cog:before {
+  content: "\f013";
+}
+
+.fa-code:before {
+  content: "\f121";
+}
+
+.fa-external-link-alt:before {
+  content: "\f35d";
+}
+
+.fa-link:before {
+  content: "\f0c1";
+}
+.far {
+  font-family: 'far';
+}
+
+.fa {
+  font-family: 'fas';
+}
+
+.fas {
+  font-family: 'fas';
+}

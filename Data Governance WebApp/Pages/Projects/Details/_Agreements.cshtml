@@ -1,0 +1,50 @@
+@*
+    Atlas of Information Management business intelligence library and documentation database.
+    Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*@
+
+@model Data_Governance_WebApp.Pages.Projects.IndexModel
+
+<h2 class="pb-2 mb-2 border-bottom border-2 darken">Agreements</h2>
+
+<div class="row">
+
+    @foreach (var a in Model.DataProject.Agreements)
+    {
+        <div class="col-3">
+            <div class="card card-body">
+                @if (a.Description != null && a.Description != "")
+                {
+
+                }
+                <h5>Description</h5>
+                <div class="markdown noleft">
+                    @Html.Raw(@Helpers.HtmlHelpers.MarkdownToHtml(a.Description))
+                </div>
+                <h5>Users</h5>
+                <ul>
+                    @foreach (var u in a.Users)
+                    {
+                        <li>@u.Name</li>}
+                </ul>
+                <h5>Meeting Date</h5>
+                <p>@a.MeetingDateString</p>
+                <h5>Effective Date</h5>
+                <p>@a.EffectiveDateString</p>
+            </div>
+        </div>
+    }
+</div>

@@ -1,0 +1,145 @@
+@*
+    Atlas of Information Management business intelligence library and documentation database.
+    Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*@
+
+<h2 class="fav-col-title">Filters</h2>
+<form id="searchForm">
+    <input type="hidden" value="@Model.SearchString" name="s" />
+    <input type="hidden" value="@Model.SearchFilter" name="f" />
+    <input type="hidden" value="@Model.SearchField" name="sf" />
+    <h5 class="fav-col-sub-title">Report Type</h5>
+    <div class="srch-fltr">
+        <label class='chck checkbox-container search-filter'>
+            <span class="darken">SSRS</span>
+            <input type="checkbox"  @if(Model.SearchFilter == 28){<text>checked="checked"</text>}) value='@(Model.SearchFilter == 28?"0":"28")' />
+            <span class="checkmark"></span>
+        </label>
+        <label class='chck checkbox-container search-filter'>
+            <span class="darken">Dashboard</span>
+            <input type="checkbox" @if(Model.SearchFilter == 20){<text>checked="checked"</text>})  value='@(Model.SearchFilter == 20?"0":"20")'/>
+            <span class="checkmark"></span>
+        </label>
+        <label class='chck checkbox-container search-filter'>
+            <span class="darken">Dash Component</span>
+            <input type="checkbox" @if(Model.SearchFilter == 21){<text>checked="checked"</text>})  value='@(Model.SearchFilter == 21?"0":"21")'/>
+            <span class="checkmark"></span>
+        </label>
+        <label class='chck checkbox-container search-filter'>
+            <span class="darken">Crystal</span>
+            <input type="checkbox" @if(Model.SearchFilter == 3){<text>checked="checked"</text>}) value='@(Model.SearchFilter == 3?"0":"3")' />
+            <span class="checkmark"></span>
+        </label>
+        <label class='chck checkbox-container search-filter' >
+            <span class="darken">Workbench</span>
+            <input type="checkbox" @if(Model.SearchFilter == 17){<text>checked="checked"</text>}) value='@(Model.SearchFilter == 17?"0":"17")' />
+            <span class="checkmark"></span>
+        </label>
+    </div>
+
+    @if (Model.Permissions.Contains(46))
+    {
+        <h5 class="fav-col-sub-title">Advanced</h5>
+        <div class="srch-fltr">
+            <label class='chck checkbox-container search-advanced-filter'>
+                <span class="darken">Show Hidden</span>
+                <input type="checkbox" @if (Model.ShowHidden > 0) { <text> checked="checked" value="1"</text> } name="h" />
+                <span class="checkmark"></span>
+            </label>
+            <label class='chck checkbox-container search-advanced-filter'>
+                <span class="darken">Show Hidden Types</span>
+                <input type="checkbox" @if (Model.ShowAllTypes > 0) { <text> checked="checked" value="1" </text> } name="t" />
+                <span class="checkmark"></span>
+            </label>
+            <label class='chck checkbox-container search-advanced-filter'>
+                <span class="darken">Show Orphans</span>
+                <input type="checkbox" @if (Model.ShowOrphans > 0) { <text> checked="checked" value="1" </text> } name="o" />
+                <span class="checkmark"></span>
+            </label>
+        </div>
+    }
+    <h5 class="fav-col-sub-title">Search Field</h5>
+    <div class="srch-fltr">
+        @{
+            var name = @Model.SearchField!= null ? Array.IndexOf(@Model.SearchField.Replace("%20"," ").Split(","),"Name") : -1;
+            var detdesc = @Model.SearchField!= null ? Array.IndexOf(@Model.SearchField.Replace("%20"," ").Split(","),"Detailed Description") : -1;
+            var keyassum = @Model.SearchField!= null ? Array.IndexOf(@Model.SearchField.Replace("%20"," ").Split(","),"Key Assumptions") : -1;
+            var devdesc = @Model.SearchField!= null ? Array.IndexOf(@Model.SearchField.Replace("%20"," ").Split(","),"Developer Description") : -1;
+            var desc = @Model.SearchField!= null ? Array.IndexOf(@Model.SearchField.Replace("%20"," ").Split(","),"Description") : -1;
+            var query = @Model.SearchField!= null ? Array.IndexOf(@Model.SearchField.Replace("%20"," ").Split(","),"Query") : -1;
+            var epicid = @Model.SearchField!= null ? Array.IndexOf(@Model.SearchField.Replace("%20"," ").Split(","),"Epic Id") : -1;
+            var epictempid = @Model.SearchField!= null ? Array.IndexOf(@Model.SearchField.Replace("%20"," ").Split(","),"Epic Template Id") : -1;
+            var termname = @Model.SearchField!= null ? Array.IndexOf(@Model.SearchField.Replace("%20"," ").Split(","),"Term Name") : -1;
+            var termsum = @Model.SearchField!= null ? Array.IndexOf(@Model.SearchField.Replace("%20"," ").Split(","),"Term Summary") : -1;
+            var termdef = @Model.SearchField!= null ? Array.IndexOf(@Model.SearchField.Replace("%20"," ").Split(","),"Term Technical Definition") : -1;
+        }
+        @Model.SearchField
+        <label class='chck checkbox-container search-field-filter'>
+            <span class="darken">Name</span>
+            <input type="checkbox" @if (name > -1) { <text> checked="checked" </text> } mvalue="Name" />
+            <span class="checkmark"></span>
+        </label>
+        <label class='chck checkbox-container search-field-filter'>
+            <span class="darken">Detailed Description</span>
+            <input type="checkbox" @if (detdesc > -1) { <text> checked="checked" </text> } mvalue="Detailed Description"/>
+            <span class="checkmark"></span>
+        </label>
+        <label class='chck checkbox-container search-field-filter'>
+            <span class="darken">Key Assumptions</span>
+            <input type="checkbox" @if (keyassum > -1) { <text> checked="checked" </text> } mvalue="Key Assumptions"/>
+            <span class="checkmark"></span>
+        </label>
+         <label class='chck checkbox-container search-field-filter'>
+            <span class="darken">Developer Description</span>
+            <input type="checkbox" @if (devdesc > -1) { <text> checked="checked" </text>}  mvalue="Developer Description" />
+            <span class="checkmark"></span>
+        </label>
+         <label class='chck checkbox-container search-field-filter'>
+            <span class="darken">Description</span>
+            <input type="checkbox" @if (desc > -1) { <text> checked="checked" </text> } mvalue="Description"/>
+            <span class="checkmark"></span>
+        </label>
+         <label class='chck checkbox-container search-field-filter'>
+            <span class="darken">Query</span>
+            <input type="checkbox" @if (query > -1) { <text> checked="checked" </text> } mvalue="Query"/>
+            <span class="checkmark"></span>
+        </label>
+        <label class='chck checkbox-container search-field-filter'>
+            <span class="darken">Epic Id</span>
+            <input type="checkbox" @if (epicid > -1) { <text> checked="checked" </text> } mvalue="Epic Id"/>
+            <span class="checkmark"></span>
+        </label>
+        <label class='chck checkbox-container search-field-filter'>
+            <span class="darken">Epic Template Id</span>
+            <input type="checkbox" @if (epictempid > -1) { <text> checked="checked" </text> } mvalue="Epic Template Id"/>
+            <span class="checkmark"></span>
+        </label>
+        <label class='chck checkbox-container search-field-filter'>
+            <span class="darken">Term Name</span>
+            <input type="checkbox" @if (termname > -1) { <text> checked="checked" </text> } mvalue="Term Name"/>
+            <span class="checkmark"></span>
+        </label>
+        <label class='chck checkbox-container search-field-filter'>
+            <span class="darken">Term Summary</span>
+            <input type="checkbox" @if (termsum > -1) { <text> checked="checked" </text> } mvalue="Term Summary"/>
+            <span class="checkmark"></span>
+        </label>
+        <label class='chck checkbox-container search-field-filter'>
+            <span class="darken">Term Definition</span>
+            <input type="checkbox" @if (termdef > -1) { <text> checked="checked" </text> } mvalue="Term Technical Definition"/>
+            <span class="checkmark"></span>
+        </label>
+</form>

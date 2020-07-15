@@ -1,0 +1,65 @@
+@*
+    Atlas of Information Management business intelligence library and documentation database.
+    Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*@
+
+@model Data_Governance_WebApp.Pages.Terms.IndexModel
+<div class="clps" id="editCollapse">
+    <div class="card card-body bg-light mb-3" id="">
+        <form asp-page-handler="EditTerm" method="post">
+            <h3 class="d-flex justify-content-between">
+                <span>Edit Term</span>
+                <div class="button-group">
+                    <button class="btn btn-link" type="button" data-toggle="clps" data-target="editCollapse">
+                        <i class="fas fa-times fa-lg"></i>
+                    </button>
+                    <button class="btn btn-link" type="submit">
+                        <i class="fas fa-save fa-lg"></i>
+                    </button>
+                </div>
+            </h3>
+            <input asp-for="NewTerm.TermId" type="hidden" value="@Model.MyTerm.Id" />
+            <div class="form-group">
+                <label class="control-label">Name</label>
+                <input class="form-control" asp-for="NewTerm.Name" value="@Model.MyTerm.Name"/>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Summary</label>
+                <textarea rows=1 class="form-control" id="NewTerm_Summary" name="NewTerm.Summary">@Model.MyTerm.Summary</textarea>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Technical Definition</label>
+                <textarea rows=1 class="form-control" id="NewTerm_TechnicalDefinition" name="NewTerm.TechnicalDefinition">@Model.MyTerm.Definition</textarea>
+            </div>
+            <div class="form-group">
+                <label class="control-label">External Standard Link</label>
+                <input class="form-control" asp-for="NewTerm.ExternalStandardUrl" value="@Model.MyTerm.ExtStdUrl" />
+            </div>
+            <div class="form-group">
+                <label class="control-label">Valid From</label>
+                <input class="form-control" type="date" asp-for="NewTerm.ValidFromDateTime" value="@DateTime.Today.ToString("yyyy-MM-dd")" />
+            </div>
+            @if (Model.Permissions.Contains(6))
+            {
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="approvedYn">
+                    <label for="approvedYn" class="form-check-label">Approved?</label>
+                    <input type="hidden" class="approvedYnHiddenTextArea" asp-for="NewTerm.ApprovedYn" value="@Model.MyTerm.Approved">
+                </div>
+            }
+        </form>
+    </div>
+</div>

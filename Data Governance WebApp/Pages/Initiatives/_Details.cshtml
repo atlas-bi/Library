@@ -1,0 +1,167 @@
+@*
+    Atlas of Information Management business intelligence library and documentation database.
+    Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*@
+
+@model Data_Governance_WebApp.Pages.Initiatives.IndexModel
+<div class="pageTitle">
+    <h2 class="pageTitle-head"><span>@Model.DataInitiative.Name</span></h2>
+    <div class="control-box">
+        <ul class=control-list>
+            @if (Model.Permissions.Contains(22))
+            {
+                <li class="control-item">
+                        <button class="btn btn-link p-0 atlas-blue" type="button" data-toggle="clps" data-target="editClps"><span class="far fa-edit"></span></button>
+                </li>
+            }
+            @if (Model.Permissions.Contains(21))
+            {
+                <li class="control-item">
+                    <form asp-page-handler="DeleteInitiative" method="post">
+                        <input asp-for="DpDataInitiative.DataInitiativeId" type="hidden" value="@Model.DataInitiative.Id" />
+                        <button class="btn btn-link p-0 atlas-blue" type="submit" onclick="return confirm('Are you sure you want to remove this?');" style="margin-top:-2px;">
+                            <svg class="icon-sm" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M432 32H312l-9.4-18.7A24 24 0 0 0 281.1 0H166.8a23.72 23.72 0 0 0-21.4 13.3L136 32H16A16 16 0 0 0 0 48v32a16 16 0 0 0 16 16h416a16 16 0 0 0 16-16V48a16 16 0 0 0-16-16zM53.2 467a48 48 0 0 0 47.9 45h245.8a48 48 0 0 0 47.9-45L416 128H32z"/></svg>
+                        </button>
+                    </form>
+                </li>
+            }
+            <li class="control-item">
+                <i fav-type="initiative" object-id="@Model.DataInitiative.Id" class="favorite far fa-star @Model.DataInitiative.Favorite"></i>
+            </li>
+            <li class="control-item" data-tooltip="Share">
+                <button class="btn btn-link p-0 atlas-blue" data-toggle="mdl" data-target="shareModal" data-name='@Model.DataInitiative.Name'><i class="fas fa-share"></i></button>
+            </li>
+            <li class="control-item" data-tooltip="Report a Problem">
+                <button class="btn btn-link p-0 atlas-blue" data-toggle="mdl" data-target="reportProblem" data-name="@Model.DataInitiative.Name"><i class="fas fa-exclamation-circle"></i></button>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<section class="pageSection">
+    <span class="location" id=""></span>
+    @if (Model.Permissions.Contains(22))
+    {
+        <partial name="_Edit" />
+    }
+
+    <div class="row py-3">
+        <div class="col-2 text-right border-right"><h4>Owners</h4></div>
+        <div class="col-10">
+            <div class="row justify-content-center">
+                @if (Model.DataInitiative.OpOwnerId != null)
+                {
+                    <div class="col-3 text-center mx-5">
+                        <h6 class="border-bottom mb-3">Operational</h6>
+                        <p>@Model.DataInitiative.OpOwner</p>
+                    </div>
+                }
+                @if (Model.DataInitiative.ExOwnerId != null)
+                {
+                    <div class="col-3 text-center mx-5">
+                        <h6 class="border-bottom mb-3">Executive</h6>
+                        <p>@Model.DataInitiative.ExOwner</p>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- Impact -->
+    <div class="row py-3">
+        <div class="col-2 text-right border-right"><h4>Impact</h4></div>
+        <div class="col-10">
+            <div class="row justify-content-center">
+                @if (Model.DataInitiative.FinancialImpId != null)
+                {
+                    <div class="col-3 text-center mx-5">
+                        <h6 class="border-bottom mb-3">Financial</h6>
+                        <p>@Model.DataInitiative.FinancialImp</p>
+                    </div>
+                }
+                @if (Model.DataInitiative.StrategicImpId != null)
+                {
+                    <div class="col-3 text-center mx-5">
+                        <h6 class="border-bottom mb-3">Strategic</h6>
+                        <p>@Model.DataInitiative.StrategicImp</p>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- Description -->
+    @if (Model.DataInitiative.Description != null && Model.DataInitiative.Description != "")
+    {
+        <div class="row py-3">
+            <div class="col-2 text-right border-right"><h4>Description</h4></div>
+            <div class="col-10">
+                <div class="markdown noleft">
+                    @Html.Raw(@Helpers.HtmlHelpers.MarkdownToHtml(Model.DataInitiative.Description))
+                </div>
+            </div>
+        </div>
+    }
+
+    @if (Model.DataInitiative.RelatedContacts.Count() > 0)
+    {
+        <!-- External Contacts -->
+        <div class="row py-3">
+            <div class="col-2 text-right border-right"><h4>Contacts</h4></div>
+            <div class="col-10">
+                @foreach (var c in Model.DataInitiative.RelatedContacts)
+                {
+                    <span>@c.Name @@ @c.Company </span><br>
+                }
+            </div>
+        </div>
+    }
+
+    @if (Model.DataInitiative.RelatedProjects.Count() > 0)
+    {
+        <div class="row py-3">
+            <div class="col-2 text-right border-right"><h4>Linked Projects</h4></div>
+            <div class="col-10">
+                @foreach (var d in @Model.DataInitiative.RelatedProjects)
+                {
+                    <div class="pb-3">
+                        <h4 class="mb-3">
+                            <a href="Projects?id=@d.Id" class="atlas-blue ajax">@d.Name</a>
+                        </h4>
+
+                        @if (d.RelatedReports.Count() > 0)
+                        {
+                            <h6 class="border-bottom pb-1">Linked Reports</h6>
+
+                            @foreach (var r in d.RelatedReports)
+                            {
+                                <h5 class="ml-3 my-3">
+                                    <a href="Reports?id=@r.Id" class="atlas-blue ajax">@r.Name</a>
+                                </h5>
+                                @if(r.Annotation != null && r.Annotation != ""){
+                                    <div class="card card-body bg-light ml-3">
+                                        <div class="card-head">Annotation</div>
+                                        @r.Annotation
+                                    </div>
+                                }
+                            }
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    }
+</section>

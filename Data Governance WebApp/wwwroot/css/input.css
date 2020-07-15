@@ -1,0 +1,92 @@
+.input-ctn {
+	margin-top: 5px;
+	width: 100%;
+	position: relative;
+	padding-bottom: 25px;
+}
+
+.input-ctn.slim {
+	padding-bottom:10px;
+}
+
+
+.input-new {
+	margin-top: 25px;
+	width: 100%;
+	position: relative;
+	padding-bottom: 15px;
+}
+
+.input-newWrapper {
+	min-height: 33px;
+	margin-left: 15px;
+	position: relative;
+	display:flex;
+	border-bottom: 1px solid #BEB8BA;
+	border-bottom: 1px solid var(--medium-grey);
+}
+
+.input-newWrapper:hover {
+	cursor: text;
+}
+
+.input-newWrapper::after {
+	position: absolute;
+	content: '';
+	width: 0;
+	left: 0;
+	bottom: -1px;
+	height: 2px;
+	background-color: #0084db;
+	background-color: var(--active-link);
+	-webkit-transition: width .7s; /* For Safari 3.1 to 6.0 */
+	transition: width .7s;
+	z-index:1;
+}
+
+.input-newWrapper-focus::after {
+	content: '';
+	position: absolute;
+	width: 100%;
+	-webkit-transition: width .2s; /* For Safari 3.1 to 6.0 */
+	transition: width .2s;
+}
+
+.input-span {
+	position: relative;
+	min-height: 33px;
+	flex:1;
+	padding: 3px;
+	display: block;
+	outline: none;
+}
+
+.input-span:empty::before {
+	content: attr(data-initial-content);
+	color: #575353;
+	color: var(--grey);
+	display: block;
+}
+
+.input-span:focus::before {
+	display: none;
+}
+
+.input-submit {
+	position: relative;
+	margin:0;
+	padding:0 10px;
+	cursor: pointer;
+	outline: none;
+	border:0;
+	background:transparent;
+}
+.input-submit:hover, .input-submit:active, .input-submit:focus, .input-submit:visited {
+	text-decoration: none;
+	outline:none;
+}
+
+.input-span:focus {
+	outline: none;
+}
+

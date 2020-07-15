@@ -1,0 +1,9 @@
+.ajaxLoader {
+	text-align: center;
+	margin-top:20px;
+	margin-bottom:20px;
+	width:100%;
+}
+.ajaxLoader-img {
+	width:25px;
+}

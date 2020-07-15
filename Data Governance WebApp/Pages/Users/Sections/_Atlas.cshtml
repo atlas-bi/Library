@@ -1,0 +1,170 @@
+@*
+    Atlas of Information Management business intelligence library and documentation database.
+    Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*@
+
+@model Data_Governance_WebApp.Pages.Users.IndexModel
+
+@{
+    var ReportObjectDocEdits = Model.ReportObjectDocEdits.Count() > 0;
+    var InitiativeEdits = Model.InitiativeEdits.Count() > 0;
+    var ProjectEdits = Model.ProjectEdits.Count() > 0;
+    var TermEdits = Model.TermEdits.Count() > 0;
+    var AtlasHistory = Model.AtlasHistory.Count() > 0;
+    var LoadTime = Model.LoadTime.Count() > 0;
+}
+@if (ReportObjectDocEdits || InitiativeEdits || ProjectEdits || TermEdits || AtlasHistory || LoadTime)
+{
+    @if (ReportObjectDocEdits || InitiativeEdits || ProjectEdits || TermEdits)
+    {
+        <h2 class="pb-3 border-bottom border-2 darken">
+            Recent Edits - Last 30 Days
+        </h2>
+
+        @if (ReportObjectDocEdits)
+        {
+            <h3 class="darken">Reports</h3>
+            <ul style="list-style: none;">
+
+                @foreach (var r in Model.ReportObjectDocEdits)
+                {
+                    <li>
+                        <a class="atlas-blue" href="@r.Url">@r.Name</a><span class="text-muted"> &middot; @r.Date</span>
+                    </li>
+                }
+            </ul>
+        }
+
+        @if (InitiativeEdits)
+        {
+            <h3 class="darken">Initiatives</h3>
+            <ul style="list-style: none;">
+                @foreach (var r in Model.InitiativeEdits)
+                {
+                    <li>
+                        <a class="atlas-blue" href="@r.Url">@r.Name</a><span class="text-muted"> &middot; @r.Date</span>
+                    </li>
+                }
+            </ul>
+        }
+
+        @if (ProjectEdits)
+        {
+            <h3 class="darken">Projects</h3>
+            <ul style="list-style: none;">
+                @foreach (var r in Model.ProjectEdits)
+                {
+                    <li>
+                        <a class="atlas-blue" href="@r.Url">@r.Name</a><span class="text-muted"> &middot; @r.Date</span>
+                    </li>
+                }
+            </ul>
+        }
+        @if (TermEdits)
+        {
+            <h3 class="darken">Terms</h3>
+            <ul style="list-style: none;">
+                @foreach (var r in Model.TermEdits)
+                {
+                    <li>
+                        <a class="atlas-blue" href="@r.Url">@r.Name</a><span class="text-muted"> &middot; @r.Date</span>
+                    </li>
+                }
+            </ul>
+        }
+    }
+
+    @if (LoadTime)
+    {
+        <h3>Most Popular Pages</h3>
+
+        <div class="atlas-chart" style="width:100%">
+            <div class="ajaxLoader"><img class="ajaxLoader-img" src="/img/loader.gif" /></div>
+            <script type="application/json">
+                @{
+                    var TopTen = Model.LoadTime.Take(20);
+                    var last = TopTen.Last();
+                }
+                {
+                    "axis": {
+                        "0": {"title":"seconds"},
+                        "1": {"title":"visits"}
+                    },
+                    "type": "bar",
+                    "height":"400",
+                    "title": "Popular Pages",
+                    "data": [{
+                        "title" : "Run Time (s)",
+                        "axis":"0",
+                        "type": "line",
+                        "units": "(s)",
+                        "data": [
+                                @foreach (var g in TopTen)
+                                { 
+                                    <text>{ "title": "@g.Date.Replace(" ","','")", "data": "@g.Avg"}</text> @if(g != last){<text>,</text>}
+                                }
+                            ]
+                       },{
+                        "title" : "Visits",
+                        "type": "bar",
+                        "axis": "1",
+                        "data": [
+                                @foreach (var g in TopTen)
+                                { 
+                                    <text>{ "title": "@g.Date.Replace(" ","','")", "data": "@g.Cnt"}</text> @if(g != last){<text>,</text>}
+                                }
+                            ]
+                       }]
+                    }
+            </script>
+        </div>
+
+    }
+    @if (AtlasHistory)
+    {
+
+        <h2 class="py-3 border-bottom border-2 darken">
+            Atlas Browsing History - Last 7 Days
+        </h2>
+        <table class="table sort">
+            <thead>
+                <tr>
+                    <th style="border-top:none">Area</th>
+                    <th style="border-top:none">Page</th>
+                    <th style="border-top:none">Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var t in Model.AtlasHistory)
+                {
+                    <tr>
+                        <td>@t.Type</td>
+                        <td><a class="atlas-blue" href="@t.Url">@t.Name</a></td>
+                        <td>@t.Date</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+    }
+
+
+}
+else
+{
+    <h5 class="w-100 pt-5 text-center">No activity to show</h5>
+    <h5 class="w-100 pt-3 text-center">¯\_(ツ)_/¯</h5>
+}
