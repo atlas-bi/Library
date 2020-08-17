@@ -37,6 +37,13 @@
       } else {
         o(el);
       }
+    } else if (e.target.closest('.clps:not(.clps-o)')){
+      el = e.target.closest('.clps:not(.clps-o)');
+      if (el.style.maxHeight || el.classList.contains('clps-o')) {
+        c(el);
+      } else {
+        o(el);
+      }
     }
   });
 

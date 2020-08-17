@@ -198,6 +198,9 @@
 	width:calc(100% - 2px);
 	min-width: 0;
 }
+.fav-body .clps {
+	min-height:30px !important;
+}
 
 .fav-type {
 	margin-bottom: 0 !important;

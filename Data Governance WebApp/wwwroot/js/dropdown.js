@@ -554,8 +554,8 @@
                 q.innerHTML = v.value;
                 c.appendChild(q);
                 if (v.value < 1 && !!document.activeElement && !document.activeElement.closest('.dd-vsbl')) {
-                    v.style.width = 16 + 'px';
-                } else { v.style.width = Math.max(q.clientWidth + 16, 16) + 'px'; }
+                    v.style.width = 17 + 'px';
+                } else { v.style.width = Math.max(q.clientWidth + 17, 17) + 'px'; }
                 q.parentElement.removeChild(q);
             });
         },
