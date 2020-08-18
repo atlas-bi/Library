@@ -17,16 +17,62 @@
 -->
 
 # Atlas Documentation
+
+## Live Demo
+> :point_right: **[Live Atlas Demo with Docker](https://hub.docker.com/r/christopherpickering/rmc-atlas-demo)**
+
+Demo is running with Docker and Ubuntu 16.04. Check out the Dockerfile for build steps.
+
+App can be run locally with our public docker image -
+```sh
+docker run -i -t -p 1234:1234 -e PORT=1234  -u 0 christopherpickering/rmc-atlas-demo:latest
+```
+or, you can clone the repo and build your own docker image -
+```sh
+docker build  --tag atlas_demo .
+docker run -i -t -p 1234:1234 -e PORT=1234  -u 0 atlas_demo:latest
+# web app will be running @ http://localhost:1234
+# see Dockerfile for db access
+```
+
+Atlas can be run in an [online sandbox](https://labs.play-with-docker.com/) - it does require a docker.com login.
+
+1. Click "start"
+2. Click "Settings" > 1 Manager and 1 Worker
+3. Click on the Manager instance. Atlas is large and doesn't run in the worker.
+4. Paste in ```docker run -i -t -p 1234:1234 -e PORT=1234  -u 0 christopherpickering/rmc-atlas-demo:latest```
+5. Wait about 1-2 mins for app to download and startup. Output will say ```Now listening on: http://[::]:1234``` when ready.
+6. Click "Open Port" and type ```1234```
+7. App will open in new tab. The URL should be valid for 3-4 hrs.
+
+    If you get memory or disk use errors, run ```top``` and kill one of the big processes you find :wink:, just not mine.
+
+## Credits
+
+Atlas was created by the Riverside Healthcare Analytics team -
+
+* Paula Courville
+* [Darrel Drake](https://www.linkedin.com/in/darrel-drake-57562529)
+* [Dee Anna Hillebrand](https://github.com/DHillebrand2016)
+* [Scott Manley](https://github.com/Scott-Manley)
+* [Madeline Matz](mailto:mmatz@RHC.net)
+* [Christopher Pickering](https://github.com/christopherpickering).
+* [Dan Ryan](https://github.com/danryan1011).
+* [Richard Schissler](https://github.com/schiss152).
+* [Eric Shultz](https://github.com/eshultz).
+
 ## Getting Started
 
 ### Requirements
-1. SQL Server Database (we use 2016 or newer, any license type)
+1. SQL Server Database (we use 2016 or newer, any license type) with Full Text Index installed
 2. IIS Webserver with Microsoft .NET Core SDK 2.2.105 (x86)
 3. Dev Machine w/ the following
     * Visual Studio + Analysis Services, extensions for SSIS Integration Services
     * Python 3.7, virtualenv
     * Active Directory Explorer, or other access to Active Directory
     * Microsoft .NET Core SDK 2.2.105 (x86)
+
+Atlas can run on any server OS that is capable of running Dotnet 2.2, and the database on any server that is capable of running Sql Server + Full Text Index.
 
 ### Steps to Run
 1. Run database create scripts (LDAP, Data Governance, DG Staging). Set Datagov user credentials in database.
