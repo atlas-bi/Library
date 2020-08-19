@@ -197,20 +197,27 @@ var cache = {
   // mins
   data: {},
   remove: function remove(url) {
-    sessionStorage.removeItem(btoa(url));
+    try{
+      sessionStorage.removeItem(btoa(url));
+    }
+    catch(e) {}
   },
   exists: function exists(url) {
+    try{
     return !!sessionStorage.getItem(btoa(url)) && JSON.parse(sessionStorage.getItem(btoa(url)))._ > new Date().getTime();
+  } catch(e){return false;}
   },
   get: function get(url) {
     return JSON.parse(sessionStorage.getItem(btoa(url))).data;
   },
   set: function set(url, data, t) {
+    try{
     sessionStorage.removeItem(btoa(url));
     sessionStorage.setItem(btoa(url), JSON.stringify({
       data: data,
       _: new Date().getTime() + (t || cache.timeout) * 1000
     }));
+  } catch(e){}
   }
 };
 

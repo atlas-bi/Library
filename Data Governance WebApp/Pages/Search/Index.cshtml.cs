@@ -80,11 +80,11 @@ namespace Data_Governance_WebApp.Pages.Search
         {
             PublicUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
             // var is copied to SearchString so it can be rendered in html view.
-            SearchString = s.Replace("'","");
+            SearchString = s.Replace("'","").Replace("–", "-");
             SearchFilter = f;
             SearchField = "";
             if (sf != null) {
-                SearchField = sf.Replace("%2C", ",").Replace("%20", " ");
+                SearchField = sf.Replace("%2C", ",").Replace("%20", " ").Replace("–", "-");
             }
             SearchPage = p;
             ShowHidden = h;
