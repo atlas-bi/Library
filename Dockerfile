@@ -35,7 +35,7 @@ COPY ["./Data Governance WebApp/.", "./Data Governance WebApp/"]
 WORKDIR "/app/Data Governance WebApp/"
 RUN dotnet publish -c Release -o out
 
-FROM mcr.microsoft.com/mssql/server:2017-CU11-ubuntu as runtime
+FROM ubuntu:16.04
 
 ENV DOTNET_CLI_TELEMETRY_OPTOUT=1 \
     ACCEPT_EULA=Y \
@@ -60,9 +60,14 @@ RUN apt-get update || true && \
     curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - && \
     curl https://packages.microsoft.com/config/ubuntu/16.04/mssql-server-2017.list | tee /etc/apt/sources.list.d/mssql-server.list && \
     apt-get update || true && \
+    curl https://packages.microsoft.com/config/ubuntu/16.04/prod.list | sudo tee /etc/apt/sources.list.d/msprod.list && \
+    apt-get update || true && \
     apt-get install -yq \
+        mssql-server \
         mssql-server-ha \
         mssql-server-fts \
+        mssql-tools \
+        unixodbc-dev \
         || true && \
     # clean up
     apt-get remove -yq --auto-remove \
