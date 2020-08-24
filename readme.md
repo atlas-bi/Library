@@ -35,7 +35,7 @@ docker run -i -t -p 1234:1234 -e PORT=1234  -u 0 atlas_demo:latest
 # see Dockerfile for db access
 ```
 
-Atlas can be run in an [online sandbox](https://labs.play-with-docker.com/) - it does require a docker.com login.
+### Atlas can be run in an [online sandbox](https://labs.play-with-docker.com/) - it does require a docker.com login.
 
 1. Click "start"
 2. Click "Settings" > 1 Manager and 1 Worker
