@@ -24,7 +24,7 @@
   });
 
   var b = function b() {
-    var t = d.title.split(' -')[0].length > 15 ? d.title.split(' -')[0].substring(0, 15) + '..' : d.title.split(' -')[0],
+    var t = d.title.indexOf('-') != -1  ? d.title.split('-')[0] : d.title,
         u = window.location.href,
         j = {},
         c = sessionStorage.getItem(btoa('crumbs'));

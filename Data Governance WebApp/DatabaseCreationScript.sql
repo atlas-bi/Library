@@ -4166,6 +4166,7 @@ GO
 
 insert into [Data_Governance].dbo.[User] (Username) values ('Default')
 GO
+
 insert into [Data_Governance].app.UserRoles (Name, Description) values
 ('Administrator','Administrators have the highest priveleges and are not prevented from taking any available actions.'),
 ('Report Writer','Report Writers can create and edit ReportObject documentation and terms, but cannot approve Terms, edit approved Terms, or delete things they do not own.'),
@@ -4173,8 +4174,7 @@ insert into [Data_Governance].app.UserRoles (Name, Description) values
 ('Term Builder','Term Builders can create and edit Term documentation, but cannot approve them, edit them after approval, or link them to ReportObjects.'),
 ('User','Users do not have any special permissions. They can navigate the site, comment, and view approved Terms and all non-hidden ReportObjects.')
 GO
-insert into [Data_Governance].app.UserRoleLinks (UserId, UserRolesId) values (1,1)
-GO
+
 insert into [Data_Governance].dbo.ReportObjectType ([Name], DefaultEpicMasterFile) values
 ('Application Report','ARO'),
 ('Application Report Template','ART'),
@@ -4427,11 +4427,11 @@ declare @ResultSize int = @pageSize * @currentPage + @pageSize * 4000
 -- @originalSearch = @searchTerm w/ special chars removed.
 declare @originalSearch varchar(100) = @searchTerm
 declare @i int;
-set @i = patindex('%[^a-zA-Z0-9 _]%', @originalSearch)
+set @i = patindex('%[^a-zA-Z0-9 _-]%', @originalSearch)
 while @i > 0
 		begin
 			set @originalSearch = STUFF(@originalSearch, @i, 1, ' ')
-			set @i = patindex('%[^a-zA-Z0-9 _]%', @originalSearch)
+			set @i = patindex('%[^a-zA-Z0-9 _-]%', @originalSearch)
 		end
 set @originalSearch = REPLACE(REPLACE(REPLACE(LTRIM(RTRIM(@originalSearch)),' ','CHAR(17)CHAR(18)'),'CHAR(18)CHAR(17)',''),'CHAR(17)CHAR(18)',' ') 
 

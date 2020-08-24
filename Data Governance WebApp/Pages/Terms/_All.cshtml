@@ -72,7 +72,7 @@
 	<partial name="_New" />
 }
 
-<div class="card-columns" style="column-count: 2;width:100%">
+<div class="card-columns" style="column-count: 2;width:100%;margin-left:15px;">
 	@foreach(var t in Model.AllTerms)
 	{
 		@if (t.Approved == "N" && @Model.Permissions.Contains(17) || t.Approved == "Y")

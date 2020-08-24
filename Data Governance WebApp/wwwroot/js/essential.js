@@ -15,8 +15,8 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-function textfill() {
-  var el = document.getElementsByClassName('pageTitle-head')[0];
+function textfill(el) {
+  var el = el || document.getElementsByClassName('pageTitle-head')[0];
 
   if (el) {
     var s = el.getElementsByTagName('span')[0];
@@ -37,13 +37,44 @@ function textfill() {
     }
   }
 }
+function titleTextfill() {
+  var head = document.getElementsByClassName('resize-header');
+  for(var x=0;x<head.length;x++){
+    var el = head[x];
+
+    if (el) {
+      var s = el.getElementsByTagName('span')[0];
+
+      if (s) {
+        s.style.display = "inline-block";
+        var styles = window.getComputedStyle(el);
+        var padding = parseFloat(styles.paddingLeft) + parseFloat(styles.paddingRight);
+        s.innerHTML = s.innerHTML.replace(/_/g, " ");
+        var fontSize = parseFloat(window.getComputedStyle(el, null).getPropertyValue('font-size')),
+            newSize = fontSize * ((el.clientWidth - padding ) / s.clientWidth - 0.05);
+        s.style.fontSize = Math.min(newSize, fontSize) + 'px';
+        s.style.removeProperty('display');
+
+        if (newSize < fontSize) {
+          s.style.marginTop = "auto";
+        }
+      }
+    }
+  }
+}
 
 textfill();
+titleTextfill();
+ 
 document.addEventListener('ajax-page', function () {
   textfill();
+  titleTextfill();
+
 });
 window.addEventListener('resize', function () {
   textfill();
+  titleTextfill();
+
 });
 /*
       $('body').on('change', '#MyRole_Id ~ input', function (e) {

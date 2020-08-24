@@ -60,7 +60,7 @@ RUN apt-get update || true && \
     curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - && \
     curl https://packages.microsoft.com/config/ubuntu/16.04/mssql-server-2017.list | tee /etc/apt/sources.list.d/mssql-server.list && \
     apt-get update || true && \
-    curl https://packages.microsoft.com/config/ubuntu/16.04/prod.list | sudo tee /etc/apt/sources.list.d/msprod.list && \
+    curl https://packages.microsoft.com/config/ubuntu/16.04/prod.list | tee /etc/apt/sources.list.d/msprod.list && \
     apt-get update || true && \
     apt-get install -yq \
         mssql-server \
@@ -81,7 +81,7 @@ RUN apt-get update || true && \
 
 WORKDIR /app
 
-# copy and execute database creation and seed scripts
+# copy and execute database creation and seed scriptsnot
 COPY ["./Data Governance WebApp/DatabaseCreationScript.sql", "create.sql"]
 COPY ["./Data Governance WebApp/DatabaseSeedScript.sql", "seed.sql"]
 

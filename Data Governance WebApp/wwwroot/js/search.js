@@ -50,8 +50,7 @@
         currentPathname = oldPath;
     }
 
-    function AjaxSearch(value, url) {
-
+    function AjaxSearch(value, url, string) {
         if (!window.location.pathname.toLowerCase().startsWith('/search')) {
             oldHref = window.location.href;
         }
@@ -68,10 +67,6 @@
 
             a.href = url || oldHref;
 
-            if (a.pathname == '/Search') { //m.innerHTML = loader;
-            } else { //m.style.visibility = 'hidden';
-            }
-
             document.dispatchEvent(new CustomEvent('progress-start', {
                 cancelable: true,
                 detail: {
@@ -81,7 +76,7 @@
 
             history.pushState({
                 state: 'ajax',
-                search: value
+                search: string
             }, document.title, window.location.origin + '/Search?s=' + encodeURI(u));
 
             if (cache.exists(s)) {
@@ -98,7 +93,7 @@
                 sAjx.send();
 
                 sAjx.onload = function() {
-                    l(sAjx.responseText, hst, a, m, d, atmr, s, u, value);
+                    l(sAjx.responseText, hst, a, m, d, atmr, s, u, string);
                     var ccHeader = sAjx.getResponseHeader('Cache-Control') != null ? (sAjx.getResponseHeader('Cache-Control').match(/\d+/) || [null])[0] : null;
 
                     if (ccHeader) {
@@ -161,7 +156,7 @@
             var q = e.target,
                 str = q.getElementsByClassName('searchString')[0].textContent.trim();
             i.value = str;
-            AjaxSearch(str, q.getAttribute('search'));
+            AjaxSearch(str, q.getAttribute('search'), str);
         }
     });
     d.addEventListener('scroll', function() {
@@ -195,7 +190,7 @@
         };
     });
     i.addEventListener('input', function(e) {
-        if (i.value.trim() !== '') AjaxSearch(i.value);
+        if (i.value.trim() !== '') AjaxSearch(i.value, null, i.value);
     });
     d.addEventListener('click', function(e) {
         hst.style.display = 'none';
@@ -269,7 +264,7 @@
             i.value = 1;
         });
         var p = serialize(l);
-        AjaxSearch(null, p);
+        AjaxSearch(null, p, document.querySelector('.sr-grp input').value);
     }
 
     scls.addEventListener('click', function(e) {

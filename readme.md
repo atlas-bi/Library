@@ -45,8 +45,6 @@ Atlas can be run in an [online sandbox](https://labs.play-with-docker.com/) - it
 6. Click "Open Port" and type ```1234```
 7. App will open in new tab. The URL should be valid for 3-4 hrs.
 
-    If you get memory or disk use errors, run ```top``` and kill one of the big processes you find :wink:, just not mine.
-
 ## Credits
 
 Atlas was created by the Riverside Healthcare Analytics team -

@@ -783,6 +783,12 @@ namespace Data_Governance_WebApp.Pages.Users
             {
                 return Redirect("/");
             }
+            
+            // clear cache
+            var oldPerm = _cache.Get<List<string>>("MasterUserPermissions");
+            for(var x=0;x<oldPerm.Count();x++){
+                _cache.Remove(oldPerm[x]);
+            }
 
             var MyItemType = "ActiveRole";
             var CurrentState = _context.UserPreferences.Where(x => x.UserId == MyUser.UserId && x.ItemType == MyItemType).FirstOrDefault();
@@ -822,7 +828,7 @@ namespace Data_Governance_WebApp.Pages.Users
                                              Url = o.Url
                                          }).ToList();
             ViewData["SharedFromMe"] = (from o in _context.SharedItems
-                                      where o.SharedToUserId == MyUser.UserId
+                                      where o.SharedFromUserId == MyUser.UserId
                                       select new SharedObjectsData
                                       {
                                           Id = o.Id,

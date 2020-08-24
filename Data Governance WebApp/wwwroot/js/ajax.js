@@ -57,6 +57,7 @@
   }
 
   var a = function a(url, t, start, type) {
+
     var d = document,
         m,
         sc,
@@ -78,7 +79,6 @@
       sc[x].parentElement.removeChild(sc[x]);
     } // get page title
 
-
     var matches = el.innerHTML.match(/<title>(.*?)<\/title>/); // update history
 
     d.title = matches ? matches[1] : 'Atlas of Information Management';
@@ -88,7 +88,6 @@
         state: 'ajax'
       }, d.title, url);
     } //scrol to top
-
 
     document.documentElement.scrollTop = document.body.scrollTop = 0;
     document.dispatchEvent(new CustomEvent('progress-finish'));
@@ -112,8 +111,7 @@
         }
       }));
     }
-
-    if (window.location.pathname == '/') {
+    if (window.location.pathname == '/' || window.location.pathname.indexOf('/Search') != -1) {
       d.dispatchEvent(new CustomEvent("clps-open", {
         cancelable: true,
         detail: {
@@ -130,6 +128,11 @@
     }
 
     d.querySelector('.sr-grp input').value = ''; // after load
+    // set search value
+    if (url.indexOf('/Search') != -1) {
+      var vars = getUrlVars(url);
+      d.querySelector('.sr-grp input').value = decodeURI(vars.s);
+    }
 
     document.dispatchEvent(new CustomEvent("ajax"));
     document.dispatchEvent(new CustomEvent("ajax-page"));

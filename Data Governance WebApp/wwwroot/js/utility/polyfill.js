@@ -184,9 +184,10 @@ function getOffset(element) {
   };
 }
 
-function getUrlVars() {
+function getUrlVars(url) {
+  var url = url || window.location.href;
   var vars = {};
-  var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function (m, key, value) {
+  var parts = url.replace(/[?&]+([^=&]+)=([^&]*)/gi, function (m, key, value) {
     vars[key] = value;
   });
   return vars;

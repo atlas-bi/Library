@@ -91,7 +91,7 @@
                                     <a class="ml-3 atlas-blue" target="_blank" rel="noopener" href="@result.ManageReportUrl">Manage Report</a>
                                 }
                             </h5>
-                            <div class="clps fav-dtls" id="clps-@result.Id">
+                            <div class="clps fav-dtls" id="clps-@result.Id" @if(result.SearchField == "Query"){<text>style="min-height:0 !important;"</text>}>
                                 <div class="markdown noleft">
                                     @if (result.Description != null && result.Description != "")
                                     {

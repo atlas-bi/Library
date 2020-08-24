@@ -24,13 +24,11 @@
 @if (m.ManageEngineTickets.Count > 0)
 {
     <h4>Manage Engine Tickets</h4>
-    <span>
-        @{ 
-            var lastTicket = m.ManageEngineTickets[m.ManageEngineTickets.Count-1];;
-        }
+<div class="reportDetails">
+
         @foreach (var t in m.ManageEngineTickets)
         {
-            <a target="_blank" class="atlas-blue" href="@t.Url" >@t.Number (@t.Description)</a>@if(t.Id != lastTicket.Id) { <text>, </text>}
+            <a target="_blank" class="atlas-blue reportDetails-title" href="@t.Url">@t.Number</a><span>@t.Description</span>
         }
-</span>
+    </div>
 }

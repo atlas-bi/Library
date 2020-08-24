@@ -98,7 +98,7 @@
                 @if (Model.Permissions.Contains(44))
                 {
                 <li class="nb-ni">
-                    <form action="/users?handler=ChangeRole" method="post">
+                    <form action="/users?handler=ChangeRole" method="post" id="change-role">
                         @{
                         var ph = "";
                         if (ViewBag.MyRole != null && ViewBag.MyRole.Name != null && ViewBag.MyRole.Name != "")
@@ -113,10 +113,16 @@
                         <input type="dynamic-dropdown" name="MyRole.Id" id="MyRole_Id" search-area="user-roles" method="fullList" required placeholder="@ph" />
                         <input type="hidden" name="MyRole.Url" id="MyRole_Url" />
                     </form>
+                    <script>
+                        document.getElementById('change-role').addEventListener('change',function(e){
+                             e.target.closest('form').querySelector('#MyRole_Url').value = window.location.href;
+                            e.target.closest('form').submit();
+                        })
+                    </script>
                 </li>
                 }
             </ul>
         </div>
     </div>
 </nav>
-<ul class="nb-cmbs"></ul>
+<div class="nb-cmbsWrp"><ul class="nb-cmbs"></ul></div>
