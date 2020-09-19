@@ -25,27 +25,27 @@
     <div class="srch-fltr">
         <label class='chck checkbox-container search-filter'>
             <span class="darken">SSRS</span>
-            <input type="checkbox"  @if(Model.SearchFilter == 28){<text>checked="checked"</text>}) value='@(Model.SearchFilter == 28?"0":"28")' />
+            <input type="checkbox"  @if(Model.SearchFilter != null && Model.SearchFilter.Contains("28")) {<text>checked="checked"</text>} value='28' />
             <span class="checkmark"></span>
         </label>
         <label class='chck checkbox-container search-filter'>
             <span class="darken">Dashboard</span>
-            <input type="checkbox" @if(Model.SearchFilter == 20){<text>checked="checked"</text>})  value='@(Model.SearchFilter == 20?"0":"20")'/>
+            <input type="checkbox" @if(Model.SearchFilter != null && Model.SearchFilter.Contains("20")){<text>checked="checked"</text>}  value='20' />
             <span class="checkmark"></span>
         </label>
         <label class='chck checkbox-container search-filter'>
             <span class="darken">Dash Component</span>
-            <input type="checkbox" @if(Model.SearchFilter == 21){<text>checked="checked"</text>})  value='@(Model.SearchFilter == 21?"0":"21")'/>
+            <input type="checkbox" @if(Model.SearchFilter != null && Model.SearchFilter.Contains("21")){<text>checked="checked"</text>}  value='21' />
             <span class="checkmark"></span>
         </label>
         <label class='chck checkbox-container search-filter'>
             <span class="darken">Crystal</span>
-            <input type="checkbox" @if(Model.SearchFilter == 3){<text>checked="checked"</text>}) value='@(Model.SearchFilter == 3?"0":"3")' />
+            <input type="checkbox" @if(Model.SearchFilter != null && Model.SearchFilter.Contains("3")){<text>checked="checked"</text>} value='3' />
             <span class="checkmark"></span>
         </label>
         <label class='chck checkbox-container search-filter' >
             <span class="darken">Workbench</span>
-            <input type="checkbox" @if(Model.SearchFilter == 17){<text>checked="checked"</text>}) value='@(Model.SearchFilter == 17?"0":"17")' />
+            <input type="checkbox" @if(Model.SearchFilter != null && Model.SearchFilter.Contains("17")){<text>checked="checked"</text>} value='17' />
             <span class="checkmark"></span>
         </label>
     </div>
@@ -86,7 +86,6 @@
             var termsum = @Model.SearchField!= null ? Array.IndexOf(@Model.SearchField.Replace("%20"," ").Split(","),"Term Summary") : -1;
             var termdef = @Model.SearchField!= null ? Array.IndexOf(@Model.SearchField.Replace("%20"," ").Split(","),"Term Technical Definition") : -1;
         }
-        @Model.SearchField
         <label class='chck checkbox-container search-field-filter'>
             <span class="darken">Name</span>
             <input type="checkbox" @if (name > -1) { <text> checked="checked" </text> } mvalue="Name" />

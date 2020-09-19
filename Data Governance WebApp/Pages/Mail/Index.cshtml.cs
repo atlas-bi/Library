@@ -130,6 +130,7 @@ namespace Data_Governance_WebApp.Pages.Mail
         public async Task<ActionResult> OnPostCheckForMail()
         {
             Permissions = UserHelpers.GetUserPermissions(_cache, _context, User.Identity.Name);
+            ViewData["SiteMessage"] = HtmlHelpers.SiteMessage(HttpContext, _context);
             Favorites = UserHelpers.GetUserFavorites(_cache, _context, User.Identity.Name);
             Preferences = UserHelpers.GetPreferences(_cache, _context, User.Identity.Name);
             PublicUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
@@ -251,6 +252,7 @@ namespace Data_Governance_WebApp.Pages.Mail
             HttpContext.Response.Headers.Add("Pragma", "no-cache"); // HTTP 1.0.
             HttpContext.Response.Headers.Add("Expires", "0"); // Proxies.
             Permissions = UserHelpers.GetUserPermissions(_cache, _context, User.Identity.Name);
+            ViewData["SiteMessage"] = HtmlHelpers.SiteMessage(HttpContext, _context);
             Favorites = UserHelpers.GetUserFavorites(_cache, _context, User.Identity.Name);
             Preferences = UserHelpers.GetPreferences(_cache, _context, User.Identity.Name);
             PublicUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
@@ -388,11 +390,16 @@ namespace Data_Governance_WebApp.Pages.Mail
 
                 var package = JObject.Parse(reader.ReadToEnd());
 
+
+      
                 int? DraftId = (int?)package["DraftId"];
                 string To = package.Value<string>("To") ?? "";
                 string Subject = package.Value<string>("Subject") ?? "";
                 string Message = package.Value<string>("Message") ?? "";
                 string Text = package.Value<string>("Text") ?? "";
+                string Share = package.Value<string>("Share") ?? "";
+                string ShareName = package.Value<string>("ShareName") ?? "";
+                string ShareUrl = package.Value<string>("ShareUrl") ?? "";
                 int? MsgId = (int?)package["MsgId"];
                 int? ConvId = (int?)package["ConvId"];
 
@@ -427,6 +434,22 @@ namespace Data_Governance_WebApp.Pages.Mail
                     // delete draft
                     _context.RemoveRange(_context.MailDrafts.Where(x => x.DraftId == (int)DraftId));
                     await _context.SaveChangesAsync();
+                }
+                // add share
+                if (Share == "1") {
+                    foreach (var user in Users)
+                    {
+                        SharedItems newShare = new SharedItems { SharedFromUserId = MyUser.UserId, SharedToUserId = user.UserId, ShareDate = DateTime.Now, Name = ShareName, Url = ShareUrl };
+                        _context.Add(newShare);
+                        
+                    }
+                    foreach (var user in GroupUsers)
+                    {
+                        SharedItems newShare = new SharedItems { SharedFromUserId = MyUser.UserId, SharedToUserId = user.UserId, ShareDate = DateTime.Now, Name = ShareName, Url = ShareUrl };
+                        _context.Add(newShare);
+                    }
+                    await _context.SaveChangesAsync();
+
                 }
             }
             return Content("peace");

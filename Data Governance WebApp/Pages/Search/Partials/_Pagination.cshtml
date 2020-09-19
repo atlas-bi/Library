@@ -23,7 +23,7 @@
 {
     <form id="searchPagination" style="margin-bottom:50px">
         <input type="hidden" value="@Model.SearchString" name="s" />
-        @if (Model.SearchFilter > 0){<input type="hidden" value="@Model.SearchFilter" name="f" />}
+        @if (Model.SearchFilter.Length > 0){<input type="hidden" value="@Model.SearchFilter" name="f" />}
         @if (Model.ShowAllTypes > 0){<input type="hidden" value="@Model.ShowAllTypes" name="t" />}
         @if (Model.ShowOrphans > 0) {<input type="hidden" value="@Model.ShowOrphans" name="o" />}
         @if (Model.ShowHidden > 0)  {<input type="hidden" value="@Model.ShowHidden" name="h" />}

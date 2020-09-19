@@ -18,12 +18,14 @@
 
 @model Data_Governance_WebApp.Pages.Terms.IndexModel
 <div class="pageTitle">
-    <h2 class="page-title">
+    <div class="page-title">
+        <h2 class="pageTitle-head">
             <span>@Model.MyTerm.Name</span>@if (@Model.MyTerm.Approved == "Y")
             {
-                <span class="badge badge-success float-sm-right mb-3 ml-3">Approved</span>
+                <span class="badge badge-success float-sm-right mb-3 ml-3">(Approved)</span>
             }
         </h2>
+        </div>
         <div class="control-box">
             <ul class=control-list>
                 @if ((Model.Permissions.Contains(13) && Model.MyTerm.Approved == "N") || (Model.Permissions.Contains(11) && Model.MyTerm.Approved == "Y"))

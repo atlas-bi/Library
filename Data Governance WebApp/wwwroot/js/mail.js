@@ -15,7 +15,18 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-(function() {
+
+(function (root, factory) {
+    if (typeof define === 'function' && define.amd) {
+        // AMD. Register as an anonymous module.
+        define(['b'], factory);
+    } else {
+        // Browser globals
+        root.Mail = factory(root.b);
+    }
+}(typeof self !== 'undefined' ? self : this, function (b) {
+
+  var x = function(){
     document.execCommand("defaultParagraphSeparator", false, "div");
     var mail_check_rate = 10 * 1000,
         getMessageAjax = null,
@@ -114,16 +125,16 @@
                 }
             }
             /* transition in the new message 
-            		var la = $(div)
-            		d.querySelector('.mlbx-msgsScroll .ss-content').innerHTML = div.innerHTML + d.querySelector('.mlbx-msgsScroll .ss-content').innerHTML;
-            		$('.mailbox-messages-scroll .ss-content').prepend(la.html());
-            		var h = parseFloat(la.outerHeight());
-            		la.css({"margin-bottom":-h});
-            		la.stop().animate({"margin-bottom":0},150,function() {
-            			// move html outside of div.
-            			la.after(la.html()).remove();
-            		});
-            	}*/
+                    var la = $(div)
+                    d.querySelector('.mlbx-msgsScroll .ss-content').innerHTML = div.innerHTML + d.querySelector('.mlbx-msgsScroll .ss-content').innerHTML;
+                    $('.mailbox-messages-scroll .ss-content').prepend(la.html());
+                    var h = parseFloat(la.outerHeight());
+                    la.css({"margin-bottom":-h});
+                    la.stop().animate({"margin-bottom":0},150,function() {
+                        // move html outside of div.
+                        la.after(la.html()).remove();
+                    });
+                }*/
         },
         LoadFolder = function(folder, folderId) {
             d.getElementsByClassName('mlbx-rdr')[0].innerHTML = '';
@@ -512,13 +523,18 @@
             //message
             var message = form.querySelector('.mlbx-newMsgMsg').innerHTML;
             var text = form.querySelector('.mlbx-newMsgMsg').innerText.replace(/\n/g, " ");
-
+            var share = form.querySelector('.mlbx-share') ? "1" : "0";
+            var shareName = form.querySelector('.mlbx-shareName') ? form.querySelector('.mlbx-shareName').value : "";
+            var shareUrl = form.querySelector('.mlbx-shareUrl') ? form.querySelector('.mlbx-shareUrl').value : "";
 
             var data = {
                 To: JSON.stringify(to),
                 Subject: subject,
                 Message: message,
-                Text: text
+                Text: text,
+                Share: share,
+                ShareName: shareName,
+                ShareUrl: shareUrl
             };
 
             if (form.querySelector('input[name="draftId"]') !== null) {
@@ -625,47 +641,47 @@
     /*
 
     $('body').on('click', '.mail-reply-all', function(e){
-    	var m = $('.mailbox-reader-outer:visible .mailbox-reader-header:not(.popout):first');
-    	var convid = m.attr('data-conv-id');
-    	var subject = "Ra: " + m.find('.mailbox-subject').text();
-    	var f = m.find('div.mailbox-sender-user')
-    	var t = m.find('.mailbox-to .mailbox-to-user')
-    	var from = [];
-    	t.each(function(t){
-    		from.push([$(this).attr('data-user-id'),$(this).find('span:first()').text(), $(this).hasClass('group')?"group":""]);
-    	});
-    	from.push([f.attr('data-user-id'),f.find('span:first()').text(), ""]);
-    	var message = document.createElement('div');
-    	var message_liner = document.createElement('div');
-    	$(message_liner).addClass('message-reply');
-    	$(message_liner).html($(m.closest('.mailbox-reader-outer .ss-content').html()))
-    	$(message_liner).find('.mailbox-reader-header-controls').remove();
-    	$(message_liner).find('.mailbox-user-dropdown').remove();
-    	$(message).html("<br><br><br>").append($(message_liner))
+        var m = $('.mailbox-reader-outer:visible .mailbox-reader-header:not(.popout):first');
+        var convid = m.attr('data-conv-id');
+        var subject = "Ra: " + m.find('.mailbox-subject').text();
+        var f = m.find('div.mailbox-sender-user')
+        var t = m.find('.mailbox-to .mailbox-to-user')
+        var from = [];
+        t.each(function(t){
+            from.push([$(this).attr('data-user-id'),$(this).find('span:first()').text(), $(this).hasClass('group')?"group":""]);
+        });
+        from.push([f.attr('data-user-id'),f.find('span:first()').text(), ""]);
+        var message = document.createElement('div');
+        var message_liner = document.createElement('div');
+        $(message_liner).addClass('message-reply');
+        $(message_liner).html($(m.closest('.mailbox-reader-outer .ss-content').html()))
+        $(message_liner).find('.mailbox-reader-header-controls').remove();
+        $(message_liner).find('.mailbox-user-dropdown').remove();
+        $(message).html("<br><br><br>").append($(message_liner))
 
-    	from = from.map(JSON.stringify).reverse().filter(function (e, i, a) {
-    	    return a.indexOf(e, i+1) === -1;
-    	}).reverse().map(JSON.parse);
-    	StartNewMessage(from,subject,message,convid)
+        from = from.map(JSON.stringify).reverse().filter(function (e, i, a) {
+            return a.indexOf(e, i+1) === -1;
+        }).reverse().map(JSON.parse);
+        StartNewMessage(from,subject,message,convid)
     })
 
     $('body').on('click', '.mail-forward', function(e){
-    	var m = $('.mailbox-reader-outer:visible .mailbox-reader-header:not(.popout):first');
-    	var convid = m.attr('data-conv-id');
-    	var subject = "Fw: " + m.find('.mailbox-subject').text();
-    	var message = document.createElement('div');
-    	var message_liner = document.createElement('div');
-    	$(message_liner).addClass('message-reply');
-    	$(message_liner).html($(m.closest('.mailbox-reader-outer .ss-content').html()))
-    	$(message_liner).find('.mailbox-reader-header-controls').remove();
-    	$(message_liner).find('.mailbox-user-dropdown').remove();
-    	$(message).html("<br><br><br>").append($(message_liner))
+        var m = $('.mailbox-reader-outer:visible .mailbox-reader-header:not(.popout):first');
+        var convid = m.attr('data-conv-id');
+        var subject = "Fw: " + m.find('.mailbox-subject').text();
+        var message = document.createElement('div');
+        var message_liner = document.createElement('div');
+        $(message_liner).addClass('message-reply');
+        $(message_liner).html($(m.closest('.mailbox-reader-outer .ss-content').html()))
+        $(message_liner).find('.mailbox-reader-header-controls').remove();
+        $(message_liner).find('.mailbox-user-dropdown').remove();
+        $(message).html("<br><br><br>").append($(message_liner))
 
-    	StartNewMessage(null,subject,message,convid)
+        StartNewMessage(null,subject,message,convid)
     })
 
     $('body').on('click', '.new-message-form .mailbox-reader-body', function(e){
-    	$(this).find('.mailbox-new-message-message').focus();
+        $(this).find('.mailbox-new-message-message').focus();
     })
 
     ;*/
@@ -705,4 +721,8 @@
 
 
         */
-})();
+    };
+    console.log('mail scripts loaded');
+    return x;
+}));
+Mail();

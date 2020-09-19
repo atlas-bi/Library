@@ -15,7 +15,18 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-(function() {
+
+(function (root, factory) {
+    if (typeof define === 'function' && define.amd) {
+        // AMD. Register as an anonymous module.
+        define(['b'], factory);
+    } else {
+        // Browser globals
+        root.Page = factory(root.b);
+    }
+}(typeof self !== 'undefined' ? self : this, function (b) {
+
+  var x = function(){
     window.addEventListener('scroll', function() {
         debounce(function() {
             scrollHead();
@@ -27,6 +38,15 @@
             scrollHead();
         }(), 100);
     });
+    
+    var title = document.querySelector('.pageTitle:not(.loose)');
+    if(title){
+        l = document.getElementsByClassName('location');
+        for(x=0;x<l.length;x++){
+            l[x].style.top = '-' + title.clientHeight + 'px';
+        }
+    }
+
     function scrollHead() {
         var title = document.querySelector('.pageTitle:not(.loose)');
         if (title) {
@@ -35,11 +55,18 @@
             if (title.getBoundingClientRect().top > 0 || window.pageYOffset < title.clientHeight) {
                 title.classList.remove('pageTitle--sticky');
                 title.style.removeProperty('width');
+
+                title.nextElementSibling.style.removeProperty('padding-top');
             } else {
                 title.classList.add('pageTitle--sticky');
                 title.style.width = w + 'px';
+             //   title.nextElementSibling.style.paddingTop = title.clientHeight + 'px';   
             }
         }
     }
     scrollHead();
-})();
+};
+console.log('page scripts loaded');
+return x;
+}));
+Page();

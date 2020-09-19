@@ -15,49 +15,64 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-(function () {
-  var n = document.getElementsByClassName('nb')[0],
-      b = document.getElementById('brs-b'),
-      f = document.getElementById('brs-f'),
-      ddl = n.getElementsByClassName('nb-ddl'),
-      ddm = n.getElementsByClassName('nb-dd-ddm');
 
-  if (b) {
-    b.addEventListener('click', function () {
-      history.back();
-      b.blur();
-    });
-  }
+(function (root, factory) {
+    if (typeof define === 'function' && define.amd) {
+        // AMD. Register as an anonymous module.
+        define(['b'], factory);
+    } else {
+        // Browser globals
+        root.Nav = factory(root.b);
+    }
+}(typeof self !== 'undefined' ? self : this, function (b) {
 
-  if (f) {
-    f.addEventListener('click', function () {
-      history.forward();
-      f.blur();
-    });
-  }
+  var x = function(){
+    var n = document.getElementsByClassName('nb')[0],
+        b = document.getElementById('brs-b'),
+        f = document.getElementById('brs-f'),
+        ddl = n.getElementsByClassName('nb-ddl'),
+        ddm = n.getElementsByClassName('nb-dd-ddm');
 
-  function m(l) {
-    event.preventDefault();
-
-    for (var q = 0; q < ddm.length; q++) {
-      var g = ddm[q];
-      if (g.classList.contains('dd-o') && g != l.nextElementSibling) g.classList.remove('dd-o');
+    if (b) {
+      b.addEventListener('click', function () {
+        history.back();
+        b.blur();
+      });
     }
 
-    l.nextElementSibling.classList.toggle("dd-o");
-  }
+    if (f) {
+      f.addEventListener('click', function () {
+        history.forward();
+        f.blur();
+      });
+    }
 
-  window.addEventListener('click', function (e) {
-    if (e.target.classList && !e.target.classList.contains('nb-ddl')) {
+    function m(l) {
+      event.preventDefault();
+
       for (var q = 0; q < ddm.length; q++) {
-        var l = ddm[q];
-        if (l.classList.contains('dd-o')) l.classList.remove('dd-o');
+        var g = ddm[q];
+        if (g.classList.contains('dd-o') && g != l.nextElementSibling) g.classList.remove('dd-o');
       }
-    }
-  });
 
-  for (var c = 0; c < ddl.length; c++) {
-    var l = ddl[c];
-    ddl[c].addEventListener('click', m.bind(this, l), false);
-  }
-})();
+      l.nextElementSibling.classList.toggle("dd-o");
+    }
+
+    window.addEventListener('click', function (e) {
+      if (e.target.classList && !e.target.classList.contains('nb-ddl')) {
+        for (var q = 0; q < ddm.length; q++) {
+          var l = ddm[q];
+          if (l.classList.contains('dd-o')) l.classList.remove('dd-o');
+        }
+      }
+    });
+
+    for (var c = 0; c < ddl.length; c++) {
+      var l = ddl[c];
+      ddl[c].addEventListener('click', m.bind(this, l), false);
+    }
+  };
+  console.log('nav scripts loaded');
+  return x;
+  }));
+Nav();

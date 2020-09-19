@@ -131,6 +131,7 @@ input[type=dynamic-dropdown] {
 .dd-rslt.active {
     background-color: rgb(63, 139, 246);
     color: rgb(255, 255, 255);
+    z-index: 0;
 }
 
 .dd-rslt.hidden {

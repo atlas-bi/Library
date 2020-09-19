@@ -72,7 +72,7 @@ namespace Data_Governance_WebApp.Pages.Terms
 
         [BindProperty] public TermConversation NewComment { get; set; }
         [BindProperty] public TermConversationMessage NewCommentReply { get; set; }
-
+        public List<AdList> AdLists { get; set; }
         public List<int?> Permissions { get; set; }
 
         public class TermsData
@@ -97,9 +97,21 @@ namespace Data_Governance_WebApp.Pages.Terms
             var MyUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
             Permissions = UserHelpers.GetUserPermissions(_cache, _context, User.Identity.Name);
             ViewData["Permissions"] = Permissions;
+            ViewData["SiteMessage"] = HtmlHelpers.SiteMessage(HttpContext, _context);
             Favorites = UserHelpers.GetUserFavorites(_cache, _context, User.Identity.Name);
             Preferences = UserHelpers.GetPreferences(_cache, _context, User.Identity.Name);
             ViewData["MyRole"] = UserHelpers.GetMyRole(_cache, _context, User.Identity.Name);
+
+            AdLists = new List<AdList>
+            {
+                new AdList { Url = "/Users?handler=SharedObjects", Column = 2},
+                new AdList { Url = "Reports/?handler=RelatedReports&id="+id, Column = 2 },
+                new AdList { Url = "/?handler=RecentReports", Column = 2 },
+                new AdList { Url = "/?handler=RecentTerms", Column = 2 },
+                new AdList { Url = "/?handler=RecentInitiatives", Column = 2 },
+                new AdList { Url = "/?handler=RecentProjects", Column = 2 }
+            };
+            ViewData["AdLists"] = AdLists;
             HttpContext.Response.Headers.Add("Cache-Control", "no-cache, no-store, must-revalidate");
             HttpContext.Response.Headers.Add("Pragma", "no-cache"); // HTTP 1.0.
             HttpContext.Response.Headers.Add("Expires", "0"); // Proxies.
@@ -179,8 +191,24 @@ namespace Data_Governance_WebApp.Pages.Terms
         public async Task<ActionResult> OnPostNewTerm()
         {
             // if invalid inputs redirect to list all
-            if (!ModelState.IsValid || NewTerm.Name is null)
+            if (!ModelState.IsValid || NewTerm.Name is null || NewTerm.Name == "")
             {
+                if (NewTermLink.ReportObjectId > 0)
+                {
+                    ViewData["ReportTerms"] = await (from r in _context.ReportObjectDocTerms
+                                                     where r.ReportObjectId == NewTermLink.ReportObjectId
+                                                     select new ReportTermsData
+                                                     {
+                                                         Name = r.Term.Name,
+                                                         Id = r.TermId,
+                                                         Summary = r.Term.Summary,
+                                                         Definition = r.Term.TechnicalDefinition,
+                                                         ReportId = r.ReportObjectId
+                                                     }).ToListAsync();
+
+                    return Partial("../Reports/_Terms");
+                }
+                
                 return RedirectToPage("/Terms/Index");
             }
 

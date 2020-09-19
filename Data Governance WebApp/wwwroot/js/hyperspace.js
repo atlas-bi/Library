@@ -15,16 +15,35 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-function getUrlVars() {
-  var vars = {};
-  var parts = window.location.href.split("#")[0].replace(/[?&]+([^=&]+)=([^&]*)/gi, function (m, key, value) {
-    vars[key] = value;
-  });
-  return vars;
-}
 
-var is_epic = getUrlVars().EPIC;
+(function (root, factory) {
+    if (typeof define === 'function' && define.amd) {
+        // AMD. Register as an anonymous module.
+        define(['b'], factory);
+    } else {
+        // Browser globals
+        root.Hyperspace = factory(root.b);
+    }
+}(typeof self !== 'undefined' ? self : this, function (b) {
 
-if (is_epic == 1 || getCookie('EPIC') == 1) {
-  setCookie('EPIC', 1, 99);
-}
+  var x = function(){
+
+    function getUrlVars() {
+      var vars = {};
+      var parts = window.location.href.split("#")[0].replace(/[?&]+([^=&]+)=([^&]*)/gi, function (m, key, value) {
+        vars[key] = value;
+      });
+      return vars;
+    }
+
+    var is_epic = getUrlVars().EPIC;
+
+    if (is_epic == 1 || getCookie('EPIC') == 1) {
+      setCookie('EPIC', 1, 99);
+    };
+  };
+  console.log('hyperspace scripts loaded.');
+  return x;
+}));
+
+Hyperspace();

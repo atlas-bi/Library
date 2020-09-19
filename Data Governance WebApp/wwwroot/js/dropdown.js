@@ -15,10 +15,39 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-(function() {
+(function (root, factory) {
+    if (typeof define === 'function' && define.amd) {
+        // AMD. Register as an anonymous module.
+        define(['b'], factory);
+    } else {
+        // Browser globals
+        root.Dropdown = factory(root.b);
+    }
+}(typeof self !== 'undefined' ? self : this, function (b) {
+
+  var x = function(){
 
     var d = document,
         q;
+
+    // when everything looses focus close all drops
+    window.addEventListener("blur", function(event) { 
+       if(document.activeElement){
+         try{
+            document.activeElement.blur();
+        } catch(e){
+
+        }
+       }
+        var el = document.querySelector( ':focus' );
+        if( el ) {
+             try{
+         el.blur();
+        } catch(e){
+            
+        }
+        }
+    });
 
     function load(el) {
 
@@ -33,15 +62,15 @@
     }
 
     /*
-    	div.dd-ctnr
-    		div.dd-wrp
-    			input.dd-hdn (or select.dd-hdn > option.dd-optn)
-    			div.dd-itm (item selected)
-    			div.dd-phdr
-    			div.dd-inpt
-    				input.dd-vsbl
-    				div.dd-rslts
-    					div.dd-rslt
+        div.dd-ctnr
+            div.dd-wrp
+                input.dd-hdn (or select.dd-hdn > option.dd-optn)
+                div.dd-itm (item selected)
+                div.dd-phdr
+                div.dd-inpt
+                    input.dd-vsbl
+                    div.dd-rslts
+                        div.dd-rslt
     */
 
     function build(b) {
@@ -144,24 +173,7 @@
         this.ddCntr.addEventListener('blur', this.unfcs.bind(this));
         this.ddRslts.addEventListener('mouseover', this.rhov.bind(this));
 
-        // when everything looses focus close all drops
-        window.addEventListener("blur", function(event) { 
-           if(document.activeElement){
-             try{
-                document.activeElement.blur();
-            } catch(e){
-
-            }
-           }
-            var el = document.querySelector( ':focus' );
-            if( el ) {
-                 try{
-             el.blur();
-            } catch(e){
-                
-            }
-            }
-        });
+       
     }
 
     var k = d.requestAnimationFrame || d.setImmediate || function(b) {
@@ -195,7 +207,7 @@
                     }
 
                     //if(r.querySelectorAll('.dd-rslt:not(.hidden):not(.disabled)').length > 0){
-                    //	r.getElementsByClassName('disabled')[0].parentElement.removeChild(r.getElementsByClassName('disabled')[0]);
+                    //  r.getElementsByClassName('disabled')[0].parentElement.removeChild(r.getElementsByClassName('disabled')[0]);
                     //}
 
                     ipt.parentElement.removeChild(ipt.previousElementSibling);
@@ -584,10 +596,10 @@
                     /*r = rs.getElementsByClassName('dd-rslt');
                     for(x=0;x<r.length;x++){
                        if(el.value.toUpperCase() == r[x].innerHTML.toUpperCase()){
-                       		r[x].style.removeProperty('display');
+                            r[x].style.removeProperty('display');
                         } else {
-                       		r[x].style.display = 'none';
-                    	}
+                            r[x].style.display = 'none';
+                        }
                     }*/
                 } else {
                     o = hi.getElementsByTagName('option');
@@ -687,112 +699,115 @@
 
     /*
     // 
-    	function addItem(element, type){
-    		var visibleInput,hiddenInput,hiddenInputType,activeItem,results,inputContainer;
-    		if (type == 'exit'){
-    			// element is dropdown-input (dynamic-dropdown-input)
-    			visibleInput = element;
-    			inputContainer = element.closest('.dynamic-dropdown-input-container');
-    			hiddenInput = visibleInput.closest('.dynamic-dropdown').find('*[dname="'+ visibleInput.attr('dname')+ '"]');
-    			results = visibleInput.siblings('.dynamic-dropdown-results');
-    			hiddenInputType = hiddenInput.get(0).tagName;
-    			activeItem = results.find('.dynamic-dropdown-result-item.active').first().length ? results.find('.dynamic-dropdown-result-item.active').first() : results.find('.dynamic-dropdown-result-item:visible:not(:contains("No matches found"))').first();
-    			activeItem = '' ? activeItem.length < 1 : activeItem;
+        function addItem(element, type){
+            var visibleInput,hiddenInput,hiddenInputType,activeItem,results,inputContainer;
+            if (type == 'exit'){
+                // element is dropdown-input (dynamic-dropdown-input)
+                visibleInput = element;
+                inputContainer = element.closest('.dynamic-dropdown-input-container');
+                hiddenInput = visibleInput.closest('.dynamic-dropdown').find('*[dname="'+ visibleInput.attr('dname')+ '"]');
+                results = visibleInput.siblings('.dynamic-dropdown-results');
+                hiddenInputType = hiddenInput.get(0).tagName;
+                activeItem = results.find('.dynamic-dropdown-result-item.active').first().length ? results.find('.dynamic-dropdown-result-item.active').first() : results.find('.dynamic-dropdown-result-item:visible:not(:contains("No matches found"))').first();
+                activeItem = '' ? activeItem.length < 1 : activeItem;
 
-    			if(hiddenInputType == 'SELECT'){
-    				if (activeItem.length > 0 && activeItem.attr('value').length > 0){
-    					visibleInput.val('')
-    					if(typeof visibleInput.attr('method') !== typeof undefined && visibleInput.attr('method') !== false){
-    						activeItem.addClass('hidden');
+                if(hiddenInputType == 'SELECT'){
+                    if (activeItem.length > 0 && activeItem.attr('value').length > 0){
+                        visibleInput.val('')
+                        if(typeof visibleInput.attr('method') !== typeof undefined && visibleInput.attr('method') !== false){
+                            activeItem.addClass('hidden');
 
-    						//if nothing is dd-wrp-showing then add item "no items"
-    				 		if(results.find('.dynamic-dropdown-result-item:not(.hidden)').length === 0){
-    				 			results.append('<div class="dynamic-dropdown-result-item no-results" value="">No matches found</div>');
-    				 	}
-    					} else {
-    						results.html('');
+                            //if nothing is dd-wrp-showing then add item "no items"
+                            if(results.find('.dynamic-dropdown-result-item:not(.hidden)').length === 0){
+                                results.append('<div class="dynamic-dropdown-result-item no-results" value="">No matches found</div>');
+                        }
+                        } else {
+                            results.html('');
 
-    					}
-    					var group = activeItem.hasClass('group') ? 'group':'';
-    					inputContainer.before('<div class="addedItem '+group+'">' + activeItem.text() + '</div>').focus();
-    					hiddenInput.append('<option class="'+group+'" selected="selected" value="'+activeItem.attr('value')+'">' + activeItem.text() + '</option>');
-    					hiddenInput.trigger("change");
+                        }
+                        var group = activeItem.hasClass('group') ? 'group':'';
+                        inputContainer.before('<div class="addedItem '+group+'">' + activeItem.text() + '</div>').focus();
+                        hiddenInput.append('<option class="'+group+'" selected="selected" value="'+activeItem.attr('value')+'">' + activeItem.text() + '</option>');
+                        hiddenInput.trigger("change");
 
-    				} else {
-    					visibleInput.val('');
-    				}
+                    } else {
+                        visibleInput.val('');
+                    }
 
-    			} else {
-    				element.val(activeItem.text());
-    				element.trigger("change");
-    				hiddenInput.attr('value',activeItem.attr('value'));
-    				hiddenInput.trigger('change');
-    				// if method not fullList then clear list	
-    				if(visibleInput.attr('method') !== 'fullList'){
-    					results.html('');
-    					results.hide();
-    					results.html('<div class="dynamic-dropdown-result-item no-results" value="">No matches found</div>');	
-    				}
-    			}
+                } else {
+                    element.val(activeItem.text());
+                    element.trigger("change");
+                    hiddenInput.attr('value',activeItem.attr('value'));
+                    hiddenInput.trigger('change');
+                    // if method not fullList then clear list   
+                    if(visibleInput.attr('method') !== 'fullList'){
+                        results.html('');
+                        results.hide();
+                        results.html('<div class="dynamic-dropdown-result-item no-results" value="">No matches found</div>');   
+                    }
+                }
 
-    			blurThis(visibleInput.closest('.dynamic-dropdown'));
+                blurThis(visibleInput.closest('.dynamic-dropdown'));
 
-    		} else if (type == 'click'){
-    			// element is the "active" result-item
-    			inputContainer = element.closest('.dynamic-dropdown-input-container');
-    			visibleInput = element.closest('.dynamic-dropdown-results').siblings('.dynamic-dropdown-input');
-    			hiddenInput = element.closest('.dynamic-dropdown').find('*[dname="'+ visibleInput.attr('dname')+ '"]');
-    			hiddenInputType = hiddenInput.get(0).tagName;
-    			results = visibleInput.siblings('.dynamic-dropdown-results');
-    			activeItem = element.clone();
+            } else if (type == 'click'){
+                // element is the "active" result-item
+                inputContainer = element.closest('.dynamic-dropdown-input-container');
+                visibleInput = element.closest('.dynamic-dropdown-results').siblings('.dynamic-dropdown-input');
+                hiddenInput = element.closest('.dynamic-dropdown').find('*[dname="'+ visibleInput.attr('dname')+ '"]');
+                hiddenInputType = hiddenInput.get(0).tagName;
+                results = visibleInput.siblings('.dynamic-dropdown-results');
+                activeItem = element.clone();
 
-    			if(hiddenInputType == 'SELECT'){
+                if(hiddenInputType == 'SELECT'){
 
-    				visibleInput.val('');
-    				if(typeof visibleInput.attr('method') !== typeof undefined && visibleInput.attr('method') !== false){
-    						activeItem.addClass('hidden');
+                    visibleInput.val('');
+                    if(typeof visibleInput.attr('method') !== typeof undefined && visibleInput.attr('method') !== false){
+                            activeItem.addClass('hidden');
 
-    						//if nothing is dd-wrp-showing then add item "no items"
-    				 		if(results.find('.dynamic-dropdown-result-item:not(.hidden)').length === 0){
-    				 			results.append('<div class="dynamic-dropdown-result-item no-results" value="">No matches found</div>');
-    				 	}
-    					} else {
-    						results.html('');
+                            //if nothing is dd-wrp-showing then add item "no items"
+                            if(results.find('.dynamic-dropdown-result-item:not(.hidden)').length === 0){
+                                results.append('<div class="dynamic-dropdown-result-item no-results" value="">No matches found</div>');
+                        }
+                        } else {
+                            results.html('');
 
-    					}
-    				var group = activeItem.hasClass('group') ? 'group':'';
-    				inputContainer.before('<div class="addedItem '+group+'">' + activeItem.text() + '</div>').focus();
-    				hiddenInput.append('<option class="'+group+'" selected="selected" value="'+activeItem.attr('value')+'">' + activeItem.text() + '</option>');
-    				hiddenInput.trigger("change");
+                        }
+                    var group = activeItem.hasClass('group') ? 'group':'';
+                    inputContainer.before('<div class="addedItem '+group+'">' + activeItem.text() + '</div>').focus();
+                    hiddenInput.append('<option class="'+group+'" selected="selected" value="'+activeItem.attr('value')+'">' + activeItem.text() + '</option>');
+                    hiddenInput.trigger("change");
 
-    		 		visibleInput.focus();
+                    visibleInput.focus();
 
-    			} else {
-    				hiddenInput.attr('value',activeItem.attr('value'))
-    				hiddenInput.trigger('change');
-    				visibleInput.val(activeItem.text());
-    				visibleInput.trigger("change");
-    				blurThis(visibleInput.closest('.dynamic-dropdown'));
-    				if(visibleInput.attr('method') !== 'fullList'){
-    					results.html('<div class="dynamic-dropdown-result-item no-results" value="">No matches found</div>');
-    				}
-    			}
-    		}
-    		setWidth(visibleInput);
-    	}
-
-
-    	$('body').on('keydown', '.dynamic-dropdown-input', function(e) {
-    		var inputContainer = $(this).closest('.dynamic-dropdown-input-container');
-    		var input = $(this);
-    		var thisVal;
-    		
-    	});
+                } else {
+                    hiddenInput.attr('value',activeItem.attr('value'))
+                    hiddenInput.trigger('change');
+                    visibleInput.val(activeItem.text());
+                    visibleInput.trigger("change");
+                    blurThis(visibleInput.closest('.dynamic-dropdown'));
+                    if(visibleInput.attr('method') !== 'fullList'){
+                        results.html('<div class="dynamic-dropdown-result-item no-results" value="">No matches found</div>');
+                    }
+                }
+            }
+            setWidth(visibleInput);
+        }
 
 
-    	*/
+        $('body').on('keydown', '.dynamic-dropdown-input', function(e) {
+            var inputContainer = $(this).closest('.dynamic-dropdown-input-container');
+            var input = $(this);
+            var thisVal;
+            
+        });
 
 
+        */
+
+};
+console.log('dropdown scripts loaded.');
+return x;
 
 
-})();
+}));
+Dropdown();

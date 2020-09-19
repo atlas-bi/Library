@@ -15,6 +15,19 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+
+(function (root, factory) {
+    if (typeof define === 'function' && define.amd) {
+        // AMD. Register as an anonymous module.
+        define(['b'], factory);
+    } else {
+        // Browser globals
+        root.Essentials = factory(root.b);
+    }
+}(typeof self !== 'undefined' ? self : this, function (b) {
+
+  var x = function(){
+
 function textfill(el) {
   var el = el || document.getElementsByClassName('pageTitle-head')[0];
 
@@ -129,3 +142,8 @@ function downloadJSAtOnload() {
 window.addEventListener("load", function () {
   downloadJSAtOnload();
 }, false);
+};
+console.log('essential scripts loaded');
+return x;
+}));
+Essentials();

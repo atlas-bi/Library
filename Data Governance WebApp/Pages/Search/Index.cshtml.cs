@@ -61,6 +61,7 @@ namespace Data_Governance_WebApp.Pages.Search
         public List<UserPreferences> Preferences { get; set; }
         public List<int?> Permissions { get; set; }
         public List<UserFavorites> Favorites { get; set; }
+        public List<AdList> AdLists { get; set; }
         [BindProperty] public List<ReportObjectType> AvailableFilters { get { return _context.ReportObjectType.ToList(); } set { } }
         [BindProperty(SupportsGet = true)] public List<SearchResult> SearchResults { get; set; }
         [BindProperty] public List<ObjectSearch> ObjectSearch { get; set; }
@@ -68,7 +69,7 @@ namespace Data_Governance_WebApp.Pages.Search
         [BindProperty] public int ShowHidden { get; set; }
         [BindProperty] public int ShowAllTypes { get; set; }
         [BindProperty] public int ShowOrphans { get; set; }
-        [BindProperty] public int SearchFilter { get; set; }
+        [BindProperty] public string SearchFilter { get; set; }
         [BindProperty] public string SearchField { get; set; }
         [BindProperty] public int SearchPage { get; set; }
         [BindProperty] public int PageSize { get; set; }
@@ -76,12 +77,15 @@ namespace Data_Governance_WebApp.Pages.Search
         [BindProperty(SupportsGet = true)] public List<string> AppliedFilters { get; set; }
         public User PublicUser { get; set; }
 
-        public ActionResult OnGet(string s, int f, int p, int h, int t, int o, string sf)
+        public ActionResult OnGet(string s, string f, int p, int h, int t, int o, string sf)
         {
             PublicUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
             // var is copied to SearchString so it can be rendered in html view.
             SearchString = s.Replace("'","").Replace("–", "-");
-            SearchFilter = f;
+
+            SearchFilter = (""+f).Replace("%2C", ",");
+
+            
             SearchField = "";
             if (sf != null) {
                 SearchField = sf.Replace("%2C", ",").Replace("%20", " ").Replace("–", "-");
@@ -119,9 +123,9 @@ namespace Data_Governance_WebApp.Pages.Search
                             command.Parameters.Add(new SqlParameter("@currentPage", p));
                         }
 
-                        if (SearchFilter > 0)
+                        if (SearchFilter != null && SearchFilter.Length > 0 && SearchFilter != "0")
                         {
-                            command.Parameters.Add(new SqlParameter("@reportObjectTypes", String.Join(",", SearchFilter)));
+                            command.Parameters.Add(new SqlParameter("@reportObjectTypes", String.Join(",", SearchFilter.Split(","))));
                         }
                         connection.Open();
                         var datareader = command.ExecuteReader();
@@ -165,6 +169,20 @@ namespace Data_Governance_WebApp.Pages.Search
             ViewData["Fullname"] = PublicUser.Fullname_Cust;
             Permissions = UserHelpers.GetUserPermissions(_cache, _context, User.Identity.Name);
             ViewData["Permissions"] = Permissions;
+            ViewData["SiteMessage"] = HtmlHelpers.SiteMessage(HttpContext, _context);
+
+            var ReportId = string.Join(",",SearchResults.Select(x => x.Id.ToString()));
+            AdLists = new List<AdList>
+            {
+                new AdList { Url = "/Users?handler=SharedObjects", Column = 2},
+                new AdList { Url = "Reports/?handler=RelatedReports&id="+ReportId, Column = 2 },
+                new AdList { Url = "/?handler=RecentReports", Column = 2 },
+                new AdList { Url = "/?handler=RecentTerms", Column = 2 },
+                new AdList { Url = "/?handler=RecentInitiatives", Column = 2 },
+                new AdList { Url = "/?handler=RecentProjects", Column = 2 }
+            };
+            ViewData["AdLists"] = AdLists;
+
             Favorites = UserHelpers.GetUserFavorites(_cache, _context, User.Identity.Name);
             Preferences = UserHelpers.GetPreferences(_cache, _context, User.Identity.Name);
             HttpContext.Response.Headers.Add("Cache-Control", "no-cache, no-store, must-revalidate");

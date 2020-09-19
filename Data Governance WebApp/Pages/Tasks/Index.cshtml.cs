@@ -114,12 +114,24 @@ namespace Data_Governance_WebApp.Pages.Tasks
         public IEnumerable<EditedOutsideAnalyticsData> EditedOutsideAnalytics { get; set; }
         public IEnumerable<DeadData> Dead { get; set; }
         public User PublicUser { get; set; }
+        public List<AdList> AdLists { get; set; }
         public IActionResult OnGet(int? id)
         {
             PublicUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
             ViewData["MyRole"] = UserHelpers.GetMyRole(_cache, _context, User.Identity.Name);
             Permissions = UserHelpers.GetUserPermissions(_cache, _context, User.Identity.Name);
             ViewData["Permissions"] = Permissions;
+            ViewData["SiteMessage"] = HtmlHelpers.SiteMessage(HttpContext, _context);
+            AdLists = new List<AdList>
+            {
+                new AdList { Url = "/Users?handler=SharedObjects", Column = 2},
+                new AdList { Url = "Reports/?handler=RelatedReports&id="+id, Column = 2 },
+                new AdList { Url = "/?handler=RecentReports", Column = 2 },
+                new AdList { Url = "/?handler=RecentTerms", Column = 2 },
+                new AdList { Url = "/?handler=RecentInitiatives", Column = 2 },
+                new AdList { Url = "/?handler=RecentProjects", Column = 2 }
+            };
+            ViewData["AdLists"] = AdLists;
             Favorites = UserHelpers.GetUserFavorites(_cache, _context, User.Identity.Name);
             Preferences = UserHelpers.GetPreferences(_cache, _context, User.Identity.Name);
             HttpContext.Response.Headers.Add("Cache-Control", "no-cache, no-store, must-revalidate");
@@ -147,7 +159,7 @@ namespace Data_Governance_WebApp.Pages.Tasks
         }
         public async Task<IActionResult> OnGetUnused()
         {
-            ViewData["Dead"] = await (from r in _context.ReportObject.Where(x => (x.ReportObjectTypeId == 3 || x.ReportObjectTypeId == 17 || x.ReportObjectTypeId == 20 || x.ReportObjectTypeId == 21 || x.ReportObjectTypeId == 28)
+            ViewData["Dead"] = await (from r in _context.ReportObject.Where(x => (x.ReportObjectTypeId == 3 || x.ReportObjectTypeId == 17 || x.ReportObjectTypeId == 20 || x.ReportObjectTypeId == 28)
                                                                 && x.DefaultVisibilityYn == "Y"
                                                                 && x.OrphanedReportObjectYn.ToString() == "N")
                           join d in _context.ReportObjectRunData on r.ReportObjectId equals d.ReportObjectId into dta

@@ -15,7 +15,18 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-(function () {
+
+(function (root, factory) {
+    if (typeof define === 'function' && define.amd) {
+        // AMD. Register as an anonymous module.
+        define(['b'], factory);
+    } else {
+        // Browser globals
+        root.Security = factory(root.b);
+    }
+}(typeof self !== 'undefined' ? self : this, function (b) {
+
+  var x = function(){
   document.addEventListener('click', function (e) {
     if (e.target.matches('.role-permissions[type="checkbox"]') && e.target.tagName == 'INPUT') {
       var p = e.target.parentElement,
@@ -53,4 +64,8 @@
       };
     }
   });
-})();
+};
+console.log('security scripts loaded');
+return x;
+}));
+Security();

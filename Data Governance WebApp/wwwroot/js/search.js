@@ -15,7 +15,18 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-(function() {
+
+(function (root, factory) {
+    if (typeof define === 'function' && define.amd) {
+        // AMD. Register as an anonymous module.
+        define(['b'], factory);
+    } else {
+        // Browser globals
+        root.Search = factory(root.b);
+    }
+}(typeof self !== 'undefined' ? self : this, function (b) {
+
+  var x = function(){
     var d = document,
         w = window,
         grp = d.getElementsByClassName('sr-grp')[0],
@@ -199,7 +210,21 @@
             e.preventDefault();
             f = e.target.closest('form');
             i = f.querySelector('input[name="f"]');
-            i.value = e.target.getAttribute('value');
+            
+            // if filter is already in input then remove it
+            pattern = new RegExp(e.target.getAttribute('value')+",?");
+            
+            if(i.value.match(pattern) != null) {
+                i.value = i.value.replace(pattern,'');
+            } else {
+                // remove 0 from start and middle of string
+                i.value = i.value.split("").reverse().join("");
+                i.value = i.value.replace(/,?0/,'')
+                i.value = i.value.split("").reverse().join("");
+                i.value += ',' +e.target.getAttribute('value')+',';
+            }
+            // remove leading and trailing comma
+            i.value = i.value.replace(/,$/g,'').replace(/^,/g,'');
             submit(f);
             return !1;
         } else if (e.target.matches('.page-link')) {
@@ -279,8 +304,8 @@
             i.value = val;
         }
     });
-    return {
-        close: close,
-        ajax: AjaxSearch
-    };
-})();
+};
+console.log('search scripts loaded');
+return x;
+}));
+Search();

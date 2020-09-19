@@ -76,6 +76,19 @@ namespace Data_Governance_WebApp.Pages
             Favorites = UserHelpers.GetUserFavorites(_cache, _context, User.Identity.Name);
             Preferences = UserHelpers.GetPreferences(_cache, _context, User.Identity.Name);
             ViewData["MyRole"] = UserHelpers.GetMyRole(_cache, _context, User.Identity.Name);
+            ViewData["SiteMessage"] = HtmlHelpers.SiteMessage(HttpContext, _context);
+
+            AdLists = new List<AdList>
+            {
+                new AdList { Url = "/Users?handler=SharedObjects", Column = 2},
+                //new AdList { Url = "Reports/?handler=RelatedReports&id="+id, Column = 2 },
+                new AdList { Url = "/?handler=RecentReports", Column = 2 },
+                new AdList { Url = "/?handler=RecentTerms", Column = 2 },
+                new AdList { Url = "/?handler=RecentInitiatives", Column = 2 },
+                new AdList { Url = "/?handler=RecentProjects", Column = 2 }
+            };
+            ViewData["AdLists"] = AdLists;
+            
             HttpContext.Response.Headers.Add("Cache-Control", "no-cache, no-store, must-revalidate");
             HttpContext.Response.Headers.Add("Pragma", "no-cache"); // HTTP 1.0.
             HttpContext.Response.Headers.Add("Expires", "0"); // Proxies.

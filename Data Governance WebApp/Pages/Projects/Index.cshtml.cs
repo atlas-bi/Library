@@ -67,6 +67,7 @@ namespace Data_Governance_WebApp.Pages.Projects
         public List<UserFavorites> Favorites { get; set; }
         public IEnumerable<ProjectCommentsData> ProjectComments { get; set; }
         public DataProjectData DataProject { get; set; }
+        public List<AdList> AdLists { get; set; }
 
         public class AllProjectsData
         {
@@ -202,8 +203,20 @@ namespace Data_Governance_WebApp.Pages.Projects
             ViewData["MyRole"] = UserHelpers.GetMyRole(_cache, _context, User.Identity.Name);
             Permissions = UserHelpers.GetUserPermissions(_cache, _context, User.Identity.Name);
             ViewData["Permissions"] = Permissions;
+            ViewData["SiteMessage"] = HtmlHelpers.SiteMessage(HttpContext, _context);
             Favorites = UserHelpers.GetUserFavorites(_cache, _context, User.Identity.Name);
             Preferences = UserHelpers.GetPreferences(_cache, _context, User.Identity.Name);
+
+            AdLists = new List<AdList>
+            {
+                new AdList { Url = "/Users?handler=SharedObjects", Column = 2},
+                new AdList { Url = "Reports/?handler=RelatedReports&id="+id, Column = 2 },
+                new AdList { Url = "/?handler=RecentReports", Column = 2 },
+                new AdList { Url = "/?handler=RecentTerms", Column = 2 },
+                new AdList { Url = "/?handler=RecentInitiatives", Column = 2 },
+                new AdList { Url = "/?handler=RecentProjects", Column = 2 }
+            };
+            ViewData["AdLists"] = AdLists;
 
             HttpContext.Response.Headers.Add("Cache-Control", "no-cache, no-store, must-revalidate");
             HttpContext.Response.Headers.Add("Pragma", "no-cache"); // HTTP 1.0.

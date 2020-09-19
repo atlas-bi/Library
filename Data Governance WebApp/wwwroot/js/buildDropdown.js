@@ -15,7 +15,17 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-(function(){
+(function (root, factory) {
+    if (typeof define === 'function' && define.amd) {
+        // AMD. Register as an anonymous module.
+        define(['b'], factory);
+    } else {
+        // Browser globals
+        root.BuildDropdown = factory(root.b);
+    }
+}(typeof self !== 'undefined' ? self : this, function (b) {
+
+  var x = function(){
 	function buildDropdown(b){
 		console.log('building input')
 		//var inputs = d.querySelectorAll('[type="dynamic-dropdown"]')
@@ -418,4 +428,8 @@
         	});
 		}
 	};
-})();
+};
+console.log('build dropdown scripts loaded');
+return x;
+}));
+BuildDropdown();

@@ -15,181 +15,194 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-(function () {
-  /*
-  get data elements
-   1. enable ajax
-    data-ajax=yes
-   2. get url
-    data-url=?handler=la
-   3. get any params
-    data-param=d=1
-   4. if we need to refresh somteims
-    data-refresh=5
-  */
-  var d = document;
-
-  var isInViewport = function isInViewport(elem) {
-    var bounding = elem.getBoundingClientRect(),
-        padding = 400;
-    return bounding.top >= 0 && bounding.left >= 0 && bounding.bottom - elem.clientHeight - padding <= (window.innerHeight || document.documentElement.clientHeight) && bounding.right - padding - elem.clientWidth <= (window.innerWidth || document.documentElement.clientWidth);
-  };
-
-  var loadAjaxContent = debounce(function () {
-    [].forEach.call(d.querySelectorAll('[data-ajax="yes"]'), function (e) {
-      if (!e.matches('#AdColOne') && !e.matches('#AdColTwo [data-ajax="yes"]') && isInViewport(e)) {
-        var u = e.getAttribute('data-url'),
-            p = e.getAttribute('data-param'),
-            l = e.getAttribute('data-loadtag'),
-            q;
-        e.removeAttribute('data-ajax');
-
-        if (!e.classList.contains('no-loader')) {
-          e.innerHTML = '<div class="ajaxLoader"><img class="ajaxLoader-img" src="/img/loader.gif" /></div>';
-        }
-
-        if (p !== null && p !== '') {
-          if (u.indexOf('?') != -1) {
-            u += "&";
-          } else {
-            u += "?";
-          }
-
-          u += p;
-        }
-
-
-
-        if (cache.exists(u)) {
-          a(e, l, p, cache.get(u), u);
-        } else {
-          q = new XMLHttpRequest();
-          q.open('get', u, true);
-          q.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
-          q.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-          q.send();
-
-          q.onload = function () {
-            var ccHeader = q.getResponseHeader('Cache-Control') != null ? (q.getResponseHeader('Cache-Control').match(/\d+/) || [null])[0] : null;
-            a(e, l, p, q.responseText, u);
-
-            if (e.hasAttribute('cache') || ccHeader) {
-              cache.set(u, q.responseText, ccHeader);
-            }
-          };
-        }
-      }
-    });
-  }, 250);
-
-  var a = function a(e, l, p, t, u) {
-    e.style.opacity = 0;
-    if (!e.parentNode) return;
-    var sc,
-        el = d.createElement('div');
-    el.innerHTML = t;
-
-    if (l !== null && l !== '') {
-      el = el.querySelector(l);
-      el.setAttribute('data-loadtag', l);
+(function (root, factory) {
+    if (typeof define === 'function' && define.amd) {
+        // AMD. Register as an anonymous module.
+        define(['b'], factory);
     } else {
-      el = el.children[0];
+        // Browser globals
+        root.AjaxContent = factory(root.b);
     }
+}(typeof self !== 'undefined' ? self : this, function (b) {
 
-    el.style.visibility = 'hidden';
-    el.style.transition = 'visibility 0.3s ease-in-out';
-    var q = el.clientHeight;
-    el.setAttribute('data-url', u);
-    el.setAttribute('data-param', p);
-    sc = Array.prototype.slice.call(el.getElementsByTagName('script'));
-    e.parentNode.replaceChild(el, e);
-    for (var x = 0; x < sc.length; x++) {
-      var s = document.createElement("script");
-      s.innerHTML = sc[x].innerHTML;
-      s.type = "text/javascript";
-      s.setAttribute('async', 'true');
-      el.appendChild(s);
-      sc[x].parentNode.removeChild(sc[x]);
-    }
+  var x = function(){
+    /*
+    get data elements
+     1. enable ajax
+      data-ajax=yes
+     2. get url
+      data-url=?handler=la
+     3. get any params
+      data-param=d=1
+     4. if we need to refresh somteims
+      data-refresh=5
+    */
+    var d = document;
 
-    el.style.visibility = 'visible';
-    document.dispatchEvent(new CustomEvent("ajax"));
-  };
+    var isInViewport = function isInViewport(elem) {
+      var bounding = elem.getBoundingClientRect(),
+          padding = 400;
+      return bounding.top >= 0 && bounding.left >= 0 && bounding.bottom - elem.clientHeight - padding <= (window.innerHeight || document.documentElement.clientHeight) && bounding.right - padding - elem.clientWidth <= (window.innerWidth || document.documentElement.clientWidth);
+    };
 
-  var loadAdAjaxContent = debounce(function () {
-    [].forEach.call(d.querySelectorAll('#AdColOne, #AdColTwo [data-ajax="yes"]'), function (e) {
-      if (isInViewport(e)) {
-        var u = e.getAttribute('data-url'),
-            p = e.getAttribute('data-param'),
-            l = e.getAttribute('data-loadtag'),
-            q;
+    var loadAjaxContent = debounce(function () {
+      [].forEach.call(d.querySelectorAll('[data-ajax="yes"]'), function (e) {
+        if (!e.matches('#AdColOne') && !e.matches('#AdColTwo [data-ajax="yes"]') && isInViewport(e)) {
+          var u = e.getAttribute('data-url'),
+              p = e.getAttribute('data-param'),
+              l = e.getAttribute('data-loadtag'),
+              q;
+          e.removeAttribute('data-ajax');
 
-        if (!e.classList.contains('no-loader')) {
-          e.innerHTML = '<div class="ajaxLoader"><img class="ajaxLoader-img" src="/img/loader.gif" /></div>';
-        }
-
-        if (p !== null && p !== '') {
-          if (u.indexOf("?") != -1) {
-            u += "&";
-          } else {
-            u += "?";
+          if (!e.classList.contains('no-loader')) {
+            e.innerHTML = '<div class="ajaxLoader"><img class="ajaxLoader-img" src="/img/loader.gif" /></div>';
           }
 
-          u += p;
-        }
-
-        e.style.visibility = 'hidden';
-
-        if (cache.exists(u)) {
-          a(e, l, p, cache.get(u), u);
-        } else {
-          q = new XMLHttpRequest();
-          q.open('get', u, true);
-          q.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
-          q.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-          q.send();
-
-          q.onload = function () {
-            var ccHeader = q.getResponseHeader('Cache-Control') != null ? (q.getResponseHeader('Cache-Control').match(/\d+/) || [null])[0] : null;
-            a(e, l, p, q.responseText, u);
-
-            if (e.hasAttribute('cache') || ccHeader) {
-              cache.set(u, q.responseText, ccHeader);
+          if (p !== null && p !== '') {
+            if (u.indexOf('?') != -1) {
+              u += "&";
+            } else {
+              u += "?";
             }
-          };
+
+            u += p;
+          }
+
+
+
+          if (cache.exists(u)) {
+            a(e, l, p, cache.get(u), u);
+          } else {
+            q = new XMLHttpRequest();
+            q.open('get', u, true);
+            q.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+            q.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+            q.send();
+
+            q.onload = function () {
+              var ccHeader = q.getResponseHeader('Cache-Control') != null ? (q.getResponseHeader('Cache-Control').match(/\d+/) || [null])[0] : null;
+              a(e, l, p, q.responseText, u);
+
+              if (e.hasAttribute('cache') || ccHeader) {
+                cache.set(u, q.responseText, ccHeader);
+              }
+            };
+          }
         }
+      });
+    }, 250);
+
+    var a = function a(e, l, p, t, u) {
+      e.style.opacity = 0;
+      if (!e.parentNode) return;
+      var sc,
+          el = d.createElement('div');
+      el.innerHTML = t;
+
+      if (l !== null && l !== '') {
+        el = el.querySelector(l);
+        el.setAttribute('data-loadtag', l);
+      } else {
+        el = el.children[0];
       }
-    });
-  }, 250);
-  var reloadFavs = debounce(function () {
-    var c = d.getElementsByClassName('favs-cntr'),
-        q;
-    [].forEach.call(c, function (e) {
 
-      q = new XMLHttpRequest();
-      q.open('get', e.getAttribute('data-url'), true);
-      q.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
-      q.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-      q.send();
+      el.style.visibility = 'hidden';
+      el.style.transition = 'visibility 0.3s ease-in-out';
+      var q = el.clientHeight;
+      el.setAttribute('data-url', u);
+      el.setAttribute('data-param', p);
+      sc = Array.prototype.slice.call(el.getElementsByTagName('script'));
+      e.parentNode.replaceChild(el, e);
+      for (var x = 0; x < sc.length; x++) {
+        var s = document.createElement("script");
+        s.innerHTML = sc[x].innerHTML;
+        s.type = "text/javascript";
+        s.setAttribute('async', 'true');
+        el.appendChild(s);
+        sc[x].parentNode.removeChild(sc[x]);
+      }
 
-      q.onload = function () {
-        a(e, null, null, q.responseText, e.getAttribute('data-url'));
-      };
-    });
-  }, 250);
+      el.style.visibility = 'visible';
+      document.dispatchEvent(new CustomEvent("ajax"));
+    };
 
-  loadAjaxContent();
-  loadAdAjaxContent();
-  document.addEventListener('load-ajax-content', function () {
+    var loadAdAjaxContent = debounce(function () {
+      [].forEach.call(d.querySelectorAll('#AdColOne, #AdColTwo [data-ajax="yes"]'), function (e) {
+        if (isInViewport(e)) {
+          var u = e.getAttribute('data-url'),
+              p = e.getAttribute('data-param'),
+              l = e.getAttribute('data-loadtag'),
+              q;
+
+          if (!e.classList.contains('no-loader')) {
+            e.innerHTML = '<div class="ajaxLoader"><img class="ajaxLoader-img" src="/img/loader.gif" /></div>';
+          }
+
+          if (p !== null && p !== '') {
+            if (u.indexOf("?") != -1) {
+              u += "&";
+            } else {
+              u += "?";
+            }
+
+            u += p;
+          }
+
+          e.style.visibility = 'hidden';
+
+          if (cache.exists(u)) {
+            a(e, l, p, cache.get(u), u);
+          } else {
+            q = new XMLHttpRequest();
+            q.open('get', u, true);
+            q.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+            q.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+            q.send();
+
+            q.onload = function () {
+              var ccHeader = q.getResponseHeader('Cache-Control') != null ? (q.getResponseHeader('Cache-Control').match(/\d+/) || [null])[0] : null;
+              a(e, l, p, q.responseText, u);
+
+              if (e.hasAttribute('cache') || ccHeader) {
+                cache.set(u, q.responseText, ccHeader);
+              }
+            };
+          }
+        }
+      });
+    }, 250);
+    var reloadFavs = debounce(function () {
+      var c = d.getElementsByClassName('favs-cntr'),
+          q;
+      [].forEach.call(c, function (e) {
+
+        q = new XMLHttpRequest();
+        q.open('get', e.getAttribute('data-url'), true);
+        q.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+        q.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+        q.send();
+
+        q.onload = function () {
+          a(e, null, null, q.responseText, e.getAttribute('data-url'));
+        };
+      });
+    }, 250);
+
     loadAjaxContent();
     loadAdAjaxContent();
-  });
-  document.addEventListener('reload-favs', function () {
-    reloadFavs();
-  });
-  document.addEventListener('scroll', function () {
-    loadAjaxContent();
-    loadAdAjaxContent();
-  }, {passive: true});
-
-})();
+    document.addEventListener('load-ajax-content', function () {
+      loadAjaxContent();
+      loadAdAjaxContent();
+    });
+    document.addEventListener('reload-favs', function () {
+      reloadFavs();
+    });
+    document.addEventListener('scroll', function () {
+      loadAjaxContent();
+      loadAdAjaxContent();
+    }, {passive: true});
+  };
+  console.log("ajax content script loaded");
+  return x;
+}));
+AjaxContent();

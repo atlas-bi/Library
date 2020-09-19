@@ -15,27 +15,42 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-(function(){
-  function ShowMessageBox(message) {
-  var d = document,
-      w = d.getElementsByClassName('message-wrapper')[0],
-      c = w.getElementsByClassName('message-close');
-  d.querySelector('.message-container .message-inner').innerHTML = message;
-  w.classList.remove('hidden');
-  setTimeout(function () {
-    w.classList.add("hidden");
-  }, 2000);
-}
-
-document.addEventListener('click', function (e) {
-  if (e.target.matches('.message-close') && e.target.parentElement.matches('.message-wrapper')) {
-    e.target.parentElement.classList.add('hidden');
-  }
-});
-
-document.addEventListener('show-message', function (e) {
-    if (typeof e.detail !== 'undefined' && !!e.detail && !!e.detail.value) {
-      ShowMessageBox(e.detail.value);
+(function (root, factory) {
+    if (typeof define === 'function' && define.amd) {
+        // AMD. Register as an anonymous module.
+        define(['b'], factory);
+    } else {
+        // Browser globals
+        root.MessageBox = factory(root.b);
     }
-  }, false);
-})();
+}(typeof self !== 'undefined' ? self : this, function (b) {
+
+  var x = function(){
+
+    function ShowMessageBox(message) {
+    var d = document,
+        w = d.getElementsByClassName('message-wrapper')[0],
+        c = w.getElementsByClassName('message-close');
+    d.querySelector('.message-container .message-inner').innerHTML = message;
+    w.classList.remove('hidden');
+    setTimeout(function () {
+      w.classList.add("hidden");
+    }, 2000);
+  }
+
+  document.addEventListener('click', function (e) {
+    if (e.target.matches('.message-close') && e.target.parentElement.matches('.message-wrapper')) {
+      e.target.parentElement.classList.add('hidden');
+    }
+  });
+
+  document.addEventListener('show-message', function (e) {
+      if (typeof e.detail !== 'undefined' && !!e.detail && !!e.detail.value) {
+        ShowMessageBox(e.detail.value);
+      }
+    }, false);
+};
+console.log('message box scripts loaded');
+return x;
+}));
+MessageBox();

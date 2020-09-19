@@ -20,12 +20,11 @@
   [data-toggle="clps"][data-target="#el"]
   #el
   */
-  var d = document;
-  d.addEventListener('click', function (e) {
-    var el,
-        d = document; // collapse
+  document.addEventListener('click', function (e) {
+    var el; // collapse
 
     if (e.target.getAttribute('data-toggle') == 'clps') {
+      var d = document;
       el = d.getElementById(e.target.getAttribute('data-target').replace("#", ''));
 
       if (el == null) {
@@ -58,12 +57,12 @@
     document.dispatchEvent(new CustomEvent("collapse-opened"));
   }
 
-  d.addEventListener('clps-close', function (e) {
+  document.addEventListener('clps-close', function (e) {
     if (typeof e.detail !== 'undefined') {
       c(e.detail.el);
     }
   }, false);
-  d.addEventListener('clps-open', function (e) {
+  document.addEventListener('clps-open', function (e) {
     if (typeof e.detail !== 'undefined') {
       o(e.detail.el);
     }

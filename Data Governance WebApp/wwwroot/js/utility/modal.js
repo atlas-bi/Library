@@ -107,6 +107,8 @@
         var modal = this;
         modal.querySelector('.mlbx-newMsgSubjIpt').innerHTML = "Share: " + name;
         modal.querySelector('.mlbx-newMsgMsg').innerHTML = "<div>Hi!<br>I would like to share this report with you.</div><br><a href='" + url + "' class='atlas-blue ajax'>" + name + "</a><br><br><div>Check it out sometime!</div><br><div>Regards!";
+        modal.querySelector('.mlbx-shareName').value = name;
+        modal.querySelector('.mlbx-shareUrl').value = url;
 
         // remove an "to" recips.
         var toName = modal.querySelectorAll('.dd-itm');

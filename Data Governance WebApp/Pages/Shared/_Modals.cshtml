@@ -46,11 +46,14 @@
       <div class="mdl-b ">
         <div class="mlbx-shareMsg">
             <form class="mlbx-newMsgForm" action="/mail?handler=SendMail" method="post">
-			        <div>
-				        <input type="hidden" id="convid" />
-        				<button type="submit" class="mlbx-newMsgSend">
-					        <i class="far fa-paper-plane fa-lg"></i>
-				        </button>
+              <input type="hidden" class="mlbx-share" value="1" />
+              <input type="hidden" class="mlbx-shareName" value="" />
+              <input type="hidden" class="mlbx-shareUrl" value="" />
+              <div>
+                <input type="hidden" id="convid" />
+                <button type="submit" class="mlbx-newMsgSend">
+                  <i class="far fa-paper-plane fa-lg"></i>
+                </button>
 
                   <div class="mlbx-newMsgSender">
                     <span>From:</span><span>@ViewBag.Fullname (you)</span></div>

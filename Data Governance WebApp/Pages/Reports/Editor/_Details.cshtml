@@ -45,36 +45,36 @@
             <option selected="selected" value="@tag.Id">@tag.Name</option>
             }
         </select>
+
         <label>Executive Visibility?</label>
-        <label class='checkbox-container'  >
+        <label class='checkbox-container' >
             <input type="checkbox" id="ExecutiveVisibilityYn" />
             <span class="checkmark"></span>
         </label>
-       @Model.Report.ExecVisibitliy</textarea>
+
         @if(Model.Report.Type == "SSRS Report")
         {
-        <label>Enabled for Hyperspace?</label>
-        <label class='checkbox-container'  >
-            <input type="checkbox" id="EnabledForHyperspace" />
-            <span class="checkmark"></span>
-        </label>
-        
+            <label>Enabled for Hyperspace?</label>
+            <label class='checkbox-container'  >
+                <input type="checkbox" id="EnabledForHyperspace" />
+                <span class="checkmark"></span>
+            </label>
         }
         @if (Model.Permissions.Contains(35))
         {
-        <label>Do not purge report?</label>
-        <label class='checkbox-container'  >
-            <input type="checkbox" id="DoNotPurge" />
-            <span class="checkmark"></span>
-        </label>
+            <label>Do not purge report?</label>
+            <label class='checkbox-container' >
+                <input type="checkbox" id="DoNotPurge" />
+                <span class="checkmark"></span>
+            </label>
         }
         @if (Model.Permissions.Contains(43))
         {
-        <label>Hide Report?</label>
-        <label class='checkbox-container'  >
-            <input type="checkbox" id="Hidden" />
-            <span class="checkmark"></span>
-        </label>
+            <label>Hide Report?</label>
+            <label class='checkbox-container' >
+                <input type="checkbox" id="Hidden" />
+                <span class="checkmark"></span>
+            </label>
         
         }
         <input type="hidden" class="HiddenReportHiddenTextArea" asp-for="ReportObjectDoc.Hidden" value="@Model.Report.Hidden">
