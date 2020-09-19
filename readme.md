@@ -54,10 +54,10 @@ Atlas was created by the Riverside Healthcare Analytics team -
 * [Dee Anna Hillebrand](https://github.com/DHillebrand2016)
 * [Scott Manley](https://github.com/Scott-Manley)
 * [Madeline Matz](mailto:mmatz@RHC.net)
-* [Christopher Pickering](https://github.com/christopherpickering).
-* [Dan Ryan](https://github.com/danryan1011).
-* [Richard Schissler](https://github.com/schiss152).
-* [Eric Shultz](https://github.com/eshultz).
+* [Christopher Pickering](https://github.com/christopherpickering)
+* [Dan Ryan](https://github.com/danryan1011)
+* [Richard Schissler](https://github.com/schiss152)
+* [Eric Shultz](https://github.com/eshultz)
 
 ## Getting Started
 
