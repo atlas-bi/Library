@@ -176,3 +176,8 @@
   opacity: 1;
   transition: opacity 0.25s linear 0s;
 }
+
+.ss-content::-webkit-scrollbar {
+    background-color: #fff;
+    width: 16px;
+}

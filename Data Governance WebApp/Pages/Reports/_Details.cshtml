@@ -68,7 +68,7 @@
             @:<a href="@m.Report.RecordViewerUrl" class="atlas-blue">
             }
         <span><span id="epic-ini">@m.Report.EpicMasterFile</span>@if (m.Report.EpicId != null)
-        {<text> </text><span id="epic-id" data-epic-hgr="@m.Report.EpicTemplateId">@m.Report.EpicId</span>}</span>
+        {<text> </text><span id="epic-id" data-epic-hgr="@m.Report.EpicTemplateId">@m.Report.EpicId @if(@m.Report.EpicTemplateId != null){<text>(Template @m.Report.EpicTemplateId)</text>}</span>}</span>
         @if (m.Report.RecordViewerUrl != null)
         {
         @:</a>

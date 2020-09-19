@@ -42,12 +42,16 @@ a.atlas-blue, button.atlas-blue, li.atlas-blue {
   	transition: color .7s;
   	color:  #0084db;
   	color: var(--active-link);
+  	fill:  #0084db;
+	fill: var(--active-link);
 }
 
 a.atlas-blue:hover, button.atlas-blue:hover , a.atlas-green:hover, li.atlas-blue:hover{
 	text-decoration: none;
 	color:  #212020;
   	color: var(--dark-grey);
+  	fill:  #212020;
+  	fill: var(--dark-grey);
 }
 
 button.atlas-blue:active, button.atlas-blue:focus, li.atlas-blue:focus {

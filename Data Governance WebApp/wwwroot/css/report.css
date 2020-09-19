@@ -159,3 +159,22 @@
     padding-bottom: 1rem;
     padding-right: 130px;
 }
+
+.query-copy {
+    display: inline-block;
+    border:1px solid transparent;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    user-select: none;
+    font-size: 1rem;
+    line-height: 1.5;
+    border-radius: .25rem;
+    background-color: transparent;
+    height:30px;
+    width:30px;
+}
+
+.query-copy:focus {
+    outline: none;
+}

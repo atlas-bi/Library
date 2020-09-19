@@ -86,7 +86,7 @@
         }
 
         if (n < 0) {
-          n = slides.length;
+          n = slides.length-1;
         }
 
         for (i = 0; i < slides.length; i++) {
