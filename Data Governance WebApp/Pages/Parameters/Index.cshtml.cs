@@ -49,8 +49,8 @@ namespace Data_Governance_WebApp.Pages.Parameters
         public IEnumerable<ValueListData> MaintenanceLogStatusList { get; set; }
         public IEnumerable<ValueListData> FinancialImpactList { get; set; }
         public IEnumerable<ValueListData> StrategicImportanceList { get; set; }
-		public IEnumerable<ValueListData> MilestoneTemplateList { get; set;}
-		public IEnumerable<ContactListData> DpContactList { get; set; }
+        public IEnumerable<ValueListData> MilestoneTemplateList { get; set;}
+        public IEnumerable<ContactListData> DpContactList { get; set; }
         public List<UserPreferences> Preferences { get; set; }
         [BindProperty] public OrganizationalValue OrganizationalValue { get; set; }
         [BindProperty] public EstimatedRunFrequency EstimatedRunFrequency { get; set; }
@@ -60,7 +60,7 @@ namespace Data_Governance_WebApp.Pages.Parameters
         [BindProperty] public MaintenanceLogStatus MaintenanceLogStatus { get; set; }
         [BindProperty] public FinancialImpact FinancialImpact { get; set; }
         [BindProperty] public StrategicImportance StrategicImportance { get; set; }
-		[BindProperty] public DpMilestoneTemplates MilestoneTemplates { get; set;}
+        [BindProperty] public DpMilestoneTemplates MilestoneTemplates { get; set;}
         [BindProperty] public DpContact DpContact { get; set; }
         [BindProperty] public GlobalSiteSettings GlobalSiteSettings { get; set; }
 
@@ -99,6 +99,7 @@ namespace Data_Governance_WebApp.Pages.Parameters
                                                              Value = o.Value
                                                          }).ToListAsync();
             ViewData["Permissions"] = UserHelpers.GetUserPermissions(_cache, _context, User.Identity.Name);
+            ViewData["SiteMessage"] = HtmlHelpers.SiteMessage(HttpContext, _context);
             HttpContext.Response.Headers.Add("Cache-Control", "no-cache, no-store, must-revalidate");
             HttpContext.Response.Headers.Add("Pragma", "no-cache"); // HTTP 1.0.
             HttpContext.Response.Headers.Add("Expires", "0"); // Proxies.
@@ -144,7 +145,7 @@ namespace Data_Governance_WebApp.Pages.Parameters
 
         public async Task<IActionResult> OnGetEstimatedRunFrequencyList()
         {
-        	ViewData["EstimatedRunFrequencyList"] = await (from o in _context.EstimatedRunFrequency
+            ViewData["EstimatedRunFrequencyList"] = await (from o in _context.EstimatedRunFrequency
                                                select new ValueListData
                                                {
                                                    Id = o.EstimatedRunFrequencyId,
@@ -269,6 +270,7 @@ namespace Data_Governance_WebApp.Pages.Parameters
             Favorites = UserHelpers.GetUserFavorites(_cache, _context, User.Identity.Name);
             Permissions = UserHelpers.GetUserPermissions(_cache, _context, User.Identity.Name);
             ViewData["Permissions"] = Permissions;
+            ViewData["SiteMessage"] = HtmlHelpers.SiteMessage(HttpContext, _context);
             Preferences = UserHelpers.GetPreferences(_cache, _context, User.Identity.Name);
             return Page();
         }

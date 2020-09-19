@@ -80,6 +80,7 @@ namespace Data_Governance_WebApp.Pages.Analytics
             ViewData["MyRole"] = UserHelpers.GetMyRole(_cache, _context, User.Identity.Name);
             Permissions = UserHelpers.GetUserPermissions(_cache, _context, User.Identity.Name);
             ViewData["Permissions"] = Permissions;
+            ViewData["SiteMessage"] = HtmlHelpers.SiteMessage(HttpContext, _context);
             Favorites = UserHelpers.GetUserFavorites(_cache, _context, User.Identity.Name);
             Preferences = UserHelpers.GetPreferences(_cache, _context, User.Identity.Name);
             TopUsers = await (from a in _context.Analytics

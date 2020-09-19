@@ -221,3 +221,40 @@ button .icon-sm {
     margin: 0 2px;
     margin-bottom: -2px;
 }
+
+.site-message {
+	padding: 20px;
+    border: 2px solid #ffc107;
+    background-color: rgb(224, 228, 231);
+    border-radius: 6px;
+    margin: 10px;
+    font-family: sf;
+    font-weight: 600;
+    letter-spacing: .2px;
+    color: rgb(38, 42, 45);
+    font-size: 16px;
+
+
+   }
+.site-messageImg {
+	max-width: 40px;
+    margin-right: 20px;
+}
+.site-messageText {
+	margin:0; display:inline-block;max-width: 90%
+}
+
+.site-messageClose {
+	display: inline-block;
+    float: right;
+    border: 1px solid transparent;
+    background: transparent;
+    fill: #b38600;
+    height: 30px;
+    width: 30px;
+    cursor: pointer;
+}
+.site-messageClose:focus {
+	outline: none;
+}
+

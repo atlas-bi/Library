@@ -31,14 +31,14 @@ namespace Data_Governance_WebApp.Pages.AccessControl
     public class IndexModel : PageModel
     {
         private IMemoryCache _cache;
-    	private readonly Data_GovernanceContext _context;
+        private readonly Data_GovernanceContext _context;
         public IndexModel(Data_GovernanceContext context, IMemoryCache cache)
         {
             _context = context;
             _cache = cache;
         }
         public List<UserFavorites> Favorites { get; set; }
-    	public List<int?> Permissions { get; set; }
+        public List<int?> Permissions { get; set; }
         public List<UserPreferences> Preferences { get; set; }
         public List<UserRolesData> UserRoles { get; set; }
         public List<RolePermissions> RolePermissions { get; set; }
@@ -93,6 +93,7 @@ namespace Data_Governance_WebApp.Pages.AccessControl
             Preferences = UserHelpers.GetPreferences(_cache, _context, User.Identity.Name);
             Permissions = UserHelpers.GetUserPermissions(_cache, _context, User.Identity.Name);
             ViewData["Permissions"] = Permissions;
+            ViewData["SiteMessage"] = HtmlHelpers.SiteMessage(HttpContext, _context);
             Favorites = UserHelpers.GetUserFavorites(_cache, _context, User.Identity.Name);
 
             PrivilegedUsers = await (from u in _context.User

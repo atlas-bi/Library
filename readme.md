@@ -158,7 +158,16 @@ follows www.maintainablecss.com.
 ### Progress bar
 ### Tooltips
 ### Drag and Drop
+### Sitewide BannerMessage
 
+Add a global site paramter in the webapp settings > global settings.
+Name: msg
+Description: <Message Text>
+Value: <id used to show message>
+
+Show message by adding the message ID to the url:
+
+www.atlas.com?msg=1
 
 ### Ajax content
 

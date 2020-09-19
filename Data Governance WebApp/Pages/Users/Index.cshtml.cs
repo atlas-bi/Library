@@ -174,6 +174,7 @@ namespace Data_Governance_WebApp.Pages.Users
             Favorites = UserHelpers.GetUserFavorites(_cache, _context, User.Identity.Name);
             Permissions = UserHelpers.GetUserPermissions(_cache, _context, User.Identity.Name);
             ViewData["Permissions"] = Permissions;
+            ViewData["SiteMessage"] = HtmlHelpers.SiteMessage(HttpContext, _context);
             Preferences = UserHelpers.GetPreferences(_cache, _context, User.Identity.Name);
             MyId = PublicUser.UserId;
             ViewData["MyRole"] = UserHelpers.GetMyRole(_cache, _context, User.Identity.Name);

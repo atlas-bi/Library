@@ -22,6 +22,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Markdig;
 using Microsoft.Extensions.Caching.Memory;
+using System.Data.SqlClient;
 
 namespace Data_Governance_WebApp.Helpers
 {
@@ -184,7 +185,22 @@ namespace Data_Governance_WebApp.Helpers
 
     public class HtmlHelpers
     {
+        public static string SiteMessage(HttpContext _httpContext, Data_GovernanceContext _context)
+        {
+            var z = _httpContext.Request.Query["msg"].ToString();
+            if (_httpContext.Request.Query["msg"].ToString() == "")
+            {
+                return "";
+            }
+            var msg = _context.GlobalSiteSettings.Where(x => x.Name == "msg" && x.Value == _httpContext.Request.Query["msg"]);
 
+            if(msg != null && msg.Count() > 0)
+            {
+                return msg.FirstOrDefault().Description;
+            }
+            return "";
+
+        }
         public static string MarkdownToHtml(string text)
         {
             if(text is null)

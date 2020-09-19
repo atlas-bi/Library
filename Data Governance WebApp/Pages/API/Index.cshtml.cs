@@ -73,6 +73,7 @@ namespace Data_Governance_WebApp.Pages.API
             Preferences = UserHelpers.GetPreferences(_cache, _context, User.Identity.Name);
             Permissions = UserHelpers.GetUserPermissions(_cache, _context, User.Identity.Name);
             ViewData["Permissions"] = Permissions;
+            ViewData["SiteMessage"] = HtmlHelpers.SiteMessage(HttpContext, _context);
             Favorites = UserHelpers.GetUserFavorites(_cache, _context, User.Identity.Name);
 
             ViewData["stuff"] = (from u in (from u in _context.User
