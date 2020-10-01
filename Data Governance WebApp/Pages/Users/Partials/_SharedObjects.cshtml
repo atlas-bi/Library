@@ -38,7 +38,7 @@
         <ul class="home-list">
             @foreach (var o in ViewBag.SharedFromMe)
             {
-                <li class="home-link" data-tooltip="Shared by @o.SharedFrom on @o.ShareDate">
+                <li class="home-link" data-tooltip="Shared to @o.SharedFrom on @o.ShareDate">
                     <div class="d-flex justify-content-start">
                         <form class="remove-shared-object" asp-page-handler="RemoveSharedObject" method="post"><input type="hidden" name="id" value="@o.Id" /><button class="btn btn-link p-0 m-0 mr-2"><i class="fas fa-times"></i></button></form>
                         <a class="ajax atlas-blue" href="@o.Url">@o.Name</a>

@@ -33,95 +33,101 @@
     var maintlog = Model.ReportMaintLogs.Count() > 0;
 }
 
-<div class="pageTitle">
-    <h2 class="pageTitle-head"><span>@Model.Report.Name.Replace("_"," ")</span> @if (Model.Permissions.Contains(12))
-                        {<button id="open-editor" class="btn btn-link pl-2 m-0 p-0 mb-1 atlas-blue editor-buttonHidden" type="button" data-toggle="mdl" data-target="editModal"><span class="far fa-edit fa-lg" style="pointer-events: none"></span></button>}<button class="btn btn-link pl-2 m-0 p-0 mb-1 atlas-blue profile-buttonHidden" data-toggle="mdl" data-target="profile-modal"><i class="far fa-chart-bar fa-lg"></i></button></h2>
-    <div class="control-box">
-        <ul class=control-list>
+    <div class="pageTitle">
+        <h2 class="pageTitle-head">
+            <span>@Model.Report.Name.Replace("_"," ")</span> @if (Model.Permissions.Contains(12))
+                        {<button id="open-editor" class="btn btn-link pl-2 m-0 p-0 mb-1 atlas-blue editor-buttonHidden" type="button" data-toggle="mdl" data-target="editModal"><span class="far fa-edit fa-lg" style="pointer-events: none"></span></button>}<button class="btn btn-link pl-2 m-0 p-0 mb-1 atlas-blue profile-buttonHidden" data-toggle="mdl" data-target="profile-modal"><i class="far fa-chart-bar fa-lg"></i></button>
+        </h2>
+        <div class="control-box">
+            <ul class=control-list>
 
-            <li class="control-item" @if(Model.Report.RunReportUrl != null) {<text>data-tooltip="Run Report"</text>} else {<text>data-tooltip="Login to Hyperspace to run report."</text>}>
-                @if (Model.Report.RunReportUrl != null)
+                <li class="control-item" @if(Model.Report.RunReportUrl != null) { <text> data-tooltip="Run Report" </text> } else { <text> data-tooltip="Report can be run in Hyperspace." </text> }>
+                    @if (Model.Report.RunReportUrl != null)
                 {
-                <a class="btn btn-link p-0 atlas-green" target="_blank" href="@Model.Report.RunReportUrl"><i class="fas fa-play"></i></a>
+                    <a class="btn btn-link p-0 atlas-green" target="_blank" href="@Model.Report.RunReportUrl"><i class="fas fa-play"></i></a>
                 } else {
-                <i class="fas fa-play" style="color:grey;margin-left:3px;"></i>
+                    <i class="fas fa-play" style="color:grey;margin-left:3px;"></i>
             }
-            </li>
+                </li>
 
-            <li class="control-item" data-tooltip="Favorite Report">
-                <i fav-type="report" object-id="@Model.Report.Id" class="favorite far fa-star @Model.Report.Favorite"></i>
-            </li>
-            <li class="control-item" data-tooltip="Request Access">
-                <button class="btn btn-link p-0 atlas-blue" data-toggle="mdl" data-target="requestAccessModal" data-name="@Model.Report.Name" data-name-clean='@Model.Report.Name.Replace("_"," ")'><i class="fas fa-universal-access"></i></button>
-            </li>
-            <li class="control-item" data-tooltip="Share">
-                <button class="btn btn-link p-0 atlas-blue" data-toggle="mdl" data-target="shareModal" data-name='@Model.Report.Name.Replace("_"," ")'><i class="fas fa-share"></i></button>
-            </li>
-            <style>.clps-o .control-list {position: absolute;}</style>
-            <li class="control-item" style="width:20px;position: relative;">
-                <button class="btn btn-link p-0 text-muted" data-toggle="clps" data-target="extra-nav"><i class="fas fa-ellipsis-h"></i></button>
-                <div class="clps" id="extra-nav">
-                    <ul class="control-list p-0" >
-                        <li class="control-item" data-tooltip="Report a Problem">
-                            <button class="btn btn-link p-0 atlas-blue" data-toggle="mdl" data-target="reportProblem" data-name="@Model.Report.Name"><i class="fas fa-exclamation-circle"></i></button>
-                        </li>
+                <li class="control-item" data-tooltip="Favorite Report">
+                    <i fav-type="report" object-id="@Model.Report.Id" class="favorite far fa-star @Model.Report.Favorite"></i>
+                </li>
+                <li class="control-item" data-tooltip="Request Access">
+                    <button class="btn btn-link p-0 atlas-blue" data-toggle="mdl" data-target="requestAccessModal" data-name="@Model.Report.Name" data-name-clean='@Model.Report.Name.Replace("_"," ")'><i class="fas fa-universal-access"></i></button>
+                </li>
+                <li class="control-item" data-tooltip="Share">
+                    <button class="btn btn-link p-0 atlas-blue" data-toggle="mdl" data-target="shareModal" data-name='@Model.Report.Name.Replace("_"," ")'><i class="fas fa-share"></i></button>
+                </li>
+                <style>
+                    .clps-o .control-list {
+                        position: absolute;
+                    }
+                </style>
+                <li class="control-item" style="width:20px;position: relative;">
+                    <button class="btn btn-link p-0 text-muted" data-toggle="clps" data-target="extra-nav"><i class="fas fa-ellipsis-h"></i></button>
+                    <div class="clps" id="extra-nav">
+                        <ul class="control-list p-0">
+                            <li class="control-item" data-tooltip="Report a Problem">
+                                <button class="btn btn-link p-0 atlas-blue" data-toggle="mdl" data-target="reportProblem" data-name="@Model.Report.Name"><i class="fas fa-exclamation-circle"></i></button>
+                            </li>
 
-                        @if (Model.Permissions.Contains(38) && Model.Report.EditReportUrl != null)
+                            @if (Model.Permissions.Contains(38) && Model.Report.EditReportUrl != null)
                         {
                             <li class="control-item p-0" data-tooltip="Edit Report">
                                 <a class="btn btn-link p-0 atlas-blue" rel="noopener" target="_blank" href="@Model.Report.EditReportUrl"><i class="fas fa-external-link-alt"></i></a>
                             </li>
                         }
-                        @if (Model.Permissions.Contains(38) && Model.Report.ManageReportUrl != null)
+                            @if (Model.Permissions.Contains(38) && Model.Report.ManageReportUrl != null)
                         {
                             <li class="control-item p-0" data-tooltip="Manage Report">
                                 <a class="btn btn-link p-0 atlas-blue" rel="noopener" target="_blank" href="@Model.Report.ManageReportUrl"><i class="fas fa-cogs"></i></a>
                             </li>
                         }
 
-                    </ul>
-                </div>
-            </li>
-        </ul>
-    </div>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+        </div>
 
-    <div class="navLinks">
+        <div class="navLinks">
 
-        @if (imgs)
+            @if (imgs)
         {
             <a href="#images" class="navLinks-link">Images</a>
         }
 
-        @if (Model.Report.Description != null || Model.Report.DeveloperDescription != null || Model.Report.KeyAssumptions != null || Model.Report.SystemDescription != null)
+            @if (Model.Report.Description != null || Model.Report.DeveloperDescription != null || Model.Report.KeyAssumptions != null || Model.Report.SystemDescription != null)
         {
             <a href="#description" class="navLinks-link">Description</a>
         }
 
-        @if (terms)
+            @if (terms)
         {
             <a href="#terms" class="navLinks-link">Terms</a>
         }
 
-        <a href="#details" class="navLinks-link">Details</a>
+            <a href="#details" class="navLinks-link">Details</a>
 
-        @if (query)
+            @if (query)
         {
             <a href="#query" class="navLinks-link">Query</a>
         }
 
-        @if (parents || children)
+            @if (parents || children)
         {
             <a href="#relationships" class="navLinks-link">Relationships</a>
         }
 
-        @if (maintlog)
+            @if (maintlog)
         {
             <a href="#maintenance" class="navLinks-link">Maintenance</a>
         }
 
-        <a href="#comments" class="navLinks-link">Comments</a>
+            <a href="#comments" class="navLinks-link">Comments</a>
+        </div>
     </div>
-</div>
 
 
 

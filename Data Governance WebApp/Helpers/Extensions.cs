@@ -379,7 +379,7 @@ namespace Data_Governance_WebApp.Helpers
             string ReportName = Name.Replace("|", " ").Replace("=", " ");
             bool Epic = IsEpic(Context);
 
-            if ((Url != "" && Url != null) || (ReportType != "SSRS Report" && Epic && ReportType != "Source Radar Dashboard Component" && ReportType != "Epic-Crystal Report"))
+            if (((Url != "" && Url != null) || (ReportType != "SSRS Report" && Epic && ReportType != "Source Radar Dashboard Component")) && ReportType != "Epic-Crystal Report")
             {
                 if (EpicMasterFile == "HRX")
                 {

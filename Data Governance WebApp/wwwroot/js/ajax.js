@@ -209,9 +209,8 @@
     window.newPopState = '';
 
     window.onpopstate = function (e) {
-
       window.newPopState = document.location.pathname;
-      if (window.newPopState != window.oldPopState) {
+      if (window.newPopState != window.oldPopState || (window.newPopState == '/Search' &&  window.oldPopState == '/Search')) {
         loadPage(document.location, false, 'replace');
         if (e.state !== null && e.state.search) {
           d.querySelector('.sr-grp input').value = e.state.search;
