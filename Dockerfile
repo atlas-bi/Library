@@ -93,4 +93,3 @@ RUN /opt/mssql/bin/sqlservr & sleep 30 && \
 COPY --from=build ["/app/Data Governance WebApp/out", "./"]
 
 CMD /opt/mssql/bin/sqlservr & sleep 30 && ASPNETCORE_URLS=http://*:$PORT dotnet "Data Governance WebApp.dll" 
-
