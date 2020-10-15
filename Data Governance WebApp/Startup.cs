@@ -230,15 +230,11 @@ namespace Data_Governance_WebApp
                 app.UseStatusCodePagesWithRedirects("/Error?id={0}");
                 //app.UseExceptionHandler("/Error");
                 // enforce https https://aka.ms/aspnetcore-hsts.
-                
-                // uncomment to use https
-                // app.UseHsts();
+                app.UseHsts();
             }
             app.UseWebMarkupMin();
             app.UseWebOptimizer();
-
-            // uncomment to use https
-            // app.UseHttpsRedirection();
+            app.UseHttpsRedirection();
 
             app.UseStaticFiles(
                 new StaticFileOptions

@@ -425,6 +425,7 @@ namespace Data_Governance_WebApp.Pages.Reports
 
             Permissions = UserHelpers.GetUserPermissions(_cache, _context, User.Identity.Name);
             ViewData["Permissions"] = Permissions;
+            ViewData["SiteMessage"] = HtmlHelpers.SiteMessage(HttpContext, _context);
             Favorites = UserHelpers.GetUserFavorites(_cache, _context, User.Identity.Name);
 
             AdLists = new List<AdList>

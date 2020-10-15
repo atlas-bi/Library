@@ -1,6 +1,24 @@
+/*
+    Atlas of Information Management business intelligence library and documentation database.
+    Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
+
 USE [master]
 GO
-/****** Object:  Database [LDAP]    Script Date: 7/15/2020 11:46:25 AM ******/
+/****** Object:  Database [LDAP]    Script Date: 3/18/2020 3:44:50 PM ******/
 CREATE DATABASE [LDAP]
  CONTAINMENT = NONE
  ON  PRIMARY 
@@ -87,14 +105,13 @@ ALTER DATABASE SCOPED CONFIGURATION SET QUERY_OPTIMIZER_HOTFIXES = OFF;
 GO
 USE [LDAP]
 GO
-/****** Object:  User [datagov]    Script Date: 7/15/2020 11:46:27 AM ******/
-CREATE USER [datagov] FOR LOGIN [datagov] WITH DEFAULT_SCHEMA=[dbo]
-GO
+
+
 ALTER ROLE [db_datareader] ADD MEMBER [datagov]
 GO
 ALTER ROLE [db_datawriter] ADD MEMBER [datagov]
 GO
-/****** Object:  Table [dbo].[Groups]    Script Date: 7/15/2020 11:46:28 AM ******/
+/****** Object:  Table [dbo].[Groups]    Script Date: 3/18/2020 3:44:53 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -111,7 +128,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Memberships]    Script Date: 7/15/2020 11:46:28 AM ******/
+/****** Object:  Table [dbo].[Memberships]    Script Date: 3/18/2020 3:44:54 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -127,7 +144,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Users]    Script Date: 7/15/2020 11:46:28 AM ******/
+/****** Object:  Table [dbo].[Users]    Script Date: 3/18/2020 3:44:54 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON

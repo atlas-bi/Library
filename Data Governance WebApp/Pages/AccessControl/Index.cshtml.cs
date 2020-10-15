@@ -31,14 +31,14 @@ namespace Data_Governance_WebApp.Pages.AccessControl
     public class IndexModel : PageModel
     {
         private IMemoryCache _cache;
-        private readonly Data_GovernanceContext _context;
+    	private readonly Data_GovernanceContext _context;
         public IndexModel(Data_GovernanceContext context, IMemoryCache cache)
         {
             _context = context;
             _cache = cache;
         }
         public List<UserFavorites> Favorites { get; set; }
-        public List<int?> Permissions { get; set; }
+    	public List<int?> Permissions { get; set; }
         public List<UserPreferences> Preferences { get; set; }
         public List<UserRolesData> UserRoles { get; set; }
         public List<RolePermissions> RolePermissions { get; set; }
