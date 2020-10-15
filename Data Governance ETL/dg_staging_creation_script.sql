@@ -109,12 +109,12 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [raw].[epcogdbp01-clarity-dashboard-run-data]    Script Date: 8/11/2020 9:07:21 AM ******/
+/****** Object:  Table [raw].[clarity_server-clarity-dashboard-run-data]    Script Date: 8/11/2020 9:07:21 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [raw].[epcogdbp01-clarity-dashboard-run-data](
+CREATE TABLE [raw].[clarity_server-clarity-dashboard-run-data](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
 	[RunId] [int] NULL,
 	[SourceServer] [nvarchar](250) NULL,
@@ -132,12 +132,12 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [raw].[epcogdbp01-clarityreport-dbo-clarity_emp]    Script Date: 8/11/2020 9:07:21 AM ******/
+/****** Object:  Table [raw].[clarity_server-clarityreport-dbo-clarity_emp]    Script Date: 8/11/2020 9:07:21 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [raw].[epcogdbp01-clarityreport-dbo-clarity_emp](
+CREATE TABLE [raw].[clarity_server-clarityreport-dbo-clarity_emp](
 	[USER_ID] [varchar](18) NULL,
 	[NAME] [varchar](160) NULL,
 	[PROV_ID] [varchar](18) NULL,
@@ -313,12 +313,12 @@ CREATE TABLE [raw].[epcogdbp01-clarityreport-dbo-clarity_emp](
 	[CAD_OTH_DEP_ECL_ID] [varchar](18) NULL
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [raw].[epcogdbp01-clarityreport-dbo-clarity_rpt]    Script Date: 8/11/2020 9:07:21 AM ******/
+/****** Object:  Table [raw].[clarity_server-clarityreport-dbo-clarity_rpt]    Script Date: 8/11/2020 9:07:21 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [raw].[epcogdbp01-clarityreport-dbo-clarity_rpt](
+CREATE TABLE [raw].[clarity_server-clarityreport-dbo-clarity_rpt](
 	[REPORT_ID] [numeric](18, 0) NOT NULL,
 	[REPORT_NAME] [varchar](192) NULL,
 	[REPORT_DESC_ONE] [varchar](255) NULL,
@@ -347,12 +347,12 @@ CREATE TABLE [raw].[epcogdbp01-clarityreport-dbo-clarity_rpt](
 	[HIDE_FROM_LIBRARY_YN] [varchar](1) NULL
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [raw].[epcogdbp01-clarityreport-dbo-clarity_rpt_groups]    Script Date: 8/11/2020 9:07:21 AM ******/
+/****** Object:  Table [raw].[clarity_server-clarityreport-dbo-clarity_rpt_groups]    Script Date: 8/11/2020 9:07:21 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [raw].[epcogdbp01-clarityreport-dbo-clarity_rpt_groups](
+CREATE TABLE [raw].[clarity_server-clarityreport-dbo-clarity_rpt_groups](
 	[REPORT_ID] [numeric](18, 0) NOT NULL,
 	[LINE] [int] NOT NULL,
 	[CM_PHY_OWNER_ID] [varchar](25) NULL,
@@ -360,24 +360,24 @@ CREATE TABLE [raw].[epcogdbp01-clarityreport-dbo-clarity_rpt_groups](
 	[REPORT_GROUP_C] [varchar](66) NULL
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [raw].[epcogdbp01-clarityreport-dbo-component_desc]    Script Date: 8/11/2020 9:07:21 AM ******/
+/****** Object:  Table [raw].[clarity_server-clarityreport-dbo-component_desc]    Script Date: 8/11/2020 9:07:21 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [raw].[epcogdbp01-clarityreport-dbo-component_desc](
+CREATE TABLE [raw].[clarity_server-clarityreport-dbo-component_desc](
 	[COMPONENT_ID] [numeric](18, 0) NULL,
 	[CM_PHY_OWNER_ID] [varchar](25) NULL,
 	[CM_LOG_OWNER_ID] [varchar](25) NULL,
 	[RECORD_DESC] [varchar](1024) NULL
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [raw].[epcogdbp01-clarityreport-dbo-component_info]    Script Date: 8/11/2020 9:07:21 AM ******/
+/****** Object:  Table [raw].[clarity_server-clarityreport-dbo-component_info]    Script Date: 8/11/2020 9:07:21 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [raw].[epcogdbp01-clarityreport-dbo-component_info](
+CREATE TABLE [raw].[clarity_server-clarityreport-dbo-component_info](
 	[COMPONENT_ID] [numeric](18, 0) NULL,
 	[CM_PHY_OWNER_ID] [varchar](25) NULL,
 	[CM_LOG_OWNER_ID] [varchar](25) NULL,
@@ -444,12 +444,12 @@ CREATE TABLE [raw].[epcogdbp01-clarityreport-dbo-component_info](
 	[ACTIVITY] [varchar](140) NULL
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [raw].[epcogdbp01-clarityreport-dbo-component-list]    Script Date: 8/11/2020 9:07:21 AM ******/
+/****** Object:  Table [raw].[clarity_server-clarityreport-dbo-component-list]    Script Date: 8/11/2020 9:07:21 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [raw].[epcogdbp01-clarityreport-dbo-component-list](
+CREATE TABLE [raw].[clarity_server-clarityreport-dbo-component-list](
 	[DASHBOARD_ID] [numeric](18, 0) NOT NULL,
 	[LINE] [int] NOT NULL,
 	[CM_PHY_OWNER_ID] [varchar](25) NULL,
@@ -470,12 +470,12 @@ CREATE TABLE [raw].[epcogdbp01-clarityreport-dbo-component-list](
 	[SOURCE_INDEX] [int] NULL
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [raw].[epcogdbp01-clarityreport-dbo-dashboard_desc]    Script Date: 8/11/2020 9:07:21 AM ******/
+/****** Object:  Table [raw].[clarity_server-clarityreport-dbo-dashboard_desc]    Script Date: 8/11/2020 9:07:21 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [raw].[epcogdbp01-clarityreport-dbo-dashboard_desc](
+CREATE TABLE [raw].[clarity_server-clarityreport-dbo-dashboard_desc](
 	[DASHBOARD_ID] [numeric](18, 0) NULL,
 	[LINE] [int] NULL,
 	[CM_PHY_OWNER_ID] [varchar](25) NULL,
@@ -483,12 +483,12 @@ CREATE TABLE [raw].[epcogdbp01-clarityreport-dbo-dashboard_desc](
 	[RECORD_DESC] [varchar](300) NULL
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [raw].[epcogdbp01-clarityreport-dbo-dashboard_info]    Script Date: 8/11/2020 9:07:21 AM ******/
+/****** Object:  Table [raw].[clarity_server-clarityreport-dbo-dashboard_info]    Script Date: 8/11/2020 9:07:21 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [raw].[epcogdbp01-clarityreport-dbo-dashboard_info](
+CREATE TABLE [raw].[clarity_server-clarityreport-dbo-dashboard_info](
 	[DASHBOARD_ID] [numeric](18, 0) NULL,
 	[CM_PHY_OWNER_ID] [varchar](25) NULL,
 	[CM_LOG_OWNER_ID] [varchar](25) NULL,
@@ -514,12 +514,12 @@ CREATE TABLE [raw].[epcogdbp01-clarityreport-dbo-dashboard_info](
 	[SOURCE_LAYOUT_ID] [numeric](18, 0) NULL
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [raw].[epcogdbp01-clarityreport-dbo-emp_basic_info]    Script Date: 8/11/2020 9:07:21 AM ******/
+/****** Object:  Table [raw].[clarity_server-clarityreport-dbo-emp_basic_info]    Script Date: 8/11/2020 9:07:21 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [raw].[epcogdbp01-clarityreport-dbo-emp_basic_info](
+CREATE TABLE [raw].[clarity_server-clarityreport-dbo-emp_basic_info](
 	[USER_ID] [varchar](18) NULL,
 	[CM_PHY_OWNER_ID] [varchar](25) NULL,
 	[CM_LOG_OWNER_ID] [varchar](25) NULL,
@@ -538,12 +538,12 @@ CREATE TABLE [raw].[epcogdbp01-clarityreport-dbo-emp_basic_info](
 	[PROMPT_EPIC_ID_KEY_YN] [varchar](1) NULL
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [raw].[epcogdbp01-clarityreport-dbo-filter_definitions]    Script Date: 8/11/2020 9:07:21 AM ******/
+/****** Object:  Table [raw].[clarity_server-clarityreport-dbo-filter_definitions]    Script Date: 8/11/2020 9:07:21 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [raw].[epcogdbp01-clarityreport-dbo-filter_definitions](
+CREATE TABLE [raw].[clarity_server-clarityreport-dbo-filter_definitions](
 	[FILTER_ID] [numeric](18, 0) NULL,
 	[CM_PHY_OWNER_ID] [varchar](25) NULL,
 	[CM_LOG_OWNER_ID] [varchar](25) NULL,
@@ -581,12 +581,12 @@ CREATE TABLE [raw].[epcogdbp01-clarityreport-dbo-filter_definitions](
 	[LOOKUP_TYPE_NAME] [varchar](254) NULL
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [raw].[epcogdbp01-clarityreport-dbo-metric_desc]    Script Date: 8/11/2020 9:07:21 AM ******/
+/****** Object:  Table [raw].[clarity_server-clarityreport-dbo-metric_desc]    Script Date: 8/11/2020 9:07:21 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [raw].[epcogdbp01-clarityreport-dbo-metric_desc](
+CREATE TABLE [raw].[clarity_server-clarityreport-dbo-metric_desc](
 	[DEFINITION_ID] [numeric](18, 0) NULL,
 	[LINE] [int] NULL,
 	[CM_PHY_OWNER_ID] [varchar](25) NULL,
@@ -594,12 +594,12 @@ CREATE TABLE [raw].[epcogdbp01-clarityreport-dbo-metric_desc](
 	[RECORD_DESC] [varchar](254) NULL
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [raw].[epcogdbp01-clarityreport-dbo-metric_info]    Script Date: 8/11/2020 9:07:21 AM ******/
+/****** Object:  Table [raw].[clarity_server-clarityreport-dbo-metric_info]    Script Date: 8/11/2020 9:07:21 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [raw].[epcogdbp01-clarityreport-dbo-metric_info](
+CREATE TABLE [raw].[clarity_server-clarityreport-dbo-metric_info](
 	[DEFINITION_ID] [numeric](18, 0) NULL,
 	[CM_PHY_OWNER_ID] [varchar](25) NULL,
 	[CM_LOG_OWNER_ID] [varchar](25) NULL,
@@ -706,12 +706,12 @@ CREATE TABLE [raw].[epcogdbp01-clarityreport-dbo-metric_info](
 	[SQL_SOURCE_DATABASE_C] [int] NULL
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [raw].[epcogdbp01-clarityreport-dbo-ovride_rpt_groups]    Script Date: 8/11/2020 9:07:21 AM ******/
+/****** Object:  Table [raw].[clarity_server-clarityreport-dbo-ovride_rpt_groups]    Script Date: 8/11/2020 9:07:21 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [raw].[epcogdbp01-clarityreport-dbo-ovride_rpt_groups](
+CREATE TABLE [raw].[clarity_server-clarityreport-dbo-ovride_rpt_groups](
 	[REPORT_ID] [numeric](18, 0) NOT NULL,
 	[LINE] [int] NOT NULL,
 	[CM_PHY_OWNER_ID] [varchar](25) NULL,
@@ -719,12 +719,12 @@ CREATE TABLE [raw].[epcogdbp01-clarityreport-dbo-ovride_rpt_groups](
 	[REPORT_GROUP_C] [varchar](66) NULL
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [raw].[epcogdbp01-clarityreport-dbo-report_desc]    Script Date: 8/11/2020 9:07:21 AM ******/
+/****** Object:  Table [raw].[clarity_server-clarityreport-dbo-report_desc]    Script Date: 8/11/2020 9:07:21 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [raw].[epcogdbp01-clarityreport-dbo-report_desc](
+CREATE TABLE [raw].[clarity_server-clarityreport-dbo-report_desc](
 	[REPORT_INFO_ID] [numeric](18, 0) NULL,
 	[LINE] [int] NULL,
 	[CM_PHY_OWNER_ID] [varchar](25) NULL,
@@ -732,12 +732,12 @@ CREATE TABLE [raw].[epcogdbp01-clarityreport-dbo-report_desc](
 	[REPORT_DESCRIPTION] [varchar](3500) NULL
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [raw].[epcogdbp01-clarityreport-dbo-report_info]    Script Date: 8/11/2020 9:07:21 AM ******/
+/****** Object:  Table [raw].[clarity_server-clarityreport-dbo-report_info]    Script Date: 8/11/2020 9:07:21 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [raw].[epcogdbp01-clarityreport-dbo-report_info](
+CREATE TABLE [raw].[clarity_server-clarityreport-dbo-report_info](
 	[REPORT_INFO_ID] [numeric](18, 0) NULL,
 	[CM_PHY_OWNER_ID] [varchar](25) NULL,
 	[CM_LOG_OWNER_ID] [varchar](25) NULL,
@@ -779,12 +779,12 @@ CREATE TABLE [raw].[epcogdbp01-clarityreport-dbo-report_info](
 	[HIDE_FROM_LIBRARY_YN] [varchar](1) NULL
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [raw].[epcogdbp01-clarityreport-dbo-rw_rpt_run_data]    Script Date: 8/11/2020 9:07:21 AM ******/
+/****** Object:  Table [raw].[clarity_server-clarityreport-dbo-rw_rpt_run_data]    Script Date: 8/11/2020 9:07:21 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [raw].[epcogdbp01-clarityreport-dbo-rw_rpt_run_data](
+CREATE TABLE [raw].[clarity_server-clarityreport-dbo-rw_rpt_run_data](
 	[RUN_ID] [numeric](18, 0) NOT NULL,
 	[REP_SETTINGS_ID] [numeric](18, 0) NULL,
 	[SERVER_NODE_NAME] [varchar](40) NULL,
@@ -804,12 +804,12 @@ CREATE TABLE [raw].[epcogdbp01-clarityreport-dbo-rw_rpt_run_data](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, FILLFACTOR = 85) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [raw].[epcogdbp01-clarityreport-dbo-template_description]    Script Date: 8/11/2020 9:07:21 AM ******/
+/****** Object:  Table [raw].[clarity_server-clarityreport-dbo-template_description]    Script Date: 8/11/2020 9:07:21 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [raw].[epcogdbp01-clarityreport-dbo-template_description](
+CREATE TABLE [raw].[clarity_server-clarityreport-dbo-template_description](
 	[REPORT_ID] [numeric](18, 0) NULL,
 	[CONTACT_DATE_REAL] [float] NULL,
 	[LINE] [int] NULL,
@@ -817,12 +817,12 @@ CREATE TABLE [raw].[epcogdbp01-clarityreport-dbo-template_description](
 	[SEARCH_SOURCE_DESC] [varchar](3500) NULL
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [raw].[epcogdbp01-clarityreport-dbo-template_dynamic]    Script Date: 8/11/2020 9:07:21 AM ******/
+/****** Object:  Table [raw].[clarity_server-clarityreport-dbo-template_dynamic]    Script Date: 8/11/2020 9:07:21 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [raw].[epcogdbp01-clarityreport-dbo-template_dynamic](
+CREATE TABLE [raw].[clarity_server-clarityreport-dbo-template_dynamic](
 	[REPORT_ID] [numeric](18, 0) NULL,
 	[CONTACT_DATE_REAL] [float] NULL,
 	[CONTACT_DATE] [datetime] NULL,
@@ -869,12 +869,12 @@ CREATE TABLE [raw].[epcogdbp01-clarityreport-dbo-template_dynamic](
 	[VWR_RPT_BTG_VIEW_C] [varchar](66) NULL
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [raw].[epcogdbp01-clarityreport-dbo-template_info]    Script Date: 8/11/2020 9:07:21 AM ******/
+/****** Object:  Table [raw].[clarity_server-clarityreport-dbo-template_info]    Script Date: 8/11/2020 9:07:21 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [raw].[epcogdbp01-clarityreport-dbo-template_info](
+CREATE TABLE [raw].[clarity_server-clarityreport-dbo-template_info](
 	[REPORT_ID] [numeric](18, 0) NULL,
 	[CM_PHY_OWNER_ID] [varchar](25) NULL,
 	[CM_LOG_OWNER_ID] [varchar](25) NULL,
@@ -936,12 +936,12 @@ CREATE TABLE [raw].[epcogdbp01-clarityreport-dbo-template_info](
 	[EXTBI_VW_BEHAVIOR_C] [int] NULL
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [raw].[epcogdbp01-clarityreport-dbo-x_idk_info_noadd_single]    Script Date: 8/11/2020 9:07:21 AM ******/
+/****** Object:  Table [raw].[clarity_server-clarityreport-dbo-x_idk_info_noadd_single]    Script Date: 8/11/2020 9:07:21 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [raw].[epcogdbp01-clarityreport-dbo-x_idk_info_noadd_single](
+CREATE TABLE [raw].[clarity_server-clarityreport-dbo-x_idk_info_noadd_single](
 	[RECORD_ID] [numeric](18, 0) NULL,
 	[CM_PHY_OWNER_ID] [varchar](25) NULL,
 	[CM_LOG_OWNER_ID] [varchar](25) NULL,
@@ -982,12 +982,12 @@ CREATE TABLE [raw].[epcogdbp01-clarityreport-dbo-x_idk_info_noadd_single](
 	[INSTANT_OF_UPDATE_DTTM] [datetime] NULL
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [raw].[epcogdbp01-clarityreport-dbo-x-idb-resources]    Script Date: 8/11/2020 9:07:21 AM ******/
+/****** Object:  Table [raw].[clarity_server-clarityreport-dbo-x-idb-resources]    Script Date: 8/11/2020 9:07:21 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [raw].[epcogdbp01-clarityreport-dbo-x-idb-resources](
+CREATE TABLE [raw].[clarity_server-clarityreport-dbo-x-idb-resources](
 	[RECORD_ID] [numeric](18, 0) NOT NULL,
 	[LINE] [int] NOT NULL,
 	[CM_PHY_OWNER_ID] [varchar](25) NULL,
@@ -1071,12 +1071,12 @@ CREATE TABLE [raw].[epcogdbp01-clarityreport-dbo-x-idb-resources](
 	[REG_DEF_TGT_ID] [numeric](18, 0) NULL
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [raw].[epcogdbp01-clarityreport-dbo-zc_record_type_24]    Script Date: 8/11/2020 9:07:21 AM ******/
+/****** Object:  Table [raw].[clarity_server-clarityreport-dbo-zc_record_type_24]    Script Date: 8/11/2020 9:07:21 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [raw].[epcogdbp01-clarityreport-dbo-zc_record_type_24](
+CREATE TABLE [raw].[clarity_server-clarityreport-dbo-zc_record_type_24](
 	[RECORD_TYPE_24_C] [int] NULL,
 	[NAME] [varchar](254) NULL,
 	[TITLE] [varchar](254) NULL,
@@ -1084,12 +1084,12 @@ CREATE TABLE [raw].[epcogdbp01-clarityreport-dbo-zc_record_type_24](
 	[INTERNAL_ID] [int] NULL
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [raw].[epcogdbp01-clarityreport-dbo-zc_report_type_hgr]    Script Date: 8/11/2020 9:07:21 AM ******/
+/****** Object:  Table [raw].[clarity_server-clarityreport-dbo-zc_report_type_hgr]    Script Date: 8/11/2020 9:07:21 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [raw].[epcogdbp01-clarityreport-dbo-zc_report_type_hgr](
+CREATE TABLE [raw].[clarity_server-clarityreport-dbo-zc_report_type_hgr](
 	[REPORT_TYPE_HGR_C] [int] NULL,
 	[NAME] [varchar](254) NULL,
 	[TITLE] [varchar](254) NULL,
@@ -1097,12 +1097,12 @@ CREATE TABLE [raw].[epcogdbp01-clarityreport-dbo-zc_report_type_hgr](
 	[INTERNAL_ID] [int] NULL
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [raw].[epcogdbp01-reportserver-dbo-catalog]    Script Date: 8/11/2020 9:07:21 AM ******/
+/****** Object:  Table [raw].[clarity_server-reportserver-dbo-catalog]    Script Date: 8/11/2020 9:07:21 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [raw].[epcogdbp01-reportserver-dbo-catalog](
+CREATE TABLE [raw].[clarity_server-reportserver-dbo-catalog](
 	[ItemID] [uniqueidentifier] NULL,
 	[Path] [nvarchar](425) NULL,
 	[Name] [nvarchar](425) NULL,
@@ -1130,12 +1130,12 @@ CREATE TABLE [raw].[epcogdbp01-reportserver-dbo-catalog](
 	[ComponentID] [uniqueidentifier] NULL
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [raw].[epcogdbp01-reportserver-dbo-executionlogstorage]    Script Date: 8/11/2020 9:07:21 AM ******/
+/****** Object:  Table [raw].[clarity_server-reportserver-dbo-executionlogstorage]    Script Date: 8/11/2020 9:07:21 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [raw].[epcogdbp01-reportserver-dbo-executionlogstorage](
+CREATE TABLE [raw].[clarity_server-reportserver-dbo-executionlogstorage](
 	[LogEntryId] [bigint] IDENTITY(1,1) NOT NULL,
 	[InstanceName] [nvarchar](38) NOT NULL,
 	[ReportID] [uniqueidentifier] NULL,
@@ -1161,24 +1161,24 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [raw].[epcogdbp01-reportserver-dbo-policyuserrole]    Script Date: 8/11/2020 9:07:21 AM ******/
+/****** Object:  Table [raw].[clarity_server-reportserver-dbo-policyuserrole]    Script Date: 8/11/2020 9:07:21 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [raw].[epcogdbp01-reportserver-dbo-policyuserrole](
+CREATE TABLE [raw].[clarity_server-reportserver-dbo-policyuserrole](
 	[ID] [uniqueidentifier] NOT NULL,
 	[RoleID] [uniqueidentifier] NOT NULL,
 	[UserID] [uniqueidentifier] NOT NULL,
 	[PolicyID] [uniqueidentifier] NOT NULL
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [raw].[epcogdbp01-reportserver-dbo-subscriptions]    Script Date: 8/11/2020 9:07:21 AM ******/
+/****** Object:  Table [raw].[clarity_server-reportserver-dbo-subscriptions]    Script Date: 8/11/2020 9:07:21 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [raw].[epcogdbp01-reportserver-dbo-subscriptions](
+CREATE TABLE [raw].[clarity_server-reportserver-dbo-subscriptions](
 	[SubscriptionID] [uniqueidentifier] NOT NULL,
 	[OwnerID] [uniqueidentifier] NOT NULL,
 	[Report_OID] [uniqueidentifier] NOT NULL,
@@ -1203,12 +1203,12 @@ CREATE TABLE [raw].[epcogdbp01-reportserver-dbo-subscriptions](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [raw].[epcogdbp01-reportserver-dbo-users]    Script Date: 8/11/2020 9:07:21 AM ******/
+/****** Object:  Table [raw].[clarity_server-reportserver-dbo-users]    Script Date: 8/11/2020 9:07:21 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [raw].[epcogdbp01-reportserver-dbo-users](
+CREATE TABLE [raw].[clarity_server-reportserver-dbo-users](
 	[UserID] [uniqueidentifier] NULL,
 	[Sid] [binary](85) NULL,
 	[UserType] [int] NULL,
@@ -1218,12 +1218,12 @@ CREATE TABLE [raw].[epcogdbp01-reportserver-dbo-users](
 	[ServiceToken] [nvarchar](max) NULL
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [raw].[epcogdwp01-reportserver-dbo-catalog]    Script Date: 8/11/2020 9:07:21 AM ******/
+/****** Object:  Table [raw].[report_server_1-reportserver-dbo-catalog]    Script Date: 8/11/2020 9:07:21 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [raw].[epcogdwp01-reportserver-dbo-catalog](
+CREATE TABLE [raw].[report_server_1-reportserver-dbo-catalog](
 	[ItemID] [uniqueidentifier] NULL,
 	[Path] [nvarchar](425) NULL,
 	[Name] [nvarchar](425) NULL,
@@ -1251,12 +1251,12 @@ CREATE TABLE [raw].[epcogdwp01-reportserver-dbo-catalog](
 	[ComponentID] [uniqueidentifier] NULL
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [raw].[epcogdwp01-reportserver-dbo-executionlogstorage]    Script Date: 8/11/2020 9:07:21 AM ******/
+/****** Object:  Table [raw].[report_server_1-reportserver-dbo-executionlogstorage]    Script Date: 8/11/2020 9:07:21 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [raw].[epcogdwp01-reportserver-dbo-executionlogstorage](
+CREATE TABLE [raw].[report_server_1-reportserver-dbo-executionlogstorage](
 	[LogEntryId] [bigint] IDENTITY(1,1) NOT NULL,
 	[InstanceName] [nvarchar](38) NOT NULL,
 	[ReportID] [uniqueidentifier] NULL,
@@ -1282,24 +1282,24 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [raw].[epcogdwp01-reportserver-dbo-policyuserrole]    Script Date: 8/11/2020 9:07:21 AM ******/
+/****** Object:  Table [raw].[report_server_1-reportserver-dbo-policyuserrole]    Script Date: 8/11/2020 9:07:21 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [raw].[epcogdwp01-reportserver-dbo-policyuserrole](
+CREATE TABLE [raw].[report_server_1-reportserver-dbo-policyuserrole](
 	[ID] [uniqueidentifier] NOT NULL,
 	[RoleID] [uniqueidentifier] NOT NULL,
 	[UserID] [uniqueidentifier] NOT NULL,
 	[PolicyID] [uniqueidentifier] NOT NULL
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [raw].[epcogdwp01-reportserver-dbo-subscriptions]    Script Date: 8/11/2020 9:07:21 AM ******/
+/****** Object:  Table [raw].[report_server_1-reportserver-dbo-subscriptions]    Script Date: 8/11/2020 9:07:21 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [raw].[epcogdwp01-reportserver-dbo-subscriptions](
+CREATE TABLE [raw].[report_server_1-reportserver-dbo-subscriptions](
 	[SubscriptionID] [uniqueidentifier] NOT NULL,
 	[OwnerID] [uniqueidentifier] NOT NULL,
 	[Report_OID] [uniqueidentifier] NOT NULL,
@@ -1324,12 +1324,12 @@ CREATE TABLE [raw].[epcogdwp01-reportserver-dbo-subscriptions](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [raw].[epcogdwp01-reportserver-dbo-users]    Script Date: 8/11/2020 9:07:21 AM ******/
+/****** Object:  Table [raw].[report_server_1-reportserver-dbo-users]    Script Date: 8/11/2020 9:07:21 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [raw].[epcogdwp01-reportserver-dbo-users](
+CREATE TABLE [raw].[report_server_1-reportserver-dbo-users](
 	[UserID] [uniqueidentifier] NULL,
 	[Sid] [binary](85) NULL,
 	[UserType] [int] NULL,
@@ -1337,12 +1337,12 @@ CREATE TABLE [raw].[epcogdwp01-reportserver-dbo-users](
 	[UserName] [nvarchar](260) NULL
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [raw].[rhbidb01-reportserver-dbo-catalog]    Script Date: 8/11/2020 9:07:21 AM ******/
+/****** Object:  Table [raw].[atlas_db_server-reportserver-dbo-catalog]    Script Date: 8/11/2020 9:07:21 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [raw].[rhbidb01-reportserver-dbo-catalog](
+CREATE TABLE [raw].[atlas_db_server-reportserver-dbo-catalog](
 	[ItemID] [uniqueidentifier] NULL,
 	[Path] [nvarchar](425) NULL,
 	[Name] [nvarchar](425) NULL,
@@ -1370,12 +1370,12 @@ CREATE TABLE [raw].[rhbidb01-reportserver-dbo-catalog](
 	[ComponentID] [uniqueidentifier] NULL
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [raw].[rhbidb01-reportserver-dbo-executionlogstorage]    Script Date: 8/11/2020 9:07:21 AM ******/
+/****** Object:  Table [raw].[atlas_db_server-reportserver-dbo-executionlogstorage]    Script Date: 8/11/2020 9:07:21 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [raw].[rhbidb01-reportserver-dbo-executionlogstorage](
+CREATE TABLE [raw].[atlas_db_server-reportserver-dbo-executionlogstorage](
 	[LogEntryId] [bigint] IDENTITY(1,1) NOT NULL,
 	[InstanceName] [nvarchar](38) NULL,
 	[ReportID] [uniqueidentifier] NULL,
@@ -1401,24 +1401,24 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [raw].[rhbidb01-reportserver-dbo-policyuserrole]    Script Date: 8/11/2020 9:07:21 AM ******/
+/****** Object:  Table [raw].[atlas_db_server-reportserver-dbo-policyuserrole]    Script Date: 8/11/2020 9:07:21 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [raw].[rhbidb01-reportserver-dbo-policyuserrole](
+CREATE TABLE [raw].[atlas_db_server-reportserver-dbo-policyuserrole](
 	[ID] [uniqueidentifier] NOT NULL,
 	[RoleID] [uniqueidentifier] NOT NULL,
 	[UserID] [uniqueidentifier] NOT NULL,
 	[PolicyID] [uniqueidentifier] NOT NULL
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [raw].[rhbidb01-reportserver-dbo-subscriptions]    Script Date: 8/11/2020 9:07:21 AM ******/
+/****** Object:  Table [raw].[atlas_db_server-reportserver-dbo-subscriptions]    Script Date: 8/11/2020 9:07:21 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [raw].[rhbidb01-reportserver-dbo-subscriptions](
+CREATE TABLE [raw].[atlas_db_server-reportserver-dbo-subscriptions](
 	[SubscriptionID] [uniqueidentifier] NOT NULL,
 	[OwnerID] [uniqueidentifier] NOT NULL,
 	[Report_OID] [uniqueidentifier] NOT NULL,
@@ -1437,18 +1437,18 @@ CREATE TABLE [raw].[rhbidb01-reportserver-dbo-subscriptions](
 	[DeliveryExtension] [nvarchar](260) NULL,
 	[Version] [int] NOT NULL,
 	[ReportZone] [int] NOT NULL,
- CONSTRAINT [PK_Subscriptions_rhbidb01] PRIMARY KEY CLUSTERED 
+ CONSTRAINT [PK_Subscriptions_atlas_db_server] PRIMARY KEY CLUSTERED 
 (
 	[SubscriptionID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [raw].[rhbidb01-reportserver-dbo-users]    Script Date: 8/11/2020 9:07:21 AM ******/
+/****** Object:  Table [raw].[atlas_db_server-reportserver-dbo-users]    Script Date: 8/11/2020 9:07:21 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [raw].[rhbidb01-reportserver-dbo-users](
+CREATE TABLE [raw].[atlas_db_server-reportserver-dbo-users](
 	[UserID] [uniqueidentifier] NULL,
 	[Sid] [binary](85) NULL,
 	[UserType] [int] NULL,
