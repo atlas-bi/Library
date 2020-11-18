@@ -18,35 +18,20 @@
 
 @model Data_Governance_WebApp.Pages.Parameters.IndexModel
 <div>
-<h4 class="pt-3">Financial Impact</h4>
-<ul class="list-group">
     @if (ViewBag.Permissions.Contains(33))
     {
-        <li class="list-group-item">
-            <form asp-page-handler="CreateFinancialImpact">
-                <input type="nice-input" class="submit slim" asp-for="FinancialImpact.Name" data-initial-content="New Item" required />
-            </form>
-        </li>
+        <form asp-page-handler="CreateFinancialImpact">
+            <input type="nice-input" class="submit slim" asp-for="FinancialImpact.Name" data-initial-content="New Item" required />
+        </form>
     }
     @foreach (var i in ViewBag.FinancialImpactList)
     {
-        <li class="list-group-item">
-            <div class="row">
-                <div class="col">
-                    @i.Name
-                    <span class="badge ml-2 atlas-blue">@i.Used</span>
-                </div>
-                <div class="col-auto text-right">
-                    @if (ViewBag.Permissions.Contains(34))
-                    {
-                        <form asp-page-handler="DeleteFinancialImpact" method="post">
-                            <input type="hidden" asp-for="FinancialImpact.FinancialImpactId" value="@i.Id" />
-                            <button type="submit" class="btn btn-link py-0 atlas-blue"><svg class="icon-sm" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M432 32H312l-9.4-18.7A24 24 0 0 0 281.1 0H166.8a23.72 23.72 0 0 0-21.4 13.3L136 32H16A16 16 0 0 0 0 48v32a16 16 0 0 0 16 16h416a16 16 0 0 0 16-16V48a16 16 0 0 0-16-16zM53.2 467a48 48 0 0 0 47.9 45h245.8a48 48 0 0 0 47.9-45L416 128H32z"/></svg></button>
-                        </form>
-                    }
-                </div>
-            </div>
-        </li>
+        <p>
+            @if (ViewBag.Permissions.Contains(34))
+            {
+                <a href="/Parameters?handler=DeleteFinancialImpact&Id=@i.Id"><svg  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M432 32H312l-9.4-18.7A24 24 0 0 0 281.1 0H166.8a23.72 23.72 0 0 0-21.4 13.3L136 32H16A16 16 0 0 0 0 48v32a16 16 0 0 0 16 16h416a16 16 0 0 0 16-16V48a16 16 0 0 0-16-16zM53.2 467a48 48 0 0 0 47.9 45h245.8a48 48 0 0 0 47.9-45L416 128H32z"/></svg></a>
+            }
+            @i.Name<span class="text-light">&nbsp;&middot;&nbsp;used in @i.Used places</span>
+        </p>  
     }
-</ul>
 </div>

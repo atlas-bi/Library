@@ -63,9 +63,6 @@ namespace Data_Governance_WebApp.Pages.Data
                 HttpContext.Response.Headers[name] = cachedResponse.Headers[name];
             }
 
-            HttpContext.Response.Headers.Add("Cache-Control", "no-cache, no-store, must-revalidate");
-            HttpContext.Response.Headers.Add("Pragma", "no-cache"); // HTTP 1.0.
-            HttpContext.Response.Headers.Add("Expires", "0"); // Proxies.
             HttpContext.Response.Headers[HeaderNames.ETag] = src.Split("v=")[1];
             return Content(Encoding.UTF8.GetString(cachedResponse.Body, 0, cachedResponse.Body.Length));    
         }
@@ -74,9 +71,6 @@ namespace Data_Governance_WebApp.Pages.Data
         {
             _pipeline.TryGetAssetFromRoute(id, out IAsset asset);
 
-            HttpContext.Response.Headers.Add("Cache-Control", "no-cache, no-store, must-revalidate");
-            HttpContext.Response.Headers.Add("Pragma", "no-cache"); // HTTP 1.0.
-            HttpContext.Response.Headers.Add("Expires", "0"); // Proxies.
             return Content(GenerateHash(asset));
         }
     }

@@ -15,43 +15,30 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-(function (root, factory) {
-    if (typeof define === 'function' && define.amd) {
-        // AMD. Register as an anonymous module.
-        define(['b'], factory);
-    } else {
-        // Browser globals
-        root.Comments = factory(root.b);
-    }
-}(typeof self !== 'undefined' ? self : this, function (b) {
 
-  var x = function(){
+(function() {
     var d = document;
-    d.addEventListener('submit', function (e) {
-      if (e.target.matches('.comments-form')) {
-        e.preventDefault();
-        var t = e.target,
-            c = d.getElementsByClassName('comments')[0],
-            url,
-            q;
-        url = serialize(t);
-        c.style.opacity = 0;
-        c.style.transition = 'opacity 0.1s ease-in-out';
-        q = new XMLHttpRequest();
-        q.open('post', t.getAttribute('action') + '&' + url, true);
-        q.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
-        q.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-        q.send();
+    d.addEventListener('submit', function(e) {
+        if (e.target.matches('.comments-form')) {
+            e.preventDefault();
+            var t = e.target,
+                c = d.getElementsByClassName('comments')[0],
+                url,
+                q;
+            url = serialize(t);
+            c.style.opacity = 0;
+            c.style.transition = 'opacity 0.1s ease-in-out';
+            q = new XMLHttpRequest();
+            q.open('post', t.getAttribute('action') + '&' + url, true);
+            q.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+            q.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+            q.send();
 
-        q.onload = function () {
-          c.innerHTML = q.responseText;
-          c.style.opacity = 1;
-          document.dispatchEvent(new CustomEvent('build-inputs'));
-        };
-      }
+            q.onload = function() {
+                c.innerHTML = q.responseText;
+                c.style.opacity = 1;
+                d.dispatchEvent(new CustomEvent('build-inputs'));
+            };
+        }
     }, false);
-  };
-  console.log('comments scripts loaded');
-  return x;
-}));
-Comments();
+})();

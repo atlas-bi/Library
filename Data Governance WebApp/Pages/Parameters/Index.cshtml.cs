@@ -100,18 +100,16 @@ namespace Data_Governance_WebApp.Pages.Parameters
                                                          }).ToListAsync();
             ViewData["Permissions"] = UserHelpers.GetUserPermissions(_cache, _context, User.Identity.Name);
             ViewData["SiteMessage"] = HtmlHelpers.SiteMessage(HttpContext, _context);
-            HttpContext.Response.Headers.Add("Cache-Control", "no-cache, no-store, must-revalidate");
-            HttpContext.Response.Headers.Add("Pragma", "no-cache"); // HTTP 1.0.
-            HttpContext.Response.Headers.Add("Expires", "0"); // Proxies.
+
             return Partial("Partials/_GlobalSettings");
         }
 
-        public ActionResult OnPostDeleteGlobalSetting()
+        public ActionResult OnGetDeleteGlobalSetting(int Id)
         {
             var checkpoint = UserHelpers.CheckUserPermissions(_cache, _context, User.Identity.Name, 45);
-            if (ModelState.IsValid && GlobalSiteSettings.Id > 0 && checkpoint)
+            if (checkpoint)
             {
-                _context.Remove(GlobalSiteSettings);
+                _context.Remove(_context.GlobalSiteSettings.Where(x => x.Id == Id).FirstOrDefault());
                 _context.SaveChanges();
             }
 

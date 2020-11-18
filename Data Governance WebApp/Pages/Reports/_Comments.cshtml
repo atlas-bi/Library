@@ -41,10 +41,10 @@
                                     <form asp-page-handler="DeleteCommentStream" class="comments-form">
                                         <input asp-for="NewComment.ConversationId" value="@comment.ConvId" type="hidden" />
                                         <input asp-for="NewComment.ReportObjectId" value="@ViewBag.Id" type="hidden" />
-                                        <button type="submit" class="comments-btn atlas-blue"><svg class="icon-sm" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M432 32H312l-9.4-18.7A24 24 0 0 0 281.1 0H166.8a23.72 23.72 0 0 0-21.4 13.3L136 32H16A16 16 0 0 0 0 48v32a16 16 0 0 0 16 16h416a16 16 0 0 0 16-16V48a16 16 0 0 0-16-16zM53.2 467a48 48 0 0 0 47.9 45h245.8a48 48 0 0 0 47.9-45L416 128H32z"/></svg></button>
+                                        <button type="submit" class="comments-btn"><svg class="icon-sm" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M432 32H312l-9.4-18.7A24 24 0 0 0 281.1 0H166.8a23.72 23.72 0 0 0-21.4 13.3L136 32H16A16 16 0 0 0 0 48v32a16 16 0 0 0 16 16h416a16 16 0 0 0 16-16V48a16 16 0 0 0-16-16zM53.2 467a48 48 0 0 0 47.9 45h245.8a48 48 0 0 0 47.9-45L416 128H32z"/></svg></button>
                                     </form>
                                 }
-                                <button class="comments-btn atlas-blue" data-toggle="clps" data-target="message-@comment.MessId" type="button"><i class="fas fa-reply"></i></button>
+                                <button class="comments-btn" data-toggle="clps" data-target="message-@comment.MessId" type="button"><i class="fas fa-reply"></i></button>
                             </div>
                         </div>
                         <p class="comments-txt">@comment.Text</p>
@@ -70,7 +70,7 @@
                                 <form asp-page-handler="DeleteComment" class="comments-form">
                                     <input asp-for="NewCommentReply.MessageId" value="@comment.MessId" type="hidden" />
                                     <input asp-for="NewComment.ReportObjectId" value="@ViewBag.Id" type="hidden" />
-                                    <button type="submit" class="comments-btn  atlas-blue" style="margin-top:-8px; padding-right:0;"><svg class="icon-sm" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M432 32H312l-9.4-18.7A24 24 0 0 0 281.1 0H166.8a23.72 23.72 0 0 0-21.4 13.3L136 32H16A16 16 0 0 0 0 48v32a16 16 0 0 0 16 16h416a16 16 0 0 0 16-16V48a16 16 0 0 0-16-16zM53.2 467a48 48 0 0 0 47.9 45h245.8a48 48 0 0 0 47.9-45L416 128H32z"/></svg></button>
+                                    <button type="submit" class="comments-btn " style="margin-top:-8px; padding-right:0;"><svg class="icon-sm" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M432 32H312l-9.4-18.7A24 24 0 0 0 281.1 0H166.8a23.72 23.72 0 0 0-21.4 13.3L136 32H16A16 16 0 0 0 0 48v32a16 16 0 0 0 16 16h416a16 16 0 0 0 16-16V48a16 16 0 0 0-16-16zM53.2 467a48 48 0 0 0 47.9 45h245.8a48 48 0 0 0 47.9-45L416 128H32z"/></svg></button>
                                 </form>
                             }
                         </div>

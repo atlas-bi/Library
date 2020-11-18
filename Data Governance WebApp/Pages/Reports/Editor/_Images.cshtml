@@ -17,14 +17,17 @@
 *@
 
 @model Data_Governance_WebApp.Pages.Reports.IndexModel
+
+<h3>Images</h3>
 <div class="editorImg">
+
     @foreach (var img in ViewBag.ReportImages)
     {
         <div class="editorImg-img">
             <form asp-antiforgery="false" asp-page-handler="RemoveImage" method="post" class="report-remove-image" >
                 <input name="Id" type="hidden" value="@ViewBag.Id">
                 <input type="hidden" name="ImgId" value="@img.Id" />
-                <button type="submit" class="btn btn-link float-right pt-0" onclick="return confirm('Are you sure you want to remove this image?');">
+                <button type="submit" onclick="return confirm('Are you sure you want to remove this image?');">
                     <svg class="icon-sm" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M432 32H312l-9.4-18.7A24 24 0 0 0 281.1 0H166.8a23.72 23.72 0 0 0-21.4 13.3L136 32H16A16 16 0 0 0 0 48v32a16 16 0 0 0 16 16h416a16 16 0 0 0 16-16V48a16 16 0 0 0-16-16zM53.2 467a48 48 0 0 0 47.9 45h245.8a48 48 0 0 0 47.9-45L416 128H32z"/></svg>
                 </button>
             </form>
@@ -35,10 +38,10 @@
         </div>
     }
     <div class="editorImg-img">
-        <form asp-antiforgery="false" class="form-inline" asp-page-handler="AddImage" enctype="multipart/form-data" id="report-add-image">
+        <form asp-antiforgery="false" asp-page-handler="AddImage" enctype="multipart/form-data" id="report-add-image">
             <input name="Id" type="hidden" value="@ViewBag.Id">
-            <label for="report-add-image-input" class="btn btn-link atlas-blue editor-new-image">
-                <i class="fas fa-file-upload fa-7x"></i>
+            <label for="report-add-image-input" class="editor-new-image">
+                New Image
             </label>
             <input type="file" name="File" hidden id="report-add-image-input" class="form-control-file" accept="image/gif, image/jpeg, image/png" />
         </form>

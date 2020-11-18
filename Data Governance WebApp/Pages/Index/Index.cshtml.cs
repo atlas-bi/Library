@@ -78,28 +78,9 @@ namespace Data_Governance_WebApp.Pages
             ViewData["MyRole"] = UserHelpers.GetMyRole(_cache, _context, User.Identity.Name);
             ViewData["SiteMessage"] = HtmlHelpers.SiteMessage(HttpContext, _context);
 
-            AdLists = new List<AdList>
-            {
-                new AdList { Url = "/Users?handler=SharedObjects", Column = 2},
-                //new AdList { Url = "Reports/?handler=RelatedReports&id="+id, Column = 2 },
-                new AdList { Url = "/?handler=RecentReports", Column = 2 },
-                new AdList { Url = "/?handler=RecentTerms", Column = 2 },
-                new AdList { Url = "/?handler=RecentInitiatives", Column = 2 },
-                new AdList { Url = "/?handler=RecentProjects", Column = 2 }
-            };
-            ViewData["AdLists"] = AdLists;
-            
-            HttpContext.Response.Headers.Add("Cache-Control", "no-cache, no-store, must-revalidate");
-            HttpContext.Response.Headers.Add("Pragma", "no-cache"); // HTTP 1.0.
-            HttpContext.Response.Headers.Add("Expires", "0"); // Proxies.
             return Page();
         }
 
-        public ActionResult OnGetScripts()
-        {
-            ViewData["Permissions"] = UserHelpers.GetUserPermissions(_cache, _context, User.Identity.Name);
-            return Partial("Partials/_Scripts");
-        }
 
         public async Task<ActionResult> OnGetWelcomeVideo()
         {
@@ -160,6 +141,7 @@ namespace Data_Governance_WebApp.Pages
                 List<int> MyList = new List<int>();
                 ViewData["NewestTerms"] = MyList;
             }
+            HttpContext.Response.Headers.Remove("Cache-Control");
             HttpContext.Response.Headers.Add("Cache-Control", "max-age=7200");
             return Partial("Partials/_RecentTerms");
 
@@ -193,6 +175,7 @@ namespace Data_Governance_WebApp.Pages
                                                                               dp.ReportObject.ReportObjectDoc.EnabledForHyperspace
                                                                               )
                                            }).Take(10).ToListAsync();
+            HttpContext.Response.Headers.Remove("Cache-Control");
             HttpContext.Response.Headers.Add("Cache-Control", "max-age=7200");
             return Partial("Partials/_RecentReports");
         }
@@ -218,6 +201,7 @@ namespace Data_Governance_WebApp.Pages
                                                 Favorite = fi.ItemId == null ? "no" : "yes"
                                             }).Take(10).ToListAsync();
 
+            HttpContext.Response.Headers.Remove("Cache-Control");
             HttpContext.Response.Headers.Add("Cache-Control", "max-age=7200");
             return Partial("Partials/_RecentProjects");
         }
@@ -242,6 +226,7 @@ namespace Data_Governance_WebApp.Pages
                                                   Id = di.DataInitiativeId,
                                                   Favorite = fi.ItemId == null ? "no" : "yes"
                                               }).Take(10).ToListAsync();
+            HttpContext.Response.Headers.Remove("Cache-Control");
             HttpContext.Response.Headers.Add("Cache-Control", "max-age=7200");
             return Partial("Partials/_RecentInitiatives");
         }

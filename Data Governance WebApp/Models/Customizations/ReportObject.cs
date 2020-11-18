@@ -119,5 +119,29 @@ namespace Data_Governance_WebApp.Models
                 else return (LastModifiedDate ?? DateTime.Now).ToShortDateString();
             }
         }
+        [NotMapped]
+        public virtual string LastLoadDateDisplayString
+        // don't display the time portion if > 24 hrs ago
+        {
+            get
+            {
+                if (LastLoadDate == null) { return ""; }
+                var timeAgo = System.DateTime.Now.Subtract(LastLoadDate ?? DateTime.Now);
+                if (timeAgo.TotalMinutes < 1) { return String.Concat(timeAgo.Seconds.ToString(), " seconds ago"); }
+                if (timeAgo.TotalHours < 1) { return String.Concat(timeAgo.Minutes.ToString(), " minutes ago"); }
+                else if (timeAgo.TotalHours < 24) { return String.Concat(timeAgo.Hours.ToString(), " hours ago"); }
+                else return (LastLoadDate ?? DateTime.Now).ToShortDateString();
+            }
+        }
+        [NotMapped]
+        public virtual string DisplayName
+        
+        {
+            get
+            {
+                if (DisplayTitle == null) { return Name; }
+                return DisplayTitle;
+            }
+        }
     }
 }

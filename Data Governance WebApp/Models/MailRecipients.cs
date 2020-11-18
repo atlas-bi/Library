@@ -13,7 +13,7 @@ namespace Data_Governance_WebApp.Models
         public int? ToGroupId { get; set; }
 
         public virtual MailMessages Message { get; set; }
-        public virtual UserLdapgroups ToGroup { get; set; }
+        public virtual UserGroups ToGroup { get; set; }
         public virtual User ToUser { get; set; }
     }
 }

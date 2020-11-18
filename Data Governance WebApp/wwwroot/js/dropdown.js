@@ -15,37 +15,28 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-(function (root, factory) {
-    if (typeof define === 'function' && define.amd) {
-        // AMD. Register as an anonymous module.
-        define(['b'], factory);
-    } else {
-        // Browser globals
-        root.Dropdown = factory(root.b);
-    }
-}(typeof self !== 'undefined' ? self : this, function (b) {
 
-  var x = function(){
+(function() {
 
     var d = document,
         q;
 
     // when everything looses focus close all drops
-    window.addEventListener("blur", function(event) { 
-       if(document.activeElement){
-         try{
-            document.activeElement.blur();
-        } catch(e){
+    window.addEventListener("blur", function(event) {
+        if (document.activeElement) {
+            try {
+                document.activeElement.blur();
+            } catch (e) {
 
+            }
         }
-       }
-        var el = document.querySelector( ':focus' );
-        if( el ) {
-             try{
-         el.blur();
-        } catch(e){
-            
-        }
+        var el = document.querySelector(':focus');
+        if (el) {
+            try {
+                el.blur();
+            } catch (e) {
+
+            }
         }
     });
 
@@ -173,7 +164,7 @@
         this.ddCntr.addEventListener('blur', this.unfcs.bind(this));
         this.ddRslts.addEventListener('mouseover', this.rhov.bind(this));
 
-       
+
     }
 
     var k = d.requestAnimationFrame || d.setImmediate || function(b) {
@@ -224,7 +215,9 @@
             } else if (key == 39 && t == 'SELECT' && ipt.nextElementSibling && ipt.nextElementSibling.matches('.dd-itm') && i.selectionStart == i.value.length) { // right arrow
                 k(function() {
                     insertAfter(ipt, ipt.nextElementSibling);
-                    setTimeout(function() { i.focus(); }, 0);
+                    setTimeout(function() {
+                        i.focus();
+                    }, 0);
                 });
 
             } else if (key == 46 && t == 'SELECT' && ipt.nextElementSibling && ipt.nextElementSibling.matches('.dd-itm') && i.selectionStart == i.value.length) { // delete
@@ -257,7 +250,9 @@
                         dd.classList.remove('dd-wrp-show');
                         r.style.removeProperty('display');
                     }
-                    setTimeout(function() { i.focus(); }, 0);
+                    setTimeout(function() {
+                        i.focus();
+                    }, 0);
                 });
 
             } else if (key == 9) { // tab
@@ -284,16 +279,24 @@
 
                 if (e.shiftKey) {
                     if (Array.prototype.indexOf.call(vInputs, i) == 0) {
-                        setTimeout(function() { vInputs[vInputs.length - 1].focus(); }, 0);
+                        setTimeout(function() {
+                            vInputs[vInputs.length - 1].focus();
+                        }, 0);
 
                     } else {
-                        setTimeout(function() { vInputs[Array.prototype.indexOf.call(vInputs, i) - 1].focus(); }, 0);
+                        setTimeout(function() {
+                            vInputs[Array.prototype.indexOf.call(vInputs, i) - 1].focus();
+                        }, 0);
                     }
                 } else {
                     if (Array.prototype.indexOf.call(vInputs, i) == vInputs.length - 1) {
-                        setTimeout(function() { vInputs[0].focus(); }, 0);
+                        setTimeout(function() {
+                            vInputs[0].focus();
+                        }, 0);
                     } else {
-                        setTimeout(function() { vInputs[Array.prototype.indexOf.call(vInputs, i) + 1].focus(); }, 0);
+                        setTimeout(function() {
+                            vInputs[Array.prototype.indexOf.call(vInputs, i) + 1].focus();
+                        }, 0);
                     }
                 }
 
@@ -353,7 +356,9 @@
                 for (x = 0; x < e.length; x++) {
                     e[x].classList.remove('active');
                 }
-                if (!!l) { l.classList.add('active'); }
+                if (!!l) {
+                    l.classList.add('active');
+                }
             });
 
         },
@@ -407,7 +412,9 @@
                         for (i = 0; i < data.length; i++) {
                             el = data[i];
                             var hiddenClass = "";
-                            if (active.indexOf(el.ObjectId) !== -1) { hiddenClass = 'hidden'; }
+                            if (active.indexOf(el.ObjectId) !== -1) {
+                                hiddenClass = 'hidden';
+                            }
                             var id = el.ObjectId || el.Description;
                             result += '<div class="dd-rslt ' + hiddenClass + '" value="' + id + '">' + el.Name + '</div>';
 
@@ -452,7 +459,9 @@
                     }
                     if (!hi.hasAttribute('value')) {
                         dd.classList.add('dd-wrp-invalid');
-                    } else { dd.classList.remove('dd-wrp-invalid'); }
+                    } else {
+                        dd.classList.remove('dd-wrp-invalid');
+                    }
                 }
             });
 
@@ -497,9 +506,13 @@
 
                         ipt.insertAdjacentHTML('beforebegin', '<div class="dd-itm ' + group + '">' + actvName + userDrop + '</div>');
                         hdn.innerHTML += '<option class="' + group + '" selected="selected" value="' + actv.getAttribute('value') + '">' + actvName + '</option>';
-                        hdn.dispatchEvent(new CustomEvent('change', { bubbles: true }));
+                        hdn.dispatchEvent(new CustomEvent('change', {
+                            bubbles: true
+                        }));
 
-                        setTimeout(function() { i.focus(); }, 0);
+                        setTimeout(function() {
+                            i.focus();
+                        }, 0);
 
                     } else {
                         hdn.setAttribute('value', actv.getAttribute('value'));
@@ -515,7 +528,9 @@
                         if (method !== 'fullList') {
                             rs.innerHTML = '<div class="dd-rslt disabled">No matches found</div>';
                         }
-                        hdn.dispatchEvent(new CustomEvent('change', { bubbles: true }));
+                        hdn.dispatchEvent(new CustomEvent('change', {
+                            bubbles: true
+                        }));
                     }
                 } else {
 
@@ -545,7 +560,9 @@
                             }
                         }
                     }
-                    setTimeout(function() { i.focus();}, 0);
+                    setTimeout(function() {
+                        i.focus();
+                    }, 0);
                     i.dispatchEvent(new CustomEvent('setWidth'));
                 }
             });
@@ -567,7 +584,9 @@
                 c.appendChild(q);
                 if (v.value < 1 && !!document.activeElement && !document.activeElement.closest('.dd-vsbl')) {
                     v.style.width = 17 + 'px';
-                } else { v.style.width = Math.max(q.clientWidth + 17, 17) + 'px'; }
+                } else {
+                    v.style.width = Math.max(q.clientWidth + 17, 17) + 'px';
+                }
                 q.parentElement.removeChild(q);
             });
         },
@@ -608,7 +627,10 @@
                     });
                     if (el.value.trim().length > 0) {
 
-                        data = { s: el.value, e: (typeof values !== 'undefined') ? values.toString() : '' };
+                        data = {
+                            s: el.value,
+                            e: (typeof values !== 'undefined') ? values.toString() : ''
+                        };
 
                         url = Object.keys(data).map(function(k) {
                             return encodeURIComponent(k) + '=' + encodeURIComponent(data[k]);
@@ -636,7 +658,7 @@
                                 rs.innerHTML = '';
                                 var result = '';
                                 for (x = 0; x < data.length; x++) {
-                                    var id = data[x].ObjectId || data[i].Description;
+                                    var id = data[x].ObjectId || data[x].Description;
 
                                     var div = document.createElement('div');
                                     div.classList.add('dd-rslt');
@@ -688,7 +710,9 @@
     };
 
     load();
-    d.addEventListener('ajax', function() { load(); });
+    d.addEventListener('ajax', function() {
+        load();
+    });
     d.addEventListener('dropdown', function(e) {
         if (typeof e.detail !== 'undefined' && !!e.detail && !!e.detail.el) {
             load(e.detail.el);
@@ -803,11 +827,5 @@
 
 
     	*/
-
-};
-console.log('dropdown scripts loaded.');
-return x;
-
-
-}));
-Dropdown();
+    console.log('dropdown scripts loaded.');
+})();

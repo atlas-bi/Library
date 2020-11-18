@@ -16,245 +16,162 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 html {
-	scroll-behavior: smooth !important;
-	font-size: 14px;
 	font-family: sans-serif;
+	font-size: 14px;
 	line-height: 1.15;
+	scroll-behavior: smooth !important
 }
 
 body {
-	text-rendering: optimizeLegibility;
-	-moz-font-feature-settings: "onum" 1;
-	font-feature-settings: "onum" 1;
-	margin: 0;
-	font-family: "nytimperial", "Georgia", "Times New Roman", serif,-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+	-moz-font-feature-settings: onum 1;
+	background-color: #fff;
+	color: #575353;
+	font-family: "nytimperial", "Georgia", "Times New Roman", serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+	font-feature-settings: onum 1;
 	font-size: 1rem;
 	font-weight: 500;
 	line-height: 1.5;
-	color: #212529;
+	margin: 0;
 	text-align: left;
-	background-color: #fff
+	text-rendering: optimizeLegibility
 }
 
-.ie-fixMinHeight {
-    display:-ms-flexbox;
-    -ms-flex-direction:column;
+a, a:hover {
+	color: #0084db;
+	text-decoration: none
 }
 
-.ctn {
-	min-height:100vh;
-	display: -webkit-flex;
-	display:flex;
-	justify-content: center;
-	-webkit-flex-direction:column;
-	flex-direction: column;
-	width:80vw;
-	max-width:1500px;
-	margin:auto;
-}
-.body {
-	-webkit-flex-grow:1;
-	flex-grow: 1;
-	display: flex;
-	flex-direction: row;
-	margin-left:15px;
-	margin-right:15px;
+button, button:focus, button:active, button:hover {
+	background-color: transparent;
+	border: 1px solid transparent;
+	cursor: pointer;
+	outline: none
 }
 
-.body-main {
-	margin-right:15px;
-	flex:1;
-	min-width:0;
+label {
+	display: inline-block;
+	font-family: sf;
+	font-weight: 600;
+	letter-spacing: .3px;
+	padding-top: 5px
 }
 
-.body-mainCtn {
-	display:block;
+code {
+	background-color: #f6f6f6;
+	padding: 3px;
+	border-radius: 3px;
 }
 
-.body-side {
-	width:25%;
-	max-width:300px;
-	margin-left:15px;
-	font-size: 80%;
+textarea {
+	display: block;
+	width: 100%;
+	padding: 3px 10px;
+	font-size: 14px;
+	line-height: 1.5;
+	color: #363636;
+	font-family: sf;
+	font-weight: 600;
+	letter-spacing: .4px;
+	background-color: #fff;
+	background-clip: padding-box;
+	border: 1px solid #c8c8c8;
+	border-radius: 4px;
+	transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
 }
-
-.ft {
-	white-space: nowrap;
-	height: 60px;
-	line-height: 60px;
-}
-
 
 a:hover {
 	cursor: pointer
 }
 
 a:hover, a:active, a:focus {
-	outline: 0;
+	outline: 0
 }
-
 
 h1, h2, h3, h4, h5, h6 {
 	font-family: "nytcheltenham", "Georgia", "Times New Roman", serif;
-	margin-top: 0;
-	margin-bottom: .5rem;
 	font-weight: 500;
+	margin-bottom: .5rem;
+	margin-top: 0
 }
 
 h1 {
+	color: inherit;
 	font-size: 3rem;
-	line-height: 1.2;
 	font-stretch: expanded;
-	color: inherit
+	line-height: 1.2
 }
 
 h2 {
-	font-size: 2rem;
+	font-size: 2rem
 }
 
 h3 {
 	font-size: 1.75rem;
+	padding: 20px 0
 }
 
 h4 {
-	font-size: 1.5rem;
+	font-size: 1.4rem;
+	padding: 10px 0
 }
 
 h5 {
 	font-size: 1.25rem;
 	font-weight: 400;
+	padding: 5px 0
 }
 
 h6 {
 	font-size: 1rem;
+	margin: 0;
+	padding: 5px 0 0
+}
+
+h1 svg, h2 svg, h3 svg, h4 svg, h5 svg, h6 svg {
+	float: right;
+	height: 25px;
+	width: 25px
+}
+
+a svg {
+	fill: #575353;
+	height: 15px;
+	width: 15px
 }
 
 [data-toggle] > * {
-	pointer-events: none;
-	display: inline-block; /* IE ignores pointer events on "inline" */
+	display: inline-block;
+	pointer-events: none
 }
 
 [data-dismiss] > * {
-	pointer-events: none;
-	display: inline-block; /* IE ignores pointer events on "inline" */
+	display: inline-block;
+	pointer-events: none
 }
 
 button > *, a > * {
-  pointer-events: none;
-}
-
-
-.w-100 {
-	width: 100% !important
-}
-
-.d-flex {
-	display: -webkit-box !important;
-	display: -ms-flexbox !important;
-	display: flex !important
+	pointer-events: none
 }
 
 @keyframes fadein {
 	from {
 		opacity: .2
 	}
+
 	to {
-		opacity: 1;
+		opacity: 1
 	}
+
 }
 
 *, ::after, ::before {
 	box-sizing: border-box
 }
 
-
-.row {
-	display: flex;
-	flex-wrap: wrap;
-	margin-right: -15px;
-	margin-left: -15px
-}
-
-.justify-content-center {
-	justify-content: center !important
-}
-
 p {
 	white-space: pre-wrap
 }
 
-
-
 img[data-src] {
-	min-height:400px;
+	min-height: 400px
 }
-
-.error {
-	font-size: 3vw;
-	width:100%;
-	padding-top:30px;
-}
-.error-img {
-	display:block;
-	margin:auto;
-	padding-top:30px;
-}
-
-.icon-sm {
-	padding: 0 5px;
-    max-height: 16px;
-    max-width: 25px;
-    margin:0 2px;
-    margin-bottom: -2px;
-}
-
-button .icon-sm {
-	margin:0;
-	padding:0;
-	height: 14px;
-    margin-bottom:-2px;
-}
-
-.icon-lg {
-	max-height: 54px;
-    padding: 0 5px;
-    margin: 0 2px;
-    margin-bottom: -2px;
-}
-
-.site-message {
-	padding: 20px;
-    border: 2px solid #ffc107;
-    background-color: rgb(224, 228, 231);
-    border-radius: 6px;
-    margin: 10px;
-    font-family: sf;
-    font-weight: 600;
-    letter-spacing: .2px;
-    color: rgb(38, 42, 45);
-    font-size: 16px;
-
-
-   }
-.site-messageImg {
-	max-width: 40px;
-    margin-right: 20px;
-}
-.site-messageText {
-	margin:0; display:inline-block;max-width: 90%
-}
-
-.site-messageClose {
-	display: inline-block;
-    float: right;
-    border: 1px solid transparent;
-    background: transparent;
-    fill: #b38600;
-    height: 30px;
-    width: 30px;
-    cursor: pointer;
-}
-.site-messageClose:focus {
-	outline: none;
-}
-

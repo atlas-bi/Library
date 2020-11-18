@@ -16,25 +16,12 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 *@
 
-@if(ViewBag.RelatedReports.Count > 0){
 <div>
-    <h3>Related Reports</h3>
-    <ul class="home-list">
+    @if(ViewBag.RelatedReports.Count > 0){
+        <h4>Related Reports</h4>
         @foreach (var report in ViewBag.RelatedReports)
         {
-            <li class="home-link">
-                <div>
-                    <i fav-type="report" object-id="@report.Id" class="favorite far fa-star @report.Favorite"></i>
-                     @if (report.ReportUrl != null)
-                    {
-                        <a class="atlas-green pr-1" rel="noopener"  target="_blank" href="@report.ReportUrl"><i class="fas fa-play"></i></a>
-                    }
-                    <a class="ajax" asp-page="../Reports/Index" asp-route-id="@report.Id">@report.Name.Replace('_', ' ')</a>
-                </div>
-            </li>
+            <a href="/reports?id=@report.Id">@report.Name.Replace('_', ' ')</a>
         }
-    </ul>
+    } 
 </div>
-} else {
-    <div></div>
-}

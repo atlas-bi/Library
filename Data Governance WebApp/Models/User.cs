@@ -44,13 +44,10 @@ namespace Data_Governance_WebApp.Models
             SharedItemsSharedFromUser = new HashSet<SharedItems>();
             SharedItemsSharedToUser = new HashSet<SharedItems>();
             TermApprovedByUser = new HashSet<Term>();
-            TermCodeExamplesHistory = new HashSet<TermCodeExamplesHistory>();
             TermConversationMessage = new HashSet<TermConversationMessage>();
-            TermHistoryApprovedByUser = new HashSet<TermHistory>();
-            TermHistoryUpdatedByUser = new HashSet<TermHistory>();
             TermUpdatedByUser = new HashSet<Term>();
             UserFavorites = new HashSet<UserFavorites>();
-            UserLdapgroupMembership = new HashSet<UserLdapgroupMembership>();
+            UserGroupsMembership = new HashSet<UserGroupsMembership>();
             UserPreferences = new HashSet<UserPreferences>();
             UserRoleLinks = new HashSet<UserRoleLinks>();
         }
@@ -68,6 +65,8 @@ namespace Data_Governance_WebApp.Models
         public string Phone { get; set; }
         public string Email { get; set; }
         public string Base { get; set; }
+        public string EpicId { get; set; }
+        public DateTime? LastLoadDate { get; set; }
 
         public virtual UserNameData UserNameData { get; set; }
         public virtual ICollection<Analytics> Analytics { get; set; }
@@ -107,13 +106,10 @@ namespace Data_Governance_WebApp.Models
         public virtual ICollection<SharedItems> SharedItemsSharedFromUser { get; set; }
         public virtual ICollection<SharedItems> SharedItemsSharedToUser { get; set; }
         public virtual ICollection<Term> TermApprovedByUser { get; set; }
-        public virtual ICollection<TermCodeExamplesHistory> TermCodeExamplesHistory { get; set; }
         public virtual ICollection<TermConversationMessage> TermConversationMessage { get; set; }
-        public virtual ICollection<TermHistory> TermHistoryApprovedByUser { get; set; }
-        public virtual ICollection<TermHistory> TermHistoryUpdatedByUser { get; set; }
         public virtual ICollection<Term> TermUpdatedByUser { get; set; }
         public virtual ICollection<UserFavorites> UserFavorites { get; set; }
-        public virtual ICollection<UserLdapgroupMembership> UserLdapgroupMembership { get; set; }
+        public virtual ICollection<UserGroupsMembership> UserGroupsMembership { get; set; }
         public virtual ICollection<UserPreferences> UserPreferences { get; set; }
         public virtual ICollection<UserRoleLinks> UserRoleLinks { get; set; }
     }

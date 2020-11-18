@@ -248,6 +248,9 @@ namespace Data_Governance_WebApp.Pages.Mail
 
         public async Task<ActionResult> OnGetGetMailbox(int id)
         {
+            HttpContext.Response.Headers.Remove("Cache-Control");
+            HttpContext.Response.Headers.Remove("Pragma");
+            
             HttpContext.Response.Headers.Add("Cache-Control", "no-cache, no-store, must-revalidate");
             HttpContext.Response.Headers.Add("Pragma", "no-cache"); // HTTP 1.0.
             HttpContext.Response.Headers.Add("Expires", "0"); // Proxies.
@@ -407,7 +410,7 @@ namespace Data_Governance_WebApp.Pages.Mail
                      var Users = AllTo.Where(x => x.Type != "g" || x.Type is null || x.Type == "").Select(x => new { UserId = (int)Int32.Parse(x.UserId.ToString()) });
                 var Groups = AllTo.Where(x => x.Type == "g").Select(x => new { GroupId = Int32.Parse(x.UserId.ToString()) });
 
-                var GroupUsers = (from ulm in _context.UserLdapgroupMembership
+                var GroupUsers = (from ulm in _context.UserGroupsMembership
                                   where (from g in Groups select g.GroupId).Contains((int)ulm.GroupId)
                                   select new
                                   {

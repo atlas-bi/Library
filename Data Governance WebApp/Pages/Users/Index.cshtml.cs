@@ -26,6 +26,7 @@ using Data_Governance_WebApp.Models;
 using Data_Governance_WebApp.Helpers;
 using Microsoft.AspNetCore.Http;
 using System.IO;
+using System.Text.RegularExpressions;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Configuration;
@@ -58,6 +59,7 @@ namespace Data_Governance_WebApp.Pages.Users
         public class ReportRunData
         {
             public string Name { get; set; }
+            public string Type { get; set; }
             public string Url { get; set; }
             public int Hits { get; set; }
             public decimal RunTime { get; set; }
@@ -128,7 +130,21 @@ namespace Data_Governance_WebApp.Pages.Users
         public class SearchHistoryData
         {
             public string SearchUrl { get; set; }
+            public string SearchString {get; set; }
+            public string ReportType {get; set;}
+            public string SearchField {get; set;}
+            public string HiddenTypes {get; set;}
+            public string Hidden {get; set;}
+            public string Orphans {get; set;}
             public int Id { get; set; }
+        }
+
+        public class Group
+        {
+            public int? Id { get; set; }
+            public string Name { get; set; }
+            public string Type { get; set; }
+            public string Source { get; set; }
         }
 
         public class SharedObjectsData
@@ -159,6 +175,7 @@ namespace Data_Governance_WebApp.Pages.Users
         public IEnumerable<ReportRunTimeData> LoadTime { get; set; }
         public IEnumerable<FailedRunsData> FailedRuns { get; set; }
         public IEnumerable<AtlasHistoryData> AtlasHistory { get; set; }
+        public IEnumerable<Group> Groups { get; set; }
         public List<SubscribedReportsData> SubscribedReports { get; set; }
         public List<UserPreferences> Preferences { get; set; }
         [BindProperty] public MyRole MyRole { get; set; }
@@ -187,240 +204,13 @@ namespace Data_Governance_WebApp.Pages.Users
                 UserDetails = _context.User.Where(x => x.UserId == UserId).FirstOrDefault() ;
             }
 
-            ReportObjectDocEdits = await _cache.GetOrCreateAsync<List<LastEdited>>("ReportObjectDocEdits-" + UserId,
-              cacheEntry =>
-              {
-                  cacheEntry.SlidingExpiration = TimeSpan.FromMinutes(10);
-                  return (from r in _context.ReportObjectDoc
-                          where r.UpdatedBy == UserId
-                             && r.LastUpdateDateTime > DateTime.Today.AddDays(-30)
-                          orderby r.LastUpdateDateTime descending
-                          select new LastEdited
-                          {
-                              Date = r.LastUpdatedDateTimeDisplayString,
-                              Name = r.ReportObject.Name,
-                              Url = "\\reports?id=" + r.ReportObjectId
-                          }).Take(10).ToListAsync();
-              });
+            
+           
+            
 
-            InitiativeEdits = await _cache.GetOrCreateAsync<List<LastEdited>>("InitiativeEdits-" + UserId,
-               cacheEntry =>
-               {
-                   cacheEntry.SlidingExpiration = TimeSpan.FromMinutes(10);
-                   return (from r in _context.DpDataInitiative
-                           where r.LastUpdateUser == UserId
-                              && r.LastUpdateDate > DateTime.Today.AddDays(-30)
-                           orderby r.LastUpdateDate descending
-                           select new LastEdited
-                           {
-                               Date = r.LastUpdatedDateDisplayString,
-                               Name = r.Name,
-                               Url = "\\initiatives?id=" + r.DataInitiativeId
-                           }).Take(10).ToListAsync();
-               });
-
-            ProjectEdits = await _cache.GetOrCreateAsync<List<LastEdited>>("ProjectEdits-" + UserId,
-               cacheEntry =>
-               {
-                   cacheEntry.SlidingExpiration = TimeSpan.FromMinutes(10);
-                   return (from r in _context.DpDataProject
-                           where r.LastUpdateUser == UserId
-                              && r.LastUpdateDate > DateTime.Today.AddDays(-30)
-                           orderby r.LastUpdateDate descending
-                           select new LastEdited
-                           {
-                               Date = r.LastUpdatedDateDisplayString,
-                               Name = r.Name,
-                               Url = "\\projects?id=" + r.DataProjectId
-                           }).Take(10).ToListAsync();
-               });
-
-            TermEdits = await _cache.GetOrCreateAsync<List<LastEdited>>("TermEdits-" + UserId,
-               cacheEntry =>
-               {
-                   cacheEntry.SlidingExpiration = TimeSpan.FromMinutes(10);
-
-                   return (from r in _context.Term
-                           where r.UpdatedByUserId == UserId
-                              && r.LastUpdatedDateTime > DateTime.Today.AddDays(-30)
-                           orderby r.LastUpdatedDateTime descending
-                           select new LastEdited
-                           {
-                               Date = r.LastUpdatedDateTimeDisplayString,
-                               Name = r.Name,
-                               Url = "\\terms?id=" + r.TermId
-                           }).Take(10).ToListAsync();
-               });
-
-            AtlasHistory = await _cache.GetOrCreateAsync<List<AtlasHistoryData>>("AtlasHistory-" + UserId,
-               cacheEntry =>
-               {
-                   cacheEntry.SlidingExpiration = TimeSpan.FromMinutes(10);
-                   return (from a in _context.Analytics
-                           where a.UserId == UserId
-                              && a.AccessDateTime > DateTime.Today.AddDays(-7)
-                              && a.Pathname != "/"
-                           join r in _context.ReportObject on a.ObjectId equals r.ReportObjectId into tmpr
-                           from r in tmpr.DefaultIfEmpty()
-                           join t in _context.Term on a.ObjectId equals t.TermId into tmpt
-                           from t in tmpt.DefaultIfEmpty()
-                           join p in _context.DpDataProject on a.ObjectId equals p.DataProjectId into tmpp
-                           from p in tmpp.DefaultIfEmpty()
-                           join i in _context.DpDataInitiative on a.ObjectId equals i.DataInitiativeId into tmpi
-                           from i in tmpi.DefaultIfEmpty()
-                           join u in _context.User on a.ObjectId equals u.UserId into tmpu
-                           from u in tmpu.DefaultIfEmpty()
-                           join c in _context.DpContact on a.ObjectId equals c.ContactId into tmpc
-                           from c in tmpc.DefaultIfEmpty()
-                           orderby a.AccessDateTime descending
-                           select new AtlasHistoryData
-                           {
-                               Name = (a.Pathname.ToLower() == "/reports" ? r.Name ?? "Home" :
-                                       a.Pathname.ToLower() == "/terms" ? t.Name ?? "Home" :
-                                       a.Pathname.ToLower() == "/projects" ? p.Name ?? "Home" :
-                                       a.Pathname.ToLower() == "/initiatives" ? i.Name ?? "Home" :
-                                       a.Pathname.ToLower() == "/users" ? (u.FullName ?? u.AccountName.Replace(_config["AppSettings:ord_ad_domain"] + "\\", "") ?? "Home") :
-                                       a.Pathname.ToLower() == "/search" ? a.SearchString ?? "Home" :
-                                       a.Pathname.ToLower() == "/tasks" ? "Home" ?? "Home" :
-                                       a.Pathname.ToLower() == "/contacts" ? c.Name ?? "Home" : "Other"),
-                               Type = (a.Pathname.ToLower() == "/reports" ? "Reports" :
-                                       a.Pathname.ToLower() == "/terms" ? "Terms" :
-                                       a.Pathname.ToLower() == "/projects" ? "Projects" :
-                                       a.Pathname.ToLower() == "/initiatives" ? "Initiatives" :
-                                       a.Pathname.ToLower() == "/users" ? "Users" :
-                                       a.Pathname.ToLower() == "/contacts" ? "Reports" :
-                                       a.Pathname.ToLower() == "/tasks" ? "Tasks" :
-                                       a.Pathname.ToLower() == "/search" ? "Search" : "Other"),
-                               Date = ((DateTime)a.AccessDateTime).ToString("g"),
-                               Url = a.Href
-                           }).ToListAsync();
-               });
-
-            ReportRunTime = await _cache.GetOrCreateAsync<List<ReportRunTimeData>>("ReportRunTime-" + UserId,
-                cacheEntry => {
-                    cacheEntry.SlidingExpiration = TimeSpan.FromHours(12);
-                    return  (from d in _context.ReportObjectRunTime
-                                                  where d.RunUserId == UserId
-                                                  orderby d.RunWeek descending
-                                                  select new ReportRunTimeData
-                                                  {
-                                                      Date = d.RunWeekString,
-                                                      Cnt = d.Runs ?? 0,
-                                                      Avg = d.RunTime ?? 0
-                                                  }
-                                   ).ToListAsync(); ;
-                });
-
-            TopRunReports = await _cache.GetOrCreateAsync<List<ReportRunData>>("TopRunReports-" + UserId,
-                cacheEntry =>
-                {
-                    cacheEntry.SlidingExpiration = TimeSpan.FromHours(12);
-                    return (from d in _context.ReportObjectTopRuns
-                            where d.RunUserId == UserId
-                               && d.ReportObjectTypeId != 21
-                            orderby d.Runs descending
-                            select new ReportRunData
-                            {
-                                Name = d.Name,
-                                Url = "\\reports?id=" + d.ReportObjectId,
-                                Hits = d.Runs ?? 0,
-                                RunTime = d.RunTime ?? 0,
-                                LastRun = d.LastRun
-                            }).ToListAsync();
-                });
-
-            FailedRuns = await _cache.GetOrCreateAsync<List<FailedRunsData>>("FailedRuns-" + UserId,
-               cacheEntry =>
-               {
-                   cacheEntry.SlidingExpiration = TimeSpan.FromHours(12);
-
-                   return (from d in _context.ReportObjectRunData
-                                 where d.RunUserId == UserId
-                                    && d.RunStatus != "Success"
-                                 orderby d.RunStartTime descending
-                                 select new FailedRunsData
-                                 {
-                                     Date = d.RunStartTimeDisplayString,
-                                     Url = "\\reports?id=" + d.ReportObjectId,
-                                     Name = d.ReportObject.Name,
-                                     RunStatus = d.RunStatus
-                                 }).ToListAsync();
-               });
-
-            SubscribedReports = await _cache.GetOrCreateAsync<List<SubscribedReportsData>>("SubscribedReports-" + UserId,
-               cacheEntry =>
-               {
-                   cacheEntry.SlidingExpiration = TimeSpan.FromHours(12);
-                   return (from r in (from s in _context.ReportObjectSubscriptions
-                                      where s.UserId == UserId
-                                      select new
-                                      {
-                                          s.ReportObject.Name,
-                                          Id = s.ReportObjectId,
-                                          s.EmailList,
-                                          s.Description,
-                                          s.LastStatus,
-                                          LastRun = s.LastRunDisplayString,
-                                          SentTo = s.SubscriptionTo,
-                                          Enabled = s.InactiveFlags,
-                                          LastRunDate = s.LastRunTime
-
-                                      }).Union(
-                                        from m in _context.UserLdapgroupMembership
-                                        from s in _context.ReportObjectSubscriptions
-                                        where (
-                                                m.Group.GroupEmail == s.SubscriptionTo
-                                            || m.Group.GroupEmail == s.SubscriptionTo.Replace(_config["AppSettings:ord_ad_domain"], "rhc")
-                                            || m.Group.GroupEmail == s.SubscriptionTo.Replace("rhc", _config["AppSettings:ord_ad_domain"])
-                                            )
-
-                                            && m.UserId == UserId
-
-                                        select new
-                                        {
-                                            s.ReportObject.Name,
-                                            Id = s.ReportObjectId,
-                                            s.EmailList,
-                                            s.Description,
-                                            s.LastStatus,
-                                            LastRun = s.LastRunDisplayString,
-                                            SentTo = s.SubscriptionTo,
-                                            Enabled = s.InactiveFlags,
-                                            LastRunDate = s.LastRunTime
-                                        }
-                                        )
-                           orderby r.Enabled, r.LastRunDate descending
-                           select new SubscribedReportsData
-                           {
-                               Name = r.Name,
-                               Id = r.Id,
-                               EmailList = r.EmailList,
-                               Description = r.Description,
-                               LastStatus = r.LastStatus.Replace(";", "; "),
-                               LastRun = r.LastRun,
-                               SentTo = r.SentTo.Replace(";", "; ")
-                           }).ToListAsync();
-               });
-
-            LoadTime = await _cache.GetOrCreateAsync<List<ReportRunTimeData>>("LoadTime-" + UserId,
-               cacheEntry =>
-               {
-                   cacheEntry.SlidingExpiration = TimeSpan.FromHours(12);
-                   return (from a in _context.Analytics
-                           where a.AccessDateTime > DateTime.Now.AddDays(-7)
-                              && a.UserId == UserId
-                           group a by a.Pathname.ToLower() into grp
-                           orderby grp.Count() descending
-                           select new ReportRunTimeData
-                           {
-                               Date = grp.Key,
-                               Cnt = grp.Count(),
-                               Avg = Math.Round((decimal)grp.Average(x => Convert.ToInt32(x.LoadTime))/1000, 2)
-                           }).ToListAsync();
-               });
-            HttpContext.Response.Headers.Add("Cache-Control", "no-cache, no-store, must-revalidate");
-            HttpContext.Response.Headers.Add("Pragma", "no-cache"); // HTTP 1.0.
-            HttpContext.Response.Headers.Add("Expires", "0"); // Proxies.
+            
+           
+            
             return Page();
         }
 
@@ -566,7 +356,13 @@ namespace Data_Governance_WebApp.Pages.Users
                                                    orderby a.AccessDateTime descending
                                                    select new SearchHistoryData
                                                    {
-                                                       SearchUrl = a.Search,
+                                                        SearchUrl = a.Search.Replace("%25","%"),
+                                                        SearchString  = Regex.Match(a.Search + " ", @"s=(.*?)[&|?|\s]").Groups[1].Value.Replace("%25","%").Replace("%20"," ").Replace("%2C", ","),
+                                                        ReportType = Regex.Match(a.Search + " ", @"f=(.*?)[&|?|\s]").Groups[1].Value.Replace("%20"," ").Replace("%2C", ","),
+                                                        HiddenTypes = Regex.Match(a.Search + " ", @"t=(.*?)[&|?|\s]").Groups[1].Value.Replace("%25","%").Replace("%25","%").Replace("%20"," "),
+                                                        Hidden = Regex.Match(a.Search + " ", @"h=(.*?)[&|?|\s]").Groups[1].Value.Replace("%25","%").Replace("%20"," "),
+                                                        Orphans = Regex.Match(a.Search + " ", @"o=(.*?)[&|?|\s]").Groups[1].Value.Replace("%25","%").Replace("%20"," "),
+                                                        SearchField = Regex.Match(a.Search + " ", @"sf=(.*?)[&|?|\s]").Groups[1].Value.Replace("%25","%").Replace("%20"," ").Replace("%2C"," & ")
                                                    }).Take(7).ToListAsync();
 
             ViewData["SearchFavorites"] = await _cache.GetOrCreateAsync<List<SearchHistoryData>>("SearchFavorites-" + MyUser.UserId,
@@ -578,11 +374,19 @@ namespace Data_Governance_WebApp.Pages.Users
                                && f.UserId == MyUser.UserId
                             select new SearchHistoryData
                             {
-                                SearchUrl = f.ItemName,
-                                Id = f.UserFavoritesId
+                                SearchUrl = f.ItemName.Replace("%25","%"),
+                                Id = f.UserFavoritesId,
+                                SearchString  = Regex.Match(f.ItemName + " ", @"s=(.*?)[&|?|\s]").Groups[1].Value.Replace("%25","%").Replace("%20"," ").Replace("%2C", ","),
+                                ReportType = Regex.Match(f.ItemName + " ", @"f=(.*?)[&|?|\s]").Groups[1].Value.Replace("%25","%").Replace("%20"," ").Replace("%2C", ","),
+                                HiddenTypes = Regex.Match(f.ItemName + " ", @"t=(.*?)[&|?|\s]").Groups[1].Value.Replace("%25","%").Replace("%20"," "),
+                                Hidden = Regex.Match(f.ItemName + " ", @"h=(.*?)[&|?|\s]").Groups[1].Value.Replace("%25","%").Replace("%20"," "),
+                                Orphans = Regex.Match(f.ItemName + " ", @"o=(.*?)[&|?|\s]").Groups[1].Value.Replace("%25","%").Replace("%20"," "),
+                                SearchField = Regex.Match(f.ItemName + " ", @"sf=(.*?)[&|?|\s]").Groups[1].Value.Replace("%25","%").Replace("%20"," ").Replace("%2C"," & ")
                             }).ToListAsync();
                 });
-
+            HttpContext.Response.Headers.Remove("Cache-Control");
+            HttpContext.Response.Headers.Remove("Pragma");
+            HttpContext.Response.Headers.Remove("Expires");
             HttpContext.Response.Headers.Add("Cache-Control", "no-cache, no-store, must-revalidate");
             HttpContext.Response.Headers.Add("Pragma", "no-cache"); // HTTP 1.0.
             HttpContext.Response.Headers.Add("Expires", "0"); // Proxies.
@@ -591,6 +395,9 @@ namespace Data_Governance_WebApp.Pages.Users
 
         public async Task<ActionResult> OnGetFavorites(int? id)
         {
+            HttpContext.Response.Headers.Remove("Cache-Control");
+            HttpContext.Response.Headers.Remove("Pragma");
+            HttpContext.Response.Headers.Remove("Expires");
             HttpContext.Response.Headers.Add("Cache-Control", "no-cache, no-store, must-revalidate");
             HttpContext.Response.Headers.Add("Pragma", "no-cache"); // HTTP 1.0.
             HttpContext.Response.Headers.Add("Expires", "0"); // Proxies.
@@ -629,7 +436,7 @@ namespace Data_Governance_WebApp.Pages.Users
                             select new FavData
                             {
                                 FavoriteId = q.UserFavoritesId,
-                                Name = ro.Name ?? tm.Name ?? pj.Name ?? di.Name ?? q.ItemName,
+                                Name = String.IsNullOrEmpty(ro.DisplayName) ? (tm.Name ?? pj.Name ?? di.Name ?? q.ItemName) : ro.DisplayName,
                                 ItemId = (int)q.ItemId,
                                 ItemType = q.ItemType_Proper,
                                 AtlasUrl = q.ItemType + (q.ItemType == "search" ? "?" : "s") + (q.ItemName ?? "?id=" + q.ItemId.ToString() ?? ""),
@@ -693,7 +500,7 @@ namespace Data_Governance_WebApp.Pages.Users
                             select new FavData
                             {
                                 FavoriteId = 0,
-                                Name = d.ReportObject.Name,
+                                Name = d.ReportObject.DisplayName,
                                 ItemId = (int)d.ReportObjectId,
                                 EpicReportTemplateId = d.ReportObject.EpicReportTemplateId.ToString(),
                                 FolderId = 0,
@@ -727,7 +534,6 @@ namespace Data_Governance_WebApp.Pages.Users
                 AdLists = new List<AdList>
                 {
                     new AdList { Url = "/Users?handler=SharedObjects", Column = 2},
-                    new AdList { Url = "Reports/?handler=RelatedReports&id="+ReportId, Column = 2 },
                 };
                 ViewData["AdLists"] = AdLists;
             }
@@ -777,7 +583,7 @@ namespace Data_Governance_WebApp.Pages.Users
             return Content("ok");
         }
 
-        public ActionResult OnPostChangeRole()
+        public ActionResult OnGetChangeRole(int Id, string Url)
         {
             var MyUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
             if(!UserHelpers.IsAdmin(_cache, _context, User.Identity.Name))
@@ -796,23 +602,27 @@ namespace Data_Governance_WebApp.Pages.Users
             try { 
                 if (CurrentState != null)
                 {
-                    CurrentState.ItemValue = MyRole.Id;
+                    CurrentState.ItemValue = Id;
                     _context.Attach(CurrentState).State = EntityState.Modified;
                 }
                 else
                 {
-                    _context.Add(new UserPreferences { UserId = MyUser.UserId, ItemType = MyItemType, ItemValue = MyRole.Id });
+                    _context.Add(new UserPreferences { UserId = MyUser.UserId, ItemType = MyItemType, ItemValue = Id });
                 }
                 _context.SaveChanges();
-                return Redirect(MyRole.Url ?? "/");
+               
+                return Redirect(Url ?? "/");
             } catch
             {
-                return Redirect(MyRole.Url ?? "/");
+                return Redirect(Url ?? "/");
             }
         }
 
         public ActionResult OnGetSharedObjects()
         {
+          HttpContext.Response.Headers.Remove("Cache-Control");
+            HttpContext.Response.Headers.Remove("Pragma");
+            HttpContext.Response.Headers.Remove("Expires");
             HttpContext.Response.Headers.Add("Cache-Control", "no-cache, no-store, must-revalidate");
             HttpContext.Response.Headers.Add("Pragma", "no-cache"); // HTTP 1.0.
             HttpContext.Response.Headers.Add("Expires", "0"); // Proxies.
@@ -849,5 +659,335 @@ namespace Data_Governance_WebApp.Pages.Users
 
             return Content("ok");
         }
+   
+
+    public async Task<ActionResult> OnGetGroups(int? id){
+        
+        MyId = UserHelpers.GetUser(_cache, _context, User.Identity.Name).UserId;
+
+        // can user view others?
+        var checkpoint = UserHelpers.CheckUserPermissions(_cache, _context, User.Identity.Name, 37);
+        if (checkpoint)
+        {
+            UserId = id ?? MyId;
+        }
+        else
+        {
+            UserId = MyId;
+        }
+        ViewData["Permissions"] = UserHelpers.GetUserPermissions(_cache, _context, User.Identity.Name);
+        ViewData["MyId"] = MyId;
+        ViewData["UserId"] = UserId;
+
+        ViewData["Groups"] = await _cache.GetOrCreateAsync<List<Group>>("Group-" + UserId,
+            cacheEntry =>
+            {
+                cacheEntry.SlidingExpiration = TimeSpan.FromHours(12);
+                return (from a in _context.UserGroupsMembership
+                        where a.UserId == UserId
+                    && a.Group.GroupType != "Email Distribution Groups"
+                        select new Group
+                        {
+                            Id = a.GroupId,
+                            Name = a.Group.GroupName,
+                            Type = a.Group.GroupType,
+                            Source = a.Group.GroupSource
+                        }).ToListAsync();
+            });
+            return Partial("Sections/_Groups");
+    }
+    public async Task<ActionResult> OnGetSubscriptions(int? id){
+        
+        MyId = UserHelpers.GetUser(_cache, _context, User.Identity.Name).UserId;
+
+            // can user view others?
+            var checkpoint = UserHelpers.CheckUserPermissions(_cache, _context, User.Identity.Name, 37);
+            if (checkpoint)
+            {
+                UserId = id ?? MyId;
+            }
+            else
+            {
+                UserId = MyId;
+            }
+            ViewData["Permissions"] = UserHelpers.GetUserPermissions(_cache, _context, User.Identity.Name);
+            ViewData["MyId"] = MyId;
+            ViewData["UserId"] = UserId;
+
+            ViewData["SubscribedReports"] = await _cache.GetOrCreateAsync<List<SubscribedReportsData>>("SubscribedReports-" + UserId,
+               cacheEntry =>
+               {
+                   cacheEntry.SlidingExpiration = TimeSpan.FromHours(12);
+                   return (from r in (from s in _context.ReportObjectSubscriptions
+                                      where s.UserId == UserId
+                                      select new
+                                      {
+                                          Name = s.ReportObject.DisplayName,
+                                          Id = s.ReportObjectId,
+                                          s.EmailList,
+                                          s.Description,
+                                          s.LastStatus,
+                                          LastRun = s.LastRunDisplayString,
+                                          SentTo = s.SubscriptionTo,
+                                          Enabled = s.InactiveFlags,
+                                          LastRunDate = s.LastRunTime
+
+                                      }).Union(
+                                        from m in _context.UserGroupsMembership
+                                        from s in _context.ReportObjectSubscriptions
+                                        where (
+                                                m.Group.GroupEmail == s.SubscriptionTo
+                                            || m.Group.GroupEmail == s.SubscriptionTo.Replace(_config["AppSettings:ord_ad_domain"], "rhc")
+                                            || m.Group.GroupEmail == s.SubscriptionTo.Replace("rhc", _config["AppSettings:ord_ad_domain"])
+                                            )
+
+                                            && m.UserId == UserId
+
+                                        select new
+                                        {
+                                            Name  = s.ReportObject.DisplayName,
+                                            Id = s.ReportObjectId,
+                                            s.EmailList,
+                                            s.Description,
+                                            s.LastStatus,
+                                            LastRun = s.LastRunDisplayString,
+                                            SentTo = s.SubscriptionTo,
+                                            Enabled = s.InactiveFlags,
+                                            LastRunDate = s.LastRunTime
+                                        }
+                                        )
+                           orderby r.Enabled, r.LastRunDate descending
+                           select new SubscribedReportsData
+                           {
+                               Name = r.Name,
+                               Id = r.Id,
+                               EmailList = r.EmailList,
+                               Description = r.Description,
+                               LastStatus = r.LastStatus.Replace(";", "; "),
+                               LastRun = r.LastRun,
+                               SentTo = r.SentTo.Replace(";", "; ")
+                           }).ToListAsync();
+               });
+
+             return Partial("Sections/_Subscriptions");
+    }
+    public async Task<ActionResult> OnGetHistory(int? id){
+        
+        MyId = UserHelpers.GetUser(_cache, _context, User.Identity.Name).UserId;
+
+            // can user view others?
+            var checkpoint = UserHelpers.CheckUserPermissions(_cache, _context, User.Identity.Name, 37);
+            if (checkpoint)
+            {
+                UserId = id ?? MyId;
+            }
+            else
+            {
+                UserId = MyId;
+            }
+            ViewData["Permissions"] = UserHelpers.GetUserPermissions(_cache, _context, User.Identity.Name);
+            ViewData["MyId"] = MyId;
+            ViewData["UserId"] = UserId;
+
+            ViewData["AtlasHistory"] = await  _cache.GetOrCreateAsync<List<AtlasHistoryData>>("AtlasHistory-" + UserId,
+               cacheEntry =>
+               {
+                   cacheEntry.SlidingExpiration = TimeSpan.FromMinutes(10);
+                   return (from a in _context.Analytics
+                           where a.UserId == UserId
+                              && a.AccessDateTime > DateTime.Today.AddDays(-7)
+                              && a.Pathname != "/"
+                           join r in _context.ReportObject on a.ObjectId equals r.ReportObjectId into tmpr
+                           from r in tmpr.DefaultIfEmpty()
+                           join t in _context.Term on a.ObjectId equals t.TermId into tmpt
+                           from t in tmpt.DefaultIfEmpty()
+                           join p in _context.DpDataProject on a.ObjectId equals p.DataProjectId into tmpp
+                           from p in tmpp.DefaultIfEmpty()
+                           join i in _context.DpDataInitiative on a.ObjectId equals i.DataInitiativeId into tmpi
+                           from i in tmpi.DefaultIfEmpty()
+                           join u in _context.User on a.ObjectId equals u.UserId into tmpu
+                           from u in tmpu.DefaultIfEmpty()
+                           join c in _context.DpContact on a.ObjectId equals c.ContactId into tmpc
+                           from c in tmpc.DefaultIfEmpty()
+                           orderby a.AccessDateTime descending
+                           select new AtlasHistoryData
+                           {
+                               Name = (a.Pathname.ToLower() == "/reports" ? r.DisplayName ?? "Home" :
+                                       a.Pathname.ToLower() == "/terms" ? t.Name ?? "Home" :
+                                       a.Pathname.ToLower() == "/projects" ? p.Name ?? "Home" :
+                                       a.Pathname.ToLower() == "/initiatives" ? i.Name ?? "Home" :
+                                       a.Pathname.ToLower() == "/users" ? (u.FullName ?? u.AccountName.Replace(_config["AppSettings:ord_ad_domain"] + "\\", "") ?? "Home") :
+                                       a.Pathname.ToLower() == "/search" ? a.SearchString ?? "Home" :
+                                       a.Pathname.ToLower() == "/tasks" ? "Home" ?? "Home" :
+                                       a.Pathname.ToLower() == "/contacts" ? c.Name ?? "Home" : "Other"),
+                               Type = (a.Pathname.ToLower() == "/reports" ? "Reports" :
+                                       a.Pathname.ToLower() == "/terms" ? "Terms" :
+                                       a.Pathname.ToLower() == "/projects" ? "Projects" :
+                                       a.Pathname.ToLower() == "/initiatives" ? "Initiatives" :
+                                       a.Pathname.ToLower() == "/users" ? "Users" :
+                                       a.Pathname.ToLower() == "/contacts" ? "Reports" :
+                                       a.Pathname.ToLower() == "/tasks" ? "Tasks" :
+                                       a.Pathname.ToLower() == "/search" ? "Search" : "Other"),
+                               Date = ((DateTime)a.AccessDateTime).ToString("g"),
+                               Url = a.Href
+                           }).ToListAsync();
+               });
+
+            ViewData["ReportObjectDocEdits"] = await _cache.GetOrCreateAsync<List<LastEdited>>("ReportObjectDocEdits-" + UserId,
+              cacheEntry =>
+              {
+                  cacheEntry.SlidingExpiration = TimeSpan.FromMinutes(10);
+                  return (from r in _context.ReportObjectDoc
+                          where r.UpdatedBy == UserId
+                             && r.LastUpdateDateTime > DateTime.Today.AddDays(-30)
+                          orderby r.LastUpdateDateTime descending
+                          select new LastEdited
+                          {
+                              Date = r.LastUpdatedDateTimeDisplayString,
+                              Name = r.ReportObject.DisplayName,
+                              Url = "\\reports?id=" + r.ReportObjectId
+                          }).Take(10).ToListAsync();
+              });
+
+            ViewData["InitiativeEdits"] = await _cache.GetOrCreateAsync<List<LastEdited>>("InitiativeEdits-" + UserId,
+               cacheEntry =>
+               {
+                   cacheEntry.SlidingExpiration = TimeSpan.FromMinutes(10);
+                   return (from r in _context.DpDataInitiative
+                           where r.LastUpdateUser == UserId
+                              && r.LastUpdateDate > DateTime.Today.AddDays(-30)
+                           orderby r.LastUpdateDate descending
+                           select new LastEdited
+                           {
+                               Date = r.LastUpdatedDateDisplayString,
+                               Name = r.Name,
+                               Url = "\\initiatives?id=" + r.DataInitiativeId
+                           }).Take(10).ToListAsync();
+               });
+
+            ViewData["ProjectEdits"] = await _cache.GetOrCreateAsync<List<LastEdited>>("ProjectEdits-" + UserId,
+               cacheEntry =>
+               {
+                   cacheEntry.SlidingExpiration = TimeSpan.FromMinutes(10);
+                   return (from r in _context.DpDataProject
+                           where r.LastUpdateUser == UserId
+                              && r.LastUpdateDate > DateTime.Today.AddDays(-30)
+                           orderby r.LastUpdateDate descending
+                           select new LastEdited
+                           {
+                               Date = r.LastUpdatedDateDisplayString,
+                               Name = r.Name,
+                               Url = "\\projects?id=" + r.DataProjectId
+                           }).Take(10).ToListAsync();
+               });
+
+            ViewData["TermEdits"] = await _cache.GetOrCreateAsync<List<LastEdited>>("TermEdits-" + UserId,
+               cacheEntry =>
+               {
+                   cacheEntry.SlidingExpiration = TimeSpan.FromMinutes(10);
+
+                   return (from r in _context.Term
+                           where r.UpdatedByUserId == UserId
+                              && r.LastUpdatedDateTime > DateTime.Today.AddDays(-30)
+                           orderby r.LastUpdatedDateTime descending
+                           select new LastEdited
+                           {
+                               Date = r.LastUpdatedDateTimeDisplayString,
+                               Name = r.Name,
+                               Url = "\\terms?id=" + r.TermId
+                           }).Take(10).ToListAsync();
+               });
+
+            ViewData["LoadTime"]  = await _cache.GetOrCreateAsync<List<ReportRunTimeData>>("LoadTime-" + UserId,
+               cacheEntry =>
+               {
+                   cacheEntry.SlidingExpiration = TimeSpan.FromHours(12);
+                   return (from a in _context.Analytics
+                           where a.AccessDateTime > DateTime.Now.AddDays(-7)
+                              && a.UserId == UserId
+                           group a by a.Pathname.ToLower() into grp
+                           orderby grp.Count() descending
+                           select new ReportRunTimeData
+                           {
+                               Date = grp.Key,
+                               Cnt = grp.Count(),
+                               Avg = Math.Round((decimal)grp.Average(x => Convert.ToInt32(x.LoadTime))/1000, 2)
+                           }).ToListAsync();
+               });
+
+
+             return Partial("Sections/_Atlas");
+    }
+ public async Task<ActionResult> OnGetActivity(int? id){
+        
+        MyId = UserHelpers.GetUser(_cache, _context, User.Identity.Name).UserId;
+
+        // can user view others?
+        var checkpoint = UserHelpers.CheckUserPermissions(_cache, _context, User.Identity.Name, 37);
+        if (checkpoint)
+        {
+            UserId = id ?? MyId;
+        }
+        else
+        {
+            UserId = MyId;
+        }
+        ViewData["Permissions"] = UserHelpers.GetUserPermissions(_cache, _context, User.Identity.Name);
+        ViewData["MyId"] = MyId;
+        ViewData["UserId"] = UserId;
+
+       ViewData["ReportRunTime"] = await _cache.GetOrCreateAsync<List<ReportRunTimeData>>("ReportRunTime-" + UserId,
+                cacheEntry => {
+                    cacheEntry.SlidingExpiration = TimeSpan.FromHours(12);
+                    return  (from d in _context.ReportObjectRunTime
+                                                  where d.RunUserId == UserId
+                                                  orderby d.RunWeek descending
+                                                  select new ReportRunTimeData
+                                                  {
+                                                      Date = d.RunWeekString,
+                                                      Cnt = d.Runs ?? 0,
+                                                      Avg = d.RunTime ?? 0
+                                                  }
+                                   ).ToListAsync(); ;
+                });
+
+        ViewData["TopRunReports"] = await _cache.GetOrCreateAsync<List<ReportRunData>>("TopRunReports-" + UserId,
+                cacheEntry =>
+                {
+                    cacheEntry.SlidingExpiration = TimeSpan.FromHours(12);
+                    return (from d in _context.ReportObjectTopRuns
+                            where d.RunUserId == UserId
+                               && d.ReportObjectTypeId != 21
+                            orderby d.Runs descending
+                            select new ReportRunData
+                            {
+                                Name = d.Name,
+                                Type = d.ReportObject.ReportObjectType.Name,
+                                Url = "\\reports?id=" + d.ReportObjectId,
+                                Hits = d.Runs ?? 0,
+                                RunTime = d.RunTime ?? 0,
+                                LastRun = d.LastRun
+                            }).ToListAsync();
+                });
+
+        ViewData["FailedRuns"] = await _cache.GetOrCreateAsync<List<FailedRunsData>>("FailedRuns-" + UserId,
+               cacheEntry =>
+               {
+                   cacheEntry.SlidingExpiration = TimeSpan.FromHours(12);
+
+                   return (from d in _context.ReportObjectRunData
+                                 where d.RunUserId == UserId
+                                    && d.RunStatus != "Success"
+                                 orderby d.RunStartTime descending
+                                 select new FailedRunsData
+                                 {
+                                     Date = d.RunStartTimeDisplayString,
+                                     Url = "\\reports?id=" + d.ReportObjectId,
+                                     Name = d.ReportObject.DisplayName,
+                                     RunStatus = d.RunStatus
+                                 }).ToListAsync();
+               });
+            return Partial("Sections/_Activity");
+    }   
     }
 }

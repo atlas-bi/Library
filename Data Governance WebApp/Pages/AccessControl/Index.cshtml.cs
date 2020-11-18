@@ -28,6 +28,7 @@ using Microsoft.Extensions.Caching.Memory;
 
 namespace Data_Governance_WebApp.Pages.AccessControl
 {
+
     public class IndexModel : PageModel
     {
         private IMemoryCache _cache;
@@ -74,6 +75,7 @@ namespace Data_Governance_WebApp.Pages.AccessControl
             public string Name { get; set; }
         }
 
+        
         public async Task<IActionResult> OnGetAsync()
         {
             PublicUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
@@ -110,20 +112,20 @@ namespace Data_Governance_WebApp.Pages.AccessControl
                                                      Name = l.UserRoles.Name,
                                                  }
                                      }).ToListAsync();
+            HttpContext.Response.Headers.Remove("Cache-Control");
+            HttpContext.Response.Headers.Remove("Pragma");
             HttpContext.Response.Headers.Add("Cache-Control", "no-cache, no-store, must-revalidate");
             HttpContext.Response.Headers.Add("Pragma", "no-cache"); // HTTP 1.0.
             HttpContext.Response.Headers.Add("Expires", "0"); // Proxies.
-
             return Page();
         }
 
-        public ActionResult OnPostRemoveUserPermission()
+        public ActionResult OnGetRemoveUserPermission(int Id, int UserId)
         {
             var checkpoint = UserHelpers.CheckUserPermissions(_cache, _context, User.Identity.Name, 1);
-            if (ModelState.IsValid && checkpoint)
+            if (checkpoint)
             {
-                var q = NewUserRole;
-                _context.RemoveRange(_context.UserRoleLinks.Where(x => x.UserId.Equals(NewUserRole.UserId) && x.UserRolesId.Equals(NewUserRole.UserRolesId)));
+                _context.RemoveRange(_context.UserRoleLinks.Where(x => x.UserId.Equals(UserId) && x.UserRolesId.Equals(Id)));
                 _context.SaveChanges();
             }
 
@@ -183,16 +185,16 @@ namespace Data_Governance_WebApp.Pages.AccessControl
             return Content("success");
         }
 
-        public ActionResult OnPostDeleteRole()
+        public ActionResult OnGetDeleteRole(int Id)
         {
             var checkpoint = UserHelpers.CheckUserPermissions(_cache, _context, User.Identity.Name, 18);
             // cannot delete admin or user role
-            if (ModelState.IsValid && UserRole.UserRolesId != 1 && UserRole.UserRolesId != 5 && UserRole.Name != "Director" && checkpoint)
+            if (Id != 1 && Id != 5 && _context.UserRoles.Where(x => x.UserRolesId == Id).First().Name != "Director" && checkpoint)
             {
                 // remove links, then remove role
-                _context.RemoveRange(_context.UserRoleLinks.Where(x => x.UserRolesId.Equals(UserRole.UserRolesId)));
-                _context.RemoveRange(_context.RolePermissionLinks.Where(x => x.RoleId.Equals(UserRole.UserRolesId)));
-                _context.Remove(UserRole);
+                _context.RemoveRange(_context.UserRoleLinks.Where(x => x.UserRolesId == Id));
+                _context.RemoveRange(_context.RolePermissionLinks.Where(x => x.RoleId == Id));
+                _context.Remove(_context.UserRoles.Where(x => x.UserRolesId == Id).First());
                 _context.SaveChanges();
             }
             // clear cache

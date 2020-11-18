@@ -1,1 +1,36 @@
-﻿Microsoft Visual Studio Solution File, Format Version 12.00# Visual Studio 15VisualStudioVersion = 15.0.28307.271MinimumVisualStudioVersion = 10.0.40219.1Project("{159641D6-6404-4A2A-AE62-294DE0FE8301}") = "Data Governance ETL", "Data Governance ETL\Data Governance ETL.dtproj", "{5FB9B705-310C-40BA-A9DF-561C98261F2F}"EndProjectProject("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Data Governance WebApp", "Data Governance WebApp\Data Governance WebApp.csproj", "{54765E87-FC46-4FD9-8D50-B1CCFF50501C}"EndProjectGlobal	GlobalSection(SolutionConfigurationPlatforms) = preSolution		Debug|Any CPU = Debug|Any CPU		Development|Any CPU = Development|Any CPU		Release|Any CPU = Release|Any CPU	EndGlobalSection	GlobalSection(ProjectConfigurationPlatforms) = postSolution		{5FB9B705-310C-40BA-A9DF-561C98261F2F}.Debug|Any CPU.ActiveCfg = Development		{5FB9B705-310C-40BA-A9DF-561C98261F2F}.Debug|Any CPU.Build.0 = Development		{5FB9B705-310C-40BA-A9DF-561C98261F2F}.Development|Any CPU.ActiveCfg = Development		{5FB9B705-310C-40BA-A9DF-561C98261F2F}.Development|Any CPU.Build.0 = Development		{5FB9B705-310C-40BA-A9DF-561C98261F2F}.Release|Any CPU.ActiveCfg = Development		{5FB9B705-310C-40BA-A9DF-561C98261F2F}.Release|Any CPU.Build.0 = Development		{54765E87-FC46-4FD9-8D50-B1CCFF50501C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU		{54765E87-FC46-4FD9-8D50-B1CCFF50501C}.Debug|Any CPU.Build.0 = Debug|Any CPU		{54765E87-FC46-4FD9-8D50-B1CCFF50501C}.Development|Any CPU.ActiveCfg = Debug|Any CPU		{54765E87-FC46-4FD9-8D50-B1CCFF50501C}.Development|Any CPU.Build.0 = Debug|Any CPU		{54765E87-FC46-4FD9-8D50-B1CCFF50501C}.Release|Any CPU.ActiveCfg = Release|Any CPU		{54765E87-FC46-4FD9-8D50-B1CCFF50501C}.Release|Any CPU.Build.0 = Release|Any CPU	EndGlobalSection	GlobalSection(SolutionProperties) = preSolution		HideSolutionNode = FALSE	EndGlobalSection	GlobalSection(ExtensibilityGlobals) = postSolution		SolutionGuid = {E4EF8318-7083-4DA3-813F-EEE0888EBCE9}	EndGlobalSectionEndGlobal
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30225.117
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{159641D6-6404-4A2A-AE62-294DE0FE8301}") = "Data Governance ETL", "Data Governance ETL\Data Governance ETL.dtproj", "{5FB9B705-310C-40BA-A9DF-561C98261F2F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Data Governance WebApp", "Data Governance WebApp\Data Governance WebApp.csproj", "{54765E87-FC46-4FD9-8D50-B1CCFF50501C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Development|Any CPU = Development|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5FB9B705-310C-40BA-A9DF-561C98261F2F}.Debug|Any CPU.ActiveCfg = Development
+		{5FB9B705-310C-40BA-A9DF-561C98261F2F}.Debug|Any CPU.Build.0 = Development
+		{5FB9B705-310C-40BA-A9DF-561C98261F2F}.Development|Any CPU.ActiveCfg = Development
+		{5FB9B705-310C-40BA-A9DF-561C98261F2F}.Development|Any CPU.Build.0 = Development
+		{5FB9B705-310C-40BA-A9DF-561C98261F2F}.Release|Any CPU.ActiveCfg = Development
+		{5FB9B705-310C-40BA-A9DF-561C98261F2F}.Release|Any CPU.Build.0 = Development
+		{54765E87-FC46-4FD9-8D50-B1CCFF50501C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{54765E87-FC46-4FD9-8D50-B1CCFF50501C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{54765E87-FC46-4FD9-8D50-B1CCFF50501C}.Development|Any CPU.ActiveCfg = Debug|Any CPU
+		{54765E87-FC46-4FD9-8D50-B1CCFF50501C}.Development|Any CPU.Build.0 = Debug|Any CPU
+		{54765E87-FC46-4FD9-8D50-B1CCFF50501C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{54765E87-FC46-4FD9-8D50-B1CCFF50501C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E4EF8318-7083-4DA3-813F-EEE0888EBCE9}
+	EndGlobalSection
+EndGlobal

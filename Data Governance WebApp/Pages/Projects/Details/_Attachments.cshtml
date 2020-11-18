@@ -18,11 +18,10 @@
 
 @model Data_Governance_WebApp.Pages.Projects.IndexModel
 
-<h2 class="pb-2 mb-2 border-bottom border-2 darken">Attachments</h2>
+<h3>Attachments</h3>
 
-<div class="row">
 @foreach (var a in ViewBag.Attachments)
-    {
-        <div class="col w-100"><a href="@a.Src">@a.Name</a> (@a.Size b)</div>
-    }
-</div>
+{
+    <a href="@a.Src">@a.Name (@a.Size b)</a> 
+}
+

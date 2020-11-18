@@ -17,34 +17,34 @@
 *@
 
 <div>
-            <span class="text-muted pb-3">Top 60 Undocumented Reports (Workbench, SSRS, Dashboard, and Crystal)</span>
-            <div class="table-responsive">
-                <table class="table sort">
-                    <thead>
-                        <tr>
-                            <th>Report Name</th>
-                            <th>Report Type</th>
-                            <th>Last Modified By</th>
-                            <th>Runs</th>
-                            <th>Favorite?</th>
-                            <th>Last Modified</th>
-                            <th>Last Run</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var t in ViewBag.Undocumented)
-                        {
-                            <tr>
-                                <td><a class="ajax atlas-blue" href="\reports?id=@t.ReportObjectId">@t.Name</a></td>
-                                <td>@t.ReportType</td>
-                                <td>@t.ModifiedBy</td>
-                                <td>@t.Runs</td>
-                                <td>@t.Favorite</td>
-                                <td>@t.LastMaintained</td>
-                                <td>@t.LastRun</td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
-        </div>
+    <span class="text-light">Top 60 Undocumented Reports (Workbench, SSRS, Dashboard, and Crystal)</span>
+    <div class="table-responsive">
+        <table class="table sort">
+            <thead>
+                <tr>
+                    <th>Report Name</th>
+                    <th>Report Type</th>
+                    <th>Last Modified By</th>
+                    <th>Runs</th>
+                    <th>Favorite?</th>
+                    <th>Last Modified</th>
+                    <th>Last Run</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var t in ViewBag.Undocumented)
+                {
+                    <tr>
+                        <td><a href="\reports?id=@t.ReportObjectId">@t.Name</a></td>
+                        <td>@t.ReportType</td>
+                        <td>@t.ModifiedBy</td>
+                        <td>@t.Runs</td>
+                        <td>@t.Favorite</td>
+                        <td>@t.LastMaintained</td>
+                        <td>@t.LastRun</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

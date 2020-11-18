@@ -16,337 +16,269 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 .editorMdl {
-    max-width: calc(100% - 40px) !important;
-    height: calc(100% - 40px);
-    background-color: rgb(255, 255, 255);
-    margin-top: 10px;
-    border: 1px solid rgb(183, 183, 183);
+    border: 1px solid #b7b7b7;
     border-radius: 6px;
-    box-shadow: 0 0 30px 10px rgb(209, 209, 209);
-    transition: all .5s;
+    height: calc(100% - 40px);
     margin: auto !important;
     margin-top: 20px !important;
+    max-width: calc(100% - 40px) !important;
 }
 
 .editorMdl-inner {
-    border-radius: inherit;
-    height: 100%;
-    padding: 0 !important;
     border: 0 !important;
+    padding: 0 !important
 }
 
 .editorMdl-title {
-    background: rgb(230, 227, 229);
-    border-radius: inherit;
+    background: #e6e3e5;
+    border-bottom: 1px solid #cccacc;
+    border-top-right-radius: inherit;
+    border-top-left-radius: inherit;
     border-bottom-right-radius: 0;
     border-bottom-left-radius: 0;
-    border-bottom: 1px solid rgb(204, 202, 204);
-    margin-bottom: 0;
-    width: 100%;
-    padding: 10px 20px;
+    padding: 20px;
+    position: relative;
 }
 
-.editorMdl-titleText {
-    display: flex;
-    justify-content: space-between;
+.editorMdl-title > h2 {
+    margin: 0;
 }
 
 #editorMdl-titleSave {
-    width: 100%;
-    text-align: center;
-    margin-top: 7px;
-    transition: visibility .4s ease-in-out;
+    transition: visibility .1s ease-in-out;
     visibility: hidden;
+    width: 100%;
+    color: #0084db;
+    position: absolute;
+    bottom: 0;
 }
 
-.editorMdl-close {
-    border: none;
-    outline: none;
-    cursor: pointer;
-    padding-left: 0;
-    font-size: 1rem;
-    background: transparent;
-}
-
-.editorMdl-close:hover,
-.editorMdl-close:active,
-.editorMdl-close:focus,
-.editorMdl-close:visited {
-    outline: none;
+.editorMdl-title > h2 > button {
+    font-size: 35px;
+    float: right;
 }
 
 .editorMdl-cnt {
-    height: calc(100% - 91px);
-    width: 100%;
+    height: calc(100% - 83px);
+    width: 100%
 }
 
+.editorMdl-cntLiner {
+    padding: 20px;
+}
 
-/* images */
+.editor {
+    display: flex;
+    margin-bottom: 1rem;
+    padding-bottom: 0;
+    padding-left: 0;
+    position: relative;
+}
 
 .editorImg {
-    flex-wrap: wrap;
     display: flex;
+    flex-wrap: wrap
 }
 
 .editorImg-img {
-    box-shadow: 0 0 30px 2px #d1d1d1;
-    border: 1px solid rgb(204, 202, 204);
-    background-color: rgb(224, 228, 231);
+    background-color: #e0e4e7;
+    border: 1px solid #cccacc;
     border-radius: 6px;
-    margin: 30px;
+    box-shadow: 0 0 30px 2px #d1d1d1;
     height: 117px;
-    width: 150px;
-    max-width: 150px;
+    margin: 30px;
     max-height: 117px;
-    min-width: 150px;
+    max-width: 150px;
     min-height: 117px;
+    min-width: 150px;
+    width: 150px
+}
+
+#report-add-image {
+    height: 100%;
+    width: 100%;
+}
+
+.editor-new-image {
+    height: 100%;
+    width: 100%;
+    margin-left: 25%;
+    margin-top: 25%;
 }
 
 .editor-sectionSubTitle {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-between
 }
 
 .editor-description {
-    padding-left: 0;
-    padding-bottom: 0;
-    position: relative;
-    margin-bottom: 1rem;
     display: flex;
+    margin-bottom: 1rem;
+    padding-bottom: 0;
+    padding-left: 0;
+    position: relative
 }
 
 .liveEditor {
     background: #f5f5f5;
-    background: var(--off-white);
     border: 1px solid rgba(0, 0, 0, .2);
     border-radius: 6px;
     width: 50%;
 }
 
+.drop-box .liveEditor {
+    background: #fff;
+}
+
 .editor-liveEditorPrev {
-    width: 50%;
     padding-left: 15px;
+    width: 50%
+}
+
+.editor-liveEditorPrev h4 {
+    padding: 0;
+    margin: 0;
 }
 
 .editor-liveEditorPrevTtl {
+    border-bottom: 1px solid #dee2e6;
     height: 34px;
     margin: 0;
     margin-bottom: 15px;
     min-width: max-content;
-    width: 40%;
-    border-bottom: 1px solid #dee2e6;
+    width: 40%
 }
 
 .liveEditor-btnGrp {
-    margin-bottom: 1rem;
     border-bottom: 1px solid #dee2e6;
-    position: relative;
     display: inline-flex;
-    vertical-align: middle;
+    margin-bottom: 1rem;
+    position: relative;
 }
 
 .liveEditor-btn {
-    transition: color .2s;
-    cursor: pointer;
-    text-align: center;
-    vertical-align: middle;
-    user-select: none;
+    background: transparent;
     border: 1px solid transparent;
+    cursor: pointer;
     font-size: 1rem;
     line-height: 1.5rem;
     outline: none;
-    background: transparent;
     padding: .375rem .75rem;
+    text-align: center;
+    transition: color .2s;
+    user-select: none;
+    vertical-align: middle
 }
 
-.liveEditor-btn:hover,
-.liveEditor-btn:active,
-.liveEditor-btn:focus,
-.liveEditor-btn:visited {
-    outline: none;
+.liveEditor-btn > svg {
+    color: #575353 !important;
+    fill: #575353 !important;
+    height: 14px;
+    width: 14px;
+    margin-bottom: -3px;
+}
+
+.liveEditor-btn.save {
+    float: right
+}
+
+.liveEditor-btn:hover, .liveEditor-btn:active, .liveEditor-btn:focus, .liveEditor-btn:visited {
     background: transparent;
+    outline: none;
 }
 
 .liveEditor-btn:hover {
     background: #DBD7D8;
-    background: var(--light-grey);
 }
 
-.liveEditor-btn:last-of-type,
-.liveEditor-btn:first-of-type {
-    border-radius: 0px;
+.liveEditor-btn:last-of-type, .liveEditor-btn:first-of-type {
+    border-radius: 0
 }
 
 .liveEditor-btnSep:after {
+    background: #dee2e6;
     content: '';
     display: block;
     float: left;
-    background: #dee2e6;
-    margin: 5px 10px;
     height: calc(100% - 10px);
-    width: 1px;
+    margin: 5px 10px;
+    width: 1px
 }
 
 .liveEditor-body .CodeMirror {
-    background: inherit;
+    background: inherit
 }
 
 .liveEditor-body {
-    margin: 0 15px 15px 15px;
+    margin: 0 15px 15px
 }
 
-.editor-sectionTitle {
-    padding-top: 10px;
-    border-bottom: 2px solid #dee2e6;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    margin-bottom: 10px;
-    max-width: 800px;
-}
-
-.editor-sectionMsg {
-    padding-left: 20px;
-    padding-right: 20px;
-    margin-top: 7px;
-    transition: visibility .2s ease-in-out;
-}
-
-.editor-sectionSave {
-    cursor: pointer;
-    user-select: none;
-    background-color: transparent;
-    outline: none;
-    border: none;
-    font-size: 1rem;
-    padding: .375rem .75rem;
-}
-
-.editor-sectionSave:hover,
-.editor-sectionSave:active,
-.editor-sectionSave:focus {
-    outline: none;
-}
-
-.editor-inputGrp {
-    display: -ms-grid;
-    display: grid;
-    -ms-grid-columns: -webkit-max-content 1fr;
-    -ms-grid-columns: max-content 1fr;
-    grid-template-columns: -webkit-max-content 1fr;
-    grid-template-columns: max-content 1fr;
-}
-
-.editor-inputGrp>* {
-    margin-bottom: 10px;
+.liveEditor-body textarea {
     display: block;
+    width: 100%;
+    padding: 3px 10px;
+    font-size: 14px;
+    line-height: 1.5;
+    color: rgb(54, 54, 54);
+    font-family: sf;
+    font-weight: 600;
+    letter-spacing: .4px;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid rgb(200, 200, 200);
+    border-radius: 4px;
+    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out
 }
 
-.editor-inputGrp>label {
-    margin-right: 20px;
-    margin-top: 4px;
-    text-align: right;
+.editor-save {
+    border-radius: 3px;
+    height: 50px;
+    text-align: center;
+    display: block;
+    width: 100%;
+    background: rgba(0, 0, 0, .1);
+    border: 1px solid rgba(0, 0, 0, .2);
+    font-size: inherit;
 }
 
-.editor-form {
-    max-width: 800px;
+h5 .editor-save {
+    height: 30px;
+    font-family: inherit;
 }
 
-
-.editor-inputGrp>*:nth-child(odd) {
-    -ms-grid-column: 1;
+.editor-save:hover {
+    background: rgba(0, 0, 0, .15);
 }
 
-.editor-inputGrp>*:nth-child(even) {
-    -ms-grid-column: 2;
+.editorMdl .listDetails >* {
+    margin-bottom: 10px;
 }
 
-.editor-inputGrp>*:nth-child(1),
-.editor-inputGrp>*:nth-child(2) {
-    -ms-grid-row: 1;
+.listDetails>input {
+    display: block;
+    width: 100%;
+    padding: 3px 10px;
+    font-size: 14px;
+    line-height: 1.5;
+    color: rgb(54, 54, 54);
+    font-family: sf;
+    font-weight: 600;
+    letter-spacing: .4px;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid rgb(200, 200, 200);
+    border-radius: 4px;
+    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out
 }
 
-.editor-inputGrp>*:nth-child(3),
-.editor-inputGrp>*:nth-child(4) {
-    -ms-grid-row: 2;
+.listDetails>input:focus {
+    border-color: #80bdff;
+    outline: 0;
+    box-shadow: 0 0 0 .2rem rgba(0, 123, 255, .25);
+    z-index: 99;
 }
 
-.editor-inputGrp>*:nth-child(5),
-.editor-inputGrp>*:nth-child(6) {
-    -ms-grid-row: 3;
-}
-
-.editor-inputGrp>*:nth-child(7),
-.editor-inputGrp>*:nth-child(8) {
-    -ms-grid-row: 4;
-}
-
-.editor-inputGrp>*:nth-child(9),
-.editor-inputGrp>*:nth-child(10) {
-    -ms-grid-row: 5;
-}
-
-.editor-inputGrp>*:nth-child(11),
-.editor-inputGrp>*:nth-child(12) {
-    -ms-grid-row: 6;
-}
-
-.editor-inputGrp>*:nth-child(13),
-.editor-inputGrp>*:nth-child(14) {
-    -ms-grid-row: 7;
-}
-
-.editor-inputGrp>*:nth-child(15),
-.editor-inputGrp>*:nth-child(16) {
-    -ms-grid-row: 8;
-}
-
-.editor-inputGrp>*:nth-child(17),
-.editor-inputGrp>*:nth-child(18) {
-    -ms-grid-row: 9;
-}
-
-.editor-inputGrp>*:nth-child(19),
-.editor-inputGrp>*:nth-child(20) {
-    -ms-grid-row: 10;
-}
-
-.editor-inputGrp>*:nth-child(21),
-.editor-inputGrp>*:nth-child(22) {
-    -ms-grid-row: 11;
-}
-
-.editor-inputGrp>*:nth-child(23),
-.editor-inputGrp>*:nth-child(24) {
-    -ms-grid-row: 12;
-}
-
-.editor-inputGrp>*:nth-child(25),
-.editor-inputGrp>*:nth-child(26) {
-    -ms-grid-row: 13;
-}
-
-.editor-inputGrp>*:nth-child(27),
-.editor-inputGrp>*:nth-child(28) {
-    -ms-grid-row: 14;
-}
-
-.editor-inputGrp>*:nth-child(29),
-.editor-inputGrp>*:nth-child(30) {
-    -ms-grid-row: 15;
-}
-
-.editor-inputGrp>*:nth-child(31),
-.editor-inputGrp>*:nth-child(32) {
-    -ms-grid-row: 16;
-}
-
-.editor-inputGrp>*:nth-child(33),
-.editor-inputGrp>*:nth-child(34) {
-    -ms-grid-row: 17;
-}
-
-.editor-inputGrp>*:nth-child(35),
-.editor-inputGrp>*:nth-child(36) {
-    -ms-grid-row: 18;
+.listDetails>input::-ms-expand {
+    background-color: transparent;
+    border: 0
 }

@@ -23,122 +23,130 @@
     <input type="hidden" value="@Model.SearchField" name="sf" />
     <h5 class="fav-col-sub-title">Report Type</h5>
     <div class="srch-fltr">
-        <label class='chck checkbox-container search-filter'>
-            <span class="darken">SSRS</span>
-            <input type="checkbox"  @if(Model.SearchFilter != null && Model.SearchFilter.Contains("28")) {<text>checked="checked"</text>} value='28' />
-            <span class="checkmark"></span>
-        </label>
-        <label class='chck checkbox-container search-filter'>
-            <span class="darken">Dashboard</span>
-            <input type="checkbox" @if(Model.SearchFilter != null && Model.SearchFilter.Contains("20")){<text>checked="checked"</text>}  value='20' />
-            <span class="checkmark"></span>
-        </label>
-        <label class='chck checkbox-container search-filter'>
-            <span class="darken">Dash Component</span>
+       
+        <div class='form-check search-filter'>
+            <input type="checkbox" @if(Model.SearchFilter != null && Model.SearchFilter.Contains("28")) {<text>checked="checked"</text>} value='28'/>
+            <input type="hidden" />
+            <label>SSRS</label>    
+        </div>
+        <div class='form-check search-filter'>
+            <input type="checkbox" @if(Model.SearchFilter != null && Model.SearchFilter.Contains("20")){<text>checked="checked"</text>}  value='20'/>
+            <input type="hidden" />
+            <label>Dashboard</label>    
+        </div>
+        <div class='form-check search-filter'>
             <input type="checkbox" @if(Model.SearchFilter != null && Model.SearchFilter.Contains("21")){<text>checked="checked"</text>}  value='21' />
-            <span class="checkmark"></span>
-        </label>
-        <label class='chck checkbox-container search-filter'>
-            <span class="darken">Crystal</span>
+            <input type="hidden" />
+            <label>Dash Component</label>    
+        </div>
+        <div class='form-check search-filter'>
             <input type="checkbox" @if(Model.SearchFilter != null && Model.SearchFilter.Contains("3")){<text>checked="checked"</text>} value='3' />
-            <span class="checkmark"></span>
-        </label>
-        <label class='chck checkbox-container search-filter' >
-            <span class="darken">Workbench</span>
+            <input type="hidden" />
+            <label>Crystal</label>    
+        </div>
+        <div class='form-check search-filter'>
             <input type="checkbox" @if(Model.SearchFilter != null && Model.SearchFilter.Contains("17")){<text>checked="checked"</text>} value='17' />
-            <span class="checkmark"></span>
-        </label>
+            <input type="hidden" />
+            <label>Workbench</label>    
+        </div>
     </div>
 
     @if (Model.Permissions.Contains(46))
     {
         <h5 class="fav-col-sub-title">Advanced</h5>
         <div class="srch-fltr">
-            <label class='chck checkbox-container search-advanced-filter'>
-                <span class="darken">Show Hidden</span>
+            <div class='form-check search-advanced-filter'>
                 <input type="checkbox" @if (Model.ShowHidden > 0) { <text> checked="checked" value="1"</text> } name="h" />
-                <span class="checkmark"></span>
-            </label>
-            <label class='chck checkbox-container search-advanced-filter'>
-                <span class="darken">Show Hidden Types</span>
+                <input type="hidden" />
+                <label>Show Hidden</label>    
+            </div>
+            <div class='form-check search-advanced-filter'>
                 <input type="checkbox" @if (Model.ShowAllTypes > 0) { <text> checked="checked" value="1" </text> } name="t" />
-                <span class="checkmark"></span>
-            </label>
-            <label class='chck checkbox-container search-advanced-filter'>
-                <span class="darken">Show Orphans</span>
+                <input type="hidden" />
+                <label>Show Hidden Types</label>    
+            </div>
+            <div class='form-check search-advanced-filter'>
                 <input type="checkbox" @if (Model.ShowOrphans > 0) { <text> checked="checked" value="1" </text> } name="o" />
-                <span class="checkmark"></span>
-            </label>
+                <input type="hidden" />
+                <label>Show Orphans</label>    
+            </div>
         </div>
     }
     <h5 class="fav-col-sub-title">Search Field</h5>
     <div class="srch-fltr">
         @{
-            var name = @Model.SearchField!= null ? Array.IndexOf(@Model.SearchField.Replace("%20"," ").Split(","),"Name") : -1;
-            var detdesc = @Model.SearchField!= null ? Array.IndexOf(@Model.SearchField.Replace("%20"," ").Split(","),"Detailed Description") : -1;
-            var keyassum = @Model.SearchField!= null ? Array.IndexOf(@Model.SearchField.Replace("%20"," ").Split(","),"Key Assumptions") : -1;
-            var devdesc = @Model.SearchField!= null ? Array.IndexOf(@Model.SearchField.Replace("%20"," ").Split(","),"Developer Description") : -1;
-            var desc = @Model.SearchField!= null ? Array.IndexOf(@Model.SearchField.Replace("%20"," ").Split(","),"Description") : -1;
-            var query = @Model.SearchField!= null ? Array.IndexOf(@Model.SearchField.Replace("%20"," ").Split(","),"Query") : -1;
-            var epicid = @Model.SearchField!= null ? Array.IndexOf(@Model.SearchField.Replace("%20"," ").Split(","),"Epic Id") : -1;
-            var epictempid = @Model.SearchField!= null ? Array.IndexOf(@Model.SearchField.Replace("%20"," ").Split(","),"Epic Template Id") : -1;
-            var termname = @Model.SearchField!= null ? Array.IndexOf(@Model.SearchField.Replace("%20"," ").Split(","),"Term Name") : -1;
-            var termsum = @Model.SearchField!= null ? Array.IndexOf(@Model.SearchField.Replace("%20"," ").Split(","),"Term Summary") : -1;
-            var termdef = @Model.SearchField!= null ? Array.IndexOf(@Model.SearchField.Replace("%20"," ").Split(","),"Term Technical Definition") : -1;
+            var name = @Model.SearchField!= null ? Array.IndexOf(@Model.SearchField.Replace("%20","").Replace(" ","").Split(","),"Name") : -1;
+            var displaytitle = @Model.SearchField != null ? Array.IndexOf(@Model.SearchField.Replace("%20", "").Replace(" ", "").Split(","), "DisplayTitle") : -1;
+            var detdesc = @Model.SearchField!= null ? Array.IndexOf(@Model.SearchField.Replace("%20","").Replace(" ", "").Split(","),"DetailedDescription") : -1;
+            var keyassum = @Model.SearchField!= null ? Array.IndexOf(@Model.SearchField.Replace("%20","").Replace(" ", "").Split(","),"KeyAssumptions") : -1;
+            var devdesc = @Model.SearchField!= null ? Array.IndexOf(@Model.SearchField.Replace("%20","").Replace(" ", "").Split(","),"DeveloperDescription") : -1;
+            var desc = @Model.SearchField!= null ? Array.IndexOf(@Model.SearchField.Replace("%20","").Replace(" ", "").Split(","),"Description") : -1;
+            var query = @Model.SearchField!= null ? Array.IndexOf(@Model.SearchField.Replace("%20","").Replace(" ", "").Split(","),"Query") : -1;
+            var epicid = @Model.SearchField!= null ? Array.IndexOf(@Model.SearchField.Replace("%20","").Replace(" ", "").Split(","),"EpicId") : -1;
+            var epictempid = @Model.SearchField!= null ? Array.IndexOf(@Model.SearchField.Replace("%20","").Replace(" ", "").Split(","),"EpicTemplateId") : -1;
+            var termname = @Model.SearchField!= null ? Array.IndexOf(@Model.SearchField.Replace("%20","").Replace(" ", "").Split(","),"TermName") : -1;
+            var termsum = @Model.SearchField!= null ? Array.IndexOf(@Model.SearchField.Replace("%20","").Replace(" ", "").Split(","),"TermSummary") : -1;
+            var termdef = @Model.SearchField!= null ? Array.IndexOf(@Model.SearchField.Replace("%20","").Replace(" ", "").Split(","),"TermTechnicalDefinition") : -1;
         }
-        <label class='chck checkbox-container search-field-filter'>
-            <span class="darken">Name</span>
+        <div class='form-check search-field-filter'>
             <input type="checkbox" @if (name > -1) { <text> checked="checked" </text> } mvalue="Name" />
-            <span class="checkmark"></span>
-        </label>
-        <label class='chck checkbox-container search-field-filter'>
-            <span class="darken">Detailed Description</span>
+            <input type="hidden" />
+            <label>Name</label>    
+        </div>
+        <div class='form-check search-field-filter'>
+            <input type="checkbox" @if (displaytitle > -1) { <text> checked="checked" </text> } mvalue="Display Title" />
+            <input type="hidden" />
+            <label>Display Title</label>    
+        </div>
+        <div class='form-check search-field-filter'>
             <input type="checkbox" @if (detdesc > -1) { <text> checked="checked" </text> } mvalue="Detailed Description"/>
-            <span class="checkmark"></span>
-        </label>
-        <label class='chck checkbox-container search-field-filter'>
-            <span class="darken">Key Assumptions</span>
+            <input type="hidden" />
+            <label>Detailed Description</label>    
+        </div>
+        <div class='form-check search-field-filter'>
             <input type="checkbox" @if (keyassum > -1) { <text> checked="checked" </text> } mvalue="Key Assumptions"/>
-            <span class="checkmark"></span>
-        </label>
-         <label class='chck checkbox-container search-field-filter'>
-            <span class="darken">Developer Description</span>
+            <input type="hidden" />
+            <label>Key Assumptions</label>    
+        </div>
+        <div class='form-check search-field-filter'>
             <input type="checkbox" @if (devdesc > -1) { <text> checked="checked" </text>}  mvalue="Developer Description" />
-            <span class="checkmark"></span>
-        </label>
-         <label class='chck checkbox-container search-field-filter'>
-            <span class="darken">Description</span>
+            <input type="hidden" />
+            <label>Developer Description</label>    
+        </div>
+        <div class='form-check search-field-filter'>
             <input type="checkbox" @if (desc > -1) { <text> checked="checked" </text> } mvalue="Description"/>
-            <span class="checkmark"></span>
-        </label>
-         <label class='chck checkbox-container search-field-filter'>
-            <span class="darken">Query</span>
+            <input type="hidden" />
+            <label>Description</label>    
+        </div>
+        <div class='form-check search-field-filter'>
             <input type="checkbox" @if (query > -1) { <text> checked="checked" </text> } mvalue="Query"/>
-            <span class="checkmark"></span>
-        </label>
-        <label class='chck checkbox-container search-field-filter'>
-            <span class="darken">Epic Id</span>
-            <input type="checkbox" @if (epicid > -1) { <text> checked="checked" </text> } mvalue="Epic Id"/>
-            <span class="checkmark"></span>
-        </label>
-        <label class='chck checkbox-container search-field-filter'>
-            <span class="darken">Epic Template Id</span>
+            <input type="hidden" />
+            <label>Query</label>    
+        </div>
+        <div class='form-check search-field-filter'>
+            <input type="checkbox"  @if (epicid > -1) { <text> checked="checked" </text> } mvalue="Epic Id"/>
+            <input type="hidden" />
+            <label>Epic Id</label>    
+        </div>
+        <div class='form-check search-field-filter'>
             <input type="checkbox" @if (epictempid > -1) { <text> checked="checked" </text> } mvalue="Epic Template Id"/>
-            <span class="checkmark"></span>
-        </label>
-        <label class='chck checkbox-container search-field-filter'>
-            <span class="darken">Term Name</span>
+            <input type="hidden" />
+            <label>Epic Template Id</label>    
+        </div>
+        <div class='form-check search-field-filter'>
             <input type="checkbox" @if (termname > -1) { <text> checked="checked" </text> } mvalue="Term Name"/>
-            <span class="checkmark"></span>
-        </label>
-        <label class='chck checkbox-container search-field-filter'>
-            <span class="darken">Term Summary</span>
+            <input type="hidden" />
+            <label>Term Name</label>    
+        </div>
+        <div class='form-check search-field-filter'>
             <input type="checkbox" @if (termsum > -1) { <text> checked="checked" </text> } mvalue="Term Summary"/>
-            <span class="checkmark"></span>
-        </label>
-        <label class='chck checkbox-container search-field-filter'>
-            <span class="darken">Term Definition</span>
+            <input type="hidden" />
+            <label>Term Summary</label>    
+        </div>
+        <div class='form-check search-field-filter'>
             <input type="checkbox" @if (termdef > -1) { <text> checked="checked" </text> } mvalue="Term Technical Definition"/>
-            <span class="checkmark"></span>
-        </label>
+            <input type="hidden" />
+            <label>Term Definition</label>    
+        </div>       
+    </div>
 </form>

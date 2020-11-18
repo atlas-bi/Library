@@ -206,7 +206,7 @@ namespace Data_Governance_WebApp.Pages.Requests
             return Content(Result);
         }
 
-        public async Task<ActionResult> OnPostReportProblem(string reportName, string reportUrl, string description)
+        public async Task<ActionResult> OnPostShareFeedback(string reportName, string reportUrl, string description)
         {
             string Result;
             string xmlString;
@@ -225,11 +225,11 @@ namespace Data_Governance_WebApp.Pages.Requests
                                 xmlWriter.WriteEndElement();
                                 xmlWriter.WriteStartElement("parameter");
                                     xmlWriter.WriteElementString("name", "subject");
-                                    xmlWriter.WriteElementString("value", "Atlas Problem Reported");
+                                    xmlWriter.WriteElementString("value", "Atlas Feedback");
                                 xmlWriter.WriteEndElement();
                                 xmlWriter.WriteStartElement("parameter");
                                     xmlWriter.WriteElementString("name", "purpose");
-                                    xmlWriter.WriteElementString("value", "Atlas problem reported on '" + reportName + "' from " + reportUrl);
+                                    xmlWriter.WriteElementString("value", "Atlas feedback reported on '" + reportName + "' from " + reportUrl);
                                 xmlWriter.WriteEndElement();
                                 xmlWriter.WriteStartElement("parameter");
                                     xmlWriter.WriteElementString("name", "Atlas Link");

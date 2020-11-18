@@ -19,7 +19,7 @@
 <div class="favs-cntr">
     @if (ViewBag.FavoriteReports.Count > 0)
     {
-        <div class="col-3 col-4-md">
+        <div class="favs-colOne">
             <h2 class="fav-col-title">Folders</h2>
             <div id="fav-folders" ss-container>
                 <div class="fav-folder active fav-show-all"><i class="fas fa-folder-open"></i>All<div class="fav-count">@ViewBag.FavoriteReports.Count</div></div>
@@ -43,7 +43,7 @@
             </div>
         </div>
 
-        <div class="col-9 col-8-md">
+        <div class="favs-colTwo">
             <div class="favs @if(!(ViewBag.UserId == ViewBag.MyId || ViewBag.Permissions.Contains(41))){<text>disabled</text>}" ss-container>
                 <div id="favs-none" @if (ViewBag.FavoriteReports.Count != 0) { <text> style="display:none;" </text> }>
                     <h5>No favorites here! ¯\_(ツ)_/¯</h5><br>
@@ -94,18 +94,18 @@
                                 </div>
                             </h5>
                             <h5 class="fav-nav">
-                                <a class=" @if(!@q.AtlasUrl.StartsWith("search")){<text>ajax</text>} atlas-blue" href="@q.AtlasUrl">Open In Atlas</a>
+                                <a href="@q.AtlasUrl">Open In Atlas</a>
                                 @if (q.ReportUrl != null && q.ReportUrl != "")
                                 {
-                                    <a class="ml-3 atlas-blue" target="_blank" rel="noopener" href="@q.ReportUrl">Run Report</a>
+                                    <a class="ml-3" target="_blank" rel="noopener" href="@q.ReportUrl">Run Report</a>
                                 }
                                 @if (q.EditReportUrl != null && ViewBag.Permissions.Contains(38))
                                 {
-                                    <a class="ml-3 atlas-blue" target="_blank" rel="noopener" href="@q.EditReportUrl">Edit Report</a>
+                                    <a class="ml-3" target="_blank" rel="noopener" href="@q.EditReportUrl">Edit Report</a>
                                 }
                                 @if (q.ManageReportUrl != null && ViewBag.Permissions.Contains(38))
                                 {
-                                    <a class="ml-3 atlas-blue" target="_blank" rel="noopener" href="@q.ManageReportUrl">Manage Report</a>
+                                    <a class="ml-3" target="_blank" rel="noopener" href="@q.ManageReportUrl">Manage Report</a>
                                 }
                             </h5>
                             <div class="clps fav-dtls" id="clps-@q.FavoriteId">
@@ -138,14 +138,14 @@
                             </span>
                         </h5>
                         <h5 class="fav-nav">
-                            <a class="ajax atlas-blue" href="Reports?id=@q.ItemId">Open Documentation</a>
+                            <a href="Reports?id=@q.ItemId">Open Documentation</a>
                                 @if (q.ReportUrl != null && q.ReportUrl != "")
                                 {
-                                    <a class="ml-5 atlas-blue" target="_blank" href="@q.ReportUrl">Run Report</a>
+                                    <a class="ml-5" target="_blank" href="@q.ReportUrl">Run Report</a>
                                 }
                                 @if (q.EditReportUrl != null && ViewBag.Permissions.Contains(38))
                                 {
-                                    <a class="ml-5 atlas-blue" target="_blank" href="@q.EditReportUrl">Edit Report</a>
+                                    <a class="ml-5" target="_blank" href="@q.EditReportUrl">Edit Report</a>
                                 }
                         </h5>
                         <div class="clps fav-dtls" id="clps-@q.ItemId">
@@ -164,24 +164,18 @@
         <h4>Search to get started!</h4>
     }
 
-<script>
-(function(){
-     if(document.readyState === 'complete') {
-    load()
-        }
+    <script>
+        (function(){
+           document.dispatchEvent(new CustomEvent('related-reports'));
+        })();
 
-        window.addEventListener('load',function(){
- load()
-  })
-        function load(){
-    var d = document;
-@if(ViewBag.AdLists != null){
-    @:d.getElementById("AdColTwo").innerHTML ='@foreach(var ad in ViewBag.AdLists){@if(ad.Column == 2){<div class="col" data-ajax="yes" data-url="@ad.Url"></div><div class="w-100"></div>}}';
-    @:d.dispatchEvent(new CustomEvent('load-ajax-content'));
-}
-}
-})()
-
-</script>
+        (function(){
+            var d = document;
+            @if(ViewBag.AdLists != null){
+                @:d.getElementById("AdColTwo").innerHTML +='@foreach(var ad in ViewBag.AdLists){@if(ad.Column == 2){<div class="col" data-ajax="yes" data-url="@ad.Url"></div>}}';
+                @:d.dispatchEvent(new CustomEvent('load-ajax-content'));
+            }
+        })()
+    </script>
 </div>
 

@@ -118,7 +118,7 @@ namespace Data_Governance_WebApp.Pages.API
             var AllTo = JsonConvert.DeserializeObject<IEnumerable<MailRecipientJsonData>>(to);
             var Users = AllTo.Where(x => x.Type != "g" || x.Type is null || x.Type == "").Select(x => new { UserId = (int)Int32.Parse(x.UserId.ToString()) });
             var Groups = AllTo.Where(x => x.Type == "g").Select(x => new { GroupId = Int32.Parse(x.UserId.ToString()) });
-            var GroupUsers = (from ulm in _context.UserLdapgroupMembership
+            var GroupUsers = (from ulm in _context.UserGroupsMembership
                               where (from g in Groups select g.GroupId).Contains((int)ulm.GroupId)
                               select new
                               {

@@ -17,55 +17,56 @@
 *@
 
 <div>
-            <span class="text-muted pb-3">Reports edited outside of Analytics in last 6 months.</span>
-            <div class="table-responsive">
-
-                <table class="table sort">
-                    <thead>
-                        <tr>
-                            <th>Report Name</th>
-                            <th>Report Type</th>
-                            <th>Author</th>
-                            <th>Last Modified By</th>
-                            <th>Last Modified</th>
-                            <th>Runs</th>
-                            <th>RecordViewer</th>
-                            <th>RunReport</th>
-                            <th>Editor</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var t in ViewBag.EditedOutsideAnalytics)
-                        {
-                            <tr>
-                                <td><a class="ajax atlas-blue" href="@t.ReportUrl">@t.Name</a></td>
-                                <td>@t.ReportType</td>
-                                <td>@t.Author</td>
-                                <td>@t.ModifiedBy</td>
-                                <td>@t.LastMod</td>
-                                <td>@t.Runs</td>
-                                <td>
-                                    @if (t.RecordViewerUrl != null && t.RecordViewerUrl != "")
-                                    {<a class="ajax atlas-blue" href="@t.RecordViewerUrl">@t.Epic</a>}
-                                else
-                                { @t.Epic}
-                                </td>
-                                <td>
-                                    @if (t.RunReportUrl != null && t.RunReportUrl != "")
-                                    {
-                                        <a class="ajax atlas-blue" href="@t.RunReportUrl">Run</a>
-
-                                    }
-                                </td>
-                                <td>
-                                    @if (t.EditReportUrl != null && t.EditReportUrl != "")
-                                    {
-                                        <a class="ajax atlas-blue" href="@t.EditReportUrl">Edit</a>
-                                    }
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
-        </div>
+    <span class="text-light">Reports edited outside of Analytics in last 6 months.</span>
+    <div class="table-responsive">
+        <table class="table sort">
+            <thead>
+                <tr>
+                    <th>Report Name</th>
+                    <th>Report Type</th>
+                    <th>Author</th>
+                    <th>Last Modified By</th>
+                    <th>Last Modified</th>
+                    <th>Runs</th>
+                    <th>RecordViewer</th>
+                    <th>RunReport</th>
+                    <th>Editor</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var t in ViewBag.EditedOutsideAnalytics)
+                {
+                    <tr>
+                        <td><a href="@t.ReportUrl">@t.Name</a></td>
+                        <td>@t.ReportType</td>
+                        <td>@t.Author</td>
+                        <td>@t.ModifiedBy</td>
+                        <td>@t.LastMod</td>
+                        <td>@t.Runs</td>
+                        <td>
+                            @if (t.RecordViewerUrl != null && t.RecordViewerUrl != "")
+                            {
+                                <a href="@t.RecordViewerUrl">@t.Epic</a>
+                            } else
+                            {
+                                @t.Epic
+                            }
+                        </td>
+                        <td>
+                            @if (t.RunReportUrl != null && t.RunReportUrl != "")
+                            {
+                                <a href="@t.RunReportUrl">Run</a>
+                            }
+                        </td>
+                        <td>
+                            @if (t.EditReportUrl != null && t.EditReportUrl != "")
+                            {
+                                <a href="@t.EditReportUrl">Edit</a>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

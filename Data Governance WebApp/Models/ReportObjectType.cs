@@ -13,6 +13,7 @@ namespace Data_Governance_WebApp.Models
         public int ReportObjectTypeId { get; set; }
         public string Name { get; set; }
         public string DefaultEpicMasterFile { get; set; }
+        public DateTime? LastLoadDate { get; set; }
 
         public virtual ICollection<ReportObject> ReportObject { get; set; }
     }

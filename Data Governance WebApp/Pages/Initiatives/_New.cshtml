@@ -18,66 +18,53 @@
 
 @model Data_Governance_WebApp.Pages.Initiatives.IndexModel
 
+
+
 <div class="mdl" id="newModal" tabindex="-1">
-  	<div class="mdl-d mdl-wide">
-	    <div class="mdl-c p-3 bg-light">
-	        <form asp-page-handler="NewDataInitiative" method="post">
-	            <h3 class="d-flex justify-content-between">
-	            	<span>New Data Initiative</span>
-	            	<div class="button-group">
-	            		<button class="btn btn-link" type="button" data-toggle="clps" data-target="newCollapse">
-	                		<i class="fas fa-times fa-lg"></i>
-	            		</button>
-	            		<button class="btn btn-link" type="submit" name="submit" id="submitNewDocumentation">
-	                		<i class="fas fa-save fa-lg"></i>
-	            		</button>
-	        		</div>
-	            </h3>
+    <div class="mdl-d editorMdl">
+        <div class="mdl-c editorMdl-inner">
+            <div class="editorMdl-title">
+                <h2>Create a New Initiative<button type="button" data-dismiss="mdl" data-tooltip="Close">&times;</button></h2>
+               
+                <div id="editorMdl-titleSave">changes saved.</div>
+            </div>
+            <div class="editorMdl-cnt" ss-container>
+                <div class="editorMdl-cntLiner">
+                    <form asp-page-handler="NewDataInitiative" method="post" >
+                        
+                        <h3>Details</h3>
+                        <div class="listDetails">
+                            
+                            <label>Name</label>
+                            <input asp-for="DpDataInitiative.Name" data-initial-content="Name" required />
 
-				<h5 class="pt-2">Name</h5>
-			    <input asp-for="DpDataInitiative.Name" class="form-control" required />
+                            <label>External Contacts</label>
+                            <select type="dynamic-dropdown" asp-for="LinkedContacts"  search-area="ext-cont" method="fullList"></select>
 
-			    <h5 class="pt-2">Description</h5>
-			    <textarea rows="3" asp-for="DpDataInitiative.Description" class="form-control"></textarea>
+                            <label>Operations Owner</label>
+                            <input type="dynamic-dropdown" asp-for="DpDataInitiative.OperationOwnerId" search-area="UserSearch" />
 
-			    <!-- external contact -->
-			    <h5 class="pt-2">External Contacts</h5>
+                            <label>Executive Owner</label>
+                            <input type="dynamic-dropdown" asp-for="DpDataInitiative.ExecutiveOwnerId" search-area="UserSearch" />
 
-			    <select type="dynamic-dropdown" asp-for="LinkedContacts" search-area="ext-cont" method="fullList"></select>
+                            <label>Financial Impact</label>
+                            <input type="dynamic-dropdown" asp-for="DpDataInitiative.FinancialImpact" search-area="financial-impact" method="fullList" />
 
-			    <!-- owners -->
-			    <div class="row pt-2">
-			    	<div class="col">
-				    	<h5 class="pt-2">Operations Owner</h5>
-				    	<input type="dynamic-dropdown" asp-for="DpDataInitiative.OperationOwnerId" value="" visible-value="" search-area="UserSearch" />
+                            <label>Strategic Importance</label>
+                            <input type="dynamic-dropdown" asp-for="DpDataInitiative.StrategicImportance" search-area="strategic-importance" method="fullList"  />
 
-					</div>
-					<div class="col">
-				    	<h5 class="pt-2">Executive Owner</h5>
-				    	<input type="dynamic-dropdown" asp-for="DpDataInitiative.ExecutiveOwnerId" value="" visible-value="" search-area="UserSearch" />
-					</div>
-				</div>
 
-				<!-- impact -->
-				<div class="row pt-2">
-			    	<div class="col">
-					    <h5 class="pt-2">Financial Impact</h5>
-					    <input type="dynamic-dropdown" asp-for="DpDataInitiative.FinancialImpact" search-area="financial-impact" method="fullList" />
+                            <label>Linked Projects</label>
+                            <select type="dynamic-dropdown" asp-for="LinkedDataProjects" id="linked-data-projects" search-area="ProjectSearch"></select>
+                        </div>
 
-					</div>
-					<div class="col">
-					    <h5 class="pt-2">Strategic Importance</h5>
-					    <input type="dynamic-dropdown" asp-for="DpDataInitiative.StrategicImportance" search-area="strategic-importance" method="fullList" />
-					</div>
-				</div>
+                        <h3>Description</h3>
+                        <div class="editor" data-inputName="DpDataInitiative.Description" data-inputId="DpDataInitiative_Description"></div>
 
-				<!-- linked projects -->
-				<h5 class="pt-2">Linked Data Projects</h5>
-
-				<select type="dynamic-dropdown" asp-for="LinkedDataProjects" value="" visible-value="" search-area="ProjectSearch" ></select>
-
-	        </form>
-	    </div>
-	</div>
+                        <h3><button class="editor-save" type="submit">Save</button></h3>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-

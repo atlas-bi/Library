@@ -18,33 +18,35 @@
 
 @model Data_Governance_WebApp.Pages.Projects.IndexModel
 
-<h2 class="pb-2 mb-2 border-bottom border-2 darken">Agreements</h2>
+<h3>Agreements</h3>
 
-<div class="row">
 
-    @foreach (var a in Model.DataProject.Agreements)
-    {
-        <div class="col-3">
-            <div class="card card-body">
-                @if (a.Description != null && a.Description != "")
-                {
+@foreach (var a in Model.DataProject.Agreements)
+{  
+    <h4 class="drop" data-toggle="clps" data-target="collapse-agreement-editor-@(a.Id)">Edit <span class="text-green">@a.Description.Substring(0,Math.Min(30,@a.Description.Length)) ...</span> Agreement
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M31.3 192h257.3c17.8 0 26.7 21.5 14.1 34.1L174.1 354.8c-7.8 7.8-20.5 7.8-28.3 0L17.2 226.1C4.6 213.5 13.5 192 31.3 192z"/></svg>
+    </h4>
+    <div id="collapse-agreement-editor-@(a.Id)" class="clps">
+        <div class="drop-box">
+            <div class="listDetails">
+                <span class="listDetails-title">Meeting Date</span>
+                <span>@a.MeetingDateString</span>     
 
-                }
-                <h5>Description</h5>
-                <div class="markdown noleft">
+                <span class="listDetails-title">Effective Date</span>
+                <span>@a.EffectiveDateString</span> 
+
+                <span class="listDetails-title">Users</span>
+                <span>@foreach (var u in a.Users)
+                {<span>@u.Name&nbsp;&nbsp;</span>}</span> 
+            </div>
+
+            @if (a.Description != null && a.Description != "")
+            {
+                <h4>Description</h4>
+                <div class="markdown">
                     @Html.Raw(@Helpers.HtmlHelpers.MarkdownToHtml(a.Description))
                 </div>
-                <h5>Users</h5>
-                <ul>
-                    @foreach (var u in a.Users)
-                    {
-                        <li>@u.Name</li>}
-                </ul>
-                <h5>Meeting Date</h5>
-                <p>@a.MeetingDateString</p>
-                <h5>Effective Date</h5>
-                <p>@a.EffectiveDateString</p>
-            </div>
+            }
         </div>
-    }
-</div>
+    </div>
+}

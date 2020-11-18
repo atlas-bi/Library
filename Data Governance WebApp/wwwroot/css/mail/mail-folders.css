@@ -16,56 +16,57 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 .mlbx-fldrs {
-	flex: 0 0 20%;
-	max-width:20%;
-	background-color: rgb(227,230,232);
-	border-right: 1px solid rgb(186,191,195);
-	border-bottom-left-radius: inherit;
-	height: 100%;
-	overflow:hidden;
-	user-select: none;
-	padding:7px 0;
+    background-color: #e3e6e8;
+    border-bottom-left-radius: inherit;
+    border-right: 1px solid #babfc3;
+    flex: 0 0 20%;
+    height: 100%;
+    max-width: 20%;
+    overflow: hidden;
+    padding: 7px 0;
+    user-select: none
 }
+
 .mlbx-fldrsTitle {
-	font-size: 13px;
-	color:rgb(86,88,90);
-	margin: 5px 0;
-	padding:0 7px;
+    color: #56585a;
+    font-size: 13px;
+    margin: 5px 0;
+    padding: 0 7px
 }
 
 .mblx-fldrsNew {
-	float:right;
-	font-size: 17px;
-    line-height: 16px;
+    background: #595c5e;
     border-radius: 18px;
-    background: rgb(89,92,94);
-    color: rgb(227,230,232);
-    padding: 0 4px 3px 4px;
+    color: #e3e6e8;
+    float: right;
+    font-size: 17px;
     font-weight: 400;
-    opacity:0;
-    transition: opacity .3s;
+    line-height: 16px;
+    opacity: 0;
+    padding: 0 4px 3px;
+    transition: opacity .3s
 }
+
 .mlbx-fldrsTitle:hover .mblx-fldrsNew {
-	opacity: 1;
+    opacity: 1
 }
 
 .mlbx-fldrsFldr {
-	margin: 3px 0;
-	padding: 2px 7px 0px 7px;
-	cursor: default;
+    cursor: default;
+    margin: 3px 0;
+    padding: 2px 7px 0
 }
 
 .mlbx-fldrsFldr.active {
-	background-color: rgb(204,204,204)
+    background-color: #ccc
 }
 
 .mlbx-fldrsNewMsgCnt {
-	   float: right;
-    font-size: 14px;
-    background: rgb(0, 88, 221);
-    color:rgb(255,255,255);
+    background: #0058dd;
     border-radius: 10px;
-    padding: 0 7px;
-    line-height:18px;
+    color: #fff;
+    float: right;
+    font-size: 14px;
+    line-height: 18px;
+    padding: 0 7px
 }
-

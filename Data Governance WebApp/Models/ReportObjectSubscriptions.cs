@@ -15,6 +15,7 @@ namespace Data_Governance_WebApp.Models
         public string LastStatus { get; set; }
         public DateTime? LastRunTime { get; set; }
         public string SubscriptionTo { get; set; }
+        public DateTime? LastLoadDate { get; set; }
 
         public virtual ReportObject ReportObject { get; set; }
         public virtual User User { get; set; }

@@ -8,6 +8,7 @@ namespace Data_Governance_WebApp.Models
         public ReportObject()
         {
             DpReportAnnotation = new HashSet<DpReportAnnotation>();
+            ReportGroupsMemberships = new HashSet<ReportGroupsMemberships>();
             ReportManageEngineTickets = new HashSet<ReportManageEngineTickets>();
             ReportObjectConversationDoc = new HashSet<ReportObjectConversationDoc>();
             ReportObjectHierarchyChildReportObject = new HashSet<ReportObjectHierarchy>();
@@ -39,13 +40,15 @@ namespace Data_Governance_WebApp.Models
         public string OrphanedReportObjectYn { get; set; }
         public decimal? EpicReportTemplateId { get; set; }
         public string ReportServerPath { get; set; }
-        public decimal? NullcolumnNumeric { get; set; }
+        public string DisplayTitle { get; set; }
+        public DateTime? LastLoadDate { get; set; }
 
         public virtual User AuthorUser { get; set; }
         public virtual User LastModifiedByUser { get; set; }
         public virtual ReportObjectType ReportObjectType { get; set; }
         public virtual ReportObjectDoc ReportObjectDoc { get; set; }
         public virtual ICollection<DpReportAnnotation> DpReportAnnotation { get; set; }
+        public virtual ICollection<ReportGroupsMemberships> ReportGroupsMemberships { get; set; }
         public virtual ICollection<ReportManageEngineTickets> ReportManageEngineTickets { get; set; }
         public virtual ICollection<ReportObjectConversationDoc> ReportObjectConversationDoc { get; set; }
         public virtual ICollection<ReportObjectHierarchy> ReportObjectHierarchyChildReportObject { get; set; }

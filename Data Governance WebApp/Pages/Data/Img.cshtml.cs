@@ -53,6 +53,7 @@ namespace Data_Governance_WebApp.Pages.Data
             var img = await _context.ReportObjectImagesDoc.Where(x => x.ImageId == id).ToListAsync();
             if(img.Count > 0)
             {
+                HttpContext.Response.Headers.Remove("Cache-Control");
                 HttpContext.Response.Headers.Add("Cache-Control", "max-age=315360000");
                 return File(img.First().ImageData, "application/octet-stream",id + ".png");
             }

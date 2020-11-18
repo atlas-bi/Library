@@ -16,17 +16,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-(function (root, factory) {
-    if (typeof define === 'function' && define.amd) {
-        // AMD. Register as an anonymous module.
-        define(['b'], factory);
-    } else {
-        // Browser globals
-        root.Search = factory(root.b);
-    }
-}(typeof self !== 'undefined' ? self : this, function (b) {
-
-  var x = function(){
+(function() {
     var d = document,
         w = window,
         grp = d.getElementsByClassName('sr-grp')[0],
@@ -34,15 +24,16 @@
         hst = d.getElementsByClassName('sr-hst')[0],
         i = grp.querySelector('.sr-grp input'),
         cls = d.getElementById('sr-cls'),
-        scls = d.getElementById('open-search'),
+        scls = d.getElementById('nav-search'),
         sAjx = null,
         hAjx = null,
         atmr,
-        loader = '<img src="/img/loader.gif" style="margin-left:calc(50% - 75px / 2);width:75px; padding-top:50px" class="search"/>',
         a = document.createElement('a');
-    var oldHref = window.location.pathname.toLowerCase().startsWith('/search') ? '/' : window.location.href;
-    oldPath = window.location.pathname;
+
+    var oldHref = w.location.pathname.toLowerCase().startsWith('/search') ? '/' : w.location.href;
     lastTitle = document.title;
+
+    w.oldPopState = document.location.pathname;
 
     function close(url) {
         a.href = url || oldHref;
@@ -58,12 +49,16 @@
         history.pushState({
             state: 'ajax'
         }, lastTitle, oldHref);
-        currentPathname = oldPath;
     }
 
     function AjaxSearch(value, url, string) {
-        if (!window.location.pathname.toLowerCase().startsWith('/search')) {
-            oldHref = window.location.href;
+
+        // remove nav links
+        if (document.querySelectorAll('.sideNav .nav-link:not(#nav-search)')) {
+            var navLinks = Array.prototype.slice.call(document.querySelectorAll('.sideNav .nav-link:not(#nav-search)'));
+            for (var x = 0; x < navLinks.length; x++) {
+                navLinks[x].parentElement.removeChild(navLinks[x]);
+            }
         }
 
         var s = '/Search?' + (url || 's=' + value),
@@ -72,7 +67,7 @@
 
         if (typeof value !== 'undefined' && value !== null && value.length > 0 || typeof url !== 'undefined') {
             document.documentElement.scrollTop = document.body.scrollTop = 0;
-            hst.style.display = "none"; // stop any analytics posts if the user continues to type
+            hst.style.display = "none";
 
             if (typeof atmr !== "undefined") clearTimeout(atmr);
 
@@ -84,11 +79,11 @@
                     value: 90
                 }
             }));
-
+            w.oldPopState = document.location.pathname;
             history.pushState({
                 state: 'ajax',
                 search: string
-            }, document.title, window.location.origin + '/Search?s=' + encodeURI(u));
+            }, document.title, w.location.origin + '/Search?s=' + encodeURI(u));
 
             if (cache.exists(s)) {
                 l(cache.get(s), hst, a, m, d, atmr, s, u, value);
@@ -112,7 +107,7 @@
                     }
                 };
             }
-            window.oldPopState = window.newPopStage;
+
         } else {
             d.dispatchEvent(new CustomEvent('load-ajax', {
                 detail: oldHref
@@ -121,9 +116,11 @@
     }
 
     var l = function l(t, hst, a, m, d, atmr, s, u, value) {
+
         hst.style.display = "none";
         document.dispatchEvent(new CustomEvent('progress-finish'));
         m.style.visibility = 'visible';
+        m.style.removeProperty('overflow');
         m.innerHTML = t;
         sc = Array.prototype.slice.call(m.querySelectorAll('script:not([type="application/json"])'));
 
@@ -134,13 +131,16 @@
             q.setAttribute('async', 'true');
             m.appendChild(q);
             sc[x].parentElement.removeChild(sc[x]);
-        } // get page title
+        }
+
         d.title = 'Search: ' + value + ' - Atlas of Information Management';
+
         history.replaceState({
             state: 'ajax',
             search: value
-        }, document.title, window.location.origin + '/Search?s=' + encodeURI(u));
-        currentPathname = document.location.pathname; // update icon
+        }, document.title, w.location.origin + '/Search?s=' + encodeURI(u));
+
+        currentPathname = document.location.pathname;
 
         atmr = setTimeout(function() {
             document.dispatchEvent(new CustomEvent('analytics-post', {
@@ -151,6 +151,8 @@
                 }
             }));
         }, 3000);
+
+        document.dispatchEvent(new CustomEvent("related-reports"));
         document.dispatchEvent(new CustomEvent("ajax"));
         document.dispatchEvent(new CustomEvent('ss-load'));
         document.dispatchEvent(new CustomEvent("code-highlight"));
@@ -160,7 +162,11 @@
         e.stopPropagation();
     });
 
-    hst.addEventListener('click', function(e) {
+    // conbinatino of mousedown and mouseup allow event to fire before blur
+    hst.addEventListener('mousedown', function(e) {
+        e.preventDefault();
+    });
+    hst.addEventListener('mouseup', function(e) {
         if (e.target.matches('.sr-hst ul li a')) {
             e.preventDefault();
             e.stopPropagation();
@@ -170,16 +176,22 @@
             AjaxSearch(str, q.getAttribute('search'), str);
         }
     });
+
     d.addEventListener('scroll', function() {
         i.blur();
         hst.style.display = 'none';
-    }, { passive: true });
+    }, {
+        passive: true
+    });
+
     i.addEventListener('focus', function(e) {
         grp.classList.add('sr-grp-f-win');
     });
+
     i.addEventListener('blur', function(e) {
         grp.classList.remove('sr-grp-f-win');
     });
+
     i.addEventListener('click', function(e) {
         hst.style.display = 'none';
 
@@ -200,31 +212,33 @@
             }
         };
     });
+
     i.addEventListener('input', function(e) {
         if (i.value.trim() !== '') AjaxSearch(i.value, null, i.value);
     });
+
     d.addEventListener('click', function(e) {
         hst.style.display = 'none';
         var g, c, f, i;
-        if (e.target.matches('.checkbox-container.search-filter input')) {
+        if (e.target.matches('.search-filter input')) {
             e.preventDefault();
             f = e.target.closest('form');
             i = f.querySelector('input[name="f"]');
-            
+
             // if filter is already in input then remove it
-            pattern = new RegExp(e.target.getAttribute('value')+",?");
-            
-            if(i.value.match(pattern) != null) {
-                i.value = i.value.replace(pattern,'');
+            pattern = new RegExp(e.target.getAttribute('value') + ",?");
+
+            if (i.value.match(pattern) != null) {
+                i.value = i.value.replace(pattern, '');
             } else {
                 // remove 0 from start and middle of string
                 i.value = i.value.split("").reverse().join("");
-                i.value = i.value.replace(/,?0/,'')
+                i.value = i.value.replace(/,?0/, '')
                 i.value = i.value.split("").reverse().join("");
-                i.value += ',' +e.target.getAttribute('value')+',';
+                i.value += ',' + e.target.getAttribute('value') + ',';
             }
             // remove leading and trailing comma
-            i.value = i.value.replace(/,$/g,'').replace(/^,/g,'');
+            i.value = i.value.replace(/,$/g, '').replace(/^,/g, '');
             submit(f);
             return !1;
         } else if (e.target.matches('.page-link')) {
@@ -237,7 +251,7 @@
             h.appendChild(j);
             submit(h);
             return !1;
-        } else if (e.target.matches('.checkbox-container.search-advanced-filter input')) {
+        } else if (e.target.matches('.search-advanced-filter input')) {
             e.preventDefault(); // if "on" set to 1, if "off" set to 0
 
             g = e.target;
@@ -253,7 +267,7 @@
 
             submit(g.closest('form'));
             return !1;
-        } else if (e.target.matches('.checkbox-container.search-field-filter input')) {
+        } else if (e.target.matches('.search-field-filter input')) {
             e.preventDefault();
             g = e.target;
             c = g.hasAttribute("checked");
@@ -266,7 +280,7 @@
                 g.value = 1;
             }
 
-            var tg = document.querySelectorAll('.checkbox-container.search-field-filter input[checked]');
+            var tg = document.querySelectorAll('.search-field-filter input[checked]');
 
             var st = "";
             for (var x = 0; x < tg.length; x++) {
@@ -304,8 +318,11 @@
             i.value = val;
         }
     });
-};
-console.log('search scripts loaded');
-return x;
-}));
-Search();
+
+    w.onpopstate = function(e) {
+        if (document.location.pathname == '/Search' || w.oldPopState == '/Search') {
+            w.location.href = document.location.href;
+        }
+    };
+    console.log('search scripts loaded');
+})();

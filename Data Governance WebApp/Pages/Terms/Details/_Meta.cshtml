@@ -18,34 +18,34 @@
 
 @model Data_Governance_WebApp.Pages.Terms.IndexModel
 
-<h2 class="pageSection-title">Details</h2>
-<div class="termDetails">
+<h3>Details</h3>
+<div class="listDetails">
     @if (Model.MyTerm.Approved == "Y")
     {
-        <span class="termDetails-title">Approval Date</span>
+        <span class="listDetails-title">Approval Date</span>
         <span>@Model.MyTerm.ApprovedDate</span>
-        <span class="termDetails-title">Approved By</span>
+        <span class="listDetails-title">Approved By</span>
         <span>@Model.MyTerm.ApprovedBy</span>
     }
     else
     {
-        <span class="termDetails-title">Has Been Approved</span>
+        <span class="listDetails-title">Has Been Approved</span>
         <span>No</span>
     }
     @if (Model.MyTerm.ExtStdUrl != null && Model.MyTerm.ExtStdUrl != "")
     {
-        <span class="termDetails-title">External Standard URL</span>
+        <span class="listDetails-title">External Standard URL</span>
         <span><a href="@Model.MyTerm.ExtStdUrl" target="_blank" rel="noopener">@Model.MyTerm.ExtStdUrl</a></span>
     }
     else
     {
-        <span class="termDetails-title">Has External Standard</span>
+        <span class="listDetails-title">Has External Standard</span>
         <span>No</span>
     }
-    <span class="termDetails-title">Valid From</span>
+    <span class="listDetails-title">Valid From</span>
     <span>@Model.MyTerm.ValidDate</span>
-    <span class="termDetails-title">Last Updated By</span>
+    <span class="listDetails-title">Last Updated By</span>
     <span>@Model.MyTerm.UpdatedBy</span>
-    <span class="termDetails-title">Last Updated</span>
+    <span class="listDetails-title">Last Updated</span>
     <span>@Model.MyTerm.UpdateDate</span>
 </div>

@@ -26,6 +26,11 @@
     var FirstName = @Model.UserDetails.Firstname_Cust;
 }
 
+@section css {
+    <link rel="stylesheet" href="/css/mail.min.css" media="print" onload="this.onload=null;this.removeAttribute('media')" />
+    <link rel="stylesheet" href="/css/users.min.css" inline />  
+
+}
 
 <div class="pageTitle">
 
@@ -33,11 +38,11 @@
         // search for other users here
         <h5>Open Another User</h5>
         <form class="" method="GET">
-            <div class="form-group d-flex justify-content-center">
-                <div class="w-100">
-                    <input type="dynamic-dropdown" name="id" search-area="UserSearch" />
-                </div>
-                <button class="btn ml-3" type="submit">Open</button>
+            <div class="user-search">
+                <div>
+                <input type="dynamic-dropdown" name="id" search-area="UserSearch" />
+            </div>
+                <button type="submit">Open</button>
             </div>
         </form>
     }
@@ -54,12 +59,12 @@
         @if (@Model.UserId == @Model.MyId){
             <a class="tab-lnk" href="#mail">Mail</a>
         }
-        @if (Model.SubscribedReports.Count() > 0)
-        {
-            <a class="tab-lnk" href="#subscriptions">Subscriptions</a>
-        }
+        
+        
+        <a class="tab-lnk" href="#subscriptions">Subscriptions</a>
         <a class="tab-lnk @if (@Model.UserId != @Model.MyId){ <text>active</text>} " href="#activity">Report Activity</a>
         <a class="tab-lnk" href="#atlas-history">Atlas History</a>
+        <a class="tab-lnk" href="#groups">Groups</a>
     </div>
 </div>
 
@@ -72,16 +77,18 @@
             <div data-ajax="yes" data-url="/Mail?handler=GetMailbox" data-param="id=@Model.UserId"></div>
         </div>
     }
-    @if (Model.SubscribedReports.Count() > 0)
-    {
-        <div class="tab-dta" id="subscriptions">
-            <partial name="Sections/_Subscriptions.cshtml" />
-        </div>
-    }
+    
+    <div class="tab-dta" id="subscriptions">
+        <div data-ajax="yes" data-url="/Users?handler=Subscriptions" data-param="id=@Model.UserId"></div>
+    </div>
+
     <div class="tab-dta @if (@Model.UserId != @Model.MyId){ <text>active</text>}" id="activity">
-        <partial name="Sections/_Activity.cshtml" />
+        <div data-ajax="yes" data-url="/Users?handler=Activity" data-param="id=@Model.UserId"></div>
     </div>
     <div class="tab-dta" id="atlas-history">
-        <partial name="Sections/_Atlas.cshtml" />
+        <div data-ajax="yes" data-url="/Users?handler=History" data-param="id=@Model.UserId"></div>
+    </div>
+    <div class="tab-dta" id="groups">
+        <div data-ajax="yes" data-url="/Users?handler=Groups" data-param="id=@Model.UserId"></div>
     </div>
 </section>

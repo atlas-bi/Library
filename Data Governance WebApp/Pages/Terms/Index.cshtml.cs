@@ -26,6 +26,7 @@ using Data_Governance_WebApp.Models;
 using Microsoft.AspNetCore.Http;
 using System.IO;
 using System.Collections.Generic;
+using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Data_Governance_WebApp.Helpers;
 using Microsoft.Extensions.Caching.Memory;
@@ -36,10 +37,12 @@ namespace Data_Governance_WebApp.Pages.Terms
     {
         // import model
         private readonly Data_GovernanceContext _context;
+        private readonly IConfiguration _config;
         private IMemoryCache _cache;
-        public IndexModel(Data_GovernanceContext context, IMemoryCache cache)
+        public IndexModel(Data_GovernanceContext context, IConfiguration config, IMemoryCache cache)
         {
             _context = context;
+            _config = config;
             _cache = cache;
         }
 
@@ -64,6 +67,12 @@ namespace Data_Governance_WebApp.Pages.Terms
             public int? ReportId { get; set; }
         }
 
+        public class RelatedReportsData {
+            public string Name { get; set; }
+            public int? Id { get; set; }
+            public string Url { get; set; }
+        }
+
         public IEnumerable<TermsData> AllTerms { get; set; }
 
         public TermsData MyTerm { get; set; }
@@ -74,6 +83,7 @@ namespace Data_Governance_WebApp.Pages.Terms
         [BindProperty] public TermConversationMessage NewCommentReply { get; set; }
         public List<AdList> AdLists { get; set; }
         public List<int?> Permissions { get; set; }
+        public List<RelatedReportsData> RelatedReports { get; set; }
 
         public class TermsData
         {
@@ -101,20 +111,18 @@ namespace Data_Governance_WebApp.Pages.Terms
             Favorites = UserHelpers.GetUserFavorites(_cache, _context, User.Identity.Name);
             Preferences = UserHelpers.GetPreferences(_cache, _context, User.Identity.Name);
             ViewData["MyRole"] = UserHelpers.GetMyRole(_cache, _context, User.Identity.Name);
+            ViewData["Fullname"] = MyUser.Fullname_Cust;
 
             AdLists = new List<AdList>
             {
                 new AdList { Url = "/Users?handler=SharedObjects", Column = 2},
-                new AdList { Url = "Reports/?handler=RelatedReports&id="+id, Column = 2 },
                 new AdList { Url = "/?handler=RecentReports", Column = 2 },
                 new AdList { Url = "/?handler=RecentTerms", Column = 2 },
                 new AdList { Url = "/?handler=RecentInitiatives", Column = 2 },
                 new AdList { Url = "/?handler=RecentProjects", Column = 2 }
             };
             ViewData["AdLists"] = AdLists;
-            HttpContext.Response.Headers.Add("Cache-Control", "no-cache, no-store, must-revalidate");
-            HttpContext.Response.Headers.Add("Pragma", "no-cache"); // HTTP 1.0.
-            HttpContext.Response.Headers.Add("Expires", "0"); // Proxies.
+
             if (id != null)
             {
                 // try to get Term by id
@@ -142,6 +150,15 @@ namespace Data_Governance_WebApp.Pages.Terms
                                   ApprovedDate = t.ApprovalDateTimeDisplayString,
                                   ValidDate = t.ValidFromDateTimeDisplayString
                               }).FirstOrDefaultAsync();
+
+                RelatedReports = await (from r in _context.ReportObjectDocTerms
+                                        where r.TermId == id
+                                        select new RelatedReportsData
+                                        {
+                                            Id = r.ReportObjectId,
+                                            Url = Helpers.HtmlHelpers.ReportUrlFromParams(_config["AppSettings:org_domain"], HttpContext, r.ReportObject.ReportObject.ReportObjectUrl, r.ReportObject.ReportObject.Name, r.ReportObject.ReportObject.ReportObjectType.Name, r.ReportObject.ReportObject.EpicReportTemplateId.ToString(), r.ReportObject.ReportObject.EpicRecordId.ToString(), r.ReportObject.ReportObject.EpicMasterFile, r.ReportObject.ReportObject.ReportObjectDoc.EnabledForHyperspace),
+                                            Name = r.ReportObject.ReportObject.DisplayName
+                                        }).ToListAsync();
 
                 if(MyTerm != null)
                 {
@@ -259,11 +276,11 @@ namespace Data_Governance_WebApp.Pages.Terms
             return RedirectToPage("/Terms/Index", new { id = NewTerm.TermId });
         }
 
-        public ActionResult OnPostDeleteTerm()
+        public ActionResult OnGetDeleteTerm(int Id)
         {
-            if (!ModelState.IsValid)
+            if ( ! _context.Term.Any(x => x.TermId == Id))
             {
-                return RedirectToPage("/Terms/Index", new {id = NewTerm.TermId});
+                return RedirectToPage("/Terms/Index", new {id = Id});
             }
 
             // delete:
@@ -272,11 +289,11 @@ namespace Data_Governance_WebApp.Pages.Terms
             //  report links
             //  initiative term annotations
 
-            _context.RemoveRange(_context.TermConversationMessage.Where(x => x.TermConversationId == _context.TermConversation.Where(g => g.TermId == NewTerm.TermId).Select(h => h.TermConversationId).FirstOrDefault()));
-            _context.RemoveRange(_context.TermConversation.Where(x => x.TermId == NewTerm.TermId));
-            _context.RemoveRange(_context.ReportObjectDocTerms.Where(x => x.TermId == NewTerm.TermId));
-            _context.RemoveRange(_context.DpTermAnnotation.Where(x => x.TermId == NewTerm.TermId));
-            _context.Remove(NewTerm);
+            _context.RemoveRange(_context.TermConversationMessage.Where(x => x.TermConversationId == _context.TermConversation.Where(g => g.TermId == Id).Select(h => h.TermConversationId).FirstOrDefault()));
+            _context.RemoveRange(_context.TermConversation.Where(x => x.TermId == Id));
+            _context.RemoveRange(_context.ReportObjectDocTerms.Where(x => x.TermId == Id));
+            _context.RemoveRange(_context.DpTermAnnotation.Where(x => x.TermId == Id));
+            _context.Remove(_context.Term.Where(x => x.TermId == Id).FirstOrDefault());
             _context.SaveChanges();
 
             return RedirectToPage("/Terms/Index");

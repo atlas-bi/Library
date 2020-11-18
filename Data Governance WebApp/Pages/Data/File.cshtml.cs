@@ -54,6 +54,7 @@ namespace Data_Governance_WebApp.Pages.Data
             if (MyFile.Count > 0)
             {
                 var ThisFile = MyFile.First();
+                HttpContext.Response.Headers.Remove("Cache-Control");
                 HttpContext.Response.Headers.Add("Cache-Control", "max-age=315360000");
                 return File(ThisFile.AttachmentData, "application/octet-stream", ThisFile.AttachmentName);
             }

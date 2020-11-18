@@ -22,23 +22,22 @@
 }
 @if (m.ReportMaintLogs.Count > 0)
 {
-    <h2 class="pageSection-title">Maintenance Logs</h2>
+    <h3 class="pageSection-title">Maintenance Logs</h3>
     @foreach (var log in m.ReportMaintLogs)
     {
-        <div class="card mb-3 mt-3  maint-log">
-            <div class="card-header pb-0 pt-0 d-flex justify-content-between">
-                <div class="py-3 my-0">
-                    <h6 class="py-0 my-0"><strong>@log.Maintainer</strong><span class="text-muted"> · @log.Date</span></h6>
-
-                </div>
-                <h6 class="py-3 my-0">
+        <div class="maint-log">
+            <div class="maint-logHeader">
+                <h6><strong>@log.Maintainer</strong><span class="text-muted"> · @log.Date</span></h6>
+                @if(@log.Status != null){
+                <h6>
                     <strong>@log.Status</strong>
                 </h6>
+                }
             </div>
             @if (log.Comment != null)
             {
-                <div class="card-body mb-0">
-                    <div class="markdown noleft">
+                <div class="maint-logBody">
+                    <div class="markdown">
                         @Html.Raw(@Helpers.HtmlHelpers.MarkdownToHtml(log.Comment))
                     </div>
                 </div>

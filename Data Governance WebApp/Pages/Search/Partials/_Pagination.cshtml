@@ -29,7 +29,7 @@
         @if (Model.ShowHidden > 0)  {<input type="hidden" value="@Model.ShowHidden" name="h" />}
 
         <nav aria-label="navigation">
-            <ul class="pagination justify-content-center pt-4">
+            <ul class="pagination pt-4" style="justify-content:center!important">
                 @if (Model.SearchPage <= 1)
                 {
                     <li class="page-item disabled">

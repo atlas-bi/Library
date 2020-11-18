@@ -21,43 +21,42 @@
 <form asp-page-handler="CreateRole" method="post">
 	<input type="nice-input" class="submit" asp-for="UserRole.Name" data-initial-content="Name" required />
 </form>
-<table class="table table-border">
-	<thead>
-		<tr>
-			<th>Security Point</th>
-			@foreach(var r in Model.UserRoles)
-			{
-				<th>
-					@if( r.Id != 1 && r.Id != 5)
-					{
-						<form asp-page-handler="DeleteRole" method="post" style="margin-bottom:-2px;">
-							<input type="hidden" asp-for="UserRole.UserRolesId" value="@r.Id">
-							@r.Name
-							<button class="btn btn-link my-0 py-0 mx-0 px-1 atlas-blue" type="submit" onclick="return confirm('Are you sure you want to remove this?');" style="margin-top:-2px;">
-							<svg class="icon-sm" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M432 32H312l-9.4-18.7A24 24 0 0 0 281.1 0H166.8a23.72 23.72 0 0 0-21.4 13.3L136 32H16A16 16 0 0 0 0 48v32a16 16 0 0 0 16 16h416a16 16 0 0 0 16-16V48a16 16 0 0 0-16-16zM53.2 467a48 48 0 0 0 47.9 45h245.8a48 48 0 0 0 47.9-45L416 128H32z"/></svg></button>
-						</form>
-					} else {
-						@r.Name
-					}
-				</th>
-			}
-		</tr>
-	</thead>
-	<tbody>
-		@foreach (var q in Model.RolePermissions)
-		{
+<div class="table-responsive">
+	<table class="table table-border">
+		<thead>
 			<tr>
-				<th>@q.Name</th>
-				@foreach (var r in Model.UserRoles)
+				<th>Security Point</th>
+				@foreach(var r in Model.UserRoles)
 				{
-					<td>
-						<label class='checkbox-container @if (r.Name == "Administrator" ) { <text>disabled</text> }  mx-auto text-center' style="width:15px;margin-right:Calc(50% - 15px - 7.5px) !important" roleId="@r.Id" permissionId="@q.RolePermissionsId" >
-							<input type="checkbox" class="role-permissions" @if (r.Name == "Administrator" || r.Permissions.Any(x => x.Id == q.RolePermissionsId)) {<text>checked="checked"</text>} @if (r.Name == "Administrator" ) { <text>disabled</text> } />
-							<span class="checkmark"></span>
-						</label>
-					</td>
+					<th>
+						@if( r.Id != 1 && r.Id != 5 && r.Name != "Director")
+						{
+							@r.Name<a href="/AccessControl?handler=DeleteRole&Id=@r.Id" onclick="return confirm('Are you sure you want to remove this?');">
+								<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M432 32H312l-9.4-18.7A24 24 0 0 0 281.1 0H166.8a23.72 23.72 0 0 0-21.4 13.3L136 32H16A16 16 0 0 0 0 48v32a16 16 0 0 0 16 16h416a16 16 0 0 0 16-16V48a16 16 0 0 0-16-16zM53.2 467a48 48 0 0 0 47.9 45h245.8a48 48 0 0 0 47.9-45L416 128H32z"/></svg>
+							</a>
+						} else {
+							@r.Name
+						}
+					</th>
 				}
 			</tr>
-		}
-	</tbody>
-</table>
+		</thead>
+		<tbody>
+			@foreach (var q in Model.RolePermissions)
+			{
+				<tr>
+					<th>@q.Name</th>
+					@foreach (var r in Model.UserRoles)
+					{
+						<td>
+							<div class='form-check @if (r.Name == "Administrator" ) { <text>disabled</text> }' style="width:15px;margin-right:Calc(50% - 15px - 7.5px) !important" roleId="@r.Id" permissionId="@q.RolePermissionsId"  >
+							    <input type="checkbox"class="role-permissions" @if (r.Name == "Administrator" || r.Permissions.Any(x => x.Id == q.RolePermissionsId)) {<text>checked="checked"</text>} @if (r.Name == "Administrator" ) { <text>disabled</text> }  />
+							   <input type="hidden" >
+							</div>
+						</td>
+					}
+				</tr>
+			}
+		</tbody>
+	</table>
+</div>

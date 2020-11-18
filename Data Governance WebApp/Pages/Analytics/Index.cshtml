@@ -25,45 +25,19 @@
 ViewData["Title"] = "Analytics";
 
 }
+
+@section startJs {
+    <script async src="/js/realtime.min.js" inline></script>
+}
+
 <div class="pageTitle">
+    <h2 class="pageTitle-head">Analytics</h2>
+</div>
 
-    <div id="active-users"></div>
-    <script>(function () {
-        if(document.readyState === 'complete') {
-    load()
-        }
-
-        window.addEventListener('load',function(){
- load()
-  })
-        function load(){
-             var e = document,
-      t = null;
-
-  function getActiveUsers() {
-    if (t !== null) {
-      t.abort();
-    }
-
-    t = new XMLHttpRequest();
-    t.open("get", "/analytics?handler=LiveUsers", !0), t.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8"), t.send(), t.onload = function () {
-        if (e.getElementById("active-users")) {
-      e.getElementById("active-users").innerHTML = t.responseText, e.dispatchEvent(new CustomEvent("ajax"));
-  }
-    };
-  }
-
-  getActiveUsers(), setInterval(function () {
-    if (e.getElementById("active-users")) {
-      getActiveUsers();
-    }
-  }, 1e4);
-        }
-})();</script>
-
-    <h2 class="pageTitle-head">Last 7 Days - Top Ten</h2>
-    <h3>Most Active Users</h3>
-    <div class="atlas-chart" style="width:100%">
+<div id="active-users"></div>
+    <h3>Last 7 Days - Top Ten</h3>
+    <h4>Most Active Users</h4>
+    <div class="atlas-chart">
         <div class="ajaxLoader"><img class="ajaxLoader-img" src="/img/loader.gif" /></div>
         <script type="application/json">
             @{
@@ -103,9 +77,9 @@ ViewData["Title"] = "Analytics";
                 }
         </script>
     </div>
-    <h3>Most Popular Pages</h3>
+    <h4>Most Popular Pages</h4>
 
-    <div class="atlas-chart" style="width:100%">
+    <div class="atlas-chart">
         <div class="ajaxLoader"><img class="ajaxLoader-img" src="/img/loader.gif" /></div>
         <script type="application/json">
             @{

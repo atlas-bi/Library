@@ -51,6 +51,7 @@ namespace Data_Governance_WebApp.Pages.Reports
         {
             public int Id { get; set; }
             public string Name { get; set; }
+            public string OldName { get; set; }
             public string Author { get; set; }
             public int? AuthorId { get; set; }
             public string LastUpdatedBy { get; set; }
@@ -90,6 +91,7 @@ namespace Data_Governance_WebApp.Pages.Reports
             public int? DocLastUpdatedById { get; set; }
             public string DocLastUpdatedBy { get; set; }
             public string ManageReportUrl { get; set; }
+            public string LastLoadDate { get; set; }
             public IEnumerable<ManageEngineTicketsData> ManageEngineTickets { get; set; }
         }
 
@@ -114,6 +116,14 @@ namespace Data_Governance_WebApp.Pages.Reports
         {
             public string Name { get; set; }
             public int Id { get; set; }
+        }
+
+        public class Group
+        {
+            public int Id { get; set; }
+            public string Source { get; set; }
+            public string Type { get; set; }
+            public string Name { get; set; }
         }
 
         public class ReportTermsData
@@ -162,6 +172,7 @@ namespace Data_Governance_WebApp.Pages.Reports
             public string EpicMasterFile { get; set; }
             public string Favorite { get; set; }
             public string RunReportUrl { get; set; }
+            public string Description { get; set; }
             public IEnumerable<ChildImgData> Img { get; set; }
             public IEnumerable<ChildData> Child { get; set; }
         }
@@ -172,6 +183,16 @@ namespace Data_Governance_WebApp.Pages.Reports
             public int Id { get; set; }
         }
 
+        public class ComponentQueryData
+        {
+            public int? Id { get; set; }
+            public string Query { get; set; }
+            public string Name { get; set; }
+            public string Description { get; set;  }
+            public string EpicName { get; set; }
+            public string Visible { get; set; }
+            public string Url { get; set; }
+        }
         public class ChildData
         {
             public string Name { get; set; }
@@ -195,6 +216,7 @@ namespace Data_Governance_WebApp.Pages.Reports
         public List<UserPreferences> Preferences { get; set; }
         public List<int?> Permissions { get; set; }
         public List<AdList> AdLists { get; set; }
+        public List<ComponentQueryData> ComponentQuery { get; set; }
         [BindProperty] public ReportObject ReportObject { get; set; }
         [BindProperty] public ReportObjectDoc ReportObjectDoc { get; set; }
         [BindProperty] public FileUpload FileUpload { get; set; }
@@ -216,6 +238,8 @@ namespace Data_Governance_WebApp.Pages.Reports
         public IEnumerable<ReportChildrenData> ReportChildren { get; set; }
         public IEnumerable<ReportChildrenData> ReportParents { get; set; }
         public IEnumerable<ManageEngineTicketsData> ManageEngineTickets { get; set; }
+        public IEnumerable<Group> Groups { get; set; }
+        public IEnumerable<ReportChildrenData> RelatedProjects { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -228,9 +252,7 @@ namespace Data_Governance_WebApp.Pages.Reports
             ViewData["Fullname"] = MyUser.Fullname_Cust;
             PublicUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
             Preferences = UserHelpers.GetPreferences(_cache, _context, User.Identity.Name);
-            HttpContext.Response.Headers.Add("Cache-Control", "no-cache, no-store, must-revalidate");
-            HttpContext.Response.Headers.Add("Pragma", "no-cache"); // HTTP 1.0.
-            HttpContext.Response.Headers.Add("Expires", "0"); // Proxies.
+
             Report = await (from r in _context.ReportObject
                             where r.ReportObjectId == id
                             join q in (from f in _context.UserFavorites
@@ -241,7 +263,8 @@ namespace Data_Governance_WebApp.Pages.Reports
                             from rfi in tmp.DefaultIfEmpty()
                             select new ReportData {
                                 Id = r.ReportObjectId,
-                                Name = r.Name,
+                                Name = r.DisplayName,
+                                OldName = String.IsNullOrEmpty(r.DisplayTitle) ? null : r.Name,
                                 Author = r.AuthorUser.Fullname_Cust,
                                 AuthorId = r.AuthorUserId,
                                 LastUpdatedBy = r.LastModifiedByUser.Fullname_Cust,
@@ -276,6 +299,7 @@ namespace Data_Governance_WebApp.Pages.Reports
                                 Hidden = r.ReportObjectDoc.Hidden,
                                 Type = r.ReportObjectType.Name,
                                 EpicTemplateId = r.EpicReportTemplateId,
+                                LastLoadDate = r.LastLoadDateDisplayString,
                                 Favorite = rfi.ItemId == null ? "no" : "yes",
                                 RunReportUrl = HtmlHelpers.ReportUrlFromParams(_config["AppSettings:org_domain"], HttpContext, r.ReportObjectUrl, r.Name, r.ReportObjectType.Name, r.EpicReportTemplateId.ToString(), r.EpicRecordId.ToString(), r.EpicMasterFile, r.ReportObjectDoc.EnabledForHyperspace),
                                 EditReportUrl = HtmlHelpers.EditReportFromParams(_config["AppSettings:org_domain"], HttpContext, r.ReportServerPath, r.SourceServer, r.EpicMasterFile, r.EpicReportTemplateId.ToString(), r.EpicRecordId.ToString()),
@@ -284,7 +308,17 @@ namespace Data_Governance_WebApp.Pages.Reports
                             }
                             ).FirstOrDefaultAsync();
 
-            ManageEngineTickets = await (from t in _context.ReportManageEngineTickets
+            Groups = await (from g in _context.ReportGroupsMemberships
+                            where g.ReportId == id
+                            select new Group
+                            {
+                                Id = g.Group.GroupId,
+                                Source = g.Group.GroupSource,
+                                Type = g.Group.GroupType,
+                                Name = g.Group.GroupName,
+                            }).ToListAsync();
+
+            ViewData["ManageEngineTickets"] = await (from t in _context.ReportManageEngineTickets
                                          where t.ReportObjectId == id
                                          select new ManageEngineTicketsData
                                          {
@@ -314,6 +348,28 @@ namespace Data_Governance_WebApp.Pages.Reports
                                  where r.ReportObjectId == id
                                  select new ReportQueryData { Query = r.Query, Id = r.ReportObjectQueryId }).ToListAsync();
 
+
+            ComponentQuery = await (from q in _context.ReportObjectQuery
+                                    from h in _context.ReportObjectHierarchy
+                                    where q.ReportObjectId == h.ChildReportObjectId
+                                    from h2 in _context.ReportObjectHierarchy
+                                    where h.ParentReportObjectId == h2.ChildReportObjectId
+                                    from r in _context.ReportObject
+                                    where h2.ParentReportObjectId == r.ReportObjectId
+                                      && r.EpicMasterFile == "IDB"
+                                      && r.ReportObjectId == id
+                                    select new ComponentQueryData
+                                    {
+                                        Id = q.ReportObjectId
+                                        , Name = q.ReportObject.DisplayName
+                                        , Description = q.ReportObject.Description
+                                        , EpicName = q.ReportObject.EpicMasterFile + " " + q.ReportObject.EpicRecordId
+                                        , Visible = q.ReportObject.DefaultVisibilityYn
+                                        , Query = q.Query.Replace("&#x0A;","")
+                                        , Url = Helpers.HtmlHelpers.ReportUrlFromParams(_config["AppSettings:org_domain"], HttpContext, q.ReportObject.ReportObjectUrl, q.ReportObject.Name, q.ReportObject.ReportObjectType.Name, q.ReportObject.EpicReportTemplateId.ToString(), q.ReportObject.EpicRecordId.ToString(), q.ReportObject.EpicMasterFile, q.ReportObject.ReportObjectDoc.EnabledForHyperspace),
+                                    }).ToListAsync();
+
+
             ReportMaintLogs = await (from l in _context.ReportObjectDocMaintenanceLogs
                                      where l.ReportObjectId == id
                                      orderby l.MaintenanceLog.MaintenanceDate descending
@@ -339,20 +395,12 @@ namespace Data_Governance_WebApp.Pages.Reports
             ReportChildren = await (from c in _context.ReportObjectHierarchy
                                     where c.ParentReportObjectId == id
                                        && c.ChildReportObject.EpicMasterFile != "IDK"
-                                    join q in (from f in _context.UserFavorites
-                                               where f.ItemType.ToLower() == "report"
-                                                  && f.UserId == MyUser.UserId
-                                               select new { f.ItemId })
-                                       on c.ChildReportObjectId equals q.ItemId into tmp
-                                    from rfi in tmp.DefaultIfEmpty()
-                                    orderby c.Line, c.ChildReportObject.Name
+                                    orderby c.Line, c.ChildReportObject.DisplayName
                                     select new ReportChildrenData
                                     {
-                                        Name = c.ChildReportObject.Name,
+                                        Name = c.ChildReportObject.DisplayName,
                                         Id = c.ChildReportObjectId,
-                                        Favorite = rfi.ItemId == null ? "no" : "yes",
                                         EpicMasterFile = c.ChildReportObject.EpicMasterFile,
-                                        RunReportUrl = Helpers.HtmlHelpers.ReportUrlFromParams(_config["AppSettings:org_domain"], HttpContext, c.ChildReportObject.ReportObjectUrl, c.ChildReportObject.Name, c.ChildReportObject.ReportObjectType.Name, c.ChildReportObject.EpicReportTemplateId.ToString(), c.ChildReportObject.EpicRecordId.ToString(), c.ChildReportObject.EpicMasterFile, c.ChildReportObject.ReportObjectDoc.EnabledForHyperspace),
                                         Img =
                                             from img in c.ChildReportObject.ReportObjectImagesDoc
                                             orderby img.ImageOrdinal
@@ -364,55 +412,31 @@ namespace Data_Governance_WebApp.Pages.Reports
                                         Child =
                                             from nc in c.ChildReportObject.ReportObjectHierarchyParentReportObject
                                             where nc.ChildReportObject.EpicMasterFile != "IDK"
-                                            join q in (from f in _context.UserFavorites
-                                                       where f.ItemType.ToLower() == "report"
-                                                          && f.UserId == MyUser.UserId
-                                                       select new { f.ItemId })
-                                             on nc.ChildReportObjectId equals q.ItemId into tmp
-                                            from rfi in tmp.DefaultIfEmpty()
-                                            orderby nc.Line, nc.ChildReportObject.Name
+                                            orderby nc.Line, nc.ChildReportObject.DisplayName
                                             select new ChildData {
-                                                Name = nc.ChildReportObject.Name,
+                                                Name = nc.ChildReportObject.DisplayName,
                                                 Id = nc.ChildReportObjectId,
-                                                Favorite = rfi.ItemId == null ? "no" : "yes",
                                                 EpicMasterFile = nc.ChildReportObject.EpicMasterFile,
-                                                RunReportUrl = HtmlHelpers.ReportUrlFromParams(_config["AppSettings:org_domain"], HttpContext, nc.ChildReportObject.ReportObjectUrl, nc.ChildReportObject.Name, nc.ChildReportObject.ReportObjectType.Name, nc.ChildReportObject.EpicReportTemplateId.ToString(), nc.ChildReportObject.EpicRecordId.ToString(), nc.ChildReportObject.EpicMasterFile, nc.ChildReportObject.ReportObjectDoc.EnabledForHyperspace),
                                                 GrandChild =
                                                     from gc in nc.ChildReportObject.ReportObjectHierarchyParentReportObject
                                                     where gc.ChildReportObject.EpicMasterFile != "IDK"
-                                                    join q in (from f in _context.UserFavorites
-                                                               where f.ItemType.ToLower() == "report"
-                                                                  && f.UserId == MyUser.UserId
-                                                               select new { f.ItemId })
-                                                    on gc.ChildReportObjectId equals q.ItemId into tmp
-                                                    from rfi in tmp.DefaultIfEmpty()
-                                                    orderby gc.Line, gc.ChildReportObject.Name
+                                                    orderby gc.Line, gc.ChildReportObject.DisplayName
                                                     select new GrandChildData
                                                     {
-                                                        Name = gc.ChildReportObject.Name,
+                                                        Name = gc.ChildReportObject.DisplayName,
                                                         Id = gc.ChildReportObject.ReportObjectId,
                                                         EpicMasterFile = gc.ChildReportObject.EpicMasterFile,
-                                                        Favorite = rfi.ItemId == null ? "no" : "yes",
-                                                        RunReportUrl = HtmlHelpers.ReportUrlFromParams(_config["AppSettings:org_domain"], HttpContext, gc.ChildReportObject.ReportObjectUrl, gc.ChildReportObject.Name, gc.ChildReportObject.ReportObjectType.Name, gc.ChildReportObject.EpicReportTemplateId.ToString(), gc.ChildReportObject.EpicRecordId.ToString(), gc.ChildReportObject.EpicMasterFile, gc.ChildReportObject.ReportObjectDoc.EnabledForHyperspace),
-                                                    }
+                                                   }
                                             }
                                     }).ToListAsync();
             ReportParents = await (from p in _context.ReportObjectHierarchy
                                    where p.ChildReportObjectId == id
-                                      && (p.ParentReportObject.DefaultVisibilityYn == "Y" || p.ParentReportObject.EpicMasterFile == "IDK")
-                                   join q in (from f in _context.UserFavorites
-                                              where f.ItemType.ToLower() == "report"
-                                                 && f.UserId == MyUser.UserId
-                                              select new { f.ItemId })
-                                          on p.ParentReportObjectId equals q.ItemId into tmp
-                                   from rfi in tmp.DefaultIfEmpty()
-                                   orderby p.Line, p.ParentReportObject.Name
+                                      && p.ParentReportObject.ReportObjectTypeId != 12
+                                   orderby p.Line, p.ParentReportObject.DisplayName
                                    select new ReportChildrenData
                                    {
-                                       Name = p.ParentReportObject.Name,
+                                       Name = p.ParentReportObject.DisplayName,
                                        Id = p.ParentReportObjectId,
-                                       Favorite = rfi.ItemId == null ? "no" : "yes",
-                                       RunReportUrl = HtmlHelpers.ReportUrlFromParams(_config["AppSettings:org_domain"], HttpContext, p.ParentReportObject.ReportObjectUrl, p.ParentReportObject.Name, p.ParentReportObject.ReportObjectType.Name, p.ParentReportObject.EpicReportTemplateId.ToString(), p.ParentReportObject.EpicRecordId.ToString(), p.ParentReportObject.EpicMasterFile, p.ParentReportObject.ReportObjectDoc.EnabledForHyperspace),
                                        Img =
                                            from img in p.ParentReportObject.ReportObjectImagesDoc
                                            orderby img.ImageOrdinal
@@ -423,6 +447,18 @@ namespace Data_Governance_WebApp.Pages.Reports
                                            },
                                    }).ToListAsync();
 
+            RelatedProjects = await (from p in _context.DpReportAnnotation
+                                     where p.ReportId == id
+                                     orderby p.Report.DisplayName
+                                     select new ReportChildrenData
+                                     {
+                                         Name = p.DataProject.Name,
+                                         Id = (int)p.DataProjectId,
+                                         Description = p.Annotation
+                                     }).ToListAsync();
+
+            
+
             Permissions = UserHelpers.GetUserPermissions(_cache, _context, User.Identity.Name);
             ViewData["Permissions"] = Permissions;
             ViewData["SiteMessage"] = HtmlHelpers.SiteMessage(HttpContext, _context);
@@ -431,7 +467,6 @@ namespace Data_Governance_WebApp.Pages.Reports
             AdLists = new List<AdList>
             {
                 new AdList { Url = "/Users?handler=SharedObjects", Column = 2},
-                new AdList { Url = "Reports/?handler=RelatedReports&id="+id, Column = 2 },
                 new AdList { Url = "/?handler=RecentReports", Column = 2 },
                 new AdList { Url = "/?handler=RecentTerms", Column = 2 },
                 new AdList { Url = "/?handler=RecentInitiatives", Column = 2 },
@@ -656,7 +691,7 @@ namespace Data_Governance_WebApp.Pages.Reports
                             select new ReportData
                             {
                                 Id = r.ReportObjectId,
-                                Name = r.Name,
+                                Name = r.DisplayName,
                                 Author = r.AuthorUser.Fullname_Cust,
                                 AuthorId = r.AuthorUserId,
                                 LastUpdatedBy = r.LastModifiedByUser.Fullname_Cust,
@@ -739,18 +774,18 @@ namespace Data_Governance_WebApp.Pages.Reports
                 await _context.SaveChangesAsync();
             }
             
-            ViewData["ReportTerms"] = await(from r in _context.ReportObjectDocTerms
-                                where r.ReportObjectId == NewTermLink.ReportObjectId
-                                            select new ReportTermsData
-                                {
-                                    Name = r.Term.Name,
-                                    Id = r.TermId,
-                                    Summary = r.Term.Summary,
-                                    Definition = r.Term.TechnicalDefinition,
-                                    ReportId = r.ReportObjectId
-                                }).ToListAsync();
+            ViewData["ReportTerms"] = await (from r in _context.ReportObjectDocTerms
+                                             where r.ReportObjectId == NewTermLink.ReportObjectId
+                                             select new ReportTermsData
+                                             {
+                                                 Name = r.Term.Name,
+                                                 Id = r.TermId,
+                                                 Summary = r.Term.Summary,
+                                                 Definition = r.Term.TechnicalDefinition,
+                                                 ReportId = r.ReportObjectId
+                                             }).ToListAsync();
 
-            return Partial("_Terms");
+            return Partial("Editor/_CurrentTerms");
         }
 
         public async Task<ActionResult> OnPostRemoveTermLink() 
@@ -827,15 +862,14 @@ namespace Data_Governance_WebApp.Pages.Reports
             return Partial("_Maintenance");
         }
 
-        public async Task<ActionResult> OnPostRemoveMeTicket()
+        public async Task<ActionResult> OnGetRemoveMeTicket(int Id)
         {
-            if (ModelState.IsValid)
-            {
-                _context.Remove(ManageEngineTicket);
-                _context.SaveChanges();
-            }
+            var reportObjectId = _context.ReportManageEngineTickets.Where(x => x.ManageEngineTicketsId == Id).FirstOrDefault().ReportObjectId;
+            _context.Remove(_context.ReportManageEngineTickets.Where(x => x.ManageEngineTicketsId == Id).FirstOrDefault());
+            _context.SaveChanges();
+
             ViewData["ManageEngineTickets"] = await(from t in _context.ReportManageEngineTickets
-                                                    where t.ReportObjectId == ManageEngineTicket.ReportObjectId
+                                                    where t.ReportObjectId == reportObjectId
                                                     select new ManageEngineTicketsData
                                                     {
                                                         Id = t.ManageEngineTicketsId,
@@ -844,14 +878,15 @@ namespace Data_Governance_WebApp.Pages.Reports
                                                         Description = t.Description,
                                                         ReportId = t.ReportObjectId
                                                     }).ToListAsync();
-
-            return Partial("Partials/_MeTickets");
+            
+            return RedirectToPage("/Reports/Index", new { id = reportObjectId });
         }
 
         public async Task<ActionResult> OnPostAddMeTicket()
         {
             if (ModelState.IsValid && ManageEngineTicket.TicketNumber != null)
             {
+                var x = ManageEngineTicket;
                 _context.Add(ManageEngineTicket);
                 _context.SaveChanges();
             }
@@ -867,25 +902,9 @@ namespace Data_Governance_WebApp.Pages.Reports
                                                         ReportId = t.ReportObjectId
                                                     }).ToListAsync();
 
-            return Partial("Partials/_MeTickets");
-        }
-
-        public async Task<ActionResult> OnGetGetMeTicket(int Id)
-        {
-            ViewData["ManageEngineTickets"] = await (from t in _context.ReportManageEngineTickets
-                                                     where t.ReportObjectId == Id
-                                                     select new ManageEngineTicketsData
-                                                     {
-                                                         Id = t.ManageEngineTicketsId,
-                                                         Number = t.TicketNumber,
-                                                         Url = t.TicketUrl,
-                                                         Description = t.Description,
-                                                         ReportId = t.ReportObjectId
-                                                     }).ToListAsync();
-
-
             return Partial("Editor/_MeTickets");
         }
+
         public async Task<ActionResult> OnPostNewComment()
         {
             if (!ModelState.IsValid || NewCommentReply.MessageText is null)
@@ -983,11 +1002,6 @@ namespace Data_Governance_WebApp.Pages.Reports
             return Partial("_Images");
         }
 
-        public JsonResult OnPostCurrentTermDetails(int TermId)
-        {
-            Term termHistory = _context.Term.Where(th => th.TermId.Equals(TermId)).FirstOrDefault();
-            return new JsonResult(termHistory);
-        }
 
         // https://docs.microsoft.com/en-us/aspnet/core/razor-pages/upload-files?view=aspnetcore-2.2
         public bool ValidateFileUpload(IFormFile file)
@@ -1067,7 +1081,7 @@ namespace Data_Governance_WebApp.Pages.Reports
                     return x;
                 });
 
-
+            HttpContext.Response.Headers.Remove("Cache-Control");
             HttpContext.Response.Headers.Add("Cache-Control", "max-age=7200");
             return Partial("Partials/_RelatedReports");
         }

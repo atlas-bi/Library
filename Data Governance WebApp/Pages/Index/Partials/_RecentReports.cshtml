@@ -18,21 +18,13 @@
 
 <cache>
     <div>
-        <h3>Recent Updates</h3>
-        <ul class="home-list">
+        @if(ViewBag.NewestReports.Count > 0)
+        {
+            <h4>Recent Updates</h4>
             @foreach (var report in ViewBag.NewestReports)
             {
-                <li class="home-link">
-                    <div>
-                        <i fav-type="report" object-id="@report.Id" class="favorite far fa-star @report.Favorite"></i>
-                        @if (report.ReportUrl != null)
-                        {
-                            <a class="atlas-green pr-1" target="_blank" rel="noopener" href="@report.ReportUrl"><i class="fas fa-play"></i></a>
-                        }
-                        <a class="ajax" asp-page="../Reports/Index" asp-route-id="@report.Id">@report.Name.Replace('_', ' ')</a>
-                    </div>
-                </li>
+                <a href="/Reports?id=@report.Id">@report.Name.Replace('_', ' ')</a>
             }
-        </ul>
+        }
     </div>
 </cache>

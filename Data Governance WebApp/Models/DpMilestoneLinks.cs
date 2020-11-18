@@ -12,7 +12,7 @@ namespace Data_Governance_WebApp.Models
         public int? LastUpdateUser { get; set; }
 
         public virtual DpDataProject DataProject { get; set; }
-        public virtual WebAppUsers LastUpdateUserNavigation { get; set; }
+        
         public virtual DpMilestoneTasks MilestoneTask { get; set; }
     }
 }

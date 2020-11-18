@@ -90,7 +90,14 @@ namespace Data_Governance_WebApp.Pages.Tasks
             public string RecordViewerUrl { get; set; }
             public int Runs { get; set; }
         }
-
+        public class CanMakeReports
+        {
+            public string Name { get; set; }
+            public int? UserId { get; set; }
+            public string Role { get; set; }
+            public int? RoleId { get; set; }
+        
+        }
         public class DeadData
         {
             public string ReportUrl { get; set; }
@@ -125,7 +132,6 @@ namespace Data_Governance_WebApp.Pages.Tasks
             AdLists = new List<AdList>
             {
                 new AdList { Url = "/Users?handler=SharedObjects", Column = 2},
-                new AdList { Url = "Reports/?handler=RelatedReports&id="+id, Column = 2 },
                 new AdList { Url = "/?handler=RecentReports", Column = 2 },
                 new AdList { Url = "/?handler=RecentTerms", Column = 2 },
                 new AdList { Url = "/?handler=RecentInitiatives", Column = 2 },
@@ -134,10 +140,22 @@ namespace Data_Governance_WebApp.Pages.Tasks
             ViewData["AdLists"] = AdLists;
             Favorites = UserHelpers.GetUserFavorites(_cache, _context, User.Identity.Name);
             Preferences = UserHelpers.GetPreferences(_cache, _context, User.Identity.Name);
-            HttpContext.Response.Headers.Add("Cache-Control", "no-cache, no-store, must-revalidate");
-            HttpContext.Response.Headers.Add("Pragma", "no-cache"); // HTTP 1.0.
-            HttpContext.Response.Headers.Add("Expires", "0"); // Proxies.
             return Page();
+        }
+        public async Task<IActionResult> OnGetCanMakeReports()
+        {
+            var Id = new[] { "100623", "100624", "100612", "5087102001", "5087101001", "5087107002" };
+            ViewData["CanMakeReports"] = await (from u in _context.UserGroupsMembership
+
+                                                where Id.Contains(u.Group.EpicId)
+                                                select new CanMakeReports
+                                                {
+                                                    Name = u.User.Fullname_Cust,
+                                                    UserId = u.UserId,
+                                                    Role = u.Group.GroupName,
+                                                    RoleId = u.GroupId
+                                                }).ToListAsync();
+            return Partial("Partials/_CanMakeReports");
         }
         public async Task<IActionResult> OnGetRecommendRetire()
         {
@@ -148,7 +166,7 @@ namespace Data_Governance_WebApp.Pages.Tasks
                                      select new RecommendRetireReports
                                      {
                                          FullName = m.Maintainer.Fullname_Cust,
-                                         Name = l.ReportObject.ReportObject.Name,
+                                         Name = l.ReportObject.ReportObject.DisplayName,
                                          MaintenanceDate = m.MaintenanceDate,
                                          MaintenanceDateString = m.MaintenanceDateDisplayString,
                                          ReportId = l.ReportObjectId,
@@ -173,7 +191,7 @@ namespace Data_Governance_WebApp.Pages.Tasks
                           select new DeadData
                           {
                               ReportUrl = "\\Reports?id=" + r.ReportObjectId,
-                              Name = r.Name,
+                              Name = r.DisplayName,
                               Type = r.ReportObjectType.Name,
                               ModifiedBy = r.LastModifiedByUser.Fullname_Cust,
                               LastMod = r.LastUpdatedDateDisplayString,
@@ -215,7 +233,7 @@ namespace Data_Governance_WebApp.Pages.Tasks
                                                             d.MaintenanceScheduleId == 3 ? (ttwo.MaintenanceDate ?? d.LastUpdateDateTime ?? Today).AddYears(1) : // yearly
                                                             d.MaintenanceScheduleId == 4 ? (ttwo.MaintenanceDate ?? d.LastUpdateDateTime ?? Today).AddYears(2) :// every two years
                                                             (ttwo.MaintenanceDate ?? d.LastUpdateDateTime ?? d.CreatedDateTime ?? Today),
-                                        d.ReportObject.Name,
+                                        Name = d.ReportObject.DisplayName,
                                         LastUser = (
                                               ttwo.Maintainer.Fullname_Cust != "user not found" ? ttwo.Maintainer.Fullname_Cust :
                                               d.UpdatedByNavigation.Fullname_Cust)
@@ -264,7 +282,7 @@ namespace Data_Governance_WebApp.Pages.Tasks
                                                             d.MaintenanceScheduleId == 3 ? (ttwo.MaintenanceDate ?? d.LastUpdateDateTime ?? Today).AddYears(1) : // yearly
                                                             d.MaintenanceScheduleId == 4 ? (ttwo.MaintenanceDate ?? d.LastUpdateDateTime ?? Today).AddYears(2) :// every two years
                                                             (ttwo.MaintenanceDate ?? d.LastUpdateDateTime ?? d.CreatedDateTime ?? Today),
-                                        d.ReportObject.Name,
+                                        Name = d.ReportObject.DisplayName,
                                         LastUser = (
                                               ttwo.Maintainer.Fullname_Cust != "user not found" ? ttwo.Maintainer.Fullname_Cust :
                                               d.UpdatedByNavigation.Fullname_Cust)
@@ -309,7 +327,7 @@ namespace Data_Governance_WebApp.Pages.Tasks
                                     {
                                         d.ReportObjectId,
                                         NextDate = (ttwo.MaintenanceDate ?? d.LastUpdateDateTime ?? Today),
-                                        d.ReportObject.Name,
+                                        Name = d.ReportObject.DisplayName,
                                         LastUser = (
                                               ttwo.Maintainer.Fullname_Cust != "user not found" ? ttwo.Maintainer.Fullname_Cust :
                                               d.UpdatedByNavigation.Fullname_Cust)
@@ -351,7 +369,7 @@ namespace Data_Governance_WebApp.Pages.Tasks
                                                 LastMod = r.LastUpdatedDateDisplayString,
                                                 Author = r.AuthorUser.Fullname_Cust,
                                                 ModifiedBy = r.LastModifiedByUser.Fullname_Cust,
-                                                Name = r.Name,
+                                                Name = r.DisplayName,
                                                 ReportType = r.ReportObjectType.Name,
                                                 Epic = r.EpicMasterFile + " " + r.EpicRecordId,
                                                 RunReportUrl = Helpers.HtmlHelpers.ReportUrlFromParams(_config["AppSettings:org_domain"], HttpContext, r.ReportObjectUrl, r.Name, r.ReportObjectType.Name, r.EpicReportTemplateId.ToString(), r.EpicRecordId.ToString(), r.EpicMasterFile, r.ReportObjectDoc.EnabledForHyperspace),
@@ -362,10 +380,10 @@ namespace Data_Governance_WebApp.Pages.Tasks
 
             return Partial("Partials/_NotAnalytics");
         }
-        public async Task<IActionResult> OnGetTopUndocumented()
+        public ActionResult OnGetTopUndocumented()
         {
             var rpts = new int[] { 17, 28, 3, 20 };
-            ViewData["Undocumented"] = await (from r in _context.ReportObject
+            ViewData["Undocumented"] = (from r in _context.ReportObject
                                  join t in _context.ReportObjectType on r.ReportObjectTypeId equals t.ReportObjectTypeId
                                  where rpts.Contains(r.ReportObjectTypeId ?? 0)
                                     && r.DefaultVisibilityYn == "Y"
@@ -375,7 +393,7 @@ namespace Data_Governance_WebApp.Pages.Tasks
                                      ModifiedBy = (
                                               r.LastModifiedByUser.Fullname_Cust != "user not found" ? r.LastModifiedByUser.Fullname_Cust:
                                               r.AuthorUser.Fullname_Cust),
-                                     r.Name,
+                                     Name = r.DisplayName,
                                      ReportType = (t.Name == "Reporting Workbench Report" ? "Workbench" :
                                                      t.Name == "Source Radar Dashboard" ? "Dashboard" :
                                                      t.Name == "Epic-Crystal Report" ? "Crystal" : "SSRS"),
@@ -404,15 +422,15 @@ namespace Data_Governance_WebApp.Pages.Tasks
                                      Favorite = tmp.Favs == null ? "" : "Yes",
                                      LastMaintained = tmp.LastMaintained.ToString("MM/dd/yyyy"),
                                      LastRun = tmp.LastRun.ToString("MM/dd/yyyy")
-                                 }).Take(60).ToListAsync();
+                                 }).Take(60).ToList();
 
 
             return Partial("Partials/_TopUndocumented");
         }
-        public async Task<IActionResult> OnGetNewUndocumented()
+        public ActionResult OnGetNewUndocumented()
         {
             var rpts = new int[] { 17, 28, 3, 20 };
-            ViewData["NewUndocumented"] = await (from r in _context.ReportObject
+            ViewData["NewUndocumented"] = (from r in _context.ReportObject
                                   join t in _context.ReportObjectType on r.ReportObjectTypeId equals t.ReportObjectTypeId
                                   where rpts.Contains(r.ReportObjectTypeId ?? 0)
                                      && r.DefaultVisibilityYn == "Y"
@@ -423,7 +441,7 @@ namespace Data_Governance_WebApp.Pages.Tasks
                                       ModifiedBy = (
                                                r.LastModifiedByUser.Fullname_Cust != "user not found" ? r.LastModifiedByUser.Fullname_Cust :
                                                r.AuthorUser.Fullname_Cust),
-                                      r.Name,
+                                      Name = r.DisplayName,
                                       ReportType = (t.Name == "Reporting Workbench Report" ? "Workbench" :
                                                       t.Name == "Source Radar Dashboard" ? "Dashboard" :
                                                       t.Name == "Epic-Crystal Report" ? "Crystal" : "SSRS"),
@@ -452,7 +470,7 @@ namespace Data_Governance_WebApp.Pages.Tasks
                                       Favorite = tmp.Favs == null ? "" : "Yes",
                                       LastMaintained = tmp.LastMaintained.ToString("MM/dd/yyyy"),
                                       LastRun = tmp.LastRun.ToString("MM/dd/yyyy")
-                                  }).Take(60).ToListAsync();
+                                  }).Take(60).ToList();
 
 
 

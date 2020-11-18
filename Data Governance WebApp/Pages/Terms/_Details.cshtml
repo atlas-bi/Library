@@ -20,58 +20,29 @@
 <div class="pageTitle">
     <div class="page-title">
         <h2 class="pageTitle-head">
-            <span>@Model.MyTerm.Name</span>@if (@Model.MyTerm.Approved == "Y")
+            <span>@Model.MyTerm.Name
+            @if (@Model.MyTerm.Approved == "Y")
             {
-                <span class="badge badge-success float-sm-right mb-3 ml-3">(Approved)</span>
+                <span class="text-green">Approved</span>
             }
         </h2>
-        </div>
-        <div class="control-box">
-            <ul class=control-list>
-                @if ((Model.Permissions.Contains(13) && Model.MyTerm.Approved == "N") || (Model.Permissions.Contains(11) && Model.MyTerm.Approved == "Y"))
-                {
-                    <li class="control-item">
-                        <button class="btn btn-link p-0 atlas-blue" type="button" data-toggle="clps" data-target="editCollapse"><span class="far fa-edit"></span></button>
-                    </li>
-                }
-                @if ((Model.Permissions.Contains(9) && Model.MyTerm.Approved == "N") || (Model.Permissions.Contains(8) && Model.MyTerm.Approved == "Y"))
-                {
-                    <li class="control-item">
-                        <form asp-page-handler="DeleteTerm" method="post">
-                            <input asp-for="NewTerm.TermId" value="@Model.MyTerm.Id" type="hidden" />
-                            <button class="btn btn-link p-0 atlas-blue" type="submit" onclick="return confirm('Are you sure you want to remove this?');" style="margin-top:-2px;">
-                                <svg class="icon-sm" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M432 32H312l-9.4-18.7A24 24 0 0 0 281.1 0H166.8a23.72 23.72 0 0 0-21.4 13.3L136 32H16A16 16 0 0 0 0 48v32a16 16 0 0 0 16 16h416a16 16 0 0 0 16-16V48a16 16 0 0 0-16-16zM53.2 467a48 48 0 0 0 47.9 45h245.8a48 48 0 0 0 47.9-45L416 128H32z"/></svg>
-                            </button>
-                        </form>
-                    </li>
-                }
-                <li class="control-item">
-                    <i fav-type="term" object-id="@Model.MyTerm.Id" class="favorite far fa-star @Model.MyTerm.Favorite"></i>
-                </li>
-                <li class="control-item" data-tooltip="Share">
-                    <button class="btn btn-link p-0 atlas-blue" data-toggle="mdl" data-target="shareModal" data-name='@Model.MyTerm.Name'><i class="fas fa-share"></i></button>
-                </li>
-                <li class="control-item" data-tooltip="Report a Problem">
-                    <button class="btn btn-link p-0 atlas-blue" data-toggle="mdl" data-target="reportProblem" data-name="@Model.MyTerm.Name"><i class="fas fa-exclamation-circle"></i></button>
-                </li>
-            </ul>
-        </div>
+    </div>
 
-        <div class="navLinks">
-            @if (Model.MyTerm.Summary != null && Model.MyTerm.Summary != "" && Model.MyTerm.Definition != null && Model.MyTerm.Definition != "")
-            {
-                <a href="#details" class="navLinks-link">Details</a>
-            }
-            <a href="#meta" class="navLinks-link">Metadata</a>
-            <a href="#comments" class="navLinks-link">Comments</a>
-        </div>
+    <div class="pageNav">
+        @if (Model.MyTerm.Summary != null && Model.MyTerm.Summary != "" && Model.MyTerm.Definition != null && Model.MyTerm.Definition != "")
+        {
+            <a href="#details" class="pageNav-link">Details</a>
+        }
+        <a href="#meta" class="pageNav-link">Metadata</a>
+    
+        @if (Model.RelatedReports.Count() > 0)
+        {
+            <a href="#reports" class="pageNav-link">Reports</a>
+        }
+
+        <a href="#comments" class="pageNav-link">Comments</a>
     </div>
 </div>
-
-@if ((Model.Permissions.Contains(13) && Model.MyTerm.Approved == "N") || (Model.Permissions.Contains(11) && Model.MyTerm.Approved == "Y"))
-{
-    <partial name="_Edit"></partial>
-}
 
 <section class="pageSection">
     <span class="location" id="details"></span>
@@ -82,6 +53,14 @@
     <span class="location" id="meta"></span>
     <partial name="Details/_Meta">
 </section>
+
+@if (Model.RelatedReports.Count() > 0)
+{
+    <section class="pageSection">
+        <span class="location" id="reports"></span>
+        <partial name="Details/_Reports">
+    </section>
+}
 
 <section class="pageSection">
     <span class="location" id="comments"></span>

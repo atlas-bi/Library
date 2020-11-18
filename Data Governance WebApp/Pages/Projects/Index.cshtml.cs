@@ -170,9 +170,11 @@ namespace Data_Governance_WebApp.Pages.Projects
             public string Template { get; set; }
             public int? TemplateId { get; set; }
             public DateTime? StartDate { get; set; }
+            public string StartDateInput { get; set; }
             public string StartDateString { get; set; }
             public DateTime? EndDate { get; set; }
             public string EndDateString { get; set; }
+            public string EndDateInput { get; set; }
             public string Owner { get; set; }
             public int? OwnerId { get; set; }
             public int? Interval { get; set; }
@@ -206,11 +208,11 @@ namespace Data_Governance_WebApp.Pages.Projects
             ViewData["SiteMessage"] = HtmlHelpers.SiteMessage(HttpContext, _context);
             Favorites = UserHelpers.GetUserFavorites(_cache, _context, User.Identity.Name);
             Preferences = UserHelpers.GetPreferences(_cache, _context, User.Identity.Name);
+            ViewData["Fullname"] = MyUser.Fullname_Cust;
 
             AdLists = new List<AdList>
             {
                 new AdList { Url = "/Users?handler=SharedObjects", Column = 2},
-                new AdList { Url = "Reports/?handler=RelatedReports&id="+id, Column = 2 },
                 new AdList { Url = "/?handler=RecentReports", Column = 2 },
                 new AdList { Url = "/?handler=RecentTerms", Column = 2 },
                 new AdList { Url = "/?handler=RecentInitiatives", Column = 2 },
@@ -218,9 +220,6 @@ namespace Data_Governance_WebApp.Pages.Projects
             };
             ViewData["AdLists"] = AdLists;
 
-            HttpContext.Response.Headers.Add("Cache-Control", "no-cache, no-store, must-revalidate");
-            HttpContext.Response.Headers.Add("Pragma", "no-cache"); // HTTP 1.0.
-            HttpContext.Response.Headers.Add("Expires", "0"); // Proxies.
             // if the id null then list all
             if (id != null)
             {
@@ -262,9 +261,9 @@ namespace Data_Governance_WebApp.Pages.Projects
                                                           {
                                                               Id = r.ReportAnnotationId,
                                                               ItemId = r.ReportId,
-                                                              Name = r.Report.Name,
+                                                              Name = r.Report.DisplayName,
                                                               Rank = r.Rank,
-                                                              Annotation = r.Annotation,
+                                                              Annotation = string.IsNullOrEmpty(r.Annotation) ? r.Report.ReportObjectDoc.DeveloperDescription : r.Annotation ,
                                                               Favorite = rfi.ItemId == null ? "no" : "yes",
                                                               RunReportUrl = Helpers.HtmlHelpers.ReportUrlFromParams(_config["AppSettings:org_domain"], HttpContext, r.Report.ReportObjectUrl, r.Report.Name, r.Report.ReportObjectType.Name, r.Report.EpicReportTemplateId.ToString(), r.Report.EpicRecordId.ToString(), r.Report.EpicMasterFile, r.Report.ReportObjectDoc.EnabledForHyperspace),
                                                               ManageReportUrl = HtmlHelpers.ReportManageUrlFromParams(_config["AppSettings:org_domain"], HttpContext, r.Report.ReportObjectType.Name, r.Report.ReportServerPath, r.Report.SourceServer),
@@ -316,10 +315,10 @@ namespace Data_Governance_WebApp.Pages.Projects
                                                               Frequency = mt.MilestoneTemplate.MilestoneType.Name,
                                                               TemplateId = mt.MilestoneTemplateId,
                                                               StartDateString = mt.StartDatePretty,
-                                                              StartDate = mt.StartDate,
-                                                              EndDate = mt.EndDate,
+                                                              StartDateInput = mt.StartDate.HasValue ? ((DateTime)mt.StartDate).ToString("yyyy-MM-dd") : "",
+                                                              EndDateInput = mt.EndDate.HasValue ? ((DateTime)mt.EndDate).ToString("yyyy-MM-dd") : "",
                                                               EndDateString = mt.EndDatePretty,
-                                                              Owner = mt.Owner.Firstname_Cust,
+                                                              Owner = mt.Owner.Fullname_Cust,
                                                               OwnerId = mt.OwnerId,
                                                               Interval = mt.MilestoneTemplate.Interval,
                                                               Checklist = from c in mt.DpMilestoneChecklist
@@ -381,7 +380,7 @@ namespace Data_Governance_WebApp.Pages.Projects
                                     {
                                         Id = i.DataProjectId,
                                         Name = i.Name,
-                                        Description = i.Description,
+                                        Description = string.IsNullOrEmpty(i.Description) ? i.Purpose : i.Description,
                                         Favorite = fi.ItemId == null ? "no" : "yes"
                                     }).ToListAsync();
             return Page();
@@ -423,22 +422,22 @@ namespace Data_Governance_WebApp.Pages.Projects
             return RedirectToPage("/Projects/Index", new { id = DpDataProject.DataProjectId });
         }
 
-        public ActionResult OnPostDeleteProject()
+        public ActionResult OnGetDeleteProject(int Id)
         {
             var checkpoint = UserHelpers.CheckUserPermissions(_cache, _context, User.Identity.Name, 27);
-            if (!ModelState.IsValid || !checkpoint)
+            if (!checkpoint)
             {
                 return RedirectToPage("/Projects/Index", new { id = DpDataProject.DataProjectId });
             }
 
             // delete report annotations, term annotations and agreements
             // then delete project and save.
-            _context.RemoveRange(_context.DpDataProjectConversationMessage.Where(x => x.DataProjectConversation.DataProjectId.Equals(DpDataProject.DataProjectId)));
-            _context.RemoveRange(_context.DpDataProjectConversation.Where(x => x.DataProjectId.Equals(DpDataProject.DataProjectId)));
-            _context.RemoveRange(_context.DpReportAnnotation.Where(m => m.DataProjectId == DpDataProject.DataProjectId));
-            _context.RemoveRange(_context.DpTermAnnotation.Where(m => m.DataProjectId == DpDataProject.DataProjectId));
-            _context.RemoveRange(_context.DpAgreement.Where(m => m.DataProjectId == DpDataProject.DataProjectId));
-            _context.Remove(DpDataProject);
+            _context.RemoveRange(_context.DpDataProjectConversationMessage.Where(x => x.DataProjectConversation.DataProjectId == Id));
+            _context.RemoveRange(_context.DpDataProjectConversation.Where(x => x.DataProjectId == Id));
+            _context.RemoveRange(_context.DpReportAnnotation.Where(m => m.DataProjectId == Id));
+            _context.RemoveRange(_context.DpTermAnnotation.Where(m => m.DataProjectId == Id));
+            _context.RemoveRange(_context.DpAgreement.Where(m => m.DataProjectId == Id));
+            _context.Remove(_context.DpDataProject.Where(m => m.DataProjectId == Id).FirstOrDefault());
             _context.SaveChanges();
 
             return RedirectToPage("/Projects/Index");
@@ -503,16 +502,18 @@ namespace Data_Governance_WebApp.Pages.Projects
             return RedirectToPage("/Projects/Index", new { id = DpReportAnnotation.DataProjectId });
         }
 
-        public ActionResult OnPostDeleteLinkedReport()
+        public ActionResult OnGetDeleteLinkedReport(int id)
         {
             var checkpoint = UserHelpers.CheckUserPermissions(_cache, _context, User.Identity.Name, 28);
-            if (ModelState.IsValid && checkpoint)
+            if (checkpoint)
             {
-                _context.DpReportAnnotation.Remove(DpReportAnnotation);
+              var ra = _context.DpReportAnnotation.Where(x => x.ReportAnnotationId == id).FirstOrDefault().DataProjectId;
+                _context.DpReportAnnotation.Remove(_context.DpReportAnnotation.Where(x => x.ReportAnnotationId == id).FirstOrDefault());
                 _context.SaveChanges();
+                return RedirectToPage("/Projects/Index", new { id = ra });
             }
 
-            return RedirectToPage("/Projects/Index", new { id = DpReportAnnotation.DataProjectId });
+            return RedirectToPage("/Projects/Index");
         }
 
         public ActionResult OnPostAddLinkedTerm()
@@ -541,16 +542,19 @@ namespace Data_Governance_WebApp.Pages.Projects
             return RedirectToPage("/Projects/Index", new { id = DpTermAnnotation.DataProjectId });
         }
 
-        public ActionResult OnPostDeleteLinkedTerm()
+        public ActionResult OnGetDeleteLinkedTerm(int id)
         {
             var checkpoint = UserHelpers.CheckUserPermissions(_cache, _context, User.Identity.Name, 28);
-            if (ModelState.IsValid && checkpoint)
+            if (checkpoint)
             {
-                _context.DpTermAnnotation.Remove(DpTermAnnotation);
+                var ta = _context.DpTermAnnotation.Where(x => x.TermAnnotationId == id).FirstOrDefault().DataProjectId;
+                _context.DpTermAnnotation.Remove(_context.DpTermAnnotation.Where(x => x.TermAnnotationId == id).FirstOrDefault());
                 _context.SaveChanges();
+                return RedirectToPage("/Projects/Index", new { id = ta });
+
             }
 
-            return RedirectToPage("/Projects/Index", new { id = DpTermAnnotation.DataProjectId });
+            return RedirectToPage("/Projects/Index");
         }
 
         public ActionResult OnPostAddAgreement()
@@ -571,18 +575,20 @@ namespace Data_Governance_WebApp.Pages.Projects
             return RedirectToPage("/Projects/Index", new { id = MyDpAgreement.DataProjectId });
         }
 
-        public ActionResult OnPostRemoveAgreement()
+        public ActionResult OnPostRemoveAgreement(int Id)
         {
             var checkpoint = UserHelpers.CheckUserPermissions(_cache, _context, User.Identity.Name, 28);
-            if (ModelState.IsValid && checkpoint)
+            if (checkpoint)
             {
                 // remove any linked users and remove agreement.
-                _context.DpAgreementUsers.RemoveRange(_context.DpAgreementUsers.Where(x => x.AgreementId == MyDpAgreement.AgreementId));
-                _context.Remove(MyDpAgreement);
+                var ag = _context.DpAgreement.Where(x => x.AgreementId == Id).FirstOrDefault().DataProjectId;
+                _context.DpAgreementUsers.RemoveRange(_context.DpAgreementUsers.Where(x => x.AgreementId == Id));
+                _context.Remove(_context.DpAgreement.Where(x => x.AgreementId == Id).FirstOrDefault());
                 _context.SaveChanges();
+                return RedirectToPage("/Projects/Index", new { id = Id});
             }
 
-            return RedirectToPage("/Projects/Index", new { id = MyDpAgreement.DataProjectId });
+            return RedirectToPage("/Projects/Index");
         }
 
         public ActionResult OnPostEditAgreement()
@@ -645,17 +651,19 @@ namespace Data_Governance_WebApp.Pages.Projects
             return RedirectToPage("/Projects/Index", new { id = DpMilestone.DataProjectId });
         }
 
-        public ActionResult OnPostDeleteMilestone()
+        public ActionResult OnPostDeleteMilestone(int id)
         {
             var checkpoint = UserHelpers.CheckUserPermissions(_cache, _context, User.Identity.Name, 28);
-            if (ModelState.IsValid && checkpoint)
+            if (checkpoint)
             {
+                var ms = _context.DpMilestoneTasks.Where(x => x.MilestoneTaskId == id).FirstOrDefault().DataProjectId;
                 _context.RemoveRange(_context.DpMilestoneChecklist.Where(x => x.MilestoneTaskId.Equals(DpMilestone.MilestoneTaskId)));
                 _context.Remove(DpMilestone);
                 _context.SaveChanges();
+                return RedirectToPage("/Projects/Index", new { id = ms });
             }
 
-            return RedirectToPage("/Projects/Index", new { id = DpMilestone.DataProjectId });
+            return RedirectToPage("/Projects/Index");
         }
 
         public ActionResult OnPostEditMilestone()
@@ -701,20 +709,30 @@ namespace Data_Governance_WebApp.Pages.Projects
             return RedirectToPage("/Projects/Index", new { id = DpMilestone.DataProjectId });
         }
 
-        public ActionResult OnPostCompleteTask()
+        public ActionResult OnPostCompleteTask(int Id, string Comments, DateTime DueDate)
         {
             var checkpoint = UserHelpers.CheckUserPermissions(_cache, _context, User.Identity.Name, 29);
-            if (!ModelState.IsValid || MilestoneCompleteTask.Owner is null || MilestoneCompleteTask.DueDate is null || MilestoneCompleteTask.DataProjectId is null || !checkpoint)
+            DpMilestoneTasks OldTask = _context.DpMilestoneTasks.Where(x => x.MilestoneTaskId == Id).Include(x => x.Owner).FirstOrDefault();
+            if (!checkpoint)
             {
-                return RedirectToPage("/Projects/Index", new { id = MilestoneCompleteTask.DataProjectId });
+                return RedirectToPage("/Projects/Index", new { id = OldTask.DataProjectId });
             }
+            
             var MyUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
-            MilestoneCompleteTask.CompletionDate = DateTime.Now;
-            MilestoneCompleteTask.CompletionUser = MyUser.Fullname_Cust;
-            _context.Add(MilestoneCompleteTask);
+            DpMilestoneTasksCompleted MyTask = new DpMilestoneTasksCompleted
+            {
+                Owner = OldTask.Owner.Fullname_Cust,
+                DueDate = DueDate,
+                DataProjectId = OldTask.DataProjectId,
+                Comments = Comments,
+                CompletionDate = DateTime.Now,
+                CompletionUser = MyUser.Fullname_Cust
+            };
+            
+            _context.Add(MyTask);
             _context.SaveChanges();
 
-            return RedirectToPage("/Projects/Index", new { id = MilestoneCompleteTask.DataProjectId });
+            return RedirectToPage("/Projects/Index", new { id = OldTask.DataProjectId });
         }
 
         public ActionResult OnPostCompleteChecklist()

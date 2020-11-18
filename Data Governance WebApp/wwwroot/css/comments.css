@@ -15,93 +15,92 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-.comments {
-}
-
 .comments-title {
-	border-top:1px solid #dee2e6;
-	padding-left:calc(25% + 15px);
-	padding-top:20px;
-	padding-bottom:10px;
-	margin-bottom:0px;
+	border-top: 1px solid #dee2e6;
+	margin-bottom: 0;
+	margin-top: 20px;
+	padding-bottom: 10px;
+	padding-left: calc(25% + 15px);
+	padding-top: 20px
 }
 
 .comments-group {
 	margin-left: 25%;
-	margin-right: 25%;
+	margin-right: 25%
 }
+
 .comments-msg {
-	padding: 15px;
-	margin: 15px;
-	margin-top: 0px;
 	background-color: #f5f5f5;
 	background-color: var(--off-white);
-	position: relative;
-	width: calc(100% - 15px);
 	border-radius: 10px;
+	margin: 15px;
+	margin-top: 0;
+	padding: 15px;
+	position: relative;
+	width: calc(100% - 15px)
 }
 
 .comments-msgHdr {
-	display:flex;
-	position: relative;
+	display: flex;
 	justify-content: space-between;
+	position: relative
 }
 
 .comments-date {
-	color: #6c757d;
+	color: #6c757d
 }
 
 .comments-cntrls {
-	display:flex;
+	display: flex;
 	justify-content: flex-end
 }
 
 .comments-btn {
-	cursor: pointer;
 	background-color: transparent;
+	border: none;
+	cursor: pointer;
 	display: inline-block;
-	user-select: none;
-	padding:10px;
-	padding-bottom: 0;
-	margin-top:-8px;
-	padding-right:0;
-	border:none;
+	margin-top: -8px;
 	outline: none;
+	padding: 10px;
+	padding-bottom: 0;
+	padding-right: 0;
+	user-select: none
 }
 
-.comments-btn:focus, .comments-btn:active, .comments-btn:visited, .comments-btn:hover{
-	outline:none;
+.comments-btn:focus, .comments-btn:active, .comments-btn:visited, .comments-btn:hover {
+	outline: none
 }
 
 .comments-txt {
-	margin-bottom:0;
+	margin-bottom: 0
 }
 
 .comments-newReply {
-	margin-left: 50px;
-	width: calc(100% - 50px);
-	position: relative;
 	height: 50px;
 	margin-bottom: 15px;
+	margin-left: 50px;
+	position: relative;
+	width: calc(100% - 50px)
 }
 
 .comments-newMsgReply {
-	padding: 15px;
-	margin-bottom: 15px;
-	margin-left: 50px;
 	background-color: #f5f5f5;
 	background-color: var(--off-white);
-	position: relative;
-	width: calc(100% - 50px);
 	border-radius: 10px;
+	margin-bottom: 15px;
+	margin-left: 50px;
+	padding: 15px;
+	position: relative;
+	width: calc(100% - 50px)
 }
 
 .comments-newMsgReply:not(:first-of-type)::before, .comments-msg::before {
-	content: '❝';
-	position: absolute;
-	top: -12px;
-	left: -15px;
-	font-size: 40px;
 	color: #0084db;
 	color: var(--active-link);
+	content: '❝';
+	font-size: 40px;
+	left: -15px;
+	position: absolute;
+	top: -12px
 }

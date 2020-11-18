@@ -11,6 +11,7 @@ namespace Data_Governance_WebApp.Models
         public DateTime? RunStartTime { get; set; }
         public int? RunDurationSeconds { get; set; }
         public string RunStatus { get; set; }
+        public DateTime? LastLoadDate { get; set; }
 
         public virtual ReportObject ReportObject { get; set; }
         public virtual User RunUser { get; set; }

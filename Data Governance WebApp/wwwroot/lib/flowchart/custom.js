@@ -16,18 +16,22 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 function loadFlowcharts() {
+    console.log('flowchart')
     var d = document,
         m = d.getElementsByClassName('mermaid');
-
-    [].forEach.call(m,function(e){
-        if(e.getElementsByTagName('svg').length == 0){
-            var chart, code = e.innerHTML;
+    [].forEach.call(m, function(e) {
+        if (e.getElementsByTagName('svg').length == 0) {
+            var t = document.createElement('textarea');
+            t.innerHTML = e.innerHTML;
+            var chart, code = t.value;
             e.innerHTML = '';
-            if(code.trim() != ''){
-                try{
+            t= null;
+            if (code.trim() != '') {
+                try {
                     chart = flowchart.parse(code);
                     chart.drawSVG(e);
-                } catch (l){}
+
+                } catch (l) {console.log(l)}
             }
         }
     });
@@ -35,8 +39,8 @@ function loadFlowcharts() {
 
 loadFlowcharts();
 
-document.addEventListener('load-charts', function(){
-    setTimeout(function(){
+document.addEventListener('load-charts', function() {
+    setTimeout(function() {
         loadFlowcharts();
-    },0);
+    }, 0);
 });

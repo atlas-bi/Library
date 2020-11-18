@@ -18,14 +18,12 @@
 
 @model Data_Governance_WebApp.Pages.Terms.IndexModel
 
-<h2 class="pageSection-title">Description</h2>
+<h3 class="pageSection-title">Description</h3>
 
 @if (Model.MyTerm.Summary != null && Model.MyTerm.Summary != "")
 {
 
-    <h4 class="pt-1">
-        Summary
-    </h4>
+    <h4>Summary</h4>
     <div class="markdown">
         @Html.Raw(@Helpers.HtmlHelpers.MarkdownToHtml(Model.MyTerm.Summary))
     </div>
@@ -33,9 +31,7 @@
 
 @if (Model.MyTerm.Definition != null && Model.MyTerm.Definition != "")
 {
-    <h4 class="pt-1">
-        Technical Definition
-    </h4>
+    <h4>Technical Definition</h4>
     <div class="markdown">
         @Html.Raw(@Helpers.HtmlHelpers.MarkdownToHtml(Model.MyTerm.Definition))
     </div>

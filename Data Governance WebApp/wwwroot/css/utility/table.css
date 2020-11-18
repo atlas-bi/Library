@@ -15,7 +15,6 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-
 table {
 	border-collapse: collapse
 }
@@ -25,10 +24,10 @@ th {
 }
 
 .table {
-	width: 100%;
-	max-width: 100%;
+	background-color: transparent;
 	margin-bottom: 1rem;
-	background-color: transparent
+	max-width: 100%;
+	width: 100%
 }
 
 .table-border {
@@ -40,23 +39,21 @@ th {
 }
 
 .table td, .table th {
+	border-top: 1px solid #dee2e6;
 	padding: .3rem;
-	vertical-align: top;
-	border-top: 1px solid #dee2e6
+	vertical-align: top
 }
 
 .table thead th {
-	vertical-align: bottom;
+	vertical-align: bottom
 }
-
-
 
 .table tbody+tbody {
 	border-top: 2px solid #dee2e6
 }
 
 .table thead tr, .table tbody th {
-	background: #f8f9fa;
+	background: #f8f9fa
 }
 
 .table tbody tr:hover {
@@ -64,9 +61,9 @@ th {
 }
 
 .table-responsive {
-	display: block;
-	width: 100%;
-	overflow-x: auto;
+	-ms-overflow-style: -ms-autohiding-scrollbar;
 	-webkit-overflow-scrolling: touch;
-	-ms-overflow-style: -ms-autohiding-scrollbar
+	display: block;
+	overflow-x: auto;
+	width: 100%
 }

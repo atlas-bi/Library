@@ -16,54 +16,90 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 *@
 
-@if (ViewBag.SearchHistory.Count > 0)
-{
-	<ul class="dropdown-menu bg-white shadow" role="menu" style="display:block;z-index:999999999999999;" aria-labelledby="menu1">
-
-    @foreach (var q in ViewBag.SearchHistory)
+<div>
+    @if (ViewBag.SearchHistory.Count > 0)
     {
+    	<ul>
 
-        var SearchString = q.SearchUrl.Split("&")[0].Replace("%20", " ").Replace("+", " ").Replace("?s=", "").Replace("s=","");
-        var FilterString = q.SearchUrl.Contains("f=") ? q.SearchUrl.Split("f=")[1] : "";
-        /*
-         28 SSRS
-         20 Dashboard
-         21 Dash Component
-         3 Crystal
-         17 Workbench
-        */
+        @foreach (var q in ViewBag.SearchHistory)
+        {
+            /*
+             28 SSRS
+             20 Dashboard
+             21 Dash Component
+             3 Crystal
+             17 Workbench
+            */
 
-        <li>
-            <a class="atlas-blue" tabindex="-1" href="/Search@(q.SearchUrl)" search="@q.SearchUrl.Replace("?","")">
-                <i class="far fa-clock text-muted mr-3"></i>
-                <span class="searchString">@SearchString</span>@if (FilterString != "" && FilterString != "0")
-                {
-                    <span class="badge badge-secondary mx-3">@(FilterString == "28" ? "SSRS" : FilterString == "20" ? "Dashboard" : FilterString == "21" ? "Dash Component" : FilterString == "3" ? "Crystal" : FilterString == "17" ? "Workbench" : "")</span>
-                }
-            </a>
+            <li>
+                <a tabindex="-1" href="/Search@(q.SearchUrl)" search="@q.SearchUrl.Replace("?","")">
+                    <span class="searchString">@q.SearchString</span>
+                    <div class="fav-type">
+                        @if (@q.ReportType != "" && @q.ReportType != "0")
+                        {
+                            <span>
+                                @if(q.ReportType.Contains("28")){<text>SSRS</text>}
+                                @if(q.ReportType.Contains("20")){<text>Dashboard</text>}
+                                @if(q.ReportType.Contains("21")){<text>Dash Component</text>}
+                                @if(q.ReportType.Contains("3")){<text>Crystal</text>}
+                                @if(q.ReportType.Contains("17")){<text>Workbench</text>}
+                            </span>
+                            
+                        }
+                        @if(q.HiddenTypes == "1"){
+                            <span>
+                                <text>+Hidden Types</text>
+                            </span>
+                        }
+                        @if(q.Hidden == "1"){
+                            <span>
+                                <text>+Hidden Reports</text>
+                            </span>
+                        }
+                        @if(q.Orphans == "1"){
+                            <span>
+                                <text>+Orphans</text>
+                            </span>
+                        }
+                        @if(q.SearchField != ""){
+                            <span>
+                                <text>@q.SearchField</text>
+                            </span>
+                        }
+                    </div>
+                </a>
 
-
-        </li>
-    }
-
-    @foreach (var q in ViewBag.SearchFavorites)
-    {
-
-
-        var SearchString = q.SearchUrl.Split("&")[0].Replace("%20", " ").Replace("+", " ").Replace("?s=", "").Replace("s=","");
-        var FilterString = q.SearchUrl.Contains("f=") ? q.SearchUrl.Split("f=")[1] : "";
-
-      
-        <li>
-            <a class="atlas-blue" tabindex="-1" href="/Search@(q.SearchUrl)" search="@q.SearchUrl.Replace("?","")">
-                <i fav-type="search" object-name="@q.SearchUrl.Replace("?","")" object-id="@q.Id" class="favorite far fa-star yes mx-3"></i>
-                <span class="searchString">@SearchString</span>@if (FilterString != "" && FilterString != "0")
-                {
-                    <span class="badge badge-secondary mx-3">@(FilterString == "28" ? "SSRS" : FilterString == "20" ? "Dashboard" : FilterString == "21" ? "Dash Component" : FilterString == "3" ? "Crystal" : FilterString == "17" ? "Workbench" : "")</span>
-                }
-            </a>
-        </li>
-
+            </li>
         }
-    </ul>
-}
+
+        @foreach (var q in ViewBag.SearchFavorites)
+        {         
+            <li>
+                <a tabindex="-1" href="/Search@(q.SearchUrl)" search="@q.SearchUrl.Replace("?","")">
+                    <span class="searchString">@q.SearchString</span>
+                    @if (@q.ReportType != "" && @q.ReportType != "0")
+                    {
+                        <div class="fav-type">
+                            @if(q.ReportType.Contains("28")){<span>SSRS</span>}
+                            @if(q.ReportType.Contains("20")){<span>Dashboard</span>}
+                            @if(q.ReportType.Contains("21")){<span>Dash Component</span>}
+                            @if(q.ReportType.Contains("3")){<span>Crystal</span>}
+                            @if(q.ReportType.Contains("17")){<span>Workbench</span>}
+                        </div>
+                         @if(q.HiddenTypes == "1"){
+                        <div class="fav-type">+Hidden Types</div>
+                    }
+                     @if(q.Hidden == "1"){
+                        <div class="fav-type">+Hidden Reports</div>
+                    }
+                     @if(q.Orphans == "1"){
+                        <div class="fav-type">+Orphans</div>
+                    }
+                    }
+                </a>
+            </li>
+
+            }
+        </ul>
+    }
+</div>

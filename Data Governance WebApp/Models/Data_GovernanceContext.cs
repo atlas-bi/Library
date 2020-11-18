@@ -16,7 +16,6 @@ namespace Data_Governance_WebApp.Models
         }
 
         public virtual DbSet<Analytics> Analytics { get; set; }
-        public virtual DbSet<BusinessApplicationDoc> BusinessApplicationDoc { get; set; }
         public virtual DbSet<DpAgreement> DpAgreement { get; set; }
         public virtual DbSet<DpAgreementUsers> DpAgreementUsers { get; set; }
         public virtual DbSet<DpAttachments> DpAttachments { get; set; }
@@ -51,6 +50,7 @@ namespace Data_Governance_WebApp.Models
         public virtual DbSet<MaintenanceLogStatus> MaintenanceLogStatus { get; set; }
         public virtual DbSet<MaintenanceSchedule> MaintenanceSchedule { get; set; }
         public virtual DbSet<OrganizationalValue> OrganizationalValue { get; set; }
+        public virtual DbSet<ReportGroupsMemberships> ReportGroupsMemberships { get; set; }
         public virtual DbSet<ReportManageEngineTickets> ReportManageEngineTickets { get; set; }
         public virtual DbSet<ReportObject> ReportObject { get; set; }
         public virtual DbSet<ReportObjectConversationDoc> ReportObjectConversationDoc { get; set; }
@@ -76,16 +76,13 @@ namespace Data_Governance_WebApp.Models
         public virtual DbSet<SharedItems> SharedItems { get; set; }
         public virtual DbSet<StrategicImportance> StrategicImportance { get; set; }
         public virtual DbSet<Term> Term { get; set; }
-        public virtual DbSet<TermCodeExamples> TermCodeExamples { get; set; }
-        public virtual DbSet<TermCodeExamplesHistory> TermCodeExamplesHistory { get; set; }
         public virtual DbSet<TermConversation> TermConversation { get; set; }
         public virtual DbSet<TermConversationMessage> TermConversationMessage { get; set; }
-        public virtual DbSet<TermHistory> TermHistory { get; set; }
         public virtual DbSet<User> User { get; set; }
         public virtual DbSet<UserFavoriteFolders> UserFavoriteFolders { get; set; }
         public virtual DbSet<UserFavorites> UserFavorites { get; set; }
-        public virtual DbSet<UserLdapgroupMembership> UserLdapgroupMembership { get; set; }
-        public virtual DbSet<UserLdapgroups> UserLdapgroups { get; set; }
+        public virtual DbSet<UserGroups> UserGroups { get; set; }
+        public virtual DbSet<UserGroupsMembership> UserGroupsMembership { get; set; }
         public virtual DbSet<UserNameData> UserNameData { get; set; }
         public virtual DbSet<UserPreferences> UserPreferences { get; set; }
         public virtual DbSet<UserRoleLinks> UserRoleLinks { get; set; }
@@ -93,11 +90,7 @@ namespace Data_Governance_WebApp.Models
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            if (!optionsBuilder.IsConfigured)
-            {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=rhbidb01;Database=Data_Governance;Trusted_Connection=True;");
-            }
+            
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -172,20 +165,6 @@ namespace Data_Governance_WebApp.Models
                     .WithMany(p => p.Analytics)
                     .HasForeignKey(d => d.UserId)
                     .HasConstraintName("FK_Analytics_User");
-            });
-
-            modelBuilder.Entity<BusinessApplicationDoc>(entity =>
-            {
-                entity.HasKey(e => e.BusinessApplicationId)
-                    .HasName("PK__Business__200E73FB9C70DD19");
-
-                entity.ToTable("BusinessApplication_doc", "app");
-
-                entity.Property(e => e.BusinessApplicationId).HasColumnName("BusinessApplicationID");
-
-                entity.Property(e => e.Name)
-                    .IsRequired()
-                    .HasMaxLength(255);
             });
 
             modelBuilder.Entity<DpAgreement>(entity =>
@@ -504,7 +483,7 @@ namespace Data_Governance_WebApp.Models
                 entity.HasOne(d => d.LastUpdateUserNavigation)
                     .WithMany(p => p.DpMilestoneTasksLastUpdateUserNavigation)
                     .HasForeignKey(d => d.LastUpdateUser)
-                    .HasConstraintName("FK_DP_MilestoneTasks_WebAppUsers");
+                    .HasConstraintName("FK_DP_MilestoneTasks_LastUpdateUser");
 
                 entity.HasOne(d => d.MilestoneTemplate)
                     .WithMany(p => p.DpMilestoneTasks)
@@ -723,7 +702,7 @@ namespace Data_Governance_WebApp.Models
                 entity.HasOne(d => d.ToGroup)
                     .WithMany(p => p.MailRecipients)
                     .HasForeignKey(d => d.ToGroupId)
-                    .HasConstraintName("FK_Mail_Recipients_UserLDAPGroups");
+                    .HasConstraintName("FK_Mail_Recipients_UserGroups");
 
                 entity.HasOne(d => d.ToUser)
                     .WithMany(p => p.MailRecipients)
@@ -793,6 +772,26 @@ namespace Data_Governance_WebApp.Models
                 entity.Property(e => e.OrganizationalValueId).HasColumnName("OrganizationalValueID");
             });
 
+            modelBuilder.Entity<ReportGroupsMemberships>(entity =>
+            {
+                entity.HasKey(e => e.MembershipId)
+                    .HasName("PK__ReportGr__92A786790B03128D");
+
+                entity.Property(e => e.LastLoadDate).HasColumnType("datetime");
+
+                entity.HasOne(d => d.Group)
+                    .WithMany(p => p.ReportGroupsMemberships)
+                    .HasForeignKey(d => d.GroupId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_ReportGroupsMemberships_UserGroups");
+
+                entity.HasOne(d => d.Report)
+                    .WithMany(p => p.ReportGroupsMemberships)
+                    .HasForeignKey(d => d.ReportId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_ReportGroupsMemberships_ReportObject");
+            });
+
             modelBuilder.Entity<ReportManageEngineTickets>(entity =>
             {
                 entity.HasKey(e => e.ManageEngineTicketsId)
@@ -824,13 +823,11 @@ namespace Data_Governance_WebApp.Models
 
                 entity.Property(e => e.EpicReportTemplateId).HasColumnType("numeric(18, 0)");
 
+                entity.Property(e => e.LastLoadDate).HasColumnType("datetime");
+
                 entity.Property(e => e.LastModifiedByUserId).HasColumnName("LastModifiedByUserID");
 
                 entity.Property(e => e.LastModifiedDate).HasColumnType("datetime");
-
-                entity.Property(e => e.NullcolumnNumeric)
-                    .HasColumnName("NULLColumnNumeric")
-                    .HasColumnType("numeric(18, 0)");
 
                 entity.Property(e => e.OrphanedReportObjectYn)
                     .HasColumnName("OrphanedReportObjectYN")
@@ -1079,6 +1076,8 @@ namespace Data_Governance_WebApp.Models
 
                 entity.Property(e => e.ChildReportObjectId).HasColumnName("ChildReportObjectID");
 
+                entity.Property(e => e.LastLoadDate).HasColumnType("datetime");
+
                 entity.HasOne(d => d.ChildReportObject)
                     .WithMany(p => p.ReportObjectHierarchyChildReportObject)
                     .HasForeignKey(d => d.ChildReportObjectId)
@@ -1116,6 +1115,8 @@ namespace Data_Governance_WebApp.Models
 
             modelBuilder.Entity<ReportObjectQuery>(entity =>
             {
+                entity.Property(e => e.LastLoadDate).HasColumnType("datetime");
+
                 entity.HasOne(d => d.ReportObject)
                     .WithMany(p => p.ReportObjectQuery)
                     .HasForeignKey(d => d.ReportObjectId)
@@ -1129,6 +1130,8 @@ namespace Data_Governance_WebApp.Models
                 entity.Property(e => e.ReportObjectId).HasColumnName("ReportObjectID");
 
                 entity.Property(e => e.RunId).HasColumnName("RunID");
+
+                entity.Property(e => e.LastLoadDate).HasColumnType("datetime");
 
                 entity.Property(e => e.RunStartTime).HasColumnType("datetime");
 
@@ -1164,6 +1167,8 @@ namespace Data_Governance_WebApp.Models
 
             modelBuilder.Entity<ReportObjectSubscriptions>(entity =>
             {
+                entity.Property(e => e.LastLoadDate).HasColumnType("datetime");
+
                 entity.Property(e => e.LastRunTime).HasColumnType("datetime");
 
                 entity.HasOne(d => d.ReportObject)
@@ -1199,6 +1204,8 @@ namespace Data_Governance_WebApp.Models
                 entity.Property(e => e.ReportObjectTypeId).HasColumnName("ReportObjectTypeID");
 
                 entity.Property(e => e.DefaultEpicMasterFile).HasMaxLength(3);
+
+                entity.Property(e => e.LastLoadDate).HasColumnType("datetime");
 
                 entity.Property(e => e.Name).IsRequired();
             });
@@ -1364,63 +1371,10 @@ namespace Data_Governance_WebApp.Models
                     .HasForeignKey(d => d.ApprovedByUserId)
                     .HasConstraintName("FK_Term_WebAppUsers1");
 
-                entity.HasOne(d => d.ParentTerm)
-                    .WithMany(p => p.InverseParentTerm)
-                    .HasForeignKey(d => d.ParentTermId)
-                    .HasConstraintName("FK__Term__ParentTerm__70DDC3D8");
-
                 entity.HasOne(d => d.UpdatedByUser)
                     .WithMany(p => p.TermUpdatedByUser)
                     .HasForeignKey(d => d.UpdatedByUserId)
                     .HasConstraintName("FK_Term_WebAppUsers");
-            });
-
-            modelBuilder.Entity<TermCodeExamples>(entity =>
-            {
-                entity.HasKey(e => e.TermCodeExampleId)
-                    .HasName("PK__TermCode__66DE6A3CF82E3FB7");
-
-                entity.ToTable("TermCodeExamples", "app");
-
-                entity.HasOne(d => d.Term)
-                    .WithMany(p => p.TermCodeExamples)
-                    .HasForeignKey(d => d.TermId)
-                    .HasConstraintName("FK__TermCodeE__TermI__03F0984C");
-            });
-
-            modelBuilder.Entity<TermCodeExamplesHistory>(entity =>
-            {
-                entity.ToTable("TermCodeExamplesHistory", "app");
-
-                entity.Property(e => e.Description).HasMaxLength(4000);
-
-                entity.Property(e => e.FormatAs)
-                    .IsRequired()
-                    .HasMaxLength(25)
-                    .HasDefaultValueSql("(N'SQL')");
-
-                entity.Property(e => e.Title)
-                    .IsRequired()
-                    .HasMaxLength(255);
-
-                entity.Property(e => e.ValidFromDateTime)
-                    .HasColumnType("datetime")
-                    .HasDefaultValueSql("(getdate())");
-
-                entity.Property(e => e.ValidToDateTime)
-                    .HasColumnType("datetime")
-                    .HasDefaultValueSql("('12-31-9999')");
-
-                entity.HasOne(d => d.Term)
-                    .WithMany(p => p.TermCodeExamplesHistory)
-                    .HasForeignKey(d => d.TermId)
-                    .HasConstraintName("FK__TermCodeE__TermI__06CD04F7");
-
-                entity.HasOne(d => d.UpdatedByUser)
-                    .WithMany(p => p.TermCodeExamplesHistory)
-                    .HasForeignKey(d => d.UpdatedByUserId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__TermCodeE__Updat__531856C7");
             });
 
             modelBuilder.Entity<TermConversation>(entity =>
@@ -1460,61 +1414,13 @@ namespace Data_Governance_WebApp.Models
                     .HasConstraintName("FK_TermConversationMessage_User");
             });
 
-            modelBuilder.Entity<TermHistory>(entity =>
-            {
-                entity.ToTable("TermHistory", "app");
-
-                entity.Property(e => e.ApprovalDateTime).HasColumnType("datetime");
-
-                entity.Property(e => e.ApprovedYn)
-                    .IsRequired()
-                    .HasColumnName("ApprovedYN")
-                    .HasMaxLength(1)
-                    .IsUnicode(false)
-                    .HasDefaultValueSql("(N'N')");
-
-                entity.Property(e => e.ExternalStandardUrl).HasMaxLength(4000);
-
-                entity.Property(e => e.HasExternalStandardYn)
-                    .IsRequired()
-                    .HasColumnName("HasExternalStandardYN")
-                    .HasMaxLength(1)
-                    .IsUnicode(false)
-                    .HasDefaultValueSql("(N'N')");
-
-                entity.Property(e => e.LastUpdatedDateTime).HasColumnType("datetime");
-
-                entity.Property(e => e.Name)
-                    .IsRequired()
-                    .HasMaxLength(255);
-
-                entity.Property(e => e.Summary).HasMaxLength(4000);
-
-                entity.Property(e => e.ValidFromDateTime)
-                    .HasColumnType("datetime")
-                    .HasDefaultValueSql("(getdate())");
-
-                entity.Property(e => e.ValidToDateTime)
-                    .HasColumnType("datetime")
-                    .HasDefaultValueSql("('12-31-9999')");
-
-                entity.HasOne(d => d.ApprovedByUser)
-                    .WithMany(p => p.TermHistoryApprovedByUser)
-                    .HasForeignKey(d => d.ApprovedByUserId)
-                    .HasConstraintName("FK__TermHisto__Appro__56E8E7AB");
-
-                entity.HasOne(d => d.UpdatedByUser)
-                    .WithMany(p => p.TermHistoryUpdatedByUser)
-                    .HasForeignKey(d => d.UpdatedByUserId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__TermHisto__Updat__57DD0BE4");
-            });
-
             modelBuilder.Entity<User>(entity =>
             {
                 entity.Property(e => e.UserId).HasColumnName("UserID");
 
                 entity.Property(e => e.EmployeeId).HasColumnName("EmployeeID");
+
+                entity.Property(e => e.LastLoadDate).HasColumnType("datetime");
 
                 entity.Property(e => e.Username).IsRequired();
             });
@@ -1542,30 +1448,28 @@ namespace Data_Governance_WebApp.Models
                     .HasConstraintName("FK_UserFavorites_User");
             });
 
-            modelBuilder.Entity<UserLdapgroupMembership>(entity =>
+            modelBuilder.Entity<UserGroups>(entity =>
             {
-                entity.HasKey(e => e.MembershipId)
-                    .HasName("PK__UserLDAP__92A7867930380A09");
+                entity.HasKey(e => e.GroupId);
 
-                entity.ToTable("UserLDAPGroupMembership", "app");
-
-                entity.HasOne(d => d.Group)
-                    .WithMany(p => p.UserLdapgroupMembership)
-                    .HasForeignKey(d => d.GroupId)
-                    .HasConstraintName("FK_UserLDAPGroupMembership_UserLDAPGroups");
-
-                entity.HasOne(d => d.User)
-                    .WithMany(p => p.UserLdapgroupMembership)
-                    .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("FK_UserLDAPGroupMembership_User");
+                entity.Property(e => e.LastLoadDate).HasColumnType("datetime");
             });
 
-            modelBuilder.Entity<UserLdapgroups>(entity =>
+            modelBuilder.Entity<UserGroupsMembership>(entity =>
             {
-                entity.HasKey(e => e.GroupId)
-                    .HasName("PK__UserLDAP__149AF36ADDF529F9");
+                entity.HasKey(e => e.MembershipId);
 
-                entity.ToTable("UserLDAPGroups", "app");
+                entity.Property(e => e.LastLoadDate).HasColumnType("datetime");
+
+                entity.HasOne(d => d.Group)
+                    .WithMany(p => p.UserGroupsMembership)
+                    .HasForeignKey(d => d.GroupId)
+                    .HasConstraintName("FK_UserGroupsMembership_UserGroups");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.UserGroupsMembership)
+                    .HasForeignKey(d => d.UserId)
+                    .HasConstraintName("FK_UserGroupsMembership_User");
             });
 
             modelBuilder.Entity<UserNameData>(entity =>

@@ -18,17 +18,13 @@
 
 <cache>
     <div>
-        <h4>Projects</h4>
-        <ul class="home-list">
+        @if(ViewBag.NewestProjects.Count > 0)
+        {
+            <h4>Projects</h4>
             @foreach (var project in ViewBag.NewestProjects)
             {
-                <li class="home-link">
-                    <div>
-                        <i fav-type="project" object-id="@project.Id" class="favorite far fa-star @project.Favorite"></i>
-                        <a class="ajax atlas-blue" asp-page="../Projects/Index" asp-route-id="@project.Id">@project.Name.Replace('_', ' ')</a>
-                    </div>
-                </li>
+                <a href="/Projects?id=@project.Id">@project.Name.Replace('_', ' ')</a>
             }
-        </ul>
+        }
     </div>
 </cache>

@@ -88,7 +88,7 @@ namespace Data_Governance_WebApp.Pages.Search
             
             SearchField = "";
             if (sf != null) {
-                SearchField = sf.Replace("%2C", ",").Replace("%20", " ").Replace("–", "-");
+                SearchField = sf.Replace("%2C", ",").Replace("%252C",",").Replace("%20", "").Replace("–", "-").Replace(" ","");
             }
             SearchPage = p;
             ShowHidden = h;
@@ -175,7 +175,6 @@ namespace Data_Governance_WebApp.Pages.Search
             AdLists = new List<AdList>
             {
                 new AdList { Url = "/Users?handler=SharedObjects", Column = 2},
-                new AdList { Url = "Reports/?handler=RelatedReports&id="+ReportId, Column = 2 },
                 new AdList { Url = "/?handler=RecentReports", Column = 2 },
                 new AdList { Url = "/?handler=RecentTerms", Column = 2 },
                 new AdList { Url = "/?handler=RecentInitiatives", Column = 2 },
@@ -185,9 +184,11 @@ namespace Data_Governance_WebApp.Pages.Search
 
             Favorites = UserHelpers.GetUserFavorites(_cache, _context, User.Identity.Name);
             Preferences = UserHelpers.GetPreferences(_cache, _context, User.Identity.Name);
+
             HttpContext.Response.Headers.Add("Cache-Control", "no-cache, no-store, must-revalidate");
             HttpContext.Response.Headers.Add("Pragma", "no-cache"); // HTTP 1.0.
             HttpContext.Response.Headers.Add("Expires", "0"); // Proxies.
+
             return Page();
         }
 
@@ -223,6 +224,8 @@ namespace Data_Governance_WebApp.Pages.Search
                     }
                 }
                 var json = JsonConvert.SerializeObject(ObjectSearch);
+
+                HttpContext.Response.Headers.Remove("Cache-Control");
                 HttpContext.Response.Headers.Add("Cache-Control", "max-age=7200");
                 return Content(json);
             }
@@ -261,6 +264,7 @@ namespace Data_Governance_WebApp.Pages.Search
                     }
                 }
                 var json = JsonConvert.SerializeObject(ObjectSearch);
+                HttpContext.Response.Headers.Remove("Cache-Control");
                 HttpContext.Response.Headers.Add("Cache-Control", "max-age=7200");
                 return Content(json);
             }
@@ -300,6 +304,7 @@ namespace Data_Governance_WebApp.Pages.Search
                     }
                 }
                 var json = JsonConvert.SerializeObject(ObjectSearch);
+                HttpContext.Response.Headers.Remove("Cache-Control");
                 HttpContext.Response.Headers.Add("Cache-Control", "max-age=7200");
                 return Content(json);
             }
@@ -338,6 +343,7 @@ namespace Data_Governance_WebApp.Pages.Search
                     }
                 }
                 var json = JsonConvert.SerializeObject(UserSearch);
+                HttpContext.Response.Headers.Remove("Cache-Control");
                 HttpContext.Response.Headers.Add("Cache-Control", "max-age=7200");
                 return Content(json);
             }
@@ -377,6 +383,7 @@ namespace Data_Governance_WebApp.Pages.Search
                     }
                 }
                 var json = JsonConvert.SerializeObject(UserSearch);
+                HttpContext.Response.Headers.Remove("Cache-Control");
                 HttpContext.Response.Headers.Add("Cache-Control", "max-age=7200");
                 return Content(json);
             }
@@ -414,6 +421,7 @@ namespace Data_Governance_WebApp.Pages.Search
                     }
                 }
                 var json = JsonConvert.SerializeObject(UserSearch);
+                HttpContext.Response.Headers.Remove("Cache-Control");
                 HttpContext.Response.Headers.Add("Cache-Control", "max-age=7200");
                 return Content(json);
             }
@@ -524,6 +532,7 @@ namespace Data_Governance_WebApp.Pages.Search
             }
 
             var json = JsonConvert.SerializeObject(myObject);
+            HttpContext.Response.Headers.Remove("Cache-Control");
             HttpContext.Response.Headers.Add("Cache-Control", "max-age=7200");
             return Content(json);
         }

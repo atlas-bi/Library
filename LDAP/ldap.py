@@ -47,7 +47,8 @@ search_bases = [
 
 group_search_bases = [
             'Email Distribution Groups',
-            'Room & Shared Mailboxes'
+            'Room & Shared Mailboxes',
+            'Access & Permissions'
        ]
 
 users = []
@@ -129,9 +130,9 @@ c.unbind()
 conn = pyodbc.connect(settings.database,autocommit=True)
 cursor = conn.cursor()
 cursor.execute('DELETE FROM [LDAP].[dbo].[Users] where 1=1; DELETE FROM [LDAP].[dbo].[Memberships] where 1=1; DELETE FROM [LDAP].[dbo].[Groups] where 1=1; ')
-cursor.executemany('INSERT INTO [LDAP].[dbo].[Users] (Base,EmployeeId,AccountName,DisplayName,FullName,FirstName,LastName,Department,Title,Phone,Email) VALUES (?,?,?,?,?,?,?,?,?,?,?)', users)
+cursor.executemany('INSERT INTO [LDAP].[dbo].[Users] (Base,EmployeeId,AccountName,DisplayName,FullName,FirstName,LastName,Department,Title,Phone,Email,LoadDate) VALUES (?,?,?,?,?,?,?,?,?,?,?,GetDate())', users)
 if len(memberships) > 0:
-    cursor.executemany('INSERT INTO [LDAP].[dbo].[Memberships] (AccountName, GroupType, GroupName) VALUES (?,?,?)', memberships)
+    cursor.executemany('INSERT INTO [LDAP].[dbo].[Memberships] (AccountName, GroupType, GroupName,LoadDate) VALUES (?,?,?,GetDate())', memberships)
 if len(groups) > 0:
-    cursor.executemany('INSERT INTO [LDAP].[dbo].[Groups] (GroupType, AccountName, GroupName, GroupEmail) VALUES (?,?,?,?)', groups)
+    cursor.executemany('INSERT INTO [LDAP].[dbo].[Groups] (GroupType, AccountName, GroupName, GroupEmail,LoadDate) VALUES (?,?,?,?,GetDate())', groups)
 conn.close()

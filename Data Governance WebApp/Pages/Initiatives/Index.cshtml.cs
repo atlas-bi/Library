@@ -113,11 +113,11 @@ namespace Data_Governance_WebApp.Pages.Initiatives
             Permissions = UserHelpers.GetUserPermissions(_cache, _context, User.Identity.Name);
             ViewData["Permissions"] = Permissions;
             ViewData["SiteMessage"] = HtmlHelpers.SiteMessage(HttpContext, _context);
+            ViewData["Fullname"] = MyUser.Fullname_Cust;
 
              AdLists = new List<AdList>
             {
                 new AdList { Url = "/Users?handler=SharedObjects", Column = 2},
-                new AdList { Url = "Reports/?handler=RelatedReports&id="+id, Column = 2 },
                 new AdList { Url = "/?handler=RecentReports", Column = 2 },
                 new AdList { Url = "/?handler=RecentTerms", Column = 2 },
                 new AdList { Url = "/?handler=RecentInitiatives", Column = 2 },
@@ -127,9 +127,7 @@ namespace Data_Governance_WebApp.Pages.Initiatives
 
             Favorites = UserHelpers.GetUserFavorites(_cache, _context, User.Identity.Name);
             Preferences = UserHelpers.GetPreferences(_cache, _context, User.Identity.Name);
-            HttpContext.Response.Headers.Add("Cache-Control", "no-cache, no-store, must-revalidate");
-            HttpContext.Response.Headers.Add("Pragma", "no-cache"); // HTTP 1.0.
-            HttpContext.Response.Headers.Add("Expires", "0"); // Proxies.
+
             // if the id null then list all
             if (id != null)
             {
@@ -232,16 +230,16 @@ namespace Data_Governance_WebApp.Pages.Initiatives
             return RedirectToPage("/Initiatives/Index", new { id = DpDataInitiative.DataInitiativeId });
         }
 
-        public ActionResult OnPostDeleteInitiative()
+        public ActionResult OnGetDeleteInitiative(int Id)
         {
             var checkpoint = UserHelpers.CheckUserPermissions(_cache, _context, User.Identity.Name, 21);
 
-            if (ModelState.IsValid || DpDataInitiative.DataInitiativeId > 0 && checkpoint)
+            if (Id > 0 && checkpoint)
             {
                 // remove project links, contacts and remove initiative.
-                _context.DpDataProject.Where(d => d.DataInitiativeId == DpDataInitiative.DataInitiativeId).ToList().ForEach(x => x.DataInitiativeId = null);
-                _context.RemoveRange(_context.DpContactLinks.Where(i => i.InitiativeId == DpDataInitiative.DataInitiativeId));
-                _context.Remove(DpDataInitiative);
+                _context.DpDataProject.Where(d => d.DataInitiativeId == Id).ToList().ForEach(x => x.DataInitiativeId = null);
+                _context.RemoveRange(_context.DpContactLinks.Where(i => i.InitiativeId ==Id));
+                _context.Remove(_context.DpDataInitiative.Where(x => x.DataInitiativeId == Id).FirstOrDefault());
                 _context.SaveChanges();
             }
             

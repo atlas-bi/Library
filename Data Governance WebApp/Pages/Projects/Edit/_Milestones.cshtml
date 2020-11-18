@@ -18,95 +18,93 @@
 
 @model Data_Governance_WebApp.Pages.Projects.IndexModel
 
-<h5 class="pt-2">New Milestone</h5>
+<h3>New Milestone</h3>
 <form asp-page-handler="AddMilestone" method="post" id=AddMilestone>
     <input asp-for="DpMilestone.DataProjectId" type="hidden" value='@Model.DataProject.Id' />
-    <h6 class="pt-2">Description</h6>
-    <textarea asp-for="DpMilestone.Description" required rows="1" type="text"  class="form-control" ></textarea>
-
-    <h6 class="pt-2">Start Date</h6>
-    <input asp-for="DpMilestone.StartDate" required type="date"  class="form-control" />
-
-    <h6 class="pt-2">End Date</h6>
-    <input asp-for="DpMilestone.EndDate" type="date"  class="form-control" />
-
-    <h6 class="pt-2">Template</h6>
-
-    <input type="dynamic-dropdown" asp-for="DpMilestone.MilestoneTemplateId"  search-area="mile-type" method="fullList" />
-
-    <h6 class="pt-2">Owner</h6>
-
-    <input type="dynamic-dropdown" asp-for="DpMilestone.OwnerId" value="" visible-value="" search-area="UserSearch" />
-
-    <h6 class="pt-2">(Optional) Task List - blank boxs automatically removed.</h6>
-    <textarea class="form-control checklistitem mb-2" rows="1"></textarea>
     <input type='hidden' name='DpChecklist' value='' />
+    
+    <div class="listDetails">
 
-    <button class='btn btn-link pt-1 mt-1' type="submit">Save</button>
-</form>
+        <label>Start Date</label>
+        <input asp-for="DpMilestone.StartDate" required type="date"  />
 
-@foreach (var t in Model.DataProject.MilestoneTasks)
-{
-    <div class="row">
-        <div class="col d-flex justify-content-start">
-            <form asp-page-handler="DeleteMilestone" method="post">
-                <input asp-for="DpMilestone.MilestoneTaskId" type="hidden" value="@t.Id" />
-                <input asp-for="DpMilestone.DataProjectId" type="hidden" value="@Model.DataProject.Id" />
-                <button class="btn btn-link" type="submit"><svg class="icon-sm" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M432 32H312l-9.4-18.7A24 24 0 0 0 281.1 0H166.8a23.72 23.72 0 0 0-21.4 13.3L136 32H16A16 16 0 0 0 0 48v32a16 16 0 0 0 16 16h416a16 16 0 0 0 16-16V48a16 16 0 0 0-16-16zM53.2 467a48 48 0 0 0 47.9 45h245.8a48 48 0 0 0 47.9-45L416 128H32z"/></svg></button>
-            </form>
-            <button class="btn btn-link atlas-blue"  type="button" data-toggle="clps" data-target="milestone-@t.Id">@t.Description - @t.Template - @t.Owner (@t.StartDate thu @t.EndDate)</button>
-        </div>
+        <label>End Date</label>
+        <input asp-for="DpMilestone.EndDate" type="date"  />
+
+        <label>Template</label>
+        <input type="dynamic-dropdown" asp-for="DpMilestone.MilestoneTemplateId"  search-area="mile-type" method="fullList" />
+
+        <label>Owner</label>
+        <input type="dynamic-dropdown" asp-for="DpMilestone.OwnerId" value="" visible-value="" search-area="UserSearch" />
 
     </div>
-     <div class="row clps" id="milestone-@t.Id">
-        <div class="col">
-            <div class="card bg-white p-3">
+    
+    <h4>Task List <span class="text-light">(optional)</span></h4>
+    <span class="text-light">Blank boxs automatically removed.</span>
+    <div class="listDetails">
+        <label>Task</label>
+        <input class="checklistitem" />
+    </div>
+    
+    <h4>Description</h4>
+    <div class="editor" data-inputName="DpMilestone.Description" data-inputId="DpMilestone_Description"><textarea></textarea></div>
+
+    <h3><button class="editor-save" type="submit">Save</button></h3>
+
+</form>
+
+@if(Model.DataProject.MilestoneTasks.Count() > 0){
+    <h3>Existing Milestones</h3>
+
+    @foreach (var t in Model.DataProject.MilestoneTasks)
+    {
+        <h4 class="drop" data-toggle="clps" data-target="collapse-milestone-@(t.Id)">Edit <span class="text-green">@t.Description.Substring(0,Math.Min(30,@t.Description.Length)) ...</span> Milestone
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M31.3 192h257.3c17.8 0 26.7 21.5 14.1 34.1L174.1 354.8c-7.8 7.8-20.5 7.8-28.3 0L17.2 226.1C4.6 213.5 13.5 192 31.3 192z"/></svg>
+        </h4>
+
+        <div id="collapse-milestone-@(t.Id)" class="clps">
+            <div class="drop-box">
+                <h5><a class="drop-link" href="/Projects?handler=DeleteMilestone&id=@t.Id">Delete This Milestone</a></h5>
+
                 <form asp-page-handler="EditMilestone" method="post">
                     <input asp-for="DpMilestone.MilestoneTaskId" type="hidden" value="@t.Id" />
                     <input asp-for="DpMilestone.DataProjectId" type="hidden" value="@Model.DataProject.Id" />
-
-                    <h6 class="pt-2">Description</h6>
-                    <textarea rows=1 class="form-control" id="DpMilestone_Description" name="DpMilestone.Description">@t.Description</textarea>
-
-                    <h6 class="pt-2">Start Date</h6>
-                    <input asp-for="DpMilestone.StartDate" required type="date"  class="form-control" value="@t.StartDate"/>
-
-                    <h6 class="pt-2">End Date</h6>
-                    <input asp-for="DpMilestone.EndDate" type="date" class="form-control" value="@t.EndDate"/>
-
-                    <h6 class="pt-2">Template</h6>
-                    <input type="dynamic-dropdown" asp-for="DpMilestone.MilestoneTemplateId" value="@t.TemplateId" visible-value="@t.Template" search-area="mile-type" method="fullList" />
-
-                    <h6 class="pt-2">Owner</h6>
-                    <input type="dynamic-dropdown" asp-for="DpMilestone.OwnerId" value="@t.OwnerId" visible-value="@t.Owner" search-area="UserSearch" />
-
-                    <h6 class="pt-2">(Optional) Task List - blank boxs automatically removed.</h6>
-                    @foreach(var q in t.Checklist)
-                    {
-                        <textarea class="form-control checklistitem mb-2" rows="1">@q.Item</textarea>
-                    }
-                    <textarea class="form-control checklistitem mb-2" rows="1"></textarea>
                     <input type='hidden' name='DpChecklist' value='' />
-                <button class='btn btn-link pt-1 mt-1' type="submit">Save</button>
+
+                    <div class="listDetails">
+
+                        <label>Start Date</label>
+                        <input asp-for="DpMilestone.StartDate" required type="date" value="@t.StartDateInput" />
+
+                        <label>End Date</label>
+                        <input asp-for="DpMilestone.EndDate" type="date" value="@t.EndDateInput" />
+
+                        <label>Template</label>
+                        <input type="dynamic-dropdown" asp-for="DpMilestone.MilestoneTemplateId"  search-area="mile-type" method="fullList" value="@t.TemplateId" visible-value="@t.Template" />
+
+                        <label>Owner</label>
+                        <input type="dynamic-dropdown" asp-for="DpMilestone.OwnerId" value="@t.OwnerId" visible-value="@t.Owner" search-area="UserSearch" />
+
+                    </div>
+                    
+                    <h4>Task List <span class="text-light">(optional)</span></h4>
+                    <span class="text-light">Blank boxs automatically removed.</span>
+                    <div class="listDetails">
+                        @foreach(var q in t.Checklist)
+                        {
+                            <label>Task</label>
+                            <input class="checklistitem" value="@q.Item" />
+                        }
+                        <label>Task</label>
+                        <input class="checklistitem" />
+                    </div>
+                    
+                    <h4>Description</h4>
+                    <div class="editor" data-inputName="DpMilestone.Description" data-inputId="DpMilestone_Description"><textarea>>@Html.Raw(@t.Description)</textarea></div>
+
+                    <h3><button class="editor-save" type="submit">Save</button></h3>
                 </form>
             </div>
-        </div>
-    </div>
+        </div> 
+    }
 }
-
-<script>
-     if(document.readyState === 'complete') {
-    load()
-        }
-
-        window.addEventListener('load',function(){
- load()
-  })
-
-
-function load(){
-  function UpdateMilestoneChecklistItems(e){var t=e.closest("form");if(null==e.nextElementSibling||null!==e.nextElementSibling&&!e.nextElementSibling.classList.contains("checklistitem")){var n=e.cloneNode(!0);n.value="",e.parentNode.insertBefore(n,e.nextSibling)}var i=t.querySelector('input[name="DpChecklist"]'),l="",c=0;[].map.call(t.getElementsByClassName("checklistitem"),function(e){var t=e.value.trim();console.log(t),""!=t&&(l+='"'+(c+=1)+'":"'+t+'",')}),l.length>0&&(i.value="{"+l.substring(0,l.length-1)+"}")}document.addEventListener("click",function(e){e.target.matches(".checklistitem")&&UpdateMilestoneChecklistItems(e.target)}),document.addEventListener("focus",function(e){e.target.matches(".checklistitem")&&UpdateMilestoneChecklistItems(e.target)}),document.addEventListener("change",function(e){e.target.matches(".checklistitem")&&UpdateMilestoneChecklistItems(e.target)}),document.addEventListener("keyup",function(e){e.target.matches(".checklistitem")&&UpdateMilestoneChecklistItems(e.target)});var cli=document.querySelectorAll("form#AddMilestone textarea.checklistitem");for(var x=0;x<cli.length;x++){UpdateMilestoneChecklistItems(cli[x])};
-  }
-
-
-</script>

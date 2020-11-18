@@ -17,42 +17,40 @@
 *@
 
 <div>
-    <span class="text-muted w-100">Reports with no run data collected for last two years & edited over 2 months ago.</span>
+    <span class="text-light">Reports with no run data collected for last two years & edited over 2 months ago.</span>
     @if (ViewBag.Dead.Count == 0)
     {
         <p><br />No reports to show.</p>
     } else
-
-        {
-           <div class="table-responsive">
-
-        <table class="table sort">
-            <thead>
-                <tr>
-                    <th>Report Name</th>
-                    <th>Report Type</th>
-                    <th>Last Modified By</th>
-                    <th>Last Modified</th>
-                    <th>Server</th>
-                    <th>Master File</th>
-                    <th>Epic File</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var t in ViewBag.Dead)
-                {
+    {
+        <div class="table-responsive">
+            <table class="table sort">
+                <thead>
                     <tr>
-                        <td><a class="ajax atlas-blue" href="@t.ReportUrl">@t.Name</a></td>
-                        <td>@t.Type</td>
-                        <td>@t.ModifiedBy</td>
-                        <td>@t.LastMod</td>
-                        <td>@t.Server</td>
-                        <td>@t.MasterFile</td>
-                        <td>@t.EpicId</td>
+                        <th>Report Name</th>
+                        <th>Report Type</th>
+                        <th>Last Modified By</th>
+                        <th>Last Modified</th>
+                        <th>Server</th>
+                        <th>Master File</th>
+                        <th>Epic File</th>
                     </tr>
-                }
-            </tbody>
-        </table>
-    </div>
-        }
-    </div>
+                </thead>
+                <tbody>
+                    @foreach (var t in ViewBag.Dead)
+                    {
+                        <tr>
+                            <td><a href="@t.ReportUrl">@t.Name</a></td>
+                            <td>@t.Type</td>
+                            <td>@t.ModifiedBy</td>
+                            <td>@t.LastMod</td>
+                            <td>@t.Server</td>
+                            <td>@t.MasterFile</td>
+                            <td>@t.EpicId</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>

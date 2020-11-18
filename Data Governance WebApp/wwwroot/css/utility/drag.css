@@ -15,19 +15,17 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-/* drag and drop */
 .drg-hdl {
-	cursor: move;
+    cursor: move
 }
 
 .drag {
-	position: fixed !important;
-	z-index: 999999 !important;
-	opacity: 0.9;
-	background: inherit;
+    background: inherit;
+    opacity: .9;
+    position: fixed !important;
+    z-index: 999999 !important
 }
 
 .drag-source {
-	opacity: 0.4;
-	/*border: 1px solid black;*/
+    opacity: .4
 }

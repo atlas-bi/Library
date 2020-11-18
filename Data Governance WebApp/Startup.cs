@@ -77,110 +77,121 @@ namespace Data_Governance_WebApp
 
             services.AddMemoryCache();
 
-            // disabled in place of webmarkupmin.
-            //services.AddResponseCaching();
-
             services.AddWebOptimizer(pipeline =>
             {
-                pipeline.AddCssBundle("/css/main.min.css", "lib/fonts/impmin/stylesheet.css",
+              pipeline.AddCssBundle("/css/main.min.css", "lib/fonts/impmin/stylesheet.css",
                                                           "lib/fonts/cheltmin/stylesheet.css",
                                                           "lib/fonts/sfmin/stylesheet.css",
-                                                          "css/color.css",
-                                                          "css/site.css",
-                                                          "css/security.css",
-                                                          "css/input.css",
+                                                          "lib/fonts/marckscript/stylesheet.css",
+                                                          "css/nav.css",
                                                           "css/favorite.css",
-                                                          "css/page-controls.css",
                                                           "css/page.css",
-                                                          "css/ajax-content.css",
-                                                          "css/report.css",
-                                                          "css/term.css",
-                                                          "css/project.css",
                                                           "css/video.css",
                                                           "css/search.css",
-                                                            "css/essential.css",
-                                                            "css/utility/carousel.css",
-                                                            "css/utility/collapse.css",
-                                                            "css/utility/modal.css",
-                                                            "css/utility/tabs.css",
-                                                            "css/nav.css",
-                                                            "css/utility/page_nav.css");
-                pipeline.AddCssBundle("/css/differed.min.css","lib/fonts/fontawesome/css/mine.css",
+                                                          "css/essential.css",
+                                                          "css/utility/collapse.css",
+                                                          "css/utility/modal.css",
+                                                          "css/utility/tabs.css");
+               
+                pipeline.AddCssBundle("/css/differed.min.css", "css/nav-effects.css",
+                                                            "css/page-effects.css",
+                                                            "css/favorite-effects.css",
+                                                            "lib/fonts/fontawesome/css/mine.css",
                                                             "css/utility/tooltip.css",
                                                             "css/utility/drag.css",
                                                             "css/utility/progressbar.css",
                                                             "lib/fonts/fasmin/css/fas.css",
                                                             "lib/fonts/farmin/css/far.css",
-                                                             "css/utility/chart.css",
-                                                          "css/utility/table.css",
-                                                          "css/milestone.css",
-                                                          "css/checkbox.css",
-                                                        "css/comments.css",
-                                                          "css/dropdown.css",
-                                                           "css/markdown.css",
-                                                           "css/messagebox.css",
-                                                           "css/toggle.css",
-                                                           "lib/scrollbars/simple-scrollbar.css",
-                                                           "lib/highlight/rainbow.css");
+                                                            "css/utility/chart.css",
+                                                            "css/utility/table.css",
+                                                            "css/milestone.css",
+                                                            "css/input.css",
+                                                            "css/comments.css",
+                                                            "css/dropdown.css",
+                                                            "css/markdown.css",
+                                                            "css/messagebox.css",
+                                                            "lib/scrollbars/simple-scrollbar.css",
+                                                            "lib/highlight/rainbow.css", 
+                                                            "css/mail/mail-newMessage.css",
+                                                             "css/query.css");
+
+                pipeline.AddCssBundle("/css/reports.min.css", "css/reports.css","css/utility/carousel.css");
+                pipeline.AddCssBundle("/css/access.min.css", "css/access.css");
+                pipeline.AddCssBundle("/css/tasks.min.css", "css/tasks.css");
+                pipeline.AddCssBundle("/css/users.min.css", "css/users.css");
+                pipeline.AddCssBundle("/css/error.min.css", "css/error.css");
+
                 pipeline.AddCssBundle("/css/mail.min.css", "css/mail/mail.css",
-                                                          "css/mail/mail-folders.css",
-                                                          "css/mail/mail-menu.css",
-                                                          "css/mail/mail-msgPreview.css",
-                                                          "css/mail/mail-notification.css",
-                                                          "css/mail/mail-reader.css",
-                                                          "css/mail/mail-newMessage.css");
+                                                           "css/mail/mail-folders.css",
+                                                           "css/mail/mail-menu.css",
+                                                           "css/mail/mail-msgPreview.css",
+                                                           "css/mail/mail-notification.css",
+                                                           "css/mail/mail-reader.css");
+
                 pipeline.AddCssBundle("/css/editor.min.css", "lib/codemirror/mycss.css",
-                                                            "css/live-editor.css");
+                                                             "css/live-editor.css");
 
-                pipeline.AddJavaScriptBundle("/js/main.min.js", "js/utility/polyfill.js",
-                                                                  "js/essential.js",
-                                                                  "js/nav.js",
-                                                                  "js/search.js",
-                                                                  "lib/scrollbars/simple-scrollbar.min.js");
+                /************   javascript   *************/
 
-                pipeline.AddJavaScriptBundle("/js/utility.min.js","js/utility/progressbar.js",
-                                                                "js/utility/collapse.js",
-                                                                "js/utility/carousel.js",
-                                                                "js/utility/modal.js",
-                                                                "js/utility/table.js",
-                                                                "js/utility/lazyload.js",
-                                                                "js/utility/tabs.js",
-                                                                "js/utility/drag.js",
-                                                                "js/utility/crumbs.js",
-                                                                "js/utility/charts.js");
+                // for ie11
+                pipeline.AddJavaScriptBundle("/js/polyfill.min.js", "js/utility/polyfill.js");
 
-                pipeline.AddJavaScriptBundle("/js/extra.min.js","js/input.js",
-                                                                "js/analytics.js",
-                                                                "js/page.js",
-                                                                "js/comments.js",
-                                                                "js/dropdown.js",
-                                                                "js/security.js",
-                                                                "js/hyperspace.js",
-                                                                "js/ajax.js",
-                                                                "js/ajax-content.js",
-                                                                "js/favorites.js",
-                                                                "js/video.js",
-                                                                "js/messagebox.js",
-                                                                "js/milestone-checklist.js",
-                                                                "js/mail.js");
+                pipeline.AddJavaScriptBundle("/js/realtime.min.js", "js/realtime.js");
+
+                // required for page load     
+                pipeline.AddJavaScriptBundle("/js/main.min.js", "js/essential.js",
+                                                                "lib/scrollbars/simple-scrollbar.js");
+                // required for search
+                pipeline.AddJavaScriptBundle("/js/search.min.js","js/search.js","js/utility/progressbar.js");
+
+                // used on all pages, but not for load
+                pipeline.AddJavaScriptBundle("/js/utility.min.js","js/utility/modal.js",
+                                                                  "js/utility/lazyload.js",
+                                                                  "js/utility/crumbs.js",
+                                                                  "js/page.js",
+                                                                  "js/hyperspace.js",
+                                                                  "js/ajax-content.js",
+                                                                  "js/favorites.js",
+                                                                  "js/video.js",
+                                                                  "js/messagebox.js",
+                                                                  "js/mail.js",
+                                                                  "js/analytics.js");
+
+                pipeline.AddJavaScriptBundle("/js/tabs.min.js","js/utility/tabs.js");
+                pipeline.AddJavaScriptBundle("/js/collapse.min.js","js/utility/collapse.js");
+                pipeline.AddJavaScriptBundle("/js/carousel.min.js","js/utility/carousel.js");
+                pipeline.AddJavaScriptBundle("/js/table.min.js","js/utility/table.js");
+                pipeline.AddJavaScriptBundle("/js/drag.min.js","js/utility/drag.js");
+                pipeline.AddJavaScriptBundle("/js/charts.min.js","js/utility/charts.js");
+                pipeline.AddJavaScriptBundle("/js/input.min.js","js/input.js");
+                pipeline.AddJavaScriptBundle("/js/comments.min.js","js/comments.js");
+                pipeline.AddJavaScriptBundle("/js/dropdown.min.js","js/dropdown.js");
+
+                pipeline.AddJavaScriptBundle("/js/milestone-checklist.min.js","js/milestone-checklist.js");
+
+                pipeline.AddJavaScriptBundle("/js/access.min.js", "js/access.js");
 
                 pipeline.AddJavaScriptBundle("/js/profile.min.js", "js/reportProfile.js");
 
-                pipeline.AddJavaScriptBundle("/js/code.min.js", "lib/highlight/highlight.pack.js");
+                pipeline.AddJavaScriptBundle("/js/code.min.js", "lib/highlight/highlight.js");
 
                 pipeline.AddJavaScriptBundle("/js/flowchart.min.js", "lib/flowchart/raphael.min.js", "lib/flowchart/flowchart.min.js", "lib/flowchart/custom.js");
-                pipeline.AddJavaScriptBundle("/js/reporteditor.min.js", "js/live-editor.js");
-                pipeline.AddJavaScriptBundle("/js/codemirror.min.js", "lib/codemirror/codemirror.js",
-                                                                    "lib/codemirror/autorefresh.js",
-                                                                    "lib/codemirror/overlay.js",
-                                                                    "lib/codemirror/markdown.js",
-                                                                    "lib/codemirror/gfm.js",
-                                                                    "lib/codemirror/python.js",
-                                                                    "lib/codemirror/r.js",
-                                                                    "lib/codemirror/shell.js",
-                                                                    "lib/codemirror/sql.js"
-                                                                    );
-            });
+                
+                pipeline.AddJavaScriptBundle("/js/editor.min.js", "lib/codemirror/codemirror.js",
+                                                                  "lib/codemirror/autorefresh.js",
+                                                                  "lib/codemirror/overlay.js",
+                                                                  "lib/codemirror/markdown.js",
+                                                                  "lib/codemirror/gfm.js",
+                                                                  "lib/codemirror/python.js",
+                                                                  "lib/codemirror/r.js",
+                                                                  "lib/codemirror/shell.js",
+                                                                  "lib/codemirror/sql.js",
+                                                                  "js/editor.js",
+                                                                  "js/utility/checkbox.js"
+                                                                  );
+                pipeline.AddJavaScriptBundle("/js/report-editor.min.js", "js/reportEditor.js");
+                pipeline.AddJavaScriptBundle("/js/project-editor.min.js", "js/projectEditor.js");
+        });
 
             services.AddWebMarkupMin(
                 options =>
@@ -235,7 +246,7 @@ namespace Data_Governance_WebApp
             app.UseWebMarkupMin();
             app.UseWebOptimizer();
             app.UseHttpsRedirection();
-
+            
             app.UseStaticFiles(
                 new StaticFileOptions
                 {

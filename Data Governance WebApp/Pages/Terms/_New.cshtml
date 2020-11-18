@@ -18,29 +18,49 @@
 
 @model Data_Governance_WebApp.Pages.Terms.IndexModel
 
-<div class="clps" id="newCollapse">
-    <div class="card card-body bg-light mb-4" id="">
-        <form asp-page-handler="NewTerm" method="post">
-            <h3 class="d-flex justify-content-between">
-            	<span>New Term</span>
-            	<div class="button-group">
-            		<button class="btn btn-link" type="button" data-toggle="clps" data-target="newCollapse">
-                		<i class="fas fa-times fa-lg"></i>
-            		</button>
-            		<button class="btn btn-link" type="submit">
-                		<i class="fas fa-save fa-lg"></i>
-            		</button>
-        		</div>
-            </h3>
-			<h5 class="pt-2">Name</h5>
-		    <input asp-for="NewTerm.Name" class="form-control" required />
-            <h5 class="pt-2">Summary</h5>
-            <textarea rows="1" asp-for="NewTerm.Summary" class="form-control"></textarea>
-            <h5 class="pt-2">Technical Definition</h5>
-            <textarea rows="3" asp-for="NewTerm.TechnicalDefinition" class="form-control"></textarea>
-            <h5 class="pt-2">External Standard Url</h5>
-            <input asp-for="NewTerm.ExternalStandardUrl" class="form-control" />
-        </form>
+<div class="mdl" id="newModal" tabindex="-1">
+    <div class="mdl-d editorMdl">
+        <div class="mdl-c editorMdl-inner">
+            <div class="editorMdl-title">
+                <h2 class="editorMdl-titleText">Create a New Term<button type="button" class="editorMdl-close" data-dismiss="mdl" data-tooltip="Close">&times;</button></h2>
+                <div id="editorMdl-titleSave">changes saved.</div>
+            </div>
+
+            <div class="editorMdl-cnt" ss-container>
+                <div class="editorMdl-cntLiner">
+                    <form asp-page-handler="NewTerm" method="post">
+                        <h3>Details</h3>
+                        <div class="listDetails">
+                
+                            <label>Name</label>
+                            <input asp-for="NewTerm.Name" />
+                
+                            <label>External Standard Link</label>
+                            <input asp-for="NewTerm.ExternalStandardUrl" />
+                
+                            <label>Valid From</label>
+                            <input type="date" asp-for="NewTerm.ValidFromDateTime" />
+                        </div>
+                         
+                        <h3>Summary</h3>
+                        <div class="editor" data-inputName="NewTerm.Summary" data-inputId="NewTerm_Summary"></div>
+
+                        <h3>Technical Definition</h3>
+                        <div class="editor" data-inputName="NewTerm.TechnicalDefinition" data-inputId="NewTerm_TechnicalDefinition"></div>
+                           
+                        @if (Model.Permissions.Contains(6))
+                        {
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="approvedYn">
+                                <label for="approvedYn" class="form-check-label">Approved?</label>
+                                <input type="hidden" class="approvedYnHiddenTextArea" asp-for="NewTerm.ApprovedYn" >
+                            </div>
+                        }
+
+                        <h3><button class="editor-save" type="submit">Save</button></h3>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
-

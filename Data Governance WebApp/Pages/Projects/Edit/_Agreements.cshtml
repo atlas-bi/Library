@@ -18,85 +18,76 @@
 
 @model Data_Governance_WebApp.Pages.Projects.IndexModel
 
-<h5 class="pt-2">New Agreement</h5>
+<h3>New Agreement</h3>
 <form asp-page-handler="AddAgreement" method="post">
     <input asp-for="MyDpAgreement.DataProjectId" type="hidden" value='@Model.DataProject.Id' />
-    <div class="wrapper head-light" data-head="Description">
-        <textarea asp-for="MyDpAgreement.Description" required rows="2" type="text"  class="form-control" ></textarea>
-    </div>
-    <div class="wrapper head-light" data-head="Meeting Date">
-        <input asp-for="MyDpAgreement.MeetingDate" required type="date"  class="form-control" />
-    </div>
-    <div class="wrapper head-light" data-head="Effective Date">
-        <input asp-for="MyDpAgreement.EffectiveDate" required type="date"  class="form-control" />
-    </div>
-    <div class="wrapper head-light" data-head="Rank">
-        <input asp-for="MyDpAgreement.Rank"  type="number"  class="form-control" />
-    </div>
-    <div class="wrapper">
+
+    <div class="listDetails">
+        <label>Meeting Date</label>
+        <input asp-for="MyDpAgreement.MeetingDate" required type="date" />
+
+        <label>Effective Date</label>
+        <input asp-for="MyDpAgreement.EffectiveDate" required type="date" />
+     
+        <label>Rank</label>
+        <input asp-for="MyDpAgreement.Rank" type="number" />
+        
+        <label>Participants</label>
         <select type="dynamic-dropdown" class="head-light" data-head="Participants" asp-for="DpAgreementUsers" value="" visible-value="" search-area="UserSearch" ></select>
     </div>
-    <div class="wrapper">
-        <button type="submit" class="btn btn-link atlas-blue p-0"><i class="fas fa-save fa-lg"></i></button>
-    </div>
+    
+    <h3>Description</h3>
+    <div class="editor" data-inputName="MyDpAgreement.Description" data-inputId="MyDpAgreement_Description"></div>
+
+    <h3><button class="editor-save" type="submit">Save</button></h3>
+
 </form>
 
 @if(Model.DataProject.Agreements.Count() > 0)
 {
-    <h5 class="pt-2">Existing Agreements</h5>
+    <h3>Existing Agreements</h3>
 
     @foreach (var a in Model.DataProject.Agreements)
     {
-        <div class="row">
-         <div class="col d-flex justify-content-start">
-            <form asp-page-handler="RemoveAgreement" method="post">
-                <input asp-for="MyDpAgreement.AgreementId" type="hidden" value="@a.Id" />
-                <input asp-for="MyDpAgreement.DataProjectId" type="hidden" value="@Model.DataProject.Id" />
-                <button class="btn btn-link" type="submit"><svg class="icon-sm" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M432 32H312l-9.4-18.7A24 24 0 0 0 281.1 0H166.8a23.72 23.72 0 0 0-21.4 13.3L136 32H16A16 16 0 0 0 0 48v32a16 16 0 0 0 16 16h416a16 16 0 0 0 16-16V48a16 16 0 0 0-16-16zM53.2 467a48 48 0 0 0 47.9 45h245.8a48 48 0 0 0 47.9-45L416 128H32z"/></svg></button>
-            </form>
-             <button class="btn btn-link atlas-blue"  type="button" data-toggle="clps" data-target="agreement-@a.Id">@a.Description</button>
-           </div>
-        </div>
-         <div class="row clps" id="agreement-@a.Id">
-            <div class="col">
+        <h4 class="drop" data-toggle="clps" data-target="collapse-agreement-editor-@(a.Id)">Edit <span class="text-green">@a.Description.Substring(0,Math.Min(30,@a.Description.Length)) ...</span> Agreement
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M31.3 192h257.3c17.8 0 26.7 21.5 14.1 34.1L174.1 354.8c-7.8 7.8-20.5 7.8-28.3 0L17.2 226.1C4.6 213.5 13.5 192 31.3 192z"/></svg>
+        </h4>
+
+        <div id="collapse-agreement-editor-@(a.Id)" class="clps">
+            <div class="drop-box">
+                <h5><a class="drop-link" href="/Projects?handler=RemoveAgreement&id=@a.Id">Delete This Agreement</a></h5>
+
                 <form asp-page-handler="EditAgreement" method="post">
                     <input asp-for="MyDpAgreement.DataProjectId" type="hidden" value='@Model.DataProject.Id' />
                     <input asp-for="MyDpAgreement.AgreementId" type="hidden" value="@a.Id" />
-                    <div class="wrapper head-light" data-head="Description">
-                        <textarea rows=2 class="form-control" id="MyDpAgreement_Description" name="MyDpAgreement.Description" required>@Model.DataProject.Description</textarea>
+            
+                    <div class="listDetails">
+                        <label>Meeting Date</label>
+                        <input asp-for="MyDpAgreement.MeetingDate" required type="date" value="@a.MeetingDate" />
+
+                        <label>Effective Date</label>
+                        <input asp-for="MyDpAgreement.EffectiveDate" required type="date" value="@a.EffectiveDate"  />
+                     
+                        <label>Rank</label>
+                        <input asp-for="MyDpAgreement.Rank" type="number" value="@a.Rank"  />
+                        
+                        <label>Participants</label>
+
+                        <select type="dynamic-dropdown" class="head-light" data-head="Participants" asp-for="DpAgreementUsers" value="" visible-value="" search-area="UserSearch">
+                            @foreach(var t in a.Users){
+                                <option selected="selected" value="@t.Id">@t.Name</option>
+                            }
+                        </select>                           
                     </div>
-                    <div class="wrapper head-light" data-head="Meeting Date">
-                        <input asp-for="MyDpAgreement.MeetingDate" required type="date" value="@a.MeetingDate"  class="form-control" />
-                    </div>
-                    <div class="wrapper head-light" data-head="Effective Date">
-                        <input asp-for="MyDpAgreement.EffectiveDate" required type="date" value="@a.EffectiveDate" class="form-control" />
-                    </div>
-                    <div class="wrapper head-light" data-head="Rank">
-                        <input asp-for="MyDpAgreement.Rank"  type="number" value="@a.Rank"  class="form-control" />
-                    </div>
-                    <div class="wrapper">
-                        <div class="dynamic-dropdown-container">
-                            <div class="head-light dynamic-dropdown" data-head="Participants">
-                                <select class="head-light" id="DpAgreementUsers" name="DpAgreementUsers" dname="dropdown8" tabindex="-1" value="" multiple="multiple" style="display: none;">
-                                    @foreach(var t in a.Users){
-                                        <option selected="selected" value="@t.Id">@t.Name</option>
-                                    }
-                                </select>
-                                @foreach(var t in a.Users){
-                                        <span>@t.Name</span>
-                                    }
-                                <input class="dynamic-dropdown-input" search-area="UserSearch" dname="dropdown8" autocomplete="off" placeholder="" value="" style="width: 4px;">
-                                <div class="dynamic-dropdown-results" style="display: none;">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="wrapper">
-                        <button type="submit" class="btn btn-link atlas-blue p-0"><i class="fas fa-save fa-lg"></i></button>
-                    </div>
+
+               
+                    <h3>Description</h3>
+                    <div class="editor" data-inputName="MyDpAgreement.Description" data-inputId="MyDpAgreement_Description"><textarea>@a.Description</textarea></div>
+
+                    <h3><button class="editor-save" type="submit">Save</button></h3>
                 </form>
             </div>
-         </div>
+        </div>       
     }
 
 }

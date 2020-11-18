@@ -15,83 +15,62 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-(function (root, factory) {
-    if (typeof define === 'function' && define.amd) {
-        // AMD. Register as an anonymous module.
-        define(['b'], factory);
-    } else {
-        // Browser globals
-        root.Milestone = factory(root.b);
-    }
-}(typeof self !== 'undefined' ? self : this, function (b) {
-
-  var x = function(){
+(function() {
     var d = document;
 
-    function load() {
-      // populate select lists intially
-      [].forEach.call(d.getElementsByClassName('checkbox-list'), function (el) {
-        var items = el.getElementsByClassName('checkbox-container'),
+    [].forEach.call(d.getElementsByClassName('complete-checklist-form'), function(el) {
+        var items = el.getElementsByClassName('form-check'),
             select = el.getElementsByTagName('select')[0];
 
         if (!select.children.length) {
-          [].forEach.call(items, function (e) {
-            completed = e.getElementsByClassName('completed').length > 0 ? 'selected="selected"' : '';
-            select.innerHTML += '<option value="' + e.getAttribute('check-id') + '" ' + completed + '></option';
-          });
+            [].forEach.call(items, function(e) {
+                var check = e.querySelector('input[type="checkbox"]');
+                if (check.hasAttribute('checked') && check.getAttribute('checked') == 'checked') {
+                    check.checked = true;
+                }
+                completed = e.getElementsByClassName('completed').length > 0 ? 'selected="selected"' : '';
+                select.innerHTML += '<option value="' + e.getAttribute('check-id') + '" ' + completed + '></option';
+            });
         }
-      });
-    }
+    });
 
-    d.addEventListener('click', function (e) {
-      if (e.target.matches('input.milestone[type="checkbox"]') && e.target.tagName == 'INPUT') {
-        var p = e.target.parentElement,
-            i = e.target,
-            type = 1,
-            l = i.closest('label'),
-            q,
-            url,
-            data,
-            f = i.closest('form'),
-            option;
+    d.addEventListener('click', function(e) {
+        if (e.target.closest('.complete-checklist-form .form-check')) {
+            var i = e.target.closest('.complete-checklist-form .form-check'),
+                type = 1,
+                q,
+                url,
+                data,
+                f = i.closest('form'),
+                option;
 
-        if (i.getAttribute("checked") == "checked") {
-          i.removeAttribute('checked');
-          type = 2;
-        } else {
-          i.setAttribute('checked', 'checked');
-        }
-
-        option = f.querySelector('select option[value="' + l.getAttribute('check-id') + '"]');
-
-        if (option) {
-          if (option.hasAttribute("selected")) {
-            option.removeAttribute("selected");
-          } else {
-            option.setAttribute("selected", "selected");
-          }
-
-          url = serialize(f);
-          q = new XMLHttpRequest();
-          q.open('post', f.getAttribute('action') + '&' + url, true);
-          q.setRequestHeader('Content-Type', 'text/html;charset=UTF-8`');
-          q.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-          q.send();
-
-          q.onreadystatechange = function (e) {
-            if (this.readyState == 4 && this.status == 200) {
-              ShowMessageBox("Changes saved.");
+            if (i.getAttribute("checked") == "checked") {
+                type = 2;
             }
-          };
+
+            option = f.querySelector('select option[value="' + i.getAttribute('check-id') + '"]');
+
+            if (option) {
+                if (option.hasAttribute("selected")) {
+                    option.removeAttribute("selected");
+                } else {
+                    option.setAttribute("selected", "selected");
+                }
+
+                url = serialize(f);
+                q = new XMLHttpRequest();
+                q.open('post', f.getAttribute('action') + '&' + url, true);
+                q.setRequestHeader('Content-Type', 'text/html;charset=UTF-8`');
+                q.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+                q.send();
+
+                q.onreadystatechange = function(e) {
+                    if (this.readyState == 4 && this.status == 200) {
+                        ShowMessageBox("Changes saved.");
+                    }
+                };
+            }
         }
-      }
     });
-    load();
-    document.addEventListener('ajax', function (n) {
-      load();
-    });
-  };
-  console.log('milestone scripts loaded.');
-  return x;
-}));
-Milestone();
+
+})();

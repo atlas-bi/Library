@@ -15,167 +15,147 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-.markdown {
-	margin-left: 10px;
-	padding-left: 20px;
-	position: relative;
-	margin-bottom: 2rem;
-	padding-bottom: 1rem;
-}
-
-.markdown.noleft{
-	margin-left:0;
-	padding-left: 0;
-	margin-bottom: 0;
-	padding-bottom: 0;
-}
-
-.markdown:not(.noleft)::before {
-	content: "";
-	position: absolute;
-	top: 3px;
-	height: 100%;
-	width: 3px;
-	left: 0;
-	border-radius: 2px;
-	background: rgba(0, 0, 0, .1);
-}
-
 .markdown p:last-child {
-	margin-bottom:0;
+	margin-bottom: 0
 }
+
+.markdown p:first-child {
+	margin-top: 0
+}
+
 .cm-header {
-	 font-family: "nytcheltenham","Georgia","Times New Roman",serif;
+	font-family: "nytcheltenham", "Georgia", "Times New Roman", serif
 }
+
 .markdown h1, .cm-header.cm-header-1 {
-	font-size: 3rem;
+	font-size: 2rem;
 	font-stretch: expanded;
-	font-weight: 500;
+	font-weight: 500
 }
 
 .markdown h2, .cm-header.cm-header-2 {
-	font-size: 2rem;
+	font-size: 1.75rem;
 	font-weight: 500
 }
 
 .markdown h3, .cm-header.cm-header-3 {
-	font-size: 1.75rem;
+	font-size: 1.4rem
 }
 
 .markdown h4, .cm-header.cm-header-4 {
-	font-size: 1.5rem;
+	font-size: 1.25rem
 }
 
 .markdown h5, .cm-header.cm-header-5 {
-	font-size: 1.25rem !important;
-	font-weight: 400 !important;
+	font-size: 1rem !important;
+	font-weight: 400 !important
 }
 
 .markdown h6, .cm-header.cm-header-6 {
-	font-size: 1rem;
+	font-size: .95rem
 }
 
 .markdown pre > code, pre > code, .CodeMirror-code {
 	border-radius: 3px;
-	tab-size: 2;
+	tab-size: 2
 }
 
 .markdown table {
-	width: 100%;
-	max-width: 100%;
-	margin-bottom: 1rem;
 	background-color: transparent;
 	border-collapse: collapse;
+	margin-bottom: 1rem;
+	max-width: 100%;
+	width: 100%
 }
 
 .markdown table thead th {
-	vertical-align: bottom;
 	border-bottom: 2px solid #dee2e6;
+	vertical-align: bottom
 }
 
 .markdown table td, .markdown table th {
-	padding: .375rem;
-	vertical-align: top;
 	border-top: 1px solid #dee2e6;
+	padding: .375rem;
+	vertical-align: top
 }
 
 th {
-	text-align: inherit;
+	text-align: inherit
 }
 
 .markdown a, .cm-s-default .cm-link {
-	-webkit-transition: all .7s; /* For Safari 3.1 to 6.0 */
-	transition: all .7s;
+	-webkit-transition: all .7s;
 	color: #0084db;
 	color: var(--active-link);
+	transition: all .7s
 }
 
 .markdown a:hover, .cm-link:hover {
-	text-decoration: none;
 	color: #212020;
 	color: var(--dark-grey);
+	text-decoration: none
 }
 
 .markdown dl {
+	-ms-flex-wrap: wrap;
 	display: -webkit-box;
 	display: -ms-flexbox;
 	display: flex;
-	-ms-flex-wrap: wrap;
 	flex-wrap: wrap;
-	margin-right: -15px;
 	margin-left: -15px;
+	margin-right: -15px
 }
 
 @media (min-width:576px) {
 	.markdown dt {
-		-webkit-box-flex: 0;
 		-ms-flex: 0 0 25%;
+		-webkit-box-flex: 0;
 		flex: 0 0 25%;
-		max-width: 25%;
+		max-width: 25%
 	}
 
 	.markdown dd {
-		-webkit-box-flex: 0;
 		-ms-flex: 0 0 75%;
+		-webkit-box-flex: 0;
 		flex: 0 0 75%;
-		max-width: 75%;
+		max-width: 75%
 	}
 
 }
 
 .markdown dd {
-	position: relative;
-	width: 100%;
-	min-height: 1px;
-	padding-right: 15px;
-	padding-left: 15px;
-	margin-top: 0;
 	margin-bottom: 0;
+	margin-top: 0;
+	min-height: 1px;
+	padding-left: 15px;
+	padding-right: 15px;
+	position: relative;
+	width: 100%
 }
 
 .markdown dt {
-	position: relative;
-	width: 100%;
-	min-height: 1px;
-	padding-right: 15px;
-	padding-left: 15px;
-	margin-top: 0;
 	margin-bottom: 0;
+	margin-top: 0;
+	min-height: 1px;
+	padding-left: 15px;
+	padding-right: 15px;
+	position: relative;
+	width: 100%
 }
 
 .markdown sup {
-	margin-left: 2px;
+	margin-left: 2px
 }
 
 .markdown li p {
-	margin-bottom: 0;
+	margin-bottom: 0
 }
 
 .markdown blockquote {
-	margin-bottom: 1rem;
 	font-size: 1.25rem;
+	margin-bottom: 1rem
 }
 
 .markdown blockquote p {
-	margin-bottom: 0;
+	margin-bottom: 0
 }

@@ -8,15 +8,11 @@ namespace Data_Governance_WebApp.Models
         public Term()
         {
             DpTermAnnotation = new HashSet<DpTermAnnotation>();
-            InverseParentTerm = new HashSet<Term>();
             ReportObjectDocTerms = new HashSet<ReportObjectDocTerms>();
-            TermCodeExamples = new HashSet<TermCodeExamples>();
-            TermCodeExamplesHistory = new HashSet<TermCodeExamplesHistory>();
             TermConversation = new HashSet<TermConversation>();
         }
 
         public int TermId { get; set; }
-        public int? ParentTermId { get; set; }
         public string Name { get; set; }
         public string Summary { get; set; }
         public string TechnicalDefinition { get; set; }
@@ -31,13 +27,9 @@ namespace Data_Governance_WebApp.Models
         public DateTime? LastUpdatedDateTime { get; set; }
 
         public virtual User ApprovedByUser { get; set; }
-        public virtual Term ParentTerm { get; set; }
         public virtual User UpdatedByUser { get; set; }
         public virtual ICollection<DpTermAnnotation> DpTermAnnotation { get; set; }
-        public virtual ICollection<Term> InverseParentTerm { get; set; }
         public virtual ICollection<ReportObjectDocTerms> ReportObjectDocTerms { get; set; }
-        public virtual ICollection<TermCodeExamples> TermCodeExamples { get; set; }
-        public virtual ICollection<TermCodeExamplesHistory> TermCodeExamplesHistory { get; set; }
         public virtual ICollection<TermConversation> TermConversation { get; set; }
     }
 }

@@ -25,6 +25,14 @@
 ViewData["Title"] = "Access Control";
 }
 
+@section css {
+    <link rel="stylesheet" href="/css/access.min.css" inline />
+}
+
+@section js {
+    <script async src="/js/access.min.js" inline></script>
+}
+
 <div class="pageTitle">
 	<h2 class="pageTitle-head">Access Control</h2>
 	<div class="tab">
@@ -34,15 +42,16 @@ ViewData["Title"] = "Access Control";
 			<a class="tab-lnk" href="#rolepriviledges">Role Priviledges</a>
 		}
 	</div>
-	<div class="tab-cnt">
-		<div class="tab-dta active" id="userroles">
-			<partial name="Pages/_UserRoles.cshtml"></partial>
-		</div>
-		@if (@Model.Permissions.Contains(18))
-		{
-			<div class="tab-dta" id="rolepriviledges">
-				<partial name="Pages/_RolePermissions.cshtml"></partial>
-			</div>
-		}
+</div>
+
+<div class="tab-cnt">
+	<div class="tab-dta active" id="userroles">
+		<partial name="Pages/_UserRoles.cshtml"></partial>
 	</div>
+	@if (@Model.Permissions.Contains(18))
+	{
+		<div class="tab-dta" id="rolepriviledges">
+			<partial name="Pages/_RolePermissions.cshtml"></partial>
+		</div>
+	}
 </div>

@@ -16,168 +16,146 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 .ss-wrapper {
-  overflow: hidden;
-  width: 100%;
-  height: 100%;
-  position: relative;
-  z-index: 1;
   float: left;
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+  z-index: 1
 }
 
 .ss-content {
+  box-sizing: border-box;
   height: calc(100% + 18px);
-  width: calc(100% + 18px);
-  padding: 0 0 0 0;
-  position: relative;
   overflow-x: scroll;
   overflow-y: scroll;
-  box-sizing: border-box;
+  padding: 0;
+  position: relative;
+  width: calc(100% + 18px)
 }
 
 .ss-scroll {
-  position: absolute;
-  padding-right:2px;
-  top: 0;
-  right:0;
-  z-index: 2;
   cursor: pointer;
   opacity: 0;
-  transition: opacity 0.25s linear 500ms;
-  padding-top:2px;
-  padding-bottom:2px;
+  padding-bottom: 2px;
+  padding-right: 2px;
+  padding-top: 2px;
+  position: absolute;
+  right: 0;
+  top: 0;
+  transition: opacity .25s linear 500ms;
+  z-index: 2
 }
 
 .ss-hscroll {
-  position: absolute;
-  padding-bottom:2px;
-  padding-left:2px;
-  padding-right:2px;
-  left:0;
-  bottom:0;
-  z-index: 2;
+  bottom: 0;
   cursor: pointer;
+  left: 0;
   opacity: 0;
-  transition: opacity 0.25s linear 500ms;
+  padding-bottom: 2px;
+  padding-left: 2px;
+  padding-right: 2px;
+  position: absolute;
+  transition: opacity .25s linear 500ms;
+  z-index: 2
 }
 
 .ss-liner {
   background: rgba(0, 0, 0, 0.4);
-  transition: background 0.25s linear;
   border-radius: 4px;
-  height:100%;
-  width:100%;
+  height: 100%;
+  transition: background .25s linear;
+  width: 100%
 }
+
 .ss-scroll .ss-liner {
-  width:8px;
-  transition: width 0.15s linear;
+  transition: width .15s linear;
+  width: 8px
 }
 
 .ss-hscroll .ss-liner {
-    height:8px;
-    transition: height 0.15s linear;
+  height: 8px;
+  transition: height .15s linear
 }
-.ss-hscroll:hover .ss-liner,
-.ss-scroll:hover .ss-liner,
-.ss-grabbed .ss-liner {
+
+.ss-hscroll:hover .ss-liner, .ss-scroll:hover .ss-liner, .ss-grabbed .ss-liner {
   background: rgba(0, 0, 0, 0.5);
-  border-radius: 6px;
+  border-radius: 6px
 }
 
-.ss-scroll:hover .ss-liner,
-.ss-scroll.ss-grabbed .ss-liner {
-  width:12px;
+.ss-scroll:hover .ss-liner, .ss-scroll.ss-grabbed .ss-liner {
+  width: 12px
 }
 
-.ss-hscroll:hover .ss-liner,
-.ss-hscroll.ss-grabbed .ss-liner
- {
-    height:12px;
+.ss-hscroll:hover .ss-liner, .ss-hscroll.ss-grabbed .ss-liner {
+  height: 12px
 }
 
 .ss-container.light .ss-liner {
-  background: rgba(255,255,255, 0.4);
+  background: rgba(255, 255, 255, 0.4)
 }
 
-
-.ss-container.light .ss-scroll:hover .ss-liner,
-.ss-container.light .ss-hscroll:hover .ss-liner,
-.ss-container.light .ss-grabbed .ss-liner {
-  background: rgba(255,255,255, 0.8);
+.ss-container.light .ss-scroll:hover .ss-liner, .ss-container.light .ss-hscroll:hover .ss-liner, .ss-container.light .ss-grabbed .ss-liner {
+  background: rgba(255, 255, 255, 0.8)
 }
 
 .ss-hidden {
-  display: none;
+  display: none
 }
 
-.ss-container:hover > .ss-wrapper > .ss-scroll,
-.ss-container:active > .ss-wrapper > .ss-scroll,
-.ss-container:hover > .ss-wrapper > .ss-hscroll,
-.ss-container:active > .ss-wrapper > .ss-hscroll,
-.ss-container.ss-grabbed > .ss-wrapper > .ss-scroll,
-.ss-container.ss-grabbed > .ss-wrapper > .ss-hscroll
-{
+.ss-container:hover > .ss-wrapper > .ss-scroll, .ss-container:active > .ss-wrapper > .ss-scroll, .ss-container:hover > .ss-wrapper > .ss-hscroll, .ss-container:active > .ss-wrapper > .ss-hscroll, .ss-container.ss-grabbed > .ss-wrapper > .ss-scroll, .ss-container.ss-grabbed > .ss-wrapper > .ss-hscroll {
   opacity: 1;
-  transition: opacity 0.25s linear 0s;
+  transition: opacity .25s linear 0s
 }
 
 .ss-grabbed {
-  -o-user-select: none;
-  -ms-user-select: none;
   -moz-user-select: none;
+  -ms-user-select: none;
+  -o-user-select: none;
   -webkit-user-select: none;
-  user-select: none;
+  user-select: none
 }
-
-
-/*********** scroll preview **************/
 
 .sp-wrapper {
-  position: absolute;
-  top:0;
-  right:0;
-  height:100%;
-  width:0px;
-  opacity:0;
- -moz-user-select: none;
   -khtml-user-select: none;
-  -webkit-user-select: none;
+  -moz-user-select: none;
   -ms-user-select: none;
+  -webkit-user-select: none;
+  height: 100%;
+  opacity: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  transition: opacity .25s linear 500ms;
   user-select: none;
-  transition: opacity 0.25s linear 500ms;
-
+  width: 0
 }
 
-.sp-container:hover .sp-wrapper,
-.sp-wrapper > .sp-grabbed,
-.ss-grabbed ~ .sp-wrapper {
+.sp-container:hover .sp-wrapper, .sp-wrapper > .sp-grabbed, .ss-grabbed ~ .sp-wrapper {
   opacity: 1;
-  transition: opacity 0.25s linear 0s;
+  transition: opacity .25s linear 0s
 }
 
 .sp-content {
-  transform-origin: 0px 0px;
+  transform-origin: 0 0
 }
 
 .sp-scroll {
-  position: absolute;
-  width:100%;
-  background-image: linear-gradient(to left, rgba(255,255,255,0), rgba(255,255,255,.2));
+  background-image: linear-gradient(to left, rgba(255, 255, 255, 0), rgba(255, 255, 255, .2));
+  border-left: 2px solid #e7db74;
+  left: -2px;
   opacity: 0;
-  left:-2px;
-  transition: opacity 0.25s linear 500ms;
-  border-left: 2px solid rgb(231,219,116);
+  position: absolute;
+  transition: opacity .25s linear 500ms;
+  width: 100%
 }
 
-.ss-scroll.ss-grabbed ~ .sp-wrapper .sp-scroll,
-.ss-scroll:hover ~ .sp-wrapper .sp-scroll,
-.sp-wrapper:hover .sp-scroll,
-.sp-wrapper.sp-hover .sp-scroll,
-.sp-wrapper .sp-scroll.sp-grabbed {
+.ss-scroll.ss-grabbed ~ .sp-wrapper .sp-scroll, .ss-scroll:hover ~ .sp-wrapper .sp-scroll, .sp-wrapper:hover .sp-scroll, .sp-wrapper.sp-hover .sp-scroll, .sp-wrapper .sp-scroll.sp-grabbed {
   opacity: 1;
-  transition: opacity 0.25s linear 0s;
+  transition: opacity .25s linear 0s
 }
 
 .ss-content::-webkit-scrollbar {
-    background-color: #fff;
-    width: 16px;
+  background-color: #fff;
+  width: 16px
 }

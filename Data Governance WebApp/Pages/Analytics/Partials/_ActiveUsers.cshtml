@@ -16,37 +16,39 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 *@
 
-<h2 class="pageTitle-head">Active Now! - @ViewBag.ActiveUsers users</h2>
+<h3>Active Now! - @ViewBag.ActiveUsers users</h3>
 
 @if(ViewBag.ActiveUserData.Count > 0)
 {
-    <table class="table @if (ViewBag.ActiveUserData.Count > 1) {<text>sort</text>} ">
-        <thead>
-            <tr>
-                <th>User</th>
-                <th>SessionTime</th>
-                <th>PageTime</th>
-                <th>Page Title</th>
-                <th>Link</th>
-                <th>Page Load Time</th>
-                <th>Refreshed</th>
-                <th>Pages Visited</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach(var d in ViewBag.ActiveUserData)
-            {
-            <tr>
-                <td><a href="users?id=@d.UserId" class="ajax atlas-blue">@d.Fullname</a></td>
-                <td>@d.SessionTime</td>
-                <td>@d.PageTime</td>
-                <td>@d.Title</td>
-                <td><a href="@d.Href" class="ajax atlas-blue">@d.Href</a></td>
-                <td>@d.AccessDateTime</td>
-                <td>@d.UpdateTime</td>
-                <td>@d.Pages</td>
-            </tr>
-            }
-        </tbody>
-    </table>
+    <div class="table-responsive">
+        <table class="table @if (ViewBag.ActiveUserData.Count > 1) {<text>sort</text>} ">
+            <thead>
+                <tr>
+                    <th>User</th>
+                    <th>SessionTime</th>
+                    <th>PageTime</th>
+                    <th>Page Title</th>
+                    <th>Link</th>
+                    <th>Page Load Time</th>
+                    <th>Refreshed</th>
+                    <th>Pages Visited</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach(var d in ViewBag.ActiveUserData)
+                {
+                <tr>
+                    <td><a href="users?id=@d.UserId">@d.Fullname</a></td>
+                    <td>@d.SessionTime</td>
+                    <td>@d.PageTime</td>
+                    <td>@d.Title</td>
+                    <td><a href="@d.Href">@d.Href</a></td>
+                    <td>@d.AccessDateTime</td>
+                    <td>@d.UpdateTime</td>
+                    <td>@d.Pages</td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 }

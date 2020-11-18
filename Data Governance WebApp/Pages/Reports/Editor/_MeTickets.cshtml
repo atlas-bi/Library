@@ -17,24 +17,33 @@
 *@
 
 @model Data_Governance_WebApp.Pages.Reports.IndexModel
-@{
-    var m = Model ?? ViewBag;
-}
 
-@if (m.ManageEngineTickets.Count > 0)
-{
-    <h5 class="pt-2">Current Tickets</h5>
-    @foreach (var t in m.ManageEngineTickets)
+<div id="report-editor-metickets-container">
+    <h3>Manage Engine Tickets</h3>
+
+    <form asp-page-handler="AddMeTicket" id="report-edit-new-meticket" method="post">
+        <input asp-for="ManageEngineTicket.ReportObjectId" type="hidden" value="@ViewBag.Id" />
+        <div class="listDetails">
+            <label>Number</label>
+            <input asp-for="ManageEngineTicket.TicketNumber" />
+            <label>Url</label>
+            <input asp-for="ManageEngineTicket.TicketUrl" />
+            <label>Comments</label>
+            <input asp-for="ManageEngineTicket.Description" />
+        </div>
+        <h3><button class="editor-save" type="submit">Save</button></h3>
+    </form>
+
+
+    @if (ViewBag.ManageEngineTickets.Count > 0)
     {
-        <form asp-page-handler="RemoveMeTicket" method="post" class="form-inline" id="report-editor-remove-meticket-form">
-            
-            <button type="submit" value="Remove" class="btn btn-link text-primary py-0" onclick="return confirm('Are you sure you want to remove this link?');">
-                <i class="fas fa-trash-alt"></i>
-            </button>
-            <a target="_blank"  rel="noopener" class="atlas-blue" href="@t.Url" data-tooltip="@t.Description">@t.Number</a>
-            <input type="hidden" asp-for="ManageEngineTicket.ReportObjectId" value="@t.ReportId" />
-            <input type="hidden" asp-for="ManageEngineTicket.ManageEngineTicketsId" value="@t.Id" />
-        </form>
+        <h5 class="pt-2">Current Tickets</h5>
+        @foreach (var t in ViewBag.ManageEngineTickets)
+        {
+            <div class="listDetails">
+                <a class="reportDetails-title" href="\reports?handler=RemoveMeTicket&Id=@t.Id">Delete</a>
+                <a target="_blank" class="reportDetails-title" href="@t.Url">#@t.Number <code>@t.Description</code></a>
+            </div>
+        }
     }
-    <h5 class="pt-2">Add a Ticket</h5>
-}
+</div>

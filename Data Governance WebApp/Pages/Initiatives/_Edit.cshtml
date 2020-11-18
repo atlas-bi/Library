@@ -17,83 +17,64 @@
 *@
 
 @model Data_Governance_WebApp.Pages.Initiatives.IndexModel
-<div class="clps" id="editClps">
-    <div class="card card-body bg-light mb-4" id="">
-        <form asp-page-handler="EditInitiative" method="post" >
-            <h5 class="d-flex justify-content-between">
-            <span>Edit Data Initiative</span>
-            <div class="button-group">
-                <button class="btn btn-link" type="button" data-toggle="clps" data-target="editClps">
-                <i class="fas fa-times fa-lg"></i>
-                </button>
-                <button class="btn btn-link" type="submit" name="submit" id="submitNewDocumentation">
-                <i class="fas fa-save fa-lg"></i>
-                </button>
-            </div>
-            </h5>
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input asp-for="DpDataInitiative.DataInitiativeId" type="hidden" value="@Model.DataInitiative.Id" />
-                <input type="nice-input" asp-for="DpDataInitiative.Name" data-initial-content="Name" required value="@Model.DataInitiative.Name" />
-                <input type="nice-input" asp-for="DpDataInitiative.Description" data-initial-content="Description" required value="@Model.DataInitiative.Description" />
-            <!-- external contact -->
-            <div class="row py-1">
-                <div class="col-2">
-                    <h6 class="pt-2 text-right">External Contacts</h6>
-                </div>
-                <div class="col">
-                    <select type="dynamic-dropdown" asp-for="LinkedContacts"  search-area="ext-cont" method="fullList">
-                        @foreach (var c in Model.DataInitiative.RelatedContacts)
-                            {
-                                <option selected="selected" value="@c.Id">@c.Name - @c.Company</option>
-                            }
-                    </select>
-                </div>
-            </div>
-            <!-- owners -->
-            <div class="row py-1">
-                <div class="col-2">
-                    <h6 class="pt-2 text-right">Operations Owner</h6>
-                </div>
-                <div class="col">
-                    <input type="dynamic-dropdown" asp-for="DpDataInitiative.OperationOwnerId" value='@Model.DataInitiative.OpOwnerId' visible-value="@Model.DataInitiative.OpOwner" search-area="UserSearch" />
-                </div>
-                <div class="col-2">
-                    <h6 class="pt-2 text-right">Executive Owner</h6>
-                </div>
-                <div class="col">
-                    <input type="dynamic-dropdown" asp-for="DpDataInitiative.ExecutiveOwnerId" value='@Model.DataInitiative.ExOwnerId' visible-value="@Model.DataInitiative.ExOwner" search-area="UserSearch" />
-                </div>
-            </div>
 
-            <!-- impact -->
-            <div class="row py-1">
-                <div class="col-2">
-                    <h6 class="pt-2 text-right">Financial Impact</h6>
-                </div>
-                <div class="col">
-                    <input type="dynamic-dropdown" asp-for="DpDataInitiative.FinancialImpact" search-area="financial-impact" method="fullList" visible-value="@Model.DataInitiative.FinancialImp" value="@Model.DataInitiative.FinancialImpId" />
-                </div>
-                <div class="col-2">
-                    <h6 class="pt-2 text-right">Strategic Importance</h6>
-                </div>
-                <div class="col">
-                    <input type="dynamic-dropdown" asp-for="DpDataInitiative.StrategicImportance" search-area="strategic-importance" method="fullList" visible-value="@Model.DataInitiative.StrategicImp" value="@Model.DataInitiative.StrategicImpId" />
+<div class="mdl" id="editModal" tabindex="-1">
+    <div class="mdl-d editorMdl">
+        <div class="mdl-c editorMdl-inner">
+            <div class="editorMdl-title">
+                <h2 class="editorMdl-titleText">Editing <span class="text-green">@Model.DataInitiative.Name</span><button type="button" class="editorMdl-close" data-dismiss="mdl" data-tooltip="Close">&times;</button></h2>
+               
+                <div id="editorMdl-titleSave">changes saved.</div>
+            </div>
+            <div class="editorMdl-cnt" ss-container>
+                <div class="editorMdl-cntLiner">
+                    <form asp-page-handler="EditInitiative" method="post" >
+                        <input asp-for="DpDataInitiative.DataInitiativeId" type="hidden" value="@Model.DataInitiative.Id" />
+                        <h3>Details</h3>
+                        <div class="listDetails">
+                            
+                            <label>Name</label>
+                            <input asp-for="DpDataInitiative.Name" data-initial-content="Name" required value="@Model.DataInitiative.Name" />
+
+                            <label>External Contacts</label>
+                            <select type="dynamic-dropdown" asp-for="LinkedContacts"  search-area="ext-cont" method="fullList">
+                                @foreach (var c in Model.DataInitiative.RelatedContacts)
+                                    {
+                                        <option selected="selected" value="@c.Id">@c.Name - @c.Company</option>
+                                    }
+                            </select>
+
+                            <label>Operations Owner</label>
+                            <input type="dynamic-dropdown" asp-for="DpDataInitiative.OperationOwnerId" value='@Model.DataInitiative.OpOwnerId' visible-value="@Model.DataInitiative.OpOwner" search-area="UserSearch" />
+
+                            <label>Executive Owner</label>
+                            <input type="dynamic-dropdown" asp-for="DpDataInitiative.ExecutiveOwnerId" value='@Model.DataInitiative.ExOwnerId' visible-value="@Model.DataInitiative.ExOwner" search-area="UserSearch" />
+
+                            <label>Financial Impact</label>
+                            <input type="dynamic-dropdown" asp-for="DpDataInitiative.FinancialImpact" search-area="financial-impact" method="fullList" visible-value="@Model.DataInitiative.FinancialImp" value="@Model.DataInitiative.FinancialImpId" />
+
+                            <label>Strategic Importance</label>
+                            <input type="dynamic-dropdown" asp-for="DpDataInitiative.StrategicImportance" search-area="strategic-importance" method="fullList" visible-value="@Model.DataInitiative.StrategicImp" value="@Model.DataInitiative.StrategicImpId" />
+
+
+                            <label>Linked Projects</label>
+                            <select type="dynamic-dropdown" asp-for="LinkedDataProjects" id="linked-data-projects" search-area="ProjectSearch">
+                                @foreach (var d in @Model.DataInitiative.RelatedProjects)
+                                {
+                                    <option selected="selected" value="@d.Id">@d.Name</option>
+                                }
+                            </select>
+                        </div>
+
+                        <h3>Description</h3>
+                        <div class="editor" data-inputName="DpDataInitiative.Description" data-inputId="DpDataInitiative_Description"><textarea>@Html.Raw(Model.DataInitiative.Description)</textarea></div>
+
+                        <h3><button class="editor-save" type="submit">Save</button></h3>
+                    </form>
                 </div>
             </div>
-            <!-- linked projects -->
-            <div class="row py-1">
-                <div class="col-2">
-                    <h6 class="pt-2 text-right">Linked Projects</h6>
-                </div>
-                <div class="col">
-                    <select type="dynamic-dropdown" asp-for="LinkedDataProjects" id="linked-data-projects" search-area="ProjectSearch" >
-                         @foreach (var d in @Model.DataInitiative.RelatedProjects)
-                    {
-                        <option selected="selected" value="@d.Id">@d.Name</option>
-                    }
-                    </select>
-                </div>
-            </div>
-        </form>
+        </div>
     </div>
 </div>
+
+

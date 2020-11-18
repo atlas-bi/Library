@@ -21,99 +21,67 @@
 
 
 <div class="pageTitle">
-    <h2 class="pageTitle-head"><span>@Model.DataProject.Name</span></h2>
-    <div class="control-box">
-        <ul class=control-list>
-            @if (Model.Permissions.Contains(28))
-            {
-                <li class="control-item">
-                        <button class="btn btn-link p-0 atlas-blue" type="button" data-toggle="mdl" data-target="editModal"><span class="far fa-edit"></span></button>
-                </li>
-            }
-            @if (Model.Permissions.Contains(27))
-            {
-                <li class="control-item">
-                    <form asp-page-handler="DeleteProject" method="post">
-                        <input asp-for="DpDataProject.DataProjectId" type="hidden" value="@Model.DataProject.Id" />
-                        <button class="btn btn-link p-0 atlas-blue" type="submit" onclick="return confirm('Are you sure you want to remove this?');" style="margin-top:-2px;">
-                            <svg class="icon-sm" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M432 32H312l-9.4-18.7A24 24 0 0 0 281.1 0H166.8a23.72 23.72 0 0 0-21.4 13.3L136 32H16A16 16 0 0 0 0 48v32a16 16 0 0 0 16 16h416a16 16 0 0 0 16-16V48a16 16 0 0 0-16-16zM53.2 467a48 48 0 0 0 47.9 45h245.8a48 48 0 0 0 47.9-45L416 128H32z"/></svg>
-                        </button>
-                    </form>
-                </li>
-            }
+    <h2 class="pageTitle-head">
+        <span>@Model.DataProject.Name</span>
+    </h2>
 
-            <li class="control-item">
-                <i fav-type="project" object-id="@Model.DataProject.Id" class="favorite far fa-star @Model.DataProject.Favorite"></i>
-            </li>
-            <li class="control-item" data-tooltiop="Share">
-                <button class="btn btn-link p-0 atlas-blue" data-toggle="mdl" data-target="shareModal" data-name='@Model.DataProject.Name'><i class="fas fa-share"></i></button>
-            </li>
-            <li class="control-item" data-tooltip="Report a Problem">
-                <button class="btn btn-link p-0 atlas-blue" data-toggle="mdl" data-target="reportProblem" data-name="@Model.DataProject.Name"><i class="fas fa-exclamation-circle"></i></button>
-            </li>
-        </ul>
-    </div>
-    <div class="navLinks">
-        <a href="#description" class="navLinks-link">Description</a>
+    <div class="pageNav">
+        <a href="#about" class="pageNav-link">About</a>
         @if(Model.DataProject.RelatedReports.Count() > 0 || Model.DataProject.RelatedTerms.Count() > 0)
         {
-            <a href="#links" class="navLinks-link">Linked Content</a>
+            <a href="#links" class="pageNav-link">Linked Content</a>
         }
         @if(ViewBag.Attachments.Count > 0){
-            <a href="#attachments" class="navLinks-link">Attachments</a>
+            <a href="#attachments" class="pageNav-link">Attachments</a>
         }
         @if(Model.DataProject.Agreements.Count() > 0)
         {
-            <a href="#agreements" class="navLinks-link">Agreements</a>
+            <a href="#agreements" class="pageNav-link">Agreements</a>
         }
         @if(Model.DataProject.MilestoneTasks.Count() > 0)
         {
-            <a href="#milestone" class="navLinks-link">Milestones</a>
+            <a href="#milestone" class="pageNav-link">Milestones</a>
         }
-        <a href="#comments" class="navLinks-link">Comments</a>
+        <a href="#comments" class="pageNav-link">Comments</a>
     </div>
 </div>
 
-@if (Model.Permissions.Contains(28))
-{
-    <partial name="_Edit"></partial>
-}
-
 <section class="pageSection">
-    <span class="location" id="description"></span>
+    <span class="location" id="about"></span>
     <partial name="Details/_Details.cshtml"></partial>
 </section>
 
-@if(Model.DataProject.RelatedReports.Count() > 0 || Model.DataProject.RelatedTerms.Count() > 0)
-{
-    <section class="pageSection">
-        <span class="location" id="links"></span>
-       <partial name="Details/_Links.cshtml"></partial>
-    </section>
-}
-
-@if(ViewBag.Attachments.Count > 0){
 <section class="pageSection">
-        <span class="location" id="attachments"></span>
-        <partial name="Details/_Attachments.cshtml"></partial>
-    </section>
+    <span class="location" id="links"></span>
+    @if(Model.DataProject.RelatedReports.Count() > 0 || Model.DataProject.RelatedTerms.Count() > 0)
+    {
+        <partial name="Details/_Links.cshtml"></partial>
     }
+</section>
 
-@if(Model.DataProject.Agreements.Count() > 0)
-{
-    <section class="pageSection">
-        <span class="location" id="agreements"></span>
+<section class="pageSection">
+    <span class="location" id="attachments"></span>
+    @if(ViewBag.Attachments.Count > 0)
+    {
+        <partial name="Details/_Attachments.cshtml"></partial>
+    }
+</section>
+
+<section class="pageSection">
+    <span class="location" id="agreements"></span>
+    @if(Model.DataProject.Agreements.Count() > 0)
+    {
         <partial name="Details/_Agreements.cshtml"></partial>
-    </section>
-}
+    }
+</section>
 
-@if(Model.DataProject.MilestoneTasks.Count() > 0)
-{
-    <section class="pageSection">
-        <span class="location" id="milestone"></span>
+<section class="pageSection">
+    <span class="location" id="milestone"></span>
+    @if(Model.DataProject.MilestoneTasks.Count() > 0)
+    {
         <partial name="Details/_Milestones.cshtml"></partial>
-    </section>
-}
+    }
+</section>
 
 <section class="pageSection" >
     <span class="location" id="comments"></span>

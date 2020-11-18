@@ -104,9 +104,7 @@ namespace Data_Governance_WebApp.Pages.Analytics
                                   Time = Math.Round(grp.Average(i => Convert.ToDouble(i.LoadTime ?? "0"))/1000, 2),
                                   Count = grp.Count()
                               }).Take(10).ToListAsync();
-            HttpContext.Response.Headers.Add("Cache-Control", "no-cache, no-store, must-revalidate");
-            HttpContext.Response.Headers.Add("Pragma", "no-cache"); // HTTP 1.0.
-            HttpContext.Response.Headers.Add("Expires", "0"); // Proxies.
+
             return Page();
         }
 
@@ -172,9 +170,6 @@ namespace Data_Governance_WebApp.Pages.Analytics
                     oldAna.FirstOrDefault().PageTime = (int)package["pageTime"];
                     oldAna.FirstOrDefault().UpdateTime = DateTime.Now;
                     await _context.SaveChangesAsync();
-                    HttpContext.Response.Headers.Add("Cache-Control", "no-cache, no-store, must-revalidate");
-                    HttpContext.Response.Headers.Add("Pragma", "no-cache"); // HTTP 1.0.
-                    HttpContext.Response.Headers.Add("Expires", "0"); // Proxies.
                     return Content("ok");
                 }
 
@@ -213,9 +208,6 @@ namespace Data_Governance_WebApp.Pages.Analytics
                 await _context.SaveChangesAsync();
             }
 
-            HttpContext.Response.Headers.Add("Cache-Control", "no-cache, no-store, must-revalidate");
-            HttpContext.Response.Headers.Add("Pragma", "no-cache"); // HTTP 1.0.
-            HttpContext.Response.Headers.Add("Expires", "0"); // Proxies.
             return Content("ok");
         }
     }

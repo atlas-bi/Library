@@ -17,93 +17,89 @@
 */
 .input-ctn {
 	margin-top: 5px;
-	width: 100%;
-	position: relative;
 	padding-bottom: 25px;
+	position: relative;
+	width: 100%
 }
 
 .input-ctn.slim {
-	padding-bottom:10px;
+	padding-bottom: 10px
 }
-
 
 .input-new {
 	margin-top: 25px;
-	width: 100%;
-	position: relative;
 	padding-bottom: 15px;
+	position: relative;
+	width: 100%
 }
 
 .input-newWrapper {
-	min-height: 33px;
-	margin-left: 15px;
-	position: relative;
-	display:flex;
 	border-bottom: 1px solid #BEB8BA;
-	border-bottom: 1px solid var(--medium-grey);
+	display: flex;
+	margin-left: 15px;
+	min-height: 33px;
+	position: relative
 }
 
 .input-newWrapper:hover {
-	cursor: text;
+	cursor: text
 }
 
 .input-newWrapper::after {
-	position: absolute;
-	content: '';
-	width: 0;
-	left: 0;
-	bottom: -1px;
-	height: 2px;
+	-webkit-transition: width .7s;
 	background-color: #0084db;
-	background-color: var(--active-link);
-	-webkit-transition: width .7s; /* For Safari 3.1 to 6.0 */
+	bottom: -1px;
+	content: '';
+	height: 2px;
+	left: 0;
+	position: absolute;
 	transition: width .7s;
-	z-index:1;
+	width: 0;
+	z-index: 1
 }
 
 .input-newWrapper-focus::after {
+	-webkit-transition: width .2s;
 	content: '';
 	position: absolute;
-	width: 100%;
-	-webkit-transition: width .2s; /* For Safari 3.1 to 6.0 */
 	transition: width .2s;
+	width: 100%
 }
 
 .input-span {
-	position: relative;
-	min-height: 33px;
-	flex:1;
-	padding: 3px;
 	display: block;
+	flex: 1;
+	min-height: 33px;
 	outline: none;
+	padding: 3px;
+	position: relative
 }
 
 .input-span:empty::before {
-	content: attr(data-initial-content);
 	color: #575353;
-	color: var(--grey);
-	display: block;
+	content: attr(data-initial-content);
+	display: block
 }
 
 .input-span:focus::before {
-	display: none;
+	display: none
 }
 
 .input-submit {
-	position: relative;
-	margin:0;
-	padding:0 10px;
+	background: transparent;
+	border: 0;
 	cursor: pointer;
+	margin: 0;
 	outline: none;
-	border:0;
-	background:transparent;
+	padding: 0 10px;
+	position: relative
 }
+
 .input-submit:hover, .input-submit:active, .input-submit:focus, .input-submit:visited {
-	text-decoration: none;
-	outline:none;
+	outline: none;
+	text-decoration: none
 }
 
 .input-span:focus {
-	outline: none;
+	outline: none
 }
-

@@ -18,10 +18,107 @@
 
 @page
 @model Data_Governance_WebApp.Pages.Groups.IndexModel
-@{
-    ViewData["Title"] = "Index";
-    Layout = "~/Pages/Shared/_Layout.cshtml";
-}
+@{ Layout = HttpContext.Request.Headers["x-requested-with"] == "XMLHttpRequest" ? "../Shared/_AjaxLayout.cshtml" : "../Shared/_Layout.cshtml"; }
+@{ ViewData["Title"] = @Model.Group.Name; }
 
-<h1>Index</h1>
 
+<div class="pageTitle">
+    <h2 class="pageTitle-head"><span>Group @Model.Group.Name</span></h2>
+    <div class="pageNav">
+        <a href="#details" class="pageNav-link">Details</a>
+        <a href="#users" class="pageNav-link">Users With Group</a>
+        <a href="#reports" class="pageNav-link">Reports With Group</a>
+    </div>
+</div>
+
+<section class="pageSection">
+    <span class="location" id="details"></span>
+
+    <h3>Details</h3>
+    <div class="listDetails">
+        @if (Model.Group.Email != "" && Model.Group.Email != null)
+        {
+            <span class="listDetails-title">Email</span>
+            <span>@Model.Group.Email</span>
+        }
+        <span class="listDetails-title">Type</span>
+        <span>@Model.Group.Type</span>
+        <span class="listDetails-title">Source</span>
+        <span>@Model.Group.Source</span>
+    </div>
+</section>
+
+<section class="pageSection">
+    <span class="location" id="users"></span>
+
+    @if(Model.GroupUsers.Count() > 0)
+    { 
+        <h3>Users With This Group</h3>
+        <div class="table-responsive">
+            <table class="table sort">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Epic Id</th>
+                        <th>Employee Id</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var s in Model.GroupUsers)
+                    {
+                        <tr>
+                            <td><a href="\Users?id=@s.Id">@s.Name</a></td>
+                            <td>@if(s.Email != ""){<a href="mailto:@s.Email">@s.Email</a>}</td>
+                            <td>@s.Phone</td>
+                            <td>@s.EpicId</td>
+                            <td>@s.EmployeeId</td>
+                        </tr>            
+                      }
+                </tbody>
+            </table>
+        </div>
+    } else
+    {
+        <h3>No Users With This Group</h3>
+
+    }
+</section>
+
+<section class="pageSection">
+    <span class="location" id="reports"></span>
+    @if (Model.GroupReports.Count() > 0)
+    {
+        <h3>Reports With This Group</h3>
+        <div class="table-responsive">
+            <table class="table sort">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Last Updated</th>
+                        <th># Subscriptions</th>
+                        <th># Favorites</th>
+                        <th># Runs (2yrs)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var s in Model.GroupReports)
+                    {
+                        <tr>
+                            <td><a href="\Reports?id=@s.Id">@s.Name</a></td>
+                            <td>@s.LastUpdated</td>
+                            <td>@s.Subscriptions</td>
+                            <td>@s.Favs</td>
+                            <td>@s.Runs</td>
+                        </tr>
+                     }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <h3 class="pageSection-title">No Reports With This Group</h3>
+    }
+</section>

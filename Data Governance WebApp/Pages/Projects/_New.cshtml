@@ -18,62 +18,53 @@
 
 @model Data_Governance_WebApp.Pages.Projects.IndexModel	
 
-<div class="clps" id="newClps">
-    <div class="card card-body bg-light mb-4" id="">
-        <form asp-page-handler="NewDataProject" method="post">
-            <h3 class="d-flex justify-content-between">
-            	<span>New Data Project</span>
-            	<div class="button-group">
-            		<button class="btn btn-link" type="button" data-toggle="clps" data-target="newClps">
-                		<i class="fas fa-times fa-lg"></i>
-            		</button>
-            		<button class="btn btn-link" type="submit" name="submit" id="submitNewDocumentation">
-                		<i class="fas fa-save fa-lg"></i>
-            		</button>
-        		</div>
-            </h3>
+<div class="mdl" id="newModal" tabindex="-1">
+    <div class="mdl-d editorMdl">
+        <div class="mdl-c editorMdl-inner">
+            <div class="editorMdl-title">
+                <h2>Create a New Initiative<button type="button" data-dismiss="mdl" data-tooltip="Close">&times;</button></h2>
+                <div id="editorMdl-titleSave">changes saved.</div>
+            </div>
+            <div class="editorMdl-cnt" ss-container>
+            	<div class="editorMdl-cntLiner">
+        			<form asp-page-handler="NewDataProject" method="post">
 
-			<h5 class="pt-2">Name</h5>
-		    <input asp-for="DpDataProject.Name" class="form-control" required />
+						<h3>Detials</h3>
+						<div class="listDetails">
+							<label>Name</label>
+					    	<input asp-for="DpDataProject.Name" required />
 
-		    <h5 class="pt-2">Purpose</h5>
-		    <input asp-for="DpDataProject.Purpose" class="form-control"></input>
+							<label>Operations Owner</label>
+						   	<input type="dynamic-dropdown" asp-for="DpDataProject.OperationOwnerId" value="" visible-value="" search-area="UserSearch" />
+							
+					    	<label>Executive Owner</label>
+					    	<input type="dynamic-dropdown" asp-for="DpDataProject.ExecutiveOwnerId" value="" visible-value="" search-area="UserSearch" />
+							
+			        		<label>Analytics Owner</label>
+			        		<input type="dynamic-dropdown" asp-for="DpDataProject.AnalyticsOwnerId" value="" visible-value="" search-area="UserSearch" />
+					     	
+					     	<label>Data Owner</label>
+				        	<input type="dynamic-dropdown" asp-for="DpDataProject.DataManagerId" value="" visible-value="" search-area="UserSearch" />
+					     	
+					     	<label>Financial Impact</label>
+							<input type="dynamic-dropdown" asp-for="DpDataProject.FinancialImpact" search-area="financial-impact" method="fullList" />
+							
+							<label>Strategic Importance</label>
+							<input type="dynamic-dropdown" asp-for="DpDataProject.StrategicImportance" search-area="strategic-importance" method="fullList" />
+						</div>
 
-		    <h5 class="pt-2">Description</h5>
-		    <textarea rows="3" asp-for="DpDataProject.Description" class="form-control"></textarea>
+						<h3>Purpose</h3>
+						<div class="editor" data-inputName="DpDataProject.Purpose" data-inputId="DpDataProject_Purpose"><textarea></textarea></div>
 
-		    <div class="row pt-2">
-		    	<div class="col">
-			    	<h5 class="pt-2">Operations Owner</h5>
-			    	<input type="dynamic-dropdown" asp-for="DpDataProject.OperationOwnerId" value="" visible-value="" search-area="UserSearch" />
-				</div>
-				<div class="col">
-			    	<h5 class="pt-2">Executive Owner</h5>
-			    	<input type="dynamic-dropdown" asp-for="DpDataProject.ExecutiveOwnerId" value="" visible-value="" search-area="UserSearch" />
-				</div>
-			</div>
-		    <div class="row pt-2">
-				<div class="col">
-	        		<h5 class="pt-2">Analytics Owner</h5>
-	        		<input type="dynamic-dropdown" asp-for="DpDataProject.AnalyticsOwnerId" value="" visible-value="" search-area="UserSearch" />
-		     	</div>
-		     	<div class="col">
-	        		<h5 class="pt-2">Data Owner</h5>
-	        		<input type="dynamic-dropdown" asp-for="DpDataProject.DataManagerId" value="" visible-value="" search-area="UserSearch" />
-		     	</div>
-			</div>
 
-			<div class="row pt-2">
-		    	<div class="col">
-				    <h5 class="pt-2">Financial Impact</h5>
-				    <input type="dynamic-dropdown" asp-for="DpDataProject.FinancialImpact" search-area="financial-impact" method="fullList" />
-				</div>
-				<div class="col">
-				    <h5 class="pt-2">Strategic Importance</h5>
-				    <input type="dynamic-dropdown" asp-for="DpDataProject.StrategicImportance" search-area="strategic-importance" method="fullList" />
-				</div>
-			</div>
-        </form>
-    </div>
+					    <h3>Description</h3>
+					    <div class="editor" data-inputName="DpDataProject.Description" data-inputId="DpDataProject_Description"><textarea></textarea></div>
+				    
+				    	<h3><button class="editor-save" type="submit">Save</button></h3>
+				    	
+			        </form>
+			    </div>
+		    </div>
+		</div>
+	</div>
 </div>
-

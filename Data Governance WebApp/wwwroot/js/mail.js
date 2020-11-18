@@ -16,17 +16,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-(function (root, factory) {
-    if (typeof define === 'function' && define.amd) {
-        // AMD. Register as an anonymous module.
-        define(['b'], factory);
-    } else {
-        // Browser globals
-        root.Mail = factory(root.b);
-    }
-}(typeof self !== 'undefined' ? self : this, function (b) {
-
-  var x = function(){
+(function() {
     document.execCommand("defaultParagraphSeparator", false, "div");
     var mail_check_rate = 10 * 1000,
         getMessageAjax = null,
@@ -41,7 +31,9 @@
 
             var div = document.createElement('div');
 
-            if (newMesQ !== null) { newMesQ.abort(); }
+            if (newMesQ !== null) {
+                newMesQ.abort();
+            }
             newMesQ = new XMLHttpRequest();
             newMesQ.open('post', "/mail?handler=CheckForMail", true);
             newMesQ.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
@@ -106,8 +98,10 @@
                         el;
                     for (x = 0; x < msg.length; x++) {
                         el = div.querySelector('.mlbx-msgsMsg[data-rep-id="' + msg[x].getAttribute('data-rep-id') + '"]');
-                        if (el !== null) { el.parentElement.removeChild(el.nextElementSibling);
-                            el.parentElement.removeChild(el); }
+                        if (el !== null) {
+                            el.parentElement.removeChild(el.nextElementSibling);
+                            el.parentElement.removeChild(el);
+                        }
                     }
                 }
                 //if(d.querySelector('.mlbx-msgsMsg.active')){
@@ -115,26 +109,13 @@
                 if (div.querySelector('.mlbx-msgsMsg.active')) {
                     div.querySelector('.mlbx-msgsMsg.active').classList.remove('active');
                 }
-                //} else {
-                //LoadMessageDetails(div.querySelector('.mlbx-msgsMsg.active').getAttribute("data-rep-id"));
-                //}
+
                 if (d.querySelector('.mlbx-msgs .ss-content').children.length > 0) {
                     d.querySelector('.mlbx-msgs .ss-content').children[0].insertAdjacentHTML('beforebegin', div.innerHTML);
                 } else {
                     d.querySelector('.mlbx-msgs .ss-content').innerHTML = div.innerHTML;
                 }
             }
-            /* transition in the new message 
-            		var la = $(div)
-            		d.querySelector('.mlbx-msgsScroll .ss-content').innerHTML = div.innerHTML + d.querySelector('.mlbx-msgsScroll .ss-content').innerHTML;
-            		$('.mailbox-messages-scroll .ss-content').prepend(la.html());
-            		var h = parseFloat(la.outerHeight());
-            		la.css({"margin-bottom":-h});
-            		la.stop().animate({"margin-bottom":0},150,function() {
-            			// move html outside of div.
-            			la.after(la.html()).remove();
-            		});
-            	}*/
         },
         LoadFolder = function(folder, folderId) {
             d.getElementsByClassName('mlbx-rdr')[0].innerHTML = '';
@@ -217,7 +198,9 @@
             /*
             1 open blank message with params from storage (or server) */
             saveDraftQ = null;
-            if (loadMesQ) { loadMesQ.abort(); }
+            if (loadMesQ) {
+                loadMesQ.abort();
+            }
             loadMesQ = new XMLHttpRequest();
             loadMesQ.open('get', "mail?handler=DraftDetails&id=" + id, true);
             loadMesQ.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
@@ -318,8 +301,12 @@
             }));
         },
         LoadMessageDetails = function(id) {
-            if (!d.getElementsByClassName('mlbx-rdr')[0]) { return false; }
-            if (loadMesQ) { loadMesQ.abort(); }
+            if (!d.getElementsByClassName('mlbx-rdr')[0]) {
+                return false;
+            }
+            if (loadMesQ) {
+                loadMesQ.abort();
+            }
             loadMesQ = new XMLHttpRequest();
             loadMesQ.open('get', "mail?handler=MessageDetails&id=" + id, true);
             loadMesQ.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
@@ -515,7 +502,10 @@
 
             for (var x = 0; x < recp.length; x++) {
                 var g = recp[x].classList.contains('group') ? 'g' : '';
-                to.push({ UserId: recp[x].value, Type: g });
+                to.push({
+                    UserId: recp[x].value,
+                    Type: g
+                });
             }
 
             //subject
@@ -576,7 +566,7 @@
 
 
     d.addEventListener('click', function(e) {
-        var m,convid,subject,f,from,x,message,message_liner,dbox;
+        var m, convid, subject, f, from, x, message, message_liner, dbox;
         if (e.target.closest('.mail-reply') && d.querySelector('#mlbx-fldrsInbox.active') !== null) {
 
             m = d.querySelector('.mlbx-rdrHead');
@@ -638,91 +628,5 @@
             StartNewMessage(from, subject, message, convid);
         }
     });
-    /*
-
-    $('body').on('click', '.mail-reply-all', function(e){
-    	var m = $('.mailbox-reader-outer:visible .mailbox-reader-header:not(.popout):first');
-    	var convid = m.attr('data-conv-id');
-    	var subject = "Ra: " + m.find('.mailbox-subject').text();
-    	var f = m.find('div.mailbox-sender-user')
-    	var t = m.find('.mailbox-to .mailbox-to-user')
-    	var from = [];
-    	t.each(function(t){
-    		from.push([$(this).attr('data-user-id'),$(this).find('span:first()').text(), $(this).hasClass('group')?"group":""]);
-    	});
-    	from.push([f.attr('data-user-id'),f.find('span:first()').text(), ""]);
-    	var message = document.createElement('div');
-    	var message_liner = document.createElement('div');
-    	$(message_liner).addClass('message-reply');
-    	$(message_liner).html($(m.closest('.mailbox-reader-outer .ss-content').html()))
-    	$(message_liner).find('.mailbox-reader-header-controls').remove();
-    	$(message_liner).find('.mailbox-user-dropdown').remove();
-    	$(message).html("<br><br><br>").append($(message_liner))
-
-    	from = from.map(JSON.stringify).reverse().filter(function (e, i, a) {
-    	    return a.indexOf(e, i+1) === -1;
-    	}).reverse().map(JSON.parse);
-    	StartNewMessage(from,subject,message,convid)
-    })
-
-    $('body').on('click', '.mail-forward', function(e){
-    	var m = $('.mailbox-reader-outer:visible .mailbox-reader-header:not(.popout):first');
-    	var convid = m.attr('data-conv-id');
-    	var subject = "Fw: " + m.find('.mailbox-subject').text();
-    	var message = document.createElement('div');
-    	var message_liner = document.createElement('div');
-    	$(message_liner).addClass('message-reply');
-    	$(message_liner).html($(m.closest('.mailbox-reader-outer .ss-content').html()))
-    	$(message_liner).find('.mailbox-reader-header-controls').remove();
-    	$(message_liner).find('.mailbox-user-dropdown').remove();
-    	$(message).html("<br><br><br>").append($(message_liner))
-
-    	StartNewMessage(null,subject,message,convid)
-    })
-
-    $('body').on('click', '.new-message-form .mailbox-reader-body', function(e){
-    	$(this).find('.mailbox-new-message-message').focus();
-    })
-
-    ;*/
-
-
-
-
-    /*
-        $('body').on('click','#new-message-share', function(e){
-            e.preventDefault();
-            $('#shareModal').modal('hide');
-            var form =  $(this).closest('form')
-            var url = window.location.href;
-            //to
-            var to = []
-            form.find('.mailbox-new-message-recipient select option').each(function(t) { var g = $(this).hasClass('group')?'g':''; to.push({UserId:this.value,Type:g}); });
-            //subject
-            var subject = form.find('.mailbox-new-message-subject input.new-message-subject:first').val();
-            //message
-            var message = form.find('.mailbox-new-message-message').html();
-            var text = form.find('.mailbox-new-message-message').get(0).innerText.replace(/\n/g, " "); ;
-
-            $.post("mail?handler=SendMail",{to:JSON.stringify(to),subject:subject,message:message,text:text}).done(function(e){});
-            ShowMessageBox("Messages sent! ¯\\_(ツ)_/¯")
-
-            $.post("api?handler=ShareObject",{to:JSON.stringify(to),name:subject,url:url},function(e){console.log(e)})
-            //to,name:subject,url:window.location
-        // close and reset
-            form.find('.share-item-name').val('');
-            form.find('.mailbox-new-message-message').html('');
-            form.find('.dynamic-dropdown select').find('option').remove();
-            form.find('.addedItem').remove();
-            form.find('.dynamic-dropdown-input-container input').val('');
-            closeModals()
-
-        })
-
-
-        */
-    };
     console.log('mail scripts loaded');
-    return x;
-}));
-Mail();
+})();

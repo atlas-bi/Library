@@ -17,11 +17,11 @@
 *@
 
 @model Data_Governance_WebApp.Pages.Projects.IndexModel
-<h2 class="pageSection-title">Description</h2>
+
 
 @if(Model.DataProject.Description != null)
 {
-    <h4>Description</h4>
+    <h3>Description</h3>
     <div class="markdown">
         @Html.Raw(@Helpers.HtmlHelpers.MarkdownToHtml(Model.DataProject.Description))
     </div>
@@ -29,24 +29,45 @@
 
 @if(Model.DataProject.Purpose != null)
 {
-    <h4>Purpose</h4>
+    <h3>Purpose</h3>
     <div class="markdown">
         @Html.Raw(@Helpers.HtmlHelpers.MarkdownToHtml(Model.DataProject.Purpose))
     </div>
 }
 
-<h4 class="pageSection-subTitle">Details</h4>
-<div class="projectDetails">
-    <span class="projectDetails-title">Operational Owner</span>
-    <span>@Model.DataProject.OpsOwner</span>
-    <span class="projectDetails-title">Executive Owner</span>
-    <span>@Model.DataProject.ExOwner</span>
-    <span class="projectDetails-title">Analytics Owner</span>
-    <span>@Model.DataProject.AnOwner</span>
-    <span class="projectDetails-title">Data Owner</span>
-    <span>@Model.DataProject.DataOwner</span>
-    <span class="projectDetails-title">Financial Impact</span>
-    <span>@Model.DataProject.FnclImpact</span>
-    <span class="projectDetails-title">Strategic Importance</span>
-    <span>@Model.DataProject.StrgImport</span>
-</div>
+@if(@Model.DataProject.OpsOwner  != null || @Model.DataProject.ExOwner  != null || @Model.DataProject.AnOwner  != null || @Model.DataProject.DataOwner != null || @Model.DataProject.FnclImpact != null || @Model.DataProject.StrgImport != null)
+{
+    <h3>Details</h3>
+    <div class="listDetails">
+        @if(@Model.DataProject.OpsOwner != null)
+        {
+            <span class="listDetails-title">Operational Owner</span>
+            <span>@Model.DataProject.OpsOwner</span>
+        }
+        @if(@Model.DataProject.ExOwner != null)
+        {
+            <span class="listDetails-title">Executive Owner</span>
+            <span>@Model.DataProject.ExOwner</span>
+        }
+        @if(@Model.DataProject.AnOwner != null)
+        {
+            <span class="listDetails-title">Analytics Owner</span>
+            <span>@Model.DataProject.AnOwner</span>
+        }
+        @if(@Model.DataProject.DataOwner != null)
+        {
+            <span class="listDetails-title">Data Owner</span>
+            <span>@Model.DataProject.DataOwner</span>
+        }
+        @if(@Model.DataProject.FnclImpact != null)
+        {
+            <span class="listDetails-title">Financial Impact</span>
+            <span>@Model.DataProject.FnclImpact</span>
+        }
+        @if(@Model.DataProject.StrgImport != null)
+        {
+            <span class="listDetails-title">Strategic Importance</span>
+            <span>@Model.DataProject.StrgImport</span>
+        }
+    </div>
+}

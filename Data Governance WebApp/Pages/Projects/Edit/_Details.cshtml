@@ -19,86 +19,36 @@
 
 @model Data_Governance_WebApp.Pages.Projects.IndexModel
 
+<h3>Details</h3>
 <form asp-page-handler="EditDataProject" method="post">
-    <h3 class="d-flex justify-content-between">
-    <span>Edit Data Project</span>
-    <div class="button-group">
-        <button class="btn btn-link" type="button" data-dismiss="mdl">
-        <i class="fas fa-times fa-lg"></i>
-        </button>
-        <button class="btn btn-link" type="submit" name="submit" id="submitNewDocumentation">
-        <i class="fas fa-save fa-lg"></i>
-        </button>
-    </div>
-    </h3>
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     <input asp-for="DpDataProject.DataProjectId" value="@Model.DataProject.Id" type="hidden"/>
-    <div class="row py-1">
-        <div class="col-2">
-            <h5 class="pt-2 text-right">Name</h5>
-        </div>
-        <div class="col">
-            <input asp-for="DpDataProject.Name" class="form-control" required value="@Model.DataProject.Name" />
-        </div>
-    </div>
-    <div class="row py-1">
-        <div class="col-2">
-            <h5 class="pt-2 text-right">Purpose</h5>
-        </div>
-        <div class="col">
-            <input asp-for="DpDataProject.Purpose" class="form-control" value="@Model.DataProject.Purpose" />
-        </div>
-    </div>
-    <div class="row py-1">
-        <div class="col-2">
-            <h5 class="pt-2 text-right">Description</h5>
-        </div>
-        <div class="col">
-            <textarea rows=1 class="form-control" id="DpDataProject_Description" name="DpDataProject.Description">@Model.DataProject.Description</textarea>
-        </div>
-    </div>
-    <div class="row py-1">
-        <div class="col-2">
-            <h5 class="pt-2 text-right">Operations Owner</h5>
-        </div>
-        <div class="col">
-            <input type="dynamic-dropdown" asp-for="DpDataProject.OperationOwnerId" value="@Model.DataProject.OpsOwnerId" visible-value="@Model.DataProject.OpsOwner" search-area="UserSearch" />
-        </div>
-        <div class="col-2">
-            <h5 class="pt-2 text-right">Executive Owner</h5>
-        </div>
-        <div class="col">
-            <input type="dynamic-dropdown" asp-for="DpDataProject.ExecutiveOwnerId" value="@Model.DataProject.ExOwnerId" visible-value="@Model.DataProject.ExOwner" search-area="UserSearch" />
-        </div>
-    </div>
-    <div class="row py-1">
-        <div class="col-2">
-            <h5 class="pt-2 text-right">Analytics Owner</h5>
-        </div>
-        <div class="col">
-            <input type="dynamic-dropdown" asp-for="DpDataProject.AnalyticsOwnerId" value="@Model.DataProject.AnOwnerId" visible-value="@Model.DataProject.AnOwner" search-area="UserSearch" />
+    <div class="listDetails">
+        <label>Name</label>
+        <input asp-for="DpDataProject.Name" class="form-control" required value="@Model.DataProject.Name" />
 
-        </div>
-        <div class="col-2">
-            <h5 class="pt-2 text-right">Data Owner</h5>
-        </div>
-        <div class="col">
-            <input type="dynamic-dropdown" asp-for="DpDataProject.DataManagerId" value="@Model.DataProject.DataOwnerId" visible-value="@Model.DataProject.DataOwner" search-area="UserSearch" />
+        <label>Operations Owner</label>
+        <input type="dynamic-dropdown" asp-for="DpDataProject.OperationOwnerId" value="@Model.DataProject.OpsOwnerId" visible-value="@Model.DataProject.OpsOwner" search-area="UserSearch" />
 
-        </div>
+        <label>Executive Owner</label>
+        <input type="dynamic-dropdown" asp-for="DpDataProject.ExecutiveOwnerId" value="@Model.DataProject.ExOwnerId" visible-value="@Model.DataProject.ExOwner" search-area="UserSearch" />
+    
+        <label>Analytics Owner</label>       
+        <input type="dynamic-dropdown" asp-for="DpDataProject.AnalyticsOwnerId" value="@Model.DataProject.AnOwnerId" visible-value="@Model.DataProject.AnOwner" search-area="UserSearch" />
+
+        <label>Data Owner</label>
+        <input type="dynamic-dropdown" asp-for="DpDataProject.DataManagerId" value="@Model.DataProject.DataOwnerId" visible-value="@Model.DataProject.DataOwner" search-area="UserSearch" />
+
+        <label>Financial Impact</label>        
+        <input type="dynamic-dropdown" asp-for="DpDataProject.FinancialImpact" search-area="financial-impact" method="fullList" visible-value="@Model.DataProject.FnclImpact" value="@Model.DataProject.FnclImpactId" />
+   
+        <label>Strategic Importance</label>
+        <input type="dynamic-dropdown" asp-for="DpDataProject.StrategicImportance" search-area="strategic-importance" method="fullList" visible-value="@Model.DataProject.StrgImport" value="@Model.DataProject.StrgImportId" />
     </div>
-    <div class="row py-1">
-        <div class="col-2">
-            <h5 class="pt-2 text-right">Financial Impact</h5>
-        </div>
-        <div class="col">
-            <input type="dynamic-dropdown" asp-for="DpDataProject.FinancialImpact" search-area="financial-impact" method="fullList" visible-value="@Model.DataProject.FnclImpact" value="@Model.DataProject.FnclImpactId" />
-        </div>
-        <div class="col-2">
-            <h5 class="pt-2 text-right">Strategic Importance</h5>
-        </div>
-        <div class="col">
-            <input type="dynamic-dropdown" asp-for="DpDataProject.StrategicImportance" search-area="strategic-importance" method="fullList" visible-value="@Model.DataProject.StrgImport" value="@Model.DataProject.StrgImportId" />
-        </div>
-    </div>
+
+    <h3>Purpose</h3>
+    <div class="editor" data-inputName="DpDataProject.Purpose" data-inputId="DpDataProject_Purpose"><textarea>@Html.Raw(Model.DataProject.Purpose)</textarea></div>
+
+    <h3>Description</h3>
+    <div class="editor" data-inputName="DpDataProject.Description" data-inputId="DpDataProject_Description"><textarea>@Html.Raw(Model.DataProject.Description)</textarea></div>
+    <h3><button class="editor-save" type="submit">Save</button></h3>
 </form>

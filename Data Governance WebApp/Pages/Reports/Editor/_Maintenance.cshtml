@@ -17,16 +17,15 @@
 *@
 
 @model Data_Governance_WebApp.Pages.Reports.IndexModel
-<form class="editor-form" asp-page-handler="NewMaintenanceLog" method="post" id="report-edit-new-maintenance">
-	<div class="editor-sectionTitle">
-		<h2 class="">Maintenance</h2>
-		<button type="submit" class="editor-sectionSave atlas-blue"><i class="fas fa-save fa-lg"></i></button>
-	</div>
-	<div class="editor-inputGrp">
+<h3>Maintenance</h3>
+<form asp-page-handler="NewMaintenanceLog" method="post" id="report-edit-new-maintenance">	
+    <input type="hidden" asp-for="NewMaintenanceLogLink.ReportObjectId" value="@Model.Report.Id" />
+	<div class="listDetails">
 		<label>Maintenance Log Status</label>
 		<input type="dynamic-dropdown" asp-for="NewMaintenanceLog.MaintenanceLogStatusId" search-area="maint-log-stat" method="fullList" />
-		<label>Comment</label>
-		<textarea rows=1 asp-for="NewMaintenanceLog.Comment" class="form-control"></textarea>
-		<input type="hidden" asp-for="NewMaintenanceLogLink.ReportObjectId" value="@Model.Report.Id" />
+
+		<label>Comments</label>
+		<input  asp-for="NewMaintenanceLog.Comment" />
 	</div>
+    <h3><button class="editor-save" type="submit">Save</button></h3>
 </form>

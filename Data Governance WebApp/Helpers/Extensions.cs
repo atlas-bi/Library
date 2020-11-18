@@ -187,18 +187,24 @@ namespace Data_Governance_WebApp.Helpers
     {
         public static string SiteMessage(HttpContext _httpContext, Data_GovernanceContext _context)
         {
-            var z = _httpContext.Request.Query["msg"].ToString();
-            if (_httpContext.Request.Query["msg"].ToString() == "")
-            {
-                return "";
-            }
-            var msg = _context.GlobalSiteSettings.Where(x => x.Name == "msg" && x.Value == _httpContext.Request.Query["msg"]);
+            var text = "";
+            // site wide message
+            var msg = _context.GlobalSiteSettings.Where(x => x.Name == "msg" && x.Value == null);
 
             if(msg != null && msg.Count() > 0)
             {
-                return msg.FirstOrDefault().Description;
+               text += msg.FirstOrDefault().Description;
             }
-            return "";
+
+
+            // url message
+            msg = _context.GlobalSiteSettings.Where(x => x.Name == "msg" && x.Value == _httpContext.Request.Query["msg"] && x.Value != null);
+
+            if(msg != null && msg.Count() > 0)
+            {
+                text += "\n" + msg.FirstOrDefault().Description;
+            }
+            return text;
 
         }
         public static string MarkdownToHtml(string text)
@@ -400,6 +406,10 @@ namespace Data_Governance_WebApp.Helpers
                         NewUrl = "EpicAct:AC_RW_WEB_BROWSER,LaunchOptions:2,runparams:" + Url + "|FormCaption=" + ReportName + "|ActivityName=" + ReportName;
                     }
                 }
+                else if (EpicMasterFile == "IDN")
+                {
+                    NewUrl = "EpicAct:WM_METRIC_EDITOR,INFONAME:IDNRECORDID,INFOVALUE:" + EpicRecordId;
+                }
                 else
                 {
                     NewUrl = Url;
@@ -407,5 +417,6 @@ namespace Data_Governance_WebApp.Helpers
             }
             return NewUrl;
         }
+
     }
 }

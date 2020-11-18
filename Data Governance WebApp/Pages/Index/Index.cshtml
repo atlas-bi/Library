@@ -23,17 +23,8 @@
     ViewData["Title"] = "";
 }
 
-@if (HttpContext.Request.Headers["Referer"].Count < 1 && !HttpContext.Request.Cookies.TryGetValue("alive", out string value))
-{
-    <div class="overlay" id="overlay">
-        <div class="overlay-wrapper">
-            <span class="overlay-name">Welcome, @Model.FirstName</span>
-            <h1 class="overlay-site">Atlas</h1>
-            <h3 class="overlay-of"><i>of</i></h3>
-            <h3 class="overlay-siteEnd">Information Management</h3>
-        </div>
-    </div>
-    <script>setTimeout(function(){var e=document.getElementById("overlay");document.getElementById("overlay").parentElement.removeChild(e)},2750);</script>
+@section css {
+    <link rel="stylesheet" href="/css/mail.min.css" media="print" onload="this.onload=null;this.removeAttribute('media')" />
 }
 
 <div class="pageTitle loose">

@@ -18,45 +18,59 @@
 
 @model Data_Governance_WebApp.Pages.Reports.IndexModel
 
-<h2 class="editor-sectionTitle">Terms</h2>
 
 <div id="report-editor-currentterms-container">
     <partial name="Editor/_CurrentTerms" />
 </div>
 
-<!-- exiting term -->
-<form class="editor-form" asp-page-handler="AddTermLink" method="post" id="report-editor-add-term-form">
-    <div class="editor-sectionSubTitle">
-        <h4 class="darken">Add Existing Term</h4>
-        <button type="submit" class="editor-sectionSave atlas-blue"><i class="fas fa-save fa-lg"></i></button>
-    </div>
- <div class="editor-inputGrp">
+
+<h3>Add Existing Term</h3>
+<form asp-page-handler="AddTermLink" method="post" id="report-editor-add-term-form">
+ <div class="listDetails">
 	<label>Name</label>
 	<input type="dynamic-dropdown" asp-for="NewTermLink.TermId" value="" visible-value="" search-area="TermSearch" required />
-	<label>Summary</label>
+	
+    <label>Summary</label>
 	<p class="new-term-summary"></p>
-	<label>Technical Definition</label>
+	
+    <label>Technical Definition</label>
 	<p class="new-term-def"></p>
     <input asp-for="NewTermLink.ReportObjectId" type="hidden" value="@Model.Report.Id" />
 </div>
+<h3><button class="editor-save" type="submit">Save</button></h3>
 </form>
 
-<!-- new term -->
-<form class="editor-form" asp-page="/Terms/Index" asp-page-handler="NewTerm" method="post" id="report-editor-add-new-term-form">
-	<div class="editor-sectionSubTitle">
-        <h4 class="darken">Add New Term</h4>
-        <button type="submit" class="editor-sectionSave atlas-blue"><i class="fas fa-save fa-lg"></i></button>
-    </div>
-    <div class="editor-inputGrp">
-        <label>Name</label>
-       	<input asp-for="NewTerm.Name" class="form-control" />
-        <label>Summary</label>
-        <textarea rows="1" asp-for="NewTerm.Summary" class="form-control"></textarea>
-        <label>Technical Definition</label>
-        <textarea rows="1" asp-for="NewTerm.TechnicalDefinition" class="form-control"></textarea>
-        <label>External Standard Link</label>
-        <input asp-for="NewTerm.ExternalStandardUrl" class="form-control" />
-        <input asp-for="NewTermLink.ReportObjectId" type="hidden" value="@Model.Report.Id"/>
-    </div>
+<h3>Add New Term</h3>
+<form asp-page="/Terms/Index" asp-page-handler="NewTerm" method="post" id="report-editor-add-new-term-form">
+    <input asp-for="NewTermLink.ReportObjectId" type="hidden" value="@Model.Report.Id"/>
+        <h4>Details</h4>
+        <div class="listDetails">
 
+            <label>Name</label>
+            <input asp-for="NewTerm.Name" />
+
+            <label>External Standard Link</label>
+            <input asp-for="NewTerm.ExternalStandardUrl" />
+
+            <label>Valid From</label>
+            <input type="date" asp-for="NewTerm.ValidFromDateTime" />
+        </div>
+         
+        <h4>Summary</h4>
+        <div class="editor" data-inputName="NewTerm.Summary" data-inputId="NewTerm_Summary"></div>
+
+        <h4>Technical Definition</h4>
+        <div class="editor" data-inputName="NewTerm.TechnicalDefinition" data-inputId="NewTerm_TechnicalDefinition"></div>
+           
+        @if (Model.Permissions.Contains(6))
+        {
+            <div class="form-check">
+                <input type="checkbox" class="form-check-input" id="approvedYn">
+                <label for="approvedYn" class="form-check-label">Approved?</label>
+                <input type="hidden" class="approvedYnHiddenTextArea" asp-for="NewTerm.ApprovedYn" >
+            </div>
+        }
+
+        <h3><button class="editor-save" type="submit">Save</button></h3>
+        
 </form>

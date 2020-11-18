@@ -22,6 +22,9 @@
     ViewData["Title"] = "Tasks";
     Layout = HttpContext.Request.Headers["x-requested-with"] == "XMLHttpRequest" ? "../Shared/_AjaxLayout.cshtml" : "../Shared/_Layout.cshtml";
 }
+@section css {
+    <link rel="stylesheet" href="/css/tasks.min.css" inline />  
+}
 
 <div class="pageTitle">
     <h2 class="pageTitle-head">Maintenance Tasks</h2>
@@ -33,7 +36,8 @@
         <a class="tab-lnk" href="#missingschedule">No Maint Schedule</a>
         <a class="tab-lnk" href="#notanalytics">Edited by Others</a>
         <a class="tab-lnk" href="#topundocumented">To Document</a>
-        <a class="tab-lnk" href="#newndocumented">New Undocumented</a>
+        <a class="tab-lnk" href="#newundocumented">New Undocumented</a>
+        <a class="tab-lnk" href="#canmakereports">Users with Create</a>
     </div>
 </div>
 <div class="tab-cnt">
@@ -56,9 +60,12 @@
         <div data-ajax="yes" data-url="/Tasks?handler=NotAnalytics"></div>
     </div>
     <div class="tab-dta" id="topundocumented">
-        <div data-ajax="yes" data-url="/Tasks?handler=TopUndocumented"></div>
+       <div data-ajax="yes" data-url="/Tasks?handler=TopUndocumented"></div>
     </div>
-    <div class="tab-dta" id="newndocumented">
-        <div data-ajax="yes" data-url="/Tasks?handler=NewUndocumented"></div>
+    <div class="tab-dta" id="newundocumented">
+       <div data-ajax="yes" data-url="/Tasks?handler=NewUndocumented"></div>
+    </div>
+    <div class="tab-dta" id="canmakereports">
+        <div data-ajax="yes" data-url="/Tasks?handler=CanMakeReports"></div>
     </div>
 </div>

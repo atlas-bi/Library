@@ -15,7 +15,6 @@ namespace Data_Governance_WebApp.Models
         public int? LastUpdateUser { get; set; }
         public DateTime? LastUpdateDate { get; set; }
 
-        public virtual WebAppUsers LastUpdateUserNavigation { get; set; }
         public virtual ICollection<DpMilestoneTemplates> DpMilestoneTemplates { get; set; }
     }
 }

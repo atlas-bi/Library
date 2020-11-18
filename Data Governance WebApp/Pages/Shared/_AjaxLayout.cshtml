@@ -29,7 +29,7 @@
 (function(){
 	var d = document;
 @if(ViewBag.AdLists != null){
-	@:d.getElementById("AdColTwo").innerHTML ='@foreach(var ad in ViewBag.AdLists){@if(ad.Column == 2){<div class="col" data-ajax="yes" data-url="@ad.Url"></div><div class="w-100"></div>}}';
+	@:d.getElementById("AdColTwo").innerHTML +='@foreach(var ad in ViewBag.AdLists){@if(ad.Column == 2){<div class="col" data-ajax="yes" data-url="@ad.Url"></div>}}';
 	@:d.dispatchEvent(new CustomEvent('load-ajax-content'));
 }
 })()

@@ -18,8 +18,6 @@
 
 @inject IConfiguration Configuration
 
-<footer class="ft darken">
-    <div class="container text-center">
-        <span>&copy; @DateTime.Now.Year - @Configuration["AppSettings:org_name"]</span>
-    </div>
+<footer class="ft">
+    &copy; @DateTime.Now.Year - @Configuration["AppSettings:org_name"]
 </footer>

@@ -17,34 +17,15 @@
 */
 
 function getUrlVars() {
-      var vars = {};
-      var parts = window.location.href.split("#")[0].replace(/[?&]+([^=&]+)=([^&]*)/gi, function (m, key, value) {
+    var vars = {};
+    var parts = window.location.href.split("#")[0].replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m, key, value) {
         vars[key] = value;
-      });
-      return vars;
+    });
+    return vars;
+}
+
+(function() {
+    if (getUrlVars().EPIC == 1 || getCookie('EPIC') == 1) {
+        setCookie('EPIC', 1, 99);
     }
-
-(function (root, factory) {
-    if (typeof define === 'function' && define.amd) {
-        // AMD. Register as an anonymous module.
-        define(['b'], factory);
-    } else {
-        // Browser globals
-        root.Hyperspace = factory(root.b);
-    }
-}(typeof self !== 'undefined' ? self : this, function (b) {
-
-  var x = function(){
-   
-
-    var is_epic = getUrlVars().EPIC;
-
-    if (is_epic == 1 || getCookie('EPIC') == 1) {
-      setCookie('EPIC', 1, 99);
-    };
-  };
-  console.log('hyperspace scripts loaded.');
-  return x;
-}));
-
-Hyperspace();
+})();

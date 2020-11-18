@@ -20,17 +20,18 @@
 @{
     var m = Model ?? ViewBag;
 }
- @if (m.ReportTerms.Count > 0) {
-    <h5>Current Terms</h5>
+@if (m.ReportTerms.Count > 0) {
+    <h3>Current Terms</h3>
     @foreach (var t in m.ReportTerms)
     {
-	    <form asp-page-handler="RemoveTermLink" method="post" class="editor-form" id="report-editor-remove-term-form">
+	    <form asp-page-handler="RemoveTermLink" method="post" id="report-editor-remove-term-form">
             <input type="hidden" asp-for="NewTermLink.ReportObjectId" value="@t.ReportId" />
             <input type="hidden" asp-for="NewTermLink.TermId" value="@t.Id" />
-            <button type="submit" value="Remove" class="btn btn-link text-primary py-0" onclick="return confirm('Are you sure you want to remove this term?');" >
-                <i class="fas fa-trash-alt"></i>
-            </button>
-            <a class="btn btn-link text-primary py-0" asp-page="../Terms/Index" asp-route-id="@(t.Id)">@t.Name</a>
+            <div class="listDetails">
+                <button type="submit" value="Remove" class="btn btn-link text-primary py-0" onclick="return confirm('Are you sure you want to remove this term?');" >
+                Delete</button>
+                <a asp-page="../Terms/Index" asp-route-id="@(t.Id)">@t.Name</a>
+            </div>
         </form>
     }
 }

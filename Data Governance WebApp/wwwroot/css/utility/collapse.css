@@ -16,15 +16,34 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 [data-toggle="clps"] {
-	cursor: pointer;
+    cursor: pointer
 }
 
 .clps {
-	transition: max-height 0.3s ease-in-out;
-	max-height: 0;
-	overflow: hidden !important;
+    max-height: 0;
+    overflow: hidden !important;
+    transition: max-height .3s ease-in-out
 }
 
 .clps.clps-o {
-	max-height: 100vh;
+    max-height: 100vh
+}
+
+.drop {
+    background-color: rgba(0, 0, 0, .03);
+    border-radius: 3px;
+    margin: 10px 0;
+    padding: 10px;
+}
+
+.drop-box {
+    background-color: rgba(0, 0, 0, 0.03);
+    border: 1px solid rgba(0, 0, 0, .2);
+    padding: 10px;
+    border-radius: 3px;
+}
+
+.drop-link > svg {
+    height: 25px;
+    width: 25px;
 }
