@@ -202,6 +202,7 @@ var cache = {
     function downloadJSAtOnload() {
         loadScripts(Array.prototype.slice.call(document.getElementsByClassName('postLoadScripts')));
         if (!!document.querySelector('.tab-lnk')) loadScripts(document.getElementsByClassName('tabScripts'));
+        if (!!document.querySelector('table.sort')) loadScripts(document.getElementsByClassName('tableScripts'));
         if (!!document.querySelector('[data-toggle="clps"]')) loadScripts(document.getElementsByClassName('collapseScripts'));
         if (!!document.querySelector(".crsl")) loadScripts(document.getElementsByClassName('carouselScripts'));
         if (!!document.querySelector(".drg")) loadScripts(document.getElementsByClassName('dragScripts'));
@@ -230,5 +231,4 @@ var cache = {
     }, {
         passive: true
     });
-    console.log('essential scripts loaded');
 })();

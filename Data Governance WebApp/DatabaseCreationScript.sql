@@ -18,164 +18,164 @@
 
 USE [master]
 GO
-/****** Object:  Database [Data_Governance_Pub]    Script Date: 11/18/2020 4:50:18 PM ******/
+Drop database if exists [Data_Governance_Pub]
+go
+
+USE [master]
+GO
+
+/****** Object:  Database [Data_Governance_Pub]    Script Date: 11/19/2020 1:53:50 PM ******/
 CREATE DATABASE [Data_Governance_Pub]
  CONTAINMENT = NONE
- ON  PRIMARY 
-( NAME = N'Data_Governance', FILENAME = N'E:\Program Files\Microsoft SQL Server\MSSQL13.MSSQLSERVER\MSSQL\DATA\Data_Governance_Pub.mdf' , SIZE = 4661248KB , MAXSIZE = 10485760KB , FILEGROWTH = 65536KB )
- LOG ON 
-( NAME = N'Data_Governance_log', FILENAME = N'E:\Program Files\Microsoft SQL Server\MSSQL13.MSSQLSERVER\MSSQL\DATA\Data_Governance_Pub_log.ldf' , SIZE = 4792320KB , MAXSIZE = 10485760KB , FILEGROWTH = 65536KB )
+ 
 GO
-ALTER DATABASE [Data_Governance_Pub] SET COMPATIBILITY_LEVEL = 130
-GO
+
 IF (1 = FULLTEXTSERVICEPROPERTY('IsFullTextInstalled'))
 begin
 EXEC [Data_Governance_Pub].[dbo].[sp_fulltext_database] @action = 'enable'
 end
 GO
+
 ALTER DATABASE [Data_Governance_Pub] SET ANSI_NULL_DEFAULT OFF 
 GO
+
 ALTER DATABASE [Data_Governance_Pub] SET ANSI_NULLS OFF 
 GO
+
 ALTER DATABASE [Data_Governance_Pub] SET ANSI_PADDING OFF 
 GO
+
 ALTER DATABASE [Data_Governance_Pub] SET ANSI_WARNINGS OFF 
 GO
+
 ALTER DATABASE [Data_Governance_Pub] SET ARITHABORT OFF 
 GO
+
 ALTER DATABASE [Data_Governance_Pub] SET AUTO_CLOSE OFF 
 GO
+
 ALTER DATABASE [Data_Governance_Pub] SET AUTO_SHRINK OFF 
 GO
+
 ALTER DATABASE [Data_Governance_Pub] SET AUTO_UPDATE_STATISTICS ON 
 GO
+
 ALTER DATABASE [Data_Governance_Pub] SET CURSOR_CLOSE_ON_COMMIT OFF 
 GO
+
 ALTER DATABASE [Data_Governance_Pub] SET CURSOR_DEFAULT  GLOBAL 
 GO
+
 ALTER DATABASE [Data_Governance_Pub] SET CONCAT_NULL_YIELDS_NULL OFF 
 GO
+
 ALTER DATABASE [Data_Governance_Pub] SET NUMERIC_ROUNDABORT OFF 
 GO
+
 ALTER DATABASE [Data_Governance_Pub] SET QUOTED_IDENTIFIER OFF 
 GO
+
 ALTER DATABASE [Data_Governance_Pub] SET RECURSIVE_TRIGGERS OFF 
 GO
+
 ALTER DATABASE [Data_Governance_Pub] SET  DISABLE_BROKER 
 GO
+
 ALTER DATABASE [Data_Governance_Pub] SET AUTO_UPDATE_STATISTICS_ASYNC OFF 
 GO
+
 ALTER DATABASE [Data_Governance_Pub] SET DATE_CORRELATION_OPTIMIZATION OFF 
 GO
+
 ALTER DATABASE [Data_Governance_Pub] SET TRUSTWORTHY OFF 
 GO
+
 ALTER DATABASE [Data_Governance_Pub] SET ALLOW_SNAPSHOT_ISOLATION OFF 
 GO
+
 ALTER DATABASE [Data_Governance_Pub] SET PARAMETERIZATION SIMPLE 
 GO
+
 ALTER DATABASE [Data_Governance_Pub] SET READ_COMMITTED_SNAPSHOT OFF 
 GO
+
 ALTER DATABASE [Data_Governance_Pub] SET HONOR_BROKER_PRIORITY OFF 
 GO
+
 ALTER DATABASE [Data_Governance_Pub] SET RECOVERY SIMPLE 
 GO
+
 ALTER DATABASE [Data_Governance_Pub] SET  MULTI_USER 
 GO
+
 ALTER DATABASE [Data_Governance_Pub] SET PAGE_VERIFY CHECKSUM  
 GO
+
 ALTER DATABASE [Data_Governance_Pub] SET DB_CHAINING OFF 
 GO
+
 ALTER DATABASE [Data_Governance_Pub] SET FILESTREAM( NON_TRANSACTED_ACCESS = OFF ) 
 GO
+
 ALTER DATABASE [Data_Governance_Pub] SET TARGET_RECOVERY_TIME = 60 SECONDS 
 GO
+
 ALTER DATABASE [Data_Governance_Pub] SET DELAYED_DURABILITY = DISABLED 
 GO
+
 ALTER DATABASE [Data_Governance_Pub] SET QUERY_STORE = OFF
 GO
+
 USE [Data_Governance_Pub]
 GO
+
 ALTER DATABASE SCOPED CONFIGURATION SET LEGACY_CARDINALITY_ESTIMATION = OFF;
 GO
+
 ALTER DATABASE SCOPED CONFIGURATION SET MAXDOP = 0;
 GO
+
 ALTER DATABASE SCOPED CONFIGURATION SET PARAMETER_SNIFFING = ON;
 GO
+
 ALTER DATABASE SCOPED CONFIGURATION SET QUERY_OPTIMIZER_HOTFIXES = OFF;
 GO
+
+ALTER DATABASE [Data_Governance_Pub] SET  READ_WRITE 
+GO
+
+
+
+
 USE [Data_Governance_Pub]
 GO
-/****** Object:  User [datagov]    Script Date: 11/18/2020 4:50:18 PM ******/
-CREATE USER [datagov] FOR LOGIN [datagov] WITH DEFAULT_SCHEMA=[dbo]
-GO
-ALTER ROLE [db_owner] ADD MEMBER [datagov]
-GO
-ALTER ROLE [db_ddladmin] ADD MEMBER [datagov]
-GO
-ALTER ROLE [db_datareader] ADD MEMBER [datagov]
-GO
-ALTER ROLE [db_datawriter] ADD MEMBER [datagov]
-GO
-/****** Object:  Schema [app]    Script Date: 11/18/2020 4:50:18 PM ******/
+/****** Object:  Schema [app]    Script Date: 11/19/2020 1:51:21 PM ******/
 CREATE SCHEMA [app]
 GO
-/****** Object:  FullTextCatalog [ReportObjectDocs]    Script Date: 11/18/2020 4:50:18 PM ******/
+/****** Object:  FullTextCatalog [ReportObjectDocs]    Script Date: 11/19/2020 1:51:21 PM ******/
 CREATE FULLTEXT CATALOG [ReportObjectDocs] WITH ACCENT_SENSITIVITY = ON
 GO
-/****** Object:  FullTextCatalog [ReportObjects]    Script Date: 11/18/2020 4:50:18 PM ******/
+/****** Object:  FullTextCatalog [ReportObjects]    Script Date: 11/19/2020 1:51:21 PM ******/
 CREATE FULLTEXT CATALOG [ReportObjects] WITH ACCENT_SENSITIVITY = OFF
 AS DEFAULT
 GO
-/****** Object:  FullTextCatalog [Search]    Script Date: 11/18/2020 4:50:18 PM ******/
+/****** Object:  FullTextCatalog [Search]    Script Date: 11/19/2020 1:51:21 PM ******/
 CREATE FULLTEXT CATALOG [Search] WITH ACCENT_SENSITIVITY = OFF
 GO
-/****** Object:  FullTextCatalog [Search_Small]    Script Date: 11/18/2020 4:50:18 PM ******/
+/****** Object:  FullTextCatalog [Search_Small]    Script Date: 11/19/2020 1:51:21 PM ******/
 CREATE FULLTEXT CATALOG [Search_Small] WITH ACCENT_SENSITIVITY = OFF
 GO
-/****** Object:  FullTextCatalog [Terms]    Script Date: 11/18/2020 4:50:18 PM ******/
+/****** Object:  FullTextCatalog [Terms]    Script Date: 11/19/2020 1:51:21 PM ******/
 CREATE FULLTEXT CATALOG [Terms] WITH ACCENT_SENSITIVITY = ON
 GO
-/****** Object:  FullTextCatalog [User_NameData]    Script Date: 11/18/2020 4:50:18 PM ******/
+/****** Object:  FullTextCatalog [User_NameData]    Script Date: 11/19/2020 1:51:21 PM ******/
 CREATE FULLTEXT CATALOG [User_NameData] WITH ACCENT_SENSITIVITY = OFF
 GO
-/****** Object:  FullTextCatalog [UserGroups]    Script Date: 11/18/2020 4:50:18 PM ******/
+/****** Object:  FullTextCatalog [UserGroups]    Script Date: 11/19/2020 1:51:21 PM ******/
 CREATE FULLTEXT CATALOG [UserGroups] WITH ACCENT_SENSITIVITY = OFF
 GO
-/****** Object:  PartitionFunction [ifts_comp_fragment_partition_function_78364A71]    Script Date: 11/18/2020 4:50:18 PM ******/
-CREATE PARTITION FUNCTION [ifts_comp_fragment_partition_function_78364A71](varbinary(128)) AS RANGE LEFT FOR VALUES (0x0069006E)
-GO
-/****** Object:  PartitionScheme [ifts_comp_fragment_data_space_78364A71]    Script Date: 11/18/2020 4:50:18 PM ******/
-CREATE PARTITION SCHEME [ifts_comp_fragment_data_space_78364A71] AS PARTITION [ifts_comp_fragment_partition_function_78364A71] TO ([PRIMARY], [PRIMARY])
-GO
-/****** Object:  UserDefinedFunction [dbo].[CleanCommaUsername]    Script Date: 11/18/2020 4:50:18 PM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
--- =============================================
--- Author:		<Author,,Name>
--- Create date: <Create Date, ,>
--- Description:	<Description, ,>
--- =============================================
-CREATE FUNCTION [dbo].[CleanCommaUsername] 
-(
-	-- Add the parameters for the function here
-	@nameIn nvarchar(max)
-)
-RETURNS nvarchar(max)
-AS
-BEGIN
-	DECLARE @nameOut nvarchar(max);
 
-	if charindex(' ',Replace(@nameIn,', ',',')) > 0
-		set @nameOut = substring(Replace(@nameIn,', ',','),0,charindex(' ',Replace(@nameIn,', ',','))) 
-	else 
-		Set @nameOut = Replace(@nameIn,', ',',');
-	
-	RETURN @nameOut
-END
-GO
-/****** Object:  UserDefinedFunction [dbo].[ToProperCase]    Script Date: 11/18/2020 4:50:18 PM ******/
+/****** Object:  UserDefinedFunction [dbo].[ToProperCase]    Script Date: 11/19/2020 1:51:21 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -218,7 +218,7 @@ begin
   RETURN @o
 END
 GO
-/****** Object:  Table [app].[Analytics]    Script Date: 11/18/2020 4:50:18 PM ******/
+/****** Object:  Table [app].[Analytics]    Script Date: 11/19/2020 1:51:21 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -263,7 +263,22 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [app].[DP_Agreement]    Script Date: 11/18/2020 4:50:18 PM ******/
+/****** Object:  Table [app].[BusinessApplication_doc]    Script Date: 11/19/2020 1:51:21 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [app].[BusinessApplication_doc](
+	[BusinessApplicationID] [int] IDENTITY(1,1) NOT NULL,
+	[Name] [nvarchar](255) NOT NULL,
+	[Description] [nvarchar](max) NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[BusinessApplicationID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  Table [app].[DP_Agreement]    Script Date: 11/19/2020 1:51:21 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -283,7 +298,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [app].[DP_AgreementUsers]    Script Date: 11/18/2020 4:50:18 PM ******/
+/****** Object:  Table [app].[DP_AgreementUsers]    Script Date: 11/19/2020 1:51:21 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -300,7 +315,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [app].[DP_Attachments]    Script Date: 11/18/2020 4:50:18 PM ******/
+/****** Object:  Table [app].[DP_Attachments]    Script Date: 11/19/2020 1:51:21 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -319,7 +334,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [app].[DP_Contact]    Script Date: 11/18/2020 4:50:18 PM ******/
+/****** Object:  Table [app].[DP_Contact]    Script Date: 11/19/2020 1:51:21 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -336,7 +351,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [app].[DP_Contact_Links]    Script Date: 11/18/2020 4:50:18 PM ******/
+/****** Object:  Table [app].[DP_Contact_Links]    Script Date: 11/19/2020 1:51:21 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -351,7 +366,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [app].[DP_DataInitiative]    Script Date: 11/18/2020 4:50:18 PM ******/
+/****** Object:  Table [app].[DP_DataInitiative]    Script Date: 11/19/2020 1:51:21 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -372,7 +387,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [app].[DP_DataProject]    Script Date: 11/18/2020 4:50:18 PM ******/
+/****** Object:  Table [app].[DP_DataProject]    Script Date: 11/19/2020 1:51:21 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -398,7 +413,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [app].[Dp_DataProjectConversation]    Script Date: 11/18/2020 4:50:18 PM ******/
+/****** Object:  Table [app].[Dp_DataProjectConversation]    Script Date: 11/19/2020 1:51:21 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -412,7 +427,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [app].[Dp_DataProjectConversationMessage]    Script Date: 11/18/2020 4:50:18 PM ******/
+/****** Object:  Table [app].[Dp_DataProjectConversationMessage]    Script Date: 11/19/2020 1:51:21 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -430,7 +445,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [app].[DP_MilestoneChecklist]    Script Date: 11/18/2020 4:50:18 PM ******/
+/****** Object:  Table [app].[DP_MilestoneChecklist]    Script Date: 11/19/2020 1:51:21 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -445,7 +460,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [app].[DP_MilestoneChecklistCompleted]    Script Date: 11/18/2020 4:50:18 PM ******/
+/****** Object:  Table [app].[DP_MilestoneChecklistCompleted]    Script Date: 11/19/2020 1:51:21 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -465,7 +480,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [app].[DP_MilestoneFrequency]    Script Date: 11/18/2020 4:50:18 PM ******/
+/****** Object:  Table [app].[DP_MilestoneFrequency]    Script Date: 11/19/2020 1:51:21 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -481,7 +496,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [app].[DP_MilestoneTasks]    Script Date: 11/18/2020 4:50:18 PM ******/
+/****** Object:  Table [app].[DP_MilestoneTasks]    Script Date: 11/19/2020 1:51:21 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -502,7 +517,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [app].[DP_MilestoneTasksCompleted]    Script Date: 11/18/2020 4:50:18 PM ******/
+/****** Object:  Table [app].[DP_MilestoneTasksCompleted]    Script Date: 11/19/2020 1:51:21 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -521,7 +536,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [app].[DP_MilestoneTemplates]    Script Date: 11/18/2020 4:50:18 PM ******/
+/****** Object:  Table [app].[DP_MilestoneTemplates]    Script Date: 11/19/2020 1:51:21 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -539,7 +554,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [app].[DP_ReportAnnotation]    Script Date: 11/18/2020 4:50:18 PM ******/
+/****** Object:  Table [app].[DP_ReportAnnotation]    Script Date: 11/19/2020 1:51:21 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -556,7 +571,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [app].[DP_TermAnnotation]    Script Date: 11/18/2020 4:50:18 PM ******/
+/****** Object:  Table [app].[DP_TermAnnotation]    Script Date: 11/19/2020 1:51:21 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -573,7 +588,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [app].[EstimatedRunFrequency]    Script Date: 11/18/2020 4:50:18 PM ******/
+/****** Object:  Table [app].[EstimatedRunFrequency]    Script Date: 11/19/2020 1:51:21 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -587,7 +602,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [app].[FinancialImpact]    Script Date: 11/18/2020 4:50:18 PM ******/
+/****** Object:  Table [app].[FinancialImpact]    Script Date: 11/19/2020 1:51:21 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -601,7 +616,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [app].[Fragility]    Script Date: 11/18/2020 4:50:18 PM ******/
+/****** Object:  Table [app].[Fragility]    Script Date: 11/19/2020 1:51:21 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -615,7 +630,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [app].[FragilityTag]    Script Date: 11/18/2020 4:50:18 PM ******/
+/****** Object:  Table [app].[FragilityTag]    Script Date: 11/19/2020 1:51:21 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -629,7 +644,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [app].[GlobalSiteSettings]    Script Date: 11/18/2020 4:50:18 PM ******/
+/****** Object:  Table [app].[GlobalSiteSettings]    Script Date: 11/19/2020 1:51:21 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -645,7 +660,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [app].[Mail_Conversations]    Script Date: 11/18/2020 4:50:18 PM ******/
+/****** Object:  Table [app].[Mail_Conversations]    Script Date: 11/19/2020 1:51:21 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -659,7 +674,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [app].[Mail_Drafts]    Script Date: 11/18/2020 4:50:18 PM ******/
+/****** Object:  Table [app].[Mail_Drafts]    Script Date: 11/19/2020 1:51:21 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -681,7 +696,7 @@ CREATE TABLE [app].[Mail_Drafts](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [app].[Mail_FolderMessages]    Script Date: 11/18/2020 4:50:18 PM ******/
+/****** Object:  Table [app].[Mail_FolderMessages]    Script Date: 11/19/2020 1:51:21 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -696,7 +711,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [app].[Mail_Folders]    Script Date: 11/18/2020 4:50:18 PM ******/
+/****** Object:  Table [app].[Mail_Folders]    Script Date: 11/19/2020 1:51:21 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -713,7 +728,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [app].[Mail_Messages]    Script Date: 11/18/2020 4:50:18 PM ******/
+/****** Object:  Table [app].[Mail_Messages]    Script Date: 11/19/2020 1:51:21 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -732,7 +747,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [app].[Mail_MessageType]    Script Date: 11/18/2020 4:50:18 PM ******/
+/****** Object:  Table [app].[Mail_MessageType]    Script Date: 11/19/2020 1:51:21 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -746,7 +761,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [app].[Mail_Recipients]    Script Date: 11/18/2020 4:50:18 PM ******/
+/****** Object:  Table [app].[Mail_Recipients]    Script Date: 11/19/2020 1:51:21 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -764,7 +779,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [app].[Mail_Recipients_Deleted]    Script Date: 11/18/2020 4:50:18 PM ******/
+/****** Object:  Table [app].[Mail_Recipients_Deleted]    Script Date: 11/19/2020 1:51:21 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -782,7 +797,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [app].[MaintenanceLog]    Script Date: 11/18/2020 4:50:18 PM ******/
+/****** Object:  Table [app].[MaintenanceLog]    Script Date: 11/19/2020 1:51:21 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -799,7 +814,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [app].[MaintenanceLogStatus]    Script Date: 11/18/2020 4:50:18 PM ******/
+/****** Object:  Table [app].[MaintenanceLogStatus]    Script Date: 11/19/2020 1:51:21 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -813,7 +828,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [app].[MaintenanceSchedule]    Script Date: 11/18/2020 4:50:18 PM ******/
+/****** Object:  Table [app].[MaintenanceSchedule]    Script Date: 11/19/2020 1:51:21 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -827,7 +842,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [app].[OrganizationalValue]    Script Date: 11/18/2020 4:50:18 PM ******/
+/****** Object:  Table [app].[OrganizationalValue]    Script Date: 11/19/2020 1:51:21 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -841,7 +856,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [app].[ReportManageEngineTickets]    Script Date: 11/18/2020 4:50:18 PM ******/
+/****** Object:  Table [app].[ReportManageEngineTickets]    Script Date: 11/19/2020 1:51:21 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -858,7 +873,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [app].[ReportObject_doc]    Script Date: 11/18/2020 4:50:18 PM ******/
+/****** Object:  Table [app].[ReportObject_doc]    Script Date: 11/19/2020 1:51:21 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -890,7 +905,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [app].[ReportObjectConversation_doc]    Script Date: 11/18/2020 4:50:18 PM ******/
+/****** Object:  Table [app].[ReportObjectConversation_doc]    Script Date: 11/19/2020 1:51:21 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -904,7 +919,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [app].[ReportObjectConversationMessage_doc]    Script Date: 11/18/2020 4:50:18 PM ******/
+/****** Object:  Table [app].[ReportObjectConversationMessage_doc]    Script Date: 11/19/2020 1:51:21 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -922,7 +937,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [app].[ReportObjectDocFragilityTags]    Script Date: 11/18/2020 4:50:18 PM ******/
+/****** Object:  Table [app].[ReportObjectDocFragilityTags]    Script Date: 11/19/2020 1:51:21 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -937,7 +952,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [app].[ReportObjectDocMaintenanceLogs]    Script Date: 11/18/2020 4:50:18 PM ******/
+/****** Object:  Table [app].[ReportObjectDocMaintenanceLogs]    Script Date: 11/19/2020 1:51:21 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -952,7 +967,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [app].[ReportObjectDocTerms]    Script Date: 11/18/2020 4:50:18 PM ******/
+/****** Object:  Table [app].[ReportObjectDocTerms]    Script Date: 11/19/2020 1:51:21 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -967,7 +982,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [app].[ReportObjectImages_doc]    Script Date: 11/18/2020 4:50:18 PM ******/
+/****** Object:  Table [app].[ReportObjectImages_doc]    Script Date: 11/19/2020 1:51:21 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -983,7 +998,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [app].[ReportObjectRunTime]    Script Date: 11/18/2020 4:50:18 PM ******/
+/****** Object:  Table [app].[ReportObjectRunTime]    Script Date: 11/19/2020 1:51:21 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1001,7 +1016,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [app].[ReportObjectTopRuns]    Script Date: 11/18/2020 4:50:18 PM ******/
+/****** Object:  Table [app].[ReportObjectTopRuns]    Script Date: 11/19/2020 1:51:21 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1021,7 +1036,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [app].[RolePermissionLinks]    Script Date: 11/18/2020 4:50:18 PM ******/
+/****** Object:  Table [app].[RolePermissionLinks]    Script Date: 11/19/2020 1:51:21 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1036,7 +1051,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [app].[RolePermissions]    Script Date: 11/18/2020 4:50:18 PM ******/
+/****** Object:  Table [app].[RolePermissions]    Script Date: 11/19/2020 1:51:21 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1051,7 +1066,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [app].[Search_BasicSearchData]    Script Date: 11/18/2020 4:50:18 PM ******/
+/****** Object:  Table [app].[Search_BasicSearchData]    Script Date: 11/19/2020 1:51:21 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1073,7 +1088,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [app].[Search_BasicSearchData_Small]    Script Date: 11/18/2020 4:50:18 PM ******/
+/****** Object:  Table [app].[Search_BasicSearchData_Small]    Script Date: 11/19/2020 1:51:21 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1095,7 +1110,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [app].[Search_ReportObjectSearchData]    Script Date: 11/18/2020 4:50:18 PM ******/
+/****** Object:  Table [app].[Search_ReportObjectSearchData]    Script Date: 11/19/2020 1:51:21 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1141,7 +1156,7 @@ CREATE TABLE [app].[Search_ReportObjectSearchData](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [app].[SearchTable]    Script Date: 11/18/2020 4:50:18 PM ******/
+/****** Object:  Table [app].[SearchTable]    Script Date: 11/19/2020 1:51:21 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1160,7 +1175,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [app].[SharedItems]    Script Date: 11/18/2020 4:50:18 PM ******/
+/****** Object:  Table [app].[SharedItems]    Script Date: 11/19/2020 1:51:21 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1178,7 +1193,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [app].[StrategicImportance]    Script Date: 11/18/2020 4:50:18 PM ******/
+/****** Object:  Table [app].[StrategicImportance]    Script Date: 11/19/2020 1:51:21 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1192,13 +1207,14 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [app].[Term]    Script Date: 11/18/2020 4:50:18 PM ******/
+/****** Object:  Table [app].[Term]    Script Date: 11/19/2020 1:51:21 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [app].[Term](
 	[TermId] [int] IDENTITY(1,1) NOT NULL,
+	[ParentTermId] [int] NULL,
 	[Name] [nvarchar](255) NULL,
 	[Summary] [nvarchar](4000) NULL,
 	[TechnicalDefinition] [nvarchar](max) NULL,
@@ -1217,7 +1233,42 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [app].[TermConversation]    Script Date: 11/18/2020 4:50:18 PM ******/
+/****** Object:  Table [app].[TermCodeExamples]    Script Date: 11/19/2020 1:51:21 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [app].[TermCodeExamples](
+	[TermCodeExampleId] [int] IDENTITY(1,1) NOT NULL,
+	[TermId] [int] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[TermCodeExampleId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [app].[TermCodeExamplesHistory]    Script Date: 11/19/2020 1:51:21 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [app].[TermCodeExamplesHistory](
+	[TermCodeExamplesHistoryId] [int] IDENTITY(1,1) NOT NULL,
+	[TermId] [int] NOT NULL,
+	[Title] [nvarchar](255) NOT NULL,
+	[Description] [nvarchar](4000) NULL,
+	[Code] [nvarchar](max) NULL,
+	[FormatAs] [nvarchar](25) NOT NULL,
+	[UpdatedByUserId] [int] NOT NULL,
+	[ValidFromDateTime] [datetime] NOT NULL,
+	[ValidToDateTime] [datetime] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[TermCodeExamplesHistoryId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  Table [app].[TermConversation]    Script Date: 11/19/2020 1:51:21 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1231,7 +1282,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [app].[TermConversationMessage]    Script Date: 11/18/2020 4:50:18 PM ******/
+/****** Object:  Table [app].[TermConversationMessage]    Script Date: 11/19/2020 1:51:21 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1249,7 +1300,33 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [app].[User_NameData]    Script Date: 11/18/2020 4:50:18 PM ******/
+/****** Object:  Table [app].[TermHistory]    Script Date: 11/19/2020 1:51:21 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [app].[TermHistory](
+	[TermHistoryId] [int] IDENTITY(1,1) NOT NULL,
+	[TermId] [int] NOT NULL,
+	[Name] [nvarchar](255) NOT NULL,
+	[Summary] [nvarchar](4000) NULL,
+	[TechnicalDefinition] [nvarchar](max) NULL,
+	[ApprovedYN] [char](1) NOT NULL,
+	[ApprovalDateTime] [datetime] NULL,
+	[ApprovedByUserId] [int] NULL,
+	[HasExternalStandardYN] [char](1) NOT NULL,
+	[ExternalStandardUrl] [nvarchar](4000) NULL,
+	[ValidFromDateTime] [datetime] NOT NULL,
+	[ValidToDateTime] [datetime] NOT NULL,
+	[UpdatedByUserId] [int] NOT NULL,
+	[LastUpdatedDateTime] [datetime] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[TermHistoryId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  Table [app].[User_NameData]    Script Date: 11/19/2020 1:51:21 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1265,7 +1342,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [app].[UserFavoriteFolders]    Script Date: 11/18/2020 4:50:18 PM ******/
+/****** Object:  Table [app].[UserFavoriteFolders]    Script Date: 11/19/2020 1:51:21 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1281,7 +1358,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [app].[UserFavorites]    Script Date: 11/18/2020 4:50:18 PM ******/
+/****** Object:  Table [app].[UserFavorites]    Script Date: 11/19/2020 1:51:21 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1300,7 +1377,39 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [app].[UserPreferences]    Script Date: 11/18/2020 4:50:18 PM ******/
+/****** Object:  Table [app].[UserLDAPGroupMembership]    Script Date: 11/19/2020 1:51:21 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [app].[UserLDAPGroupMembership](
+	[MembershipId] [int] IDENTITY(1,1) NOT NULL,
+	[UserId] [int] NULL,
+	[GroupId] [int] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[MembershipId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [app].[UserLDAPGroups]    Script Date: 11/19/2020 1:51:21 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [app].[UserLDAPGroups](
+	[GroupId] [int] IDENTITY(1,1) NOT NULL,
+	[AccountName] [nvarchar](max) NULL,
+	[GroupName] [nvarchar](max) NULL,
+	[GroupEmail] [nvarchar](max) NULL,
+	[GroupType] [nvarchar](max) NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[GroupId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  Table [app].[UserPreferences]    Script Date: 11/19/2020 1:51:21 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1317,7 +1426,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [app].[UserRoleLinks]    Script Date: 11/18/2020 4:50:18 PM ******/
+/****** Object:  Table [app].[UserRoleLinks]    Script Date: 11/19/2020 1:51:21 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1332,7 +1441,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [app].[UserRoles]    Script Date: 11/18/2020 4:50:18 PM ******/
+/****** Object:  Table [app].[UserRoles]    Script Date: 11/19/2020 1:51:21 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1347,7 +1456,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[__EFMigrationsHistory]    Script Date: 11/18/2020 4:50:18 PM ******/
+/****** Object:  Table [dbo].[__EFMigrationsHistory]    Script Date: 11/19/2020 1:51:21 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1361,7 +1470,7 @@ CREATE TABLE [dbo].[__EFMigrationsHistory](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[ReportGroupsMemberships]    Script Date: 11/18/2020 4:50:18 PM ******/
+/****** Object:  Table [dbo].[ReportGroupsMemberships]    Script Date: 11/19/2020 1:51:21 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1377,7 +1486,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[ReportObject]    Script Date: 11/18/2020 4:50:18 PM ******/
+/****** Object:  Table [dbo].[ReportObject]    Script Date: 11/19/2020 1:51:21 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1403,6 +1512,7 @@ CREATE TABLE [dbo].[ReportObject](
 	[OrphanedReportObjectYN] [nchar](1) NULL,
 	[EpicReportTemplateId] [numeric](18, 0) NULL,
 	[ReportServerPath] [nvarchar](max) NULL,
+	[NULLColumnNumeric] [numeric](18, 0) NULL,
 	[DisplayTitle] [nvarchar](max) NULL,
 	[LastLoadDate] [datetime] NULL,
 PRIMARY KEY CLUSTERED 
@@ -1411,7 +1521,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[ReportObjectHierarchy]    Script Date: 11/18/2020 4:50:18 PM ******/
+/****** Object:  Table [dbo].[ReportObjectHierarchy]    Script Date: 11/19/2020 1:51:21 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1428,7 +1538,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[ReportObjectQuery]    Script Date: 11/18/2020 4:50:18 PM ******/
+/****** Object:  Table [dbo].[ReportObjectQuery]    Script Date: 11/19/2020 1:51:21 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1444,7 +1554,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[ReportObjectRunData]    Script Date: 11/18/2020 4:50:18 PM ******/
+/****** Object:  Table [dbo].[ReportObjectRunData]    Script Date: 11/19/2020 1:51:21 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1464,7 +1574,7 @@ CREATE TABLE [dbo].[ReportObjectRunData](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[ReportObjectSubscriptions]    Script Date: 11/18/2020 4:50:18 PM ******/
+/****** Object:  Table [dbo].[ReportObjectSubscriptions]    Script Date: 11/19/2020 1:51:21 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1487,7 +1597,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[ReportObjectType]    Script Date: 11/18/2020 4:50:18 PM ******/
+/****** Object:  Table [dbo].[ReportObjectType]    Script Date: 11/19/2020 1:51:21 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1503,7 +1613,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[User]    Script Date: 11/18/2020 4:50:18 PM ******/
+/****** Object:  Table [dbo].[User]    Script Date: 11/19/2020 1:51:21 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1530,7 +1640,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[UserGroups]    Script Date: 11/18/2020 4:50:18 PM ******/
+/****** Object:  Table [dbo].[UserGroups]    Script Date: 11/19/2020 1:51:21 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1550,7 +1660,7 @@ CREATE TABLE [dbo].[UserGroups](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[UserGroupsMembership]    Script Date: 11/18/2020 4:50:18 PM ******/
+/****** Object:  Table [dbo].[UserGroupsMembership]    Script Date: 11/19/2020 1:51:21 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1568,23 +1678,38 @@ CREATE TABLE [dbo].[UserGroupsMembership](
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [approved]    Script Date: 11/18/2020 4:50:18 PM ******/
+/****** Object:  Index [approved]    Script Date: 11/19/2020 1:51:21 PM ******/
 CREATE NONCLUSTERED INDEX [approved] ON [app].[Term]
 (
 	[ApprovedYN] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
-/****** Object:  Index [validfrom]    Script Date: 11/18/2020 4:50:18 PM ******/
+/****** Object:  Index [validfrom]    Script Date: 11/19/2020 1:51:21 PM ******/
 CREATE NONCLUSTERED INDEX [validfrom] ON [app].[Term]
 (
 	[ValidFromDateTime] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
+
 ALTER TABLE [app].[DP_MilestoneChecklistCompleted] ADD  DEFAULT ((0)) FOR [ChecklistStatus]
 GO
 ALTER TABLE [app].[ReportObjectImages_doc] ADD  DEFAULT ((1)) FOR [ImageOrdinal]
 GO
+ALTER TABLE [app].[TermCodeExamplesHistory] ADD  DEFAULT (N'SQL') FOR [FormatAs]
+GO
+ALTER TABLE [app].[TermCodeExamplesHistory] ADD  DEFAULT (getdate()) FOR [ValidFromDateTime]
+GO
+ALTER TABLE [app].[TermCodeExamplesHistory] ADD  DEFAULT ('12-31-9999') FOR [ValidToDateTime]
+GO
 ALTER TABLE [app].[TermConversationMessage] ADD  DEFAULT (getdate()) FOR [PostDateTime]
+GO
+ALTER TABLE [app].[TermHistory] ADD  DEFAULT (N'N') FOR [ApprovedYN]
+GO
+ALTER TABLE [app].[TermHistory] ADD  DEFAULT (N'N') FOR [HasExternalStandardYN]
+GO
+ALTER TABLE [app].[TermHistory] ADD  DEFAULT (getdate()) FOR [ValidFromDateTime]
+GO
+ALTER TABLE [app].[TermHistory] ADD  DEFAULT ('12-31-9999') FOR [ValidToDateTime]
 GO
 ALTER TABLE [dbo].[ReportObject] ADD  DEFAULT ('N') FOR [OrphanedReportObjectYN]
 GO
@@ -1833,10 +1958,10 @@ REFERENCES [dbo].[User] ([UserID])
 GO
 ALTER TABLE [app].[Mail_Recipients] CHECK CONSTRAINT [FK_Mail_Recipients_User]
 GO
-ALTER TABLE [app].[Mail_Recipients]  WITH CHECK ADD  CONSTRAINT [FK_Mail_Recipients_UserGroups] FOREIGN KEY([ToGroupId])
-REFERENCES [dbo].[UserGroups] ([GroupId])
+ALTER TABLE [app].[Mail_Recipients]  WITH CHECK ADD  CONSTRAINT [FK_Mail_Recipients_UserLDAPGroups] FOREIGN KEY([ToGroupId])
+REFERENCES [app].[UserLDAPGroups] ([GroupId])
 GO
-ALTER TABLE [app].[Mail_Recipients] CHECK CONSTRAINT [FK_Mail_Recipients_UserGroups]
+ALTER TABLE [app].[Mail_Recipients] CHECK CONSTRAINT [FK_Mail_Recipients_UserLDAPGroups]
 GO
 ALTER TABLE [app].[Mail_Recipients_Deleted]  WITH CHECK ADD  CONSTRAINT [FK_Mail_Recipients_User1] FOREIGN KEY([ToUserId])
 REFERENCES [dbo].[User] ([UserID])
@@ -1960,6 +2085,9 @@ REFERENCES [dbo].[User] ([UserID])
 GO
 ALTER TABLE [app].[SharedItems] CHECK CONSTRAINT [FK_SharedItems_User1]
 GO
+ALTER TABLE [app].[Term]  WITH CHECK ADD FOREIGN KEY([ParentTermId])
+REFERENCES [app].[Term] ([TermId])
+GO
 ALTER TABLE [app].[Term]  WITH CHECK ADD  CONSTRAINT [FK_Term_WebAppUsers] FOREIGN KEY([UpdatedByUserId])
 REFERENCES [dbo].[User] ([UserID])
 GO
@@ -1969,6 +2097,19 @@ ALTER TABLE [app].[Term]  WITH CHECK ADD  CONSTRAINT [FK_Term_WebAppUsers1] FORE
 REFERENCES [dbo].[User] ([UserID])
 GO
 ALTER TABLE [app].[Term] CHECK CONSTRAINT [FK_Term_WebAppUsers1]
+GO
+ALTER TABLE [app].[TermCodeExamples]  WITH CHECK ADD FOREIGN KEY([TermId])
+REFERENCES [app].[Term] ([TermId])
+ON DELETE CASCADE
+GO
+ALTER TABLE [app].[TermCodeExamplesHistory]  WITH CHECK ADD FOREIGN KEY([TermId])
+REFERENCES [app].[Term] ([TermId])
+ON DELETE CASCADE
+GO
+ALTER TABLE [app].[TermCodeExamplesHistory]  WITH CHECK ADD  CONSTRAINT [FK__TermCodeE__Updat__531856C7] FOREIGN KEY([UpdatedByUserId])
+REFERENCES [dbo].[User] ([UserID])
+GO
+ALTER TABLE [app].[TermCodeExamplesHistory] CHECK CONSTRAINT [FK__TermCodeE__Updat__531856C7]
 GO
 ALTER TABLE [app].[TermConversation]  WITH CHECK ADD FOREIGN KEY([TermId])
 REFERENCES [app].[Term] ([TermId])
@@ -1984,6 +2125,16 @@ REFERENCES [dbo].[User] ([UserID])
 GO
 ALTER TABLE [app].[TermConversationMessage] CHECK CONSTRAINT [FK_TermConversationMessage_User]
 GO
+ALTER TABLE [app].[TermHistory]  WITH CHECK ADD  CONSTRAINT [FK__TermHisto__Appro__56E8E7AB] FOREIGN KEY([ApprovedByUserId])
+REFERENCES [dbo].[User] ([UserID])
+GO
+ALTER TABLE [app].[TermHistory] CHECK CONSTRAINT [FK__TermHisto__Appro__56E8E7AB]
+GO
+ALTER TABLE [app].[TermHistory]  WITH CHECK ADD  CONSTRAINT [FK__TermHisto__Updat__57DD0BE4] FOREIGN KEY([UpdatedByUserId])
+REFERENCES [dbo].[User] ([UserID])
+GO
+ALTER TABLE [app].[TermHistory] CHECK CONSTRAINT [FK__TermHisto__Updat__57DD0BE4]
+GO
 ALTER TABLE [app].[User_NameData]  WITH CHECK ADD  CONSTRAINT [FK_User_NameData_User] FOREIGN KEY([UserId])
 REFERENCES [dbo].[User] ([UserID])
 GO
@@ -1998,6 +2149,16 @@ ALTER TABLE [app].[UserFavorites]  WITH CHECK ADD  CONSTRAINT [FK_UserFavorites_
 REFERENCES [app].[UserFavoriteFolders] ([UserFavoriteFolderId])
 GO
 ALTER TABLE [app].[UserFavorites] CHECK CONSTRAINT [FK_UserFavorites_UserFavoriteFolders]
+GO
+ALTER TABLE [app].[UserLDAPGroupMembership]  WITH CHECK ADD  CONSTRAINT [FK_UserLDAPGroupMembership_User] FOREIGN KEY([UserId])
+REFERENCES [dbo].[User] ([UserID])
+GO
+ALTER TABLE [app].[UserLDAPGroupMembership] CHECK CONSTRAINT [FK_UserLDAPGroupMembership_User]
+GO
+ALTER TABLE [app].[UserLDAPGroupMembership]  WITH CHECK ADD  CONSTRAINT [FK_UserLDAPGroupMembership_UserLDAPGroups] FOREIGN KEY([GroupId])
+REFERENCES [app].[UserLDAPGroups] ([GroupId])
+GO
+ALTER TABLE [app].[UserLDAPGroupMembership] CHECK CONSTRAINT [FK_UserLDAPGroupMembership_UserLDAPGroups]
 GO
 ALTER TABLE [app].[UserPreferences]  WITH CHECK ADD  CONSTRAINT [FK_UserPreferences_User] FOREIGN KEY([UserId])
 REFERENCES [dbo].[User] ([UserID])
@@ -2071,7 +2232,129 @@ REFERENCES [dbo].[UserGroups] ([GroupId])
 GO
 ALTER TABLE [dbo].[UserGroupsMembership] CHECK CONSTRAINT [FK_UserGroupsMembership_UserGroups]
 GO
-/****** Object:  StoredProcedure [app].[CalculateReportRunData]    Script Date: 11/18/2020 4:50:18 PM ******/
+
+
+/****** Object:  FullTextIndex     Script Date: 11/19/2020 1:51:21 PM ******/
+/*CREATE FULLTEXT INDEX ON [app].[ReportObject_doc](
+[DeveloperDescription] LANGUAGE 'English', 
+[KeyAssumptions] LANGUAGE 'English')
+KEY INDEX [PK__ReportOb__B7A74135D2A44EFC]ON ([ReportObjectDocs], FILEGROUP [PRIMARY])
+WITH (CHANGE_TRACKING = AUTO, STOPLIST = OFF)
+*/
+declare @i nvarchar(max) = (select
+								'CREATE FULLTEXT INDEX ON [app].[ReportObject_doc]([DeveloperDescription] LANGUAGE ''English'',[KeyAssumptions] LANGUAGE ''English'')KEY INDEX [' + i.name + ']ON ([ReportObjectDocs], FILEGROUP [PRIMARY]) WITH (CHANGE_TRACKING = AUTO, STOPLIST = OFF)'
+							from sys.tables t
+								INNER JOIN sys.indexes i ON t.object_id = i.object_id
+							where 
+								i.index_id = 1  -- clustered index
+								and t.name = 'ReportObject_doc')
+
+
+exec sp_executesql @i
+GO
+/****** Object:  FullTextIndex     Script Date: 11/19/2020 1:51:21 PM ******/
+/*
+CREATE FULLTEXT INDEX ON [app].[Search_BasicSearchData](
+[SearchField] LANGUAGE 'English')
+KEY INDEX [PK__Search_B__3214EC07DFB24C4E]ON ([Search], FILEGROUP [PRIMARY])
+WITH (CHANGE_TRACKING = AUTO, STOPLIST = OFF)
+*/
+declare @i nvarchar(max) = (select
+								'CREATE FULLTEXT INDEX ON [app].[Search_BasicSearchData]([SearchField] LANGUAGE ''English'')KEY INDEX [' + i.name + ']ON ([Search], FILEGROUP [PRIMARY]) WITH (CHANGE_TRACKING = AUTO, STOPLIST = OFF)'
+							from sys.tables t
+								INNER JOIN sys.indexes i ON t.object_id = i.object_id
+							where 
+								i.index_id = 1  -- clustered index
+								and t.name = 'Search_BasicSearchData')
+exec sp_executesql @i
+
+GO
+/****** Object:  FullTextIndex     Script Date: 11/19/2020 1:51:21 PM ******/
+/*
+CREATE FULLTEXT INDEX ON [app].[Search_BasicSearchData_Small](
+[SearchField] LANGUAGE 'English')
+KEY INDEX [PK__Search_B__3214EC07D8479892]ON ([Search_Small], FILEGROUP [PRIMARY])
+WITH (CHANGE_TRACKING = AUTO, STOPLIST = SYSTEM)
+*/
+declare @i nvarchar(max) = (select
+								'CREATE FULLTEXT INDEX ON [app].[Search_BasicSearchData_Small]([SearchField] LANGUAGE ''English'')KEY INDEX [' + i.name + ']ON ([Search_Small], FILEGROUP [PRIMARY]) WITH (CHANGE_TRACKING = AUTO, STOPLIST = SYSTEM)'
+							from sys.tables t
+								INNER JOIN sys.indexes i ON t.object_id = i.object_id
+							where 
+								i.index_id = 1  -- clustered index
+								and t.name = 'Search_BasicSearchData_Small')
+exec sp_executesql @i
+GO
+/****** Object:  FullTextIndex     Script Date: 11/19/2020 1:51:21 PM ******/
+/*CREATE FULLTEXT INDEX ON [app].[Term](
+[Name] LANGUAGE 'English', 
+[Summary] LANGUAGE 'English', 
+[TechnicalDefinition] LANGUAGE 'English')
+KEY INDEX [PK__Term__410A21A5A6BE1546]ON ([Terms], FILEGROUP [PRIMARY])
+WITH (CHANGE_TRACKING = AUTO, STOPLIST = OFF)
+*/
+declare @i nvarchar(max) = (select
+								'CREATE FULLTEXT INDEX ON [app].[Term]([Name] LANGUAGE ''English'',[Summary] LANGUAGE ''English'',[TechnicalDefinition] LANGUAGE ''English'')KEY INDEX [' + i.name + ']ON ([Terms], FILEGROUP [PRIMARY]) WITH (CHANGE_TRACKING = AUTO, STOPLIST = OFF)'
+							from sys.tables t
+								INNER JOIN sys.indexes i ON t.object_id = i.object_id
+							where 
+								i.index_id = 1  -- clustered index
+								and t.name = 'Term')
+exec sp_executesql @i
+
+GO
+USE [Data_Governance_Pub]
+GO
+/****** Object:  FullTextIndex     Script Date: 11/19/2020 1:51:21 PM ******/
+/*CREATE FULLTEXT INDEX ON [app].[User_NameData](
+[Fullname] LANGUAGE 'English')
+KEY INDEX [PK__User_Nam__1788CC4CF297F9FC]ON ([User_NameData], FILEGROUP [PRIMARY])
+WITH (CHANGE_TRACKING = AUTO, STOPLIST = SYSTEM)
+*/
+declare @i nvarchar(max) = (select
+								'CREATE FULLTEXT INDEX ON [app].[User_NameData]([Fullname] LANGUAGE ''English'')KEY INDEX [' + i.name + ']ON ([User_NameData], FILEGROUP [PRIMARY]) WITH (CHANGE_TRACKING = AUTO, STOPLIST = SYSTEM)'
+							from sys.tables t
+								INNER JOIN sys.indexes i ON t.object_id = i.object_id
+							where 
+								i.index_id = 1  -- clustered index
+								and t.name = 'User_NameData')
+exec sp_executesql @i
+
+GO
+
+/****** Object:  FullTextIndex     Script Date: 11/19/2020 1:51:21 PM ******/
+/*CREATE FULLTEXT INDEX ON [app].[UserLDAPGroups](
+[GroupName] LANGUAGE 'English')
+KEY INDEX [PK__UserLDAP__149AF36ADDF529F9]ON ([UserGroups], FILEGROUP [PRIMARY])
+WITH (CHANGE_TRACKING = AUTO, STOPLIST = SYSTEM)
+*/
+declare @i nvarchar(max) = (select
+								'CREATE FULLTEXT INDEX ON [dbo].[UserGroups]([GroupName] LANGUAGE ''English'')KEY INDEX [' + i.name + ']ON ([UserGroups], FILEGROUP [PRIMARY]) WITH (CHANGE_TRACKING = AUTO, STOPLIST = SYSTEM)'
+							from sys.tables t
+								INNER JOIN sys.indexes i ON t.object_id = i.object_id
+							where 
+								i.index_id = 1  -- clustered index
+								and t.name = 'UserGroups')
+exec sp_executesql @i
+GO
+/****** Object:  FullTextIndex     Script Date: 11/19/2020 1:51:21 PM ******/
+/*CREATE FULLTEXT INDEX ON [dbo].[ReportObject](
+[Description] LANGUAGE 'English', 
+[DetailedDescription] LANGUAGE 'English', 
+[Name] LANGUAGE 'English')
+KEY INDEX [PK__ReportOb__B7A741355058A44F]ON ([ReportObjects], FILEGROUP [PRIMARY])
+WITH (CHANGE_TRACKING = AUTO, STOPLIST = OFF)
+*/
+declare @i nvarchar(max) = (select
+								'CREATE FULLTEXT INDEX ON [dbo].[ReportObject]([Description] LANGUAGE ''English'',[DetailedDescription] LANGUAGE ''English'',[Name] LANGUAGE ''English'')KEY INDEX [' + i.name + ']ON ([ReportObjects], FILEGROUP [PRIMARY]) WITH (CHANGE_TRACKING = AUTO, STOPLIST = OFF)'
+							from sys.tables t
+								INNER JOIN sys.indexes i ON t.object_id = i.object_id
+							where 
+								i.index_id = 1  -- clustered index
+								and t.name = 'ReportObject')
+exec sp_executesql @i
+GO
+/****** Object:  StoredProcedure [app].[CalculateReportRunData]    Script Date: 11/19/2020 1:51:21 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2165,7 +2448,7 @@ BEGIN
 
 End
 GO
-/****** Object:  StoredProcedure [app].[CalculateReportRunTimeData]    Script Date: 11/18/2020 4:50:18 PM ******/
+/****** Object:  StoredProcedure [app].[CalculateReportRunTimeData]    Script Date: 11/19/2020 1:51:21 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2255,33 +2538,8 @@ convert(nvarchar(MAX),  DATEADD(dd, DATEPART(DW,RunStartTime)*-1+1, DATEADD(dd, 
 
 End
 GO
-/****** Object:  StoredProcedure [app].[Search_MasterDataUpdate]    Script Date: 11/18/2020 4:50:18 PM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
--- =============================================
--- Author:		Christopher Pickering
--- Create date: 3/19/20
--- Description:	Master package to update search data
--- =============================================
-CREATE PROCEDURE [app].[Search_MasterDataUpdate]
-	-- no params
-AS
-BEGIN
-	SET NOCOUNT ON;
 
-	DECLARE	@return_value int
-	EXEC	@return_value = [app].[Search_UpdateReportObjectData]
-	
-	EXEC	@return_value = [app].[Search_UpdateBasicSearchData]
-
-	EXEC	@return_value = [app].[User_UpdateUsernameData]
-	
-
-END
-GO
-/****** Object:  StoredProcedure [app].[Search_UpdateBasicSearchData]    Script Date: 11/18/2020 4:50:18 PM ******/
+/****** Object:  StoredProcedure [app].[Search_UpdateBasicSearchData]    Script Date: 11/19/2020 1:51:21 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2749,7 +3007,7 @@ BEGIN
 	-- create full text index
 	if not exists (select * from sys.fulltext_index_columns as fi inner JOIN sys.columns as c ON c.object_id = fi.object_id AND c.column_id = fi.column_id and c.name = 'SearchField' inner join sys.tables as t on t.object_id = fi.object_id and t.name = 'Search_BasicSearchData')
 		begin
-			declare @i varchar(max) = (select
+			declare @i nvarchar(max) = (select
 									'create fulltext index on app.Search_BasicSearchData(SearchField) key index ' + i.name + ' On Search With Stoplist = off;'
 								from sys.tables t
 									INNER JOIN sys.indexes i ON t.object_id = i.object_id
@@ -2786,7 +3044,7 @@ BEGIN
 
 END
 GO
-/****** Object:  StoredProcedure [app].[Search_UpdateReportObjectData]    Script Date: 11/18/2020 4:50:18 PM ******/
+/****** Object:  StoredProcedure [app].[Search_UpdateReportObjectData]    Script Date: 11/19/2020 1:51:21 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -3337,7 +3595,7 @@ BEGIN
 
 	END
 GO
-/****** Object:  StoredProcedure [app].[UpdateSearchTable]    Script Date: 11/18/2020 4:50:18 PM ******/
+/****** Object:  StoredProcedure [app].[UpdateSearchTable]    Script Date: 11/19/2020 1:51:21 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -3651,7 +3909,7 @@ BEGIN
 	-- create full text index
 	if not exists (select * from sys.fulltext_index_columns as fi inner JOIN sys.columns as c ON c.object_id = fi.object_id AND c.column_id = fi.column_id and name = 'SearchField')
 		begin
-			declare @i varchar(max) = (select
+			declare @i nvarchar(max) = (select
 									'create fulltext index on app.SearchTable(SearchField) key index ' + i.name + ' On Search With Stoplist = off;'
 								from sys.tables t
 									INNER JOIN sys.indexes i ON t.object_id = i.object_id
@@ -3669,7 +3927,7 @@ BEGIN
 
 End
 GO
-/****** Object:  StoredProcedure [app].[User_UpdateUsernameData]    Script Date: 11/18/2020 4:50:18 PM ******/
+/****** Object:  StoredProcedure [app].[User_UpdateUsernameData]    Script Date: 11/19/2020 1:51:21 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -3765,7 +4023,7 @@ BEGIN
 					INNER JOIN sys.objects o ON o.object_id = c.object_id 
 					where o.name = 'User_NameData' and c.name = 'Fullname')
 		begin
-			declare @i varchar(max) = (select
+			declare @i nvarchar(max) = (select
 									'create fulltext index on app.User_NameData(Fullname,Firstname,Lastname) key index ' + i.name + ' On User_NameData With Stoplist = off;'
 								from sys.tables t
 									INNER JOIN sys.indexes i ON t.object_id = i.object_id
@@ -3779,7 +4037,7 @@ BEGIN
 end;
 	
 GO
-/****** Object:  StoredProcedure [dbo].[BasicDirectorSearch]    Script Date: 11/18/2020 4:50:18 PM ******/
+/****** Object:  StoredProcedure [dbo].[BasicDirectorSearch]    Script Date: 11/19/2020 1:51:21 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -3817,7 +4075,7 @@ inner join app.UserRoles u on u.UserRolesId = l.UserRolesId
 	ORDER BY 2 asc
 END
 GO
-/****** Object:  StoredProcedure [dbo].[BasicProjectSearch]    Script Date: 11/18/2020 4:50:18 PM ******/
+/****** Object:  StoredProcedure [dbo].[BasicProjectSearch]    Script Date: 11/19/2020 1:51:21 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -3850,7 +4108,7 @@ BEGIN
 	AND r.DataProjectID NOT IN (SELECT * FROM STRING_SPLIT(@exclude,','))
 END
 GO
-/****** Object:  StoredProcedure [dbo].[BasicRealUserSearch]    Script Date: 11/18/2020 4:50:18 PM ******/
+/****** Object:  StoredProcedure [dbo].[BasicRealUserSearch]    Script Date: 11/19/2020 1:51:21 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -3884,7 +4142,7 @@ SELECT TOP(10) UserId, Username FROM 	dbo.[User] r
 	ORDER BY 2 asc
 END
 GO
-/****** Object:  StoredProcedure [dbo].[BasicReportObjectSearch]    Script Date: 11/18/2020 4:50:18 PM ******/
+/****** Object:  StoredProcedure [dbo].[BasicReportObjectSearch]    Script Date: 11/19/2020 1:51:21 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -3918,7 +4176,7 @@ BEGIN
 	and r.Name like concat('%', @searchTerm, '%')
 END
 GO
-/****** Object:  StoredProcedure [dbo].[BasicReportSearch]    Script Date: 11/18/2020 4:50:18 PM ******/
+/****** Object:  StoredProcedure [dbo].[BasicReportSearch]    Script Date: 11/19/2020 1:51:21 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -3955,7 +4213,7 @@ BEGIN
 	AND r.ReportObjectID NOT IN (SELECT * FROM STRING_SPLIT(@exclude,','))
 END
 GO
-/****** Object:  StoredProcedure [dbo].[BasicTermObjectSearch]    Script Date: 11/18/2020 4:50:18 PM ******/
+/****** Object:  StoredProcedure [dbo].[BasicTermObjectSearch]    Script Date: 11/19/2020 1:51:21 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -3987,7 +4245,7 @@ BEGIN
 	and r.name like concat('%', @searchTerm, '%')
 END
 GO
-/****** Object:  StoredProcedure [dbo].[BasicTermSearch]    Script Date: 11/18/2020 4:50:18 PM ******/
+/****** Object:  StoredProcedure [dbo].[BasicTermSearch]    Script Date: 11/19/2020 1:51:21 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -4021,7 +4279,7 @@ BEGIN
 	AND r.TermId NOT IN (SELECT * FROM STRING_SPLIT(@exclude,','))
 END
 GO
-/****** Object:  StoredProcedure [dbo].[BasicUserSearch]    Script Date: 11/18/2020 4:50:18 PM ******/
+/****** Object:  StoredProcedure [dbo].[BasicUserSearch]    Script Date: 11/19/2020 1:51:21 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -4117,7 +4375,7 @@ begin
 	select distinct top(@results)  userid, fullname as username, S from #matches where userid not in (select [value] from String_Split(@exclude,',')) order by fullname
 END
 GO
-/****** Object:  StoredProcedure [dbo].[RelatedReports]    Script Date: 11/18/2020 4:50:18 PM ******/
+/****** Object:  StoredProcedure [dbo].[RelatedReports]    Script Date: 11/19/2020 1:51:21 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -4167,7 +4425,7 @@ select top(@records) Id, cnt into #related from (
 		 where (
 				s.UserId = s2.UserId
 			or s.SubscriptionTo = s2.SubscriptionTo
-			or s.SubscriptionTo = replace(lower(s2.SubscriptionTo),'','rhc')
+			or s.SubscriptionTo = replace(lower(s2.SubscriptionTo),'riversidehealthcare','rhc')
 			)
 		group by s2.ReportObjectId
 
@@ -4226,7 +4484,7 @@ order by case when d.ReportObjectID is null then 0 else 1 end desc
 
 	end;
 GO
-/****** Object:  StoredProcedure [dbo].[Search]    Script Date: 11/18/2020 4:50:18 PM ******/
+/****** Object:  StoredProcedure [dbo].[Search]    Script Date: 11/19/2020 1:51:21 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -4549,7 +4807,7 @@ end;
 		
 
 GO
-/****** Object:  StoredProcedure [dbo].[SearchReportObjects]    Script Date: 11/18/2020 4:50:18 PM ******/
+/****** Object:  StoredProcedure [dbo].[SearchReportObjects]    Script Date: 11/19/2020 1:51:21 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -4805,7 +5063,7 @@ set @totalRecords = (select count(*)from #output);
 
 end;
 GO
-/****** Object:  StoredProcedure [dbo].[SearchReportObjects_Original]    Script Date: 11/18/2020 4:50:18 PM ******/
+/****** Object:  StoredProcedure [dbo].[SearchReportObjects_Original]    Script Date: 11/19/2020 1:51:21 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -4868,7 +5126,451 @@ begin
     order by o.RANK desc offset (@currentPage - 1) * @pageSize rows fetch next @pageSize rows only;
 end;
 GO
+
+/****** Object:  StoredProcedure [app].[Search_MasterDataUpdate]    Script Date: 11/19/2020 1:51:21 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		Christopher Pickering
+-- Create date: 3/19/20
+-- Description:	Master package to update search data
+-- =============================================
+CREATE PROCEDURE [app].[Search_MasterDataUpdate]
+	-- no params
+AS
+BEGIN
+	SET NOCOUNT ON;
+
+	DECLARE	@return_value int
+	EXEC	@return_value = [app].[Search_UpdateReportObjectData]
+	
+	EXEC	@return_value = [app].[Search_UpdateBasicSearchData]
+
+	EXEC	@return_value = [app].[User_UpdateUsernameData]
+	
+
+END
+GO
+
+
+
 USE [master]
 GO
 ALTER DATABASE [Data_Governance_Pub] SET  READ_WRITE 
+GO
+
+USE [Data_Governance_Pub]
+GO
+
+
+/* basic seed */
+
+insert into [Data_Governance_Pub].dbo.[User] (Username) values ('Default')
+GO
+insert into [Data_Governance_Pub].app.UserRoles (Name, Description) values
+('Administrator','Administrators have the highest priveleges and are not prevented from taking any available actions.'),
+('Report Writer','Report Writers can create and edit ReportObject documentation and terms, but cannot approve Terms, edit approved Terms, or delete things they do not own.'),
+('Term Administrator','Term Admins can create, edit, approve and delete Terms.'),
+('Term Builder','Term Builders can create and edit Term documentation, but cannot approve them, edit them after approval, or link them to ReportObjects.'),
+('User','Users do not have any special permissions. They can navigate the site, comment, and view approved Terms and all non-hidden ReportObjects.')
+GO
+insert into [Data_Governance_Pub].app.UserRoleLinks (UserId, UserRolesId) values (1,1)
+GO
+insert into [Data_Governance_Pub].dbo.ReportObjectType ([Name], DefaultEpicMasterFile) values
+('Application Report','ARO'),
+('Application Report Template','ART'),
+('Epic-Crystal Report','ECR'),
+('Epic-Crystal Template','ECT'),
+('Epic-WebI Report','AWR'),
+('Epic-WebI Template','AWT'),
+('External Crystal Template','ECT'),
+('External WebI Template','EWT'),
+('Other HGR Template','OHT'),
+('Other HRX Report','OHR'),
+('Other Radar Dashboard','ORD'),
+('Personalization Radar Dashboard','PRD'),
+('Personalization Radar Dashboard Component','PRC'),
+('Radar Dashboard Resource','RDR'),
+('Radar Metric','RME'),
+('Redirector Radar Dashboard','RRD'),
+('Reporting Workbench Report','RWR'),
+('Reporting Workbench Template','RWT'),
+('SlicerDicer Filter','SDF'),
+('Source Radar Dashboard','SRD'),
+('Source Radar Dashboard Component','SRC'),
+('SSRS Datasource','NUL'),
+('SSRS File','NUL'),
+('SSRS Folder','NUL'),
+('SSRS KPI','NUL'),
+('SSRS Linked Report','NUL'),
+('SSRS Mobile Report (folder)','NUL'),
+('SSRS Report','NUL'),
+('SSRS Shared Dataset','NUL'),
+('User Created Radar Dashboard','UCR'),
+('SSRS Report Part','NUL'),
+('Other Radar Dashboard Component','RDC')
+
+GO
+insert into [Data_Governance_Pub].app.RolePermissions ([Name], Description) values
+('Edit User Permissions', 'NULL'),
+('Approve Terms', 'NULL'),
+('Create New Terms', 'NULL'),
+('Delete Approved Terms', 'NULL'),
+('Delete Unapproved Terms', 'NULL'),
+('Edit Approved ReportObjects Documentation', 'NULL'),
+('Edit Approved Terms', 'NULL'),
+('Edit Report Documentation', 'NULL'),
+('Edit Unapproved Terms', 'NULL'),
+('Link/Unlink Terms and ReportObjects', 'NULL'),
+('View Hidden ReportObjects', 'NULL'),
+('View Unapproved Terms', 'NULL'),
+('Edit Role Permissions', 'NULL'),
+('Search', 'NULL'),
+('Create Initiative', 'NULL'),
+('Delete Initiative', 'NULL'),
+('Edit Initiative', 'NULL'),
+('Create Milestone Template', 'NULL'),
+('Delete Milestone Template', 'NULL'),
+('Delete Comments', 'NULL'),
+('Create Project', 'NULL'),
+('Delete Project', 'NULL'),
+('Edit Project', 'NULL'),
+('Complete Milestone Task Checklist Item', 'NULL'),
+('Complete Milestone Task', 'NULL'),
+('Create Contacts', 'NULL'),
+('Delete Contacts', 'NULL'),
+('Create Parameters', 'NULL'),
+('Delete Parameters', 'NULL'),
+('Edit Report Purge Option', 'NULL'),
+('View Site Analytics', 'NULL'),
+('View Other User', 'NULL'),
+('Open In Editor', 'NULL'),
+('View Report Profiles', 'NULL'),
+('Search For Other User', 'NULL'),
+('Edit Other Users', 'NULL'),
+('Uncomplete Milestone Task Checklist Item', 'NULL'),
+('Edit Report Hidden Option', 'NULL'),
+('Can Change Roles', 'NULL'),
+('Manage Global Site Settings', 'NULL')
+GO
+insert into [Data_Governance_Pub].app.RolePermissionLinks (RoleId, RolePermissionsId) values 
+(3,7),
+(3,10),
+(3,12),
+(3,13),
+(3,14),
+(3,16),
+(3,17),
+(4,6),
+(4,7),
+(4,9),
+(4,11),
+(4,13),
+(4,17),
+(5,17),
+(5,19),
+(2,19),
+(3,19),
+(4,19),
+(5,39),
+(2,37),
+(3,37),
+(4,37),
+(5,37),
+(2,39),
+(3,39),
+(4,39),
+(2,40),
+(3,40),
+(4,40),
+(5,40)
+GO
+insert into [Data_Governance_Pub].app.OrganizationalValue (OrganizationalValueName) values ('Critical'),
+('High'),
+('Medium-High'),
+('Medium')
+GO
+insert into [Data_Governance_Pub].app.MaintenanceSchedule (MaintenanceScheduleName) values
+
+('Quarterly'),
+('Twice a Year'),
+('Yearly'),
+('Every Two Years'),
+('Audit Only')
+GO
+insert into [Data_Governance_Pub].app.MaintenanceLogStatus (MaintenanceLogStatusName) VALUES
+('Approved - No Changes'),
+('Approved - With Changes'),
+('Recommend Retire')
+GO
+insert into [Data_Governance_Pub].app.Fragility (FragilityName) VALUES
+('High'),
+('Medium'),
+('Low'),
+('Very Low')
+GO
+insert into [Data_Governance_Pub].app.FragilityTag (FragilityTagName) VALUES
+('Facility Build'),
+('Procedure Code (CPT)'),
+('Procedure Code (ICD)'),
+('Procedure Code (Proc ID)'),
+('Diagnosis Code'),
+('Regulatory Changes'),
+('Payor Plan Name'),
+('Agency Build'),
+('Service Area'),
+('SER Build'),
+('Workqueues'),
+('Billing Indicators'),
+('Batches'),
+('M-Code'),
+('Patient Class'),
+('Bad Debt'),
+('New Application'),
+('Rules Engine'),
+('Registry'),
+('SQL'),
+('Free Text'),
+('ClarityREF Dependencies'),
+('External Application'),
+('Flowsheets'),
+('Primary Care Provider'),
+('Order Sets'),
+('Workflow Dependent')
+GO
+insert into [Data_Governance_Pub].app.FinancialImpact ([Name]) values 
+('Medium'),
+('High'),
+('Critical')
+GO
+insert into [Data_Governance_Pub].app.EstimatedRunFrequency (EstimatedRunFrequencyName) VALUES
+('Multiple Times Per Day'),
+('Daily'),
+('Weekly'),
+('Monthly'),
+('Yearly')
+GO
+insert into [Data_Governance_Pub].app.DP_MilestoneFrequency ([Name]) VALUES
+('Day(s)'),
+('Week(s)'),
+('Month(s)'),
+('Year(s)'),
+('Quarter(s)')
+GO
+insert into [Data_Governance_Pub].app.StrategicImportance ([Name]) VALUES
+('Medium'),
+('High'),
+('Critical')
+GO
+
+
+USE [master]
+GO
+ALTER DATABASE [Data_Governance_Pub] SET  READ_WRITE 
+GO
+
+USE [Data_Governance_Pub]
+GO
+
+
+/* basic seed */
+
+insert into [Data_Governance_Pub].dbo.[User] (Username) values ('Default')
+GO
+insert into [Data_Governance_Pub].app.UserRoles (Name, Description) values
+('Administrator','Administrators have the highest priveleges and are not prevented from taking any available actions.'),
+('Report Writer','Report Writers can create and edit ReportObject documentation and terms, but cannot approve Terms, edit approved Terms, or delete things they do not own.'),
+('Term Administrator','Term Admins can create, edit, approve and delete Terms.'),
+('Term Builder','Term Builders can create and edit Term documentation, but cannot approve them, edit them after approval, or link them to ReportObjects.'),
+('User','Users do not have any special permissions. They can navigate the site, comment, and view approved Terms and all non-hidden ReportObjects.')
+GO
+insert into [Data_Governance_Pub].app.UserRoleLinks (UserId, UserRolesId) values (1,1)
+GO
+insert into [Data_Governance_Pub].dbo.ReportObjectType ([Name], DefaultEpicMasterFile) values
+('Application Report','ARO'),
+('Application Report Template','ART'),
+('Epic-Crystal Report','ECR'),
+('Epic-Crystal Template','ECT'),
+('Epic-WebI Report','AWR'),
+('Epic-WebI Template','AWT'),
+('External Crystal Template','ECT'),
+('External WebI Template','EWT'),
+('Other HGR Template','OHT'),
+('Other HRX Report','OHR'),
+('Other Radar Dashboard','ORD'),
+('Personalization Radar Dashboard','PRD'),
+('Personalization Radar Dashboard Component','PRC'),
+('Radar Dashboard Resource','RDR'),
+('Radar Metric','RME'),
+('Redirector Radar Dashboard','RRD'),
+('Reporting Workbench Report','RWR'),
+('Reporting Workbench Template','RWT'),
+('SlicerDicer Filter','SDF'),
+('Source Radar Dashboard','SRD'),
+('Source Radar Dashboard Component','SRC'),
+('SSRS Datasource','NUL'),
+('SSRS File','NUL'),
+('SSRS Folder','NUL'),
+('SSRS KPI','NUL'),
+('SSRS Linked Report','NUL'),
+('SSRS Mobile Report (folder)','NUL'),
+('SSRS Report','NUL'),
+('SSRS Shared Dataset','NUL'),
+('User Created Radar Dashboard','UCR'),
+('SSRS Report Part','NUL'),
+('Other Radar Dashboard Component','RDC')
+
+GO
+insert into [Data_Governance_Pub].app.RolePermissions ([Name], Description) values
+('Edit User Permissions', 'NULL'),
+('Approve Terms', 'NULL'),
+('Create New Terms', 'NULL'),
+('Delete Approved Terms', 'NULL'),
+('Delete Unapproved Terms', 'NULL'),
+('Edit Approved ReportObjects Documentation', 'NULL'),
+('Edit Approved Terms', 'NULL'),
+('Edit Report Documentation', 'NULL'),
+('Edit Unapproved Terms', 'NULL'),
+('Link/Unlink Terms and ReportObjects', 'NULL'),
+('View Hidden ReportObjects', 'NULL'),
+('View Unapproved Terms', 'NULL'),
+('Edit Role Permissions', 'NULL'),
+('Search', 'NULL'),
+('Create Initiative', 'NULL'),
+('Delete Initiative', 'NULL'),
+('Edit Initiative', 'NULL'),
+('Create Milestone Template', 'NULL'),
+('Delete Milestone Template', 'NULL'),
+('Delete Comments', 'NULL'),
+('Create Project', 'NULL'),
+('Delete Project', 'NULL'),
+('Edit Project', 'NULL'),
+('Complete Milestone Task Checklist Item', 'NULL'),
+('Complete Milestone Task', 'NULL'),
+('Create Contacts', 'NULL'),
+('Delete Contacts', 'NULL'),
+('Create Parameters', 'NULL'),
+('Delete Parameters', 'NULL'),
+('Edit Report Purge Option', 'NULL'),
+('View Site Analytics', 'NULL'),
+('View Other User', 'NULL'),
+('Open In Editor', 'NULL'),
+('View Report Profiles', 'NULL'),
+('Search For Other User', 'NULL'),
+('Edit Other Users', 'NULL'),
+('Uncomplete Milestone Task Checklist Item', 'NULL'),
+('Edit Report Hidden Option', 'NULL'),
+('Can Change Roles', 'NULL'),
+('Manage Global Site Settings', 'NULL')
+GO
+insert into [Data_Governance_Pub].app.RolePermissionLinks (RoleId, RolePermissionsId) values 
+(3,7),
+(3,10),
+(3,12),
+(3,13),
+(3,14),
+(3,16),
+(3,17),
+(4,6),
+(4,7),
+(4,9),
+(4,11),
+(4,13),
+(4,17),
+(5,17),
+(5,19),
+(2,19),
+(3,19),
+(4,19),
+(5,39),
+(2,37),
+(3,37),
+(4,37),
+(5,37),
+(2,39),
+(3,39),
+(4,39),
+(2,40),
+(3,40),
+(4,40),
+(5,40)
+GO
+insert into [Data_Governance_Pub].app.OrganizationalValue (OrganizationalValueName) values ('Critical'),
+('High'),
+('Medium-High'),
+('Medium')
+GO
+insert into [Data_Governance_Pub].app.MaintenanceSchedule (MaintenanceScheduleName) values
+
+('Quarterly'),
+('Twice a Year'),
+('Yearly'),
+('Every Two Years'),
+('Audit Only')
+GO
+insert into [Data_Governance_Pub].app.MaintenanceLogStatus (MaintenanceLogStatusName) VALUES
+('Approved - No Changes'),
+('Approved - With Changes'),
+('Recommend Retire')
+GO
+insert into [Data_Governance_Pub].app.Fragility (FragilityName) VALUES
+('High'),
+('Medium'),
+('Low'),
+('Very Low')
+GO
+insert into [Data_Governance_Pub].app.FragilityTag (FragilityTagName) VALUES
+('Facility Build'),
+('Procedure Code (CPT)'),
+('Procedure Code (ICD)'),
+('Procedure Code (Proc ID)'),
+('Diagnosis Code'),
+('Regulatory Changes'),
+('Payor Plan Name'),
+('Agency Build'),
+('Service Area'),
+('SER Build'),
+('Workqueues'),
+('Billing Indicators'),
+('Batches'),
+('M-Code'),
+('Patient Class'),
+('Bad Debt'),
+('New Application'),
+('Rules Engine'),
+('Registry'),
+('SQL'),
+('Free Text'),
+('ClarityREF Dependencies'),
+('External Application'),
+('Flowsheets'),
+('Primary Care Provider'),
+('Order Sets'),
+('Workflow Dependent')
+GO
+insert into [Data_Governance_Pub].app.FinancialImpact ([Name]) values 
+('Medium'),
+('High'),
+('Critical')
+GO
+insert into [Data_Governance_Pub].app.EstimatedRunFrequency (EstimatedRunFrequencyName) VALUES
+('Multiple Times Per Day'),
+('Daily'),
+('Weekly'),
+('Monthly'),
+('Yearly')
+GO
+insert into [Data_Governance_Pub].app.DP_MilestoneFrequency ([Name]) VALUES
+('Day(s)'),
+('Week(s)'),
+('Month(s)'),
+('Year(s)'),
+('Quarter(s)')
+GO
+insert into [Data_Governance_Pub].app.StrategicImportance ([Name]) VALUES
+('Medium'),
+('High'),
+('Critical')
 GO

@@ -484,5 +484,4 @@
     document.addEventListener("ajax", function() {
         load();
     });
-    console.log('editor scripts loaded');
 })();

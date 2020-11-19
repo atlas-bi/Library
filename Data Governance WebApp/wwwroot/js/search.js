@@ -324,5 +324,4 @@
             w.location.href = document.location.href;
         }
     };
-    console.log('search scripts loaded');
 })();

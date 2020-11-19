@@ -827,5 +827,4 @@
 
 
     	*/
-    console.log('dropdown scripts loaded.');
 })();

@@ -628,5 +628,4 @@
             StartNewMessage(from, subject, message, convid);
         }
     });
-    console.log('mail scripts loaded');
 })();

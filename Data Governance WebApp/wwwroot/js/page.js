@@ -144,6 +144,4 @@
     document.addEventListener('related-reports', function() {
         relatedReports();
     });
-
-    console.log('page scripts loaded');
 })();

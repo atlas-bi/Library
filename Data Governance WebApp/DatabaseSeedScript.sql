@@ -16,11 +16,11 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-USE [Data_Governance]
+USE [Data_Governance_Pub]
 GO
 
 -- insert seed records
-insert into [Data_Governance].app.UserRoleLinks (UserId, UserRolesId) values (1,1)
+insert into [Data_Governance_Pub].app.UserRoleLinks (UserId, UserRolesId) values (1,1)
 GO
 -- thanks http://random-name-generator.info/index.php?n=100&g=1&st=3
 insert into dbo.[User] (Username, FullName, FirstName, LastName, Department, Title, Email) values
@@ -125,7 +125,7 @@ insert into dbo.[User] (Username, FullName, FirstName, LastName, Department, Tit
 ('Carisa-Forbes','Carisa Forbes','Carisa','Forbes','Orthopaedics','Worker','cForbes@my_hosptital.rocks'),
 ('Marti-Winter','Marti Winter','Marti','Winter','Orthopaedics','Boss','mWinter@my_hosptital.rocks')
 GO
-insert into [Data_Governance].app.UserRoleLinks (UserId, UserRolesId) values
+insert into [Data_Governance_Pub].app.UserRoleLinks (UserId, UserRolesId) values
 (1,2),
 (2,2),
 (3,3),
@@ -228,7 +228,7 @@ insert into [Data_Governance].app.UserRoleLinks (UserId, UserRolesId) values
 (100,5)
 GO
 
-insert into [Data_Governance].app.UserLDAPGroups (AccountName, GroupName, GroupEmail, GroupType) VALUES
+insert into [Data_Governance_Pub].dbo.UserGroups (AccountName, GroupName, GroupEmail, GroupType) VALUES
 ('Accident and Emergency Group','Accident and Emergency Group (Group)','Accident_and_Emergency@my_hospital.rocks','Email Distribution'),
 ('Admissions Group','Admissions Group (Group)','Admissions@my_hospital.rocks','Email Distribution'),
 ('Cardiology Group','Cardiology Group (Group)','Cardiology@my_hospital.rocks','Email Distribution'),
@@ -240,7 +240,7 @@ insert into [Data_Governance].app.UserLDAPGroups (AccountName, GroupName, GroupE
 ('Ophthalmology Group','Ophthalmology Group (Group)','Ophthalmology@my_hospital.rocks','Email Distribution'),
 ('Orthopaedics Group','Orthopaedics Group (Group)','Orthopaedics@my_hospital.rocks','Email Distribution')
 GO
-insert into [Data_Governance].app.UserLDAPGroupMembership (UserId,GroupId) values 
+insert into [Data_Governance_Pub].dbo.UserGroupsMembership (UserId,GroupId) values 
 (1,1),
 (2,1),
 (3,1),
@@ -37348,15 +37348,15 @@ GO
 */
 -- run packages to load search data & run data
 DECLARE @RC int
-EXECUTE @RC = [Data_Governance].[app].[Search_MasterDataUpdate] 
+EXECUTE @RC = [Data_Governance_Pub].[app].[Search_MasterDataUpdate] 
 GO
 
 DECLARE @RC int
-EXECUTE @RC = [Data_Governance].[app].[CalculateReportRunTimeData]
+EXECUTE @RC = [Data_Governance_Pub].[app].[CalculateReportRunTimeData]
 GO
 
 DECLARE @RC int
-EXECUTE @RC = [Data_Governance].[app].[CalculateReportRunData]
+EXECUTE @RC = [Data_Governance_Pub].[app].[CalculateReportRunData]
 GO
 
 select 'completed';

@@ -16,7 +16,6 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 function loadFlowcharts() {
-    console.log('flowchart')
     var d = document,
         m = d.getElementsByClassName('mermaid');
     [].forEach.call(m, function(e) {
@@ -31,7 +30,7 @@ function loadFlowcharts() {
                     chart = flowchart.parse(code);
                     chart.drawSVG(e);
 
-                } catch (l) {console.log(l)}
+                } catch (l) {}
             }
         }
     });
