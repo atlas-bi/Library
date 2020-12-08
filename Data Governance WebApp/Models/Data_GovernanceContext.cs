@@ -90,7 +90,11 @@ namespace Data_Governance_WebApp.Models
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            
+            if (!optionsBuilder.IsConfigured)
+            {
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+                optionsBuilder.UseSqlServer("Server=rhbidb01;Database=Data_Governance;Trusted_Connection=True;");
+            }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -702,7 +706,7 @@ namespace Data_Governance_WebApp.Models
                 entity.HasOne(d => d.ToGroup)
                     .WithMany(p => p.MailRecipients)
                     .HasForeignKey(d => d.ToGroupId)
-                    .HasConstraintName("FK_Mail_Recipients_UserGroups");
+                    .HasConstraintName("FK_Mail_Recipients_UserLDAPGroups");
 
                 entity.HasOne(d => d.ToUser)
                     .WithMany(p => p.MailRecipients)

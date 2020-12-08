@@ -18,15 +18,7 @@
 
 (function() {
 
-    // onload open tab that is url
-    if (document.location.hash !== "" && document.location.hash !== null) {
-        document.dispatchEvent(new CustomEvent("tab-open", {
-            cancelable: true,
-            detail: {
-                el: document.querySelector('.tab-lnk[href="' + document.location.hash.replace("#", "") + '"], .tab-lnk[href="' + document.location.hash + '"]')
-            }
-        }));
-    }
+   
 
     window.addEventListener('scroll', function() {
         debounce(function() {

@@ -139,6 +139,13 @@ section {
     fill: rgba(41, 206, 66) !important;
 }
 
+.text-alert {
+    font-family: sf;
+    font-weight: 600;
+    letter-spacing: .3px;
+    color: #ff6961;
+}
+
 .ajaxLoader {
     margin-bottom: 20px;
     margin-top: 20px;

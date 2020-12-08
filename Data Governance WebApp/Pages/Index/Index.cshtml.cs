@@ -77,6 +77,7 @@ namespace Data_Governance_WebApp.Pages
             Preferences = UserHelpers.GetPreferences(_cache, _context, User.Identity.Name);
             ViewData["MyRole"] = UserHelpers.GetMyRole(_cache, _context, User.Identity.Name);
             ViewData["SiteMessage"] = HtmlHelpers.SiteMessage(HttpContext, _context);
+            ViewData["Fullname"] = MyUser.Fullname_Cust;
 
             return Page();
         }

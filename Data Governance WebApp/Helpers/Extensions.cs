@@ -363,6 +363,10 @@ namespace Data_Governance_WebApp.Helpers
             {
                 Url = "EpicAct:IP_REPORT_SETTING_POPUP,runparams:" + EpicReportTemplateId + "|" + EpicRecordId;
             }
+            else if (EpicMasterFile == "IDN" && EpicRecordId != null && Epic && EpicReportTemplateId != null)
+            {
+                Url = "EpicAct:WM_METRIC_EDITOR,INFONAME:IDNRECORDID,INFOVALUE:" + EpicRecordId;
+            }
 
             return Url;
         }

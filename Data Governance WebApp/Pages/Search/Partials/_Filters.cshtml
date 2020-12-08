@@ -49,6 +49,11 @@
             <input type="hidden" />
             <label>Workbench</label>    
         </div>
+        <div class='form-check search-filter'>
+            <input type="checkbox" @if(Model.SearchFilter != null && Model.SearchFilter.Contains("15")){<text>checked="checked"</text>} value='15' />
+            <input type="hidden" />
+            <label>Metric</label>    
+        </div>
     </div>
 
     @if (Model.Permissions.Contains(46))

@@ -117,7 +117,10 @@ namespace Data_Governance_WebApp.Pages.Reports
             public string Name { get; set; }
             public int Id { get; set; }
         }
-
+        public class MaintStatus
+        {
+            public string Required { get; set; }
+        }
         public class Group
         {
             public int Id { get; set; }
@@ -1084,6 +1087,55 @@ namespace Data_Governance_WebApp.Pages.Reports
             HttpContext.Response.Headers.Remove("Cache-Control");
             HttpContext.Response.Headers.Add("Cache-Control", "max-age=7200");
             return Partial("Partials/_RelatedReports");
+        }
+
+        public async Task<ActionResult> OnGetMaintStatusAsync(int id)
+        {
+            DateTime Today = DateTime.Now;
+            ViewData["MaintStatus"] = await (from n in (
+                                   from d in _context.ReportObjectDoc
+                                   where d.MaintenanceScheduleId != 5
+                                      && d.MaintenanceScheduleId != null
+                                      && d.ReportObject.DefaultVisibilityYn == "Y"
+                                      && d.ReportObject.OrphanedReportObjectYn.ToString() == "N"
+                                      && d.ReportObjectId==id
+                                   join l in (
+                                       from l in _context.MaintenanceLog
+                                       join m in _context.ReportObjectDocMaintenanceLogs on l.MaintenanceLogId equals m.MaintenanceLogId
+                                       group m by m.ReportObjectId into grp
+                                       select new
+                                       {
+                                           ReportObjectId = grp.Key,
+                                           MaintenanceLogId = grp.Max(x => x.MaintenanceLogId)
+                                       }
+                                   ) on d.ReportObjectId equals l.ReportObjectId into tmp
+                                   from t in tmp.DefaultIfEmpty()
+
+                                   join m in _context.MaintenanceLog on t.MaintenanceLogId equals m.MaintenanceLogId into tmptwo
+                                   from ttwo in tmptwo.DefaultIfEmpty()
+                                   select new
+                                   {
+                                       d.ReportObjectId,
+                                       NextDate = d.MaintenanceScheduleId == 1 ? (ttwo.MaintenanceDate ?? d.LastUpdateDateTime ?? Today).AddMonths(3) : // quarterly
+                                                           d.MaintenanceScheduleId == 2 ? (ttwo.MaintenanceDate ?? d.LastUpdateDateTime ?? Today).AddMonths(6) : // twice a year
+                                                           d.MaintenanceScheduleId == 3 ? (ttwo.MaintenanceDate ?? d.LastUpdateDateTime ?? Today).AddYears(1) : // yearly
+                                                           d.MaintenanceScheduleId == 4 ? (ttwo.MaintenanceDate ?? d.LastUpdateDateTime ?? Today).AddYears(2) :// every two years
+                                                           (ttwo.MaintenanceDate ?? d.LastUpdateDateTime ?? d.CreatedDateTime ?? Today),
+                                       Name = d.ReportObject.DisplayName,
+                                       LastUser = (
+                                             ttwo.Maintainer.Fullname_Cust != "user not found" ? ttwo.Maintainer.Fullname_Cust :
+                                             d.UpdatedByNavigation.Fullname_Cust)
+                                   }
+)
+                                                where n.NextDate < Today
+                                                orderby n.NextDate
+                                                select new MaintStatus
+                                                {
+                                                    Required = "Report requires maintenance."
+                                                }
+                                     ).FirstOrDefaultAsync();
+
+            return Partial("Partials/_MaintStatus");
         }
     }
 }

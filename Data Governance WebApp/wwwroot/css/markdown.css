@@ -83,18 +83,11 @@ th {
 	text-align: inherit
 }
 
-.markdown a, .cm-s-default .cm-link {
-	-webkit-transition: all .7s;
+.cm-s-default .cm-link, .cm-link:hover {
 	color: #0084db;
-	color: var(--active-link);
-	transition: all .7s
-}
-
-.markdown a:hover, .cm-link:hover {
-	color: #212020;
-	color: var(--dark-grey);
 	text-decoration: none
 }
+
 
 .markdown dl {
 	-ms-flex-wrap: wrap;

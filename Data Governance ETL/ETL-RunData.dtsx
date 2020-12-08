@@ -12,8 +12,8 @@
   DTS:LocaleID="1033"
   DTS:ObjectName="ETL-RunData"
   DTS:PackageType="5"
-  DTS:VersionBuild="181"
-  DTS:VersionGUID="{E670D379-A2AE-416C-B190-0E3B2653AAB8}">
+  DTS:VersionBuild="187"
+  DTS:VersionGUID="{6D29B57B-49CB-4BB2-B3B5-2359862654A9}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -209,6 +209,36 @@
           <SQLTask:ParameterBinding
             SQLTask:ParameterName="2"
             SQLTask:DtsVariableName="$Package::Org_AD_Name"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="130"
+            SQLTask:ParameterSize="-1" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Load Sub SSRS Report Run Data"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{d8403316-4138-47c1-8bc9-908cb4ba1fb2}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Load Sub SSRS Report Run Data"
+      DTS:ThreadHint="1">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{C2F16F37-819E-4F16-AF67-EDB4D3CDF018}"
+          SQLTask:BypassPrepare="False"
+          SQLTask:SqlStatementSource="DECLARE @SQL nvarchar(max);&#xA;DECLARE @DG_DB VARCHAR(100);&#xA;DECLARE @DG_STAGE VARCHAR(100);&#xA;SELECT @DG_DB = ?;&#xA;SELECT @DG_STAGE = ?;&#xA;&#xA;&#xA;&#xA;&#xA;SELECT @SQL ='&#xA;&#xA;&#x9;drop table if exists #SSRS_XML;&#xA;&#x9;select &#xA;&#x9;  ItemId&#xA;&#x9;, CONVERT(xml, &#xA;&#x9;&#x9;&#x9;&#x9;CASE &#xA;&#x9;&#x9;&#x9;&#x9;&#x9;WHEN LEFT(Content,3) = 0xEFBBBF  THEN CONVERT(varbinary(max),SUBSTRING(Content,4,LEN(Content))) &#xA;&#x9;&#x9;&#x9;&#x9;&#x9;ELSE Content &#xA;&#x9;&#x9;&#x9;&#x9;END,1) AS Content &#xA;&#x9;into #SSRS_XML&#xA;&#x9;from &#xA;&#x9;( &#xA;&#x9;&#x9;SELECT &#xA;&#x9;&#x9;&#x9;ItemID&#xA;&#x9;&#x9;&#x9;,CONVERT(varbinary(max),Content) AS Content &#xA;&#x9;&#x9;FROM '+@DG_STAGE+'.raw.[clarity_server-reportserver-dbo-catalog]&#xA;&#x9;&#x9;WHERE Type IN (2,5,7,8) &#xA;&#x9;&#x9;union all &#xA;&#x9;&#x9;SELECT &#xA;&#x9;&#x9;&#x9;ItemID&#xA;&#x9;&#x9;&#x9;,CONVERT(varbinary(max),Content) AS Content &#xA;&#x9;&#x9;FROM '+@DG_STAGE+'.raw.[atlas_db_server-reportserver-dbo-catalog]&#xA;&#x9;&#x9;WHERE Type IN (2,5,7,8) &#xA;&#x9;) as t&#xA;&#x9;&#xA;&#x9;drop table if exists #SSRS_SUB_REPORT;&#xA;&#xA;&#x9;select * into #SSRS_SUB_REPORT From (&#xA;&#x9;select * from ( &#xA;&#x9;SELECT &#xA;&#x9;&#x9;ItemID&#xA;&#x9;&#x9;,T.SubReport.value(''(./*:ReportName/text())[1]'',''nvarchar(max)'') AS SubReport &#xA;     &#xA;&#x9;FROM #SSRS_XML&#xA;&#x9; CROSS APPLY #SSRS_XML.Content.nodes(''//*:Subreport'') T(SubReport) &#xA;&#xA;&#x9;)  as t&#xA;&#x9;where SubReport is not null) as t&#xA;&#xA;&#x9;;&#xA;&#xA;&#x9;INSERT INTO ' + @DG_DB + '.[dbo].[ReportObjectRunData]&#xA;           ([ReportObjectID]&#xA;           ,[RunID]&#xA;           ,[RunUserID]&#xA;           ,[RunStartTime]&#xA;           ,[RunDurationSeconds]&#xA;           ,[RunStatus])&#xA;&#xA;&#x9;select subr.ReportObjectID,&#xA;&#x9;d.RunId,&#xA;&#x9;d.RunUserID,&#xA;&#x9;d.RunStartTime,&#xA;&#x9;d.RunDurationSeconds,&#xA;&#x9;d.RunStatus&#xA;&#x9;from #SSRS_SUB_REPORT sub&#xA;&#x9;inner join ' + @DG_DB + '.dbo.ReportObject r on r.ReportServerCatalogID = sub.ItemID&#xA;&#x9;inner join ' + @DG_DB + '.dbo.ReportObject subr on subr.ReportServerPath = sub.SubReport and r.SourceServer = subr.SourceServer&#xA;&#xA;&#x9;-- runs&#xA;&#x9;inner join ' + @DG_DB + '.dbo.ReportObjectRunData d on r.ReportObjectId = d.ReportObjectId&#xA;&#xA;&#x9;; &#xA;&#x9;drop table if exists #SSRS_SUB_REPORT;&#xA;&#x9;drop table if exists #SSRS_XML;&#xA;&#x9;'&#xA;&#xA;&#x9;exec sp_executesql @SQL" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="0"
+            SQLTask:DtsVariableName="$Package::Data_Governance_InitialCatalog"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="130"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="1"
+            SQLTask:DtsVariableName="$Package::DG_Staging_InitialCatalog"
             SQLTask:ParameterDirection="Input"
             SQLTask:DataType="130"
             SQLTask:ParameterSize="-1" />
@@ -1047,8 +1077,8 @@ where
                   UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=15.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91">DECLARE @DATE DATE = DATEADD(YEAR, -2, CAST(GETDATE() AS DATE));
 
 
-SELECT row_number() over (order by  rrrvs.run_id + rrrvs.line) as run_id
-  , rrrvs.run_id + rrrvs.line as id
+SELECT row_number() over (order by  rrrd.run_id + rrrvs.line) as run_id
+  , rrrd.run_id + rrrvs.line as id
   ,REP_SETTINGS_ID
   ,SERVER_NODE_NAME
   ,rrrvs.VIEW_INSTANT
@@ -1062,14 +1092,14 @@ SELECT row_number() over (order by  rrrvs.run_id + rrrvs.line) as run_id
   ,SOURCE_REPORT_ID
   ,REPORT_RUN_TYPE_C 
 FROM [CLARITYreport].[dbo].[RW_RPT_RUN_DATA] rrrd
-inner join [CLARITYreport].[dbo].[RW_RPT_RUN_VU_STAT] rrrvs on rrrd.RUN_ID = rrrvs.RUN_ID
+left outer join [CLARITYreport].[dbo].[RW_RPT_RUN_VU_STAT] rrrvs on rrrd.RUN_ID = rrrvs.RUN_ID
 WHERE SOURCE_REPORT_ID IS NOT null
 	--and VIEW_STATUS_C = 1
   AND rrrvs.VIEW_INSTANT &gt;= @DATE
   --view stat c = 1 &gt; read by runner
   --view stat c = 2 &gt; unread by runner
   group by 
-   rrrvs.run_id + rrrvs.line
+   rrrd.run_id + rrrvs.line
   ,REP_SETTINGS_ID
   ,SERVER_NODE_NAME
   ,rrrvs.VIEW_INSTANT
@@ -3777,7 +3807,7 @@ SELECT [LogEntryId]
       DTS:ExecutableType="Microsoft.ExecuteSQLTask"
       DTS:LocaleID="-1"
       DTS:ObjectName="Report Run Time Data Compilation"
-      DTS:ThreadHint="1">
+      DTS:ThreadHint="0">
       <DTS:Variables />
       <DTS:ObjectData>
         <SQLTask:SqlTaskData
@@ -3801,7 +3831,7 @@ SELECT [LogEntryId]
       DTS:ExecutableType="Microsoft.ExecuteSQLTask"
       DTS:LocaleID="-1"
       DTS:ObjectName="Report Run User Data Compilation"
-      DTS:ThreadHint="0">
+      DTS:ThreadHint="1">
       <DTS:Variables />
       <DTS:ObjectData>
         <SQLTask:SqlTaskData
@@ -7062,6 +7092,22 @@ from
       DTS:ObjectName="Constraint 2"
       DTS:To="Package\Populate Raw Tables (SSRS)" />
     <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 3]"
+      DTS:CreationName=""
+      DTS:DTSID="{2431BD0D-CB5E-4508-BFFE-E57FEDA4257F}"
+      DTS:From="Package\Load Data to DG"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 3"
+      DTS:To="Package\Load Sub SSRS Report Run Data" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 4]"
+      DTS:CreationName=""
+      DTS:DTSID="{EBBEAB82-4413-4DB0-8C7E-EE10577A77CD}"
+      DTS:From="Package\Load Sub SSRS Report Run Data"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 4"
+      DTS:To="Package\Report Run Time Data Compilation" />
+    <DTS:PrecedenceConstraint
       DTS:refId="Package.PrecedenceConstraints[Constraint 5]"
       DTS:CreationName=""
       DTS:DTSID="{6ED9F151-C523-4264-A5AE-D0F1D51A22D7}"
@@ -7077,6 +7123,14 @@ from
       DTS:LogicalAnd="True"
       DTS:ObjectName="Constraint 6"
       DTS:To="Package\Stage Raw Data" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 7]"
+      DTS:CreationName=""
+      DTS:DTSID="{A9E307B5-3087-49E1-A2B4-F06763C79049}"
+      DTS:From="Package\Load Sub SSRS Report Run Data"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 7"
+      DTS:To="Package\Report Run User Data Compilation" />
   </DTS:PrecedenceConstraints>
   <DTS:DesignTimeProperties><![CDATA[<?xml version="1.0"?>
 <!--This CDATA section contains the layout information of the package. The section includes information such as (x,y) coordinates, width, and height.-->
@@ -7198,26 +7252,26 @@ from
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{x:Null}"
-              EndConnector="156,180"
+              EndConnector="-49.1666666666667,314"
               Start="0,0"
-              End="156,172.5">
+              End="-49.1666666666667,306.5">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,68.8323699421965" />
+                    End="0,153.228000627993" />
                   <mssgle:CubicBezierSegment
-                    Point1="0,68.8323699421965"
-                    Point2="0,72.8323699421965"
-                    Point3="4,72.8323699421965" />
+                    Point1="0,153.228000627993"
+                    Point2="0,157.228000627993"
+                    Point3="-4,157.228000627993" />
                   <mssgle:LineSegment
-                    End="152,72.8323699421965" />
+                    End="-45.1666666666667,157.228000627993" />
                   <mssgle:CubicBezierSegment
-                    Point1="152,72.8323699421965"
-                    Point2="156,72.8323699421965"
-                    Point3="156,76.8323699421965" />
+                    Point1="-45.1666666666667,157.228000627993"
+                    Point2="-49.1666666666667,157.228000627993"
+                    Point3="-49.1666666666667,161.228000627993" />
                   <mssgle:LineSegment
-                    End="156,172.5" />
+                    End="-49.1666666666667,306.5" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -7232,26 +7286,26 @@ from
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{x:Null}"
-              EndConnector="276,124"
+              EndConnector="71.1666666666666,258"
               Start="0,0"
-              End="276,116.5">
+              End="71.1666666666666,250.5">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,46.1734104046243" />
+                    End="0,125.178670360111" />
                   <mssgle:CubicBezierSegment
-                    Point1="0,46.1734104046243"
-                    Point2="0,50.1734104046243"
-                    Point3="4,50.1734104046243" />
+                    Point1="0,125.178670360111"
+                    Point2="0,129.178670360111"
+                    Point3="4,129.178670360111" />
                   <mssgle:LineSegment
-                    End="272,50.1734104046243" />
+                    End="67.1666666666666,129.178670360111" />
                   <mssgle:CubicBezierSegment
-                    Point1="272,50.1734104046243"
-                    Point2="276,50.1734104046243"
-                    Point3="276,54.1734104046243" />
+                    Point1="67.1666666666666,129.178670360111"
+                    Point2="71.1666666666666,129.178670360111"
+                    Point3="71.1666666666666,133.178670360111" />
                   <mssgle:LineSegment
-                    End="276,116.5" />
+                    End="71.1666666666666,250.5" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -7385,7 +7439,7 @@ from
           PanelSize="439,158"
           Size="439,201"
           Id="0d89670b-b39e-492d-b38c-4672549b3fad"
-          TopLeft="277.5,434.5">
+          TopLeft="111.5,567.5">
           <GroupLayout.ChildrenIds>
             <s:String>Package\Report Run Time Data Compilation</s:String>
             <s:String>Package\Report Run User Data Compilation</s:String>
@@ -7409,6 +7463,112 @@ from
             </mssge:FontInfo>
           </AnnotationLayout.FontInfo>
         </AnnotationLayout>
+        <NodeLayout
+          Size="232,42"
+          Id="Package\Load Sub SSRS Report Run Data"
+          TopLeft="412.78571427355,324.5" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 3]"
+          TopLeft="310.833333503632,288.294124060436">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{x:Null}"
+              EndConnector="217.952380769918,36.205875939564"
+              Start="0,0"
+              End="217.952380769918,28.705875939564">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,10.7015032188394" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,10.7015032188394"
+                    Point2="0,14.7015032188394"
+                    Point3="4,14.7015032188394" />
+                  <mssgle:LineSegment
+                    End="213.952380769918,14.7015032188394" />
+                  <mssgle:CubicBezierSegment
+                    Point1="213.952380769918,14.7015032188394"
+                    Point2="217.952380769918,14.7015032188394"
+                    Point3="217.952380769918,18.7015032188394" />
+                  <mssgle:LineSegment
+                    End="217.952380769918,28.705875939564" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 4]"
+          TopLeft="491.452380940217,366.5">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{x:Null}"
+              EndConnector="-212.78571427355,306.5"
+              Start="0,0"
+              End="-212.78571427355,299">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,149.30881275512" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,149.30881275512"
+                    Point2="0,153.30881275512"
+                    Point3="-4,153.30881275512" />
+                  <mssgle:LineSegment
+                    End="-208.78571427355,153.30881275512" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-208.78571427355,153.30881275512"
+                    Point2="-212.78571427355,153.30881275512"
+                    Point3="-212.78571427355,157.30881275512" />
+                  <mssgle:LineSegment
+                    End="-212.78571427355,299" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 7]"
+          TopLeft="566.119047606883,366.5">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{x:Null}"
+              EndConnector="-101.78571427355,250.5"
+              Start="0,0"
+              End="-101.78571427355,243">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,121.28965141229" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,121.28965141229"
+                    Point2="0,125.28965141229"
+                    Point3="-4,125.28965141229" />
+                  <mssgle:LineSegment
+                    End="-97.7857142735499,125.28965141229" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-97.7857142735499,125.28965141229"
+                    Point2="-101.78571427355,125.28965141229"
+                    Point3="-101.78571427355,129.28965141229" />
+                  <mssgle:LineSegment
+                    End="-101.78571427355,243" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
       </GraphLayout>
     </LayoutInfo>
   </Package>
@@ -7416,7 +7576,7 @@ from
     design-time-name="Package\Populate Raw Tables (Clarity)">
     <LayoutInfo>
       <GraphLayout
-        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
         <NodeLayout
           Size="266,42"
           Id="Package\Populate Raw Tables (Clarity)\clarity_server-clarity-dashboard-run-data"
@@ -7438,7 +7598,7 @@ from
           TopLeft="680.75,262">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,45"
               Start="0,0"
               End="0,37.5">
@@ -7452,7 +7612,9 @@ from
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
-            <EdgeLabelCollection />
+            <mssgm:EdgeLabel
+              BoundingBox="0,0,0,0"
+              RelativePosition="Any" />
           </EdgeLayout.Labels>
         </EdgeLayout>
         <EdgeLayout
@@ -7460,7 +7622,7 @@ from
           TopLeft="231.83333333333,264.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,40"
               Start="0,0"
               End="0,32.5">
@@ -7474,14 +7636,16 @@ from
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
-            <EdgeLabelCollection />
+            <mssgm:EdgeLabel
+              BoundingBox="0,0,0,0"
+              RelativePosition="Any" />
           </EdgeLayout.Labels>
         </EdgeLayout>
         <AnnotationLayout
           Text="Data is imported to raw tables from source tables  into &quot;raw&quot; tables. Workbench data is  a simple line for line import, while&#xA;dashboard data is a bit more complex. &#xA;Dashboard run usage is grouped into a daily summary in Clarity, so we need to split it out into 1 row per run before importing it.&#xA;&#xA;Notes&#xA;- only importing data from last two years"
           ParentId="Package\Populate Raw Tables (Clarity)"
-          FontInfo="{assembly:Null}"
-          Size="708,120"
+          FontInfo="{x:Null}"
+          Size="708,NaN"
           Id="cb7cbdca-e102-43cd-b458-4c39f532a9d5"
           TopLeft="197,65" />
       </GraphLayout>
@@ -7533,7 +7697,7 @@ from
     design-time-name="Package\Populate Raw Tables (SSRS)">
     <LayoutInfo>
       <GraphLayout
-        Capacity="16" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        Capacity="16" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
         <NodeLayout
           Size="256,42"
           Id="Package\Populate Raw Tables (SSRS)\ExecutionLogStorage (EPCOGDWP01)"
@@ -7563,7 +7727,7 @@ from
           TopLeft="871.666666666667,511.822222222222">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,57.076479076479"
               Start="0,0"
               End="0,49.576479076479">
@@ -7587,7 +7751,7 @@ from
           TopLeft="528.056998556998,511.822222222222">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,57.076479076479"
               Start="0,0"
               End="0,49.576479076479">
@@ -7611,7 +7775,7 @@ from
           TopLeft="178.063492063493,511.822222222222">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,57.076479076479"
               Start="0,0"
               End="0,49.576479076479">
@@ -7633,7 +7797,7 @@ from
         <AnnotationLayout
           Text="Data is imported to raw tables from source tables  into &quot;raw&quot; tables from SSRS report servers.&#xA;There are three SSRS report servers in this org.&#xA;&#xA;Notes&#xA;- only importing data from last two years&#xA;- only importing SSRS Report (item type = 2)&#xA;    /*case&#xA;        when c.Type = 1 then N'SSRS Folder'&#xA;        when c.Type = 2 then N'SSRS Report'&#xA;        when c.Type = 3 then N'SSRS File'&#xA;        when c.Type = 4 then N'SSRS Linked Report'&#xA;        when c.Type = 5 then N'SSRS Datasource'&#xA;        when c.Type = 6 then N'SSRS Model'&#xA;        when c.Type = 8 then N'SSRS Shared Dataset'&#xA;        when c.Type = 9 then N'SSRS Report Part'&#xA;        when c.Type = 11 then N'SSRS KPI'&#xA;        when c.Type = 12 then N'SSRS Mobile Report (folder)'&#xA;        when c.Type = 13 then N'SSRS Power BI Desktop Document'&#xA;        else N'SSRS Unknown'&#xA;    end as ReportObjectType,*/"
           ParentId="Package\Populate Raw Tables (SSRS)"
-          FontInfo="{assembly:Null}"
+          FontInfo="{x:Null}"
           Size="521,NaN"
           Id="c216f73b-97db-4269-ad68-7cf67f5fdf3b"
           TopLeft="230,82" />
@@ -7722,7 +7886,7 @@ from
     design-time-name="Package\Stage Raw Data">
     <LayoutInfo>
       <GraphLayout
-        Capacity="16" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        Capacity="16" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
         <NodeLayout
           Size="171,42"
           Id="Package\Stage Raw Data\OLE DB Destination"
@@ -7768,7 +7932,7 @@ from
           TopLeft="412.344392220672,454">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,30.02688519171"
               Start="0,0"
               End="0,22.52688519171">
@@ -7792,7 +7956,7 @@ from
           TopLeft="143.503828737114,454">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,30.02688519171"
               Start="0,0"
               End="0,22.52688519171">
@@ -7816,7 +7980,7 @@ from
           TopLeft="143.503828737114,277.74285438201">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,33.6840308096999"
               Start="0,0"
               End="0,26.1840308096999">
@@ -7840,7 +8004,7 @@ from
           TopLeft="412.344392220672,277.74285438201">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,33.6840308096999"
               Start="0,0"
               End="0,26.1840308096999">
@@ -7864,7 +8028,7 @@ from
           TopLeft="677.028074723291,277.74285438201">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,33.6840308096999"
               Start="0,0"
               End="0,26.1840308096999">
@@ -7886,7 +8050,7 @@ from
         <AnnotationLayout
           Text="Data is moved from raw tables into a common staging tables.&#xA;&#xA;Notes&#xA;- SSRS users come as domain (ex first-last)&#xA;- Clarity data uses epic user_id, which is now converted to domain name"
           ParentId="Package\Stage Raw Data"
-          FontInfo="{assembly:Null}"
+          FontInfo="{x:Null}"
           Size="410,NaN"
           Id="18c21111-86aa-437f-b6f4-d0c010822ae6"
           TopLeft="135,62" />

@@ -533,7 +533,7 @@ namespace Data_Governance_WebApp.Pages.Search
 
             var json = JsonConvert.SerializeObject(myObject);
             HttpContext.Response.Headers.Remove("Cache-Control");
-            HttpContext.Response.Headers.Add("Cache-Control", "max-age=7200");
+            HttpContext.Response.Headers.Add("Cache-Control", "max-age=0");
             return Content(json);
         }
     }
