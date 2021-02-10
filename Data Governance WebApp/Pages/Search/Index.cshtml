@@ -56,7 +56,7 @@
                             <div class="fav-star">
                                 <i fav-type="@result.ItemType.ToLower()" object-id="@result.Id" class="far fa-star @if(favorite == true) {<text>yes</text>} else {<text>no</text>}"></i>
                             </div>
-                            <div class="fav-share darken" data-toggle="mdl" data-target="shareModal"  data-name='@result.Name' data-url="/Reports?id=@result.Id">
+                            <div class="fav-share darken" data-toggle="mdl" data-target="shareModal" data-type="report" data-name='@result.Name' data-url="/Reports?id=@result.Id">
                                 <i class="fas fa-share"></i>
                             </div>
                             @if (result.ReportUrl != null && result.ReportUrl != "")

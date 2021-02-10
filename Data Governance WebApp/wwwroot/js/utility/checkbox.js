@@ -15,12 +15,13 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+
 (function() {
     var d = document,
         checkbox = function(el) {
             el.classList.add('loaded');
-            var check = el.querySelector('input[type=checkbox]'),
-                input = el.querySelector('input[type=hidden');
+            var check = el.querySelector('#editModal input[type=checkbox]'),
+                input = el.querySelector('#editModal input[type=hidden');
 
             if (check && input) {
                 check.checked = input.value == "Y" ? true : false;

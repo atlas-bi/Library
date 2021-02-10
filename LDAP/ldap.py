@@ -36,26 +36,13 @@ c.start_tls()
       this will create the Groups table
 
 """
-search_bases = [
-            'EPIC'
-           ,'Employees'
-           ,'Doctors'
-           ,'Non-Staff'
-           ,'Students'
-           ,'Volunteers'
-       ]
 
-group_search_bases = [
-            'Email Distribution Groups',
-            'Room & Shared Mailboxes',
-            'Access & Permissions'
-       ]
 
 users = []
 memberships = []
 groups = []
 
-for base in search_bases:
+for base in settings.search_bases:
 
     # ldap only returns 1000 records at a time. generator will get all.
     generator = c.extend.standard.paged_search(search_base = 'OU=' + base + ',dc='+settings.dc+',dc=net'
@@ -96,12 +83,12 @@ for base in search_bases:
                 ]
 
                 # only save three groups
-                if('OU' in memberdict and memberdict['OU'] in group_search_bases):
+                if('OU' in memberdict and memberdict['OU'] in settings.group_search_bases):
                     memberships.append(memberrow)
                  
                                  
 
-for base in group_search_bases:
+for base in settingsgroup_search_bases:
 
     # ldap only returns 1000 records at a time. generator will get all.
     generator = c.extend.standard.paged_search(search_base = 'OU=' + base + ',dc='+settings.dc+',dc=net'

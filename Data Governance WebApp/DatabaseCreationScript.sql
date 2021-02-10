@@ -4425,7 +4425,7 @@ select top(@records) Id, cnt into #related from (
 		 where (
 				s.UserId = s2.UserId
 			or s.SubscriptionTo = s2.SubscriptionTo
-			or s.SubscriptionTo = replace(lower(s2.SubscriptionTo),'riversidehealthcare','rhc')
+			or s.SubscriptionTo = replace(lower(s2.SubscriptionTo),'YOURORGNAME','rhc')
 			)
 		group by s2.ReportObjectId
 

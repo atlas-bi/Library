@@ -33,13 +33,13 @@
 
 <section class="pageSection">
     <span class="location" id="details"></span>
-   
 
-    @if(Model.DataInitiative.OpOwnerId != null || Model.DataInitiative.ExOwnerId != null)
+
+    @if (Model.DataInitiative.OpOwnerId != null || Model.DataInitiative.ExOwnerId != null)
     {
         <h3>Owners</h3>
     }
-    <p>   
+    <p>
         @if (Model.DataInitiative.OpOwnerId != null)
         {
             @:Operational<span class="text-light">&nbsp;&middot;&nbsp;@Model.DataInitiative.OpOwner</span><br>
@@ -50,7 +50,7 @@
             @:Executive<span class="text-light">&nbsp;&middot;&nbsp;@Model.DataInitiative.ExOwner</span>
         }
     </p>
-    @if(Model.DataInitiative.FinancialImpId != null || Model.DataInitiative.StrategicImpId != null)
+    @if (Model.DataInitiative.FinancialImpId != null || Model.DataInitiative.StrategicImpId != null)
     {
         <h3>Impact</h3>
     }
@@ -58,6 +58,7 @@
     @if (Model.DataInitiative.FinancialImpId != null)
     {
         @:Financial<span class="text-light">&nbsp;&middot;&nbsp;@Model.DataInitiative.FinancialImp</span><br>
+
 
     }
 
@@ -82,6 +83,14 @@
             <span>@c.Name @@ @c.Company </span><br>
         }
     }
+    <h3>Details</h3>
+    <div class="listDetails">
+        <span class="listDetails-title">Last Updated By</span>
+        <span>@Model.DataInitiative.UpdatedBy</span>
+
+        <span class="listDetails-title">Last Updated</span>
+        <span>@Model.DataInitiative.UpdateDate</span>
+    </div>
 </section>
 <section class="pageSection">
     <span class="location" id="projects"></span>

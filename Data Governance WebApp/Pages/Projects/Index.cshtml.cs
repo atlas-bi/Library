@@ -105,6 +105,8 @@ namespace Data_Governance_WebApp.Pages.Projects
             public int? FnclImpactId { get; set; }
             public string StrgImport { get; set; }
             public int? StrgImportId { get; set; }
+            public string UpdatedBy { get; set; }
+            public string UpdateDate { get; set; }
             public IEnumerable<RelatedItemData> RelatedReports { get; set; }
             public IEnumerable<RelatedItemData> RelatedTerms { get; set; }
             public IEnumerable<AgreementsData> Agreements { get; set; }
@@ -249,6 +251,8 @@ namespace Data_Governance_WebApp.Pages.Projects
                                          FnclImpactId = d.FinancialImpact,
                                          StrgImport = d.StrategicImportanceNavigation.Name,
                                          StrgImportId = d.StrategicImportance,
+                                         UpdateDate = d.LastUpdatedDateDisplayString,
+                                         UpdatedBy = d.LastUpdateUserNavigation.Fullname_Cust,
                                          RelatedReports = from r in d.DpReportAnnotation
                                                           join q in (from f in _context.UserFavorites
                                                                      where f.ItemType.ToLower() == "report"

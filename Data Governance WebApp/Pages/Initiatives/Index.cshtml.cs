@@ -58,6 +58,8 @@ namespace Data_Governance_WebApp.Pages.Initiatives
             public int? FinancialImpId { get; set; }
             public string StrategicImp { get; set; }
             public int? StrategicImpId { get; set; }
+            public string UpdatedBy { get; set; }
+            public string UpdateDate { get; set; }
             public string Description { get; set; }
             public IEnumerable<RelatedProjectsData> RelatedProjects { get; set; }
             public IEnumerable<RelatedContactsData> RelatedContacts { get; set; }
@@ -151,6 +153,8 @@ namespace Data_Governance_WebApp.Pages.Initiatives
                                             FinancialImpId = d.FinancialImpact,
                                             StrategicImp = d.StrategicImportanceNavigation.Name,
                                             StrategicImpId = d.StrategicImportance,
+                                            UpdateDate = d.LastUpdatedDateDisplayString,
+                                            UpdatedBy = d.LastUpdateUserNavigation.Fullname_Cust,
                                             Description = d.Description,
                                             RelatedProjects = from p in _context.DpDataProject
                                                               where p.DataInitiativeId == d.DataInitiativeId

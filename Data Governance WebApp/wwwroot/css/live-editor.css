@@ -230,7 +230,9 @@
     transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out
 }
 
-.editor-save {
+.editor-save,
+.editor-save:focus,
+.editor-save:active {
     border-radius: 3px;
     height: 50px;
     text-align: center;

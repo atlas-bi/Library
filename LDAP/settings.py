@@ -22,3 +22,17 @@ password = '12345'
 database = 'DRIVER={ODBC Driver 17 for SQL Server};SERVER=server_name;DATABASE=LDAP;UID=datagov;PWD='
 ad_domain = 'hospital'
 dc = 'hosptial_01'
+search_bases = [
+  'EPIC'
+ ,'Employees'
+ ,'Doctors'
+ ,'Non-Staff'
+ ,'Students'
+ ,'Volunteers'
+]
+
+group_search_bases = [
+  'Email Distribution Groups',
+  'Room & Shared Mailboxes',
+  'Access & Permissions'
+]
