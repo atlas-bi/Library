@@ -1,0 +1,60 @@
+@*
+    Atlas of Information Management business intelligence library and documentation database.
+    Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*@
+
+<div class="mlbx-fldrsTitle">Mailboxes</div>
+<div class="mlbx-fldrsFldr active darken" id="mlbx-fldrsInbox">
+    <svg class="icon-sm" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512">
+        <path d="M567.938 243.908L462.25 85.374A48.003 48.003 0 0 0 422.311 64H153.689a48 48 0 0 0-39.938 21.374L8.062 243.908A47.994 47.994 0 0 0 0 270.533V400c0 26.51 21.49 48 48 48h480c26.51 0 48-21.49 48-48V270.533a47.994 47.994 0 0 0-8.062-26.625zM162.252 128h251.497l85.333 128H376l-32 64H232l-32-64H76.918l85.334-128z" />
+    </svg>
+    Inbox<div class="mlbx-fldrsNewMsgCnt mail-unread-cnt">
+        @if (@ViewBag.UnreadMail > 0)
+        {@ViewBag.UnreadMail}
+</div>
+</div>
+<!--
+<div class="mlbx-fldrsFldr darken" id="mlbx-fldrsDeleted">
+    <svg class="icon-sm"xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+        <path d="M432 32H312l-9.4-18.7A24 24 0 0 0 281.1 0H166.8a23.72 23.72 0 0 0-21.4 13.3L136 32H16A16 16 0 0 0 0 48v32a16 16 0 0 0 16 16h416a16 16 0 0 0 16-16V48a16 16 0 0 0-16-16zM53.2 467a48 48 0 0 0 47.9 45h245.8a48 48 0 0 0 47.9-45L416 128H32z"/>
+    </svg>
+    Deleted
+</div>
+<div class="mlbx-fldrsFldr darken" id="mlbx-fldrsSent">
+    <svg class="icon-sm" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+        <path d="M476 3.2L12.5 270.6c-18.1 10.4-15.8 35.6 2.2 43.2L121 358.4l287.3-253.2c5.5-4.9 13.3 2.6 8.6 8.3L176 407v80.5c0 23.6 28.5 32.9 42.5 15.8L282 426l124.6 52.2c14.2 6 30.4-2.9 33-18.2l72-432C515 7.8 493.3-6.8 476 3.2z"/>
+    </svg>
+    Sent
+</div>
+    -->
+<div class="mlbx-fldrsFldr darken" id="mlbx-fldrsDrafts">
+    <svg class="icon-sm" viewBox="0 0 384 512" xmlns="http://www.w3.org/2000/svg">
+        <path d="M288 248v28c0 6.6-5.4 12-12 12H108c-6.6 0-12-5.4-12-12v-28c0-6.6 5.4-12 12-12h168c6.6 0 12 5.4 12 12zm-12 72H108c-6.6 0-12 5.4-12 12v28c0 6.6 5.4 12 12 12h168c6.6 0 12-5.4 12-12v-28c0-6.6-5.4-12-12-12zm108-188.1V464c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V48C0 21.5 21.5 0 48 0h204.1C264.8 0 277 5.1 286 14.1L369.9 98c9 8.9 14.1 21.2 14.1 33.9zm-128-80V128h76.1L256 51.9zM336 464V176H232c-13.3 0-24-10.7-24-24V48H48v416h288z" />
+    </svg>
+    Drafts<div class="mlbx-fldrsNewMsgCnt mail-draft-cnt">
+        @if (@ViewBag.Drafts > 0)
+        {@ViewBag.Drafts}
+</div>
+</div>
+<!--
+<div class="mlbx-fldrsTitle">Folders<div class="mblx-fldrsNew">&#43;</div></div>
+<div class="mlbx-fldrsFldr darken">
+    <svg class="icon-sm" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+        <path d="M464 128H272l-64-64H48C21.49 64 0 85.49 0 112v288c0 26.51 21.49 48 48 48h416c26.51 0 48-21.49 48-48V176c0-26.51-21.49-48-48-48z" />
+    </svg>
+    My Folder
+</div>
+    -->

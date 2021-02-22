@@ -1,0 +1,117 @@
+/*
+    Atlas of Information Management business intelligence library and documentation database.
+    Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
+.video {
+  background-color: #fff;
+  border: 1px solid #b7b7b7;
+  border-radius: 6px;
+  border-top: 1px solid #d0d0d0;
+  bottom: 0;
+  box-shadow: 0 0 30px 10px #d1d1d1;
+  height: 257px;
+  margin-bottom: 5px;
+  margin-right: 5px;
+  position: fixed;
+  right: 0;
+  transition: all 0.7s;
+  width: 400px;
+  z-index: 9;
+}
+
+.video::after {
+  color: #212020;
+  color: #393939;
+  content: "Welcome To Atlas!";
+  font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  position: absolute;
+  right: calc(50% - 63px);
+  top: 2px;
+}
+
+.video-ctnr {
+  border-radius: inherit;
+  border-top: 1px solid #f4f5f6;
+  margin-bottom: 5px;
+}
+
+.video-open {
+  background-color: #25c83a;
+  border: 1px solid #12a127;
+  left: 48px;
+}
+
+.video-min {
+  background-color: #ffb729;
+  border: 1px solid #dc9618;
+  left: 28px;
+}
+
+.video-close {
+  background-color: #ff564f;
+  border: 1px solid #dc413a;
+  left: 8px;
+}
+
+.video-btn {
+  border-radius: 6px;
+  display: inline-block;
+  height: 12px;
+  margin: 0;
+  outline: none;
+  padding: 0;
+  position: absolute;
+  top: 6px;
+  transition: box-shadow 0.1s;
+  user-select: none;
+  width: 12px;
+}
+
+.video-btn:hover {
+  box-shadow: inset 0 0 0 1000px rgba(0, 0, 0, 0.2);
+  outline: none;
+}
+
+.video-btn:active,
+.video-btn:focus,
+.video-btn:visited {
+  outline: none;
+}
+
+.video-wrapper {
+  border-radius: inherit;
+  border-top: 22px solid #e6e3e5;
+}
+
+.video-large {
+  height: auto;
+  max-height: 80vh;
+  max-width: 80vw;
+  width: auto;
+  z-index: 999;
+}
+
+.video-closed {
+  bottom: -238px;
+}
+
+.video-liner {
+  border-top: 1px solid #cccacc;
+  cursor: pointer;
+  margin-bottom: -4px;
+}

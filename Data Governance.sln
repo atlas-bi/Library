@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30225.117
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{159641D6-6404-4A2A-AE62-294DE0FE8301}") = "Data Governance ETL", "Data Governance ETL\Data Governance ETL.dtproj", "{5FB9B705-310C-40BA-A9DF-561C98261F2F}"
+Project("{159641D6-6404-4A2A-AE62-294DE0FE8301}") = "Data_Governance_ETL", "Data_Governance_ETL\Data Governance ETL.dtproj", "{5FB9B705-310C-40BA-A9DF-561C98261F2F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Data Governance WebApp", "Data Governance WebApp\Data Governance WebApp.csproj", "{54765E87-FC46-4FD9-8D50-B1CCFF50501C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Data_Governance_WebApp", "Data_Governance_WebApp\Data Governance WebApp.csproj", "{54765E87-FC46-4FD9-8D50-B1CCFF50501C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,0 +1,137 @@
+﻿@*
+    Atlas of Information Management business intelligence library and documentation database.
+    Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*@
+
+@page
+@model Data_Governance_WebApp.Pages.Parameters.IndexModel
+
+@{
+    Layout = HttpContext.Request.Headers["x-requested-with"] == "XMLHttpRequest" ? "../Shared/_AjaxLayout.cshtml" : "../Shared/_Layout.cshtml";
+    ViewData["Title"] = "Parameters";
+}
+
+@section css {
+    <link rel="stylesheet" href="/css/editor.min.css" media="print" onload="this.onload=null;this.removeAttribute('media')" />
+}
+
+@section js {
+    <textarea class="postLoadScripts"><script>hljs.initHighlightingOnLoad();</script><script src="/js/editor.min.js" async></script></textarea>
+}
+
+<div class="pageTitle">
+    <h2 class="pageTitle-head">@ViewData["Title"]</h2>
+    <div class="tab">
+        <a class="tab-lnk active" href="#reportfields">Report Fields</a>
+        <a class="tab-lnk" href="#initiativeproject">Initiative & Project Fields</a>
+        <a class="tab-lnk" href="#globalsettings">Global Settings</a>
+    </div>
+</div>
+<div class="tab-cnt">
+    <div class="tab-dta active" id="reportfields">
+        <h4 class="drop" data-toggle="clps" data-target="collapse-orgvalue">Organizational Value
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M31.3 192h257.3c17.8 0 26.7 21.5 14.1 34.1L174.1 354.8c-7.8 7.8-20.5 7.8-28.3 0L17.2 226.1C4.6 213.5 13.5 192 31.3 192z"/></svg>
+        </h4>
+        <div id="collapse-orgvalue" class="clps">
+            <div class="drop-box">
+                <div data-ajax="yes" data-url="/parameters?Handler=OrganizationalValueList"></div>              
+            </div>
+        </div>
+        <h4 class="drop" data-toggle="clps" data-target="collapse-runfreq">Estimated Run Frequency
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M31.3 192h257.3c17.8 0 26.7 21.5 14.1 34.1L174.1 354.8c-7.8 7.8-20.5 7.8-28.3 0L17.2 226.1C4.6 213.5 13.5 192 31.3 192z"/></svg>
+        </h4>
+        <div id="collapse-runfreq" class="clps">
+            <div class="drop-box">                   
+                <div data-ajax="yes" data-url="/parameters?Handler=EstimatedRunFrequencyList"></div>
+            </div>
+        </div>
+        <h4 class="drop" data-toggle="clps" data-target="collapse-fragtype">Fragility Types
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M31.3 192h257.3c17.8 0 26.7 21.5 14.1 34.1L174.1 354.8c-7.8 7.8-20.5 7.8-28.3 0L17.2 226.1C4.6 213.5 13.5 192 31.3 192z"/></svg>
+        </h4>
+        <div id="collapse-fragtype" class="clps">
+            <div class="drop-box">
+                
+                <div data-ajax="yes" data-url="/parameters?Handler=FragilityList"></div>
+            </div>
+        </div>
+        <h4 class="drop" data-toggle="clps" data-target="collapse-fragtag">Fragility Tags
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M31.3 192h257.3c17.8 0 26.7 21.5 14.1 34.1L174.1 354.8c-7.8 7.8-20.5 7.8-28.3 0L17.2 226.1C4.6 213.5 13.5 192 31.3 192z"/></svg>
+        </h4>
+        <div id="collapse-fragtag" class="clps">
+            <div class="drop-box">
+                <div data-ajax="yes" data-url="/parameters?Handler=FragilityTagList"></div>
+            </div>
+        </div>
+        <h4 class="drop" data-toggle="clps" data-target="collapse-maintsched">Maintenance Schedules
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M31.3 192h257.3c17.8 0 26.7 21.5 14.1 34.1L174.1 354.8c-7.8 7.8-20.5 7.8-28.3 0L17.2 226.1C4.6 213.5 13.5 192 31.3 192z"/></svg>
+        </h4>
+        <div id="collapse-maintsched" class="clps">
+            <div class="drop-box">
+                <div data-ajax="yes" data-url="/parameters?Handler=MaintenanceScheduleList"></div>
+            </div>
+        </div>
+        <h4 class="drop" data-toggle="clps" data-target="collapse-maintlog">Maintenance Log Status
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M31.3 192h257.3c17.8 0 26.7 21.5 14.1 34.1L174.1 354.8c-7.8 7.8-20.5 7.8-28.3 0L17.2 226.1C4.6 213.5 13.5 192 31.3 192z"/></svg>
+        </h4>
+        <div id="collapse-maintlog" class="clps">
+            <div class="drop-box">
+
+                <div data-ajax="yes" data-url="/parameters?Handler=MaintenanceLogStatusList"></div>
+            </div>
+        </div>
+    </div>
+    <div class="tab-dta" id="initiativeproject">
+        <h4 class="drop" data-toggle="clps" data-target="collapse-miletemp">Milestone Template
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M31.3 192h257.3c17.8 0 26.7 21.5 14.1 34.1L174.1 354.8c-7.8 7.8-20.5 7.8-28.3 0L17.2 226.1C4.6 213.5 13.5 192 31.3 192z"/></svg>
+        </h4>
+        <div id="collapse-miletemp" class="clps">
+            <div class="drop-box">
+
+                <div data-ajax="yes" data-url="/parameters?Handler=MilestoneTemplateList"></div>
+            </div>
+        </div>
+        <h4 class="drop" data-toggle="clps" data-target="collapse-finimp">Financial Impact
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M31.3 192h257.3c17.8 0 26.7 21.5 14.1 34.1L174.1 354.8c-7.8 7.8-20.5 7.8-28.3 0L17.2 226.1C4.6 213.5 13.5 192 31.3 192z"/></svg>
+        </h4>
+        <div id="collapse-finimp" class="clps">
+            <div class="drop-box">
+
+                <div data-ajax="yes" data-url="/parameters?Handler=FinancialImpactList"></div>
+            </div>
+        </div>
+        <h4 class="drop" data-toggle="clps" data-target="collapse-stragimp">Strategic Importance
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M31.3 192h257.3c17.8 0 26.7 21.5 14.1 34.1L174.1 354.8c-7.8 7.8-20.5 7.8-28.3 0L17.2 226.1C4.6 213.5 13.5 192 31.3 192z"/></svg>
+        </h4>
+        <div id="collapse-stragimp" class="clps">
+            <div class="drop-box">
+
+                <div data-ajax="yes" data-url="/parameters?Handler=StrategicImportanceList"></div>
+            </div>
+        </div>
+        <h4 class="drop" data-toggle="clps" data-target="collapse-dpcontacts">Data Project Contacts
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M31.3 192h257.3c17.8 0 26.7 21.5 14.1 34.1L174.1 354.8c-7.8 7.8-20.5 7.8-28.3 0L17.2 226.1C4.6 213.5 13.5 192 31.3 192z"/></svg>
+        </h4>
+        <div id="collapse-dpcontacts" class="clps">
+            <div class="drop-box">
+
+               <div data-ajax="yes" data-url="/parameters?Handler=DpContactList"></div>
+            </div>
+        </div>
+    </div>
+    <div class="tab-dta" id="globalsettings">
+        <div data-ajax="yes" data-url="/parameters?Handler=GlobalSettings"></div>                
+    </div>
+</div>

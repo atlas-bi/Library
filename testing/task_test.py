@@ -22,11 +22,12 @@
 """
 
 import time
-import warnings
 import unittest
+import warnings
+
+import urllib3
 from selenium import webdriver
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
-import urllib3
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 

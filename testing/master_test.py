@@ -25,16 +25,16 @@
 
 import unittest
 
-from group_test import Groups
-from user_test import Users
 from accessControl_test import AccessControl
 from analytics_test import Analytics
+from group_test import Groups
 from parameters_test import Parameters
 from project_test import Projects
 from report_test import Reports
 from task_test import Tasks
 from term_test import Terms
 from url_test import Urls
+from user_test import Users
 
 
 def suite():

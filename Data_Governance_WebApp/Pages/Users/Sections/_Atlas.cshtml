@@ -1,0 +1,170 @@
+@*
+    Atlas of Information Management business intelligence library and documentation database.
+    Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*@
+
+@model Data_Governance_WebApp.Pages.Users.IndexModel
+
+<div>
+    @{
+        var ReportObjectDocEdits = ViewBag.ReportObjectDocEdits.Count > 0;
+        var InitiativeEdits = ViewBag.InitiativeEdits.Count > 0;
+        var ProjectEdits = ViewBag.ProjectEdits.Count > 0;
+        var TermEdits = ViewBag.TermEdits.Count > 0;
+        var AtlasHistory = ViewBag.AtlasHistory.Count > 0;
+        var LoadTime = ViewBag.LoadTime.Count > 0;
+    }
+  
+    @if (ReportObjectDocEdits || InitiativeEdits || ProjectEdits || TermEdits || AtlasHistory || LoadTime)
+    {
+        @if (ReportObjectDocEdits || InitiativeEdits || ProjectEdits || TermEdits)
+        {
+            <h3>Recent Edits - Last 30 Days</h3>
+
+            @if (ReportObjectDocEdits)
+            {
+                <h4>Reports</h4>
+                @foreach (var r in ViewBag.ReportObjectDocEdits)
+                {
+                    <a href="@r.Url">@r.Name</a><span class="text-light">&nbsp;&middot;&nbsp;@r.Date</span><br>
+                }
+            }
+
+            @if (InitiativeEdits)
+            {
+                <h4>Initiatives</h4>
+                @foreach (var r in ViewBag.InitiativeEdits)
+                {
+                    <a href="@r.Url">@r.Name</a><span class="text-light">&nbsp;&middot;&nbsp;@r.Date</span><br>
+                }
+
+            }
+
+            @if (ProjectEdits)
+            {
+                <h4>Projects</h4>
+                @foreach (var r in ViewBag.ProjectEdits)
+                {
+                    <a href="@r.Url">@r.Name</a><span class="text-light">&nbsp;&middot;&nbsp;@r.Date</span><br>
+                }
+            }
+
+            @if (TermEdits)
+            {
+                <h4>Terms</h4>
+                @foreach (var r in ViewBag.TermEdits)
+                {
+                    <a href="@r.Url">@r.Name</a><span class="text-light">&nbsp;&middot;&nbsp;@r.Date</span><br>
+                }
+            }
+        }
+
+        @if (LoadTime)
+        {
+            <h3>Most Popular Pages</h3>
+
+            <div class="atlas-chart">
+                <div class="ajaxLoader"><img class="ajaxLoader-img" src="/img/loader.gif" /></div>
+                <script type="application/json">
+                    @{
+                        var TopTen = ViewBag.LoadTime;
+                        int i = 0;
+                    }
+                    {
+                        "axis": {
+                            "0": {"title":"seconds"},
+                            "1": {"title":"visits"}
+                        },
+                        "type": "bar",
+                        "height":"400",
+                        "title": "Popular Pages",
+                        "data": [{
+                            "title" : "Run Time (s)",
+                            "axis":"0",
+                            "type": "line",
+                            "units": "(s)",
+                            "data": [
+
+                                    @foreach (var g in TopTen)
+                                    { 
+                                        <text>{ "title": "@g.Date.Replace(" ","','")", "data": "@g.Avg"}</text> @if(i < 9 && i < TopTen.Count-1){<text>,</text>}
+                                        
+                                        @if (i == 9 ||  i == TopTen.Count-1)
+                                        {
+                                            break;
+                                        }
+                                        i++;
+                                    }
+                                ]
+                           },{
+                            "title" : "Visits",
+                            "type": "bar",
+                            "axis": "1",
+                            "data": [
+                                    @{ 
+                                        i = 0;
+                                    }
+                                    @foreach (var g in TopTen)
+                                    { 
+                                        <text>{ "title": "@g.Date.Replace(" ","','")", "data": "@g.Cnt"}</text> @if(i < 9 && i < TopTen.Count-1){<text>,</text>}
+                                        @if (i == 9 ||  i == TopTen.Count-1)
+                                        {
+                                            break;
+                                        }
+                                        i++;
+                                    }
+                                ]
+                           }]
+                        }
+                </script>
+            </div>
+
+        }
+        @if (ViewBag.AtlasHistory.Count > 0)
+        {
+
+            <h3>Atlas Browsing History - Last 7 Days</h3>
+            <div class="table-responsive">
+                <table class="table sort">
+                    <thead>
+                        <tr>
+                            <th>Area</th>
+                            <th>Page</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var t in ViewBag.AtlasHistory)
+                        {
+                            <tr>
+                                <td>@t.Type</td>
+                                <td><a href="@t.Url">@t.Name</a></td>
+                                <td>@t.Date</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    }
+    else
+    {
+        <p>
+            No activity to show
+            ¯\_(ツ)_/¯
+        </p>
+    }
+</div>

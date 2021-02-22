@@ -1,0 +1,66 @@
+{
+  "dependencies": {
+    "markdown-include": "^0.4.3",
+    "postcss": "^7.0.35"
+  },
+  "description": "atlas of information management",
+  "devDependencies": {
+    "eslint": "^7.17.0",
+    "eslint-config-prettier": "^7.1.0",
+    "eslint-plugin-prettier": "^3.3.1",
+    "jshint": "^2.12.0",
+    "prettier": "^2.2.1",
+    "stylelint": "^13.10.0",
+    "stylelint-config-prettier": "^8.0.2",
+    "stylelint-config-standard": "^20.0.0",
+    "stylelint-prettier": "^1.1.2"
+  },
+  "eslintConfig": {
+    "extends": [
+      "plugin:prettier/recommended"
+    ],
+    "plugins": [
+      "prettier"
+    ],
+    "rules": {
+      "prettier/prettier": "error"
+    }
+  },
+  "jshintConfig": {
+    "laxbreak": true
+  },
+  "license": "AGPL-3.0-or-later",
+  "name": "atlas",
+  "prittier": {
+    "printWidth": "99",
+    "tabWidth": "4"
+  },
+  "repository": {
+    "private": true
+  },
+  "stylelint": {
+    "extends": [
+      "stylelint-config-standard",
+      "stylelint-config-prettier"
+    ],
+    "ignoreFiles": [
+      "*.min.css",
+      "lib/*.css"
+    ],
+    "plugins": [
+      "stylelint-prettier"
+    ],
+    "rules": {
+      "prettier/prettier": true,
+      "selector-type-no-unknown": [
+        true,
+        {
+          "ignoreTypes": [
+            "icon"
+          ]
+        }
+      ]
+    }
+  },
+  "version": "0.0.0"
+}

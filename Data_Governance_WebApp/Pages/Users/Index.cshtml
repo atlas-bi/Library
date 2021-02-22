@@ -1,0 +1,101 @@
+﻿@*
+    Atlas of Information Management business intelligence library and documentation database.
+    Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*@
+
+@page
+@model Data_Governance_WebApp.Pages.Users.IndexModel
+@{
+    Layout = HttpContext.Request.Headers["x-requested-with"] == "XMLHttpRequest" ? "../Shared/_AjaxLayout.cshtml" : "../Shared/_Layout.cshtml";
+}
+@{
+    ViewData["Title"] = @Model.UserDetails.Fullname_Cust;
+    var FirstName = @Model.UserDetails.Firstname_Cust;
+}
+
+@section css {
+    <link rel="stylesheet" href="/css/mail.min.css" media="print" onload="this.onload=null;this.removeAttribute('media')" />
+    <link rel="stylesheet" href="/css/users.min.css" inline />  
+
+}
+
+<div class="pageTitle">
+
+    @if (Model.Permissions.Contains(40)){
+        // search for other users here
+        <h5>Open Another User</h5>
+        <form class="" method="GET">
+            <div class="user-search">
+                <div>
+                <input type="dynamic-dropdown" name="id" search-area="UserSearch" />
+            </div>
+                <button type="submit">Open</button>
+            </div>
+        </form>
+        <script type="text/javascript">
+            document.querySelector('.user-search').addEventListener('keydown', function(e){
+                if(e.target.closest('input.dd-vsbl') && !e.target.closest('.dd-wrp-show') &&  (e.keyCode == 13 || e.keyCode == 3)){
+                    e.target.closest('form').submit()
+                }
+            })
+        </script>
+    }
+
+    @if(@Model.UserId == @Model.MyId)
+    {
+        <h2 class="pageTitle-head"><span>Hi, @FirstName</span></h2>
+    } else {
+        <h2 class="pageTitle-head"><span>You are viewing @FirstName's Profile</span></h2>
+    }
+
+    <div class="tab">
+        <a class="tab-lnk  @if (@Model.UserId == @Model.MyId){ <text>active</text>}" href="#favorites">Favorites</a>
+        @if (@Model.UserId == @Model.MyId){
+            <a class="tab-lnk" href="#mail">Mail</a>
+        }
+        
+        
+        <a class="tab-lnk" href="#subscriptions">Subscriptions</a>
+        <a class="tab-lnk @if (@Model.UserId != @Model.MyId){ <text>active</text>} " href="#activity">Report Activity</a>
+        <a class="tab-lnk" href="#atlas-history">Atlas History</a>
+        <a class="tab-lnk" href="#groups">Groups</a>
+    </div>
+</div>
+
+<section class="tab-cnt">
+    <div class="tab-dta @if (@Model.UserId == @Model.MyId){ <text>active</text>}" id="favorites">
+        <div data-ajax="yes" data-url="/Users?handler=Favorites" data-param="id=@Model.UserId"></div>
+    </div>
+    @if (@Model.UserId == @Model.MyId){
+        <div class="tab-dta " id="mail">
+            <div data-ajax="yes" data-url="/Mail?handler=GetMailbox" data-param="id=@Model.UserId"></div>
+        </div>
+    }
+    
+    <div class="tab-dta" id="subscriptions">
+        <div data-ajax="yes" data-url="/Users?handler=Subscriptions" data-param="id=@Model.UserId"></div>
+    </div>
+
+    <div class="tab-dta @if (@Model.UserId != @Model.MyId){ <text>active</text>}" id="activity">
+        <div data-ajax="yes" data-url="/Users?handler=Activity" data-param="id=@Model.UserId"></div>
+    </div>
+    <div class="tab-dta" id="atlas-history">
+        <div data-ajax="yes" data-url="/Users?handler=History" data-param="id=@Model.UserId"></div>
+    </div>
+    <div class="tab-dta" id="groups">
+        <div data-ajax="yes" data-url="/Users?handler=Groups" data-param="id=@Model.UserId"></div>
+    </div>
+</section>

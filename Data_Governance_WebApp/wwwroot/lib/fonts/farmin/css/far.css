@@ -1,0 +1,12 @@
+@font-face {
+  font-family: 'far';
+  src: url('../font/far.eot?4069908');
+  src: url('../font/far.eot?4069908#iefix') format('embedded-opentype'),
+       url('../font/far.woff2?4069908') format('woff2'),
+       url('../font/far.woff?4069908') format('woff'),
+       url('../font/far.ttf?4069908') format('truetype'),
+       url('../font/far.svg?4069908#far') format('svg');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}

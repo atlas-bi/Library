@@ -1,0 +1,68 @@
+@*
+    Atlas of Information Management business intelligence library and documentation database.
+    Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*@
+
+@model Data_Governance_WebApp.Pages.Terms.IndexModel
+<div class="pageTitle">
+    <div class="page-title">
+        <h2 class="pageTitle-head">
+            <span>@Model.MyTerm.Name
+            @if (@Model.MyTerm.Approved == "Y")
+            {
+                <span class="text-green">Approved</span>
+            }
+        </h2>
+    </div>
+
+    <div class="pageNav">
+        @if (Model.MyTerm.Summary != null && Model.MyTerm.Summary != "" && Model.MyTerm.Definition != null && Model.MyTerm.Definition != "")
+        {
+            <a href="#details" class="pageNav-link">Details</a>
+        }
+        <a href="#meta" class="pageNav-link">Metadata</a>
+    
+        @if (Model.RelatedReports.Count() > 0)
+        {
+            <a href="#reports" class="pageNav-link">Reports</a>
+        }
+
+        <a href="#comments" class="pageNav-link">Comments</a>
+    </div>
+</div>
+
+<section class="pageSection">
+    <span class="location" id="details"></span>
+    <partial name="Details/_Details" />
+</section>
+
+<section class="pageSection">
+    <span class="location" id="meta"></span>
+    <partial name="Details/_Meta">
+</section>
+
+@if (Model.RelatedReports.Count() > 0)
+{
+    <section class="pageSection">
+        <span class="location" id="reports"></span>
+        <partial name="Details/_Reports">
+    </section>
+}
+
+<section class="pageSection">
+    <span class="location" id="comments"></span>
+    <div class="comments" data-ajax="yes" data-url="/terms?Handler=Comments&id=@Model.MyTerm.Id"></div>
+</section>

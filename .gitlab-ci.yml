@@ -1,0 +1,63 @@
+include:
+  - template: Code-Quality.gitlab-ci.yml
+
+code_quality:
+  before_script:
+    - echo "nothing to do.."
+  services:            # Shut off Docker-in-Docker
+  tags:
+    - cq-sans-dind     # Set this job to only run on our new specialized runner
+  artifacts:
+    paths: [gl-code-quality-report.json]
+
+metrics:
+  before_script:
+    - echo "nothing to do.."
+  script:
+    - echo 'metric_name metric_value' > metrics.txt
+  artifacts:
+    reports:
+      metrics: metrics.txt
+
+stages:
+ - test
+ - build
+
+precommit:
+  image: mcr.microsoft.com/dotnet/sdk:3.1-alpine
+  stage: test
+  before_script:
+    - export PYTHONUNBUFFERED=1
+    - apk add --no-cache git build-base python3 python3-dev wget bash nodejs nodejs-npm && ln -sf python3 /usr/bin/python
+    - python3 -m ensurepip
+    - pip3 install --no-cache --upgrade pip setuptools
+    - python3 -m pip install pre-commit
+    - rm package-lock.json
+  script:
+    - wget -cq https://download.microsoft.com/download/D/0/B/D0B7F62D-9C5D-4CF3-AB6C-88F56B4FC1A9/aspnetcore-runtime-2.1.0-rc1-final-linux-musl-x64.tar.gz
+    - mkdir -p $HOME/dotnet && tar zxf aspnetcore-runtime-2.1.0-rc1-final-linux-musl-x64.tar.gz -C $HOME/dotnet
+    - export DOTNET_ROOT=$HOME/dotnet
+    - export PATH=$PATH:$HOME/dotnet
+    - export PATH="$PATH:/root/.dotnet/tools"
+    - dotnet tool install -g dotnet-format
+    - npm -g install
+    - pre-commit run dotnet-format --all-files
+    - pre-commit run check-json --all-files
+    - pre-commit run check-toml --all-files
+    - pre-commit run check-yaml --all-files
+    - pre-commit run end-of-file-fixer --all-files
+    - pre-commit run isort --all-files
+    - pre-commit run black --all-files
+    - pre-commit run prettier --all-files
+    - pre-commit run stylelint --all-files
+
+build_web:
+ image: microsoft/dotnet:2.2-sdk-alpine3.8
+ stage: build
+ needs: []
+ script:
+  - cd "Data_Governance_WebApp"
+  - dotnet restore "Data Governance WebApp.csproj"
+  - dotnet publish -c Release -o out
+ artifacts:
+  paths: ["/builds/Data_Governance/atlas-information-management/Data_Governance_WebApp/out/"]

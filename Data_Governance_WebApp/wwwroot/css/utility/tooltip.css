@@ -1,0 +1,88 @@
+/*
+    Atlas of Information Management business intelligence library and documentation database.
+    Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
+@keyframes tt-fade {
+  from {
+    opacity: 0.1;
+  }
+
+  to {
+    opacity: 0.9;
+  }
+}
+
+[data-tooltip] {
+  position: relative;
+}
+
+[data-tooltip]:hover::before {
+  animation: tt-fade 0.1s;
+  background-color: #f4f4f4;
+  border: 1px solid #d1d1d1;
+  border-radius: 6px;
+  box-shadow: 0 5px 20px 2px #e1e1e1;
+  color: #575353;
+  content: attr(data-tooltip);
+  font-family: sf, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+    "Segoe UI Symbol";
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: 0.4px;
+  max-width: 200px;
+  opacity: 0.99;
+  padding: 0.25rem 0.5rem;
+  pointer-events: none;
+  position: absolute;
+  right: calc(100% + 10px);
+  text-align: center;
+  top: calc(50% - 1px);
+  transform: translateY(-50%);
+  z-index: 1070;
+}
+
+[data-tooltip]:hover::after {
+  background: #f4f4f4;
+  border: 1px solid #d1d1d1;
+  border-bottom-width: 0;
+  border-left-width: 0;
+  content: "";
+  height: 10px;
+  pointer-events: none;
+  position: absolute;
+  right: calc(100% + 5px);
+  top: calc(50% - 7px);
+  transform: rotate(45deg);
+  width: 10px;
+  z-index: 1071;
+}
+
+.tt-top[data-tooltip]:hover::before {
+  bottom: calc(100% + 10px);
+  left: 50%;
+  min-width: 200px;
+  top: auto;
+  transform: translateX(-50%);
+}
+
+.tt-top[data-tooltip]:hover::after {
+  border-bottom-width: 1px;
+  border-top-width: 0;
+  bottom: calc(100% + 5px);
+  right: calc(50% - 4px);
+  top: auto;
+}

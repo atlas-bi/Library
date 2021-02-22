@@ -1,0 +1,96 @@
+exclude:
+  Data_Governance_ETL* | venv | .venv | .tox | .vs | docs | node_modules* | package-lock.json | .cache*
+
+repos:
+  # reformat c#
+  - repo: local
+    hooks:
+      - id: dotnet-format
+        name: dotnet-format
+        entry: sh -c 'dotnet-format Data_Governance_WebApp.sln -w -s'
+        language: system
+        files: \.*(?:cs|sln)
+       
+
+  # misc file cleanup
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v3.4.0
+    hooks:
+      - id: pretty-format-json
+        exclude: package-lock.json
+        args: [--autofix]
+      - id: check-json
+        exclude: package-lock.json
+      - id: check-toml
+      - id: check-yaml
+      - id: end-of-file-fixer
+
+  # isort python files
+  - repo: https://github.com/timothycrosley/isort
+    rev: 5.7.0
+    hooks:
+      - id: isort
+        additional_dependencies: [toml]
+        files:  \.py$
+
+  # reformat python
+  - repo: https://github.com/ambv/black
+    rev: 20.8b1
+    hooks:
+      - id: black
+        files:  \.py$
+
+  # reformat js
+  - repo: https://github.com/pre-commit/mirrors-prettier
+    rev: 'v2.2.1'
+    hooks:
+      - id: prettier
+        name: prettier-js
+        args: [--write,--loglevel=error]
+        types: [javascript]
+        files: wwwroot/js/.*.js$
+
+  # reformat js
+  - repo: https://github.com/pre-commit/mirrors-eslint
+    rev: 'v7.19.0'
+    hooks:
+      - id: eslint
+        args: [--fix]
+        files:  wwwroot/js/.*.js$
+        types: [file]
+        additional_dependencies:
+        - eslint-config-prettier@^7.1.0
+        - eslint-plugin-prettier@^3.3.1
+
+  # reformat css
+  - repo: https://github.com/pre-commit/mirrors-prettier
+    rev: 'v2.2.1'
+    hooks:
+      - id: prettier
+        name: prettier-css
+        args: [--write,--loglevel=error]
+        types: [css]
+        files: wwwroot/css/.*.css$
+
+  # reformat css
+  - repo: https://github.com/awebdeveloper/pre-commit-stylelint
+    rev: ''
+    hooks:
+      - id: stylelint
+        files: wwwroot/css/.*.css$
+        args: [--fix]
+        additional_dependencies:
+        - prettier@^2.2.1
+        - stylelint@13.2.1
+        - stylelint-config-standard@20.0.0
+        - stylelint-config-prettier@^8.0.2
+        - stylelint-config-standard@^20.0.0
+        - stylelint-prettier@^1.1.2
+
+  # check with css lint - doesn't support css grid yet
+  # - repo: https://github.com/pre-commit/mirrors-csslint
+  #   rev: 'v1.0.5'
+  #   hooks:
+  #   - id: csslint
+  #     files: wwwroot/css/.*.css$
+  #     args: [--quiet,--format=compact,--errors=errors,]

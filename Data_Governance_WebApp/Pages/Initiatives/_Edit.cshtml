@@ -1,0 +1,78 @@
+@*
+    Atlas of Information Management business intelligence library and documentation database.
+    Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*@
+
+@model Data_Governance_WebApp.Pages.Initiatives.IndexModel
+
+<div class="mdl" id="editModal" tabindex="-1">
+    <div class="mdl-d editorMdl">
+        <div class="mdl-c editorMdl-inner">
+            <div class="editorMdl-title">
+                <h2 class="editorMdl-titleText">Editing <span class="text-green">@Model.DataInitiative.Name</span><button type="button" class="editorMdl-close" data-dismiss="mdl" data-tooltip="Close">&times;</button></h2>
+               
+                <div id="editorMdl-titleSave">changes saved.</div>
+            </div>
+            <div class="editorMdl-cnt" ss-container>
+                <div class="editorMdl-cntLiner">
+                    <form asp-page-handler="EditInitiative" method="post" >
+                        <input asp-for="DpDataInitiative.DataInitiativeId" type="hidden" value="@Model.DataInitiative.Id" />
+                        <h3>Details</h3>
+                        <div class="listDetails">
+                            
+                            <label>Name</label>
+                            <input asp-for="DpDataInitiative.Name" data-initial-content="Name" required value="@Model.DataInitiative.Name" />
+
+                            <label>External Contacts</label>
+                            <select type="dynamic-dropdown" asp-for="LinkedContacts"  search-area="ext-cont" method="fullList">
+                                @foreach (var c in Model.DataInitiative.RelatedContacts)
+                                    {
+                                        <option selected="selected" value="@c.Id">@c.Name - @c.Company</option>
+                                    }
+                            </select>
+
+                            <label>Operations Owner</label>
+                            <input type="dynamic-dropdown" asp-for="DpDataInitiative.OperationOwnerId" value='@Model.DataInitiative.OpOwnerId' visible-value="@Model.DataInitiative.OpOwner" search-area="UserSearch" />
+
+                            <label>Executive Owner</label>
+                            <input type="dynamic-dropdown" asp-for="DpDataInitiative.ExecutiveOwnerId" value='@Model.DataInitiative.ExOwnerId' visible-value="@Model.DataInitiative.ExOwner" search-area="UserSearch" />
+
+                            <label>Financial Impact</label>
+                            <input type="dynamic-dropdown" asp-for="DpDataInitiative.FinancialImpact" search-area="financial-impact" method="fullList" visible-value="@Model.DataInitiative.FinancialImp" value="@Model.DataInitiative.FinancialImpId" />
+
+                            <label>Strategic Importance</label>
+                            <input type="dynamic-dropdown" asp-for="DpDataInitiative.StrategicImportance" search-area="strategic-importance" method="fullList" visible-value="@Model.DataInitiative.StrategicImp" value="@Model.DataInitiative.StrategicImpId" />
+
+
+                            <label>Linked Projects</label>
+                            <select type="dynamic-dropdown" asp-for="LinkedDataProjects" id="linked-data-projects" search-area="ProjectSearch">
+                                @foreach (var d in @Model.DataInitiative.RelatedProjects)
+                                {
+                                    <option selected="selected" value="@d.Id">@d.Name</option>
+                                }
+                            </select>
+                        </div>
+
+                        <h3>Description</h3>
+                        <div class="editor" data-inputName="DpDataInitiative.Description" data-inputId="DpDataInitiative_Description"><textarea>@Html.Raw(Model.DataInitiative.Description)</textarea></div>
+
+                        <h3><button class="editor-save" type="submit">Save</button></h3>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

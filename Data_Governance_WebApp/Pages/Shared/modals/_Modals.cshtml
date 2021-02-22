@@ -1,0 +1,99 @@
+@*
+    Atlas of Information Management business intelligence library and documentation database.
+    Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*@
+<cache>
+  <div class="mdl" id="requestAccessModal" tabindex="-1">
+    <div class="mdl-d">
+      <div class="mdl-c">
+        <div class="mdl-h">
+          <button type="button" class="close" data-dismiss="mdl">&times;</button>
+          <h2>Request Report Access</h2>
+        </div>
+        <div class="mdl-b">
+          <p>You are requesting access to "<span class="report-name-clean text-green"></span>".</p>
+          <p>
+          Please select your director
+          <input type='dynamic-dropdown' id="director-name" search-area='director' />
+        </p>
+        </div>
+        <div class="mdl-f">
+          <button type="button" class="request-access" report-name="">Submit</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</cache>
+
+<div class="mdl " id="shareModal" tabindex="-1">
+  <div class="mdl-d mdl-new-mail">
+    <div class="mdl-c">
+      <div class="mdl-h">
+        <button type="button" class="close" data-dismiss="mdl">&times;</button>
+        <h2>Share this page</h2>
+      </div>
+      <div class="mdl-b ">
+        <div class="mlbx-shareMsg">
+            <form class="mlbx-newMsgForm" action="/mail?handler=SendMail" method="post">
+              <input type="hidden" class="mlbx-share" value="1" />
+              <input type="hidden" class="mlbx-shareName" value="" />
+              <input type="hidden" class="mlbx-shareUrl" value="" />
+			        <div style="position: relative">
+				        <input type="hidden" id="convid" />
+        				<button type="submit" class="mlbx-newMsgSend">
+					        <i class="far fa-paper-plane fa-lg"></i>
+				        </button>
+
+                  <div class="mlbx-newMsgSender">
+                    <span>From:</span><span class="sender-name">@ViewBag.Fullname</span></div>
+                  <div class="mlbx-dvdr"></div>
+                  <div class="mlbx-newMsgRecip">
+                    <span>To:</span><select id='new_msg_dynamic-dropdown' class="slim" id="user" search-area='UserSearchMail' placeholder=" " ></select></div>
+                  <div class="mlbx-dvdr"></div>
+                  <div class="mlbx-newMsgSubj">
+                    <span>Subject:</span><div class="mlbx-newMsgSubjIpt" contenteditable="true"></div>
+                  </div>
+                  <div class="mlbx-dvdr"></div>
+              </div>
+              <div class="mlbx-newMsgMsgBx">
+                  <div class="mlbx-newMsgMsg" contenteditable="true"></div>
+                </div>
+            </form>
+        </div>
+    </div>
+    </div>
+  </div>
+</div>
+
+<cache>
+  <div class="mdl" id="shareFeedback" tabindex="-1">
+    <div class="mdl-d">
+      <div class="mdl-c">
+        <div class="mdl-h">
+          <button type="button" class="close" data-dismiss="mdl">&times;</button>
+          <h2>Share Feedback</h2>
+        </div>
+        <div class="mdl-b">
+          <h4>Please share some feedback!</h4>
+          <textarea name="description"></textarea>
+        </div>
+        <div class="mdl-f">
+          <button type="submit" class="share-feedback">Submit</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</cache>

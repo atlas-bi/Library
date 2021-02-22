@@ -1,0 +1,48 @@
+[tool.poetry]
+name = "atlas-of-information-management"
+description = "atlas-of-information-management"
+version = "0.0.0"
+authors = [
+    "Paula Courville",
+    "Darrel Drake",
+    "Dee Anna Hillebrand",
+    "Scott Manley",
+    "Madeline Matz",
+    "Christopher Pickering <cpickering@rhc.net>",
+    "Dan Ryan",
+    "Richard Schissler",
+    "Eric Shultz"
+]
+
+[tool.black]
+max_line_length = 99
+include ='atlas'
+exclude = '''
+    /(
+        \.git
+      | \.hg
+      | \.mypy_cache
+      | \.tox
+      | \.venv
+      | _build
+      | buck-out
+      | build
+      | dist
+
+      # The following are specific to Black, you probably don't want those.
+      | blib2to3
+      | tests/data
+
+      # atlas
+      | migrations
+      | Data_Governance_ETL
+      | Data_Governance_WebApp
+    )/
+    '''
+quiet = true
+
+
+[tool.isort]
+profile = "black"
+quiet = true
+sections="FUTURE,STDLIB,THIRDPARTY,FIRSTPARTY,LOCALFOLDER"
