@@ -23,7 +23,7 @@ Atlas of Information Management
 Atlas of Information Management is a business intelligence library and documentation database. ELT processes collect metadata from various reporting platforms and store it in a centraly located database. A modern web UI is used to add additional documentation to the report objects and also to provide an intuative way to search, favorite and share reporting content.
 
 
-See the `project documentation <https://riverside-healthcare.github.io/atlas/>`_
+See the `project documentation <https://riverside-healthcare.github.io/Atlas/>`_
 
 Included Content
 ----------------
@@ -76,4 +76,4 @@ Atlas was created by the Riverside Healthcare Analytics team -
    
 
 .. |docs| image:: https://img.shields.io/badge/Atlas-Documentation-orange
-   :target: https://riverside-healthcare.github.io/atlas/
+   :target: https://riverside-healthcare.github.io/Atlas/
