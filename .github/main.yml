@@ -1,0 +1,27 @@
+name: CI
+
+on:
+  push:
+    branches: [ master ]
+
+  workflow_dispatch:
+
+jobs:
+  docs:
+    runs-on: ubuntu-latest
+    container: python:3
+    steps:
+      - name: get code
+        uses: actions/checkout@v1
+
+      - name: build docs
+        run: |
+          pip install tox poetry Sphinx Pygments furo sphinx-copybutton sphinx-inline-tabs myst-parser colorama sphinx-panels git+https://github.com/sphinx-contrib/youtube.git
+          tox -e docs
+
+      # Runs a set of commands using the runners shell
+      - name: publish
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs/_build
