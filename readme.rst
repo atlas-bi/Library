@@ -72,7 +72,7 @@ Atlas was created by the Riverside Healthcare Analytics team -
 * `Eric Shultz <https://github.com/eshultz>`_
 
 
-.. image:: https://analyticsgit.riversidehealthcare.net/atlas/web/atlas-dotnet/badges/master/pipeline.svg
+
    
 
 .. |docs| image:: https://img.shields.io/badge/Atlas-Documentation-orange
