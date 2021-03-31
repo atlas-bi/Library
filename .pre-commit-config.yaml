@@ -7,10 +7,9 @@ repos:
     hooks:
       - id: dotnet-format
         name: dotnet-format
-        entry: sh -c 'dotnet-format Data_Governance_WebApp.sln -w -s'
+        entry: sh -c 'dotnet format -wsa'
         language: system
         files: \.*(?:cs|sln)
-       
 
   # misc file cleanup
   - repo: https://github.com/pre-commit/pre-commit-hooks

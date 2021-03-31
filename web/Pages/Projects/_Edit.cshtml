@@ -1,0 +1,63 @@
+@*
+    Atlas of Information Management business intelligence library and documentation database.
+    Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*@
+
+@model Atlas_Web.Pages.Projects.IndexModel
+
+<div class="mdl" id="editModal" tabindex="-1">
+    <div class="mdl-d editorMdl">
+        <div class="mdl-c editorMdl-inner">
+            <div class="editorMdl-title">
+                <h2 class="editorMdl-titleText">Editing <span class="text-green">@Model.DataProject.Name</span><button type="button" class="editorMdl-close" data-dismiss="mdl" data-tooltip="Close">&times;</button></h2>
+               
+                <div id="editorMdl-titleSave">changes saved.</div>
+            </div>
+            <div class="editorMdl-cnt" ss-container>
+                <div class="editorMdl-cntLiner">
+                    <div class="tab">
+                        <a class="tab-lnk active" href="detailstab">Details</a>
+                        <a class="tab-lnk" href="reportlinkstab">Linked Reports</a>
+                        <a class="tab-lnk" href="termlinkstab">Linked Terms</a>
+                        <a class="tab-lnk" href="attachmentstab">Attachments</a>
+                        <a class="tab-lnk" href="agreetab">Agreements</a>
+                        <a class="tab-lnk" href="milestab">Milestones</a>
+                    </div>
+                    <div class="tab-cnt">
+                        <div class="tab-dta active" id="detailstab">
+                            <partial name="Edit/_Details.cshtml"></partial>
+                        </div>
+                        <div class="tab-dta" id="reportlinkstab">
+                            <partial name="Edit/_ReportLinks.cshtml"></partial>
+                        </div>
+                        <div class="tab-dta" id="termlinkstab">
+                            <partial name="Edit/_TermLinks.cshtml"></partial>
+                        </div>
+                        <div class="tab-dta" id="attachmentstab">
+                            <partial name="Edit/_Attachments.cshtml"></partial>
+                        </div>
+                        <div class="tab-dta" id="agreetab">
+                            <partial name="Edit/_Agreements.cshtml"></partial>
+                        </div>
+                        <div class="tab-dta" id="milestab">
+                            <partial name="Edit/_Milestones.cshtml"></partial>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

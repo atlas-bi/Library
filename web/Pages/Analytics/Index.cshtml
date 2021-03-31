@@ -1,0 +1,228 @@
+﻿@*
+    Atlas of Information Management business intelligence library and documentation database.
+    Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*@
+
+@page
+@model Atlas_Web.Pages.Analytics.IndexModel
+@{ Layout = HttpContext.Request.Headers["x-requested-with"] == "XMLHttpRequest" ? "../Shared/_AjaxLayout.cshtml" : "../Shared/_Layout.cshtml"; }
+@{ ViewData["Title"] = "Analytics"; }
+
+@section startJs {
+    <script async src="/js/realtime.min.js" inline></script>
+}
+
+<div class="pageTitle">
+    <h2 class="pageTitle-head">Analytics</h2>
+</div>
+
+<div id="active-users"></div>
+
+<h3>Last 7 Days - Top Ten</h3>
+<h4>Most Active Users</h4>
+
+<div class="atlas-chart">
+    <div class="ajaxLoader"><img class="ajaxLoader-img" src="/img/loader.gif" /></div>
+    <script type="application/json">
+        @{
+            var TopTen = Model.TopUsers.Take(10);
+            var last = TopTen.Last();
+        }
+        {
+            "axis": {
+                "0": {"title":"seconds"},
+                "1": {"title":"visits"}
+            },
+            "type": "bar",
+            "height":"400",
+            "title": "Top Users",
+            "data": [{
+                "title" : "Load Time (s)",
+                "axis":"0",
+                "type": "line",
+                "units": "(s)",
+                "data": [
+                        @foreach (var g in TopTen)
+                        {
+                            <text>{ "title": "@g.Name", "data": "@g.Time"}</text> @if(g != last){<text>,</text>}
+                        }
+                    ]
+               },{
+                "title" : "Visits",
+                "type": "bar",
+                "axis": "1",
+                "data": [
+                        @foreach (var g in TopTen)
+                        {
+                            <text>{ "title": "@g.Name", "data": "@g.Count"}</text> @if(g != last){<text>,</text>}
+                        }
+                    ]
+               }]
+            }
+    </script>
+</div>
+
+<h4>Most Popular Pages</h4>
+
+<div class="atlas-chart">
+    <div class="ajaxLoader"><img class="ajaxLoader-img" src="/img/loader.gif" /></div>
+    <script type="application/json">
+        @{
+            var TopTenTwo = Model.TopPages.Take(10);
+            var lastTwo = TopTenTwo.Last();
+        }
+        {
+            "axis": {
+                "0": {"title":"seconds"},
+                "1": {"title":"visits"}
+            },
+            "type": "bar",
+            "height":"400",
+            "title": "Top Pages",
+            "data": [{
+                "title" : "Load Time (s)",
+                "axis":"0",
+                "type": "line",
+                "units": "(s)",
+                "data": [
+                        @foreach (var g in TopTenTwo)
+                        {
+                            <text>{ "title": "@g.Name", "data": "@g.Time"}</text> @if(g != lastTwo){<text>,</text>}
+                        }
+                    ]
+               },{
+                "title" : "Visits",
+                "type": "bar",
+                "axis": "1",
+                "data": [
+                        @foreach (var g in TopTenTwo)
+                        {
+                            <text>{ "title": "@g.Name", "data": "@g.Count"}</text> @if(g != lastTwo){<text>,</text>}
+                        }
+                    ]
+               }]
+            }
+    </script>
+</div>
+
+<h3>Access History</h3>
+
+<div class="atlas-chart">
+    <div class="ajaxLoader"><img class="ajaxLoader-img" src="/img/loader.gif" /></div>
+    <script type="application/json">
+        {
+            "axis": {
+                "0": {"title":"visits"}
+            },
+            "type": "bar",
+            "height":"400",
+            "title": "Monthly Atlas Visits",
+            "data": [{
+                "title" : "Visits",
+                "axis":"0",
+                "type": "bar",
+                "data": [
+                        @foreach (var g in Model.AccessHistory)
+                        {
+                            <text>{ "title": "@g.Month", "data": "@g.Hits"}</text> @if(g != Model.AccessHistory.Last()){<text>,</text>}
+                        }
+                    ]
+               }]
+            }
+    </script>
+</div>
+
+<h3>Search Access History</h3>
+
+<div class="atlas-chart">
+    <div class="ajaxLoader"><img class="ajaxLoader-img" src="/img/loader.gif" /></div>
+    <script type="application/json">
+        {
+            "axis": {
+                "0": {"title":"searches"}
+            },
+            "type": "bar",
+            "height":"400",
+            "title": "Monthly Atlas Searches",
+            "data": [{
+                "title" : "Searches",
+                "axis":"0",
+                "type": "bar",
+                "data": [
+                        @foreach (var g in Model.SearchHistory)
+                        {
+                            <text>{ "title": "@g.Month", "data": "@g.Hits"}</text> @if(g != Model.SearchHistory.Last()){<text>,</text>}
+                        }
+                    ]
+               }]
+            }
+    </script>
+</div>
+
+<h3>Report Access History</h3>
+
+<div class="atlas-chart">
+    <div class="ajaxLoader"><img class="ajaxLoader-img" src="/img/loader.gif" /></div>
+    <script type="application/json">
+        {
+            "axis": {
+                "0": {"title":"visits"}
+            },
+            "type": "bar",
+            "height":"400",
+            "title": "Monthly Atlas Report Access",
+            "data": [{
+                "title" : "Visits",
+                "axis":"0",
+                "type": "bar",
+                "data": [
+                        @foreach (var g in Model.ReportHistory)
+                        {
+                            <text>{ "title": "@g.Month", "data": "@g.Hits"}</text> @if(g != Model.ReportHistory.Last()){<text>,</text>}
+                        }
+                    ]
+               }]
+            }
+    </script>
+</div>
+
+
+<h3>Term Access History</h3>
+
+<div class="atlas-chart">
+    <div class="ajaxLoader"><img class="ajaxLoader-img" src="/img/loader.gif" /></div>
+    <script type="application/json">
+        {
+            "axis": {
+                "0": {"title":"visits"}
+            },
+            "type": "bar",
+            "height":"400",
+            "title": "Monthly Atlas Term Access",
+            "data": [{
+                "title" : "Visits",
+                "axis":"0",
+                "type": "bar",
+                "data": [
+                        @foreach (var g in Model.TermHistory)
+                        {
+                            <text>{ "title": "@g.Month", "data": "@g.Hits"}</text> @if(g != Model.TermHistory.Last()){<text>,</text>}
+                        }
+                    ]
+               }]
+            }
+    </script>
+</div>

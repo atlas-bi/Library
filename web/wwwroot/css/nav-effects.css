@@ -1,0 +1,69 @@
+/*
+    Atlas of Information Management business intelligence library and documentation database.
+    Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
+.nav-title:hover {
+  color: #6c757d;
+  text-decoration: none;
+}
+
+.nav-link:hover svg,
+.nav-drop:hover svg {
+  fill: #6c757d;
+}
+
+.nav-link.favorite svg {
+  fill: #ffd700 !important;
+}
+
+.nav-link.favorite:hover svg {
+  fill: #e6c300 !important;
+}
+
+.sideNav .nav-link:not(.nav-linkDisabled):hover svg {
+  fill: #575353;
+}
+
+.nav-drop:hover .nav-dropBox {
+  display: block;
+}
+
+.nav-dropBox a {
+  color: #575353;
+  display: block;
+  font-size: 17px;
+  padding: 10px;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.nav-dropBox a:hover {
+  color: #6c757d;
+  text-decoration: none;
+}
+
+.nb-cmbs li a:hover {
+  color: #6c757d;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.nav-dropLiner {
+  background-color: #fff;
+  border: 1px solid #6c757d;
+  border-radius: 3px;
+  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+}

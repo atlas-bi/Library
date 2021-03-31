@@ -1,0 +1,199 @@
+﻿@*
+    Atlas of Information Management business intelligence library and documentation database.
+    Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*@
+
+@model Atlas_Web.Pages.Reports.IndexModel
+@{
+    var m = Model ?? ViewBag;
+}
+
+<h3 class="pageSection-title">Details</h3>
+<div class="listDetails">
+    @if (@m.Report.OldName != null)
+    {
+         <span class="listDetails-title">Report Name</span>
+         <span>@m.Report.OldName</span>
+    }
+
+    <span class="listDetails-title">Report Type</span>
+    <span>@m.Report.Type</span>
+
+    @if (@m.Report.LastLoadDate != null)
+    {
+        <span class="listDetails-title">Last ETL Load Date</span>
+        <span>@m.Report.LastLoadDate</span>
+    }
+    <span class="listDetails-title">Report Last Modified</span>
+    <span>
+        @m.Report.LastModifiedDate
+        @if (m.Report.LastUpdatedBy != null)
+        {
+            <span class="text-light">&nbsp;&middot;&nbsp;<a href="/users?id=@m.Report.LastUpdatedById">@m.Report.LastUpdatedBy</a></span>
+        }
+    </span>
+
+    @if (@m.Report.DocLastUpdated != null)
+    {
+        <span class="listDetails-title">Documentation Last Modified</span>
+        <span>
+            @m.Report.DocLastUpdated
+            @if (m.Report.DocLastUpdatedBy != null)
+            {
+                <span class="text-light">&nbsp;&middot;&nbsp;<a href="/users?id=@m.Report.DocLastUpdatedById">@m.Report.DocLastUpdatedBy</a></span>
+            }
+        </span>
+    }
+
+    @if (m.Report.Author != null)
+    {
+        <span class="listDetails-title">Report Author</span>
+        <a href="users?id=@m.Report.AuthorId">@m.Report.Author</a>
+    }
+
+    @if (m.Report.Requester != null)
+    {
+        <span class="listDetails-title">Report Requester</span>
+        <a href="users?id=@m.Report.RequesterId">@m.Report.Requester</a>
+    }
+    
+    @if (m.Report.OpsOwner != null)
+    {
+        <span class="listDetails-title">Operational Owner</span>
+        <a href="users?id=@m.Report.OpsOwnerId">@m.Report.OpsOwner</a>
+    }
+
+    @if (m.Report.GitUrl != null)
+    {
+        <span class="listDetails-title">Git Project Link</span>
+        <a target="_blank" rel="noopener" href="@m.Report.GitUrl">View Source</a>
+    }
+
+    @if (m.Report.EpicMasterFile != null)
+    {
+        <span class="listDetails-title">Epic Identifier</span>
+        @if (m.Report.RecordViewerUrl != null)
+        {
+            @:<a href="@m.Report.RecordViewerUrl">
+        }
+        <span>
+            <span id="epic-ini">@m.Report.EpicMasterFile&nbsp;</span>
+            @if (m.Report.EpicId != null)
+            {
+                <span id="epic-id" data-epic-hgr="@m.Report.EpicTemplateId">@m.Report.EpicId
+                    @if (@m.Report.EpicTemplateId != null)
+                    {
+                        @:(Template @m.Report.EpicTemplateId)
+                    }
+                </span>
+            }
+        </span>
+
+        @if (m.Report.RecordViewerUrl != null)
+        {
+            @:</a>
+        }
+    }
+    
+    <span class="listDetails-title">Atlas Id</span>
+    <span>@m.Report.Id</span>
+    
+    @if (m.Report.Orphaned == "Y")
+    {
+        <span class="listDetails-title">Orphaned?</span>
+        <span>@m.Report.Orphaned</span>
+    }
+
+    @if (m.Report.ExecVisibitliy == "Y")
+    {
+        <span class="listDetails-title">Executive Visiblity</span>
+        <span>Yes</span>
+    }
+
+    @if (m.Report.Type == "SSRS Report" && m.Report.Hyperspace != null)
+    {
+        <span class="listDetails-title">Enabled for Hyperspace</span>
+        <span>
+            @if (m.Report.Hyperspace == "Y")
+            {
+                @:Yes
+            } else
+            {
+                @:No
+            }
+        </span>
+    }
+
+    @if (m.Permissions.Contains(35) && m.Report.DoNotPurge == "Y")
+    {
+        <span class="listDetails-title">Do Not Purge</span>
+        <span>Yes</span>
+    }
+
+    @if (m.Permissions.Contains(43) && m.Report.Hidden == "Y")
+    {
+        <span class="listDetails-title">Hidden?</span>
+        <span>Yes</span>
+    }
+
+    @if (m.Report.RunFreq != null)
+    {
+        <span class="listDetails-title">Estimated Run Frequency</span>
+        <span>@m.Report.RunFreq</span>
+    }
+
+    @if (m.Report.Fragility != null)
+    {
+        <span class="listDetails-title">Fragility Rating</span>
+        <span>@m.Report.Fragility</span>
+    }
+
+    @if (m.Report.MaintSched != null)
+    {
+        <span class="listDetails-title">Maintenance Schedule</span>
+        <span>@m.Report.MaintSched</span>
+    }
+
+    @if (m.Report.Value != null)
+    {
+        <span class="listDetails-title">Organizational Value Rating</span>
+        <span>@m.Report.Value</span>
+    }
+
+    @if (m.ReportFragilityTags.Count > 0)
+    {
+        <span class="listDetails-title">Fragility Tags</span>
+        <span>
+            @foreach (var tag in m.ReportFragilityTags)
+            {
+                <span class="badge badge-primary">@tag.Name</span>
+            }
+        </span>
+    }
+</div>
+
+<section id="report-meticket-container">
+    @if (ViewBag.ManageEngineTickets.Count > 0)
+    {
+        <h4>Service Request Tickets</h4>
+        <div class="reportDetails">
+            @foreach (var t in ViewBag.ManageEngineTickets)
+            {
+                <a target="_blank" class="reportDetails-title" href="@t.Url">#@t.Number <code>@t.Description</code></a>
+            }
+        </div>
+    }
+</section>

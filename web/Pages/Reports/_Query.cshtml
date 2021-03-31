@@ -1,0 +1,85 @@
+﻿@*
+    Atlas of Information Management business intelligence library and documentation database.
+    Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*@
+
+@model Atlas_Web.Pages.Reports.IndexModel
+@if (Model.ReportQuery.Count() + Model.ComponentQuery.Count() > 0)
+{
+
+<h3 class="pageSection-title report-query" data-toggle="clps" data-target="query-data">Query<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M31.3 192h257.3c17.8 0 26.7 21.5 14.1 34.1L174.1 354.8c-7.8 7.8-20.5 7.8-28.3 0L17.2 226.1C4.6 213.5 13.5 192 31.3 192z"/></svg></h3>
+<div class="clps" id="query-data">
+    @if(!Context.Request.Headers["User-Agent"].ToString().Contains("Trident")){
+        @foreach (var t in Model.ReportQuery)
+        {
+            <button class="query-copy" onclick="copyQuery(event,@t.Id)"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M433.941 65.941l-51.882-51.882A48 48 0 0 0 348.118 0H176c-26.51 0-48 21.49-48 48v48H48c-26.51 0-48 21.49-48 48v320c0 26.51 21.49 48 48 48h224c26.51 0 48-21.49 48-48v-48h80c26.51 0 48-21.49 48-48V99.882a48 48 0 0 0-14.059-33.941zM266 464H54a6 6 0 0 1-6-6V150a6 6 0 0 1 6-6h74v224c0 26.51 21.49 48 48 48h96v42a6 6 0 0 1-6 6zm128-96H182a6 6 0 0 1-6-6V54a6 6 0 0 1 6-6h106v88c0 13.255 10.745 24 24 24h88v202a6 6 0 0 1-6 6zm6-256h-64V48h9.632c1.591 0 3.117.632 4.243 1.757l48.368 48.368a6 6 0 0 1 1.757 4.243V112z"/></svg></button>
+            <div class="query-box">
+                <div class="query-box-inner light @if(!Context.Request.Headers["User-Agent"].ToString().Contains("Trident")){<text>ss-preview</text>}" id='query-@t.Id' @if(!Context.Request.Headers["User-Agent"].ToString().Contains("Trident")){<text>ss-container</text>}>
+                    <pre><code class="sql" id="@t.Id">@t.Query</code></pre>
+                </div>
+            </div>
+           
+        }
+
+        <!-- metric queries -->
+        @if (Model.ComponentQuery.Count > 0)
+        {
+            @foreach(var t in Model.ComponentQuery)
+            {
+                <h4>@t.Name (@if(t.Url != "" && t.Url != null){<a href="@t.Url">@t.EpicName</a>}else {@t.EpicName})</h4>
+                <p>@t.Description</p>
+                <button class="query-copy " onclick="copyQuery(event,@t.Id)"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M433.941 65.941l-51.882-51.882A48 48 0 0 0 348.118 0H176c-26.51 0-48 21.49-48 48v48H48c-26.51 0-48 21.49-48 48v320c0 26.51 21.49 48 48 48h224c26.51 0 48-21.49 48-48v-48h80c26.51 0 48-21.49 48-48V99.882a48 48 0 0 0-14.059-33.941zM266 464H54a6 6 0 0 1-6-6V150a6 6 0 0 1 6-6h74v224c0 26.51 21.49 48 48 48h96v42a6 6 0 0 1-6 6zm128-96H182a6 6 0 0 1-6-6V54a6 6 0 0 1 6-6h106v88c0 13.255 10.745 24 24 24h88v202a6 6 0 0 1-6 6zm6-256h-64V48h9.632c1.591 0 3.117.632 4.243 1.757l48.368 48.368a6 6 0 0 1 1.757 4.243V112z"/></svg></button>
+                <div class="query-box">
+                    <div class="query-box-inner light @if(!Context.Request.Headers["User-Agent"].ToString().Contains("Trident")){<text>ss-preview</text>}" id='query-@t.Id' @if(!Context.Request.Headers["User-Agent"].ToString().Contains("Trident")){<text>ss-container</text>}>
+                        <pre><code class="sql" id="@t.Id">@t.Query</code></pre>
+                    </div>
+                </div>
+            }
+
+        }
+
+
+        <script>
+          if(document.readyState === 'complete') {
+            document.dispatchEvent(new CustomEvent("code-highlight"));
+            document.dispatchEvent(new CustomEvent('ss-load'));
+          }
+
+            var copyQuery = function (e, id) {
+                var code = document.getElementById(id).innerText;
+            var txt = document.createElement('textarea');
+            txt.value = code;
+            txt.setAttribute('readonly', '');
+            txt.style = {
+              position: 'absolute',
+              left: '-9999px'
+            };
+            document.body.appendChild(txt);
+            txt.select();
+            document.execCommand('copy');
+            document.body.removeChild(txt);
+          };
+
+          window.addEventListener('load',function(){
+            document.dispatchEvent(new CustomEvent('ss-load'));
+            document.dispatchEvent(new CustomEvent("code-highlight"));
+          });
+        </script>
+    } else {
+    <text>Open in chrome to view query.</text>
+}
+    
+</div>}

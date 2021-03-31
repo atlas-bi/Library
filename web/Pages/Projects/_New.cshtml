@@ -1,0 +1,70 @@
+@*
+    Atlas of Information Management business intelligence library and documentation database.
+    Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*@
+
+@model Atlas_Web.Pages.Projects.IndexModel	
+
+<div class="mdl" id="newModal" tabindex="-1">
+    <div class="mdl-d editorMdl">
+        <div class="mdl-c editorMdl-inner">
+            <div class="editorMdl-title">
+                <h2>Create a New Project<button type="button" data-dismiss="mdl" data-tooltip="Close">&times;</button></h2>
+                <div id="editorMdl-titleSave">changes saved.</div>
+            </div>
+            <div class="editorMdl-cnt" ss-container>
+            	<div class="editorMdl-cntLiner">
+        			<form asp-page-handler="NewDataProject" method="post">
+
+						<h3>Details</h3>
+						<div class="listDetails">
+							<label>Name</label>
+					    	<input asp-for="DpDataProject.Name" required />
+
+							<label>Operations Owner</label>
+						   	<input type="dynamic-dropdown" asp-for="DpDataProject.OperationOwnerId" value="" visible-value="" search-area="UserSearch" />
+							
+					    	<label>Executive Owner</label>
+					    	<input type="dynamic-dropdown" asp-for="DpDataProject.ExecutiveOwnerId" value="" visible-value="" search-area="UserSearch" />
+							
+			        		<label>Analytics Owner</label>
+			        		<input type="dynamic-dropdown" asp-for="DpDataProject.AnalyticsOwnerId" value="" visible-value="" search-area="UserSearch" />
+					     	
+					     	<label>Data Owner</label>
+				        	<input type="dynamic-dropdown" asp-for="DpDataProject.DataManagerId" value="" visible-value="" search-area="UserSearch" />
+					     	
+					     	<label>Financial Impact</label>
+							<input type="dynamic-dropdown" asp-for="DpDataProject.FinancialImpact" search-area="financial-impact" method="fullList" />
+							
+							<label>Strategic Importance</label>
+							<input type="dynamic-dropdown" asp-for="DpDataProject.StrategicImportance" search-area="strategic-importance" method="fullList" />
+						</div>
+
+						<h3>Purpose</h3>
+						<div class="editor" data-inputName="DpDataProject.Purpose" data-inputId="DpDataProject_Purpose"><textarea></textarea></div>
+
+
+					    <h3>Description</h3>
+					    <div class="editor" data-inputName="DpDataProject.Description" data-inputId="DpDataProject_Description"><textarea></textarea></div>
+				    
+				    	<h3><button class="editor-save" type="submit">Save</button></h3>
+				    	
+			        </form>
+			    </div>
+		    </div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,76 @@
+@*
+    Atlas of Information Management business intelligence library and documentation database.
+    Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*@
+
+@model Atlas_Web.Pages.Reports.IndexModel
+
+
+<div id="report-editor-currentterms-container">
+    <partial name="Editor/_CurrentTerms" />
+</div>
+
+
+<h3>Add Existing Term</h3>
+<form asp-page-handler="AddTermLink" method="post" id="report-editor-add-term-form">
+ <div class="listDetails">
+	<label>Name</label>
+	<input type="dynamic-dropdown" asp-for="NewTermLink.TermId" value="" visible-value="" search-area="TermSearch" required />
+	
+    <label>Summary</label>
+	<p class="new-term-summary"></p>
+	
+    <label>Technical Definition</label>
+	<p class="new-term-def"></p>
+    <input asp-for="NewTermLink.ReportObjectId" type="hidden" value="@Model.Report.Id" />
+</div>
+<h3><button class="editor-save" type="submit">Save</button></h3>
+</form>
+
+<h3>Add New Term</h3>
+<form asp-page="/Terms/Index" asp-page-handler="NewTerm" method="post" id="report-editor-add-new-term-form">
+    <input asp-for="NewTermLink.ReportObjectId" type="hidden" value="@Model.Report.Id"/>
+        <h4>Details</h4>
+        <div class="listDetails">
+
+            <label>Name</label>
+            <input asp-for="NewTerm.Name" />
+
+            <label>External Standard Link</label>
+            <input asp-for="NewTerm.ExternalStandardUrl" />
+
+            <label>Valid From</label>
+            <input type="date" asp-for="NewTerm.ValidFromDateTime" />
+        </div>
+         
+        <h4>Summary</h4>
+        <div class="editor" data-inputName="NewTerm.Summary" data-inputId="NewTerm_Summary"></div>
+
+        <h4>Technical Definition</h4>
+        <div class="editor" data-inputName="NewTerm.TechnicalDefinition" data-inputId="NewTerm_TechnicalDefinition"></div>
+           
+        @if (Model.Permissions.Contains(6))
+        {
+            <div class="form-check">
+                <input type="checkbox" class="form-check-input" id="approvedYn">
+                <label for="approvedYn" class="form-check-label">Approved?</label>
+                <input type="hidden" class="approvedYnHiddenTextArea" asp-for="NewTerm.ApprovedYn" >
+            </div>
+        }
+
+        <h3><button class="editor-save" type="submit">Save</button></h3>
+        
+</form>

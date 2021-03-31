@@ -1,0 +1,75 @@
+@*
+    Atlas of Information Management business intelligence library and documentation database.
+    Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*@
+
+@{
+    var pages = Convert.ToInt32(Math.Ceiling(Convert.ToDecimal(@Model.SearchResults[0].TotalRecords) / Convert.ToDecimal(@Model.PageSize)));
+}
+@if (pages > 1)
+{
+    <form id="searchPagination" style="margin-bottom:50px">
+        <input type="hidden" value="@Model.SearchString" name="s" />
+        @if (Model.SearchFilter.Length > 0){<input type="hidden" value="@Model.SearchFilter" name="f" />}
+        @if (Model.ShowAllTypes > 0){<input type="hidden" value="@Model.ShowAllTypes" name="t" />}
+        @if (Model.ShowOrphans > 0) {<input type="hidden" value="@Model.ShowOrphans" name="o" />}
+        @if (Model.ShowHidden > 0)  {<input type="hidden" value="@Model.ShowHidden" name="h" />}
+
+        <nav aria-label="navigation">
+            <ul class="pagination pt-4" style="justify-content:center!important">
+                @if (Model.SearchPage <= 1)
+                {
+                    <li class="page-item disabled">
+                        <button class="page-link" type="button" tabindex="-1" name="p" value="@Model.SearchPage">Previous</button>
+                    </li>
+                }
+                else
+                {
+                    var previousPage = Model.SearchPage - 1;
+                    <li class="page-item">
+                        <button class="page-link" type="button" tabindex="-1" name="p" value="@previousPage">Previous</button>
+                    </li>
+                }
+
+                @for (var x = 1; x <= pages; x++)
+                {
+                    @if (x == Model.SearchPage || (@Model.SearchPage == 0 && x == 1))
+                    {
+                        <li class="page-item disabled"><button class="page-link" type="button" name="p" value="@x">@x</button></li>
+                    }
+                    else if (((x < 6 && x < pages) || x < Model.SearchPage + 3) && x > Model.SearchPage - 3)
+                    {
+                        <li class="page-item"><button class="page-link" type="button" name="p" value="@x">@x</button></li>
+                    }
+                }
+
+                @if (Model.SearchPage < pages)
+                {
+                    var nextPage = Model.SearchPage + 1;
+                    <li class="page-item">
+                        <button class="page-link" type="button" name="p" value="@nextPage">Next</button>
+                    </li>
+                }
+                else
+                {
+                    <li class="page-item disabled">
+                        <button class="page-link" type="button" name="p" value="">Next</button>
+                    </li>
+                }
+            </ul>
+        </nav>
+    </form>
+}

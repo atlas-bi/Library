@@ -1,27 +1,22 @@
-"""
-  Atlas of Information Management business intelligence library and documentation database.
-  Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
+# Atlas of Information Management business intelligence library and documentation database.
 
-  This program is free software: you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation, either version 3 of the License, or
-  (at your option) any later version.
+# Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
 
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
 
-  You should have received a copy of the GNU General Public License
-  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
 
-"""
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-"""
 
-	Master Atlas Test Suite
-
-"""
+"""Master Atlas Test Suite."""
 
 import unittest
 
@@ -38,10 +33,7 @@ from user_test import Users
 
 
 def suite():
-    """
-    build a list of tests to run
-    """
-
+    """Build a list of tests to run."""
     tests = unittest.TestSuite()
 
     tests.addTest(Groups())

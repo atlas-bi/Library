@@ -1,25 +1,20 @@
-"""
-  Atlas of Information Management business intelligence library and documentation database.
-  Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
+# Atlas of Information Management business intelligence library and documentation database.
+# Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
 
-  This program is free software: you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation, either version 3 of the License, or
-  (at your option) any later version.
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
 
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
 
-  You should have received a copy of the GNU General Public License
-  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-"""
-
-"""
-    test case for /accesscontrol urls
-"""
+"""Test case for /accesscontrol urls."""
 
 import time
 import unittest
@@ -34,13 +29,12 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 
 class AccessControl(unittest.TestCase):
-    """
-    test class from access control
+    """Test class from access control.
 
     setUp
     runText
-        test for chrome
-        test for ie
+    - test for chrome
+    - test for ie
     cleanUp
     """
 

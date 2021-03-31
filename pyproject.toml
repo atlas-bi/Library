@@ -2,6 +2,7 @@
 name = "atlas-of-information-management"
 description = "atlas-of-information-management"
 version = "0.0.0"
+license = "GPL-3.0-or-later"
 authors = [
     "Paula Courville",
     "Darrel Drake",
@@ -13,6 +14,27 @@ authors = [
     "Richard Schissler",
     "Eric Shultz"
 ]
+packages = [{ include = "testing" }]
+
+[tool.poetry.dependencies]
+python = "^3.6.2"
+urllib3 = "^1.26.3"
+selenium = "^3.141.0"
+
+[tool.poetry.extras]
+docs = ["Sphinx", "Pygments", "furo", "sphinx-copybutton", "sphinx-inline-tabs", "myst-parser", "colorama", "sphinx-panels", "sphinxcontrib-youtube"]
+
+[tool.poetry.dev-dependencies]
+Sphinx = { version = "^3.5.2", optional = true }
+Pygments = { version = "^2.8.1", optional = true }
+furo = { version = "^2021.2.28-beta.28", optional = true }
+sphinx-copybutton = { version = "^0.3.1", optional = true }
+sphinx-inline-tabs = { version = "^2020.10.19-beta.4", optional = true }
+myst-parser = { version = "^0.13.5", optional = true }
+colorama = { version = "^0.4.4", optional = true }
+sphinx-panels = { version = "^0.5.2", optional = true }
+sphinxcontrib-youtube = {git = "https://github.com/sphinx-contrib/youtube.git", optional = true }
+
 
 [tool.black]
 max_line_length = 99
@@ -46,3 +68,7 @@ quiet = true
 profile = "black"
 quiet = true
 sections="FUTURE,STDLIB,THIRDPARTY,FIRSTPARTY,LOCALFOLDER"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

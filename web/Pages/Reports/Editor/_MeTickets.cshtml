@@ -1,0 +1,49 @@
+@*
+    Atlas of Information Management business intelligence library and documentation database.
+    Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*@
+
+@model Atlas_Web.Pages.Reports.IndexModel
+
+<div id="report-editor-metickets-container">
+    <h3>Service Request Tickets</h3>
+
+    <form asp-page-handler="AddMeTicket" id="report-edit-new-meticket" method="post">
+        <input asp-for="ManageEngineTicket.ReportObjectId" type="hidden" value="@ViewBag.Id" />
+        <div class="listDetails">
+            <label>Number</label>
+            <input asp-for="ManageEngineTicket.TicketNumber" />
+            <label>Url</label>
+            <input asp-for="ManageEngineTicket.TicketUrl" />
+            <label>Comments</label>
+            <input asp-for="ManageEngineTicket.Description" />
+        </div>
+        <h3><button class="editor-save" type="submit">Save</button></h3>
+    </form>
+
+
+    @if (ViewBag.ManageEngineTickets.Count > 0)
+    {
+        <h5 class="pt-2">Current Tickets</h5>
+        @foreach (var t in ViewBag.ManageEngineTickets)
+        {
+            <div class="listDetails">
+                <a class="reportDetails-title" href="\reports?handler=RemoveMeTicket&Id=@t.Id">Delete</a>
+                <a target="_blank" class="reportDetails-title" href="@t.Url">#@t.Number <code>@t.Description</code></a>
+            </div>
+        }
+    }
+</div>

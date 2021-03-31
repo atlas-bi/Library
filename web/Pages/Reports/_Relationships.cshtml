@@ -1,0 +1,182 @@
+﻿@*
+    Atlas of Information Management business intelligence library and documentation database.
+    Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*@
+
+@model Atlas_Web.Pages.Reports.IndexModel
+@{
+    var i = 0;
+}
+<h3 class="pageSection-title">Relationships</h3>
+    @if (Model.Groups.Count() > 0)
+    {
+        <h4 class="drop" data-toggle="clps" data-target="related-groups">Related Groups
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M31.3 192h257.3c17.8 0 26.7 21.5 14.1 34.1L174.1 354.8c-7.8 7.8-20.5 7.8-28.3 0L17.2 226.1C4.6 213.5 13.5 192 31.3 192z"/></svg>
+        </h4>
+
+        <div id="related-groups" class="clps">
+
+            <div class="table-responsive">
+                <table class="table sort">
+                    <thead>
+                        <tr>
+                            <th>Group Name</th>
+                            <th>Type</th>
+                            <th>Source</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach(var s in Model.Groups){
+                        <tr>
+                            
+                            <td><a href="\Groups?id=@s.Id">@s.Name</a></td>
+                            <td>@s.Type</td>
+                            <td>@s.Source</td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    
+    }
+
+    @if (Model.ReportChildren.Count() > 0) //show nested children model if they exist
+    {
+        <h4>Reports included in this report.</h4>
+        @foreach (var child in Model.ReportChildren)
+        {
+            <h5>
+                <a href="Reports?id=@child.Id">@child.Name [@child.EpicMasterFile]</a>
+            </h5>
+
+            if (child.Img.Count() == 1)
+            {
+                <div class="pop ml-5" style="max-height:400px">
+                    <img class=" img-responsive" data-src="@child.Img.FirstOrDefault().Src" alt="Image loading.." style="max-width: 78%;max-height: 290px" src="/img/loader.gif" >
+                </div>
+            } else if (child.Img.Count() > 1)
+            {
+                <div class="crsl">
+                    @foreach (var img in child.Img)
+                    {
+                        <div class="crsl-itm pop">
+                            <img data-src="@img.Src" alt="Image loading.." src="/img/loader.gif"  />
+                        </div>
+                        i++;
+                    }
+                    <div class="crsl-ind">
+                        @{
+                            i = 0;
+                        }
+                        @foreach(var q in child.Img)
+                        {
+                            <span  class="crsl-dot @if(i==0){<text> active</text>}" slide="@i"></span>
+                            i++;
+                        }
+                    </div>
+                    <a class="crsl-prev">
+                        <i class="fas fa-chevron-left fa-lg"></i>
+                    </a>
+                    <a class="crsl-next">
+                        <i class="fas fa-chevron-right fa-lg"></i>
+                    </a>
+                </div>
+
+            }
+
+            @foreach (var subchild in child.Child)
+            {
+                <h6>
+                    <a href="Reports?id=@subchild.Id">@subchild.Name [@subchild.EpicMasterFile]</a>
+                </h6>
+
+                @foreach (var supersubchild in subchild.GrandChild)
+                {
+                    <h6 style="margin-left:40px"><a href="Reports?id=@supersubchild.Id">@supersubchild.Name [@supersubchild.EpicMasterFile]</a></h6>
+                }
+            }
+        }
+    }
+
+    @if (Model.ReportParents.Count() > 0)
+    {
+        <h4>Reports that include this report.</h4>
+        @foreach (var parent in Model.ReportParents)
+        {
+            <h5>
+                <a href="Reports?id=@parent.Id">@parent.Name</a>
+            </h5>
+            if (parent.Img.Count() == 1)
+            {
+                <div class="pop text-center" style="max-height:400px">
+                    <img class=" img-responsive" data-src="@parent.Img.FirstOrDefault().Src" alt="Image loading.." style="max-width: 78%;max-height: 290px" src="/img/loader.gif" >
+                </div>
+            } else if (parent.Img.Count() > 1)
+            {
+                <div class="crsl">
+                    @foreach (var img in parent.Img.ToList())
+                    {
+                        <div class="crsl-itm pop">
+                            <img data-src="@img.Src" alt="Image loading.." src="/img/loader.gif"  />
+                        </div>
+                        i++;
+                    }
+                    <div class="crsl-ind">
+                        @{
+                            i = 0;
+                        }
+                        @foreach(var q in parent.Img.ToList())
+                        {
+                            <span  class="crsl-dot @if(i==0){<text> active</text>}" slide="@i"></span>
+                            i++;
+                        }
+                    </div>
+                    <a class="crsl-prev">
+                        <i class="fas fa-chevron-left fa-lg"></i>
+                    </a>
+                    <a class="crsl-next">
+                        <i class="fas fa-chevron-right fa-lg"></i>
+                    </a>
+                </div>
+            }
+        }
+    }
+
+    @if (Model.RelatedProjects.Count() > 0)
+    {
+        <h4>Data Projects that include this report.</h4>
+
+        @foreach(var t in Model.RelatedProjects){
+
+        <h4 class="drop" data-toggle="clps" data-target="collapse-project-@(t.Id)">@t.Name
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M31.3 192h257.3c17.8 0 26.7 21.5 14.1 34.1L174.1 354.8c-7.8 7.8-20.5 7.8-28.3 0L17.2 226.1C4.6 213.5 13.5 192 31.3 192z"/></svg>
+        </h4>
+
+        <div id="collapse-project-@(t.Id)" class="clps">
+            <div class="drop-box">
+                <h5><a class="drop-link" href="/projects?id=@t.Id">Open This Project</a></h5>
+                @if(t.Description != null)
+                {
+                    <h5>Annotation</h5>
+                    <div class="markdown">
+                        @Html.Raw(@Helpers.HtmlHelpers.MarkdownToHtml(t.Description))
+                    </div>
+                }
+            </div>
+        </div>
+        }
+    }
