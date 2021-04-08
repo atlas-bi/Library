@@ -90,17 +90,6 @@ GO
 USE [atlas]
 GO
 
-CREATE USER [datagov] FOR LOGIN [datagov] WITH DEFAULT_SCHEMA=[app]
-GO
-ALTER ROLE [db_owner] ADD MEMBER [datagov]
-GO
-ALTER ROLE [db_ddladmin] ADD MEMBER [datagov]
-GO
-ALTER ROLE [db_datareader] ADD MEMBER [datagov]
-GO
-ALTER ROLE [db_datawriter] ADD MEMBER [datagov]
-GO
-
 
 CREATE SCHEMA [app]
 GO
