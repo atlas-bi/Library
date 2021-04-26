@@ -118,17 +118,29 @@
                                      @result.Name @if (result.EpicMasterFile != null && result.EpicMasterFile != "" && result.EpicRecordId != null && result.EpicRecordId != "")
                                      {<text>&nbsp(@result.EpicMasterFile @result.EpicRecordId)</text>}
                                 </span>
-                                <div class="fav-type">
-                                    <span class="srch-field">@result.EpicReleased</span>
-                                    @if (result.Orphaned > 0)
-                                    {<span class="srch-field">Orphaned</span>}
-                                    @if (result.Hidden > 0)
-                                    {<span class="srch-field">Hidden</span>}<span class="srch-field">@if (@result.ReportType == "")
+                             <div class="fav-type">  
+                                    @if (result.EpicReleased == "Analytics Certified")
+                                    {<span class="srch-fieldHunterGreen">@result.EpicReleased</span>}
+                                    @if (result.EpicReleased == "Analytics Reviewed")
+                                    {<span class="srch-fieldGreen">@result.EpicReleased</span>}
+                                    @if (result.EpicReleased == "Epic Released")
+                                    {<span class="srch-fieldOrange">@result.EpicReleased</span>}
+                                    @if (result.EpicReleased == "Legacy")
+                                    {<span class="srch-fieldOrange">@result.EpicReleased</span>}
+                                    @if (result.EpicReleased == "High Risk")
+                                    {<span class="srch-fieldRed">@result.EpicReleased</span>}
+                            
+                                @if (result.Orphaned > 0)
+                                {<span class="srch-field">Orphaned</span>}
+                                @if (result.Hidden > 0)
+                                {<span class="srch-field">Hidden</span>}<span class="srch-field">
+                                    @if (@result.ReportType == "")
                                     {<text>Hidden Type</text>}
-                                    else
-                                    {@result.ReportType}</span>
-                                </div>
-                            </h5>
+                                else
+                                {@result.ReportType}
+                                </span>
+                            </div>
+</h5>
                             <h5 class="fav-nav">
                                 <a href="Reports?id=@result.Id">Open In Atlas</a>
                                 @if (result.ReportUrl != null && result.ReportUrl != "")

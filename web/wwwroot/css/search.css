@@ -255,6 +255,61 @@
   white-space: nowrap;
 }
 
+.srch-fieldOrange {
+  background-color: #ffc107;
+  border-radius: 0.25rem;
+  color: #212529;
+  display: inline-block;
+  font-size: 75%;
+  font-weight: 700;
+  line-height: 1;
+  padding: 0.25em 0.4em;
+  text-align: center;
+  vertical-align: baseline;
+  white-space: nowrap;
+}
+
+.srch-fieldHunterGreen {
+  background-color: #22aa36 !important;
+  border-radius: 0.25rem;
+  color: #212529;
+  display: inline-block;
+  font-size: 75%;
+  font-weight: 700;
+  line-height: 1;
+  padding: 0.25em 0.4em;
+  text-align: center;
+  vertical-align: baseline;
+  white-space: nowrap;
+}
+
+.srch-fieldGreen {
+  background-color: rgba(41, 206, 66) !important;
+  border-radius: 0.25rem;
+  color: #212529;
+  display: inline-block;
+  font-size: 75%;
+  font-weight: 700;
+  line-height: 1;
+  padding: 0.25em 0.4em;
+  text-align: center;
+  vertical-align: baseline;
+  white-space: nowrap;
+}
+
+.srch-fieldRed {
+  background-color: #ff6961 !important;
+  border-radius: 0.25rem;
+  color: #212529;
+  display: inline-block;
+  font-size: 75%;
+  font-weight: 700;
+  line-height: 1;
+  padding: 0.25em 0.4em;
+  text-align: center;
+  vertical-align: baseline;
+  white-space: nowrap;
+}
 .srch-fltr {
   margin: 10px;
 }

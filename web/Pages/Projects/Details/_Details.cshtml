@@ -74,5 +74,11 @@
 
         <span class="listDetails-title">Last Updated</span>
         <span>@Model.DataProject.UpdateDate</span>
+
+        @if (Model.DataProject.Hidden == "Y")
+    {
+        <span class="listDetails-title">Hidden?</span>
+        <span>Yes</span>
+    }
     </div>
 }

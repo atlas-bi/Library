@@ -43,6 +43,12 @@
    
         <label>Strategic Importance</label>
         <input type="dynamic-dropdown" asp-for="DpDataProject.StrategicImportance" search-area="strategic-importance" method="fullList" visible-value="@Model.DataProject.StrgImport" value="@Model.DataProject.StrgImportId" />
+
+        <label>Hide Report?</label>
+            <div class='form-check' >
+                <input type="checkbox" id="DoNotPurge" />
+                <input type="hidden" asp-for="DpDataProject.Hidden" value="@Model.DataProject.Hidden">
+            </div>
     </div>
 
     <h3>Purpose</h3>

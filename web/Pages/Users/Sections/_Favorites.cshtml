@@ -81,12 +81,24 @@
                                     <span class="darken">@q.Name @if (q.EpicRecordId != null && q.EpicRecordId != "")
                                     {<text>&nbsp(@q.EpicMasterFile @q.EpicRecordId)</text>}</span>
                                 }
-                                <div class="fav-type">
-                                    @if (q.EpicReleased == 1)
-                                    {
-                                        <span>Epic Released</span>
-                                    }
-                                    @if (q.ItemType == "Search")
+                            <div class="fav-type">
+
+
+                                @if (q.EpicReleased == "Analytics Certified")
+                                {<span class="srch-fieldHunterGreen">@q.EpicReleased</span>}
+                                @if (q.EpicReleased == "Analytics Reviewed")
+                                {<span class="srch-fieldGreen">@q.EpicReleased</span>}
+                                @if (q.EpicReleased == "Epic Released")
+                                {<span class="srch-fieldOrange">@q.EpicReleased</span>}
+                                @if (q.EpicReleased == "Legacy")
+                                {<span class="srch-fieldOrange">@q.EpicReleased</span>}
+                                @if (q.EpicReleased == "High Risk")
+                                {<span class="srch-fieldRed">@q.EpicReleased</span>}
+
+
+
+
+                                @if (q.ItemType == "Search")
                                 {
                                     var FilterString = q.Name.Contains("f=") ? q.Name.Split("f=")[1] : "";
 
@@ -96,8 +108,8 @@
                                     }
 
                                 }
-                                    <span>@q.ItemType</span>
-                                </div>
+                                <span>@q.ItemType</span>
+                            </div>
                             </h5>
                             <h5 class="fav-nav">
                                 <a href="@q.AtlasUrl">Open In Atlas</a>
@@ -131,40 +143,42 @@
         </div>
     } else if (ViewBag.TopRunReports.Count > 0)
     {
-<div class="favs-noFavs" ss-container>
-    <h3 class="favs-noFavsTitle">Your last run reports</h3>
-    @foreach (var q in ViewBag.TopRunReports)
-    {
-        <div class="fav" >
-                    <div class="fav-body">
-                        <h5 class="fav-title"  data-toggle="clps" data-target="clps-@q.ItemId">
-                            <span>
-                                @q.Name @if (q.EpicRecordId != null && q.EpicRecordId != "")
-                                {<span> (@q.EpicMasterFile @q.EpicRecordId)</span>}
-                            </span>
-                        </h5>
-                        <h5 class="fav-nav">
-                            <a href="Reports?id=@q.ItemId">Open Documentation</a>
-                                @if (q.ReportUrl != null && q.ReportUrl != "")
+        <div class="favs-none">
+            <div class="favs-noFavs" ss-container>         
+                <h3 class="favs-noFavsTitle">Your last run reports</h3>
+                @foreach (var q in ViewBag.TopRunReports)
+                {
+                    <div class="fav" >
+                        <div class="fav-body">
+                            <h5 class="fav-title"  data-toggle="clps" data-target="clps-@q.ItemId">
+                                <span>
+                                    @q.Name @if (q.EpicRecordId != null && q.EpicRecordId != "")
+                                    {<span> (@q.EpicMasterFile @q.EpicRecordId)</span>}
+                                </span>
+                            </h5>
+                            <h5 class="fav-nav">
+                                <a href="Reports?id=@q.ItemId">Open Documentation</a>
+                                    @if (q.ReportUrl != null && q.ReportUrl != "")
+                                    {
+                                        <a class="ml-5" target="_blank" href="@q.ReportUrl">Run Report</a>
+                                    }
+                                    @if (q.EditReportUrl != null && ViewBag.Permissions.Contains(38))
+                                    {
+                                        <a class="ml-5" target="_blank" href="@q.EditReportUrl">Edit Report</a>
+                                    }
+                            </h5>
+                            <div class="clps fav-dtls" id="clps-@q.ItemId">
+                                @if (q.Description != null && q.Description != "")
                                 {
-                                    <a class="ml-5" target="_blank" href="@q.ReportUrl">Run Report</a>
+                                    <div class="markdown noleft">
+                                        @Html.Raw(@Helpers.HtmlHelpers.MarkdownToHtml(q.Description))
+                                    </div>
                                 }
-                                @if (q.EditReportUrl != null && ViewBag.Permissions.Contains(38))
-                                {
-                                    <a class="ml-5" target="_blank" href="@q.EditReportUrl">Edit Report</a>
-                                }
-                        </h5>
-                        <div class="clps fav-dtls" id="clps-@q.ItemId">
-                            @if (q.Description != null && q.Description != "")
-                            {
-                                <div class="markdown noleft">
-                                    @Html.Raw(@Helpers.HtmlHelpers.MarkdownToHtml(q.Description))
-                                </div>
-                            }
+                            </div>
                         </div>
                     </div>
-                </div>
-            }
+                }
+            </div>
         </div>
     } else {
         <h4>Search to get started!</h4>
@@ -183,4 +197,5 @@
             }
         })()
     </script>
+
 </div>

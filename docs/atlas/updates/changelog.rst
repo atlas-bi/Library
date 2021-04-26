@@ -19,6 +19,17 @@
 Changelog
 *********
 
+Version 2021.04.1
+-----------------
+
+- Updated project editor to be able to link multiple terms and reports at a time
+- Modified image loader size
+- Updated formatting for maintenance entries
+- Added hidden flag to data projects to hide from search
+- Updated search filters for metrics
+- Fixed report type tooltip
+- Added report certification title to favorites
+
 Version 2021.03.1
 -----------------
 

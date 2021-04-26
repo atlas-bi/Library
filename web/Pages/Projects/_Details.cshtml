@@ -27,7 +27,7 @@
 
     <div class="pageNav">
         <a href="#about" class="pageNav-link">About</a>
-        @if(Model.DataProject.RelatedReports.Count() > 0 || Model.DataProject.RelatedTerms.Count() > 0)
+        @if(Model.DataProject.RelatedReports.Count() > 0 || ViewBag.RelatedTerms.Count > 0)
         {
             <a href="#links" class="pageNav-link">Linked Content</a>
         }
@@ -53,7 +53,7 @@
 
 <section class="pageSection">
     <span class="location" id="links"></span>
-    @if(Model.DataProject.RelatedReports.Count() > 0 || Model.DataProject.RelatedTerms.Count() > 0)
+    @if(Model.DataProject.RelatedReports.Count() > 0 || ViewBag.RelatedTerms.Count > 0)
     {
         <partial name="Details/_Links.cshtml"></partial>
     }

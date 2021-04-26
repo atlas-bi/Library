@@ -180,7 +180,7 @@ namespace Atlas_Web.Pages.Search
 
 
             Projects = (from dp in _context.DpReportAnnotations
-                        where SearchResults.Select(x => x.Id).ToList().Contains((int)dp.ReportId)
+                        where (SearchResults.Select(x => x.Id).ToList().Contains((int)dp.ReportId)) && (dp.DataProject.Hidden ?? "N") == "N"
                         select new SearchProjectData
                         {
                             ProjectId = (int)dp.DataProjectId,

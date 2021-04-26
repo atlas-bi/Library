@@ -28,10 +28,11 @@
         <div class="maint-log">
             <div class="maint-logHeader">
                 <h6><strong>@log.Maintainer</strong><span class="text-muted"> · @log.Date</span></h6>
-                @if(@log.Status != null){
-                <h6>
-                    <strong>@log.Status</strong>
-                </h6>
+                @if (@log.Status != null)
+                {
+                    <h6>
+                        <strong>@log.Status</strong>
+                    </h6>
                 }
             </div>
             @if (log.Comment != null)

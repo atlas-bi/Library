@@ -1,0 +1,52 @@
+@*
+    Atlas of Information Management business intelligence library and documentation database.
+    Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*@
+
+@model Atlas_Web.Pages.Projects.IndexModel
+
+@if(ViewBag.RelatedReports.Count> 0)
+{
+    <h4>Existing Links</h4>
+
+    @foreach (var t in ViewBag.RelatedReports)
+    {
+        <h4 class="drop" data-toggle="clps" data-target="collapse-reportlink-@(t.Id)">Edit <span class="text-green">@t.Name</span> Link
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M31.3 192h257.3c17.8 0 26.7 21.5 14.1 34.1L174.1 354.8c-7.8 7.8-20.5 7.8-28.3 0L17.2 226.1C4.6 213.5 13.5 192 31.3 192z"/></svg>
+        </h4>
+
+        <div id="collapse-reportlink-@(t.Id)" class="clps">
+            <div class="drop-box">
+                <h5><a class="drop-link" href="Reports?id=@t.ItemId">Open This Report</a> / <a class="drop-link" href="/Projects?handler=DeleteLinkedReport&id=@t.Id" id="project-editor-remove-report-form">Delete This Link</a></h5>
+
+                <form action="/Projects?handler=EditLinkedReport" method="post" id="project-editor-edit-report-form">
+                    <input asp-for="DpReportAnnotation.ReportAnnotationId" value="@t.Id" type="hidden" />
+                    <input asp-for="DpReportAnnotation.DataProjectId" value="@t.DataProjectId" type="hidden" />
+
+                    <div class="listDetails">
+                        <label>Rank</label>
+                        <input asp-for="DpReportAnnotation.Rank" type="number" value="@t.Rank" />
+                    </div>
+
+                    <h3>Annotation</h3>
+                    <div class="editor" data-inputName="DpReportAnnotation.Annotation" data-inputId="DpReportAnnotation_Annotation"><textarea>@t.Annotation</textarea></div>
+
+                    <h3><button class="editor-save" type="submit">Save</button></h3>
+                </form>
+            </div>
+        </div>
+    }
+}

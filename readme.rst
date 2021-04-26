@@ -15,7 +15,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-|docs|
+|docs| |codacy| |codeql| |climate|
 
 Atlas of Information Management
 ===============================
@@ -73,7 +73,16 @@ Atlas was created by the Riverside Healthcare Analytics team -
 
 
 
-   
-
 .. |docs| image:: https://img.shields.io/badge/Atlas-Documentation-orange
    :target: https://riverside-healthcare.github.io/Atlas/
+
+.. |codacy| image:: https://app.codacy.com/project/badge/Grade/5238d35fb338443fb784b852337fe75f
+   :target: https://www.codacy.com/gh/Riverside-Healthcare/Atlas/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Riverside-Healthcare/Atlas&amp;utm_campaign=Badge_Grade
+
+.. |codeql| image:: https://github.com/Riverside-Healthcare/extract_management/workflows/CodeQL/badge.svg
+   :target: https://github.com/Riverside-Healthcare/extract_management/actions/workflows/codeql-analysis.yml
+   :alt: CodeQL
+
+.. |climate| image:: https://api.codeclimate.com/v1/badges/385f0450d811190e7e43/maintainability
+   :target: https://codeclimate.com/github/Riverside-Healthcare/Atlas/maintainability
+   :alt: Maintainability

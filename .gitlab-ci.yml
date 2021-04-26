@@ -1,0 +1,162 @@
+include:
+  - template: Code-Quality.gitlab-ci.yml
+
+code_quality:
+  before_script:
+    - echo "nothing to do.."
+  services:            # Shut off Docker-in-Docker
+  tags:
+    - cq-sans-dind     # Set this job to only run on our new specialized runner
+  artifacts:
+    paths: [gl-code-quality-report.json]
+
+metrics:
+  before_script:
+    - echo "nothing to do.."
+  script:
+    - echo 'metric_name metric_value' > metrics.txt
+  artifacts:
+    reports:
+      metrics: metrics.txt
+
+stages:
+ - test
+ - build
+ - publish
+
+precommit:
+  image: mcr.microsoft.com/dotnet/sdk:5.0-alpine
+  stage: test
+  except:
+    - public
+  before_script:
+    - export PYTHONUNBUFFERED=1
+    - apk add --no-cache git build-base python3 python3-dev wget bash nodejs nodejs-npm && ln -sf python3 /usr/bin/python
+    - python3 -m ensurepip
+    - pip3 install --no-cache --upgrade pip setuptools
+    - python3 -m pip install pre-commit
+    - rm package-lock.json
+    - dotnet restore "web/web.csproj"
+    - dotnet --version
+  script:
+    - export PATH="$PATH:/root/.dotnet/tools"
+    - dotnet tool install -g dotnet-format
+    - npm -g install
+    # - pre-commit run dotnet-format --all-files
+    - pre-commit run check-json --all-files
+    - pre-commit run check-toml --all-files
+    - pre-commit run check-yaml --all-files
+    - pre-commit run end-of-file-fixer --all-files
+    - pre-commit run isort --all-files
+    - pre-commit run black --all-files
+    - pre-commit run prettier --all-files
+    - pre-commit run stylelint --all-files
+
+build_web:
+ image: mcr.microsoft.com/dotnet/sdk:5.0-alpine
+ stage: build
+ except:
+  - public
+ script:
+  - cd "web"
+  - dotnet publish -r win-x86 --self-contained false -c Release -o out
+ artifacts:
+  paths: ["/builds/atlas/web/atlas-dotnet/web/out/"]
+
+pages:
+  image: python:3.9
+  stage: publish
+  before_script:
+    # need to do installs here cause we don't have a real python package
+    - python -m pip install tox poetry Sphinx Pygments furo sphinx-copybutton sphinx-inline-tabs myst-parser colorama sphinx-panels git+https://github.com/sphinx-contrib/youtube.git
+  script:
+    - tox -e docs
+    - mv docs/_build/ public/
+  artifacts:
+    paths:
+      - public
+  only:
+    - master
+
+deploy_test:
+ image: alpine:latest
+ stage: publish
+ only:
+  - master
+ dependencies:
+  - build_web
+ needs: [build_web]
+ before_script:
+  - apk add --no-cache openssh
+  - eval $(ssh-agent -s)
+  - echo "$atlas_ssh_key" | ssh-add -
+  - mkdir -p ~/.ssh
+  - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+ script:
+  # empty folder
+  - ssh $atlas_ssh_user@$atlas_server "cd C:\inetpub\wwwroot\atlas-test && DEL /Q . && for /d %x in (C:\inetpub\wwwroot\atlas-test\*) do @rd /s /q \"%x\""
+  # load new site
+  - scp -r /builds/atlas/web/atlas-dotnet/web/out/* $atlas_ssh_user@$atlas_server:/c:/inetpub/wwwroot/atlas-test/
+
+
+public:
+  stage: publish
+  image: python:3.9
+  needs:
+    - job: build_web
+      artifacts: false
+  only:
+    - master
+  except:
+    - public
+  before_script:
+    - apt-get install -y git
+    - 'command -v ssh-agent >/dev/null || ( apt-get update -y && apt-get install openssh-client -y )'
+    - eval $(ssh-agent -s)
+    - mkdir -p ~/.ssh
+    - ssh-keyscan github.com >> ~/.ssh/known_hosts
+    - echo "$github_priv_key" | tr -d '\r' | ssh-add -
+    - git config --global user.email "$GITLAB_USER_EMAIL"
+    - git config --global user.name "$GITLAB_USER_NAME"
+    - shopt -s dotglob # include dotfiles in mv
+  script:
+    - cd public-publish && python build_public.py
+    - cd $CI_PROJECT_DIR
+    - git init
+    - git remote add origin https://oauth2:${CI_PUSH_TOKEN}@$CI_SERVER_HOST/$CI_PROJECT_PATH.git || git remote set-url origin https://oauth2:${CI_PUSH_TOKEN}@$CI_SERVER_HOST/$CI_PROJECT_PATH.git
+    - git config user.email "$GITLAB_USER_EMAIL"
+    - git config user.name "$GITLAB_USER_NAME"
+    - git add . && git commit -m '[skip ci] public update'
+    # force to remove history on branch
+    - export GIT_SSL_NO_VERIFY=1 && git push --force --follow-tags origin HEAD:public
+    # list changes
+    - cd ..; rm -rf pub; mkdir pub; cd pub && git init && git remote add origin git@github.com:Riverside-Healthcare/Atlas.git && git pull origin master
+    - git rm -rf . ; git clean -fxd # remove pub files, except git
+    - cd $CI_PROJECT_DIR && rm -rf .git
+    - cd .. && cd pub && mv $CI_PROJECT_DIR/* .
+    - git status
+
+github:
+  when: manual
+  only:
+    - public # public branch
+  stage: publish
+  image: python:3.9
+  before_script:
+    - 'command -v ssh-agent >/dev/null || ( apt-get update -y && apt-get install openssh-client -y )'
+    - eval $(ssh-agent -s)
+    - mkdir -p ~/.ssh
+    - ssh-keyscan github.com >> ~/.ssh/known_hosts
+    - echo "$github_priv_key" | tr -d '\r' | ssh-add -
+    - git config --global user.email "$GITLAB_USER_EMAIL"
+    - git config --global user.name "$GITLAB_USER_NAME"
+    - shopt -s dotglob # include dotfiles in mv
+  script:
+    - cd ..; rm -rf pub; mkdir pub; cd pub && git init && git remote add origin git@github.com:Riverside-Healthcare/Atlas.git && git pull origin master
+    - git rm -rf . ; git clean -fxd # remove pub files, except git
+    - cd $CI_PROJECT_DIR && rm -rf .git
+    - cd .. && cd pub && mv $CI_PROJECT_DIR/* .
+    - git status
+    - git add . && git commit -m "$MESSAGE"
+    - git status
+    - git push -u origin master

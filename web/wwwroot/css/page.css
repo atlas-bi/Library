@@ -119,10 +119,10 @@ section {
 
 .pageNav-badgeGreen {
   margin-right: 10px;
-  border: 2px solid rgba(41, 206, 66);
+  border: 2px solid rgb(41, 206, 66);
   border-radius: 3px;
   padding: 0 5px;
-  color: rgba(41, 206, 66);
+  color: rgb(41, 206, 66);
 }
 
 .pageNav-badgeHunterGreen {
@@ -160,6 +160,8 @@ section {
   vertical-align: middle;
   visibility: hidden;
   white-space: nowrap;
+  width: 39px;
+  height: 39px;
 }
 
 .text-light {
@@ -168,8 +170,16 @@ section {
 }
 
 .text-green {
-  color: rgba(41, 206, 66) !important;
-  fill: rgba(41, 206, 66) !important;
+  color: rgb(41, 206, 66) !important;
+  fill: rgb(41, 206, 66) !important;
+}
+
+.text-greenModified {
+  margin-right: 10px;
+  border: 2px solid rgb(41, 206, 66);
+  border-radius: 3px;
+  padding: 0 5px;
+  color: rgb(41, 206, 66);
 }
 
 .text-alert {

@@ -85,7 +85,7 @@ namespace Atlas_Web.Pages.Users
             public string ReportServerPath { get; set; }
             public string SourceServer { get; set; }
             public string ReportUrl { get; set; }
-            public int? EpicReleased { get; set; }
+            public string EpicReleased { get; set; }
             public string ManageReportUrl { get; set; }
             public string FolderName { get; set; }
             public int? ItemRank { get; set; }
@@ -455,7 +455,7 @@ namespace Atlas_Web.Pages.Users
                                 FolderId = q.FolderId,
                                 FolderName = q.Folder.FolderName,
                                 ItemRank = q.ItemRank,
-                                EpicReleased = (ro.EpicReleased == "Y" ? 1 : 0),
+                                EpicReleased = q.ItemType == "report" ? ReportHelpers.EpicReleased(_context, (int)q.ItemId) : "",
                                 FolderRank = q.Folder.FolderRank,
                                 Description = (ro.ReportObjectDoc.DeveloperDescription ?? ro.Description ?? ro.DetailedDescription ?? ro.ReportObjectDoc.KeyAssumptions
                                                ?? tm.Summary ?? tm.TechnicalDefinition

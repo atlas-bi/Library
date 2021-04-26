@@ -190,8 +190,7 @@ namespace Atlas_Web.Pages.Terms
                                                          // where (p.ParentReportObject.ReportObjectDoc.Hidden ?? "N") == "N"
                                                          //   && p.ParentReportObject.DefaultVisibilityYn == "Y"
                                                          join gp in _context.ReportObjectHierarchies on p.ParentReportObjectId equals gp.ChildReportObjectId
-                                                         where gp.ChildReportObjectId == id
-                                                            && (gp.ParentReportObject.ReportObjectDoc.Hidden ?? "N") == "N"
+                                                         where (gp.ParentReportObject.ReportObjectDoc.Hidden ?? "N") == "N"
                                                             && gp.ParentReportObject.DefaultVisibilityYn == "Y"
                                                          select new
                                                          {
@@ -446,6 +445,7 @@ namespace Atlas_Web.Pages.Terms
             {
                 // create new comment
                 _context.Add(NewComment);
+                _context.SaveChanges();
             }
             // add message
             NewCommentReply.UserId = UserHelpers.GetUser(_cache, _context, User.Identity.Name).UserId;

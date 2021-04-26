@@ -88,6 +88,17 @@
   padding-right: 0;
 }
 
+.favs-none {
+  -ms-flex: 0 0 100%;
+  -webkit-box-flex: 0;
+  border-top-right-radius: inherit;
+  flex: 0 0 100%;
+  max-width: 100%;
+  min-height: 600px;
+  padding-left: 0;
+  padding-right: 0;
+}
+
 .favs {
   height: 100%;
 }

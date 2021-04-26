@@ -20,11 +20,11 @@
 <div class="pageTitle">
     <div class="page-title">
         <h2 class="pageTitle-head">
-            <span>@Model.MyTerm.Name
             @if (@Model.MyTerm.Approved == "Y")
             {
-                <span class="text-green">Approved</span>
+                <span class="text-greenModified">Approved</span>
             }
+            @Model.MyTerm.Name
         </h2>
     </div>
 

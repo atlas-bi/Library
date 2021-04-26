@@ -17,15 +17,15 @@
 *@
 
 @model Atlas_Web.Pages.Projects.IndexModel
-<h3>Report Links</h3>
+
 <h4>New Link</h4>
-<form asp-page-handler="AddLinkedReport" method="post">
+<form action="/Projects?handler=AddLinkedReport" method="post" id="project-editor-add-report-form">
     <input asp-for="DpReportAnnotation.DataProjectId" type="hidden" value='@Model.DataProject.Id' />
     <div class="listDetails">
-        
+
         <label>Report Name</label>
         <input type="dynamic-dropdown" class="head-light" data-head="Name" asp-for="DpReportAnnotation.ReportId" value="" visible-value="" search-area="ReportSearch" />
-        
+
         <label>Rank</label>
         <input asp-for="DpReportAnnotation.Rank" type="number" />
     </div>
@@ -33,40 +33,10 @@
     <h3>Annotation</h3>
     <div class="editor" data-inputName="DpReportAnnotation.Annotation" data-inputId="DpReportAnnotation_Annotation"><textarea></textarea></div>
 
-    <h3><button class="editor-save" type="submit">Save</button></h3>        
-    
+    <h3><button class="editor-save" type="submit">Save</button></h3>
 </form>
 
-@if(Model.DataProject.RelatedReports.Count() > 0)
-{
-    <h4>Existing Links</h4>
-
-    @foreach (var t in Model.DataProject.RelatedReports)
-    {
-        <h4 class="drop" data-toggle="clps" data-target="collapse-reportlink-@(t.Id)">Edit <span class="text-green">@t.Name</span> Link
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M31.3 192h257.3c17.8 0 26.7 21.5 14.1 34.1L174.1 354.8c-7.8 7.8-20.5 7.8-28.3 0L17.2 226.1C4.6 213.5 13.5 192 31.3 192z"/></svg>
-        </h4>
-
-        <div id="collapse-reportlink-@(t.Id)" class="clps">
-            <div class="drop-box">
-                <h5><a class="drop-link" href="Reports?id=@t.ItemId">Open This Report</a> / <a class="drop-link" href="/Projects?handler=DeleteLinkedReport&id=@t.Id">Delete This Link</a></h5>
-
-                <form asp-page-handler="EditLinkedReport" method="post">
-                    <input asp-for="DpReportAnnotation.ReportAnnotationId" value="@t.Id" type="hidden" />
-                    <input asp-for="DpReportAnnotation.DataProjectId" value="@Model.DataProject.Id" type="hidden" />
-            
-                    <div class="listDetails">
-                        <label>Rank</label>
-                        <input asp-for="DpReportAnnotation.Rank" type="number" value="@t.Rank" />
-                    </div>
-            
-                    <h3>Annotation</h3>
-                    <div class="editor" data-inputName="DpReportAnnotation.Annotation" data-inputId="DpReportAnnotation_Annotation"><textarea>@t.Annotation</textarea></div>
-
-                    <h3><button class="editor-save" type="submit">Save</button></h3>
-                </form>
-            </div>
+     <h3>Report Links</h3>
+        <div id="project-editor-currentreports-container">
+            <partial name="Edit/_CurrentReports" />
         </div>
-       
-    }
-}

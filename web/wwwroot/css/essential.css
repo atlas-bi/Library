@@ -198,3 +198,9 @@ p {
 img[data-src] {
   min-height: 400px;
 }
+
+img[src="/img/loader.gif"] {
+  max-width: 78%;
+  max-height: 290px;
+  padding-bottom: 350px;
+}
