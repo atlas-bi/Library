@@ -138,6 +138,9 @@ public:
 
 github:
   when: manual
+  needs:
+  - job: code_quality
+    artifacts: false
   only:
     - public # public branch
   stage: publish

@@ -281,7 +281,7 @@ namespace Atlas_Web.Pages.Reports
                             {
                                 Id = r.ReportObjectId,
                                 Name = r.DisplayName,
-                                OldName = r.DisplayName,
+                                OldName = r.Name,
                                 Author = r.AuthorUser.Fullname_Cust,
                                 AuthorId = r.AuthorUserId,
                                 LastUpdatedBy = r.LastModifiedByUser.Fullname_Cust,
