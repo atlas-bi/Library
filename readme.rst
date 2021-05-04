@@ -20,7 +20,7 @@
 Atlas of Information Management
 ===============================
 
-Atlas of Information Management is a business intelligence library and documentation database. ELT processes collect metadata from various reporting platforms and store it in a centraly located database. A modern web UI is used to add additional documentation to the report objects and also to provide an intuative way to search, favorite and share reporting content.
+Atlas of Information Management is a business intelligence library and documentation database. ETL processes collect metadata from various reporting platforms and store it in a centraly located database. A modern web UI is used to add additional documentation to the report objects and also to provide an intuative way to search, favorite and share reporting content.
 
 
 See the `project documentation <https://riverside-healthcare.github.io/Atlas/>`_
