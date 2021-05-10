@@ -92,8 +92,9 @@ namespace Atlas_Web.Helpers
 
             var Epic = ApprovedLogs.Contains(logs) && YearlyLogs.Contains(yearlyLog) &&
                                                 MaintenanceVal(_context, id) ? "Analytics Certified" :
-                                                _context.ReportObjectDocs.Any(x => x.ReportObjectId == id) ? "Analytics Reviewed" :
                                                 _context.ReportObjects.Any(x => x.EpicReleased == "Y" && x.ReportObjectId == id) ? "Epic Released" :
+                                                _context.ReportObjectImagesDocs.Any(x => x.ReportObjectId == id)
+                                                && _context.ReportObjectDocs.Any(x => x.ReportObjectId == id && (x.DeveloperDescription != null || x.KeyAssumptions != null)) ? "Analytics Reviewed" :
                                                 _context.ReportObjectReportRunTimes.Where(x => x.ReportObjectId == id).Sum(x => x.Runs) > 24 ? "Legacy" :
                                                 "High Risk";
             return Epic;

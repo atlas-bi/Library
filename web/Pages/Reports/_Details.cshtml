@@ -175,11 +175,21 @@
 
     @if (m.ReportFragilityTags.Count > 0)
     {
+        var length = m.ReportFragilityTags.Count;
+        var counter = 0;
         <span class="listDetails-title">Fragility Tags</span>
         <span>
             @foreach (var tag in m.ReportFragilityTags)
             {
-                <span class="badge badge-primary">@tag.Name</span>
+                @if (counter == (length - 1))
+                {
+                    <span class="badge badge-primary">@tag.Name</span>
+                }
+                else
+                {
+                    <span class="badge badge-primary">@tag.Name, </span>
+                }
+                counter++;
             }
         </span>
     }

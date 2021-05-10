@@ -210,6 +210,13 @@
       this.saveUrl = this.target.getAttribute("data-saveUrl");
     }
 
+    this.editorPrevTitleButton = document.createElement("button");
+    this.editorPrevTitleButton.setAttribute("type", "button");
+    this.editorPrevTitleButton.innerHTML = "Refresh Preview";
+    this.editorPrevTitleButton.classList.add("liveEditor-btn");
+    this.editorPrevTitleButton.classList.add("save");
+    this.editorInput.appendChild(this.editorPrevTitleButton);
+
     this.editorInput.appendChild(this.editorBody);
     this.target.appendChild(this.editorInput);
     this.target.appendChild(this.editorPrev);
@@ -224,7 +231,14 @@
 
     this.mirror.setValue(initialValue);
 
-    this.mirror.on("change", this.updateMirror.bind(this), false);
+    // this.mirror.on("change", this.updateMirror.bind(this), false);
+
+    //this.editorPrevTitle.button.addEventListener("click", this.updateMirror.bind(this), false);
+    this.editorPrevTitleButton.addEventListener(
+      "click",
+      this.updateMirror.bind(this),
+      false
+    );
 
     if (this.target.closest(".mdl")) {
       this.target
@@ -244,7 +258,7 @@
     // mirror even
     updateMirror: function updateMirror(b) {
       var a = this;
-
+      console.log("sean is the best");
       k(function () {
         var data = {
           md: a.mirror.getValue(),

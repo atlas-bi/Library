@@ -312,7 +312,7 @@
       i.value = i.value.replace(/,$/g, "").replace(/^,/g, "");
 
       // find 15, 36, 38, but not 3 and check the box for "show hidden type"
-      if (i.value.match(/(?:36|38|15)/g)) {
+      if (i.value.match(/(?:36|38|15|4|18)/g)) {
         document.querySelector('input[name="t"]').setAttribute("value", "1");
         document
           .querySelector('input[name="t"]')

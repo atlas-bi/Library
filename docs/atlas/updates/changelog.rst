@@ -19,6 +19,15 @@
 Changelog
 *********
 
+Version 2021.05.1
+-----------------
+
+- Updated criteria for certification tags
+- Updated criteria for Epic report groups
+- Added commas when multiple fragility tags
+- Added button to refresh preview
+- Modified report details to show report name not display title
+
 Version 2021.04.1
 -----------------
 

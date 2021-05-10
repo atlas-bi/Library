@@ -88,7 +88,7 @@
     <div class="tab-dta" id="subscriptions">
         <div data-ajax="yes" data-url="/Users?handler=Subscriptions" data-param="id=@Model.UserId"></div>
     </div>
-
+    
     <div class="tab-dta @if (@Model.UserId != @Model.MyId){ <text>active</text>}" id="activity">
         <div data-ajax="yes" data-url="/Users?handler=Activity" data-param="id=@Model.UserId"></div>
     </div>
