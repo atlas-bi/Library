@@ -44,7 +44,7 @@
 {
     <h4>System Description</h4>
     <div class="markdown">
-        @(Model != null && Model.Report != null ? Model.Report.Description : ViewBag.Description)
+        @Html.Raw(HtmlHelpers.MarkdownToHtml(Model != null && Model.Report != null ? Model.Report.Description : ViewBag.Description))
     </div>
 }
 
@@ -52,7 +52,7 @@
 {
     <h4>System Detailed Description</h4>
     <div class="markdown">
-        @(Model != null && Model.Report != null ? Model.Report.SystemDescription : ViewBag.SystemDescription)
+        @Html.Raw(HtmlHelpers.MarkdownToHtml(Model != null && Model.Report != null ? Model.Report.SystemDescription : ViewBag.SystemDescription))
     </div>
 }
 

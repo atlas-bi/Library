@@ -40,6 +40,11 @@ Atlas of Information Management is a business intelligence library and documenta
    atlas/demo
    atlas/web/index
 
+.. toctree::
+   :caption: Development
+   :hidden:
+
+   atlas/development/index
 
 .. toctree::
    :caption: Implementation
@@ -47,20 +52,19 @@ Atlas of Information Management is a business intelligence library and documenta
 
    atlas/requirements
    atlas/deploy
-   atlas/etl
-
-.. toctree::
-   :caption: Development
-   :hidden:
-
-   atlas/development/index
-
 
 .. toctree::
    :caption: Releases
    :hidden:
 
    atlas/updates/index
+
+.. toctree::
+   :caption: ETL
+   :hidden:
+
+   atlas/etl/index
+
 
 .. toctree::
    :caption: Links

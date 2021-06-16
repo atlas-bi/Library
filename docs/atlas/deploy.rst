@@ -69,6 +69,7 @@ Deploy to IIS
 
    Deploying with Visual Studio is the preferred method. After opening the ``web.sln`` file -
 
+
    - First update ``web/appsettings.json`` with the correct settings for your database and organization.
    - In Visual Studio's menu, click **Build** then **Publish Web**
    - Create a new publish profile.

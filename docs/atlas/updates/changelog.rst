@@ -19,6 +19,23 @@
 Changelog
 *********
 
+Version 2021.06.1
+-----------------
+
+- Combined ETL documentation with webapp documentation
+- Fixed SlicerDicer run button in Hyperspace
+- Split a joined primary key to a single primary key in three tables
+- Added a SlicerDicer filter button to search
+- Modified Tableau filter button on search
+- Fixed new favorite folder bug
+- Removed 0's from user profile run data
+- Removed hidden reports from report relationships
+- Fixed search pagination that was removing search filters
+- Moved certification tag to ETL
+- Made the run button green
+- Fixed the search bug when searching for single letters
+- Updated project search procedure
+
 Version 2021.05.1
 -----------------
 

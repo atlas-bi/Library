@@ -8,7 +8,7 @@ namespace Atlas_Web.Models
     public partial class ReportObjectRunDatum
     {
         public int ReportObjectId { get; set; }
-        public int RunId { get; set; }
+        public long RunId { get; set; }
         public int? RunUserId { get; set; }
         public DateTime? RunStartTime { get; set; }
         public int? RunDurationSeconds { get; set; }

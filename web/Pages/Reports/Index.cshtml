@@ -58,12 +58,18 @@
 
     @if(@Model.Report.RunReportUrl != null)
     {
-        <a class="nav-link" target="_blank" data-tooltip="Run Report" href="@Model.Report.RunReportUrl">
-            <svg viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg" ><path d="M424.4 214.7L72.4 6.6C43.8-10.3 0 6.1 0 47.9V464c0 37.5 40.7 60.1 72.4 41.3l352-208c31.4-18.5 31.5-64.1 0-82.6z"/></svg>
+        <a class="nav-linkRun" target="_blank"  data-tooltip="Run Report" href="@Model.Report.RunReportUrl">
+            <svg viewBox="0 0 448 512"  xmlns="http://www.w3.org/2000/svg" ><path d="M424.4 214.7L72.4 6.6C43.8-10.3 0 6.1 0 47.9V464c0 37.5 40.7 60.1 72.4 41.3l352-208c31.4-18.5 31.5-64.1 0-82.6z"/></svg>
         </a>
     } else 
     {
-        if(@Model.Report.EditReportUrl != null)
+        if(@Model.Report.EpicMasterFile.Equals("IDB"))
+        {
+            <a class="nav-link nav-linkDisabled" data-tooltip="Open a related dashboard that uses this." >
+                <svg viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><path d="M424.4 214.7L72.4 6.6C43.8-10.3 0 6.1 0 47.9V464c0 37.5 40.7 60.1 72.4 41.3l352-208c31.4-18.5 31.5-64.1 0-82.6z" /></svg>
+            </a>
+        }
+        else if(@Model.Report.EditReportUrl != null)
         {
             <a class="nav-link nav-linkDisabled" data-tooltip="Open in report library." >
                 <svg viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><path d="M424.4 214.7L72.4 6.6C43.8-10.3 0 6.1 0 47.9V464c0 37.5 40.7 60.1 72.4 41.3l352-208c31.4-18.5 31.5-64.1 0-82.6z" /></svg>
@@ -107,16 +113,16 @@
 
 <div class="pageTitle">
     <h2 class="pageTitle-head">
-        <span>@if (@ViewBag.EpicReleased == "Analytics Certified")
-            {<span data-tooltip="This report has received the highest level of scrutiny from the Analytics Team and the owning end user. Certified reports are the most reliable and accurate in the system." class="pageNav-badgeHunterGreen tt-bottom">@ViewBag.EpicReleased</span>}
-        else if(@ViewBag.EpicReleased == "Analytics Reviewed")
-            {<span data-tooltip="This report has gone through the standard Analytics code review and validation process. Reviewed reports can be trusted for monitoring most operational processes." class="pageNav-badgeGreen tt-bottom">@ViewBag.EpicReleased</span>}
-        else if(@ViewBag.EpicReleased == "Epic Released")
-            {<span data-tooltip="Epic Released Reports are limited to the standard Epic configuration. They cannot be customized to match Riverside’s unique system build and may not always be accurate. Use with caution." class="pageNav-badgeOrange tt-bottom">@ViewBag.EpicReleased</span>}
-         else if(@ViewBag.EpicReleased == "Legacy")
-            {<span data-tooltip="This report has not been validated by the Analytics team for accuracy and reliability. Use with caution." class="pageNav-badgeOrange tt-bottom">@ViewBag.EpicReleased</span>}
+        <span>@if (Model.Report.EpicReleased == "Analytics Certified")
+            {<span data-tooltip="This report has received the highest level of scrutiny from the Analytics Team and the owning end user. Certified reports are the most reliable and accurate in the system." class="pageNav-badgeHunterGreen tt-bottom">@Model.Report.EpicReleased</span>}
+        else if(Model.Report.EpicReleased == "Analytics Reviewed")
+            {<span data-tooltip="This report has gone through the standard Analytics code review and validation process. Reviewed reports can be trusted for monitoring most operational processes." class="pageNav-badgeGreen tt-bottom">@Model.Report.EpicReleased</span>}
+        else if(Model.Report.EpicReleased == "Epic Released")
+        {<span data-tooltip="Epic Released Reports are limited to the standard Epic configuration. They cannot be customized to match Riverside’s unique system build and may not always be accurate. Use with caution." class="pageNav-badgeOrange tt-bottom">@Model.Report.EpicReleased</span>}
+         else if(Model.Report.EpicReleased == "Legacy")
+            {<span data-tooltip="This report has not been validated by the Analytics team for accuracy and reliability. Use with caution." class="pageNav-badgeOrange tt-bottom">@Model.Report.EpicReleased</span>}
          else
-            {<span data-tooltip="This report has not been validated by the Analytics Team and does not have a usage track record. It may display inaccurate or misleading information. Use at your own risk." class="pageNav-badgeRed tt-bottom">@ViewBag.EpicReleased</span>}
+            {<span data-tooltip="This report has not been validated by the Analytics Team and does not have a usage track record. It may display inaccurate or misleading information. Use at your own risk." class="pageNav-badgeRed tt-bottom">@Model.Report.EpicReleased</span>}
 
         @Model.Report.Name.Replace("_"," ")</span>
     </h2>
@@ -241,7 +247,7 @@
 
 @section js {
     <textarea class="postLoadScripts">
-        <script src="/js/flowchart.min.js" async></script><script>hljs.initHighlightingOnLoad();</script>@if (ViewBag.Permissions.Contains(12)){<script src="/js/editor.min.js" async></script><script src="/js/report-editor.min.js" async></script>}
+        <script src="/js/flowchart.min.js" async></script>@if(!Request.Headers["User-Agent"].ToString().Contains("Trident")){<script>hljs.highlightAll();</script>}@if (ViewBag.Permissions.Contains(12)){<script src="/js/editor.min.js" async></script><script src="/js/report-editor.min.js" async></script>}
     </textarea>
     
 }

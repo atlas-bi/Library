@@ -17,5 +17,6 @@ namespace Atlas_Web.Models
         public int? Hidden { get; set; }
         public int? VisibleType { get; set; }
         public int? Orphaned { get; set; }
+        public string CertificationTag { get; set; }
     }
 }

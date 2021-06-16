@@ -36,72 +36,7 @@ namespace Atlas_Web.Helpers
         public string Date { get; set; }
     }
 
-    public class ReportHelpers
-    {
 
-        public static Boolean MaintenanceVal(Atlas_WebContext _context, int id)
-        {
-            DateTime Today = DateTime.Now;
-
-            var MaintenanceVal = (from l in
-                                 (from x in _context.ReportObjectDocs
-                                  where (x.MaintenanceScheduleId ?? 1) != 5
-                                     && x.ReportObjectId == id
-
-                                  select new
-                                  {
-                                      sch = x.MaintenanceScheduleId,
-                                      thiss = _context.MaintenanceLogs.Where(l => l.MaintenanceLogId == x.ReportObjectDocMaintenanceLogs.Select(x => x.MaintenanceLogId).Max()).First().MaintenanceDate
-                                  })
-
-                                  select new
-                                  {
-                                      no_maintenance_needed = (l.sch == 1 ? (l.thiss ?? Today).AddMonths(3) : // quarterly
-                                                          l.sch == 2 ? (l.thiss ?? Today).AddMonths(6) : // twice a year
-                                                          l.sch == 3 ? (l.thiss ?? Today).AddYears(1) : // yearly
-                                                          l.sch == 4 ? (l.thiss ?? Today).AddYears(2) : // every two years
-                                                          (l.thiss ?? Today)
-                                                          ) > Today
-                                  });
-
-            Boolean Maintenance = false;
-            if (MaintenanceVal.Any())
-            {
-                Maintenance = MaintenanceVal.First().no_maintenance_needed;
-            }
-            return Maintenance;
-        }
-
-        public static string EpicReleased(Atlas_WebContext _context, int id)
-        {
-            List<int> ApprovedLogs = new List<int> { 1, 2 };
-            List<int> YearlyLogs = new List<int> { 1, 2, 3 };
-            int logs = 0;
-            var LogQuery = _context.MaintenanceLogs.Where(x => x.ReportObjectDocMaintenanceLogs.Any(r => r.ReportObjectId == id)).OrderByDescending(x => x.MaintenanceDate).ToList();
-            if (LogQuery.Count() > 0)
-            {
-                logs = LogQuery.First().MaintenanceLogStatusId ?? 0;
-            }
-
-            int yearlyLog = 0;
-            var yearLogQuery = _context.ReportObjectDocs.Where(x => x.ReportObjectId == id && x.MaintenanceScheduleId != null).ToList();
-            if (yearLogQuery.Count() > 0)
-            {
-                yearlyLog = yearLogQuery.FirstOrDefault().MaintenanceScheduleId ?? 0;
-            }
-
-            var Epic = ApprovedLogs.Contains(logs) && YearlyLogs.Contains(yearlyLog) &&
-                                                MaintenanceVal(_context, id) ? "Analytics Certified" :
-                                                _context.ReportObjects.Any(x => x.EpicReleased == "Y" && x.ReportObjectId == id) ? "Epic Released" :
-                                                _context.ReportObjectImagesDocs.Any(x => x.ReportObjectId == id)
-                                                && _context.ReportObjectDocs.Any(x => x.ReportObjectId == id && (x.DeveloperDescription != null || x.KeyAssumptions != null)) ? "Analytics Reviewed" :
-                                                _context.ReportObjectReportRunTimes.Where(x => x.ReportObjectId == id).Sum(x => x.Runs) > 24 ? "Legacy" :
-                                                "High Risk";
-            return Epic;
-
-        }
-
-    }
     public class UserHelpers
     {
         public static Boolean IsAdmin(IMemoryCache cache, Atlas_WebContext _context, string username)
@@ -431,10 +366,6 @@ namespace Atlas_Web.Helpers
             {
                 Url = "reportbuilder:Action=Edit&ItemPath=" + @Uri.EscapeDataString(ReportServerPath) + "&Endpoint=https%3A%2F%2F" + SourceServer + "." + Domain + "%3A443%2FReportServer";
             }
-            else if (EpicMasterFile == "FDM" && EpicRecordId != null && Epic)
-            {
-                Url = "EpicACT:BI_SLICERDICER,LaunchOptions:16,RunParams:StartingDataModelId=" + EpicRecordId;
-            }
             else if (EpicMasterFile == "IDM" && EpicRecordId != null && Epic)
             {
                 Url = "EpicAct:WM_DASHBOARD_EDITOR,INFONAME:IDMRECORDID,INFOVALUE:" + EpicRecordId;
@@ -483,7 +414,7 @@ namespace Atlas_Web.Helpers
                 {
                     NewUrl = "EpicAct:WM_DASHBOARD_LAUNCHER,runparams:" + EpicRecordId;
                 }
-                else if (ReportType == "SSRS Report" && Epic)
+                else if ((ReportType == "SSRS Report" || ReportType == "Tableau Workbook" || ReportType == "Tableau Dashboard") && Epic)
                 {
                     if (EnabledForHyperspace == "Y")
                     {
@@ -497,6 +428,10 @@ namespace Atlas_Web.Helpers
                 else if (EpicMasterFile == "IDN")
                 {
                     NewUrl = "EpicAct:WM_METRIC_EDITOR,INFONAME:IDNRECORDID,INFOVALUE:" + EpicRecordId;
+                }
+                else if (EpicMasterFile == "FDM" && EpicRecordId != null)
+                {
+                    NewUrl = "EpicACT:BI_SLICERDICER,LaunchOptions:16,RunParams:StartingDataModelId=" + EpicRecordId;
                 }
                 else
                 {

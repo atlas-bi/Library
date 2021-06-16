@@ -18,6 +18,9 @@
 	  <PlatformTarget>AnyCPU</PlatformTarget>
 	  <Prefer32Bit>false</Prefer32Bit>
 	  <Optimize>false</Optimize>
+	  <DefineConstants>DEBUG;TRACE</DefineConstants>
+	  <DebugType>full</DebugType>
+	  <DebugSymbols>true</DebugSymbols>
 	</PropertyGroup>
    <ItemGroup>
     <PackageReference Include="LigerShark.WebOptimizer.AutoPrefixer" Version="7.1.8-beta" />

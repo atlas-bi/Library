@@ -21,9 +21,10 @@
     <input type="hidden" value="@Model.SearchString" name="s" />
     <input type="hidden" value="@Model.SearchFilter" name="f" />
     <input type="hidden" value="@Model.SearchField" name="sf" />
+    <input type="hidden" value="@Model.Category" name="c" />
+
     <h5 class="fav-col-sub-title">Report Type</h5>
     <div class="srch-fltr">
-
         <div class='form-check search-filter'>
             <input type="checkbox" @if (Model.SearchFilter != null && Model.SearchFilter.Contains("28")) { <text> checked="checked" </text> } value='28' />
             <input type="hidden" />
@@ -64,8 +65,40 @@
             <input type="hidden" />
             <label>Tableau</label>
         </div>
+        <div class='form-check search-filter'>
+            <input type="checkbox" @if (Model.SearchFilter != null && Model.SearchFilter.Contains("37")) { <text> checked="checked" </text> } value='37' />
+            <input type="hidden" />
+            <label>SlicerDicer</label>
+        </div>
     </div>
-
+    <h5 class="fav-col-sub-title">Category</h5>
+    <div class="srch-fltr">
+        <div class='form-check search-category'>
+            <input type="checkbox" @if (Model.Category != null && Model.Category.Replace("%20", " ") == "Analytics Certified") { <text> checked="checked" </text> } value='Analytics Certified' />
+            <input type="hidden" />
+            <label>Analytics Certified</label>
+        </div>
+        <div class='form-check search-category'>
+            <input type="checkbox" @if (Model.Category != null && Model.Category.Replace("%20", " ") == "Analytics Reviewed") { <text> checked="checked" </text> } value='Analytics Reviewed' />
+            <input type="hidden" />
+            <label>Analytics Reviewed</label>
+        </div>
+        <div class='form-check search-category'>
+            <input type="checkbox" @if (Model.Category != null && Model.Category.Replace("%20", " ") == "Epic Released") { <text> checked="checked" </text> } value='Epic Released' />
+            <input type="hidden" />
+            <label>Epic Released</label>
+        </div>
+        <div class='form-check search-category'>
+            <input type="checkbox" @if (Model.Category != null && Model.Category.Replace("%20", " ") == "Legacy") { <text> checked="checked" </text> } value='Legacy' />
+            <input type="hidden" />
+            <label>Legacy</label>
+        </div>
+        <div class='form-check search-category'>
+            <input type="checkbox" @if (Model.Category != null && Model.Category.Replace("%20", " ") == "High Risk") { <text> checked="checked" </text> } value='High Risk' />
+            <input type="hidden" />
+            <label>High Risk</label>
+        </div>
+    </div>
     @if (Model.Permissions.Contains(46))
     {
         <h5 class="fav-col-sub-title">Advanced</h5>

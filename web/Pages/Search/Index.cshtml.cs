@@ -81,13 +81,14 @@ namespace Atlas_Web.Pages.Search
         [BindProperty] public int ShowOrphans { get; set; }
         [BindProperty] public string SearchFilter { get; set; }
         [BindProperty] public string SearchField { get; set; }
+        [BindProperty] public string Category { get; set; }
         [BindProperty] public int SearchPage { get; set; }
         [BindProperty] public int PageSize { get; set; }
         [BindProperty] public string SearchString { get; set; }
         [BindProperty(SupportsGet = true)] public List<string> AppliedFilters { get; set; }
         public User PublicUser { get; set; }
 
-        public ActionResult OnGet(string s, string f, int p, int h, int t, int o, string sf)
+        public ActionResult OnGet(string s, string f, int p, int h, int t, int o, string sf, string c)
         {
             PublicUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
             // var is copied to SearchString so it can be rendered in html view.
@@ -98,7 +99,12 @@ namespace Atlas_Web.Pages.Search
             SearchField = "";
             if (sf != null)
             {
-                SearchField = sf.Replace("%2C", ",").Replace("%252C", ",").Replace("%20", "").Replace("–", "-").Replace(" ", "");
+                SearchField = sf.Replace("%2C", ",").Replace("%252C", ",").Replace("%20", " ").Replace("–", "-");
+            }
+            Category = null;
+            if (c != null)
+            {
+                Category = c.Replace("%2C", ",").Replace("%252C", ",").Replace("%20", " ").Replace("–", "-");
             }
             SearchPage = p;
             ShowHidden = h;
@@ -122,6 +128,7 @@ namespace Atlas_Web.Pages.Search
                         command.Parameters.Add(new SqlParameter("@showHidden", ShowHidden));
                         command.Parameters.Add(new SqlParameter("@showAllTypes", ShowAllTypes));
                         command.Parameters.Add(new SqlParameter("@showOrphans", ShowOrphans));
+                        command.Parameters.Add(new SqlParameter("@category", Category));
 
                         if (SearchField != null && SearchField.Length > 0)
                         {
@@ -150,7 +157,7 @@ namespace Atlas_Web.Pages.Search
                                 SearchField = datareader["SearchField"].ToString(),
                                 TotalRecords = (int)datareader["TotalRecords"],
                                 EpicRecordId = datareader["EpicRecordId"].ToString(),
-                                EpicReleased = ReportHelpers.EpicReleased(_context, (int)datareader["ItemId"]),
+                                EpicReleased = datareader["CertificationTag"].ToString(),
                                 EpicMasterFile = datareader["EpicMasterFile"].ToString(),
                                 SourceServer = datareader["SourceServer"].ToString(),
                                 ReportServerPath = datareader["ReportServerPath"].ToString(),

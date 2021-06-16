@@ -7,6 +7,7 @@ namespace Atlas_Web.Models
 {
     public partial class ReportObjectDocFragilityTag
     {
+        public int LinkId { get; set; }
         public int ReportObjectId { get; set; }
         public int FragilityTagId { get; set; }
 

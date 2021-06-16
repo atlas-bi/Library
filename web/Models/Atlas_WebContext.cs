@@ -355,6 +355,11 @@ namespace Atlas_Web.Models
                     .HasForeignKey(d => d.AnalyticsOwnerId)
                     .HasConstraintName("FK_DP_DataProject_WebAppUsers1");
 
+                entity.HasOne(d => d.DataInitiative)
+                    .WithMany(p => p.DpDataProjects)
+                    .HasForeignKey(d => d.DataInitiativeId)
+                    .HasConstraintName("FK_DP_DataProject_DP_DataInitiative");
+
                 entity.HasOne(d => d.DataManager)
                     .WithMany(p => p.DpDataProjectDataManagers)
                     .HasForeignKey(d => d.DataManagerId)
@@ -1029,52 +1034,52 @@ namespace Atlas_Web.Models
 
             modelBuilder.Entity<ReportObjectDocFragilityTag>(entity =>
             {
-                entity.HasKey(e => new { e.ReportObjectId, e.FragilityTagId })
-                    .HasName("PK__ReportOb__A068477FF5CC7648");
+                entity.HasKey(e => e.LinkId)
+                    .HasName("PK__ReportOb__2D122135B03BB8CE");
 
                 entity.ToTable("ReportObjectDocFragilityTags", "app");
 
-                entity.Property(e => e.ReportObjectId).HasColumnName("ReportObjectID");
-
                 entity.Property(e => e.FragilityTagId).HasColumnName("FragilityTagID");
+
+                entity.Property(e => e.ReportObjectId).HasColumnName("ReportObjectID");
 
                 entity.HasOne(d => d.FragilityTag)
                     .WithMany(p => p.ReportObjectDocFragilityTags)
                     .HasForeignKey(d => d.FragilityTagId)
-                    .HasConstraintName("FK__ReportObj__Fragi__50FB042B");
+                    .HasConstraintName("FK__ReportObj__Fragi__71EFB72C");
 
                 entity.HasOne(d => d.ReportObject)
                     .WithMany(p => p.ReportObjectDocFragilityTags)
                     .HasForeignKey(d => d.ReportObjectId)
-                    .HasConstraintName("FK__ReportObj__Repor__51EF2864");
+                    .HasConstraintName("FK__ReportObj__Repor__72E3DB65");
             });
 
             modelBuilder.Entity<ReportObjectDocMaintenanceLog>(entity =>
             {
-                entity.HasKey(e => new { e.ReportObjectId, e.MaintenanceLogId })
-                    .HasName("PK__ReportOb__90514770A7C801F6");
+                entity.HasKey(e => e.LinkId)
+                    .HasName("PK__ReportOb__2D1221350C7530C5");
 
                 entity.ToTable("ReportObjectDocMaintenanceLogs", "app");
 
-                entity.Property(e => e.ReportObjectId).HasColumnName("ReportObjectID");
-
                 entity.Property(e => e.MaintenanceLogId).HasColumnName("MaintenanceLogID");
+
+                entity.Property(e => e.ReportObjectId).HasColumnName("ReportObjectID");
 
                 entity.HasOne(d => d.MaintenanceLog)
                     .WithMany(p => p.ReportObjectDocMaintenanceLogs)
                     .HasForeignKey(d => d.MaintenanceLogId)
-                    .HasConstraintName("FK__ReportObj__Maint__54CB950F");
+                    .HasConstraintName("FK__ReportObj__Maint__6E1F2648");
 
                 entity.HasOne(d => d.ReportObject)
                     .WithMany(p => p.ReportObjectDocMaintenanceLogs)
                     .HasForeignKey(d => d.ReportObjectId)
-                    .HasConstraintName("FK__ReportObj__Repor__55BFB948");
+                    .HasConstraintName("FK__ReportObj__Repor__6F134A81");
             });
 
             modelBuilder.Entity<ReportObjectDocTerm>(entity =>
             {
-                entity.HasKey(e => new { e.ReportObjectId, e.TermId })
-                    .HasName("PK__ReportOb__F3B7E32FEC52DF5C");
+                entity.HasKey(e => e.LinkId)
+                    .HasName("PK__ReportOb__2D122135AFCD5E79");
 
                 entity.ToTable("ReportObjectDocTerms", "app");
 
@@ -1083,12 +1088,12 @@ namespace Atlas_Web.Models
                 entity.HasOne(d => d.ReportObject)
                     .WithMany(p => p.ReportObjectDocTerms)
                     .HasForeignKey(d => d.ReportObjectId)
-                    .HasConstraintName("FK__ReportObj__Repor__589C25F3");
+                    .HasConstraintName("FK__ReportObj__Repor__6A4E9564");
 
                 entity.HasOne(d => d.Term)
                     .WithMany(p => p.ReportObjectDocTerms)
                     .HasForeignKey(d => d.TermId)
-                    .HasConstraintName("FK__ReportObj__TermI__59904A2C");
+                    .HasConstraintName("FK__ReportObj__TermI__6B42B99D");
             });
 
             modelBuilder.Entity<ReportObjectHierarchy>(entity =>
@@ -1183,12 +1188,12 @@ namespace Atlas_Web.Models
                     .WithMany(p => p.ReportObjectRunData)
                     .HasForeignKey(d => d.ReportObjectId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__ReportObj__Repor__7A35830E");
+                    .HasConstraintName("FK__ReportObj__Repor__7B2284FD");
 
                 entity.HasOne(d => d.RunUser)
                     .WithMany(p => p.ReportObjectRunData)
                     .HasForeignKey(d => d.RunUserId)
-                    .HasConstraintName("FK__ReportObj__RunUs__7B29A747");
+                    .HasConstraintName("FK__ReportObj__RunUs__7C16A936");
             });
 
             modelBuilder.Entity<ReportObjectRunTime>(entity =>
@@ -1304,6 +1309,8 @@ namespace Atlas_Web.Models
             {
                 entity.ToTable("Search_BasicSearchData_Small", "app");
 
+                entity.Property(e => e.CertificationTag).HasMaxLength(200);
+
                 entity.Property(e => e.ItemType).HasMaxLength(100);
 
                 entity.Property(e => e.SearchFieldDescription).HasMaxLength(100);
@@ -1312,6 +1319,8 @@ namespace Atlas_Web.Models
             modelBuilder.Entity<SearchBasicSearchDatum>(entity =>
             {
                 entity.ToTable("Search_BasicSearchData", "app");
+
+                entity.Property(e => e.CertificationTag).HasMaxLength(200);
 
                 entity.Property(e => e.ItemType).HasMaxLength(100);
 
@@ -1326,6 +1335,8 @@ namespace Atlas_Web.Models
                 entity.ToTable("Search_ReportObjectSearchData", "app");
 
                 entity.Property(e => e.Pk).HasColumnName("pk");
+
+                entity.Property(e => e.CertificationTag).HasColumnName("certificationTag");
 
                 entity.Property(e => e.DefaultVisibilityYn)
                     .HasMaxLength(1)

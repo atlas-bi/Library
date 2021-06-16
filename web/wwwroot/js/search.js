@@ -83,6 +83,15 @@
       }
     }
 
+    if (document.querySelectorAll(".sideNav .nav-linkRun:not(#nav-search)")) {
+      var navLinks = Array.prototype.slice.call(
+        document.querySelectorAll(".sideNav .nav-linkRun:not(#nav-search)")
+      );
+      for (var x = 0; x < navLinks.length; x++) {
+        navLinks[x].parentElement.removeChild(navLinks[x]);
+      }
+    }
+
     // attempt to get existing search params from url
     var url_Path = window.location.pathname.toLowerCase() == "/search",
       urlParams = getUrlVars(decodeURI(window.location.search)),
@@ -90,14 +99,15 @@
       url_f = url_Path && urlParams["f"] ? "&f=" + urlParams["f"] : "",
       url_h = url_Path && urlParams["h"] ? "&h=" + urlParams["h"] : "",
       url_t = url_Path && urlParams["t"] ? "&t=" + urlParams["t"] : "",
+      url_c = url_Path && urlParams["c"] ? "&c=" + urlParams["c"] : "",
       url_o = url_Path && urlParams["o"] ? "&o=" + urlParams["o"] : "";
 
     var s =
         "/Search?" +
-        (url || "s=" + value + url_sf + url_f + url_h + url_t + url_o),
+        (url || "s=" + value + url_sf + url_f + url_h + url_t + url_o + url_c),
       u = s.replace("/Search?s=", "");
     start = new Date();
-
+    console.log(s);
     if (
       (typeof value !== "undefined" && value !== null && value.length > 0) ||
       typeof url !== "undefined"
@@ -331,7 +341,7 @@
       return !1;
     } else if (e.target.matches(".page-link")) {
       e.preventDefault();
-      var h = e.target.closest("form"),
+      var h = document.querySelector("#searchForm"),
         j = document.createElement("input");
       j.type = "hidden";
       j.value = e.target.getAttribute("value");
@@ -381,6 +391,21 @@
       submit(f);
       return !1;
       // get all checked, concat and submit form.
+    } else if (e.target.matches(".search-category input")) {
+      e.preventDefault(); // if "on" set to 1, if "off" set to 0
+
+      g = e.target;
+      f = g.closest("form");
+      i = f.querySelector('input[name="c"]');
+      if (g.hasAttribute("checked")) {
+        g.removeAttribute("checked");
+        i.removeAttribute("value");
+      } else {
+        g.setAttribute("checked", "checked");
+        i.value = g.value;
+      }
+      submit(f);
+      return !1;
     }
   });
 

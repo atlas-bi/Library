@@ -145,6 +145,7 @@ namespace Atlas_Web.Pages.Reports
         {
             public string Query { get; set; }
             public int Id { get; set; }
+            public string Type { get; set; }
         }
 
         public class ReportMaintLogsData
@@ -309,6 +310,7 @@ namespace Atlas_Web.Pages.Reports
                                 LastModifiedDate = r.LastUpdatedDateDisplayString,
                                 EpicMasterFile = r.EpicMasterFile,
                                 EpicId = r.EpicRecordId,
+                                EpicReleased = r.CertificationTag,
                                 Orphaned = r.OrphanedReportObjectYn,
                                 GitUrl = r.ReportObjectDoc.GitLabProjectUrl,
                                 ExecVisibitliy = r.ReportObjectDoc.ExecutiveVisibilityYn,
@@ -350,8 +352,6 @@ namespace Atlas_Web.Pages.Reports
             ReportFragilityTags = await (from r in _context.ReportObjectDocFragilityTags
                                          where r.ReportObjectId == id
                                          select new ReportFragilityTagData { Name = r.FragilityTag.FragilityTagName, Id = r.FragilityTagId }).ToListAsync();
-
-            ViewData["EpicReleased"] = ReportHelpers.EpicReleased(_context, (int)id);
 
 
             var report_terms = await (from r in _context.ReportObjectDocTerms
@@ -407,7 +407,12 @@ namespace Atlas_Web.Pages.Reports
 
             ReportQuery = await (from r in _context.ReportObjectQueries
                                  where r.ReportObjectId == id
-                                 select new ReportQueryData { Query = r.Query, Id = r.ReportObjectQueryId }).ToListAsync();
+                                 select new ReportQueryData
+                                 {
+                                     Query = r.Query,
+                                     Id = r.ReportObjectQueryId,
+                                     Type = r.ReportObject.EpicMasterFile == "LPP" ? "col" : "sql"
+                                 }).ToListAsync();
 
 
             ComponentQuery = await (from q in _context.ReportObjectQueries
@@ -464,7 +469,9 @@ namespace Atlas_Web.Pages.Reports
             ReportChildren = await (from c in _context.ReportObjectHierarchies
                                     where c.ParentReportObjectId == id
                                        && c.ChildReportObject.EpicMasterFile != "IDK"
-                                    orderby c.Line, c.ChildReportObject.Name
+                                       && (c.ChildReportObject.ReportObjectDoc.Hidden ?? "N") == "N"
+                                       && c.ChildReportObject.DefaultVisibilityYn == "Y"
+                                    orderby c.Line, c.ChildReportObject.EpicMasterFile, c.ChildReportObject.Name
                                     select new ReportChildrenData
                                     {
                                         Name = c.ChildReportObject.DisplayName,
@@ -481,7 +488,11 @@ namespace Atlas_Web.Pages.Reports
                                         Child =
                                             from nc in c.ChildReportObject.ReportObjectHierarchyParentReportObjects
                                             where nc.ChildReportObject.EpicMasterFile != "IDK"
-                                            orderby nc.Line, nc.ChildReportObject.Name
+                                               && nc.ChildReportObject.EpicMasterFile != "LPP"
+                                               && nc.ParentReportObject.EpicMasterFile != "HRX"
+                                               && (nc.ChildReportObject.ReportObjectDoc.Hidden ?? "N") == "N"
+                                               && nc.ChildReportObject.DefaultVisibilityYn == "Y"
+                                            orderby nc.Line, nc.ChildReportObject.EpicMasterFile, nc.ChildReportObject.Name
                                             select new ChildData
                                             {
                                                 Name = nc.ChildReportObject.DisplayName,
@@ -490,7 +501,9 @@ namespace Atlas_Web.Pages.Reports
                                                 GrandChild =
                                                     from gc in nc.ChildReportObject.ReportObjectHierarchyParentReportObjects
                                                     where gc.ChildReportObject.EpicMasterFile != "IDK"
-                                                    orderby gc.Line, gc.ChildReportObject.Name
+                                                       && (gc.ChildReportObject.ReportObjectDoc.Hidden ?? "N") == "N"
+                                                       && gc.ChildReportObject.DefaultVisibilityYn == "Y"
+                                                    orderby gc.Line, gc.ChildReportObject.EpicMasterFile, gc.ChildReportObject.Name
                                                     select new GrandChildData
                                                     {
                                                         Name = gc.ChildReportObject.DisplayName,
@@ -503,7 +516,9 @@ namespace Atlas_Web.Pages.Reports
             ReportParents = await (from p in _context.ReportObjectHierarchies
                                    where p.ChildReportObjectId == id
                                       && p.ParentReportObject.ReportObjectTypeId != 12
-                                   orderby p.Line, p.ParentReportObject.Name
+                                      && (p.ParentReportObject.ReportObjectDoc.Hidden ?? "N") == "N"
+                                      && p.ChildReportObject.DefaultVisibilityYn == "Y"
+                                   orderby p.Line, p.ParentReportObject.EpicMasterFile, p.ParentReportObject.Name
                                    select new ReportChildrenData
                                    {
                                        Name = p.ParentReportObject.DisplayName,

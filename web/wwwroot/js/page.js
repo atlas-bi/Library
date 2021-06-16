@@ -121,13 +121,18 @@
   function relatedReports() {
     var links = document.querySelectorAll(".body-main a[href]"),
       ids = [],
-      re = /[R|r]eports\?id=(\d+)/;
+      re = /[R|r]eports\?id=(\d+)/,
+      m;
 
     for (var x = 0; x < links.length; x++) {
-      var m = links[x].getAttribute("href").match(re);
+      m = links[x].getAttribute("href").match(re);
       if (m) {
         ids.push(m[1]);
       }
+    }
+    m = window.location.href.match(re);
+    if (m) {
+      ids.push(m[1]);
     }
 
     if (ids.length > 0) {

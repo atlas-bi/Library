@@ -258,7 +258,6 @@
     // mirror even
     updateMirror: function updateMirror(b) {
       var a = this;
-      console.log("sean is the best");
       k(function () {
         var data = {
           md: a.mirror.getValue(),

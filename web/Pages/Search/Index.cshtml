@@ -148,7 +148,13 @@
                                     <a  target="_blank" rel="noopener" href="@result.ReportUrl">Run Report</a>
                                 } else 
                                 {
-                                    if(result.EditReportUrl != null && @Model.Permissions.Contains(38))
+                                    if(result.EpicMasterFile=="IDB")
+                                    {
+                                        <div style="position: relative;">
+                                            <span class="tt-top" style="color:grey;position: relative;cursor:default" data-tooltip="Open a related dashboard that uses this.">Run Report</span>
+                                        </div>
+                                    }
+                                    else if(result.EditReportUrl != null && @Model.Permissions.Contains(38))
                                     {
                                         <div style="position: relative;">
                                             <span class="tt-top" style="color:grey;position: relative;white-space: nowrap;cursor:default" data-tooltip="Open in report library.">Run Report</span>

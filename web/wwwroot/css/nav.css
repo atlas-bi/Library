@@ -63,6 +63,7 @@
 }
 
 .nav-link,
+.nav-linkRun,
 .nav-drop {
   cursor: pointer;
   display: inline-block;
@@ -80,19 +81,28 @@
 }
 
 .nav-link svg,
+.nav-linkRun svg,
 .nav-drop svg {
   fill: #575353;
   height: 17px;
   width: 17px;
 }
 
+.sideNav .nav-linkDisabled svg {
+  opacity: 0.7;
+  cursor: default;
+}
+
 .sideNav .nav-link svg {
   fill: #6c757d;
 }
 
-.sideNav .nav-linkDisabled svg {
-  opacity: 0.7;
-  cursor: default;
+.sideNav .nav-linkRun svg {
+  fill: #25c83a;
+}
+
+.sideNav .nav-linkRun:hover svg {
+  fill: #12a127;
 }
 
 .nav-dropBox {

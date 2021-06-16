@@ -26,7 +26,7 @@
 
 FROM microsoft/dotnet:2.2-sdk-alpine3.8 AS build
 WORKDIR /app
-COPY Data_Governance_WebApp.sln .
+COPY web.sln .
 COPY ["./web/web.csproj", "./web/"]
 RUN ls "./web/"
 RUN dotnet restore
@@ -96,7 +96,7 @@ RUN apt-get update || true && \
 WORKDIR /app
 
 # copy and execute database creation and seed scriptsnot
-COPY ["./web/atkas-creation_script.sql", "create.sql"]
+COPY ["./web/atlas-creation_script.sql", "create.sql"]
 COPY ["./web/atlas-demo-seed_script.sql", "seed.sql"]
 
 # sql server takes about 30 seconds to start.

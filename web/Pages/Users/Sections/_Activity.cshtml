@@ -122,13 +122,14 @@
                             <tbody>
                                 @foreach (var u in ViewBag.TopRunReports)
                                 {
-                                    <tr>
-                                        <td><a href="@u.Url">@u.Name</a></td>
-                                        <td>@u.Type</td>
-                                        <td>@u.Hits</td>
-                                        <td>@u.RunTime</td>
-                                        <td>@u.LastRun</td>
-                                    </tr>
+                                <tr>
+                                    <td><a href="@u.Url">@u.Name</a></td>
+                                    <td>@u.Type</td>
+                                    <td>@u.Hits</td>
+                                    @if (u.RunTime != 0) { <td>@u.RunTime</td>}
+                                    else {<td> </td>}                                    
+                                    <td>@u.LastRun</td>
+                                </tr>
                                 }
                             </tbody>
                         </table>

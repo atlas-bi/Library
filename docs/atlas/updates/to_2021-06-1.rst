@@ -1,0 +1,148 @@
+..
+    Atlas of Information Management
+    Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+*******************
+Update to 2021.06.1
+*******************
+
+
+- Add column ``CertificationTag`` to ``dbo.ReportObject``
+- Three tables have a primary key added, and the joint pk removed. Script to create new tables is below. Remove old tables, then rename new to the old name.
+
+.. code:: sql
+
+    USE [atlas]
+    GO
+
+    /****** Object:  Table [app].[ReportObjectDocFragilityTags]    Script Date: 6/2/2021 10:47:59 AM ******/
+    SET ANSI_NULLS ON
+    GO
+
+    SET QUOTED_IDENTIFIER ON
+    GO
+    drop table if exists [app].[ReportObjectDocFragilityTags_New];
+    CREATE TABLE [app].[ReportObjectDocFragilityTags_New](
+        LinkId  [int] IDENTITY(1,1) NOT NULL,
+        [ReportObjectID] [int] NOT NULL,
+        [FragilityTagID] [int] NOT NULL,
+    PRIMARY KEY CLUSTERED 
+    (
+        LinkId ASC
+    )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+    ) ON [PRIMARY]
+    GO
+
+    ALTER TABLE [app].[ReportObjectDocFragilityTags_New]  WITH CHECK ADD FOREIGN KEY([FragilityTagID])
+    REFERENCES [app].[FragilityTag] ([FragilityTagID])
+    ON DELETE CASCADE
+    GO
+
+    ALTER TABLE [app].[ReportObjectDocFragilityTags_New]  WITH CHECK ADD FOREIGN KEY([ReportObjectID])
+    REFERENCES [app].[ReportObject_doc] ([ReportObjectID])
+    ON DELETE CASCADE
+    GO
+
+
+    insert into [app].[ReportObjectDocFragilityTags_New] (FragilityTagID, ReportObjectId)
+    select t.FragilityTagID, t.ReportObjectID
+    from [app].[ReportObjectDocFragilityTags] t
+
+    -- then rename
+
+
+.. code:: sql
+
+    USE [atlas]
+    GO
+
+    /****** Object:  Table [app].[ReportObjectDocMaintenanceLogs]    Script Date: 6/2/2021 12:19:35 PM ******/
+    SET ANSI_NULLS ON
+    GO
+
+    SET QUOTED_IDENTIFIER ON
+    GO
+
+    drop table if exists [app].[ReportObjectDocMaintenanceLogs_New];
+    CREATE TABLE [app].[ReportObjectDocMaintenanceLogs_New](
+        LinkId  [int] IDENTITY(1,1) NOT NULL,
+        [ReportObjectID] [int] NOT NULL,
+        [MaintenanceLogID] [int] NOT NULL,
+    PRIMARY KEY CLUSTERED 
+    (
+        LinkId ASC
+    )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+    ) ON [PRIMARY]
+    GO
+
+    ALTER TABLE [app].[ReportObjectDocMaintenanceLogs_New]  WITH CHECK ADD FOREIGN KEY([MaintenanceLogID])
+    REFERENCES [app].[MaintenanceLog] ([MaintenanceLogID])
+    ON DELETE CASCADE
+    GO
+
+    ALTER TABLE [app].[ReportObjectDocMaintenanceLogs_New]  WITH CHECK ADD FOREIGN KEY([ReportObjectID])
+    REFERENCES [app].[ReportObject_doc] ([ReportObjectID])
+    ON DELETE CASCADE
+    GO
+
+    insert into [app].[ReportObjectDocMaintenanceLogs_New] (ReportObjectID, MaintenanceLogID)
+    select t.[ReportObjectID], t.[MaintenanceLogID]
+    from [app].[ReportObjectDocMaintenanceLogs] t
+
+    -- then rename
+
+.. code:: sql
+
+    USE [atlas]
+    GO
+
+    /****** Object:  Table [app].[ReportObjectDocTerms]    Script Date: 6/2/2021 12:22:48 PM ******/
+    SET ANSI_NULLS ON
+    GO
+
+    SET QUOTED_IDENTIFIER ON
+    GO
+    drop table if exists [app].[ReportObjectDocTerms_New];
+    CREATE TABLE [app].[ReportObjectDocTerms_New](
+        LinkId  [int] IDENTITY(1,1) NOT NULL,
+        [ReportObjectID] [int] NOT NULL,
+        [TermId] [int] NOT NULL,
+    PRIMARY KEY CLUSTERED 
+    (
+        LinkId ASC
+    )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+    ) ON [PRIMARY]
+    GO
+
+    ALTER TABLE [app].[ReportObjectDocTerms_New]  WITH CHECK ADD FOREIGN KEY([ReportObjectID])
+    REFERENCES [app].[ReportObject_doc] ([ReportObjectID])
+    ON DELETE CASCADE
+    GO
+
+    ALTER TABLE [app].[ReportObjectDocTerms_New]  WITH CHECK ADD FOREIGN KEY([TermId])
+    REFERENCES [app].[Term] ([TermId])
+    ON DELETE CASCADE
+    GO
+
+
+    insert into [app].[ReportObjectDocTerms_New] (ReportObjectID, [TermId])
+    select t.[ReportObjectID], t.[TermId]
+    from [app].[ReportObjectDocTerms] t
+
+    -- then rename
+
+
+- Update search procedures from database creation script

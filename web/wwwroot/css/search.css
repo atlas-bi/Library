@@ -207,7 +207,7 @@
   border-bottom: 3px solid #fff;
   bottom: 0;
   content: "";
-  height: 50px;
+  height: 20px;
   left: -30px;
   margin-top: -30px;
   position: absolute;
@@ -225,7 +225,7 @@
   border-top-left-radius: inherit;
   flex: 0 0 25%;
   max-width: 25%;
-  min-height: 800px;
+  min-height: 1000px;
   padding-left: 0;
   padding-right: 0;
 }
@@ -236,7 +236,7 @@
   border-top-right-radius: inherit;
   flex: 0 0 75%;
   max-width: 75%;
-  min-height: 800px;
+  min-height: 1000px;
   padding-left: 0;
   padding-right: 0;
 }

@@ -42,7 +42,16 @@ Requirements
       While Atlas will run on any OS that has **.Net 5** installed (check out our `Ubuntu docker file <https://github.com/Riverside-Healthcare/Atlas-of-Information-Management/blob/master/Dockerfile>`_!), Atlas authentication uses IIS Windows Authentication.
       Also, using Windows Server 2019 has HTTP2, which allows greater site speed.
 
-      Ensure IIS has server roles needed for web deploy and web management service installed and started. Microsoft has a few `examples <https://docs.microsoft.com/en-us/aspnet/web-forms/overview/deployment/visual-studio-web-deployment/deploying-to-iis>`_.
+      **If publishing from Visual Studio..**
+
+      Ensure IIS has server roles needed for `web deploy and web management service <https://docs.microsoft.com/en-us/aspnet/web-forms/overview/deployment/visual-studio-web-deployment/deploying-to-iis>`_ installed and started. Microsoft has a few `examples <https://docs.microsoft.com/en-us/aspnet/web-forms/overview/deployment/visual-studio-web-deployment/deploying-to-iis>`_.
+
+      By default the Web Deploy will not install correctly. "Change" the install in `Control Panel / Programs / Programs and Features` and ensure the package is completely installed.
+
+      .. figure:: ../images/requirements/install_web_deploy.png
+         :alt: Web Deploy
+
+      Then, restart/start services `Web Deployment Agent Service` and `Web Management Service`.
 
    .. admonition:: Deploy Atlas
       :class: hint

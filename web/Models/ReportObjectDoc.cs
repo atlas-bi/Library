@@ -34,6 +34,7 @@ namespace Atlas_Web.Models
         public string EnabledForHyperspace { get; set; }
         public string DoNotPurge { get; set; }
         public string Hidden { get; set; }
+        public string DeveloperNotes { get; set; }
 
         public virtual EstimatedRunFrequency EstimatedRunFrequency { get; set; }
         public virtual Fragility Fragility { get; set; }

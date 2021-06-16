@@ -47,6 +47,7 @@ namespace Atlas_Web.Models
         public DateTime? LastLoadDate { get; set; }
         public string RepositoryDescription { get; set; }
         public string EpicReleased { get; set; }
+        public string CertificationTag { get; set; }
 
         public virtual User AuthorUser { get; set; }
         public virtual User LastModifiedByUser { get; set; }

@@ -219,15 +219,18 @@
         );
         q.setRequestHeader("X-Requested-With", "XMLHttpRequest");
         q.send();
-
+        // clear input
+        i.value = "";
+        e.target.querySelector(".submit").innerHTML = "";
         q.onload = function () {
           var div = d.createElement("div");
           div.classList.add("fav-folder");
+          div.classList.add("drg");
           div.setAttribute("folder-id", q.responseText);
           div.innerHTML =
-            '<i class="fas fa-folder mr-3"></i>' +
+            '<i class="fas fa-folder"></i><span>' +
             v +
-            '<div class="folder-grip"><i class="fas fa-grip-lines fa-folder"></i></div>';
+            '</span><div class="fav-count">0</div><div class="folder-grip drg-hdl"><i class="fas fa-grip-lines"></i></div>';
           var nf = f.getElementsByClassName("fav-folder-new")[0];
           nf.parentElement.insertBefore(div, nf);
           s.innerHTML = "";

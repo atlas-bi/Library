@@ -36,6 +36,7 @@ namespace Atlas_Web.Models
         public string Hidden { get; set; }
 
         public virtual User AnalyticsOwner { get; set; }
+        public virtual DpDataInitiative DataInitiative { get; set; }
         public virtual User DataManager { get; set; }
         public virtual User ExecutiveOwner { get; set; }
         public virtual FinancialImpact FinancialImpactNavigation { get; set; }

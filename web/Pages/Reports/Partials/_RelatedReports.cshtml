@@ -17,11 +17,12 @@
 *@
 
 <div>
-    @if(ViewBag.RelatedReports.Count > 0){
-        <h4>Related Reports</h4>
-        @foreach (var report in ViewBag.RelatedReports)
+        @if (ViewBag.RelatedReports.Count > 0)
         {
-            <a href="/reports?id=@report.Id">@report.Name.Replace('_', ' ')</a>
+            <h4>Related Reports</h4>
+            @foreach (var report in ViewBag.RelatedReports)
+            {
+                <a href="/Reports?id=@report.Id">@report.Name.Replace('_', ' ')</a>
+            }
         }
-    } 
 </div>

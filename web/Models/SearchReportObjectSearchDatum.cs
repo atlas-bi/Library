@@ -37,6 +37,7 @@ namespace Atlas_Web.Models
         public string DocHypeEnabled { get; set; }
         public string DocDoNotPurge { get; set; }
         public string DocHidden { get; set; }
+        public string CertificationTag { get; set; }
         public int? TwoYearRuns { get; set; }
         public int? OneYearRuns { get; set; }
         public int? SixMonthsRuns { get; set; }

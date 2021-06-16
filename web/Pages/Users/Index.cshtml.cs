@@ -305,30 +305,26 @@ namespace Atlas_Web.Pages.Users
             //}
         }
 
-        public ActionResult OnPostUpdateFavoriteFolder([FromBody] dynamic package)
+        public async Task<ActionResult> OnPostUpdateFavoriteFolder()
         {
-            try
+            var body = await new System.IO.StreamReader(Request.Body).ReadToEndAsync();
+            var package = JObject.Parse(body);
+
+            var MyUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
+            var FavoriteId = (int)package["FavoriteId"];
+            var FolderId = (int)package["FolderId"];
+            if (FolderId == 0)
             {
-                var MyUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
-                var FavoriteId = (int)package.FavoriteId;
-                var FolderId = (int)package.FolderId;
-                if (FolderId == 0)
-                {
-                    _context.UserFavorites.Where(x => x.UserFavoritesId == FavoriteId && x.UserId == MyUser.UserId).FirstOrDefault().FolderId = null;
-                }
-                else
-                {
-                    _context.UserFavorites.Where(x => x.UserFavoritesId == FavoriteId && x.UserId == MyUser.UserId).FirstOrDefault().FolderId = FolderId;
-                }
-                _cache.Remove("FavoriteFolders-" + MyUser.UserId);
-                _cache.Remove("FavoriteReports-" + MyUser.UserId);
-                _context.SaveChanges();
-                return Content("ok");
+                _context.UserFavorites.Where(x => x.UserFavoritesId == FavoriteId && x.UserId == MyUser.UserId).FirstOrDefault().FolderId = null;
             }
-            catch
+            else
             {
-                return Content("error");
+                _context.UserFavorites.Where(x => x.UserFavoritesId == FavoriteId && x.UserId == MyUser.UserId).FirstOrDefault().FolderId = FolderId;
             }
+            _cache.Remove("FavoriteFolders-" + MyUser.UserId);
+            _cache.Remove("FavoriteReports-" + MyUser.UserId);
+            _context.SaveChanges();
+            return Content("ok");
         }
 
         public ActionResult OnPostReorderFolders([FromBody] dynamic package)
@@ -455,7 +451,7 @@ namespace Atlas_Web.Pages.Users
                                 FolderId = q.FolderId,
                                 FolderName = q.Folder.FolderName,
                                 ItemRank = q.ItemRank,
-                                EpicReleased = q.ItemType == "report" ? ReportHelpers.EpicReleased(_context, (int)q.ItemId) : "",
+                                EpicReleased = ro.CertificationTag,
                                 FolderRank = q.Folder.FolderRank,
                                 Description = (ro.ReportObjectDoc.DeveloperDescription ?? ro.Description ?? ro.DetailedDescription ?? ro.ReportObjectDoc.KeyAssumptions
                                                ?? tm.Summary ?? tm.TechnicalDefinition
@@ -961,6 +957,8 @@ namespace Atlas_Web.Pages.Users
                         return (from d in _context.ReportObjectTopRuns
                                 where d.RunUserId == UserId
                                    && d.ReportObjectTypeId != 21
+                                   && d.ReportObjectTypeId != 39  // extensions
+                                   && d.ReportObjectTypeId != 40  // columns
                                 orderby d.Runs descending
                                 select new ReportRunData
                                 {
