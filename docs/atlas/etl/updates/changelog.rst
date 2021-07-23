@@ -19,6 +19,15 @@
 Changelog
 *********
 
+Version 2021.07.1
+-----------------
+
+- Added SlicerDicer session info to ETL
+- Updated certification tags to include self-service
+- Fixed Tableau rundata
+- Updated hierarchies for sessions
+- Added Clarity tags and tag memberships
+
 Version 2021.06.1
 -----------------
 

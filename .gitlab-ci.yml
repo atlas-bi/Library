@@ -35,7 +35,6 @@ precommit:
     - python3 -m ensurepip
     - pip3 install --no-cache --upgrade pip setuptools
     - python3 -m pip install pre-commit
-    - rm package-lock.json
     - dotnet restore "web/web.csproj"
     - dotnet --version
   script:
@@ -59,6 +58,7 @@ build_web:
   - public
  script:
   - cd "web"
+  - sed -i '$s/}/,\n"banner_text":{"site_message":"Atlas Test"}}/' appsettings.json
   - dotnet publish -r win-x86 --self-contained false -c Release -o out
  artifacts:
   paths: ["/builds/atlas/web/atlas-dotnet/web/out/"]

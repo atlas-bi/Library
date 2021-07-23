@@ -45,6 +45,15 @@
     atmr,
     a = document.createElement("a");
 
+  /**
+   * scroll to top when clicking search button
+   */
+  document.addEventListener("click", function (e) {
+    if (e.target.closest("#nav-search")) {
+      document.documentElement.scrollTop = document.body.scrollTop = 0;
+    }
+  });
+
   var oldHref = w.location.pathname.toLowerCase().startsWith("/search")
     ? "/"
     : w.location.href;
@@ -107,7 +116,6 @@
         (url || "s=" + value + url_sf + url_f + url_h + url_t + url_o + url_c),
       u = s.replace("/Search?s=", "");
     start = new Date();
-    console.log(s);
     if (
       (typeof value !== "undefined" && value !== null && value.length > 0) ||
       typeof url !== "undefined"
@@ -322,7 +330,7 @@
       i.value = i.value.replace(/,$/g, "").replace(/^,/g, "");
 
       // find 15, 36, 38, but not 3 and check the box for "show hidden type"
-      if (i.value.match(/(?:36|38|15|4|18)/g)) {
+      if (i.value.match(/(?:15|4,18)/g)) {
         document.querySelector('input[name="t"]').setAttribute("value", "1");
         document
           .querySelector('input[name="t"]')

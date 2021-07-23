@@ -62,7 +62,7 @@
       } // close modal
       else if (
         e.target.getAttribute("data-dismiss") == "mdl" ||
-        e.target.matches(".mdl")
+        e.target.matches(".mdl:not(#editModal)")
       ) {
         // close closest modal
         closeModals(e.target.closest(".mdl"));

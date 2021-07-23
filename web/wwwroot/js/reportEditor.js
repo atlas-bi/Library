@@ -222,4 +222,91 @@
       d.getElementsByClassName("new-term-def")[0].innerHTML = "";
     }
   });
+
+  /* projects */
+
+  document.querySelector("#editModal").addEventListener("click", function (e) {
+    var q,
+      data,
+      form,
+      url,
+      termsContainer = document.getElementById(
+        "report-editor-currentprojects-container"
+      );
+    if (e.target.closest("#report-editor-remove-project-form")) {
+      e.preventDefault();
+
+      form = e.target.closest("#report-editor-remove-project-form");
+      url = form.getAttribute("href");
+
+      q = new XMLHttpRequest();
+      q.open("get", url, true);
+      q.setRequestHeader("Content-Type", "text/plain;charset=UTF-8`");
+      q.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+      q.send();
+      q.onload = function () {
+        data = q.responseText;
+
+        if (data.trim().length == 0) {
+          termsContainer.innerHTML = "";
+        } else {
+          termsContainer.innerHTML = data;
+          // render markdown
+          document.dispatchEvent(new CustomEvent("ajax"));
+        }
+        document.getElementById("editorMdl-titleSave").style.visibility =
+          "visible";
+        setTimeout(function () {
+          document
+            .getElementById("editorMdl-titleSave")
+            .style.removeProperty("visibility");
+        }, 750);
+      };
+    }
+  });
+
+  d.querySelector("#editModal").addEventListener("submit", function (e) {
+    var q,
+      data,
+      form,
+      url,
+      termsContainer = d.getElementById(
+        "report-editor-currentprojects-container"
+      );
+    if (
+      e.target.closest("#report-editor-add-new-data-project-form") ||
+      e.target.closest("#report-editor-edit-project-form")
+    ) {
+      e.preventDefault();
+
+      form =
+        e.target.closest("#report-editor-add-new-data-project-form") ||
+        e.target.closest("#report-editor-edit-project-form");
+      url = form.getAttribute("action");
+
+      q = new XMLHttpRequest();
+      q.open("post", form.getAttribute("action") + "&" + serialize(form), true);
+      q.setRequestHeader("Content-Type", "text/plain;charset=UTF-8`");
+      q.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+      q.send();
+      q.onload = function () {
+        data = q.responseText;
+
+        if (data.trim().length == 0) {
+          termsContainer.innerHTML = "";
+        } else {
+          termsContainer.innerHTML = data;
+          // render markdown
+          d.dispatchEvent(new CustomEvent("ajax"));
+        }
+        d.getElementById("editorMdl-titleSave").style.visibility = "visible";
+        setTimeout(function () {
+          d.getElementById("editorMdl-titleSave").style.removeProperty(
+            "visibility"
+          );
+        }, 750);
+      };
+      form.reset();
+    }
+  });
 })();

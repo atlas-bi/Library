@@ -90,6 +90,7 @@ Atlas was created by the Riverside Healthcare Analytics team -
 * `Scott Manley <https://github.com/Scott-Manley>`_
 * `Madeline Matz <mailto:mmatz@RHC.net>`_
 * `Christopher Pickering <https://github.com/christopherpickering>`_
+* `Sean Pickering <https://github.com/Sean-Pickering>`_
 * `Dan Ryan <https://github.com/danryan1011>`_
 * `Richard Schissler <https://github.com/schiss152>`_
 * `Eric Shultz <https://github.com/eshultz>`_

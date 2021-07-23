@@ -120,6 +120,12 @@ namespace Atlas_Web.Pages.Reports
             public string Name { get; set; }
             public int Id { get; set; }
         }
+
+        public class ReportTagData
+        {
+            public string Name { get; set; }
+            public int Id { get; set; }
+        }
         public class MaintStatus
         {
             public string Required { get; set; }
@@ -184,6 +190,15 @@ namespace Atlas_Web.Pages.Reports
             public IEnumerable<ChildData> Child { get; set; }
         }
 
+        public class ReportProjectData
+        {
+            public string Name { get; set; }
+            public int? Id { get; set; }
+            public string Description { get; set; }
+            public int AnnotationId { get; set; }
+            public int? ReportId { get; set; }
+        }
+
         public class ChildImgData
         {
             public string Src { get; set; }
@@ -240,9 +255,11 @@ namespace Atlas_Web.Pages.Reports
         [BindProperty] public int[] SelectedFragilityTagIds { get; set; }
         [BindProperty] public ReportObjectDocTerm NewTermLink { get; set; }
         [BindProperty] public Term NewTerm { get; set; }
+        [BindProperty] public DpReportAnnotation DpReportAnnotation { get; set; }
         [BindProperty] public ReportManageEngineTicket ManageEngineTicket { get; set; }
         public ReportData Report { get; set; }
         public List<ReportFragilityTagData> ReportFragilityTags { get; set; }
+        public List<ReportTagData> ReportTags { get; set; }
         public ReportObjectImagesDoc RemovedImage { get; set; }
         public IEnumerable<ReportTermsData> ReportTerms { get; set; }
         public IEnumerable<ReportTermsData> ViewerReportTerms { get; set; }
@@ -253,7 +270,7 @@ namespace Atlas_Web.Pages.Reports
         public IEnumerable<ReportChildrenData> ReportParents { get; set; }
         public IEnumerable<ManageEngineTicketsData> ManageEngineTickets { get; set; }
         public IEnumerable<Group> Groups { get; set; }
-        public IEnumerable<ReportChildrenData> RelatedProjects { get; set; }
+        public IEnumerable<ReportProjectData> RelatedProjects { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -353,6 +370,10 @@ namespace Atlas_Web.Pages.Reports
                                          where r.ReportObjectId == id
                                          select new ReportFragilityTagData { Name = r.FragilityTag.FragilityTagName, Id = r.FragilityTagId }).ToListAsync();
 
+            ReportTags = await (from r in _context.ReportObjectTagMemberships
+                                where r.ReportObjectId == id
+                                select new ReportTagData { Name = r.Tag.TagName, Id = r.TagId }).ToListAsync();
+
 
             var report_terms = await (from r in _context.ReportObjectDocTerms
                                       where r.ReportObjectId == id
@@ -403,6 +424,7 @@ namespace Atlas_Web.Pages.Reports
 
             ViewerReportTerms = report_terms.Union(child_report_terms).Union(grandchild_report_terms).Union(great_grandchild_report_terms).Distinct().Select(x => new ReportTermsData { Name = x.Name, Id = x.Id, Summary = x.Summary, Definition = x.Definition }).ToList();
             ReportTerms = report_terms.Select(x => new ReportTermsData { Name = x.Name, Id = x.Id, Summary = x.Summary, Definition = x.Definition, ReportId = id }).ToList();
+
 
 
             ReportQuery = await (from r in _context.ReportObjectQueries
@@ -513,37 +535,62 @@ namespace Atlas_Web.Pages.Reports
                                             }
                                     }).ToListAsync();
 
-            ReportParents = await (from p in _context.ReportObjectHierarchies
-                                   where p.ChildReportObjectId == id
-                                      && p.ParentReportObject.ReportObjectTypeId != 12
-                                      && (p.ParentReportObject.ReportObjectDoc.Hidden ?? "N") == "N"
-                                      && p.ChildReportObject.DefaultVisibilityYn == "Y"
-                                   orderby p.Line, p.ParentReportObject.EpicMasterFile, p.ParentReportObject.Name
-                                   select new ReportChildrenData
-                                   {
-                                       Name = p.ParentReportObject.DisplayName,
-                                       Id = p.ParentReportObjectId,
-                                       Img =
-                                           from img in p.ParentReportObject.ReportObjectImagesDocs
-                                           orderby img.ImageOrdinal
-                                           select new ChildImgData
-                                           {
-                                               Src = "data/img?id=" + img.ImageId,
-                                               Id = img.ImageId
-                                           },
-                                   }).ToListAsync();
+            var ReportParentsPartOne = await (from p in _context.ReportObjectHierarchies
+                                              where p.ChildReportObjectId == id
+                                                 && p.ParentReportObject.ReportObjectTypeId != 12 //Personal dashboard
+                                                 && (p.ParentReportObject.ReportObjectDoc.Hidden ?? "N") == "N"
+                                                 && p.ChildReportObject.DefaultVisibilityYn == "Y"
+                                              orderby p.Line, p.ParentReportObject.EpicMasterFile, p.ParentReportObject.Name
+                                              select new ReportChildrenData
+                                              {
+                                                  Name = p.ParentReportObject.DisplayName,
+                                                  Id = p.ParentReportObjectId,
+                                                  Img =
+                                                      from img in p.ParentReportObject.ReportObjectImagesDocs
+                                                      orderby img.ImageOrdinal
+                                                      select new ChildImgData
+                                                      {
+                                                          Src = "data/img?id=" + img.ImageId,
+                                                          Id = img.ImageId
+                                                      },
+                                              }).ToListAsync();
+
+
+            var ReportParentsPartTwo = await (from gc in _context.ReportObjectHierarchies
+                                              join ggc in _context.ReportObjectHierarchies on gc.ChildReportObjectId equals ggc.ParentReportObjectId
+                                              where ggc.ChildReportObjectId == id
+                                                 && ggc.ChildReportObject.EpicMasterFile == "IDN"
+                                                 && gc.ParentReportObject.EpicMasterFile == "IDB"
+                                                 && (gc.ParentReportObject.ReportObjectDoc.Hidden ?? "N") == "N"
+                                              select new ReportChildrenData
+                                              {
+                                                  Name = gc.ParentReportObject.DisplayName,
+                                                  Id = gc.ParentReportObjectId,
+                                                  Img =
+                                                     from img in gc.ParentReportObject.ReportObjectImagesDocs
+                                                     orderby img.ImageOrdinal
+                                                     select new ChildImgData
+                                                     {
+                                                         Src = "data/img?id=" + img.ImageId,
+                                                         Id = img.ImageId
+                                                     }
+                                              }).ToListAsync();
+
+            ReportParents = ReportParentsPartOne.Union(ReportParentsPartTwo).Select(x => new ReportChildrenData { Name = x.Name, Id = x.Id, Img = x.Img }).ToList();
 
             RelatedProjects = await (from p in _context.DpReportAnnotations
                                      where p.ReportId == id
                                      orderby p.Report.Name
-                                     select new ReportChildrenData
+                                     select new ReportProjectData
                                      {
                                          Name = p.DataProject.Name,
                                          Id = (int)p.DataProjectId,
-                                         Description = p.Annotation
+                                         Description = p.Annotation,
+                                         AnnotationId = p.ReportAnnotationId,
+                                         ReportId = p.ReportId
                                      }).ToListAsync();
 
-
+            ViewData["RelatedProjects"] = RelatedProjects;
 
             Permissions = UserHelpers.GetUserPermissions(_cache, _context, User.Identity.Name);
             ViewData["Permissions"] = Permissions;
@@ -785,6 +832,126 @@ namespace Atlas_Web.Pages.Reports
             return Content("success");
         }
 
+        public async Task<ActionResult> OnGetDeleteLinkedProject(int id)
+        {
+
+            var checkpoint = UserHelpers.CheckUserPermissions(_cache, _context, User.Identity.Name, 28);
+            var ta = _context.DpReportAnnotations.Where(x => x.ReportAnnotationId == id).FirstOrDefault().ReportId;
+            if (checkpoint)
+            {
+                _context.DpReportAnnotations.Remove(_context.DpReportAnnotations.Where(x => x.ReportAnnotationId == id).FirstOrDefault());
+                await _context.SaveChangesAsync();
+            }
+
+            var MyUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
+
+
+            ViewData["RelatedProjects"] = await (from r in _context.DpReportAnnotations
+                                                 where r.ReportId == ta
+                                                 join q in (from f in _context.UserFavorites
+                                                            where f.ItemType.ToLower() == "project"
+                                                               && f.UserId == MyUser.UserId
+                                                            select new { f.ItemId })
+                                               on r.ReportId equals q.ItemId into tmp
+                                                 from rfi in tmp.DefaultIfEmpty()
+                                                 orderby r.Rank, r.Report.Name
+                                                 select new ReportProjectData
+                                                 {
+                                                     AnnotationId = r.ReportAnnotationId,
+                                                     Id = r.DataProjectId,
+                                                     Name = r.DataProject.Name,
+                                                     Description = r.Annotation,
+                                                     ReportId = r.ReportId,
+                                                 }).ToListAsync();
+            //return Partial((".+?"));
+            return new PartialViewResult()
+            {
+                ViewName = "Editor/_CurrentProjects",
+                ViewData = ViewData
+            };
+        }
+
+        public async Task<ActionResult> OnPostAddLinkedProject()
+        {
+            var checkpoint = UserHelpers.CheckUserPermissions(_cache, _context, User.Identity.Name, 28);
+            if (ModelState.IsValid && DpReportAnnotation.DataProjectId > 0 && DpReportAnnotation.ReportId > 0 && checkpoint)
+            {
+                if (!_context.DpReportAnnotations.Any(x => x.ReportId == DpReportAnnotation.ReportId && x.DataProjectId == DpReportAnnotation.DataProjectId))
+                {
+                    _context.Add(DpReportAnnotation);
+
+                    // update last update date on report. 
+                    _context.DpDataProjects.Where(d => d.DataProjectId == DpReportAnnotation.DataProjectId).FirstOrDefault().LastUpdateDate = DateTime.Now;
+                    _context.DpDataProjects.Where(d => d.DataProjectId == DpReportAnnotation.DataProjectId).FirstOrDefault().LastUpdateUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name).UserId;
+                    await _context.SaveChangesAsync();
+                }
+            }
+
+            var MyUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
+
+            ViewData["RelatedProjects"] = await (from r in _context.DpReportAnnotations
+                                                 where r.ReportId == DpReportAnnotation.ReportId
+                                                 join q in (from f in _context.UserFavorites
+                                                            where f.ItemType.ToLower() == "project"
+                                                               && f.UserId == MyUser.UserId
+                                                            select new { f.ItemId })
+                                               on r.ReportId equals q.ItemId into tmp
+                                                 from rfi in tmp.DefaultIfEmpty()
+                                                 orderby r.Rank, r.Report.Name
+                                                 select new ReportProjectData
+                                                 {
+                                                     AnnotationId = r.ReportAnnotationId,
+                                                     Id = r.DataProjectId,
+                                                     Name = r.DataProject.Name,
+                                                     Description = r.Annotation,
+                                                     ReportId = r.ReportId,
+                                                 }).ToListAsync();
+
+            return new PartialViewResult()
+            {
+                ViewName = "Editor/_CurrentProjects",
+                ViewData = ViewData
+            };
+        }
+
+        public async Task<ActionResult> OnPostEditLinkedProject()
+        {
+
+            var checkpoint = UserHelpers.CheckUserPermissions(_cache, _context, User.Identity.Name, 28);
+            if (ModelState.IsValid && DpReportAnnotation.ReportAnnotationId > 0 && checkpoint)
+            {
+                var q = _context.DpReportAnnotations.Where(x => x.ReportAnnotationId == DpReportAnnotation.ReportAnnotationId).FirstOrDefault();
+                q.Annotation = DpReportAnnotation.Annotation;
+                q.Rank = DpReportAnnotation.Rank;
+                await _context.SaveChangesAsync();
+            }
+
+            var MyUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
+
+            ViewData["RelatedProjects"] = await (from r in _context.DpReportAnnotations
+                                                 where r.ReportId == DpReportAnnotation.ReportId
+                                                 join q in (from f in _context.UserFavorites
+                                                            where f.ItemType.ToLower() == "project"
+                                                               && f.UserId == MyUser.UserId
+                                                            select new { f.ItemId })
+                                              on r.ReportId equals q.ItemId into tmp
+                                                 from rfi in tmp.DefaultIfEmpty()
+                                                 orderby r.Rank, r.Report.Name
+                                                 select new ReportProjectData
+                                                 {
+                                                     AnnotationId = r.ReportAnnotationId,
+                                                     Id = r.DataProjectId,
+                                                     Name = r.DataProject.Name,
+                                                     Description = r.Annotation,
+                                                     ReportId = r.ReportId,
+                                                 }).ToListAsync();
+
+            return new PartialViewResult()
+            {
+                ViewName = "Editor/_CurrentProjects",
+                ViewData = ViewData
+            };
+        }
         public async Task<ActionResult> OnPostAddTermLink()
         {
             if (!ModelState.IsValid)

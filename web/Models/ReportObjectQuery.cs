@@ -12,6 +12,7 @@ namespace Atlas_Web.Models
         public string Query { get; set; }
         public DateTime? LastLoadDate { get; set; }
         public string SourceServer { get; set; }
+        public string Language { get; set; }
 
         public virtual ReportObject ReportObject { get; set; }
     }

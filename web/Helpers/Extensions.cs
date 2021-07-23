@@ -390,7 +390,7 @@ namespace Atlas_Web.Helpers
         {
             string Url = null;
             bool Epic = IsEpic(Context);
-            if (ReportType == "SSRS Report" && !Epic)
+            if ((ReportType == "SSRS Report" || ReportType == "SSRS File") && !Epic)
             {
                 Url = "https://" + SourceServer + "." + Domain + "/Reports/manage/catalogitem/properties" + ReportServerPath;
             }
@@ -404,7 +404,7 @@ namespace Atlas_Web.Helpers
             string ReportName = Name.Replace("|", " ").Replace("=", " ");
             bool Epic = IsEpic(Context);
 
-            if (((Url != "" && Url != null) || (ReportType != "SSRS Report" && Epic && ReportType != "Source Radar Dashboard Component")) && ReportType != "Epic-Crystal Report")
+            if (((Url != "" && Url != null) || (ReportType != "SSRS Report" && ReportType != "SSRS File" && Epic && ReportType != "Source Radar Dashboard Component")) && ReportType != "Epic-Crystal Report")
             {
                 if (EpicMasterFile == "HRX")
                 {
@@ -414,7 +414,7 @@ namespace Atlas_Web.Helpers
                 {
                     NewUrl = "EpicAct:WM_DASHBOARD_LAUNCHER,runparams:" + EpicRecordId;
                 }
-                else if ((ReportType == "SSRS Report" || ReportType == "Tableau Workbook" || ReportType == "Tableau Dashboard") && Epic)
+                else if ((ReportType == "SSRS Report" || ReportType == "SSRS File" || ReportType == "Tableau Workbook" || ReportType == "Tableau Dashboard") && Epic)
                 {
                     if (EnabledForHyperspace == "Y")
                     {

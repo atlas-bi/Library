@@ -129,6 +129,8 @@
                                     {<span class="srch-fieldOrange">@result.EpicReleased</span>}
                                     @if (result.EpicReleased == "High Risk")
                                     {<span class="srch-fieldRed">@result.EpicReleased</span>}
+                                    @if (result.EpicReleased == "Self-Service")
+                                    {<span class="srch-fieldBlue">@result.EpicReleased</span>}
                             
                                 @if (result.Orphaned > 0)
                                 {<span class="srch-field">Orphaned</span>}

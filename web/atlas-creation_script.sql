@@ -1389,10 +1389,13 @@ PRIMARY KEY CLUSTERED
 ) ON [PRIMARY]
 GO
 
+
 SET ANSI_NULLS ON
 GO
+
 SET QUOTED_IDENTIFIER ON
 GO
+
 CREATE TABLE [dbo].[ReportObject](
     [ReportObjectID] [int] IDENTITY(1,1) NOT NULL,
     [ReportObjectBizKey] [nvarchar](max) NULL,
@@ -1418,12 +1421,33 @@ CREATE TABLE [dbo].[ReportObject](
     [LastLoadDate] [datetime] NULL,
     [RepositoryDescription] [nvarchar](max) NULL,
     [EpicReleased] [nvarchar](1) NULL,
+    [CertificationTag] [nvarchar](max) NULL,
+    [Availability] [nvarchar](max) NULL,
 PRIMARY KEY CLUSTERED 
 (
     [ReportObjectID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+
 GO
+
+ALTER TABLE [dbo].[ReportObject] ADD  DEFAULT ('N') FOR [OrphanedReportObjectYN]
+GO
+
+ALTER TABLE [dbo].[ReportObject]  WITH CHECK ADD FOREIGN KEY([AuthorUserID])
+REFERENCES [dbo].[User] ([UserID])
+GO
+
+ALTER TABLE [dbo].[ReportObject]  WITH CHECK ADD FOREIGN KEY([LastModifiedByUserID])
+REFERENCES [dbo].[User] ([UserID])
+GO
+
+ALTER TABLE [dbo].[ReportObject]  WITH CHECK ADD FOREIGN KEY([ReportObjectTypeID])
+REFERENCES [dbo].[ReportObjectType] ([ReportObjectTypeID])
+ON DELETE SET NULL
+GO
+
+
 
 SET ANSI_NULLS ON
 GO
@@ -1511,6 +1535,8 @@ CREATE TABLE [dbo].[ReportObjectType](
     [Name] [nvarchar](max) NOT NULL,
     [DefaultEpicMasterFile] [nvarchar](3) NULL,
     [LastLoadDate] [datetime] NULL,
+    [ShortName] [nvarchar](max) NULL,
+    [Visible] [nvarchar](1) NULL,
 PRIMARY KEY CLUSTERED 
 (
     [ReportObjectTypeID] ASC
@@ -2540,14 +2566,11 @@ GO
 
 USE [atlas]
 GO
-
-/****** Object:  StoredProcedure [app].[Search_UpdateBasicSearchData]    Script Date: 6/16/2021 11:54:25 AM ******/
+/****** Object:  StoredProcedure [app].[Search_UpdateBasicSearchData]    Script Date: 7/23/2021 9:49:04 AM ******/
 SET ANSI_NULLS ON
 GO
-
 SET QUOTED_IDENTIFIER ON
 GO
-
 -- =============================================
 -- Author:      Christopher Pickering
 -- Create date: 3/19/20
@@ -2560,6 +2583,11 @@ BEGIN
     SET NOCOUNT ON;
     -- create view of current data
     drop table if exists #myTemp;
+    drop table if exists #VisibleReportTypes;
+
+SELECT ReportObjectTypeID into #VisibleReportTypes
+FROM [dbo].[ReportObjectType]
+WHERE Visible = 'Y';
 
     select * into #myTemp from (
         select
@@ -2574,16 +2602,12 @@ BEGIN
                  when DefaultVisibilityYN = 'Y' and isnull([DocHidden],'N') = 'Y'  then 1 
                  when DefaultVisibilityYN = 'N' and isnull([DocHidden],'N') = 'N'  then 1 
                  when DefaultVisibilityYN = 'N' and isnull([DocHidden],'N') = 'Y'  then 0 end as [Hidden],
-            case when ReportObjectTypeID IN (3, 17, 20, 21, 28, 36, 37) then 0 else 1 end VisibleType,
+            case when ReportObjectTypeID in (select * from #VisibleReportTypes) then 0 else 1 end VisibleType,
             case when OrphanedReportObjectYN = 'Y' then 1 else 0 end Orphaned,
             certificationTag
         from
             app.Search_ReportObjectSearchData as r
         where 1=1
-    --      OrphanedReportObjectYN = 'N'
-    --      and DefaultVisibilityYN = 'Y'
-    --      and ([DocHidden] is null or [DocHidden] = 'N')
-    --      and ReportObjectTypeID IN (3, 17, 20, 21, 28)
             and [ColumnName] = 'Name'
 
         union all
@@ -2601,16 +2625,12 @@ BEGIN
                  when DefaultVisibilityYN = 'Y' and isnull([DocHidden],'N') = 'Y'  then 1 
                  when DefaultVisibilityYN = 'N' and isnull([DocHidden],'N') = 'N'  then 1 
                  when DefaultVisibilityYN = 'N' and isnull([DocHidden],'N') = 'Y'  then 0 end as [Hidden],
-            case when ReportObjectTypeID IN (3, 17, 20, 21, 28, 36, 37) then 0 else 1 end VisibleType,
+            case when ReportObjectTypeID IN (select * from #VisibleReportTypes) then 0 else 1 end VisibleType,
             case when OrphanedReportObjectYN = 'Y' then 1 else 0 end Orphaned,
             certificationTag
         from
             app.Search_ReportObjectSearchData as r
         where 1=1
-    --      OrphanedReportObjectYN = 'N'
-    --      and DefaultVisibilityYN = 'Y'
-    --      and ([DocHidden] is null or [DocHidden] = 'N')
-    --      and ReportObjectTypeID IN (3, 17, 20, 21, 28)
             and [ColumnName] = 'DisplayTitle'
 
         union all
@@ -2626,16 +2646,12 @@ BEGIN
                  when DefaultVisibilityYN = 'Y' and isnull([DocHidden],'N') = 'Y'  then 1 
                  when DefaultVisibilityYN = 'N' and isnull([DocHidden],'N') = 'N'  then 1 
                  when DefaultVisibilityYN = 'N' and isnull([DocHidden],'N') = 'Y'  then 0 end as [Hidden],
-            case when ReportObjectTypeID IN (3, 17, 20, 21, 28, 36, 37) then 0 else 1 end VisibleType,
+            case when ReportObjectTypeID IN (select * from #VisibleReportTypes) then 0 else 1 end VisibleType,
             case when OrphanedReportObjectYN = 'Y' then 1 else 0 end Orphaned,
             certificationTag
         from
             app.Search_ReportObjectSearchData as r
         where 1=1
-        --  OrphanedReportObjectYN = 'N'
-        --  and DefaultVisibilityYN = 'Y'
-        --  and (DocHidden is null or DocHidden = 'N')
-        --  and r.ReportObjectTypeID IN (3, 17, 20, 21, 28)
             and ColumnName = 'Description'
 
         union all
@@ -2651,16 +2667,12 @@ BEGIN
                  when DefaultVisibilityYN = 'Y' and isnull([DocHidden],'N') = 'Y'  then 1 
                  when DefaultVisibilityYN = 'N' and isnull([DocHidden],'N') = 'N'  then 1 
                  when DefaultVisibilityYN = 'N' and isnull([DocHidden],'N') = 'Y'  then 0 end as [Hidden],
-            case when ReportObjectTypeID IN (3, 17, 20, 21, 28, 36, 37) then 0 else 1 end VisibleType,
+            case when ReportObjectTypeID IN (select * from #VisibleReportTypes) then 0 else 1 end VisibleType,
             case when OrphanedReportObjectYN = 'Y' then 1 else 0 end Orphaned,
             certificationTag
         from
             app.Search_ReportObjectSearchData as r
         where 1=1
-        --  OrphanedReportObjectYN = 'N'
-        --  and DefaultVisibilityYN = 'Y'
-        --  and (DocHidden is null or DocHidden = 'N')
-        --  and r.ReportObjectTypeID IN (3, 17, 20, 21, 28)
             and ColumnName = 'DetailedDescription'
         
         union all
@@ -2668,7 +2680,7 @@ BEGIN
         select
             'report' as 'Type',
             r.id,
-            ReportObjectTypeID as TypeId,
+            r.ReportObjectTypeID as TypeId,
             [Value] as SearchField,
             'Term Name' as SearchFieldDescription,
             4,
@@ -2676,26 +2688,23 @@ BEGIN
                  when DefaultVisibilityYN = 'Y' and isnull([DocHidden],'N') = 'Y'  then 1 
                  when DefaultVisibilityYN = 'N' and isnull([DocHidden],'N') = 'N'  then 1 
                  when DefaultVisibilityYN = 'N' and isnull([DocHidden],'N') = 'Y'  then 0 end as [Hidden],
-            case when ReportObjectTypeID IN (3, 17, 20, 21, 28, 36, 37) then 0 else 1 end VisibleType,
+            case when t.ReportObjectTypeID is not null then 0 else 1 end VisibleType,
             case when OrphanedReportObjectYN = 'Y' then 1 else 0 end Orphaned,
             certificationTag
         from
             app.Search_ReportObjectSearchData as r
+            left outer join #VisibleReportTypes as t on t.ReportObjectTypeID=r.ReportObjectTypeID
         where 1=1
-        --  OrphanedReportObjectYN = 'N'
-        --  and DefaultVisibilityYN = 'Y'
-        --  and (DocHidden is null or DocHidden = 'N')
-        --  and r.ReportObjectTypeID IN (3, 17, 20, 21, 28)
             and ColumnName = 'Term-Name'
         group by
             r.id,
-            ReportObjectTypeID,
+            r.ReportObjectTypeID,
             [Value],
             case when DefaultVisibilityYN = 'Y' and isnull([DocHidden],'N') = 'N'  then 0 
                  when DefaultVisibilityYN = 'Y' and isnull([DocHidden],'N') = 'Y'  then 1 
                  when DefaultVisibilityYN = 'N' and isnull([DocHidden],'N') = 'N'  then 1 
                  when DefaultVisibilityYN = 'N' and isnull([DocHidden],'N') = 'Y'  then 0 end ,
-            case when ReportObjectTypeID IN (3, 17, 20, 21, 28, 36, 37) then 0 else 1 end ,
+            case when t.ReportObjectTypeID is not null then 0 else 1 end ,
             case when OrphanedReportObjectYN = 'Y' then 1 else 0 end ,
             certificationTag
 
@@ -2704,7 +2713,7 @@ BEGIN
         select
             'report' as 'Type',
             r.id,
-            ReportObjectTypeID as TypeId,
+            r.ReportObjectTypeID as TypeId,
             [Value] as SearchField,
             'Term Summary' as SearchFieldDescription,
             5,
@@ -2712,26 +2721,23 @@ BEGIN
                  when DefaultVisibilityYN = 'Y' and isnull([DocHidden],'N') = 'Y'  then 1 
                  when DefaultVisibilityYN = 'N' and isnull([DocHidden],'N') = 'N'  then 1 
                  when DefaultVisibilityYN = 'N' and isnull([DocHidden],'N') = 'Y'  then 0 end as [Hidden],
-            case when ReportObjectTypeID IN (3, 17, 20, 21, 28, 36, 37) then 0 else 1 end VisibleType,
+            case when t.ReportObjectTypeID is not null then 0 else 1 end VisibleType,
             case when OrphanedReportObjectYN = 'Y' then 1 else 0 end Orphaned,
             certificationTag
         from
             app.Search_ReportObjectSearchData as r
+            left outer join #VisibleReportTypes as t on t.ReportObjectTypeID=r.ReportObjectTypeID
         where 1=1
-        --  OrphanedReportObjectYN = 'N'
-        --  and DefaultVisibilityYN = 'Y'
-        --  and (DocHidden is null or DocHidden = 'N')
-        --  and r.ReportObjectTypeID IN (3, 17, 20, 21, 28)
             and ColumnName = 'Term-Summary'
         group by
             r.id,
-            ReportObjectTypeID,
+            r.ReportObjectTypeID,
             [Value],
             case when DefaultVisibilityYN = 'Y' and isnull([DocHidden],'N') = 'N'  then 0 
                  when DefaultVisibilityYN = 'Y' and isnull([DocHidden],'N') = 'Y'  then 1 
                  when DefaultVisibilityYN = 'N' and isnull([DocHidden],'N') = 'N'  then 1 
                  when DefaultVisibilityYN = 'N' and isnull([DocHidden],'N') = 'Y'  then 0 end ,
-            case when ReportObjectTypeID IN (3, 17, 20, 21, 28, 36, 37) then 0 else 1 end,
+            case when t.ReportObjectTypeID is not null then 0 else 1 end,
             case when OrphanedReportObjectYN = 'Y' then 1 else 0 end,
             certificationTag
 
@@ -2740,7 +2746,7 @@ BEGIN
         select
             'report' as 'Type',
             r.id,
-            ReportObjectTypeID as TypeId,
+            r.ReportObjectTypeID as TypeId,
             [Value] as SearchField,
             'Term Technical Definition' as SearchFieldDescription,
             5,
@@ -2748,26 +2754,23 @@ BEGIN
                  when DefaultVisibilityYN = 'Y' and isnull([DocHidden],'N') = 'Y'  then 1 
                  when DefaultVisibilityYN = 'N' and isnull([DocHidden],'N') = 'N'  then 1 
                  when DefaultVisibilityYN = 'N' and isnull([DocHidden],'N') = 'Y'  then 0 end as [Hidden],
-            case when ReportObjectTypeID IN (3, 17, 20, 21, 28, 36, 37) then 0 else 1 end VisibleType,
+            case when t.ReportObjectTypeID is not null then 0 else 1 end VisibleType,
             case when OrphanedReportObjectYN = 'Y' then 1 else 0 end Orphaned,
             certificationTag
         from
             app.Search_ReportObjectSearchData as r
+            left outer join #VisibleReportTypes as t on t.ReportObjectTypeID=r.ReportObjectTypeID
         where 1=1
-        --  OrphanedReportObjectYN = 'N'
-        --  and DefaultVisibilityYN = 'Y'
-        --  and (DocHidden is null or DocHidden = 'N')
-        --  and r.ReportObjectTypeID IN (3, 17, 20, 21, 28)
             and ColumnName = 'Term-TechnicalDefinition'
         group by
             r.id,
-            ReportObjectTypeID,
+            r.ReportObjectTypeID,
             [Value],
             case when DefaultVisibilityYN = 'Y' and isnull([DocHidden],'N') = 'N'  then 0 
                  when DefaultVisibilityYN = 'Y' and isnull([DocHidden],'N') = 'Y'  then 1 
                  when DefaultVisibilityYN = 'N' and isnull([DocHidden],'N') = 'N'  then 1 
                  when DefaultVisibilityYN = 'N' and isnull([DocHidden],'N') = 'Y'  then 0 end,
-            case when ReportObjectTypeID IN (3, 17, 20, 21, 28, 36, 37) then 0 else 1 end,
+            case when t.ReportObjectTypeID is not null then 0 else 1 end,
             case when OrphanedReportObjectYN = 'Y' then 1 else 0 end,
             certificationTag
 
@@ -2775,7 +2778,7 @@ BEGIN
          select
             'report' as 'Type',
             r.id,
-            ReportObjectTypeID as TypeId,
+            r.ReportObjectTypeID as TypeId,
             [Value] as SearchField,
             'Project Annotation' as SearchFieldDescription,
             5,
@@ -2783,26 +2786,23 @@ BEGIN
                  when DefaultVisibilityYN = 'Y' and isnull([DocHidden],'N') = 'Y'  then 1 
                  when DefaultVisibilityYN = 'N' and isnull([DocHidden],'N') = 'N'  then 1 
                  when DefaultVisibilityYN = 'N' and isnull([DocHidden],'N') = 'Y'  then 0 end as [Hidden],
-            case when ReportObjectTypeID IN (3, 17, 20, 21, 28, 36, 37) then 0 else 1 end VisibleType,
+            case when t.ReportObjectTypeID is not null then 0 else 1 end VisibleType,
             case when OrphanedReportObjectYN = 'Y' then 1 else 0 end Orphaned,
             certificationTag
         from
             app.Search_ReportObjectSearchData as r
+            left outer join #VisibleReportTypes as t on t.ReportObjectTypeID=r.ReportObjectTypeID
         where 1=1
-        --  OrphanedReportObjectYN = 'N'
-        --  and DefaultVisibilityYN = 'Y'
-        --  and (DocHidden is null or DocHidden = 'N')
-        --  and r.ReportObjectTypeID IN (3, 17, 20, 21, 28)
             and ColumnName = 'ProjectAnnotation-Annotation'
         group by
             r.id,
-            ReportObjectTypeID,
+            r.ReportObjectTypeID,
             [Value],
             case when DefaultVisibilityYN = 'Y' and isnull([DocHidden],'N') = 'N'  then 0 
                  when DefaultVisibilityYN = 'Y' and isnull([DocHidden],'N') = 'Y'  then 1 
                  when DefaultVisibilityYN = 'N' and isnull([DocHidden],'N') = 'N'  then 1 
                  when DefaultVisibilityYN = 'N' and isnull([DocHidden],'N') = 'Y'  then 0 end,
-            case when ReportObjectTypeID IN (3, 17, 20, 21, 28, 36, 37) then 0 else 1 end,
+            case when t.ReportObjectTypeID is not null then 0 else 1 end,
             case when OrphanedReportObjectYN = 'Y' then 1 else 0 end,
             certificationTag
         union all
@@ -2818,16 +2818,12 @@ BEGIN
                  when DefaultVisibilityYN = 'Y' and isnull([DocHidden],'N') = 'Y'  then 1 
                  when DefaultVisibilityYN = 'N' and isnull([DocHidden],'N') = 'N'  then 1 
                  when DefaultVisibilityYN = 'N' and isnull([DocHidden],'N') = 'Y'  then 0 end as [Hidden],
-            case when ReportObjectTypeID IN (3, 17, 20, 21, 28, 36, 37) then 0 else 1 end VisibleType,
+            case when ReportObjectTypeID IN (select * from #VisibleReportTypes) then 0 else 1 end VisibleType,
             case when OrphanedReportObjectYN = 'Y' then 1 else 0 end Orphaned,
             certificationTag
         from
             app.Search_ReportObjectSearchData as r
         where 1=1
-        --  OrphanedReportObjectYN = 'N'
-        --  and DefaultVisibilityYN = 'Y'
-        --  and (DocHidden is null or DocHidden = 'N')
-        --  and r.ReportObjectTypeID IN (3, 17, 20, 21, 28)
             and ColumnName = 'Doc-DeveloperDescription'
 
         union all
@@ -2843,16 +2839,12 @@ BEGIN
                  when DefaultVisibilityYN = 'Y' and isnull([DocHidden],'N') = 'Y'  then 1 
                  when DefaultVisibilityYN = 'N' and isnull([DocHidden],'N') = 'N'  then 1 
                  when DefaultVisibilityYN = 'N' and isnull([DocHidden],'N') = 'Y'  then 0 end as [Hidden],
-            case when ReportObjectTypeID IN (3, 17, 20, 21, 28, 36, 37) then 0 else 1 end VisibleType,
+            case when ReportObjectTypeID IN (select * from #VisibleReportTypes) then 0 else 1 end VisibleType,
             case when OrphanedReportObjectYN = 'Y' then 1 else 0 end Orphaned,
             certificationTag
         from
             app.Search_ReportObjectSearchData as r
         where 1=1
-        --  OrphanedReportObjectYN = 'N'
-        --  and DefaultVisibilityYN = 'Y'
-        --  and (DocHidden is null or DocHidden = 'N')
-        --  and r.ReportObjectTypeID IN (3, 17, 20, 21, 28)
             and ColumnName = 'Doc-KeyAssumptions'
 
         union all
@@ -2868,15 +2860,11 @@ BEGIN
                  when DefaultVisibilityYN = 'Y' and isnull([DocHidden],'N') = 'Y'  then 1 
                  when DefaultVisibilityYN = 'N' and isnull([DocHidden],'N') = 'N'  then 1 
                  when DefaultVisibilityYN = 'N' and isnull([DocHidden],'N') = 'Y'  then 0 end as [Hidden],
-            case when ReportObjectTypeID IN (3, 17, 20, 21, 28, 36, 37) then 0 else 1 end VisibleType,
+            case when ReportObjectTypeID IN (select * from #VisibleReportTypes) then 0 else 1 end VisibleType,
             case when OrphanedReportObjectYN = 'Y' then 1 else 0 end Orphaned,
             certificationTag
         from app.Search_ReportObjectSearchData as r
         where 1=1
-        --  OrphanedReportObjectYN = 'N'
-        --  and DefaultVisibilityYN = 'Y'
-        --  and (DocHidden is null or DocHidden = 'N')
-        --  and r.ReportObjectTypeID IN (3, 17, 20, 21, 28)
             and r.EpicMasterFile is not null
             and ColumnName = 'EpicRecordId'
 
@@ -2893,15 +2881,11 @@ BEGIN
                  when DefaultVisibilityYN = 'Y' and isnull([DocHidden],'N') = 'Y'  then 1 
                  when DefaultVisibilityYN = 'N' and isnull([DocHidden],'N') = 'N'  then 1 
                  when DefaultVisibilityYN = 'N' and isnull([DocHidden],'N') = 'Y'  then 0 end as [Hidden],
-            case when ReportObjectTypeID IN (3, 17, 20, 21, 28, 36, 37) then 0 else 1 end VisibleType,
+            case when ReportObjectTypeID IN (select * from #VisibleReportTypes) then 0 else 1 end VisibleType,
             case when OrphanedReportObjectYN = 'Y' then 1 else 0 end Orphaned,
             certificationTag
         from app.Search_ReportObjectSearchData as r
         where 1=1
-        --  OrphanedReportObjectYN = 'N'
-        --  and DefaultVisibilityYN = 'Y'
-        --  and (DocHidden is null or DocHidden = 'N')
-        --  and r.ReportObjectTypeID IN (3, 17, 20, 21, 28)
             and r.EpicReportTemplateId is not null
             and ColumnName = 'Name'
 
@@ -2919,15 +2903,11 @@ BEGIN
                  when DefaultVisibilityYN = 'Y' and isnull([DocHidden],'N') = 'Y'  then 1 
                  when DefaultVisibilityYN = 'N' and isnull([DocHidden],'N') = 'N'  then 1 
                  when DefaultVisibilityYN = 'N' and isnull([DocHidden],'N') = 'Y'  then 0 end as [Hidden],
-            case when ReportObjectTypeID IN (3, 17, 20, 21, 28, 36, 37) then 0 else 1 end VisibleType,
+            case when ReportObjectTypeID IN (select * from #VisibleReportTypes) then 0 else 1 end VisibleType,
             case when OrphanedReportObjectYN = 'Y' then 1 else 0 end Orphaned,
             certificationTag
         from app.Search_ReportObjectSearchData as r
         where 1=1
-        --  OrphanedReportObjectYN = 'N'
-        --  and DefaultVisibilityYN = 'Y'
-        --  and (DocHidden is null or DocHidden = 'N')
-        --  and r.ReportObjectTypeID IN (3, 17, 20, 21, 28)
             and ColumnName = 'Query-Query'
                 
         ) as t
@@ -3105,7 +3085,6 @@ BEGIN
 
 END
 
-GO
 
 
 
@@ -3815,14 +3794,11 @@ GO
 
 USE [atlas]
 GO
-
-/****** Object:  StoredProcedure [app].[UpdateSearchTable]    Script Date: 6/16/2021 11:56:22 AM ******/
+/****** Object:  StoredProcedure [app].[UpdateSearchTable]    Script Date: 7/23/2021 9:50:43 AM ******/
 SET ANSI_NULLS ON
 GO
-
 SET QUOTED_IDENTIFIER ON
 GO
-
 
 
 -- =============================================
@@ -3847,6 +3823,11 @@ BEGIN
 
 -- create view of current data
     drop table if exists #myTemp;
+    drop table if exists #VisibleReportTypes;
+
+SELECT ReportObjectTypeID into #VisibleReportTypes
+FROM [dbo].[ReportObjectType]
+WHERE Visible = 'Y';
 
     select * into #myTemp from (
 
@@ -3868,7 +3849,7 @@ BEGIN
             OrphanedReportObjectYN = 'N'
             and DefaultVisibilityYN = 'Y'
             and (ro.Hidden is null or ro.Hidden = 'N')
-            and r.ReportObjectTypeID IN (3, 17, 20, 21, 28)
+            and r.ReportObjectTypeID IN (select * from #VisibleReportTypes)
             and Name is not null
 
         union all
@@ -3887,7 +3868,7 @@ BEGIN
             OrphanedReportObjectYN = 'N'
             and DefaultVisibilityYN = 'Y'
             and (ro.Hidden is null or ro.Hidden = 'N')
-            and r.ReportObjectTypeID IN (3, 17, 20, 21, 28)
+            and r.ReportObjectTypeID IN (select * from #VisibleReportTypes)
             and description is not null
 
         union all
@@ -3908,7 +3889,7 @@ BEGIN
             OrphanedReportObjectYN = 'N'
             and DefaultVisibilityYN = 'Y'
             and (ro.Hidden is null or ro.Hidden = 'N')
-            and r.ReportObjectTypeID IN (3, 17, 20, 21, 28)
+            and r.ReportObjectTypeID IN (select * from #VisibleReportTypes)
             and detaileddescription is not null
 
         union all
@@ -3929,7 +3910,7 @@ BEGIN
             OrphanedReportObjectYN = 'N'
             and DefaultVisibilityYN = 'Y'
             and (ro.Hidden is null or ro.Hidden = 'N')
-            and r.ReportObjectTypeID IN (3, 17, 20, 21, 28)
+            and r.ReportObjectTypeID IN (select * from #VisibleReportTypes)
             and t.Name is not null
         group by
             r.ReportObjectID,
@@ -3954,7 +3935,7 @@ BEGIN
             OrphanedReportObjectYN = 'N'
             and DefaultVisibilityYN = 'Y'
             and (ro.Hidden is null or ro.Hidden = 'N')
-            and r.ReportObjectTypeID IN (3, 17, 20, 21, 28)
+            and r.ReportObjectTypeID IN (select * from #VisibleReportTypes)
             and t.summary is not null
         group by
             r.ReportObjectID,
@@ -3979,7 +3960,7 @@ BEGIN
             OrphanedReportObjectYN = 'N'
             and DefaultVisibilityYN = 'Y'
             and (ro.Hidden is null or ro.Hidden = 'N')
-            and r.ReportObjectTypeID IN (3, 17, 20, 21, 28)
+            and r.ReportObjectTypeID IN (select * from #VisibleReportTypes)
             and t.technicaldefinition is not null
         group by
             r.ReportObjectID,
@@ -4002,7 +3983,7 @@ BEGIN
             OrphanedReportObjectYN = 'N'
             and DefaultVisibilityYN = 'Y'
             and (d.Hidden is null or d.Hidden = 'N')
-            and r.ReportObjectTypeID IN (3, 17, 20, 21, 28)
+            and r.ReportObjectTypeID IN (select * from #VisibleReportTypes)
             and developerdescription is not null
 
         union all
@@ -4021,7 +4002,7 @@ BEGIN
             OrphanedReportObjectYN = 'N'
             and DefaultVisibilityYN = 'Y'
             and (d.Hidden is null or d.Hidden = 'N')
-            and r.ReportObjectTypeID IN (3, 17, 20, 21, 28)
+            and r.ReportObjectTypeID IN (select * from #VisibleReportTypes)
             and KeyAssumptions is not null
     
         union all
@@ -4039,7 +4020,7 @@ BEGIN
             OrphanedReportObjectYN = 'N'
             and DefaultVisibilityYN = 'Y'
             and (ro.Hidden is null or ro.Hidden = 'N')
-            and r.ReportObjectTypeID IN (3, 17, 20, 21, 28)
+            and r.ReportObjectTypeID IN (select * from #VisibleReportTypes)
             and (r.EpicMasterFile is not null or r.EpicRecordID is not null)
 
         union all 
@@ -4057,7 +4038,7 @@ BEGIN
             OrphanedReportObjectYN = 'N'
             and DefaultVisibilityYN = 'Y'
             and (ro.Hidden is null or ro.Hidden = 'N')
-            and r.ReportObjectTypeID IN (3, 17, 20, 21, 28)
+            and r.ReportObjectTypeID IN (select * from #VisibleReportTypes)
             and r.EpicReportTemplateId is not null
             
         ) as cool
@@ -4374,6 +4355,9 @@ SELECT TOP(10) UserId, Username FROM    dbo.[User] r
 END
 GO
 
+USE [atlas]
+GO
+/****** Object:  StoredProcedure [dbo].[BasicReportObjectSearch]    Script Date: 7/23/2021 9:52:33 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -4392,7 +4376,11 @@ BEGIN
     -- SET NOCOUNT ON added to prevent extra result sets from
     -- interfering with SELECT statements.
     SET NOCOUNT ON;
+    drop table if exists #VisibleReportTypes;
 
+SELECT ReportObjectTypeID into #VisibleReportTypes
+FROM [dbo].[ReportObjectType]
+WHERE Visible = 'Y';
    SET @searchTerm = REPLACE(REPLACE(LTRIM(RTRIM(@searchTerm)),' ','%'),'*','%');
 
     SELECT TOP (10) r.ReportObjectID
@@ -4403,7 +4391,7 @@ BEGIN
     inner join  ReportObjectType rt on rt.ReportObjectTypeID = r.ReportObjectTypeID
     where OrphanedReportObjectYN = 'N'
     and DefaultVisibilityYN = 'Y'
-    and rt.ReportObjectTypeID IN (3,17,20,21,28)--Crystal, RW, DB, component, SSRS
+    and rt.ReportObjectTypeID IN (select * from #VisibleReportTypes)--Crystal, RW, DB, component, SSRS
     and r.Name like concat('%', @searchTerm, '%')
 END
 GO
@@ -4427,20 +4415,34 @@ AS
 BEGIN
     -- SET NOCOUNT ON added to prevent extra result sets from
     -- interfering with SELECT statements.
+    --declare @searchTerm varchar(1000) = 'Clinic Manager Dashboard'
+    --declare @results int = 100
+    --declare @exclude varchar(1000) = ''
     SET NOCOUNT ON;
+    drop table if exists #VisibleReportTypes;
 
+SELECT ReportObjectTypeID into #VisibleReportTypes
+FROM [dbo].[ReportObjectType]
+WHERE Visible = 'Y';
    SET @searchTerm = REPLACE(REPLACE(LTRIM(RTRIM(@searchTerm)),' ','%'),'*','%');
 
     SELECT TOP (@results) r.ReportObjectID
-    ,           r.Name  as ReportObjectName
+    , case when EpicMasterFile is not null
+    then concat(isnull(r.DisplayTitle,r.Name),' (',r.EpicMasterFile,' ', r.EpicRecordID,')')
+    else concat(isnull(r.DisplayTitle,r.Name),' (', rt.Name,')') 
+    end as ReportObjectName
     ,           r.Description
     
     from        ReportObject r
     inner join  ReportObjectType rt on rt.ReportObjectTypeID = r.ReportObjectTypeID
     where OrphanedReportObjectYN = 'N'
     and DefaultVisibilityYN = 'Y'
-    and rt.ReportObjectTypeID IN (3,17,20,21,28)--Crystal, RW, DB, component, SSRS
-    and r.Name like concat('%', @searchTerm, '%')
+    and rt.ReportObjectTypeID IN (select * from #VisibleReportTypes)--Crystal, RW, DB, component, SSRS
+    and (
+         r.Name like concat('%', @searchTerm, '%')
+      or r.DisplayTitle like concat('%', @searchTerm, '%')
+      or concat(r.EpicMasterFile,' ',r.EpicRecordID) like  concat('%', @searchTerm, '%')
+     )
     AND r.ReportObjectID NOT IN (SELECT * FROM STRING_SPLIT(@exclude,','))
 END
 GO
@@ -5105,7 +5107,11 @@ BEGIN
     SET @i = patindex('%[^a-zA-Z0-9 ]%', @searchTerm)
 END
 ;
+    drop table if exists #VisibleReportTypes;
 
+SELECT ReportObjectTypeID into #VisibleReportTypes
+FROM [dbo].[ReportObjectType]
+WHERE Visible = 'Y';
 -- remove extra space from string
 SET @searchTerm = REPLACE(REPLACE(REPLACE(LTRIM(RTRIM(@searchTerm)),' ','CHAR(17)CHAR(18)'),'CHAR(18)CHAR(17)',''),'CHAR(17)CHAR(18)',' ') 
 print @searchTerm
@@ -5152,7 +5158,7 @@ from
 where
     OrphanedReportObjectYN = 'N'
     and DefaultVisibilityYN = 'Y'
-    and r.ReportObjectTypeID IN (3,17,20,21,28) 
+    and r.ReportObjectTypeID IN (select * from #VisibleReportTypes) 
 ;                                                               
 
 -- Direct match to Term (Search 2 Rank 2)
@@ -5179,7 +5185,7 @@ where
     )
     and OrphanedReportObjectYN = 'N'
     and DefaultVisibilityYN = 'Y'
-    and r.ReportObjectTypeID IN (3,17,20,21,28)
+    and r.ReportObjectTypeID IN (select * from #VisibleReportTypes)
 group by
     r.ReportObjectID,
     r.Name,
@@ -5209,7 +5215,7 @@ where
         from
             #results where SearchRank =1
     )
-    and r.ReportObjectTypeID IN (3, 17, 20, 21, 28) --Crystal, RW, DB, component, SSRS
+    and r.ReportObjectTypeID IN (select * from #VisibleReportTypes) --Crystal, RW, DB, component, SSRS
 
 ;                       
 
@@ -5229,7 +5235,7 @@ from  app.ReportObject_doc d
 where OrphanedReportObjectYN = 'N'
     and DefaultVisibilityYN = 'Y'
     and r.ReportObjectID not in (select distinct ReportObjectID from #results )
-    and r.ReportObjectTypeID IN (3,17,20,21,28)--Crystal, RW, DB, component, SSRS
+    and r.ReportObjectTypeID IN (select * from #VisibleReportTypes)--Crystal, RW, DB, component, SSRS
 ;                       
 
 --Fuzzy match to ReportObject (Search 5 rank 3)
@@ -5247,7 +5253,7 @@ from ReportObject r
 where OrphanedReportObjectYN = 'N'
     and DefaultVisibilityYN = 'Y'
     and r.ReportObjectID not in (select distinct ReportObjectID from #results ) --only use fuzzy logic if no direct/near matching was found
-    and r.ReportObjectTypeID IN (3,17,20,21,28) --Crystal, RW, DB, component, SSRS
+    and r.ReportObjectTypeID IN (select * from #VisibleReportTypes) --Crystal, RW, DB, component, SSRS
 ;                       
 
 --Fuzzy match to ReportObjectTerm (Search 6 Rank 3)
@@ -5267,7 +5273,7 @@ from app.Term t
 where OrphanedReportObjectYN = 'N'
     and DefaultVisibilityYN = 'Y'
     and r.ReportObjectID not in (select distinct ReportObjectID from #results)
-    and r.ReportObjectTypeID IN (3,17,20,21,28)--Crystal, RW, DB, component, SSRS
+    and r.ReportObjectTypeID IN (select * from #VisibleReportTypes)--Crystal, RW, DB, component, SSRS
 group by
     r.ReportObjectID
 ,   r.Name  
@@ -5290,7 +5296,7 @@ from app.ReportObject_doc d
 where OrphanedReportObjectYN = 'N'
     and DefaultVisibilityYN = 'Y'
     and r.ReportObjectID not in (select distinct ReportObjectID from #results)
-    and r.ReportObjectTypeID IN (3,17,20,21,28)--Crystal, RW, DB, component, SSRS
+    and r.ReportObjectTypeID IN (select * from #VisibleReportTypes)--Crystal, RW, DB, component, SSRS
 ;   
 
 

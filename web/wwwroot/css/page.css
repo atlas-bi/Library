@@ -125,6 +125,14 @@ section {
   color: rgb(41, 206, 66);
 }
 
+.pageNav-badgeBlue {
+  margin-right: 10px;
+  border: 2px solid rgb(35, 96, 252);
+  border-radius: 3px;
+  padding: 0 5px;
+  color: rgb(35, 96, 252);
+}
+
 .pageNav-badgeHunterGreen {
   margin-right: 10px;
   border: 2px solid #22aa36;

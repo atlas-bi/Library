@@ -19,6 +19,22 @@
 Changelog
 *********
 
+Version 2021.07.1
+-----------------
+
+- Added ShortName column to ReportObjectType
+- Added report tags for Clarity reports
+- Added projects to report relationships
+- Added Self-Service certification tag
+- Added SSRS Files to search
+- Removed hardcoded report types from search
+- Updated report editor to be able to add data projects to reports
+- Modified ReportObjectType table to include visibility
+- Added optional banner text to config file
+- Fixed script errors on projects page
+- Updated metrics to include components in relationships
+- Modified report editor to only close on x
+
 Version 2021.06.1
 -----------------
 

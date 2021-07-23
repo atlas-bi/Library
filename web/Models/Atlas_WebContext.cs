@@ -68,6 +68,8 @@ namespace Atlas_Web.Models
         public virtual DbSet<ReportObjectRunDatum> ReportObjectRunData { get; set; }
         public virtual DbSet<ReportObjectRunTime> ReportObjectRunTimes { get; set; }
         public virtual DbSet<ReportObjectSubscription> ReportObjectSubscriptions { get; set; }
+        public virtual DbSet<ReportObjectTag> ReportObjectTags { get; set; }
+        public virtual DbSet<ReportObjectTagMembership> ReportObjectTagMemberships { get; set; }
         public virtual DbSet<ReportObjectTopRun> ReportObjectTopRuns { get; set; }
         public virtual DbSet<ReportObjectType> ReportObjectTypes { get; set; }
         public virtual DbSet<ReportObjectWeightedRunRank> ReportObjectWeightedRunRanks { get; set; }
@@ -1230,6 +1232,44 @@ namespace Atlas_Web.Models
                     .HasConstraintName("FK_ReportObjectSubscriptions_User");
             });
 
+            modelBuilder.Entity<ReportObjectTag>(entity =>
+            {
+                entity.HasKey(e => e.TagId);
+
+                entity.Property(e => e.TagId).HasColumnName("TagID");
+
+                entity.Property(e => e.EpicTagId)
+                    .HasColumnType("numeric(18, 0)")
+                    .HasColumnName("EpicTagID");
+
+                entity.Property(e => e.TagName)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<ReportObjectTagMembership>(entity =>
+            {
+                entity.HasKey(e => e.TagMembershipId);
+
+                entity.Property(e => e.TagMembershipId).HasColumnName("TagMembershipID");
+
+                entity.Property(e => e.ReportObjectId).HasColumnName("ReportObjectID");
+
+                entity.Property(e => e.TagId).HasColumnName("TagID");
+
+                entity.HasOne(d => d.ReportObject)
+                    .WithMany(p => p.ReportObjectTagMemberships)
+                    .HasForeignKey(d => d.ReportObjectId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_ReportObjectTagMemberships_ReportObject");
+
+                entity.HasOne(d => d.Tag)
+                    .WithMany(p => p.ReportObjectTagMemberships)
+                    .HasForeignKey(d => d.TagId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_ReportObjectTagMemberships_ReportObjectTags");
+            });
+
             modelBuilder.Entity<ReportObjectTopRun>(entity =>
             {
                 entity.ToTable("ReportObjectTopRuns", "app");
@@ -1258,6 +1298,8 @@ namespace Atlas_Web.Models
                 entity.Property(e => e.LastLoadDate).HasColumnType("datetime");
 
                 entity.Property(e => e.Name).IsRequired();
+
+                entity.Property(e => e.Visible).HasMaxLength(1);
             });
 
             modelBuilder.Entity<ReportObjectWeightedRunRank>(entity =>

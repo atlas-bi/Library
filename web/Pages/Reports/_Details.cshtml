@@ -25,8 +25,8 @@
 <div class="listDetails">
     @if (@m.Report.OldName != null)
     {
-         <span class="listDetails-title">Report Name</span>
-         <span>@m.Report.OldName</span>
+        <span class="listDetails-title">Report Name</span>
+        <span>@m.Report.OldName</span>
     }
 
     <span class="listDetails-title">Report Type</span>
@@ -69,7 +69,7 @@
         <span class="listDetails-title">Report Requester</span>
         <a href="users?id=@m.Report.RequesterId">@m.Report.Requester</a>
     }
-    
+
     @if (m.Report.OpsOwner != null)
     {
         <span class="listDetails-title">Operational Owner</span>
@@ -88,29 +88,30 @@
         @if (m.Report.RecordViewerUrl != null)
         {
             @:<a href="@m.Report.RecordViewerUrl">
-        }
+            }
         <span>
             <span id="epic-ini">@m.Report.EpicMasterFile&nbsp;</span>
             @if (m.Report.EpicId != null)
             {
-                <span id="epic-id" data-epic-hgr="@m.Report.EpicTemplateId">@m.Report.EpicId
-                    @if (@m.Report.EpicTemplateId != null)
-                    {
-                        @:(Template @m.Report.EpicTemplateId)
-                    }
-                </span>
-            }
+                <span id="epic-id" data-epic-hgr="@m.Report.EpicTemplateId">
+                    @m.Report.EpicId
+                @if (@m.Report.EpicTemplateId != null)
+                {
+                    @:(Template @m.Report.EpicTemplateId)
+                }
+            </span>
+        }
         </span>
 
         @if (m.Report.RecordViewerUrl != null)
         {
-            @:</a>
-        }
+        @:</a>
     }
-    
+    }
+
     <span class="listDetails-title">Atlas Id</span>
     <span>@m.Report.Id</span>
-    
+
     @if (m.Report.Orphaned == "Y")
     {
         <span class="listDetails-title">Orphaned?</span>
@@ -130,7 +131,8 @@
             @if (m.Report.Hyperspace == "Y")
             {
                 @:Yes
-            } else
+            }
+            else
             {
                 @:No
             }
@@ -193,6 +195,24 @@
             }
         </span>
     }
+
+    @if (m.ReportTags.Count > 0)
+    {
+        var length = m.ReportTags.Count;
+        var counter = 0;
+        <span class="listDetails-title">Report Tags</span>
+         <span>
+            @foreach (var tag in m.ReportTags)
+                {
+                    @if (counter == (length - 1))
+                    {
+                        <span class="badge badge-primary">@tag.Name</span> 
+                        }
+                    else
+                    {
+                        <span class="badge badge-primary">@tag.Name, </span>}counter++;
+                    }
+         </span>}
 </div>
 
 <section id="report-meticket-container">

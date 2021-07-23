@@ -60,11 +60,11 @@
         @foreach (var child in Model.ReportChildren)
         {
             <h5>
-                <a href="Reports?id=@child.Id">@child.Name [@child.EpicMasterFile]</a>
+                <a href="Reports?id=@child.Id">@child.Name @if (child.EpicMasterFile is not null){<text>[@child.EpicMasterFile]</text>}</a>
             </h5>
 
             if (child.Img.Count() == 1)
-            {
+                {
                 <div class="pop ml-5" style="max-height:400px">
                     <img class=" img-responsive" data-src="@child.Img.FirstOrDefault().Src" alt="Image loading.." style="max-width: 78%;max-height: 290px;" src="/img/loader.gif">
                 </div>
@@ -101,12 +101,12 @@
             @foreach (var subchild in child.Child)
             {
                 <h6>
-                    <a href="Reports?id=@subchild.Id">@subchild.Name [@subchild.EpicMasterFile]</a>
+                    <a href="Reports?id=@subchild.Id">@subchild.Name @if (subchild.EpicMasterFile is not null){<text>[@subchild.EpicMasterFile]</text>}</a>
                 </h6>
 
                 @foreach (var supersubchild in subchild.GrandChild)
                 {
-                    <h6 style="margin-left:40px"><a href="Reports?id=@supersubchild.Id">@supersubchild.Name [@supersubchild.EpicMasterFile]</a></h6>
+                    <h6 style="margin-left:40px"><a href="Reports?id=@supersubchild.Id">@supersubchild.Name @if (supersubchild.EpicMasterFile is not null){<text>[@supersubchild.EpicMasterFile]</text>}</a></h6>
                 }
             }
         }

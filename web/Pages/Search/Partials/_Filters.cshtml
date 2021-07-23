@@ -51,7 +51,7 @@
             <label>Workbench</label>
         </div>
         <div class='form-check search-filter'>
-            <input type="checkbox" @if (Model.SearchFilter != null && (Model.SearchFilter.Contains("18") || Model.SearchFilter.Contains("4"))) { <text> checked="checked" </text> } value='4,18' />
+            <input type="checkbox" @if (Model.SearchFilter != null && Model.SearchFilter.Contains("4,18")) { <text> checked="checked" </text> } value='4,18' />
             <input type="hidden" />
             <label>Templates</label>
         </div>
@@ -61,14 +61,19 @@
             <label>Metric</label>
         </div>
         <div class='form-check search-filter'>
-            <input type="checkbox" @if (Model.SearchFilter != null && (Model.SearchFilter.Contains("36") || Model.SearchFilter.Contains("38"))) { <text> checked="checked" </text> } value='36,38' />
+            <input type="checkbox" @if (Model.SearchFilter != null && Model.SearchFilter.Contains("36,38")) { <text> checked="checked" </text> } value='36,38' />
             <input type="hidden" />
             <label>Tableau</label>
         </div>
         <div class='form-check search-filter'>
-            <input type="checkbox" @if (Model.SearchFilter != null && Model.SearchFilter.Contains("37")) { <text> checked="checked" </text> } value='37' />
+            <input type="checkbox" @if (Model.SearchFilter != null && Model.SearchFilter.Contains("37,41")) { <text> checked="checked" </text> } value='37,41' />
             <input type="hidden" />
             <label>SlicerDicer</label>
+        </div>
+        <div class='form-check search-filter'>
+            <input type="checkbox" @if (Model.SearchFilter != null && Model.SearchFilter.Contains("23")) { <text> checked="checked" </text> } value='23' />
+            <input type="hidden" />
+            <label>Files</label>
         </div>
     </div>
     <h5 class="fav-col-sub-title">Category</h5>

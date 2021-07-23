@@ -297,6 +297,20 @@
   white-space: nowrap;
 }
 
+.srch-fieldBlue {
+  background-color: rgba(35, 96, 252) !important;
+  border-radius: 0.25rem;
+  color: #fff !important;
+  display: inline-block;
+  font-size: 75%;
+  font-weight: 700;
+  line-height: 1;
+  padding: 0.25em 0.4em;
+  text-align: center;
+  vertical-align: baseline;
+  white-space: nowrap;
+}
+
 .srch-fieldRed {
   background-color: #ff6961 !important;
   border-radius: 0.25rem;

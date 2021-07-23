@@ -29,7 +29,7 @@
         url,
         data;
 
-      if (i.getAttribute("checked") == "checked") {
+      if (i.hasAttribute("checked")) {
         i.removeAttribute("checked");
         type = 2;
       } else {

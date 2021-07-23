@@ -20,6 +20,7 @@ namespace Atlas_Web.Models
             ReportObjectReportRunTimes = new HashSet<ReportObjectReportRunTime>();
             ReportObjectRunData = new HashSet<ReportObjectRunDatum>();
             ReportObjectSubscriptions = new HashSet<ReportObjectSubscription>();
+            ReportObjectTagMemberships = new HashSet<ReportObjectTagMembership>();
             ReportObjectTopRuns = new HashSet<ReportObjectTopRun>();
         }
 
@@ -48,6 +49,7 @@ namespace Atlas_Web.Models
         public string RepositoryDescription { get; set; }
         public string EpicReleased { get; set; }
         public string CertificationTag { get; set; }
+        public string Availability { get; set; }
 
         public virtual User AuthorUser { get; set; }
         public virtual User LastModifiedByUser { get; set; }
@@ -64,6 +66,7 @@ namespace Atlas_Web.Models
         public virtual ICollection<ReportObjectReportRunTime> ReportObjectReportRunTimes { get; set; }
         public virtual ICollection<ReportObjectRunDatum> ReportObjectRunData { get; set; }
         public virtual ICollection<ReportObjectSubscription> ReportObjectSubscriptions { get; set; }
+        public virtual ICollection<ReportObjectTagMembership> ReportObjectTagMemberships { get; set; }
         public virtual ICollection<ReportObjectTopRun> ReportObjectTopRuns { get; set; }
     }
 }

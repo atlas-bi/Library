@@ -16,6 +16,8 @@ namespace Atlas_Web.Models
         public string Name { get; set; }
         public string DefaultEpicMasterFile { get; set; }
         public DateTime? LastLoadDate { get; set; }
+        public string ShortName { get; set; }
+        public string Visible { get; set; }
 
         public virtual ICollection<ReportObject> ReportObjects { get; set; }
     }
