@@ -25,9 +25,9 @@
 
     var TopUsers = Model.TopUsers.Count() > 0;
     var RunHistory = Model.RunTime.Count() > 0;
-    var FailedRuns = Model.FailedRuns.Count() > 0;
-    var Subscriptions = Model.Subscriptions.Count() > 0;
-    var Favorites = Model.ProfileFavorites.Count() > 0;
+    var FailedRuns = Model.FailedRuns != null && Model.FailedRuns.Count() > 0;
+    var Subscriptions = Model.Subscriptions != null && Model.Subscriptions.Count() > 0;
+    var Favorites = Model.ProfileFavorites != null && Model.ProfileFavorites.Count() > 0;
 }
 
 
@@ -73,6 +73,7 @@
                                 @{
                                     var TopTen = Model.TopUsers.Take(10);
                                     var last = TopTen.Last();
+                                    var hasRunTime = !TopTen.Sum(x => x.RunTime).Equals(0);
                                 }
                                 {
                                     "axis": {
@@ -82,18 +83,18 @@
                                     "type": "bar",
                                     "height":"400",
                                     "title": "Top Report Users",
-                                    "data": [{
+                                    "data": [@if (hasRunTime) {<text>{
                                         "title" : "Run Time (s)",
                                         "axis":"0",
                                         "type": "line",
                                         "units": "(s)",
                                         "data": [
                                                 @foreach (var g in TopTen)
-                                                { 
-                                                    <text>{ "title": "@g.Username", "data": "@g.RunTime"}</text> @if(g != last){<text>,</text>}
+                                                {
+                                                    <text>{ "title": "@g.Username", "data": "@g.RunTime"}</text> @if (g != last) {<text>,</text>}
                                                 }
                                             ]
-                                       },{
+                                       }</text>},{
                                         "title" : "Runs",
                                         "type": "bar",
                                         "axis": "1",

@@ -194,5 +194,58 @@ namespace Atlas_Web.Pages.Profile
             HttpContext.Response.Headers.Add("Cache-Control", "max-age=360");
             return Page();
         }
+        public async Task<IActionResult> OnGetCollectionsAsync(int? id)
+        {
+            PublicUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
+            var ReportList = _context.DpReportAnnotations.Where(x => x.DataProjectId == id).Select(x => x.ReportId).ToList();
+
+            TopUsers = await _cache.GetOrCreateAsync<List<TopUsersData>>("TopUsers-" + id,
+              cacheEntry =>
+              {
+                  cacheEntry.SlidingExpiration = TimeSpan.FromHours(2);
+                  return (from d in _context.ReportObjectRunData
+                          where ReportList.Contains(d.ReportObjectId)
+                             && d.RunStatus == "Success"
+                          group d by d.RunUserId into grp
+                          select new { UserId = grp.Key, count = grp.Count(), avg = grp.Average(x => (int)x.RunDurationSeconds), lastRun = grp.Max(x => (DateTime)x.RunStartTime) } into tmp
+                          join u in _context.Users on tmp.UserId equals u.UserId
+                          orderby tmp.count descending
+                          select new TopUsersData
+                          {
+                              Username = u.Fullname_Cust,
+                              UserUrl = "\\users?id=" + u.UserId,
+                              Hits = tmp.count,
+                              RunTime = Math.Round(tmp.avg, 2),
+                              LastRun = tmp.lastRun.ToString("MM/dd/yyyy")
+                          }).ToListAsync();
+              });
+
+            RunTime = await _cache.GetOrCreateAsync<List<RunTimeData>>("RunTime-" + id,
+              cacheEntry =>
+              {
+                  cacheEntry.SlidingExpiration = TimeSpan.FromHours(2);
+                  return (from d in _context.ReportObjectReportRunTimes
+                          where ReportList.Contains(d.ReportObjectId)
+                          group d by new { d.RunWeekString, d.RunWeek } into grp
+                          orderby grp.Key.RunWeek
+                          select new RunTimeData
+                          {
+                              Date = grp.Key.RunWeekString,
+                              Avg = (double)Math.Round(grp.Average(x => x.Duration ?? 0), 2),
+                              Cnt = (int)grp.Sum(x => x.Runs ?? 1)
+                          }).ToListAsync();
+              });
+
+
+            Permissions = UserHelpers.GetUserPermissions(_cache, _context, User.Identity.Name);
+            ViewData["Permissions"] = Permissions;
+            ViewData["SiteMessage"] = HtmlHelpers.SiteMessage(HttpContext, _context);
+            Favorites = UserHelpers.GetUserFavorites(_cache, _context, User.Identity.Name);
+            Preferences = UserHelpers.GetPreferences(_cache, _context, User.Identity.Name);
+            ViewData["MyRole"] = UserHelpers.GetMyRole(_cache, _context, User.Identity.Name);
+            HttpContext.Response.Headers.Remove("Cache-Control");
+            HttpContext.Response.Headers.Add("Cache-Control", "max-age=360");
+            return Page();
+        }
     }
 }

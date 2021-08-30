@@ -15,7 +15,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-|docs| |codacy| |codeql| |climate|
+|docs| |codacy| |codeql| |climate| |netlify|
 
 Atlas of Information Management
 ===============================
@@ -23,6 +23,8 @@ Atlas of Information Management
 Atlas of Information Management is a business intelligence library and documentation database. ETL processes collect metadata from various reporting platforms and store it in a centraly located database. A modern web UI is used to add additional documentation to the report objects and also to provide an intuative way to search, favorite and share reporting content.
 
 See the `project documentation <https://docs.atlas.bi>`_
+
+Chat on Discord `https://discord.gg/pAzSbMw259 <https://discord.gg/pAzSbMw259>`_
 
 Included Content
 ----------------
@@ -108,3 +110,7 @@ Atlas was created by the Riverside Healthcare Analytics team -
 .. |climate| image:: https://api.codeclimate.com/v1/badges/385f0450d811190e7e43/maintainability
    :target: https://codeclimate.com/github/Riverside-Healthcare/Atlas/maintainability
    :alt: Maintainability
+
+.. |netlify| image:: https://api.netlify.com/api/v1/badges/ed758351-91b0-4df8-9b89-21792d1fd372/deploy-status
+   :target: https://app.netlify.com/sites/hopeful-meninsky-c2b956/deploys
+   :alt: netlify

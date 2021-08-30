@@ -175,7 +175,7 @@ namespace Atlas_Web
 
                 pipeline.AddJavaScriptBundle("/js/access.min.js", "js/access.js");
 
-                pipeline.AddJavaScriptBundle("/js/profile.min.js", "js/reportProfile.js");
+                pipeline.AddJavaScriptBundle("/js/profile.min.js", "js/profile.js");
 
                 pipeline.AddJavaScriptBundle("/js/code.min.js", "lib/highlight/highlight.js");
 
@@ -194,7 +194,7 @@ namespace Atlas_Web
                                                                   "js/utility/checkbox.js"
                                                                   );
                 pipeline.AddJavaScriptBundle("/js/report-editor.min.js", "js/reportEditor.js");
-                pipeline.AddJavaScriptBundle("/js/project-editor.min.js", "js/projectEditor.js");
+                pipeline.AddJavaScriptBundle("/js/collection-editor.min.js", "js/collectionEditor.js");
             });
 
             services.AddWebMarkupMin(

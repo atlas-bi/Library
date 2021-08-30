@@ -523,9 +523,7 @@
             rs.style.height = Math.min(data.length * 23 + 8, 238) + "px";
             try {
               SimpleScrollbar.initAll();
-            } catch (e) {
-              console.log(e);
-            }
+            } catch (e) {}
           }
         }
       });
@@ -637,6 +635,20 @@
             }, 0);
           } else {
             hdn.setAttribute("value", actv.getAttribute("value"));
+            if (actv.classList.contains("group")) {
+              i.setAttribute("group", "true");
+              hdn.setAttribute("group", "true");
+              // only change url in some cases
+              if (window.location.pathname.toLowerCase() == "/users") {
+                i.closest("form").setAttribute("action", "/groups");
+              }
+            } else {
+              i.removeAttribute("group");
+              hdn.removeAttribute("group");
+              if (window.location.pathname.toLowerCase() == "/groups") {
+                i.closest("form").setAttribute("action", "/users");
+              }
+            }
             //hdn.trigger('change');
             i.value = actvName;
             i.setAttribute("value", actvName);
@@ -829,9 +841,7 @@
                 rs.style.height = Math.min(data.length * 23 + 8, 238) + "px";
                 try {
                   SimpleScrollbar.initAll();
-                } catch (e) {
-                  console.log(e);
-                }
+                } catch (e) {}
               }
             };
           } else {

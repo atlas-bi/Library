@@ -16,11 +16,11 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 *@
 
-@model Atlas_Web.Pages.Projects.IndexModel
+@model Atlas_Web.Pages.Collections.IndexModel
 
 <h3>New Milestone</h3>
 <form asp-page-handler="AddMilestone" method="post" id=AddMilestone>
-    <input asp-for="DpMilestone.DataProjectId" type="hidden" value='@Model.DataProject.Id' />
+    <input asp-for="DpMilestone.DataProjectId" type="hidden" value='@Model.Collection.Id' />
     <input type='hidden' name='DpChecklist' value='' />
     
     <div class="listDetails">
@@ -53,10 +53,10 @@
 
 </form>
 
-@if(Model.DataProject.MilestoneTasks.Count() > 0){
+@if(Model.Collection.MilestoneTasks.Count() > 0){
     <h3>Existing Milestones</h3>
 
-    @foreach (var t in Model.DataProject.MilestoneTasks)
+    @foreach (var t in Model.Collection.MilestoneTasks)
     {
         <h4 class="drop" data-toggle="clps" data-target="collapse-milestone-@(t.Id)">Edit <span class="text-green">@t.Description.Substring(0,Math.Min(30,@t.Description.Length)) ...</span> Milestone
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M31.3 192h257.3c17.8 0 26.7 21.5 14.1 34.1L174.1 354.8c-7.8 7.8-20.5 7.8-28.3 0L17.2 226.1C4.6 213.5 13.5 192 31.3 192z"/></svg>
@@ -64,11 +64,11 @@
 
         <div id="collapse-milestone-@(t.Id)" class="clps">
             <div class="drop-box">
-                <h5><a class="drop-link" href="/Projects?handler=DeleteMilestone&id=@t.Id">Delete This Milestone</a></h5>
+                <h5><a class="drop-link" href="/collections?handler=DeleteMilestone&id=@t.Id">Delete This Milestone</a></h5>
 
                 <form asp-page-handler="EditMilestone" method="post">
                     <input asp-for="DpMilestone.MilestoneTaskId" type="hidden" value="@t.Id" />
-                    <input asp-for="DpMilestone.DataProjectId" type="hidden" value="@Model.DataProject.Id" />
+                    <input asp-for="DpMilestone.DataProjectId" type="hidden" value="@Model.Collection.Id" />
                     <input type='hidden' name='DpChecklist' value='' />
 
                     <div class="listDetails">

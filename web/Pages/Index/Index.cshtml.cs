@@ -185,26 +185,26 @@ namespace Atlas_Web.Pages
             };
         }
 
-        public async Task<ActionResult> OnGetRecentProjects()
+        public async Task<ActionResult> OnGetRecentCollections()
         {
             var user = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
 
             ViewData["UserId"] = user.UserId;
 
-            ViewData["NewestProjects"] = await (from dp in _context.DpDataProjects
-                                                join q in (from f in _context.UserFavorites
-                                                           where f.ItemType.ToLower() == "project"
-                                                           && f.UserId == user.UserId
-                                                           select new { f.ItemId })
-                                                on dp.DataProjectId equals q.ItemId into tmp
-                                                from fi in tmp.DefaultIfEmpty()
-                                                orderby dp.LastUpdateDate descending
-                                                select new BasicFavoriteData
-                                                {
-                                                    Name = dp.Name,
-                                                    Id = dp.DataProjectId,
-                                                    Favorite = fi.ItemId == null ? "no" : "yes"
-                                                }).Take(10).ToListAsync();
+            ViewData["NewestCollections"] = await (from dp in _context.DpDataProjects
+                                                   join q in (from f in _context.UserFavorites
+                                                              where f.ItemType.ToLower() == "project"
+                                                              && f.UserId == user.UserId
+                                                              select new { f.ItemId })
+                                                   on dp.DataProjectId equals q.ItemId into tmp
+                                                   from fi in tmp.DefaultIfEmpty()
+                                                   orderby dp.LastUpdateDate descending
+                                                   select new BasicFavoriteData
+                                                   {
+                                                       Name = dp.Name,
+                                                       Id = dp.DataProjectId,
+                                                       Favorite = fi.ItemId == null ? "no" : "yes"
+                                                   }).Take(10).ToListAsync();
 
             HttpContext.Response.Headers.Remove("Cache-Control");
             HttpContext.Response.Headers.Add("Cache-Control", "max-age=7200");
@@ -212,7 +212,7 @@ namespace Atlas_Web.Pages
 
             return new PartialViewResult()
             {
-                ViewName = "Partials/_RecentProjects",
+                ViewName = "Partials/_RecentCollections",
                 ViewData = ViewData
             };
         }

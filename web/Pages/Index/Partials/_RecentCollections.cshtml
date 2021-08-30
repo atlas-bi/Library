@@ -15,14 +15,16 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 *@
-<div class="mdl" id="profile-modal" tabindex="-1">
-    <div class="mdl-d" style="max-width:70%">
-        <div class="mdl-c">
-            <div class="mdl-h">
-                <button type="button" class="close" data-dismiss="mdl">&times;</button>
-                <h2>Profile</h2>
-            </div>
-            <div class="mdl-b"></div>
-        </div>
+
+<cache>
+    <div>
+        @if(ViewBag.NewestCollections.Count > 0)
+        {
+            <h4>Collections</h4>
+            @foreach (var collection in ViewBag.NewestCollections)
+            {
+                <a href="/collections?id=@collection.Id">@collection.Name.Replace('_', ' ')</a>
+            }
+        }
     </div>
-</div>
+</cache>

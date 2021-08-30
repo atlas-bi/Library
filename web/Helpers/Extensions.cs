@@ -247,7 +247,7 @@ namespace Atlas_Web.Helpers
             return "Every " + content.Interval + " " + name; ;
         }
 
-        public static List<TaskData> GetMilestoneTaskDates(Atlas_Web.Pages.Projects.IndexModel.MilestoneTasksData task)
+        public static List<TaskData> GetMilestoneTaskDates(Atlas_Web.Pages.Collections.IndexModel.MilestoneTasksData task)
         {
             int counter;
             DateTime StartDate = DateTime.Now;
@@ -324,7 +324,7 @@ namespace Atlas_Web.Helpers
             return list;
         }
 
-        public static List<TaskData> GetMilestoneCalendar(List<Atlas_Web.Pages.Projects.IndexModel.MilestoneTasksData> Tasks)
+        public static List<TaskData> GetMilestoneCalendar(List<Atlas_Web.Pages.Collections.IndexModel.MilestoneTasksData> Tasks)
         {
             var list = new List<TaskData>();
             foreach (var task in Tasks)
@@ -406,7 +406,7 @@ namespace Atlas_Web.Helpers
 
             if (((Url != "" && Url != null) || (ReportType != "SSRS Report" && ReportType != "SSRS File" && Epic && ReportType != "Source Radar Dashboard Component")) && ReportType != "Epic-Crystal Report")
             {
-                if (EpicMasterFile == "HRX")
+                if (EpicMasterFile == "HRX" && ReportType != "SlicerDicer Session")
                 {
                     NewUrl = "EpicAct:AC_RW_STATUS,RUNPARAMS:" + EpicReportTemplateId + "|" + EpicRecordId;
                 }
@@ -429,7 +429,7 @@ namespace Atlas_Web.Helpers
                 {
                     NewUrl = "EpicAct:WM_METRIC_EDITOR,INFONAME:IDNRECORDID,INFOVALUE:" + EpicRecordId;
                 }
-                else if (EpicMasterFile == "FDM" && EpicRecordId != null)
+                else if ((EpicMasterFile == "FDM" || ReportType == "SlicerDicer Session") && EpicRecordId != null)
                 {
                     NewUrl = "EpicACT:BI_SLICERDICER,LaunchOptions:16,RunParams:StartingDataModelId=" + EpicRecordId;
                 }

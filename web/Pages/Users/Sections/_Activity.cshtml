@@ -173,7 +173,7 @@
                                     "data": [
                                             @foreach (var g in TopTenRun)
                                             { 
-                                                <text>{ "title": "@Name(g.Date)", "data": "@g.Avg"}</text> @if(i < 19){<text>,</text>}
+                                                <text>{ "title": "@Name(g.Date)", "data": "@g.Avg"}</text> @if(i < 19 && i < TopTenRun.Count - 1){<text>,</text>}
 
 
                                                 @if(i == 19 )
@@ -193,7 +193,7 @@
                                             }
                                             @foreach (var g in TopTenRun)
                                             { 
-                                                <text>{ "title": "@Name(g.Date)", "data": "@g.Cnt"}</text> @if(i < 19){<text>,</text>}
+                                                <text>{ "title": "@Name(g.Date)", "data": "@g.Cnt"}</text> @if(i < 19 && i < TopTenRun.Count - 1){<text>,</text>}
                                                 @if(i == 19 )
                                                 {
                                                     break;

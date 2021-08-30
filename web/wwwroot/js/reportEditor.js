@@ -223,7 +223,7 @@
     }
   });
 
-  /* projects */
+  /* collections */
 
   document.querySelector("#editModal").addEventListener("click", function (e) {
     var q,
@@ -231,12 +231,12 @@
       form,
       url,
       termsContainer = document.getElementById(
-        "report-editor-currentprojects-container"
+        "report-editor-currentcollections-container"
       );
-    if (e.target.closest("#report-editor-remove-project-form")) {
+    if (e.target.closest("#report-editor-remove-collection-form")) {
       e.preventDefault();
 
-      form = e.target.closest("#report-editor-remove-project-form");
+      form = e.target.closest("#report-editor-remove-collection-form");
       url = form.getAttribute("href");
 
       q = new XMLHttpRequest();
@@ -271,17 +271,17 @@
       form,
       url,
       termsContainer = d.getElementById(
-        "report-editor-currentprojects-container"
+        "report-editor-currentcollections-container"
       );
     if (
-      e.target.closest("#report-editor-add-new-data-project-form") ||
-      e.target.closest("#report-editor-edit-project-form")
+      e.target.closest("#report-editor-add-new-collection-form") ||
+      e.target.closest("#report-editor-edit-collection-form")
     ) {
       e.preventDefault();
 
       form =
-        e.target.closest("#report-editor-add-new-data-project-form") ||
-        e.target.closest("#report-editor-edit-project-form");
+        e.target.closest("#report-editor-add-new-collection-form") ||
+        e.target.closest("#report-editor-edit-collection-form");
       url = form.getAttribute("action");
 
       q = new XMLHttpRequest();

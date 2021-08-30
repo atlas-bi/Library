@@ -84,6 +84,7 @@ namespace Atlas_Web.Pages.Users
             public string EpicMasterFile { get; set; }
             public string ReportServerPath { get; set; }
             public string SourceServer { get; set; }
+            public string Image { get; set; }
             public string ReportUrl { get; set; }
             public string EpicReleased { get; set; }
             public string ManageReportUrl { get; set; }
@@ -163,7 +164,7 @@ namespace Atlas_Web.Pages.Users
         public List<int?> Permissions { get; set; }
         public IEnumerable<LastEdited> ReportObjectDocEdits { get; set; }
         public IEnumerable<LastEdited> InitiativeEdits { get; set; }
-        public IEnumerable<LastEdited> ProjectEdits { get; set; }
+        public IEnumerable<LastEdited> CollectionEdits { get; set; }
         public IEnumerable<LastEdited> TermEdits { get; set; }
         public int UserId { get; set; }
         public int MyId { get; set; }
@@ -433,7 +434,7 @@ namespace Atlas_Web.Pages.Users
                             where ((ro.DefaultVisibilityYn == "Y" && q.ItemType == "report") || q.ItemType != "report")
                             join tm in _context.Terms on new { Id = (int)q.ItemId, Type = q.ItemType } equals new { Id = (int)tm.TermId, Type = "term" } into tms
                             from tm in tms.DefaultIfEmpty()
-                            join pj in _context.DpDataProjects on new { Id = (int)q.ItemId, Type = q.ItemType } equals new { Id = (int)pj.DataProjectId, Type = "project" } into pjs
+                            join pj in _context.DpDataProjects on new { Id = (int)q.ItemId, Type = q.ItemType } equals new { Id = (int)pj.DataProjectId, Type = "collection" } into pjs
                             from pj in pjs.DefaultIfEmpty()
                             join di in _context.DpDataInitiatives on new { Id = (int)q.ItemId, Type = q.ItemType } equals new { Id = (int)di.DataInitiativeId, Type = "initiative" } into dis
                             from di in dis.DefaultIfEmpty()
@@ -451,6 +452,7 @@ namespace Atlas_Web.Pages.Users
                                 FolderId = q.FolderId,
                                 FolderName = q.Folder.FolderName,
                                 ItemRank = q.ItemRank,
+                                Image = ro.ReportObjectImagesDocs.Any() ? "/data/img?id=" + ro.ReportObjectImagesDocs.First().ImageId : "",
                                 EpicReleased = ro.CertificationTag,
                                 FolderRank = q.Folder.FolderRank,
                                 Description = (ro.ReportObjectDoc.DeveloperDescription ?? ro.Description ?? ro.DetailedDescription ?? ro.ReportObjectDoc.KeyAssumptions
@@ -711,7 +713,7 @@ namespace Atlas_Web.Pages.Users
                     cacheEntry.SlidingExpiration = TimeSpan.FromHours(12);
                     return (from a in _context.UserGroupsMemberships
                             where a.UserId == UserId
-                        && a.Group.GroupType != "Email Distribution Groups"
+                            // && a.Group.GroupType != "Email Distribution Groups"
                             select new Group
                             {
                                 Id = a.GroupId,
@@ -813,7 +815,8 @@ namespace Atlas_Web.Pages.Users
                                Name = a.Title,
                                Type = (a.Pathname.ToLower() == "/reports" ? "Reports" :
                                        a.Pathname.ToLower() == "/terms" ? "Terms" :
-                                       a.Pathname.ToLower() == "/projects" ? "Projects" :
+                                       a.Pathname.ToLower() == "/projects" ? "Collections" :
+                                       a.Pathname.ToLower() == "/collections" ? "Collections" :
                                        a.Pathname.ToLower() == "/initiatives" ? "Initiatives" :
                                        a.Pathname.ToLower() == "/users" ? "Users" :
                                        a.Pathname.ToLower() == "/contacts" ? "Reports" :
@@ -857,7 +860,7 @@ namespace Atlas_Web.Pages.Users
                            }).Take(10).ToListAsync();
                });
 
-            ViewData["ProjectEdits"] = await _cache.GetOrCreateAsync<List<LastEdited>>("ProjectEdits-" + UserId,
+            ViewData["CollectionEdits"] = await _cache.GetOrCreateAsync<List<LastEdited>>("CollectionEdits-" + UserId,
                cacheEntry =>
                {
                    cacheEntry.SlidingExpiration = TimeSpan.FromMinutes(10);
@@ -869,7 +872,7 @@ namespace Atlas_Web.Pages.Users
                            {
                                Date = r.LastUpdatedDateDisplayString,
                                Name = r.Name,
-                               Url = "\\projects?id=" + r.DataProjectId
+                               Url = "\\collections?id=" + r.DataProjectId
                            }).Take(10).ToListAsync();
                });
 

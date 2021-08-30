@@ -39,6 +39,7 @@ namespace Atlas_Web.Models
         public string ReportServerPath { get; set; }
         public string Description { get; set; }
         public string ReportType { get; set; }
+        public string Image { get; set; }
         public int Documented { get; set; }
         public string EpicReleased { get; set; }
         public string ReportUrl { get; set; }

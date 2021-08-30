@@ -36,11 +36,11 @@
 
     @if (Model.Permissions.Contains(40)){
         // search for other users here
-        <h5>Open Another User</h5>
+        <h5>Open Another User or Group</h5>
         <form class="" method="GET">
             <div class="user-search">
                 <div>
-                <input type="dynamic-dropdown" name="id" search-area="UserSearch" />
+                <input type="dynamic-dropdown" name="id" search-area="UserProfileSearch" placeholder="search for a user or group" />
             </div>
                 <button type="submit">Open</button>
             </div>

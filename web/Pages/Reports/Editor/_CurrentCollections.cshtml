@@ -16,11 +16,18 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 *@
 
-@model Atlas_Web.Pages.Projects.IndexModel
+@model Atlas_Web.Pages.Reports.IndexModel
 
-<h3>Attachments</h3>
-
-@foreach (var a in ViewBag.Attachments)
+@if (ViewBag.RelatedCollections.Count > 0)
 {
-    <a href="@a.Src">@a.Name (@a.Size b)</a> 
+    <h4>Existing Linked Collections</h4>
+
+  @foreach (var t in ViewBag.RelatedCollections)
+    {
+    <div class="snippet">
+        <h4>Edit <span class="text-green">@t.Name</span> Link</h4>
+        <h5><a class="drop-link" href="/collections?id=@t.Id">Open This Collection</a> / <a class="drop-link" href="/Reports?handler=DeleteLinkedCollection&id=@t.AnnotationId" id="report-editor-remove-collection-form">Delete This Link</a></h5>
+    </div>
+    }
+
 }

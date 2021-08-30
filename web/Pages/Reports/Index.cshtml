@@ -31,7 +31,7 @@
     var groups = Model.Groups.Count() > 0;
     var query = (Model.ReportQuery.Count() + Model.ComponentQuery.Count()) > 0;
     var terms = Model.ViewerReportTerms.Count() > 0;
-    var projects = Model.RelatedProjects.Count() > 0;
+    var collections = Model.RelatedCollections.Count() > 0;
     var maintlog = Model.ReportMaintLogs.Count() > 0;
 }
 
@@ -156,7 +156,7 @@
             <a href="#query" class="pageNav-link">Query</a>
         }
 
-        @if (parents || children || groups || projects)
+        @if (parents || children || groups || collections)
         {
             <a href="#relationships" class="pageNav-link">Relationships</a>
         }
@@ -215,7 +215,7 @@
     </section>
 }
 
-@if (parents || children || groups || projects)
+@if (parents || children || groups || collections)
 {
     <section class="pageSection">
         <span class="location" id="relationships"></span>

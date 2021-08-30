@@ -302,7 +302,10 @@
   i.addEventListener("input", function (e) {
     window.clearTimeout(searchTimerId);
     searchTimerId = window.setTimeout(function () {
-      if (i.value.trim() !== "") AjaxSearch(i.value, null, i.value);
+      if (i.value.trim() !== "") {
+        AjaxSearch(i.value, null, i.value);
+        window.clearTimeout(searchTimerId);
+      }
     }, searchTimeout);
   });
 

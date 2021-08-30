@@ -16,33 +16,31 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 *@
 
-@model Atlas_Web.Pages.Projects.IndexModel
+@model Atlas_Web.Pages.Collections.IndexModel
 
-@if(ViewBag.RelatedTerms.Count> 0)
+@if(ViewBag.RelatedReports.Count> 0)
 {
     <h4>Existing Links</h4>
 
-    @foreach (var t in ViewBag.RelatedTerms)
+    @foreach (var t in ViewBag.RelatedReports)
     {
-        <h4 class="drop" data-toggle="clps" data-target="collapse-termlink-@(t.Id)">Edit <span class="text-green">@t.Name</span> Link
+        <h4 class="drop" data-toggle="clps" data-target="collapse-reportlink-@(t.Id)">Edit <span class="text-green">@t.Name</span> Link
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M31.3 192h257.3c17.8 0 26.7 21.5 14.1 34.1L174.1 354.8c-7.8 7.8-20.5 7.8-28.3 0L17.2 226.1C4.6 213.5 13.5 192 31.3 192z"/></svg>
         </h4>
 
-        <div id="collapse-termlink-@(t.Id)" class="clps">
+        <div id="collapse-reportlink-@(t.Id)" class="clps">
             <div class="drop-box">
-                <h5><a class="drop-link" href="Terms?id=@t.ItemId">Open This Term</a> / <a class="drop-link" href="/Projects?handler=DeleteLinkedTerm&id=@t.Id" id="project-editor-remove-term-form">Delete This Link</a></h5>
+                <h5><a class="drop-link" href="Reports?id=@t.ItemId">Open This Report</a> / <a class="drop-link" href="/Collections?handler=DeleteLinkedReport&id=@t.Id" id="collection-editor-remove-report-form">Delete This Link</a></h5>
 
-                <form action="/Projects?handler=EditLinkedTerm" method="post" id="project-editor-edit-term-form">
-                    <input asp-for="DpTermAnnotation.TermAnnotationId" value="@t.Id" type="hidden" />
-                    <input asp-for="DpTermAnnotation.DataProjectId" value="@t.DataProjectId" type="hidden" />
+                <form action="/Collections?handler=EditLinkedReport" method="post" id="collection-editor-edit-report-form">
+                    <input asp-for="DpReportAnnotation.ReportAnnotationId" value="@t.Id" type="hidden" />
+                    <input asp-for="DpReportAnnotation.DataProjectId" value="@t.CollectionId" type="hidden" />
 
                     <div class="listDetails">
                         <label>Rank</label>
-                        <input asp-for="DpTermAnnotation.Rank" type="number" value="@t.Rank" />
+                        <input asp-for="DpReportAnnotation.Rank" type="number" value="@t.Rank" />
                     </div>
 
-                    <h3>Annotation</h3>
-                    <div class="editor" data-inputName="DpTermAnnotation.Annotation" data-inputId="DpTermAnnotation_Annotation"><textarea>@t.Annotation</textarea></div>
 
                     <h3><button class="editor-save" type="submit">Save</button></h3>
                 </form>

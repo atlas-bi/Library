@@ -135,7 +135,7 @@ namespace Atlas_Web.Pages.Tasks
                 new AdList { Url = "/?handler=RecentReports", Column = 2 },
                 new AdList { Url = "/?handler=RecentTerms", Column = 2 },
                 new AdList { Url = "/?handler=RecentInitiatives", Column = 2 },
-                new AdList { Url = "/?handler=RecentProjects", Column = 2 }
+                new AdList { Url = "/?handler=RecentCollections", Column = 2 }
             };
             ViewData["AdLists"] = AdLists;
             Favorites = UserHelpers.GetUserFavorites(_cache, _context, User.Identity.Name);

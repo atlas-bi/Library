@@ -63,6 +63,7 @@
       }
     };
     */
+
   var d = document,
     l = debounce(function () {
       setTimeout(function () {
@@ -79,6 +80,7 @@
           }
 
           var w = dest[el].clientWidth;
+
           if (w > 0) dest[el].appendChild(new build(a, w));
         }
       }, 0);

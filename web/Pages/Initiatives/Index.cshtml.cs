@@ -61,12 +61,12 @@ namespace Atlas_Web.Pages.Initiatives
             public string UpdatedBy { get; set; }
             public string UpdateDate { get; set; }
             public string Description { get; set; }
-            public IEnumerable<RelatedProjectsData> RelatedProjects { get; set; }
+            public IEnumerable<RelatedCollectionsData> RelatedCollections { get; set; }
             public IEnumerable<RelatedContactsData> RelatedContacts { get; set; }
             public string Favorite { get; set; }
         }
 
-        public class RelatedProjectsData
+        public class RelatedCollectionsData
         {
             public int Id { get; set; }
             public string Name { get; set; }
@@ -96,7 +96,7 @@ namespace Atlas_Web.Pages.Initiatives
             public string Favorite { get; set; }
         }
 
-        [BindProperty] public int[] LinkedDataProjects { get; set; }
+        [BindProperty] public int[] LinkedCollections { get; set; }
         [BindProperty] public int?[] LinkedContacts { get; set; }
         [BindProperty] public DpDataInitiative DpDataInitiative { get; set; }
 
@@ -123,7 +123,7 @@ namespace Atlas_Web.Pages.Initiatives
                 new AdList { Url = "/?handler=RecentReports", Column = 2 },
                 new AdList { Url = "/?handler=RecentTerms", Column = 2 },
                 new AdList { Url = "/?handler=RecentInitiatives", Column = 2 },
-                new AdList { Url = "/?handler=RecentProjects", Column = 2 }
+                new AdList { Url = "/?handler=RecentCollections", Column = 2 }
             };
             ViewData["AdLists"] = AdLists;
 
@@ -151,21 +151,21 @@ namespace Atlas_Web.Pages.Initiatives
                                             UpdateDate = d.LastUpdatedDateDisplayString,
                                             UpdatedBy = d.LastUpdateUserNavigation.Fullname_Cust,
                                             Description = d.Description,
-                                            RelatedProjects = (from p in _context.DpDataProjects
-                                                               where p.DataInitiativeId == d.DataInitiativeId
-                                                               select new RelatedProjectsData
-                                                               {
-                                                                   Id = p.DataProjectId,
-                                                                   Name = p.Name,
-                                                                   RelatedReports = (from r in _context.DpReportAnnotations
-                                                                                     where r.DataProjectId == p.DataProjectId
-                                                                                     select new RelatedReportsData
-                                                                                     {
-                                                                                         Id = r.ReportId,
-                                                                                         Name = r.Report.Name,
-                                                                                         Annotation = r.Annotation
-                                                                                     }).ToList()
-                                                               }).ToList(),
+                                            RelatedCollections = (from p in _context.DpDataProjects
+                                                                  where p.DataInitiativeId == d.DataInitiativeId
+                                                                  select new RelatedCollectionsData
+                                                                  {
+                                                                      Id = p.DataProjectId,
+                                                                      Name = p.Name,
+                                                                      RelatedReports = (from r in _context.DpReportAnnotations
+                                                                                        where r.DataProjectId == p.DataProjectId
+                                                                                        select new RelatedReportsData
+                                                                                        {
+                                                                                            Id = r.ReportId,
+                                                                                            Name = r.Report.Name,
+                                                                                            Annotation = r.Annotation
+                                                                                        }).ToList()
+                                                                  }).ToList(),
                                             RelatedContacts = (from c in _context.DpContactLinks
                                                                where c.InitiativeId == d.DataInitiativeId
                                                                select new RelatedContactsData
@@ -222,7 +222,7 @@ namespace Atlas_Web.Pages.Initiatives
             _context.Add(DpDataInitiative);
 
             // add any links to the projects
-            _context.DpDataProjects.Where(t => LinkedDataProjects.Contains(t.DataProjectId)).ToList().ForEach(x => x.DataInitiativeId = DpDataInitiative.DataInitiativeId);
+            _context.DpDataProjects.Where(t => LinkedCollections.Contains(t.DataProjectId)).ToList().ForEach(x => x.DataInitiativeId = DpDataInitiative.DataInitiativeId);
 
             // add contacts
             _context.AddRange(LinkedContacts.Select(id => new DpContactLink { ContactId = id, InitiativeId = DpDataInitiative.DataInitiativeId }));
@@ -272,8 +272,8 @@ namespace Atlas_Web.Pages.Initiatives
             _context.Attach(NewDpDataInitiative).State = EntityState.Modified;
 
             // updated any linked data projects that were added and remove any that were delinked.
-            _context.DpDataProjects.Where(d => LinkedDataProjects.Contains(d.DataProjectId)).ToList().ForEach(x => x.DataInitiativeId = DpDataInitiative.DataInitiativeId);
-            _context.DpDataProjects.Where(d => d.DataInitiativeId == DpDataInitiative.DataInitiativeId).Except(_context.DpDataProjects.Where(d => LinkedDataProjects.Contains(d.DataProjectId))).ToList().ForEach(x => x.DataInitiativeId = null);
+            _context.DpDataProjects.Where(d => LinkedCollections.Contains(d.DataProjectId)).ToList().ForEach(x => x.DataInitiativeId = DpDataInitiative.DataInitiativeId);
+            _context.DpDataProjects.Where(d => d.DataInitiativeId == DpDataInitiative.DataInitiativeId).Except(_context.DpDataProjects.Where(d => LinkedCollections.Contains(d.DataProjectId))).ToList().ForEach(x => x.DataInitiativeId = null);
             // first delete contacts
             _context.RemoveRange(_context.DpContactLinks.Where(i => i.InitiativeId == DpDataInitiative.DataInitiativeId));
 

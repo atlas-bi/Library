@@ -1,4 +1,4 @@
-@*
+﻿/*
     Atlas of Information Management business intelligence library and documentation database.
     Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
 
@@ -14,15 +14,32 @@
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*@
-<div class="mdl" id="profile-modal" tabindex="-1">
-    <div class="mdl-d" style="max-width:70%">
-        <div class="mdl-c">
-            <div class="mdl-h">
-                <button type="button" class="close" data-dismiss="mdl">&times;</button>
-                <h2>Profile</h2>
-            </div>
-            <div class="mdl-b"></div>
-        </div>
-    </div>
-</div>
+*/
+
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Atlas_Web.Models;
+/**************** notice ****************/
+// this section of the website is only 
+// kept to allow old urls to acces
+// the reports. example of the old url:
+// /ReportObjects/Detials?id=73715
+
+
+namespace Atlas_Web.Pages.Projects
+{
+    public class DetailsModel : PageModel
+    {
+        private readonly Atlas_WebContext _context;
+
+        public DetailsModel(Atlas_WebContext context)
+        {
+            _context = context;
+        }
+
+        public IActionResult OnGet(int? id)
+        {
+            return RedirectToPage("/Collections/Index", new { id });
+        }
+    }
+}

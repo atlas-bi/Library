@@ -16,13 +16,13 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 *@
 
-@model Atlas_Web.Pages.Projects.IndexModel
+@model Atlas_Web.Pages.Collections.IndexModel
 
 <h3>Attachments</h3>
 @foreach (var file in ViewBag.Attachments)
 {
     <form asp-page-handler="RemoveFile" method="post" c>
-        <input name="Id" type="hidden" value="@Model.DataProject.Id">
+        <input name="Id" type="hidden" value="@Model.Collection.Id">
         <input name="FileId" type="hidden" value="@file.Id">
         <a href="@file.Src">@file.Name</a> (@file.Size b)
         <button type="submit" class="btn btn-link float-right pt-0" onclick="return confirm('Are you sure you want to remove this file?');">
@@ -32,7 +32,7 @@
 }
 
 <form method="post" asp-page-handler="AddFile" enctype="multipart/form-data" id="dp-add-attachment-form">
-    <input name="Id" type="hidden" value="@Model.DataProject.Id">
+    <input name="Id" type="hidden" value="@Model.Collection.Id">
     <label>Upload New File</label>
     <input type="file" name="File" hidden id="dp-add-attachment" class="form-control-file" accept="image/gif, image/jpeg, image/png" onchange="form.submit()" />
 </form>

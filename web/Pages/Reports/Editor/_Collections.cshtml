@@ -19,20 +19,18 @@
 @model Atlas_Web.Pages.Reports.IndexModel
 
 
-<h3>Add Link to Data Project</h3>
-<form asp-page="/Reports/Index" asp-page-handler="AddLinkedProject" method="post" id="report-editor-add-new-data-project-form">
+<h3>Add Link to Collection</h3>
+<form asp-page="/Reports/Index" asp-page-handler="AddLinkedCollection" method="post" id="report-editor-add-new-collection-form">
     <input asp-for="DpReportAnnotation.ReportId" type="hidden" value="@Model.Report.Id"/>
         <div class="listDetails">
 
-        <label>Project Name</label>
-        <input type="dynamic-dropdown" class="head-light" data-head="Name" asp-for="DpReportAnnotation.DataProjectId" value="" visible-value="" search-area="ProjectSearch" />
+        <label>Collection Name</label>
+        <input type="dynamic-dropdown" class="head-light" data-head="Name" asp-for="DpReportAnnotation.DataProjectId" value="" visible-value="" search-area="CollectionSearch" />
          </div>
 
-         <h3>Annotation</h3>
-    <div class="editor" data-inputName="DpReportAnnotation.Annotation" data-inputId="DpReportAnnotation_Annotation"><textarea></textarea></div>
         <h3><button class="editor-save" type="submit">Save</button></h3>
 </form>
 
-<div id="report-editor-currentprojects-container">
-    <partial name="Editor/_CurrentProjects" />
+<div id="report-editor-currentcollections-container">
+    <partial name="Editor/_CurrentCollections" />
 </div>

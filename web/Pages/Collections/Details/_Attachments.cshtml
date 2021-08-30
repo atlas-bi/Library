@@ -16,15 +16,11 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 *@
 
-<cache>
-    <div>
-        @if(ViewBag.NewestProjects.Count > 0)
-        {
-            <h4>Projects</h4>
-            @foreach (var project in ViewBag.NewestProjects)
-            {
-                <a href="/Projects?id=@project.Id">@project.Name.Replace('_', ' ')</a>
-            }
-        }
-    </div>
-</cache>
+@model Atlas_Web.Pages.Collections.IndexModel
+
+<h3>Attachments</h3>
+
+@foreach (var a in ViewBag.Attachments)
+{
+    <a href="@a.Src">@a.Name (@a.Size b)</a> 
+}

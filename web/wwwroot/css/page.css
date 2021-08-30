@@ -418,3 +418,32 @@ button .icon-sm {
   margin: 0 15px;
   white-space: nowrap;
 }
+
+.thumb > img {
+  width: 150px;
+  border: 1px solid #e0e4e7;
+  border-radius: 3px;
+  padding: 1px;
+  max-height: 150px;
+  min-height: 0;
+}
+
+.snippet {
+  background-color: rgba(0, 0, 0, 0.03);
+  border-radius: 3px;
+  margin: 10px 0;
+  padding: 10px;
+}
+.snippet-col {
+  display: flex;
+  flex-direction: row;
+  margin-top: 10px;
+}
+.snippet-left {
+  width: auto;
+}
+
+.snippet-right {
+  flex: 1;
+  padding-left: 10px;
+}

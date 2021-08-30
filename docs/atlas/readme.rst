@@ -50,6 +50,12 @@ Key Features
     - Embedded report maintenance scheduling
     - Ability to run and open editors directly from Atlas
 
+####
+Chat
+####
+
+Chat on Discord `https://discord.gg/pAzSbMw259 <https://discord.gg/pAzSbMw259>`_.
+
 #######
 Credits
 #######

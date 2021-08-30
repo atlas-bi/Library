@@ -15,14 +15,38 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 *@
-<div class="mdl" id="profile-modal" tabindex="-1">
-    <div class="mdl-d" style="max-width:70%">
-        <div class="mdl-c">
-            <div class="mdl-h">
-                <button type="button" class="close" data-dismiss="mdl">&times;</button>
-                <h2>Profile</h2>
-            </div>
-            <div class="mdl-b"></div>
-        </div>
+
+@model Atlas_Web.Pages.Collections.IndexModel
+
+
+@if(Model.Collection.Description != null)
+{
+    <h3>Description</h3>
+    <div class="markdown">
+        @Html.Raw(@Helpers.HtmlHelpers.MarkdownToHtml(Model.Collection.Description))
     </div>
+}
+
+@if(Model.Collection.Purpose != null)
+{
+    <h3>Search Summary</h3>
+    <div class="markdown">
+        @Html.Raw(@Helpers.HtmlHelpers.MarkdownToHtml(Model.Collection.Purpose))
+    </div>
+}
+
+<h3>Details</h3>
+<div class="listDetails">
+       
+    <span class="listDetails-title">Last Updated By</span>
+    <span>@Model.Collection.UpdatedBy</span>
+
+    <span class="listDetails-title">Last Updated</span>
+    <span>@Model.Collection.UpdateDate</span>
+
+    @if (Model.Collection.Hidden == "Y")
+{
+    <span class="listDetails-title">Hidden?</span>
+    <span>Yes</span>
+}
 </div>

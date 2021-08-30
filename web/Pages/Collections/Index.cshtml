@@ -17,14 +17,14 @@
 *@
 
 @page
-@model Atlas_Web.Pages.Projects.IndexModel
+@model Atlas_Web.Pages.Collections.IndexModel
 @{
     Layout = HttpContext.Request.Headers["x-requested-with"] == "XMLHttpRequest" ? "../Shared/_AjaxLayout.cshtml" : "../Shared/_Layout.cshtml";
 }
 
-@if(Model.DataProject is null)
+@if(Model.Collection is null)
 {
-    ViewData["Title"] = "Data Projects";
+    ViewData["Title"] = "Collections";
 
     @section Side_Links {
         @if (Model.Permissions.Contains(26))
@@ -38,9 +38,12 @@
     <partial name="_All" />
 } else
 {
-    ViewData["Title"] = @Model.DataProject.Name;
+    ViewData["Title"] = @Model.Collection.Name;
     { 
         @section Side_Links {
+             <a class="nav-link" data-toggle="mdl" data-target="profile-modal" data-tooltip="Open Report Profile">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M396.8 352h22.4c6.4 0 12.8-6.4 12.8-12.8V108.8c0-6.4-6.4-12.8-12.8-12.8h-22.4c-6.4 0-12.8 6.4-12.8 12.8v230.4c0 6.4 6.4 12.8 12.8 12.8zm-192 0h22.4c6.4 0 12.8-6.4 12.8-12.8V140.8c0-6.4-6.4-12.8-12.8-12.8h-22.4c-6.4 0-12.8 6.4-12.8 12.8v198.4c0 6.4 6.4 12.8 12.8 12.8zm96 0h22.4c6.4 0 12.8-6.4 12.8-12.8V204.8c0-6.4-6.4-12.8-12.8-12.8h-22.4c-6.4 0-12.8 6.4-12.8 12.8v134.4c0 6.4 6.4 12.8 12.8 12.8zM496 400H48V80c0-8.84-7.16-16-16-16H16C7.16 64 0 71.16 0 80v336c0 17.67 14.33 32 32 32h464c8.84 0 16-7.16 16-16v-16c0-8.84-7.16-16-16-16zm-387.2-48h22.4c6.4 0 12.8-6.4 12.8-12.8v-70.4c0-6.4-6.4-12.8-12.8-12.8h-22.4c-6.4 0-12.8 6.4-12.8 12.8v70.4c0 6.4 6.4 12.8 12.8 12.8z"/></svg>
+            </a>
             @if (Model.Permissions.Contains(28))
             {
                 <!-- editor -->
@@ -52,20 +55,20 @@
             @if (Model.Permissions.Contains(27))
             {
                 <!-- delete -->
-                <a class="nav-link" data-tooltip="Delete this Project" href="/Projects?handler=DeleteProject&Id=@Model.DataProject.Id" onclick="return confirm('Are you sure you want to remove this?');">
+                <a class="nav-link" data-tooltip="Delete this Project" href="/Projects?handler=DeleteProject&Id=@Model.Collection.Id" onclick="return confirm('Are you sure you want to remove this?');">
                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M432 32H312l-9.4-18.7A24 24 0 0 0 281.1 0H166.8a23.72 23.72 0 0 0-21.4 13.3L136 32H16A16 16 0 0 0 0 48v32a16 16 0 0 0 16 16h416a16 16 0 0 0 16-16V48a16 16 0 0 0-16-16zM53.2 467a48 48 0 0 0 47.9 45h245.8a48 48 0 0 0 47.9-45L416 128H32z"/></svg>
                 </a>
             }
 
-            <a class="nav-link @Html.Raw((@Model.DataProject.Favorite=="yes") ? "favorite" : "")" data-tooltip="@Html.Raw((@Model.DataProject.Favorite=="yes") ? "Remove from Favorites" : "Add to Favorites")" fav-type="project" object-id="@Model.DataProject.Id">
+            <a class="nav-link @Html.Raw((@Model.Collection.Favorite=="yes") ? "favorite" : "")" data-tooltip="@Html.Raw((@Model.Collection.Favorite=="yes") ? "Remove from Favorites" : "Add to Favorites")" fav-type="collection" object-id="@Model.Collection.Id">
                 <svg viewBox="0 0 576 512" xmlns="http://www.w3.org/2000/svg" ><path d="M259.3 17.8L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0z"/></svg>
             </a>
 
-            <a class="nav-link" data-tooltip="Share" data-toggle="mdl" data-target="shareModal" data-name="@Model.DataProject.Name" data-type="project">
+            <a class="nav-link" data-tooltip="Share" data-toggle="mdl" data-target="shareModal" data-name="@Model.Collection.Name" data-type="collection">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M503.691 189.836L327.687 37.851C312.281 24.546 288 35.347 288 56.015v80.053C127.371 137.907 0 170.1 0 322.326c0 61.441 39.581 122.309 83.333 154.132 13.653 9.931 33.111-2.533 28.077-18.631C66.066 312.814 132.917 274.316 288 272.085V360c0 20.7 24.3 31.453 39.687 18.164l176.004-152c11.071-9.562 11.086-26.753 0-36.328z"/></svg>
             </a>
 
-            <a class="nav-link" data-tooltip="Share Feedback" data-toggle="mdl" data-target="shareFeedback" data-name="@Model.DataProject.Name">
+            <a class="nav-link" data-tooltip="Share Feedback" data-toggle="mdl" data-target="shareFeedback" data-name="@Model.Collection.Name">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M466.27 286.69C475.04 271.84 480 256 480 236.85c0-44.015-37.218-85.58-85.82-85.58H357.7c4.92-12.81 8.85-28.13 8.85-46.54C366.55 31.936 328.86 0 271.28 0c-61.607 0-58.093 94.933-71.76 108.6-22.747 22.747-49.615 66.447-68.76 83.4H32c-17.673 0-32 14.327-32 32v240c0 17.673 14.327 32 32 32h64c14.893 0 27.408-10.174 30.978-23.95 44.509 1.001 75.06 39.94 177.802 39.94 7.22 0 15.22.01 22.22.01 77.117 0 111.986-39.423 112.94-95.33 13.319-18.425 20.299-43.122 17.34-66.99 9.854-18.452 13.664-40.343 8.99-62.99zm-61.75 53.83c12.56 21.13 1.26 49.41-13.94 57.57 7.7 48.78-17.608 65.9-53.12 65.9h-37.82c-71.639 0-118.029-37.82-171.64-37.82V240h10.92c28.36 0 67.98-70.89 94.54-97.46 28.36-28.36 18.91-75.63 37.82-94.54 47.27 0 47.27 32.98 47.27 56.73 0 39.17-28.36 56.72-28.36 94.54h103.99c21.11 0 37.73 18.91 37.82 37.82.09 18.9-12.82 37.81-22.27 37.81 13.489 14.555 16.371 45.236-5.21 65.62zM88 432c0 13.255-10.745 24-24 24s-24-10.745-24-24 10.745-24 24-24 24 10.745 24 24z"/></svg>
             </a>
                
@@ -93,17 +96,23 @@
     <partial name="_New" />
 }
 
+<partial name="modals\_reportProfile" />
+
 @if (Model.Permissions.Contains(26) || Model.Permissions.Contains(28)){
     @section css {
         <link rel="stylesheet" href="/css/editor.min.css" media="print" onload="this.onload=null;this.removeAttribute('media')" />
     }
     
     @section js {
-        <textarea class="postLoadScripts"><script src="/js/flowchart.min.js" async></script><script src="/js/editor.min.js" async></script><script src="/js/milestone-checklist.min.js" async></script>@if(!Request.Headers["User-Agent"].ToString().Contains("Trident")){<script>hljs.highlightAll();</script>}<script src="/js/project-editor.min.js" async></script></textarea>
+        <textarea class="postLoadScripts"><script src="/js/flowchart.min.js" async></script><script src="/js/editor.min.js" async></script><script src="/js/milestone-checklist.min.js" async></script>@if(!Request.Headers["User-Agent"].ToString().Contains("Trident")){<script>hljs.highlightAll();</script>}<script src="/js/collection-editor.min.js" async></script></textarea>
     }
 
 } else {
     @section js {
         <textarea class="postLoadScripts"><script src="/js/flowchart.min.js" async></script><script src="/js/milestone-checklist.min.js" async></script>@if(!Request.Headers["User-Agent"].ToString().Contains("Trident")){<script>hljs.highlightAll();</script>}
     }
+}
+
+@section startJs {
+    <script async src="/js/profile.min.js" inline></script>
 }

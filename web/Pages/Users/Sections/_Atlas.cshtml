@@ -1,36 +1,18 @@
-@*
-    Atlas of Information Management business intelligence library and documentation database.
-    Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*@
-
 @model Atlas_Web.Pages.Users.IndexModel
 
 <div>
     @{
         var ReportObjectDocEdits = ViewBag.ReportObjectDocEdits.Count > 0;
         var InitiativeEdits = ViewBag.InitiativeEdits.Count > 0;
-        var ProjectEdits = ViewBag.ProjectEdits.Count > 0;
+        var CollectionEdits = ViewBag.CollectionEdits.Count > 0;
         var TermEdits = ViewBag.TermEdits.Count > 0;
         var AtlasHistory = ViewBag.AtlasHistory.Count > 0;
         var LoadTime = ViewBag.LoadTime.Count > 0;
     }
   
-    @if (ReportObjectDocEdits || InitiativeEdits || ProjectEdits || TermEdits || AtlasHistory || LoadTime)
+    @if (ReportObjectDocEdits || InitiativeEdits || CollectionEdits || TermEdits || AtlasHistory || LoadTime)
     {
-        @if (ReportObjectDocEdits || InitiativeEdits || ProjectEdits || TermEdits)
+        @if (ReportObjectDocEdits || InitiativeEdits || CollectionEdits || TermEdits)
         {
             <h3>Recent Edits - Last 30 Days</h3>
 
@@ -53,10 +35,10 @@
 
             }
 
-            @if (ProjectEdits)
+            @if (CollectionEdits)
             {
-                <h4>Projects</h4>
-                @foreach (var r in ViewBag.ProjectEdits)
+                <h4>Collections</h4>
+                @foreach (var r in ViewBag.CollectionEdits)
                 {
                     <a href="@r.Url">@r.Name</a><span class="text-light">&nbsp;&middot;&nbsp;@r.Date</span><br>
                 }

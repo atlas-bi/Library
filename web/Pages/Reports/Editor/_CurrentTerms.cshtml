@@ -27,6 +27,7 @@
 	    <form asp-page-handler="RemoveTermLink" method="post" id="report-editor-remove-term-form">
             <input type="hidden" asp-for="NewTermLink.ReportObjectId" value="@t.ReportId" />
             <input type="hidden" asp-for="NewTermLink.TermId" value="@t.Id" />
+            <input type="hidden" asp-for="NewTermLink.LinkId" value="@t.LinkId" />
             <div class="listDetails">
                 <button type="submit" value="Remove" class="btn btn-link text-primary py-0" onclick="return confirm('Are you sure you want to remove this term?');" >
                 Delete</button>

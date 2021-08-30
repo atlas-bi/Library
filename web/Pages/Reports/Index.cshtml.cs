@@ -143,6 +143,7 @@ namespace Atlas_Web.Pages.Reports
             public string Name { get; set; }
             public int Id { get; set; }
             public string Summary { get; set; }
+            public int LinkId { get; set; }
             public string Definition { get; set; }
             public int? ReportId { get; set; }
         }
@@ -190,7 +191,7 @@ namespace Atlas_Web.Pages.Reports
             public IEnumerable<ChildData> Child { get; set; }
         }
 
-        public class ReportProjectData
+        public class ReportCollectionData
         {
             public string Name { get; set; }
             public int? Id { get; set; }
@@ -270,7 +271,7 @@ namespace Atlas_Web.Pages.Reports
         public IEnumerable<ReportChildrenData> ReportParents { get; set; }
         public IEnumerable<ManageEngineTicketsData> ManageEngineTickets { get; set; }
         public IEnumerable<Group> Groups { get; set; }
-        public IEnumerable<ReportProjectData> RelatedProjects { get; set; }
+        public IEnumerable<ReportCollectionData> RelatedCollections { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -381,6 +382,7 @@ namespace Atlas_Web.Pages.Reports
                                       {
                                           Name = r.Term.Name,
                                           Id = r.TermId,
+                                          LinkId = r.LinkId,
                                           Summary = r.Term.Summary,
                                           Definition = r.Term.TechnicalDefinition,
                                       }).ToListAsync();
@@ -393,6 +395,7 @@ namespace Atlas_Web.Pages.Reports
                                 {
                                     Name = r.Term.Name,
                                     Id = r.TermId,
+                                    LinkId = r.LinkId,
                                     Summary = r.Term.Summary,
                                     Definition = r.Term.TechnicalDefinition,
                                 }).ToListAsync();
@@ -405,6 +408,7 @@ namespace Atlas_Web.Pages.Reports
                                                  {
                                                      Name = r.Term.Name,
                                                      Id = r.TermId,
+                                                     LinkId = r.LinkId,
                                                      Summary = r.Term.Summary,
                                                      Definition = r.Term.TechnicalDefinition,
                                                  }).ToListAsync();
@@ -418,12 +422,13 @@ namespace Atlas_Web.Pages.Reports
                                                        {
                                                            Name = r.Term.Name,
                                                            Id = r.TermId,
+                                                           LinkId = r.LinkId,
                                                            Summary = r.Term.Summary,
                                                            Definition = r.Term.TechnicalDefinition,
                                                        }).ToListAsync();
 
             ViewerReportTerms = report_terms.Union(child_report_terms).Union(grandchild_report_terms).Union(great_grandchild_report_terms).Distinct().Select(x => new ReportTermsData { Name = x.Name, Id = x.Id, Summary = x.Summary, Definition = x.Definition }).ToList();
-            ReportTerms = report_terms.Select(x => new ReportTermsData { Name = x.Name, Id = x.Id, Summary = x.Summary, Definition = x.Definition, ReportId = id }).ToList();
+            ReportTerms = report_terms.Select(x => new ReportTermsData { Name = x.Name, Id = x.Id, Summary = x.Summary, Definition = x.Definition, ReportId = id, LinkId = x.LinkId }).ToList();
 
 
 
@@ -578,19 +583,18 @@ namespace Atlas_Web.Pages.Reports
 
             ReportParents = ReportParentsPartOne.Union(ReportParentsPartTwo).Select(x => new ReportChildrenData { Name = x.Name, Id = x.Id, Img = x.Img }).ToList();
 
-            RelatedProjects = await (from p in _context.DpReportAnnotations
-                                     where p.ReportId == id
-                                     orderby p.Report.Name
-                                     select new ReportProjectData
-                                     {
-                                         Name = p.DataProject.Name,
-                                         Id = (int)p.DataProjectId,
-                                         Description = p.Annotation,
-                                         AnnotationId = p.ReportAnnotationId,
-                                         ReportId = p.ReportId
-                                     }).ToListAsync();
+            RelatedCollections = await (from p in _context.DpReportAnnotations
+                                        where p.ReportId == id
+                                        orderby p.Report.Name
+                                        select new ReportCollectionData
+                                        {
+                                            Name = p.DataProject.Name,
+                                            Id = (int)p.DataProjectId,
+                                            AnnotationId = p.ReportAnnotationId,
+                                            ReportId = p.ReportId
+                                        }).ToListAsync();
 
-            ViewData["RelatedProjects"] = RelatedProjects;
+            ViewData["RelatedCollections"] = RelatedCollections;
 
             Permissions = UserHelpers.GetUserPermissions(_cache, _context, User.Identity.Name);
             ViewData["Permissions"] = Permissions;
@@ -603,7 +607,7 @@ namespace Atlas_Web.Pages.Reports
                 new AdList { Url = "/?handler=RecentReports", Column = 2 },
                 new AdList { Url = "/?handler=RecentTerms", Column = 2 },
                 new AdList { Url = "/?handler=RecentInitiatives", Column = 2 },
-                new AdList { Url = "/?handler=RecentProjects", Column = 2 }
+                new AdList { Url = "/?handler=RecentCollections", Column = 2 }
             };
             ViewData["AdLists"] = AdLists;
             return Page();
@@ -832,7 +836,7 @@ namespace Atlas_Web.Pages.Reports
             return Content("success");
         }
 
-        public async Task<ActionResult> OnGetDeleteLinkedProject(int id)
+        public async Task<ActionResult> OnGetDeleteLinkedCollection(int id)
         {
 
             var checkpoint = UserHelpers.CheckUserPermissions(_cache, _context, User.Identity.Name, 28);
@@ -846,32 +850,31 @@ namespace Atlas_Web.Pages.Reports
             var MyUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
 
 
-            ViewData["RelatedProjects"] = await (from r in _context.DpReportAnnotations
-                                                 where r.ReportId == ta
-                                                 join q in (from f in _context.UserFavorites
-                                                            where f.ItemType.ToLower() == "project"
-                                                               && f.UserId == MyUser.UserId
-                                                            select new { f.ItemId })
-                                               on r.ReportId equals q.ItemId into tmp
-                                                 from rfi in tmp.DefaultIfEmpty()
-                                                 orderby r.Rank, r.Report.Name
-                                                 select new ReportProjectData
-                                                 {
-                                                     AnnotationId = r.ReportAnnotationId,
-                                                     Id = r.DataProjectId,
-                                                     Name = r.DataProject.Name,
-                                                     Description = r.Annotation,
-                                                     ReportId = r.ReportId,
-                                                 }).ToListAsync();
+            ViewData["RelatedCollections"] = await (from r in _context.DpReportAnnotations
+                                                    where r.ReportId == ta
+                                                    join q in (from f in _context.UserFavorites
+                                                               where f.ItemType.ToLower() == "project"
+                                                                  && f.UserId == MyUser.UserId
+                                                               select new { f.ItemId })
+                                                  on r.ReportId equals q.ItemId into tmp
+                                                    from rfi in tmp.DefaultIfEmpty()
+                                                    orderby r.Rank, r.Report.Name
+                                                    select new ReportCollectionData
+                                                    {
+                                                        AnnotationId = r.ReportAnnotationId,
+                                                        Id = r.DataProjectId,
+                                                        Name = r.DataProject.Name,
+                                                        ReportId = r.ReportId,
+                                                    }).ToListAsync();
             //return Partial((".+?"));
             return new PartialViewResult()
             {
-                ViewName = "Editor/_CurrentProjects",
+                ViewName = "Editor/_CurrentCollections",
                 ViewData = ViewData
             };
         }
 
-        public async Task<ActionResult> OnPostAddLinkedProject()
+        public async Task<ActionResult> OnPostAddLinkedCollection()
         {
             var checkpoint = UserHelpers.CheckUserPermissions(_cache, _context, User.Identity.Name, 28);
             if (ModelState.IsValid && DpReportAnnotation.DataProjectId > 0 && DpReportAnnotation.ReportId > 0 && checkpoint)
@@ -889,32 +892,31 @@ namespace Atlas_Web.Pages.Reports
 
             var MyUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
 
-            ViewData["RelatedProjects"] = await (from r in _context.DpReportAnnotations
-                                                 where r.ReportId == DpReportAnnotation.ReportId
-                                                 join q in (from f in _context.UserFavorites
-                                                            where f.ItemType.ToLower() == "project"
-                                                               && f.UserId == MyUser.UserId
-                                                            select new { f.ItemId })
-                                               on r.ReportId equals q.ItemId into tmp
-                                                 from rfi in tmp.DefaultIfEmpty()
-                                                 orderby r.Rank, r.Report.Name
-                                                 select new ReportProjectData
-                                                 {
-                                                     AnnotationId = r.ReportAnnotationId,
-                                                     Id = r.DataProjectId,
-                                                     Name = r.DataProject.Name,
-                                                     Description = r.Annotation,
-                                                     ReportId = r.ReportId,
-                                                 }).ToListAsync();
+            ViewData["RelatedCollections"] = await (from r in _context.DpReportAnnotations
+                                                    where r.ReportId == DpReportAnnotation.ReportId
+                                                    join q in (from f in _context.UserFavorites
+                                                               where f.ItemType.ToLower() == "project"
+                                                                  && f.UserId == MyUser.UserId
+                                                               select new { f.ItemId })
+                                                  on r.ReportId equals q.ItemId into tmp
+                                                    from rfi in tmp.DefaultIfEmpty()
+                                                    orderby r.Rank, r.Report.Name
+                                                    select new ReportCollectionData
+                                                    {
+                                                        AnnotationId = r.ReportAnnotationId,
+                                                        Id = r.DataProjectId,
+                                                        Name = r.DataProject.Name,
+                                                        ReportId = r.ReportId,
+                                                    }).ToListAsync();
 
             return new PartialViewResult()
             {
-                ViewName = "Editor/_CurrentProjects",
+                ViewName = "Editor/_CurrentCollections",
                 ViewData = ViewData
             };
         }
 
-        public async Task<ActionResult> OnPostEditLinkedProject()
+        public async Task<ActionResult> OnPostEditLinkedCollection()
         {
 
             var checkpoint = UserHelpers.CheckUserPermissions(_cache, _context, User.Identity.Name, 28);
@@ -928,27 +930,27 @@ namespace Atlas_Web.Pages.Reports
 
             var MyUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
 
-            ViewData["RelatedProjects"] = await (from r in _context.DpReportAnnotations
-                                                 where r.ReportId == DpReportAnnotation.ReportId
-                                                 join q in (from f in _context.UserFavorites
-                                                            where f.ItemType.ToLower() == "project"
-                                                               && f.UserId == MyUser.UserId
-                                                            select new { f.ItemId })
-                                              on r.ReportId equals q.ItemId into tmp
-                                                 from rfi in tmp.DefaultIfEmpty()
-                                                 orderby r.Rank, r.Report.Name
-                                                 select new ReportProjectData
-                                                 {
-                                                     AnnotationId = r.ReportAnnotationId,
-                                                     Id = r.DataProjectId,
-                                                     Name = r.DataProject.Name,
-                                                     Description = r.Annotation,
-                                                     ReportId = r.ReportId,
-                                                 }).ToListAsync();
+            ViewData["RelatedCollections"] = await (from r in _context.DpReportAnnotations
+                                                    where r.ReportId == DpReportAnnotation.ReportId
+                                                    join q in (from f in _context.UserFavorites
+                                                               where f.ItemType.ToLower() == "project"
+                                                                  && f.UserId == MyUser.UserId
+                                                               select new { f.ItemId })
+                                                 on r.ReportId equals q.ItemId into tmp
+                                                    from rfi in tmp.DefaultIfEmpty()
+                                                    orderby r.Rank, r.Report.Name
+                                                    select new ReportCollectionData
+                                                    {
+                                                        AnnotationId = r.ReportAnnotationId,
+                                                        Id = r.DataProjectId,
+                                                        Name = r.DataProject.Name,
+                                                        Description = r.Annotation,
+                                                        ReportId = r.ReportId,
+                                                    }).ToListAsync();
 
             return new PartialViewResult()
             {
-                ViewName = "Editor/_CurrentProjects",
+                ViewName = "Editor/_CurrentCollections",
                 ViewData = ViewData
             };
         }
@@ -983,6 +985,7 @@ namespace Atlas_Web.Pages.Reports
                                              {
                                                  Name = r.Term.Name,
                                                  Id = r.TermId,
+                                                 LinkId = r.LinkId,
                                                  Summary = r.Term.Summary,
                                                  Definition = r.Term.TechnicalDefinition,
                                                  ReportId = r.ReportObjectId
@@ -1005,6 +1008,7 @@ namespace Atlas_Web.Pages.Reports
 
             // remove term link & update last updated on report
             _context.Remove(NewTermLink);
+            await _context.SaveChangesAsync();
             _context.ReportObjectDocs.Where(x => x.ReportObjectId == NewTermLink.ReportObjectId).FirstOrDefault().LastUpdateDateTime = DateTime.Now;
             _context.ReportObjectDocs.Where(x => x.ReportObjectId == NewTermLink.ReportObjectId).FirstOrDefault().UpdatedBy = UserHelpers.GetUser(_cache, _context, User.Identity.Name).UserId;
             await _context.SaveChangesAsync();
@@ -1015,6 +1019,7 @@ namespace Atlas_Web.Pages.Reports
                                              {
                                                  Name = r.Term.Name,
                                                  Id = r.TermId,
+                                                 LinkId = r.LinkId,
                                                  Summary = r.Term.Summary,
                                                  Definition = r.Term.TechnicalDefinition,
                                                  ReportId = r.ReportObjectId
@@ -1036,6 +1041,7 @@ namespace Atlas_Web.Pages.Reports
                                              {
                                                  Name = r.Term.Name,
                                                  Id = r.TermId,
+                                                 LinkId = r.LinkId,
                                                  Summary = r.Term.Summary,
                                                  Definition = r.Term.TechnicalDefinition,
                                                  ReportId = r.ReportObjectId

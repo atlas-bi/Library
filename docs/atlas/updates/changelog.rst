@@ -19,6 +19,19 @@
 Changelog
 *********
 
+Version 2021.08.1
+-----------------
+
+- Renamed Data Projects to Collections
+- Added details to search
+- Added thumbnail of screenshot in search
+- Modified search bar to always display
+- Fixed js bug within collections
+- Added feature to group reports by report type
+- Added report profile that combines usage information across all reports in a collection
+- Updated LDAP groups to show in Atlas
+- Fixed bug to let term links be removed
+
 Version 2021.07.1
 -----------------
 

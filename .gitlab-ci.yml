@@ -77,13 +77,12 @@ pages:
       - public
   only:
     - master
-    - dev
 
 deploy_test:
  image: alpine:latest
  stage: publish
- only:
-  - master
+ except:
+  - public
  dependencies:
   - build_web
  needs: [build_web]

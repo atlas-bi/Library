@@ -60,10 +60,10 @@ namespace Atlas_Web.Pages.Search
             _cache = cache;
         }
 
-        public class SearchProjectData
+        public class SearchCollectionData
         {
-            public SearchProjectData() { }
-            public int ProjectId { get; set; }
+            public SearchCollectionData() { }
+            public int CollectionId { get; set; }
             public string Annotation { get; set; }
             public string Name { get; set; }
         }
@@ -71,7 +71,7 @@ namespace Atlas_Web.Pages.Search
         public List<int?> Permissions { get; set; }
         public List<UserFavorite> Favorites { get; set; }
         public List<AdList> AdLists { get; set; }
-        public List<SearchProjectData> Projects { get; set; }
+        public List<SearchCollectionData> Collections { get; set; }
         [BindProperty] public List<ReportObjectType> AvailableFilters { get { return _context.ReportObjectTypes.ToList(); } set { } }
         [BindProperty(SupportsGet = true)] public List<SearchResult> SearchResults { get; set; }
         [BindProperty] public List<ObjectSearch> ObjectSearch { get; set; }
@@ -164,6 +164,7 @@ namespace Atlas_Web.Pages.Search
                                 Description = datareader["Description"].ToString(),
                                 ReportType = datareader["ReportType"].ToString(),
                                 Documented = (int)datareader["Documented"],
+                                Image = _context.ReportObjectImagesDocs.Where(x => x.ReportObjectId.Equals(datareader["ItemId"])).Any() ? "/data/img?id=" + _context.ReportObjectImagesDocs.Where(x => x.ReportObjectId.Equals(datareader["ItemId"])).First().ImageId : "",
                                 EpicReportTemplateId = datareader["EpicReportTemplateId"].ToString(),
                                 ReportUrl = Helpers.HtmlHelpers.ReportUrlFromParams(_config["AppSettings:org_domain"], HttpContext, datareader["ReportObjectURL"].ToString(),
                                                                         datareader["Name"].ToString(),
@@ -186,15 +187,15 @@ namespace Atlas_Web.Pages.Search
 
 
 
-            Projects = (from dp in _context.DpReportAnnotations
-                        where (SearchResults.Select(x => x.Id).ToList().Contains((int)dp.ReportId)) && (dp.DataProject.Hidden ?? "N") == "N"
-                        select new SearchProjectData
-                        {
-                            ProjectId = (int)dp.DataProjectId,
-                            Annotation = dp.DataProject.Purpose ?? dp.DataProject.Description,
-                            Name = dp.DataProject.Name,
+            Collections = (from dp in _context.DpReportAnnotations
+                           where (SearchResults.Select(x => x.Id).ToList().Contains((int)dp.ReportId)) && (dp.DataProject.Hidden ?? "N") == "N"
+                           select new SearchCollectionData
+                           {
+                               CollectionId = (int)dp.DataProjectId,
+                               Annotation = dp.DataProject.Purpose ?? dp.DataProject.Description,
+                               Name = dp.DataProject.Name,
 
-                        }).Distinct().ToList();
+                           }).Distinct().ToList();
 
 
 
@@ -211,7 +212,7 @@ namespace Atlas_Web.Pages.Search
                 new AdList { Url = "/?handler=RecentReports", Column = 2 },
                 new AdList { Url = "/?handler=RecentTerms", Column = 2 },
                 new AdList { Url = "/?handler=RecentInitiatives", Column = 2 },
-                new AdList { Url = "/?handler=RecentProjects", Column = 2 }
+                new AdList { Url = "/?handler=RecenCollections", Column = 2 }
             };
             ViewData["AdLists"] = AdLists;
 
@@ -303,7 +304,7 @@ namespace Atlas_Web.Pages.Search
             }
         }
 
-        public ActionResult OnPostProjectSearch(string s, string e)
+        public ActionResult OnPostCollectionSearch(string s, string e)
         {
             if (s != null)
                 SearchString = s;//.Replace("'","''").Replace(";","_");
@@ -356,6 +357,46 @@ namespace Atlas_Web.Pages.Search
                         command.CommandText = "BasicUserSearch";
                         command.Parameters.Add(new SqlParameter("@searchTerm", SearchString));
                         command.Parameters.Add(new SqlParameter("@results", 20));
+                        if (e != null)
+                        {
+                            command.Parameters.Add(new SqlParameter("@exclude", e));
+                        }
+                        connection.Open();
+                        var datareader = command.ExecuteReader();
+
+                        while (datareader.Read())
+                        {
+                            UserSearch.Add(new ObjectSearch
+                            {
+                                ObjectId = (int)datareader["Userid"],
+                                Name = datareader["Username"].ToString(),
+                                Type = datareader["S"].ToString()
+
+                            });
+                        }
+                    }
+                }
+                var json = JsonConvert.SerializeObject(UserSearch);
+                HttpContext.Response.Headers.Remove("Cache-Control");
+                HttpContext.Response.Headers.Add("Cache-Control", "max-age=7200");
+                return Content(json);
+            }
+        }
+
+        public ActionResult OnPostUserProfileSearch(string s, string e)
+        {
+            if (s != null)
+                SearchString = s;//.Replace("'","''").Replace(";","_");
+            {
+                using (var connection = new SqlConnection(_config.GetConnectionString("AtlasDatabase")))
+                {
+                    using (var command = connection.CreateCommand())
+                    {
+                        command.CommandType = System.Data.CommandType.StoredProcedure;
+                        command.CommandText = "BasicUserSearch";
+                        command.Parameters.Add(new SqlParameter("@searchTerm", SearchString));
+                        command.Parameters.Add(new SqlParameter("@results", 20));
+                        command.Parameters.Add(new SqlParameter("@type", "a"));
                         if (e != null)
                         {
                             command.Parameters.Add(new SqlParameter("@exclude", e));

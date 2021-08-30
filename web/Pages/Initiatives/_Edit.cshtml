@@ -57,9 +57,9 @@
                             <input type="dynamic-dropdown" asp-for="DpDataInitiative.StrategicImportance" search-area="strategic-importance" method="fullList" visible-value="@Model.DataInitiative.StrategicImp" value="@Model.DataInitiative.StrategicImpId" />
 
 
-                            <label>Linked Projects</label>
-                            <select type="dynamic-dropdown" asp-for="LinkedDataProjects" id="linked-data-projects" search-area="ProjectSearch">
-                                @foreach (var d in @Model.DataInitiative.RelatedProjects)
+                            <label>Linked Collections</label>
+                            <select type="dynamic-dropdown" asp-for="LinkedCollections" id="linked-data-projects" search-area="CollectionSearch">
+                                @foreach (var d in @Model.DataInitiative.RelatedCollections)
                                 {
                                     <option selected="selected" value="@d.Id">@d.Name</option>
                                 }

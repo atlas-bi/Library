@@ -123,7 +123,7 @@ else
                         <div class="nav-dropBox">
                             <div class="nav-dropLiner">
                                 <a href="/initiatives">Initiatives</a>
-                                <a href="/projects">Projects</a>
+                                <a href="/collections">Collections</a>
                                 <a href="/terms">Terms</a>
                                 <a href="/about_analytics">About Analytics</a>
                             </div>
@@ -195,7 +195,7 @@ else
                 <!-- search -->
                 @if (@Model.Permissions.Contains(19))
                 {
-                    <div class='clps @if (ViewData["Title"] != null && (@ViewData["Title"].ToString() == "" || @ViewData["Title"].ToString().StartsWith("Search"))){ @("clps-o") }' id="sr-cls">
+                    <div class='clps clps-o' id="sr-cls">
                         <div class="sr-grp">
                             <input type="text" placeholder="type to search.." value='@{try{@Model.SearchString}catch{}}' maxlength="80" required />
                             <!--<icon class="sr-fav"><i class="far fa-star"></i></icon>-->

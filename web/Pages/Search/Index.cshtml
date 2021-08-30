@@ -48,34 +48,34 @@
             @if (Model.SearchResults != null && Model.SearchResults.Count > 0)
             {
                 
-                 @* insert data projects *@
+                 @* insert data collections *@
 
-                    @if(Model.Projects.Count() > 0){
+                    @if(Model.Collections.Count() > 0){
 
-                        @foreach (var proj in Model.Projects){
-                            var projFavorite = Model.Favorites.Any(x => x.ItemType.ToLower().Equals("project") && x.ItemId.Equals(proj.ProjectId));
+                        @foreach (var proj in Model.Collections){
+                            var projFavorite = Model.Favorites.Any(x => x.ItemType.ToLower().Equals("collection") && x.ItemId.Equals(proj.CollectionId));
                             <div class="srch-result srch-resultProj">
                                 <!-- fav links -->
                                 <div class="fav-links">
                                     <div class="fav-star">
-                                         <i fav-type="project" object-id="@proj.ProjectId" class="far fa-star @if(projFavorite == true) {<text>favorite</text>}"></i>
+                                         <i fav-type="collection" object-id="@proj.CollectionId" class="far fa-star @if(projFavorite == true) {<text>favorite</text>}"></i>
                                     </div>
-                                    <div class="fav-share darken" data-toggle="mdl" data-target="shareModal" data-type="project" data-name='@proj.Name' data-url="/Projects?id=@proj.ProjectId">
+                                    <div class="fav-share darken" data-toggle="mdl" data-target="shareModal" data-type="collection" data-name='@proj.Name' data-url="/Collections?id=@proj.CollectionId">
                                         <i class="fas fa-share"></i>
                                     </div>
                                 </div>
                                 <!-- fav body -->
                                 <div class="fav-body fav-bodyProj">
-                                    <h5 class="fav-title"  data-toggle="clps" data-target="clps-@proj.ProjectId">
+                                    <h5 class="fav-title"  data-toggle="clps" data-target="clps-@proj.CollectionId">
                                         <span>@proj.Name</span>
                                         <div class="fav-type">
-                                            <span class="srch-field">Project</span>
+                                            <span class="srch-field">Collection</span>
                                         </div>
                                     </h5>
                                     <h5 class="fav-nav">
-                                        <a href="Projects?id=@proj.ProjectId">Open In Atlas</a>
+                                        <a href="Collections?id=@proj.CollectionId">Open In Atlas</a>
                                     </h5>
-                                    <div class="clps fav-dtls" id="clps-@proj.ProjectId">
+                                    <div class="clps fav-dtls" id="clps-@proj.CollectionId">
                                         <div class="markdown noleft">
                                             @Html.Raw(@Helpers.HtmlHelpers.MarkdownToHtml(@proj.Annotation))
                                         </div>
@@ -112,95 +112,109 @@
 
                         <!-- fav body -->
                         <div class="fav-body">
-                            <h5 class="fav-title"  data-toggle="clps" data-target="clps-@result.Id">
-                                <span>
-                                    @if (result.Documented > 0) {<span class="text-success"><i class="fas fa-check"></i></span>}@if(@result.SearchField != ""){<span class="srch-field" style="margin-left:6px;margin-right:0px">@result.SearchField</span>}
-                                     @result.Name @if (result.EpicMasterFile != null && result.EpicMasterFile != "" && result.EpicRecordId != null && result.EpicRecordId != "")
-                                     {<text>&nbsp(@result.EpicMasterFile @result.EpicRecordId)</text>}
-                                </span>
-                             <div class="fav-type">  
-                                    @if (result.EpicReleased == "Analytics Certified")
-                                    {<span class="srch-fieldHunterGreen">@result.EpicReleased</span>}
-                                    @if (result.EpicReleased == "Analytics Reviewed")
-                                    {<span class="srch-fieldGreen">@result.EpicReleased</span>}
-                                    @if (result.EpicReleased == "Epic Released")
-                                    {<span class="srch-fieldOrange">@result.EpicReleased</span>}
-                                    @if (result.EpicReleased == "Legacy")
-                                    {<span class="srch-fieldOrange">@result.EpicReleased</span>}
-                                    @if (result.EpicReleased == "High Risk")
-                                    {<span class="srch-fieldRed">@result.EpicReleased</span>}
-                                    @if (result.EpicReleased == "Self-Service")
-                                    {<span class="srch-fieldBlue">@result.EpicReleased</span>}
-                            
-                                @if (result.Orphaned > 0)
-                                {<span class="srch-field">Orphaned</span>}
-                                @if (result.Hidden > 0)
-                                {<span class="srch-field">Hidden</span>}<span class="srch-field">
-                                    @if (@result.ReportType == "")
-                                    {<text>Hidden Type</text>}
-                                else
-                                {@result.ReportType}
-                                </span>
+                            <div class="snippet-col">
+                                @if (result.Image != null && result.Image != "")
+                                {
+                        <div class="snippet-left">
+                            <div class="thumb">
+                                <img data-src="@result.Image" src="/img/loader.gif" />
                             </div>
-</h5>
-                            <h5 class="fav-nav">
-                                <a href="Reports?id=@result.Id">Open In Atlas</a>
-                                @if (result.ReportUrl != null && result.ReportUrl != "")
-                                {
-                                    <a  target="_blank" rel="noopener" href="@result.ReportUrl">Run Report</a>
-                                } else 
-                                {
-                                    if(result.EpicMasterFile=="IDB")
+                        </div>}
+                                <div class="snippet-right">
+                                <h5 class="fav-title" data-toggle="clps" data-target="clps-@result.Id">
+                                    <span>
+                                        @if (result.Documented > 0)
+                                        {<span class="text-success"><i class="fas fa-check"></i></span>}@if (@result.SearchField != "")
+                                        {<span class="srch-field" style="margin-left:6px;margin-right:0px">@result.SearchField</span>}
+                                        @result.Name @if (result.EpicMasterFile != null && result.EpicMasterFile != "" && result.EpicRecordId != null && result.EpicRecordId != "")
+                                        {<text>&nbsp(@result.EpicMasterFile @result.EpicRecordId)</text>}
+                                    </span>
+                                    <div class="fav-type">
+                                        @if (result.EpicReleased == "Analytics Certified")
+                                        {<span class="srch-fieldHunterGreen">@result.EpicReleased</span>}
+                                        @if (result.EpicReleased == "Analytics Reviewed")
+                                        {<span class="srch-fieldGreen">@result.EpicReleased</span>}
+                                        @if (result.EpicReleased == "Epic Released")
+                                        {<span class="srch-fieldOrange">@result.EpicReleased</span>}
+                                        @if (result.EpicReleased == "Legacy")
+                                        {<span class="srch-fieldOrange">@result.EpicReleased</span>}
+                                        @if (result.EpicReleased == "High Risk")
+                                        {<span class="srch-fieldRed">@result.EpicReleased</span>}
+                                        @if (result.EpicReleased == "Self-Service")
+                                        {<span class="srch-fieldBlue">@result.EpicReleased</span>}
+
+                                        @if (result.Orphaned > 0)
+                                        {<span class="srch-field">Orphaned</span>}
+                                        @if (result.Hidden > 0)
+                                        {<span class="srch-field">Hidden</span>}<span class="srch-field">
+                                            @if (@result.ReportType == "")
+                                            {<text>Hidden Type</text>}
+                                        else
+                                        {@result.ReportType}
+                                        </span>
+                                    </div>
+                                </h5>
+                                <h5 class="fav-nav">
+                                    <a href="Reports?id=@result.Id">Details</a>
+                                    @if (result.ReportUrl != null && result.ReportUrl != "")
                                     {
-                                        <div style="position: relative;">
-                                            <span class="tt-top" style="color:grey;position: relative;cursor:default" data-tooltip="Open a related dashboard that uses this.">Run Report</span>
-                                        </div>
-                                    }
-                                    else if(result.EditReportUrl != null && @Model.Permissions.Contains(38))
+                        <a target="_blank" rel="noopener" href="@result.ReportUrl">Run</a> }
+                                            else
+                                            {
+                                                if (result.EpicMasterFile == "IDB")
+                                                {
+                        <div style="position: relative;">
+                            <span class="tt-top" style="color:grey;position: relative;cursor:default" data-tooltip="Open a related dashboard that uses this.">Run</span>
+                        </div> }
+                                                else if (result.EditReportUrl != null && @Model.Permissions.Contains(38))
+                                                {
+                        <div style="position: relative;">
+                            <span class="tt-top" style="color:grey;position: relative;white-space: nowrap;cursor:default" data-tooltip="Open in report library.">Run</span>
+                        </div> }
+                                                else
+                                                {
+                        <div style="position: relative;">
+                            <span class="tt-top" style="color:grey;position: relative;white-space: nowrap;cursor:default" data-tooltip="Login to Hyperspace to run report.">Run</span>
+                        </div>}
+                                            }
+                                    @if (result.EditReportUrl != null && @Model.Permissions.Contains(38))
                                     {
-                                        <div style="position: relative;">
-                                            <span class="tt-top" style="color:grey;position: relative;white-space: nowrap;cursor:default" data-tooltip="Open in report library.">Run Report</span>
-                                        </div>
-                                    } else 
+                        <a target="_blank" rel="noopener" href="@result.EditReportUrl">Edit</a>}
+                                    @if (result.ManageReportUrl != null && @Model.Permissions.Contains(38))
                                     {
-                                        <div style="position: relative;">
-                                            <span class="tt-top" style="color:grey;position: relative;white-space: nowrap;cursor:default" data-tooltip="Login to Hyperspace to run report.">Run Report</span>
+                        <a target="_blank" rel="noopener" href="@result.ManageReportUrl">Manage</a>}
+                                </h5>
+                                <div class="clps fav-dtls" id="clps-@result.Id" @if (result.SearchField == "Query") { <text> style="min-height:0 !important;" </text> }>
+
+                                        <div class="markdown noleft">
+                                            @if (result.Description != null && result.Description != "")
+                                            {
+                        @if (result.SearchField == "Query")
+                        {
+                        @if (@Request.Headers["User-Agent"].ToString().Contains("Trident"))
+                        {
+                        @:Open in Atlas to view query.
+                    }
+                    else
+                    {
+                        <div class="query-box">
+                            <div class="query-box-inner light ss-preview" id='query-@result.Id' ss-container>
+                                <pre><code class="sql" id="code-@result.Id">@result.Description</code></pre>
+                            </div>
+                        </div>} }
+                    else
+                    {
+                        @Html.Raw(@Helpers.HtmlHelpers.MarkdownToHtml(@result.Description))} }
+                    else
+                    {
+                        @:Open in Atlas to see details.
+                    }
                                         </div>
-                                    }
-                                }
-                                @if (result.EditReportUrl != null && @Model.Permissions.Contains(38))
-                                {
-                                    <a target="_blank" rel="noopener" href="@result.EditReportUrl">Edit Report</a>
-                                }
-                                @if (result.ManageReportUrl != null && @Model.Permissions.Contains(38))
-                                {
-                                    <a target="_blank" rel="noopener" href="@result.ManageReportUrl">Manage Report</a>
-                                }
-                            </h5>
-                            <div class="clps fav-dtls" id="clps-@result.Id" @if(result.SearchField == "Query"){<text>style="min-height:0 !important;"</text>}>
-                                <div class="markdown noleft">
-                                    @if (result.Description != null && result.Description != "")
-                                    {
-                                        @if(result.SearchField == "Query"){
-                                        @if(@Request.Headers["User-Agent"].ToString().Contains("Trident")){
-                                         @:Open in Atlas to view query.
-                                    } else {
-                                         <div class="query-box">
-                                            <div class="query-box-inner light ss-preview" id='query-@result.Id' ss-container>
-                                                <pre><code class="sql" id="code-@result.Id">@result.Description</code></pre>
-                                            </div>
-                                        </div>
-                        }
-                                        } else {
-                                        @Html.Raw(@Helpers.HtmlHelpers.MarkdownToHtml(@result.Description))
-                                    }
-                                    } else {
-                                        @:Open in Atlas to see details.
-                                    }
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                            </div>
                 }
 
                  <partial name="Partials/_Pagination" />

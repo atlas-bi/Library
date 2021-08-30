@@ -25,6 +25,7 @@ using Microsoft.EntityFrameworkCore;
 using Atlas_Web.Models;
 using Atlas_Web.Helpers;
 using Microsoft.AspNetCore.Http;
+using System.Text.RegularExpressions;
 using System.IO;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -56,6 +57,30 @@ namespace Atlas_Web.Pages.Groups
             public string EmployeeId { get; set; }
             public string Phone { get; set; }
         }
+        public class ReportRunData
+        {
+            public string Name { get; set; }
+            public string Type { get; set; }
+            public string Url { get; set; }
+            public int Hits { get; set; }
+            public decimal RunTime { get; set; }
+            public string LastRun { get; set; }
+        }
+
+        public class ReportRunTimeData
+        {
+            public string Date { get; set; }
+            public int Cnt { get; set; }
+            public decimal Avg { get; set; }
+        }
+
+        public class FailedRunsData
+        {
+            public string Date { get; set; }
+            public string Url { get; set; }
+            public string RunStatus { get; set; }
+            public string Name { get; set; }
+        }
 
         public class ReportList
         {
@@ -66,6 +91,13 @@ namespace Atlas_Web.Pages.Groups
             public int Subscriptions { get; set; }
             public int Runs { get; set; }
         }
+        public class RunTimeData
+        {
+            public string Date { get; set; }
+            public double Avg { get; set; }
+            public int Cnt { get; set; }
+        }
+
 
         public class GroupItem
         {
@@ -172,6 +204,79 @@ namespace Atlas_Web.Pages.Groups
 
 
             return Page();
+        }
+
+
+        public async Task<ActionResult> OnGetActivity(int? Id)
+        {
+
+            var MyId = UserHelpers.GetUser(_cache, _context, User.Identity.Name).UserId;
+            var GroupUsers = _context.UserGroupsMemberships.Where(x => x.GroupId == Id).Select(x => x.UserId).ToList();
+
+            ViewData["Permissions"] = UserHelpers.GetUserPermissions(_cache, _context, User.Identity.Name);
+            ViewData["MyId"] = MyId;
+            ViewData["UserId"] = MyId;
+
+            ViewData["ReportRunTime"] = await _cache.GetOrCreateAsync<List<ReportRunTimeData>>("ReportRunTime-" + Id,
+                     cacheEntry =>
+                     {
+                         cacheEntry.SlidingExpiration = TimeSpan.FromHours(12);
+                         return (from d in _context.ReportObjectRunTimes
+                                 where GroupUsers.Contains(d.RunUserId)
+                                 orderby d.RunWeek descending
+                                 select new ReportRunTimeData
+                                 {
+                                     Date = d.RunWeekString,
+                                     Cnt = d.Runs ?? 0,
+                                     Avg = d.RunTime ?? 0
+                                 }
+                                        ).ToListAsync(); ;
+                     });
+
+            ViewData["TopRunReports"] = await _cache.GetOrCreateAsync<List<ReportRunData>>("TopRunReports-" + Id,
+                    cacheEntry =>
+                    {
+                        cacheEntry.SlidingExpiration = TimeSpan.FromHours(12);
+                        return (from d in _context.ReportObjectTopRuns
+                                where GroupUsers.Contains(d.RunUserId)
+                                   && d.ReportObjectTypeId != 21
+                                   && d.ReportObjectTypeId != 39  // extensions
+                                   && d.ReportObjectTypeId != 40  // columns
+                                orderby d.Runs descending
+                                select new ReportRunData
+                                {
+                                    Name = d.Name,
+                                    Type = d.ReportObject.ReportObjectType.Name,
+                                    Url = "\\reports?id=" + d.ReportObjectId,
+                                    Hits = d.Runs ?? 0,
+                                    RunTime = d.RunTime ?? 0,
+                                    LastRun = d.LastRun
+                                }).ToListAsync();
+                    });
+
+            ViewData["FailedRuns"] = await _cache.GetOrCreateAsync<List<FailedRunsData>>("FailedRuns-" + Id,
+                   cacheEntry =>
+                   {
+                       cacheEntry.SlidingExpiration = TimeSpan.FromHours(12);
+
+                       return (from d in _context.ReportObjectRunData
+                               where GroupUsers.Contains(d.RunUserId)
+                              && d.RunStatus != "Success"
+                               orderby d.RunStartTime descending
+                               select new FailedRunsData
+                               {
+                                   Date = d.RunStartTimeDisplayString,
+                                   Url = "\\reports?id=" + d.ReportObjectId,
+                                   Name = d.ReportObject.DisplayName,
+                                   RunStatus = d.RunStatus
+                               }).ToListAsync();
+                   });
+            //return Partial((".+?"));
+            return new PartialViewResult()
+            {
+                ViewName = "Sections/_Activity",
+                ViewData = ViewData
+            };
         }
     }
 }
