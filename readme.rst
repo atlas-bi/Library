@@ -24,7 +24,7 @@ Atlas of Information Management is a business intelligence library and documenta
 
 See the `project documentation <https://docs.atlas.bi>`_
 
-Chat on Discord `https://discord.gg/pAzSbMw259 <https://discord.gg/pAzSbMw259>`_
+Chat on Discord `https://discord.gg/hdz2cpygQD <https://discord.gg/hdz2cpygQD>`_
 
 Included Content
 ----------------
