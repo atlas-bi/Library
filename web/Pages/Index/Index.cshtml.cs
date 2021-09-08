@@ -193,7 +193,7 @@ namespace Atlas_Web.Pages
 
             ViewData["NewestCollections"] = await (from dp in _context.DpDataProjects
                                                    join q in (from f in _context.UserFavorites
-                                                              where f.ItemType.ToLower() == "project"
+                                                              where f.ItemType.ToLower() == "collection"
                                                               && f.UserId == user.UserId
                                                               select new { f.ItemId })
                                                    on dp.DataProjectId equals q.ItemId into tmp

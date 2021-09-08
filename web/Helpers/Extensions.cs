@@ -429,9 +429,13 @@ namespace Atlas_Web.Helpers
                 {
                     NewUrl = "EpicAct:WM_METRIC_EDITOR,INFONAME:IDNRECORDID,INFOVALUE:" + EpicRecordId;
                 }
-                else if ((EpicMasterFile == "FDM" || ReportType == "SlicerDicer Session") && EpicRecordId != null)
+                else if (EpicMasterFile == "FDM" && EpicRecordId != null)
                 {
                     NewUrl = "EpicACT:BI_SLICERDICER,LaunchOptions:16,RunParams:StartingDataModelId=" + EpicRecordId;
+                }
+                else if (ReportType == "SlicerDicer Session" && EpicRecordId != null)
+                {
+                    NewUrl = "EpicACT:BI_SLICERDICER,RunParams:StartingPopulationId=" + EpicRecordId;
                 }
                 else
                 {

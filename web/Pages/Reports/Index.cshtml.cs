@@ -853,7 +853,7 @@ namespace Atlas_Web.Pages.Reports
             ViewData["RelatedCollections"] = await (from r in _context.DpReportAnnotations
                                                     where r.ReportId == ta
                                                     join q in (from f in _context.UserFavorites
-                                                               where f.ItemType.ToLower() == "project"
+                                                               where f.ItemType.ToLower() == "collection"
                                                                   && f.UserId == MyUser.UserId
                                                                select new { f.ItemId })
                                                   on r.ReportId equals q.ItemId into tmp
@@ -895,7 +895,7 @@ namespace Atlas_Web.Pages.Reports
             ViewData["RelatedCollections"] = await (from r in _context.DpReportAnnotations
                                                     where r.ReportId == DpReportAnnotation.ReportId
                                                     join q in (from f in _context.UserFavorites
-                                                               where f.ItemType.ToLower() == "project"
+                                                               where f.ItemType.ToLower() == "collection"
                                                                   && f.UserId == MyUser.UserId
                                                                select new { f.ItemId })
                                                   on r.ReportId equals q.ItemId into tmp
@@ -933,7 +933,7 @@ namespace Atlas_Web.Pages.Reports
             ViewData["RelatedCollections"] = await (from r in _context.DpReportAnnotations
                                                     where r.ReportId == DpReportAnnotation.ReportId
                                                     join q in (from f in _context.UserFavorites
-                                                               where f.ItemType.ToLower() == "project"
+                                                               where f.ItemType.ToLower() == "collection"
                                                                   && f.UserId == MyUser.UserId
                                                                select new { f.ItemId })
                                                  on r.ReportId equals q.ItemId into tmp

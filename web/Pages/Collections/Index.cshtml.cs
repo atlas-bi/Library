@@ -308,7 +308,7 @@ namespace Atlas_Web.Pages.Collections
                                                                   }
                                                       }).ToList(),
                                         Favorite = (from f in _context.UserFavorites
-                                                    where f.ItemType == "project"
+                                                    where f.ItemType == "collection"
                                                        && f.UserId == MyUser.UserId
                                                        && f.ItemId == d.DataProjectId
                                                     select new { f.ItemId }).Any() ? "yes" : "no",
@@ -429,7 +429,7 @@ namespace Atlas_Web.Pages.Collections
                                         Name = i.Name,
                                         Description = string.IsNullOrEmpty(i.Description) ? i.Purpose : i.Description,
                                         Favorite = (from f in _context.UserFavorites
-                                                    where f.ItemType == "project"
+                                                    where f.ItemType == "collection"
                                                        && f.UserId == MyUser.UserId
                                                        && f.ItemId == i.DataProjectId
                                                     select new { f.ItemId }).Any() ? "yes" : "no"

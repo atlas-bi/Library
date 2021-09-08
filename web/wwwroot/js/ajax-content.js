@@ -104,46 +104,53 @@
   }, 250);
 
   var a = function (e, l, p, t, u, id) {
-    e.style.opacity = 0;
-    if (!e.parentNode) return;
-    var sc,
-      el = d.createElement("div");
-    el.innerHTML = t;
-
-    if (l !== null && l !== "") {
-      el = el.querySelector(l);
-      el.setAttribute("data-loadtag", l);
-    } else {
-      el = el.children[0];
+    if (e == undefined) {
+      return;
     }
+    try {
+      e.style.opacity = 0;
+      if (!e.parentNode) return;
+      var sc,
+        el = d.createElement("div");
+      el.innerHTML = t;
 
-    if (id) el.setAttribute("id", id);
-
-    el.style.visibility = "hidden";
-    el.style.transition = "visibility 0.3s ease-in-out";
-    var q = el.clientHeight;
-    el.setAttribute("data-url", u);
-    el.setAttribute("data-param", p);
-
-    e.parentNode.replaceChild(el, e);
-
-    if (el.querySelector('script:not([type="application/json"])')) {
-      sc = Array.prototype.slice.call(
-        el.querySelectorAll('script:not([type="application/json"])')
-      );
-
-      for (var x = 0; x < sc.length; x++) {
-        var s = d.createElement("script");
-        s.innerHTML = sc[x].innerHTML;
-        s.type = "text/javascript";
-        s.setAttribute("async", "true");
-        el.appendChild(s);
-        sc[x].parentNode.removeChild(sc[x]);
+      if (l !== null && l !== "") {
+        el = el.querySelector(l);
+        el.setAttribute("data-loadtag", l);
+      } else {
+        el = el.children[0];
       }
-    }
 
-    el.style.visibility = "visible";
-    d.dispatchEvent(new CustomEvent("ajax"));
+      if (id) el.setAttribute("id", id);
+
+      el.style.visibility = "hidden";
+      el.style.transition = "visibility 0.3s ease-in-out";
+      var q = el.clientHeight;
+      el.setAttribute("data-url", u);
+      el.setAttribute("data-param", p);
+
+      e.parentNode.replaceChild(el, e);
+
+      if (el.querySelector('script:not([type="application/json"])')) {
+        sc = Array.prototype.slice.call(
+          el.querySelectorAll('script:not([type="application/json"])')
+        );
+
+        for (var x = 0; x < sc.length; x++) {
+          var s = d.createElement("script");
+          s.innerHTML = sc[x].innerHTML;
+          s.type = "text/javascript";
+          s.setAttribute("async", "true");
+          el.appendChild(s);
+          sc[x].parentNode.removeChild(sc[x]);
+        }
+      }
+
+      el.style.visibility = "visible";
+      d.dispatchEvent(new CustomEvent("ajax"));
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   var loadAdAjaxContent = debounce(function () {
