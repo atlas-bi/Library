@@ -130,7 +130,7 @@ public:
     # force to remove history on branch
     - export GIT_SSL_NO_VERIFY=1 && git push --force --follow-tags origin HEAD:public
     # list changes
-    - cd ..; rm -rf pub; mkdir pub; cd pub && git init && git remote add origin git@github.com:Riverside-Healthcare/Atlas.git && git pull origin master
+    - cd ..; rm -rf pub; mkdir pub; cd pub && git init && git remote add origin git@github.com:atlas-bi/atlas-bi-library.git && git pull origin master
     - git rm -rf . ; git clean -fxd # remove pub files, except git
     - cd $CI_PROJECT_DIR && rm -rf .git
     - cd .. && cd pub && mv $CI_PROJECT_DIR/* .
@@ -155,7 +155,7 @@ github:
     - git config --global user.name "$GITLAB_USER_NAME"
     - shopt -s dotglob # include dotfiles in mv
   script:
-    - cd ..; rm -rf pub; mkdir pub; cd pub && git init && git remote add origin git@github.com:Riverside-Healthcare/Atlas.git && git pull origin master
+    - cd ..; rm -rf pub; mkdir pub; cd pub && git init && git remote add origin git@github.com:atlas-bi/atlas-bi-library.git && git pull origin master
     - git rm -rf . ; git clean -fxd # remove pub files, except git
     - cd $CI_PROJECT_DIR && rm -rf .git
     - cd .. && cd pub && mv $CI_PROJECT_DIR/* .

@@ -15,7 +15,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-|docs| |codacy| |codeql| |climate| |netlify|
+|docs| |codacy| |climate|
 
 Atlas of Information Management
 ===============================
@@ -98,19 +98,11 @@ Atlas was created by the Riverside Healthcare Analytics team -
 * `Eric Shultz <https://github.com/eshultz>`_
 
 .. |docs| image:: https://img.shields.io/badge/Atlas-Documentation-orange
-   :target: https://docs.atlas.bi
+   :target: https://www.atlas.bi/docs/bi_library/
 
-.. |codacy| image:: https://app.codacy.com/project/badge/Grade/5238d35fb338443fb784b852337fe75f
-   :target: https://www.codacy.com/gh/Riverside-Healthcare/Atlas/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Riverside-Healthcare/Atlas&amp;utm_campaign=Badge_Grade
+.. |codacy| image:: https://app.codacy.com/project/badge/Grade/45f8f86fdb9847d98274d6ee9d3ab850
+   :target: https://www.codacy.com/gh/atlas-bi/atlas-bi-library/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=atlas-bi/atlas-bi-library&amp;utm_campaign=Badge_Grade
 
-.. |codeql| image:: https://github.com/Riverside-Healthcare/extract_management/workflows/CodeQL/badge.svg
-   :target: https://github.com/Riverside-Healthcare/extract_management/actions/workflows/codeql-analysis.yml
-   :alt: CodeQL
-
-.. |climate| image:: https://api.codeclimate.com/v1/badges/385f0450d811190e7e43/maintainability
-   :target: https://codeclimate.com/github/Riverside-Healthcare/Atlas/maintainability
+.. |climate| image:: https://api.codeclimate.com/v1/badges/71150ba85b7f08fd9ae9/maintainability
+   :target: https://codeclimate.com/github/atlas-bi/atlas-bi-library/maintainability
    :alt: Maintainability
-
-.. |netlify| image:: https://api.netlify.com/api/v1/badges/ed758351-91b0-4df8-9b89-21792d1fd372/deploy-status
-   :target: https://app.netlify.com/sites/hopeful-meninsky-c2b956/deploys
-   :alt: netlify
