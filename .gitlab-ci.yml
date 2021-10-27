@@ -1,15 +1,3 @@
-include:
-  - template: Code-Quality.gitlab-ci.yml
-
-code_quality:
-  before_script:
-    - echo "nothing to do.."
-  services:            # Shut off Docker-in-Docker
-  tags:
-    - cq-sans-dind     # Set this job to only run on our new specialized runner
-  artifacts:
-    paths: [gl-code-quality-report.json]
-
 metrics:
   before_script:
     - echo "nothing to do.."
@@ -31,7 +19,7 @@ precommit:
     - public
   before_script:
     - export PYTHONUNBUFFERED=1
-    - apk add --no-cache git build-base python3 python3-dev wget bash nodejs nodejs-npm && ln -sf python3 /usr/bin/python
+    - apk add --no-cache git build-base python3 python3-dev wget bash nodejs npm && ln -sf python3 /usr/bin/python
     - python3 -m ensurepip
     - pip3 install --no-cache --upgrade pip setuptools
     - python3 -m pip install pre-commit
@@ -63,20 +51,6 @@ build_web:
  artifacts:
   paths: ["/builds/atlas/web/atlas-dotnet/web/out/"]
 
-pages:
-  image: python:3.9
-  stage: publish
-  before_script:
-    # need to do installs here cause we don't have a real python package
-    - python -m pip install tox poetry Sphinx Pygments furo sphinx-copybutton sphinx-inline-tabs myst-parser colorama sphinx-panels git+https://github.com/sphinx-contrib/youtube.git
-  script:
-    - tox -e docs
-    - mv docs/_build/ public/
-  artifacts:
-    paths:
-      - public
-  only:
-    - master
 
 deploy_test:
  image: alpine:latest
@@ -139,7 +113,7 @@ public:
 github:
   when: manual
   needs:
-  - job: code_quality
+  - job: metrics
     artifacts: false
   only:
     - public # public branch

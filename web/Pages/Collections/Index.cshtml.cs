@@ -407,7 +407,7 @@ namespace Atlas_Web.Pages.Collections
                                                         ReportType = r.Report.ReportObjectType.Name,
                                                         CertTag = r.Report.CertificationTag,
                                                         EpicMasterFile = r.Report.EpicMasterFile,
-                                                        Annotation = r.Report.ReportObjectDoc.DeveloperDescription,
+                                                        Annotation = r.Report.ReportObjectDoc.DeveloperDescription == null ? r.Report.Description : r.Report.ReportObjectDoc.DeveloperDescription,
                                                         Image = r.Report.ReportObjectImagesDocs.Any() ? "/data/img?id=" + r.Report.ReportObjectImagesDocs.First().ImageId : "",
                                                         Favorite = rfi.ItemId == null ? "no" : "yes",
                                                         RunReportUrl = Helpers.HtmlHelpers.ReportUrlFromParams(_config["AppSettings:org_domain"], HttpContext, r.Report.ReportObjectUrl, r.Report.Name, r.Report.ReportObjectType.Name, r.Report.EpicReportTemplateId.ToString(), r.Report.EpicRecordId.ToString(), r.Report.EpicMasterFile, r.Report.ReportObjectDoc.EnabledForHyperspace),

@@ -59,7 +59,7 @@
     <a class="drop-link" href="/reports?id=@t.ItemId">Details</a>
     @if (t.RunReportUrl != null && t.RunReportUrl != "")
     {
-<a class="drop-link" href="@t.RunReportUrl">Run</a> }
+<a class="drop-link" target="_blank" href="@t.RunReportUrl">Run</a> }
                     else
                     {
                         if (t.EpicMasterFile == "IDB")
@@ -80,10 +80,10 @@
                     }
     @if (t.EditReportUrl != null && t.EditReportUrl != "" && @Model.Permissions.Contains(38))
     {
-<a class="drop-link" href="@t.EditReportUrl">Edit</a>}
+<a class="drop-link" target="_blank" href="@t.EditReportUrl">Edit</a>}
     @if (t.ManageReportUrl != null && t.ManageReportUrl != "" && @Model.Permissions.Contains(38))
     {
-<a class="drop-link" href="@t.ManageReportUrl">Manage</a>}
+<a class="drop-link" taget="_blank" href="@t.ManageReportUrl">Manage</a>}
 </h5>
 
         <div class="markdown">

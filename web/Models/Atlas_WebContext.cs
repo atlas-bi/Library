@@ -80,6 +80,13 @@ namespace Atlas_Web.Models
         public virtual DbSet<SearchReportObjectSearchDatum> SearchReportObjectSearchData { get; set; }
         public virtual DbSet<SearchTable> SearchTables { get; set; }
         public virtual DbSet<SharedItem> SharedItems { get; set; }
+        public virtual DbSet<StarredCollection> StarredCollections { get; set; }
+        public virtual DbSet<StarredGroup> StarredGroups { get; set; }
+        public virtual DbSet<StarredInitiative> StarredInitiatives { get; set; }
+        public virtual DbSet<StarredReport> StarredReports { get; set; }
+        public virtual DbSet<StarredSearch> StarredSearches { get; set; }
+        public virtual DbSet<StarredTerm> StarredTerms { get; set; }
+        public virtual DbSet<StarredUser> StarredUsers { get; set; }
         public virtual DbSet<StrategicImportance> StrategicImportances { get; set; }
         public virtual DbSet<Term> Terms { get; set; }
         public virtual DbSet<TermConversation> TermConversations { get; set; }
@@ -99,7 +106,8 @@ namespace Atlas_Web.Models
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer("Server=localhost;Database=atlas;Trusted_Connection=True;");
+
+
             }
         }
 
@@ -1457,6 +1465,190 @@ namespace Atlas_Web.Models
                     .WithMany(p => p.SharedItemSharedToUsers)
                     .HasForeignKey(d => d.SharedToUserId)
                     .HasConstraintName("FK_SharedItems_User1");
+            });
+
+            modelBuilder.Entity<StarredCollection>(entity =>
+            {
+                entity.HasKey(e => e.StarId)
+                    .HasName("PK__StarredC__88222DCEA294BB15");
+
+                entity.ToTable("StarredCollections", "app");
+
+                entity.Property(e => e.StarId).HasColumnName("star_id");
+
+                entity.Property(e => e.Collectionid).HasColumnName("collectionid");
+
+                entity.Property(e => e.Ownerid).HasColumnName("ownerid");
+
+                entity.Property(e => e.Rank).HasColumnName("rank");
+
+                entity.HasOne(d => d.Collection)
+                    .WithMany(p => p.StarredCollections)
+                    .HasForeignKey(d => d.Collectionid)
+                    .HasConstraintName("FK_StarredCollections_DP_DataProject");
+
+                entity.HasOne(d => d.Owner)
+                    .WithMany(p => p.StarredCollections)
+                    .HasForeignKey(d => d.Ownerid)
+                    .HasConstraintName("FK_StarredCollections_User");
+            });
+
+            modelBuilder.Entity<StarredGroup>(entity =>
+            {
+                entity.HasKey(e => e.StarId)
+                    .HasName("PK__StarredG__88222DCE76B4AC11");
+
+                entity.ToTable("StarredGroups", "app");
+
+                entity.Property(e => e.StarId).HasColumnName("star_id");
+
+                entity.Property(e => e.Groupid).HasColumnName("groupid");
+
+                entity.Property(e => e.Ownerid).HasColumnName("ownerid");
+
+                entity.Property(e => e.Rank).HasColumnName("rank");
+
+                entity.HasOne(d => d.Group)
+                    .WithMany(p => p.StarredGroups)
+                    .HasForeignKey(d => d.Groupid)
+                    .HasConstraintName("FK_StarredGroups_UserGroups");
+
+                entity.HasOne(d => d.Owner)
+                    .WithMany(p => p.StarredGroups)
+                    .HasForeignKey(d => d.Ownerid)
+                    .HasConstraintName("FK_StarredGroups_User");
+            });
+
+            modelBuilder.Entity<StarredInitiative>(entity =>
+            {
+                entity.HasKey(e => e.StarId)
+                    .HasName("PK__StarredI__88222DCEFCC5A8E5");
+
+                entity.ToTable("StarredInitiatives", "app");
+
+                entity.Property(e => e.StarId).HasColumnName("star_id");
+
+                entity.Property(e => e.Initiativeid).HasColumnName("initiativeid");
+
+                entity.Property(e => e.Ownerid).HasColumnName("ownerid");
+
+                entity.Property(e => e.Rank).HasColumnName("rank");
+
+                entity.HasOne(d => d.Initiative)
+                    .WithMany(p => p.StarredInitiatives)
+                    .HasForeignKey(d => d.Initiativeid)
+                    .HasConstraintName("FK_StarredInitiatives_DP_DataInitiative");
+
+                entity.HasOne(d => d.Owner)
+                    .WithMany(p => p.StarredInitiatives)
+                    .HasForeignKey(d => d.Ownerid)
+                    .HasConstraintName("FK_StarredInitiatives_User");
+            });
+
+            modelBuilder.Entity<StarredReport>(entity =>
+            {
+                entity.HasKey(e => e.StarId)
+                    .HasName("PK__StarredR__88222DCE157D560E");
+
+                entity.ToTable("StarredReports", "app");
+
+                entity.Property(e => e.StarId).HasColumnName("star_id");
+
+                entity.Property(e => e.Folderid).HasColumnName("folderid");
+
+                entity.Property(e => e.Ownerid).HasColumnName("ownerid");
+
+                entity.Property(e => e.Rank).HasColumnName("rank");
+
+                entity.Property(e => e.Reportid).HasColumnName("reportid");
+
+                entity.HasOne(d => d.Folder)
+                    .WithMany(p => p.StarredReports)
+                    .HasForeignKey(d => d.Folderid)
+                    .HasConstraintName("FK_StarredReports_UserFavoriteFolders");
+
+                entity.HasOne(d => d.Owner)
+                    .WithMany(p => p.StarredReports)
+                    .HasForeignKey(d => d.Ownerid)
+                    .HasConstraintName("FK_StarredReports_User");
+
+                entity.HasOne(d => d.Report)
+                    .WithMany(p => p.StarredReports)
+                    .HasForeignKey(d => d.Reportid)
+                    .HasConstraintName("FK_StarredReports_ReportObject");
+            });
+
+            modelBuilder.Entity<StarredSearch>(entity =>
+            {
+                entity.HasKey(e => e.StarId)
+                    .HasName("PK__StarredS__88222DCE6D6FEE1D");
+
+                entity.ToTable("StarredSearches", "app");
+
+                entity.Property(e => e.StarId).HasColumnName("star_id");
+
+                entity.Property(e => e.Ownerid).HasColumnName("ownerid");
+
+                entity.Property(e => e.Rank).HasColumnName("rank");
+
+                entity.Property(e => e.Search).HasColumnName("search");
+
+                entity.HasOne(d => d.Owner)
+                    .WithMany(p => p.StarredSearches)
+                    .HasForeignKey(d => d.Ownerid)
+                    .HasConstraintName("FK_StarredSearches_User");
+            });
+
+            modelBuilder.Entity<StarredTerm>(entity =>
+            {
+                entity.HasKey(e => e.StarId)
+                    .HasName("PK__StarredT__88222DCE11EE382D");
+
+                entity.ToTable("StarredTerms", "app");
+
+                entity.Property(e => e.StarId).HasColumnName("star_id");
+
+                entity.Property(e => e.Ownerid).HasColumnName("ownerid");
+
+                entity.Property(e => e.Rank).HasColumnName("rank");
+
+                entity.Property(e => e.Termid).HasColumnName("termid");
+
+                entity.HasOne(d => d.Owner)
+                    .WithMany(p => p.StarredTerms)
+                    .HasForeignKey(d => d.Ownerid)
+                    .HasConstraintName("FK_StarredTerms_User");
+
+                entity.HasOne(d => d.Term)
+                    .WithMany(p => p.StarredTerms)
+                    .HasForeignKey(d => d.Termid)
+                    .HasConstraintName("FK_StarredTerms_Term");
+            });
+
+            modelBuilder.Entity<StarredUser>(entity =>
+            {
+                entity.HasKey(e => e.StarId)
+                    .HasName("PK__StarredU__88222DCE446292A3");
+
+                entity.ToTable("StarredUsers", "app");
+
+                entity.Property(e => e.StarId).HasColumnName("star_id");
+
+                entity.Property(e => e.Ownerid).HasColumnName("ownerid");
+
+                entity.Property(e => e.Rank).HasColumnName("rank");
+
+                entity.Property(e => e.Userid).HasColumnName("userid");
+
+                entity.HasOne(d => d.Owner)
+                    .WithMany(p => p.StarredUserOwners)
+                    .HasForeignKey(d => d.Ownerid)
+                    .HasConstraintName("FK_StarredUsers_User_owner");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.StarredUserUsers)
+                    .HasForeignKey(d => d.Userid)
+                    .HasConstraintName("FK_StarredUsers_User");
             });
 
             modelBuilder.Entity<StrategicImportance>(entity =>

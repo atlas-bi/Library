@@ -209,7 +209,9 @@
           form.reset();
           form.querySelector(".dd-vsbl").value = "";
           form.querySelector("#DpTermAnnotation_Rank").value = "";
-          form.querySelector(".CodeMirror").CodeMirror.getDoc().setValue("");
+          if (form.querySelector(".CodeMirror")) {
+            form.querySelector(".CodeMirror").CodeMirror.getDoc().setValue("");
+          }
           // document.getElementsByClassName("new-term-summary")[0].innerHTML = "";
           // document.getElementsByClassName("new-term-def")[0].innerHTML = "";
         }
@@ -270,7 +272,9 @@
           form.reset();
           form.querySelector(".dd-vsbl").value = "";
           form.querySelector("#DpReportAnnotation_Rank").value = "";
-          form.querySelector(".CodeMirror").CodeMirror.getDoc().setValue("");
+          if (form.querySelector(".CodeMirror")) {
+            form.querySelector(".CodeMirror").CodeMirror.getDoc().setValue("");
+          }
           // document.getElementsByClassName("new-term-summary")[0].innerHTML = "";
           // document.getElementsByClassName("new-term-def")[0].innerHTML = "";
         }

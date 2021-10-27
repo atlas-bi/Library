@@ -17,6 +17,7 @@ namespace Atlas_Web.Models
             DpMilestoneTasksCompleteds = new HashSet<DpMilestoneTasksCompleted>();
             DpReportAnnotations = new HashSet<DpReportAnnotation>();
             DpTermAnnotations = new HashSet<DpTermAnnotation>();
+            StarredCollections = new HashSet<StarredCollection>();
         }
 
         public int DataProjectId { get; set; }
@@ -51,5 +52,6 @@ namespace Atlas_Web.Models
         public virtual ICollection<DpMilestoneTasksCompleted> DpMilestoneTasksCompleteds { get; set; }
         public virtual ICollection<DpReportAnnotation> DpReportAnnotations { get; set; }
         public virtual ICollection<DpTermAnnotation> DpTermAnnotations { get; set; }
+        public virtual ICollection<StarredCollection> StarredCollections { get; set; }
     }
 }

@@ -45,6 +45,14 @@ namespace Atlas_Web.Models
             ReportObjectTopRuns = new HashSet<ReportObjectTopRun>();
             SharedItemSharedFromUsers = new HashSet<SharedItem>();
             SharedItemSharedToUsers = new HashSet<SharedItem>();
+            StarredCollections = new HashSet<StarredCollection>();
+            StarredGroups = new HashSet<StarredGroup>();
+            StarredInitiatives = new HashSet<StarredInitiative>();
+            StarredReports = new HashSet<StarredReport>();
+            StarredSearches = new HashSet<StarredSearch>();
+            StarredTerms = new HashSet<StarredTerm>();
+            StarredUserOwners = new HashSet<StarredUser>();
+            StarredUserUsers = new HashSet<StarredUser>();
             TermApprovedByUsers = new HashSet<Term>();
             TermConversationMessages = new HashSet<TermConversationMessage>();
             TermUpdatedByUsers = new HashSet<Term>();
@@ -108,6 +116,14 @@ namespace Atlas_Web.Models
         public virtual ICollection<ReportObjectTopRun> ReportObjectTopRuns { get; set; }
         public virtual ICollection<SharedItem> SharedItemSharedFromUsers { get; set; }
         public virtual ICollection<SharedItem> SharedItemSharedToUsers { get; set; }
+        public virtual ICollection<StarredCollection> StarredCollections { get; set; }
+        public virtual ICollection<StarredGroup> StarredGroups { get; set; }
+        public virtual ICollection<StarredInitiative> StarredInitiatives { get; set; }
+        public virtual ICollection<StarredReport> StarredReports { get; set; }
+        public virtual ICollection<StarredSearch> StarredSearches { get; set; }
+        public virtual ICollection<StarredTerm> StarredTerms { get; set; }
+        public virtual ICollection<StarredUser> StarredUserOwners { get; set; }
+        public virtual ICollection<StarredUser> StarredUserUsers { get; set; }
         public virtual ICollection<Term> TermApprovedByUsers { get; set; }
         public virtual ICollection<TermConversationMessage> TermConversationMessages { get; set; }
         public virtual ICollection<Term> TermUpdatedByUsers { get; set; }

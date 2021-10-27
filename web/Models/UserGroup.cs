@@ -11,6 +11,7 @@ namespace Atlas_Web.Models
         {
             MailRecipients = new HashSet<MailRecipient>();
             ReportGroupsMemberships = new HashSet<ReportGroupsMembership>();
+            StarredGroups = new HashSet<StarredGroup>();
             UserGroupsMemberships = new HashSet<UserGroupsMembership>();
         }
 
@@ -25,6 +26,7 @@ namespace Atlas_Web.Models
 
         public virtual ICollection<MailRecipient> MailRecipients { get; set; }
         public virtual ICollection<ReportGroupsMembership> ReportGroupsMemberships { get; set; }
+        public virtual ICollection<StarredGroup> StarredGroups { get; set; }
         public virtual ICollection<UserGroupsMembership> UserGroupsMemberships { get; set; }
     }
 }

@@ -9,6 +9,7 @@ namespace Atlas_Web.Models
     {
         public UserFavoriteFolder()
         {
+            StarredReports = new HashSet<StarredReport>();
             UserFavorites = new HashSet<UserFavorite>();
         }
 
@@ -17,6 +18,7 @@ namespace Atlas_Web.Models
         public int? UserId { get; set; }
         public int? FolderRank { get; set; }
 
+        public virtual ICollection<StarredReport> StarredReports { get; set; }
         public virtual ICollection<UserFavorite> UserFavorites { get; set; }
     }
 }

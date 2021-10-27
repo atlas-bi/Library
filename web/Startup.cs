@@ -24,6 +24,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Configuration.Json;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Net.Http.Headers;
 using System;
@@ -47,6 +48,11 @@ namespace Atlas_Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSingleton<IConfiguration>(provider => new ConfigurationBuilder()
+            .AddEnvironmentVariables()
+            .AddJsonFile("appsettings.cust.json", optional: true, reloadOnChange: true)
+            .Build());
+
             services.Configure<CookiePolicyOptions>(options =>
             {
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
@@ -190,6 +196,7 @@ namespace Atlas_Web
                                                                   "lib/codemirror/r.js",
                                                                   "lib/codemirror/shell.js",
                                                                   "lib/codemirror/sql.js",
+                                                                  "lib/codemirror/spellcheck.js",
                                                                   "js/editor.js",
                                                                   "js/utility/checkbox.js"
                                                                   );

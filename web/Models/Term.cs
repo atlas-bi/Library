@@ -11,6 +11,7 @@ namespace Atlas_Web.Models
         {
             DpTermAnnotations = new HashSet<DpTermAnnotation>();
             ReportObjectDocTerms = new HashSet<ReportObjectDocTerm>();
+            StarredTerms = new HashSet<StarredTerm>();
             TermConversations = new HashSet<TermConversation>();
         }
 
@@ -32,6 +33,7 @@ namespace Atlas_Web.Models
         public virtual User UpdatedByUser { get; set; }
         public virtual ICollection<DpTermAnnotation> DpTermAnnotations { get; set; }
         public virtual ICollection<ReportObjectDocTerm> ReportObjectDocTerms { get; set; }
+        public virtual ICollection<StarredTerm> StarredTerms { get; set; }
         public virtual ICollection<TermConversation> TermConversations { get; set; }
     }
 }

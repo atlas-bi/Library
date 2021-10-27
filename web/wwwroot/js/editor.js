@@ -230,6 +230,7 @@
     });
 
     this.mirror.setValue(initialValue);
+    this.mirror.getInputField().spellcheck = true;
 
     // this.mirror.on("change", this.updateMirror.bind(this), false);
 

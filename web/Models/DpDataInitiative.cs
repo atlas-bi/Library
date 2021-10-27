@@ -11,6 +11,7 @@ namespace Atlas_Web.Models
         {
             DpContactLinks = new HashSet<DpContactLink>();
             DpDataProjects = new HashSet<DpDataProject>();
+            StarredInitiatives = new HashSet<StarredInitiative>();
         }
 
         public int DataInitiativeId { get; set; }
@@ -30,5 +31,6 @@ namespace Atlas_Web.Models
         public virtual StrategicImportance StrategicImportanceNavigation { get; set; }
         public virtual ICollection<DpContactLink> DpContactLinks { get; set; }
         public virtual ICollection<DpDataProject> DpDataProjects { get; set; }
+        public virtual ICollection<StarredInitiative> StarredInitiatives { get; set; }
     }
 }

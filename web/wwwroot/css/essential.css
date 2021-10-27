@@ -205,3 +205,8 @@ img[src="/img/loader.gif"] {
   max-height: 290px;
   padding-bottom: 350px;
 }
+
+.img-modal-lg {
+  max-height: 80% !important;
+  max-width: 80% !important;
+}

@@ -22,6 +22,7 @@ namespace Atlas_Web.Models
             ReportObjectSubscriptions = new HashSet<ReportObjectSubscription>();
             ReportObjectTagMemberships = new HashSet<ReportObjectTagMembership>();
             ReportObjectTopRuns = new HashSet<ReportObjectTopRun>();
+            StarredReports = new HashSet<StarredReport>();
         }
 
         public int ReportObjectId { get; set; }
@@ -68,5 +69,6 @@ namespace Atlas_Web.Models
         public virtual ICollection<ReportObjectSubscription> ReportObjectSubscriptions { get; set; }
         public virtual ICollection<ReportObjectTagMembership> ReportObjectTagMemberships { get; set; }
         public virtual ICollection<ReportObjectTopRun> ReportObjectTopRuns { get; set; }
+        public virtual ICollection<StarredReport> StarredReports { get; set; }
     }
 }

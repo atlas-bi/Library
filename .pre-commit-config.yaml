@@ -93,3 +93,8 @@ repos:
   #   - id: csslint
   #     files: wwwroot/css/.*.css$
   #     args: [--quiet,--format=compact,--errors=errors,]
+
+  - repo: https://github.com/atlas-bi/pre-commit-hooks
+    rev: 0.0.1 # Get the latest from: https://github.com/atlas-bi/pre-commit-hooks/releases
+    hooks:
+      - id: clean_model_context
