@@ -1,4 +1,5 @@
 appsettings.cust.json
+appsettings.cust.Development.json
 PublishProfiles
 web.csproj.user
 .vscode
