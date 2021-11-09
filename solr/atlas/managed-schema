@@ -1,0 +1,426 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Solr managed schema - automatically generated - DO NOT EDIT -->
+<schema name="default-config" version="1.6">
+  <uniqueKey>id</uniqueKey>
+  <fieldType name="_nest_path_" class="solr.NestPathField" omitTermFreqAndPositions="true" omitNorms="true" maxCharsForDocValues="-1" stored="false"/>
+  <fieldType name="ancestor_path" class="solr.TextField">
+    <analyzer type="index">
+      <tokenizer class="solr.KeywordTokenizerFactory"/>
+    </analyzer>
+    <analyzer type="query">
+      <tokenizer class="solr.PathHierarchyTokenizerFactory" delimiter="/"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="binary" class="solr.BinaryField"/>
+  <fieldType name="boolean" class="solr.BoolField" sortMissingLast="true"/>
+  <fieldType name="booleans" class="solr.BoolField" sortMissingLast="true" multiValued="true"/>
+  <fieldType name="delimited_payloads_float" class="solr.TextField" indexed="true" stored="false">
+    <analyzer>
+      <tokenizer class="solr.WhitespaceTokenizerFactory"/>
+      <filter class="solr.DelimitedPayloadTokenFilterFactory" encoder="float"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="delimited_payloads_int" class="solr.TextField" indexed="true" stored="false">
+    <analyzer>
+      <tokenizer class="solr.WhitespaceTokenizerFactory"/>
+      <filter class="solr.DelimitedPayloadTokenFilterFactory" encoder="integer"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="delimited_payloads_string" class="solr.TextField" indexed="true" stored="false">
+    <analyzer>
+      <tokenizer class="solr.WhitespaceTokenizerFactory"/>
+      <filter class="solr.DelimitedPayloadTokenFilterFactory" encoder="identity"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="descendent_path" class="solr.TextField">
+    <analyzer type="index">
+      <tokenizer class="solr.PathHierarchyTokenizerFactory" delimiter="/"/>
+    </analyzer>
+    <analyzer type="query">
+      <tokenizer class="solr.KeywordTokenizerFactory"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="ignored" class="solr.StrField" indexed="false" stored="false" multiValued="true"/>
+  <fieldType name="location" class="solr.LatLonPointSpatialField" docValues="true"/>
+  <fieldType name="location_rpt" class="solr.SpatialRecursivePrefixTreeFieldType" geo="true" omitNorms="true" omitTermFreqAndPositions="true" maxDistErr="0.001" termOffsets="false" distErrPct="0.025" distanceUnits="kilometers" termPositions="false" omitPositions="true"/>
+  <fieldType name="lowercase" class="solr.TextField" positionIncrementGap="100">
+    <analyzer>
+      <tokenizer class="solr.KeywordTokenizerFactory"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="pdate" class="solr.DatePointField" docValues="true"/>
+  <fieldType name="pdates" class="solr.DatePointField" docValues="true" multiValued="true"/>
+  <fieldType name="pdouble" class="solr.DoublePointField" docValues="true"/>
+  <fieldType name="pdoubles" class="solr.DoublePointField" docValues="true" multiValued="true"/>
+  <fieldType name="pfloat" class="solr.FloatPointField" docValues="true"/>
+  <fieldType name="pfloats" class="solr.FloatPointField" docValues="true" multiValued="true"/>
+  <fieldType name="phonetic_en" class="solr.TextField" indexed="true" stored="false">
+    <analyzer>
+      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <filter class="solr.DoubleMetaphoneFilterFactory" inject="false"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="pint" class="solr.IntPointField" docValues="true"/>
+  <fieldType name="pints" class="solr.IntPointField" docValues="true" multiValued="true"/>
+  <fieldType name="plong" class="solr.LongPointField" docValues="true"/>
+  <fieldType name="plongs" class="solr.LongPointField" docValues="true" multiValued="true"/>
+  <fieldType name="point" class="solr.PointType" subFieldSuffix="_d" dimension="2"/>
+  <fieldType name="random" class="solr.RandomSortField" indexed="true"/>
+  <fieldType name="rank" class="solr.RankField"/>
+  <fieldType name="string" class="solr.StrField" sortMissingLast="true" docValues="true"/>
+  <fieldType name="strings" class="solr.StrField" sortMissingLast="true" docValues="true" multiValued="true"/>
+  <fieldType name="text_en" class="solr.TextField" positionIncrementGap="100">
+    <analyzer type="index">
+      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <filter class="solr.StopFilterFactory" words="lang/stopwords_en.txt" ignoreCase="true"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+      <filter class="solr.EnglishPossessiveFilterFactory"/>
+      <filter class="solr.KeywordMarkerFilterFactory" protected="protwords.txt"/>
+      <filter class="solr.PorterStemFilterFactory"/>
+    </analyzer>
+    <analyzer type="query">
+      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <filter class="solr.SynonymGraphFilterFactory" expand="true" ignoreCase="true" synonyms="synonyms.txt"/>
+      <filter class="solr.StopFilterFactory" words="lang/stopwords_en.txt" ignoreCase="true"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+      <filter class="solr.EnglishPossessiveFilterFactory"/>
+      <filter class="solr.KeywordMarkerFilterFactory" protected="protwords.txt"/>
+      <filter class="solr.PorterStemFilterFactory"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="text_en_splitting" class="solr.TextField" autoGeneratePhraseQueries="true" positionIncrementGap="100">
+    <analyzer type="index">
+      <tokenizer class="solr.WhitespaceTokenizerFactory"/>
+      <filter class="solr.StopFilterFactory" words="lang/stopwords_en.txt" ignoreCase="true"/>
+      <filter class="solr.WordDelimiterGraphFilterFactory" catenateNumbers="1" generateNumberParts="1" splitOnCaseChange="1" generateWordParts="1" catenateAll="0" catenateWords="1"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+      <filter class="solr.KeywordMarkerFilterFactory" protected="protwords.txt"/>
+      <filter class="solr.PorterStemFilterFactory"/>
+      <filter class="solr.FlattenGraphFilterFactory"/>
+    </analyzer>
+    <analyzer type="query">
+      <tokenizer class="solr.WhitespaceTokenizerFactory"/>
+      <filter class="solr.SynonymGraphFilterFactory" expand="true" ignoreCase="true" synonyms="synonyms.txt"/>
+      <filter class="solr.StopFilterFactory" words="lang/stopwords_en.txt" ignoreCase="true"/>
+      <filter class="solr.WordDelimiterGraphFilterFactory" catenateNumbers="0" generateNumberParts="1" splitOnCaseChange="1" generateWordParts="1" catenateAll="0" catenateWords="0"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+      <filter class="solr.KeywordMarkerFilterFactory" protected="protwords.txt"/>
+      <filter class="solr.PorterStemFilterFactory"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="text_en_splitting_tight" class="solr.TextField" autoGeneratePhraseQueries="true" positionIncrementGap="100">
+    <analyzer type="index">
+      <tokenizer class="solr.WhitespaceTokenizerFactory"/>
+      <filter class="solr.SynonymGraphFilterFactory" expand="false" ignoreCase="true" synonyms="synonyms.txt"/>
+      <filter class="solr.StopFilterFactory" words="lang/stopwords_en.txt" ignoreCase="true"/>
+      <filter class="solr.WordDelimiterGraphFilterFactory" catenateNumbers="1" generateNumberParts="0" generateWordParts="0" catenateAll="0" catenateWords="1"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+      <filter class="solr.KeywordMarkerFilterFactory" protected="protwords.txt"/>
+      <filter class="solr.EnglishMinimalStemFilterFactory"/>
+      <filter class="solr.RemoveDuplicatesTokenFilterFactory"/>
+      <filter class="solr.FlattenGraphFilterFactory"/>
+    </analyzer>
+    <analyzer type="query">
+      <tokenizer class="solr.WhitespaceTokenizerFactory"/>
+      <filter class="solr.SynonymGraphFilterFactory" expand="false" ignoreCase="true" synonyms="synonyms.txt"/>
+      <filter class="solr.StopFilterFactory" words="lang/stopwords_en.txt" ignoreCase="true"/>
+      <filter class="solr.WordDelimiterGraphFilterFactory" catenateNumbers="1" generateNumberParts="0" generateWordParts="0" catenateAll="0" catenateWords="1"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+      <filter class="solr.KeywordMarkerFilterFactory" protected="protwords.txt"/>
+      <filter class="solr.EnglishMinimalStemFilterFactory"/>
+      <filter class="solr.RemoveDuplicatesTokenFilterFactory"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="text_gen_sort" class="solr.SortableTextField" positionIncrementGap="100" multiValued="true">
+    <analyzer type="index">
+      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <filter class="solr.StopFilterFactory" words="stopwords.txt" ignoreCase="true"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+    </analyzer>
+    <analyzer type="query">
+      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <filter class="solr.StopFilterFactory" words="stopwords.txt" ignoreCase="true"/>
+      <filter class="solr.SynonymGraphFilterFactory" expand="true" ignoreCase="true" synonyms="synonyms.txt"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="non_split_text" class="solr.TextField" multiValued="true">
+  </fieldType>
+  <fieldType name="text_general" class="solr.TextField" positionIncrementGap="100" multiValued="true">
+    <analyzer type="index">
+      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <filter class="solr.StopFilterFactory" words="stopwords.txt" ignoreCase="true"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+    </analyzer>
+    <analyzer type="query">
+      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <filter class="solr.StopFilterFactory" words="stopwords.txt" ignoreCase="true"/>
+      <filter class="solr.SynonymGraphFilterFactory" expand="true" ignoreCase="true" synonyms="synonyms.txt"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="text_general_rev" class="solr.TextField" positionIncrementGap="100">
+    <analyzer type="index">
+      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <filter class="solr.StopFilterFactory" words="stopwords.txt" ignoreCase="true"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+      <filter class="solr.ReversedWildcardFilterFactory" maxPosQuestion="2" maxFractionAsterisk="0.33" maxPosAsterisk="3" withOriginal="true"/>
+    </analyzer>
+    <analyzer type="query">
+      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <filter class="solr.SynonymGraphFilterFactory" expand="true" ignoreCase="true" synonyms="synonyms.txt"/>
+      <filter class="solr.StopFilterFactory" words="stopwords.txt" ignoreCase="true"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="text_ws" class="solr.TextField" positionIncrementGap="100">
+    <analyzer>
+      <tokenizer class="solr.WhitespaceTokenizerFactory"/>
+    </analyzer>
+  </fieldType>
+  <field name="analytics_owner" type="text_general"/>
+  <field name="approval_date" type="pdate"/>
+  <field name="approved" type="text_en"/>
+  <field name="approved_by" type="text_en"/>
+  <field name="author" type="text_en" />
+  <field name="created" type="pdate"/>
+  <field name="run_user" type="text_en"/>
+  <field name="created_by" type="text_en"/>
+  <field name="created_by_id" type="plong"/>
+  <field name="data_owner" type="text_en"/>
+  <field name="certification" type="text_general"  stored="true" indexed="true" />
+  <field name="description" type="text_en" multiValued="true" stored="true" indexed="true" />
+  <field name="documented" type="plong" />
+  <field name="do_not_purge" type="text_en" />
+  <field name="enabled_for_hyperspace" type="text_en" />
+  <field name="epic_master_file" type="text_en"/>
+  <field name="epic_record_id" type="text_en"/>
+  <field name="epic_template" type="text_en" />
+  <field name="executive_owner" type="text_en"/>
+  <field name="user_roles" type="text_en" multiValued="true" stored="true" indexed="true" />
+  <field name="executive_visibility" type="text_en" />
+  <field name="estimated_run_frequency" type="text_en" />
+  <field name="external_url" type="text_en"/>
+  <field name="financial_impact" type="text_en"/>
+  <field name="fragility" type="text_en" />
+  <field name="fragility_tags" type="text_en" multiValued="true" />
+  <field name="has_external_standard" type="text_en"/>
+  <field name="last_load_date" type="pdate"/>
+  <field name="last_updated" type="pdate"/>
+  <field name="maintenance_schedule" type="text_en" />
+  <field name="name" type="text_en" indexed="true" />
+  <field name="operations_owner" type="text_en"/>
+  <field name="organizational_value" type="text_en" />
+  <field name="orphan" type="text_en"/>
+  <field name="query" type="text_en" multiValued="true" />
+  <field name="related_initiatives" type="text_general" multiValued="true" />
+  <field name="related_collections" type="text_general" multiValued="true" />
+  <field name="related_reports" type="text_general" multiValued="true" />
+  <field name="related_terms" type="text_general" multiValued="true" />
+  <field name="report_last_updated" type="pdate"/>
+  <field name="report_last_updated_by" type="text_en" />
+  <field name="report_type" type="text_en"/>
+  <field name="report_type_short" type="text_en"/>
+  <field name="requester" type="text_en" />
+  <field name="source_database" type="text_en"/>
+  <field name="source_server" type="text_en"/>
+  <field name="strategic_importance" type="text_en"/>
+  <field name="updated_by" type="text_en"/>
+  <field name="user_runs" type="_nest_path_" />
+  <field name="runs" type="pfloat" indexed="true" stored="true" />
+  <field name="run_user_id" type="plongs" indexed="true" stored="true" />
+  <field name="valid_from" type="pdate"/>
+  <field name="valid_to" type="pdate"/>
+  <field name="visible" type="text_en"/>
+  <field name="_nest_path_" type="_nest_path_"/>
+  <field name="_root_" type="string" docValues="false" indexed="true" stored="false"/>
+  <field name="_text_" type="text_general" multiValued="true" indexed="true" stored="false"/>
+  <field name="_version_" type="plong" indexed="false" stored="false"/>
+  <field name="atlas_id" type="plongs"/>
+  <field name="employee_id" type="text_en"/>
+  <field name="email" type="text_en"/>
+  <field name="id" type="string" multiValued="false" indexed="true" required="true" stored="true"/>
+  <field name="linked_description" type="text_en" multiValued="true" />
+  <field name="linked_name" type="text_en" multiValued="true"/>
+  <field name="type" type="text_general"/>
+  <field name="all_text" type="text_en" uninvertible="true" multiValued="true" indexed="true" stored="false" />
+  <field name="run_user_text" type="non_split_text" indexed="true" stored="false" multiValued="true" />
+  <field name="certification_text" type="non_split_text" indexed="true" stored="false" multiValued="false" />
+  <field name="run_user_id_text" type="non_split_text" indexed="true" stored="false" multiValued="true" />
+  <field name="updated_by_text" type="non_split_text" indexed="true" stored="false" multiValued="true" />
+  <field name="report_type_text" type="non_split_text" indexed="true" stored="false" multiValued="true" />
+  <field name="report_type_short_text" type="non_split_text" indexed="true" stored="false" multiValued="true" />
+  <field name="related_terms_text" type="non_split_text" indexed="true" stored="false" multiValued="true" />
+  <field name="visibility_text" type="non_split_text" indexed="true" stored="false" multiValued="true" />
+  <field name="orphaned_text" type="non_split_text" indexed="true" stored="false" multiValued="true" />
+  <field name="source_server_text" type="non_split_text" indexed="true" stored="false" multiValued="true" />
+  <field name="source_database_text" type="non_split_text" indexed="true" stored="false" multiValued="true" />
+  <field name="epic_master_file_text" type="non_split_text" indexed="true" stored="false" multiValued="true" />
+  <field name="created_by_text" type="non_split_text" indexed="true" stored="false" multiValued="true" />
+  <field name="operations_owner_text" type="non_split_text" indexed="true" stored="false" multiValued="true" />
+  <field name="requester_text" type="non_split_text" indexed="true" stored="false" multiValued="true" />
+  <field name="epic_template_text" type="non_split_text" indexed="true" stored="false" multiValued="true" />
+  <field name="organizational_value_text" type="non_split_text" indexed="true" stored="false" multiValued="true" />
+  <field name="estimated_run_frequency_text" type="non_split_text" indexed="true" stored="false" multiValued="true" />
+  <field name="fragility_text" type="non_split_text" indexed="true" stored="false" multiValued="true" />
+  <field name="executive_visibility_text" type="non_split_text" indexed="true" stored="false" multiValued="true" />
+  <field name="maintenance_schedule_text" type="non_split_text" indexed="true" stored="false" multiValued="true" />
+  <field name="enabled_for_hyperspace_text" type="non_split_text" indexed="true" stored="false" multiValued="true" />
+  <field name="do_not_purge_text" type="non_split_text" indexed="true" stored="false" multiValued="true" />
+  <field name="related_collections_text" type="non_split_text" indexed="true" stored="false" multiValued="true" />
+  <field name="related_initiatives_text" type="non_split_text" indexed="true" stored="false" multiValued="true" />
+  <field name="approved_text" type="non_split_text" indexed="true" stored="false" multiValued="true" />
+  <field name="approved_by_text" type="non_split_text" indexed="true" stored="false" multiValued="true" />
+  <field name="has_external_standard_text" type="non_split_text" indexed="true" stored="false" multiValued="true" />
+  <field name="financial_impact_text" type="non_split_text" indexed="true" stored="false" multiValued="true" />
+  <field name="strategic_importance_text" type="non_split_text" indexed="true" stored="false" multiValued="true" />
+  <field name="executive_owner_text" type="non_split_text" indexed="true" stored="false" multiValued="true" />
+  <field name="analytics_owner_text" type="non_split_text" indexed="true" stored="false" multiValued="true" />
+  <field name="data_owner_text" type="non_split_text" indexed="true" stored="false" multiValued="true" />
+  <field name="fragility_tags_text" type="non_split_text" indexed="true" stored="false" multiValued="true" />
+  <field name="report_last_updated_by_text" type="non_split_text" indexed="true" stored="false" multiValued="true" />
+  <field name="related_reports_text" type="non_split_text" indexed="true" stored="false" multiValued="true" />
+
+  <dynamicField name="*_txt_en_split_tight" type="text_en_splitting_tight" indexed="true" stored="true"/>
+  <dynamicField name="*_descendent_path" type="descendent_path" indexed="true" stored="true"/>
+  <dynamicField name="*_ancestor_path" type="ancestor_path" indexed="true" stored="true"/>
+  <dynamicField name="*_txt_en_split" type="text_en_splitting" indexed="true" stored="true"/>
+  <dynamicField name="*_txt_sort" type="text_gen_sort" indexed="true" stored="true"/>
+  <dynamicField name="ignored_*" type="ignored"/>
+  <dynamicField name="*_phon_en" type="phonetic_en" indexed="true" stored="true"/>
+  <dynamicField name="*_s_lower" type="lowercase" indexed="true" stored="true"/>
+  <dynamicField name="random_*" type="random"/>
+  <dynamicField name="*_t_sort" type="text_gen_sort" multiValued="false" indexed="true" stored="true"/>
+  <dynamicField name="*_txt_en" type="text_en" indexed="true" stored="true"/>
+  <dynamicField name="*_point" type="point" indexed="true" stored="true"/>
+  <dynamicField name="*_srpt" type="location_rpt" indexed="true" stored="true"/>
+  <dynamicField name="attr_*" type="text_general" multiValued="true" indexed="true" stored="true"/>
+  <dynamicField name="*_txt" type="text_general" indexed="true" stored="true"/>
+  <dynamicField name="*_str" type="strings" docValues="true" indexed="false" stored="false" useDocValuesAsStored="false"/>
+  <dynamicField name="*_dts" type="pdate" multiValued="true" indexed="true" stored="true"/>
+  <dynamicField name="*_dpf" type="delimited_payloads_float" indexed="true" stored="true"/>
+  <dynamicField name="*_dpi" type="delimited_payloads_int" indexed="true" stored="true"/>
+  <dynamicField name="*_dps" type="delimited_payloads_string" indexed="true" stored="true"/>
+  <dynamicField name="*_is" type="pints" indexed="true" stored="true"/>
+  <dynamicField name="*_ss" type="strings" indexed="true" stored="true"/>
+  <dynamicField name="*_ls" type="plongs" indexed="true" stored="true"/>
+  <dynamicField name="*_bs" type="booleans" indexed="true" stored="true"/>
+  <dynamicField name="*_fs" type="pfloats" indexed="true" stored="true"/>
+  <dynamicField name="*_ds" type="pdoubles" indexed="true" stored="true"/>
+  <dynamicField name="*_dt" type="pdate" indexed="true" stored="true"/>
+  <dynamicField name="*_ws" type="text_ws" indexed="true" stored="true"/>
+  <dynamicField name="*_i" type="pint" indexed="true" stored="true"/>
+  <dynamicField name="*_s" type="string" indexed="true" stored="true"/>
+  <dynamicField name="*_l" type="plong" indexed="true" stored="true"/>
+  <dynamicField name="*_t" type="text_general" multiValued="false" indexed="true" stored="true"/>
+  <dynamicField name="*_b" type="boolean" indexed="true" stored="true"/>
+  <dynamicField name="*_f" type="pfloat" indexed="true" stored="true"/>
+  <dynamicField name="*_d" type="pdouble" indexed="true" stored="true"/>
+  <dynamicField name="*_p" type="location" indexed="true" stored="true"/>
+  <copyField source="related_reports" dest="related_Reports_str" maxChars="256"/>
+  <copyField source="related_terms" dest="related_Terms_str" maxChars="256"/>
+  <copyField source="description" dest="description_str" maxChars="256"/>
+  <copyField source="user_roles" dest="user_roles_str" maxChars="256" />
+  <copyField source="id" dest="id_str" maxChars="256"/>
+  <copyField source="type" dest="type_str" maxChars="256"/>
+  <copyField source="certification" dest="certification_str" maxChars="256"/>
+  <copyField source="linked_name" dest="linked_name_str" maxChars="256"/>
+  <copyField source="related_initiatives" dest="related_initiatives_str" maxChars="256"/>
+  <copyField source="linked_description" dest="linked_description_str" maxChars="256"/>
+  <copyField source="updated_by" dest="updated_by_str" maxChars="256"/>
+  <copyField source="operations_owner" dest="operations_owner_str" maxChars="256"/>
+  <copyField source="analytics_owner" dest="analytics_owner_str" maxChars="256"/>
+  <copyField source="executive_owner" dest="executive_owner_str" maxChars="256"/>
+  <copyField source="financial_impact" dest="financial_impact_str" maxChars="256"/>
+  <copyField source="data_owner" dest="data_owner_str" maxChars="256"/>
+  <copyField source="strategic_importance" dest="strategic_importance_str" maxChars="256"/>
+  <copyField source="source_database" dest="source_database_str" maxChars="256"/>
+  <copyField source="epic_master_file" dest="epic_master_file_str" maxChars="256"/>
+  <copyField source="source_server" dest="source_server_str" maxChars="256"/>
+  <copyField source="visible" dest="visible_str" maxChars="256"/>
+  <copyField source="created_by" dest="created_by_str" maxChars="256"/>
+  <copyField source="run_user" dest="run_user_str" maxChars="256"/>
+  <copyField source="report_type" dest="report_type_str" maxChars="256"/>
+  <copyField source="report_type_short" dest="report_type_str" maxChars="256"/>
+  <copyField source="requester" dest="requester_str" maxChars="256" />
+  <copyField source="orphan" dest="orphan_str" maxChars="256"/>
+  <copyField source="name" dest="name_str" maxChars="256"/>
+  <copyField source="approved" dest="approved_str" maxChars="256"/>
+  <copyField source="approved_by" dest="approved_by_str" maxChars="256"/>
+  <copyField source="has_external_standard" dest="has_external_standard_str" maxChars="256"/>
+  <copyField source="related_collections" dest="related_collections_str" maxChars="256"/>
+  <copyField source="external_url" dest="external_url_str" maxChars="256"/>
+
+
+  <copyField source="report_last_updated_by" dest="all_text" />
+  <copyField source="author" dest="all_text" />
+  <copyField source="related_reports" dest="all_text" />
+  <copyField source="related_terms" dest="all_text" />
+  <copyField source="description" dest="all_text" />
+  <copyField source="user_roles" dest="all_text" />
+  <copyField source="type" dest="all_text" />
+  <copyField source="certification" dest="all_text" />
+  <copyField source="linked_name" dest="all_text" />
+  <copyField source="related_initiatives" dest="all_text" />
+  <copyField source="linked_description" dest="all_text" />
+  <copyField source="updated_by" dest="all_text" />
+  <copyField source="operations_owner" dest="all_text" />
+  <copyField source="analytics_owner" dest="all_text" />
+  <copyField source="executive_owner" dest="all_text" />
+  <copyField source="financial_impact" dest="all_text" />
+  <copyField source="fragility" dest="all_text" />
+  <copyField source="data_owner" dest="all_text" />
+  <copyField source="strategic_importance" dest="all_text" />
+  <copyField source="epic_master_file" dest="all_text" />
+  <copyField source="epic_template" dest="all_text" />
+  <copyField source="created_by" dest="all_text" />
+  <copyField source="report_type" dest="all_text" />
+  <copyField source="report_type_short" dest="all_text" />
+  <copyField source="name" dest="all_text" />
+  <copyField source="approved_by" dest="all_text" />
+  <copyField source="related_collections" dest="all_text" />
+  <copyField source="estimated_run_frequency" dest="all_text" />
+  <copyField source="maintenance_schedule" dest="all_text" />
+  <copyField source="query" dest="all_text" />
+  <copyField source="email" dest="all_text" />
+  <copyField source="employee_id" dest="all_text" />
+  <copyField source="epic_record_id" dest="all_text" />
+
+  <copyField source="updated_by" dest="updated_by_text" />
+  <copyField source="report_type" dest="report_type_text" />
+  <copyField source="report_type_short" dest="report_type_short_text" />
+  <copyField source="related_terms" dest="related_terms_text" />
+  <copyField source="related_reports" dest="related_reports_text" />
+  <copyField source="visible" dest="visibility_text" />
+  <copyField source="report_last_updated_by" dest="report_last_updated_by_text" />
+  <copyField source="orphan" dest="orphaned_text" />
+  <copyField source="source_server" dest="source_server_text" />
+  <copyField source="source_database" dest="source_database_text" />
+  <copyField source="epic_master_file" dest="epic_master_file_text" />
+  <copyField source="run_user" dest="run_user_text" />
+  <copyField source="created_by" dest="created_by_text" />
+  <copyField source="run_user_id" dest="run_user_id_text" />
+  <copyField source="operations_owner" dest="operations_owner_text" />
+  <copyField source="requester" dest="requester_text" />
+  <copyField source="epic_template" dest="epic_template_text" />
+  <copyField source="organizational_value" dest="organizational_value_text" />
+  <copyField source="estimated_run_frequency" dest="estimated_run_frequency_text" />
+  <copyField source="fragility" dest="fragility_text" />
+  <copyField source="executive_visibility" dest="executive_visibility_text" />
+  <copyField source="maintenance_schedule" dest="maintenance_schedule_text" />
+  <copyField source="enabled_for_hyperspace" dest="enabled_for_hyperspace_text" />
+  <copyField source="do_not_purge" dest="do_not_purge_text" />
+  <copyField source="related_collections" dest="related_collections_text" />
+  <copyField source="related_initiatives" dest="related_initiatives_text" />
+  <copyField source="approved" dest="approved_text" />
+  <copyField source="approved_by" dest="approved_by_text" />
+  <copyField source="has_external_standard" dest="has_external_standard_text" />
+  <copyField source="financial_impact" dest="financial_impact_text" />
+  <copyField source="strategic_importance" dest="strategic_importance_text" />
+  <copyField source="executive_owner" dest="executive_owner_text" />
+  <copyField source="analytics_owner" dest="analytics_owner_text" />
+  <copyField source="data_owner" dest="data_owner_text" />
+  <copyField source="fragility_tags" dest="fragility_tags_text" />
+  <copyField source="certification" dest="certification_text" />
+</schema>
