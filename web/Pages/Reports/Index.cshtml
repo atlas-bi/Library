@@ -64,7 +64,7 @@
         </a>
     } else 
     {
-        if(@Model.Report.EpicMasterFile.Equals("IDB"))
+        if(@Model.Report.EpicMasterFile != null && @Model.Report.EpicMasterFile.Equals("IDB"))
         {
             <a class="nav-link nav-linkDisabled" data-tooltip="Open a related dashboard that uses this." >
                 <svg viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><path d="M424.4 214.7L72.4 6.6C43.8-10.3 0 6.1 0 47.9V464c0 37.5 40.7 60.1 72.4 41.3l352-208c31.4-18.5 31.5-64.1 0-82.6z" /></svg>
@@ -75,7 +75,7 @@
             <a class="nav-link nav-linkDisabled" data-tooltip="Open in report library." >
                 <svg viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><path d="M424.4 214.7L72.4 6.6C43.8-10.3 0 6.1 0 47.9V464c0 37.5 40.7 60.1 72.4 41.3l352-208c31.4-18.5 31.5-64.1 0-82.6z" /></svg>
             </a>
-        } else
+        } else if(@Model.Report.EpicMasterFile != null)
         {
             <a class="nav-link nav-linkDisabled" data-tooltip="Login to Hyperspace to run report.">
                 <svg viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><path d="M424.4 214.7L72.4 6.6C43.8-10.3 0 6.1 0 47.9V464c0 37.5 40.7 60.1 72.4 41.3l352-208c31.4-18.5 31.5-64.1 0-82.6z" /></svg>
@@ -154,6 +154,7 @@
         @if (query)
         {
             <a href="#query" class="pageNav-link">Query</a>
+  
         }
 
         @if (parents || children || groups || collections)
