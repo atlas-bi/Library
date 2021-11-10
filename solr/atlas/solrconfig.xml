@@ -854,7 +854,7 @@
       <str name="facet.range.end">NOW/MONTH</str>
       <str name="facet.range.gap">+1MONTH</str>
       <str name="facet.field">updated_by_text</str>
-      <str name="facet.field">{!key=report_type}report_type_short_text</str>
+      <str name="facet.field">{!key=report_type}report_type_text</str>
     </lst>
   </requestHandler>
   <requestHandler name="/reports" class="solr.SearchHandler">
