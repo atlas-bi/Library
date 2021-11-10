@@ -980,8 +980,23 @@
       <str name="facet.field">{!ex=dt}type</str>
     </lst>
   </requestHandler>
+  <requestHandler name="/groups" class="solr.SearchHandler">
+    <lst name="appends">
+      <str name="fq">{!tag=dt}type:groups</str>
+    </lst>
+    <lst name="defaults">
+      <str name="echoParams">explicit</str>
+      <str name="wt">json</str>
+      <str name="indent">true</str>
+      <str name="fl">id name email epic_record_id type atlas_id</str>
+      <str name="facet">on</str>
+      <str name="facet.field">user_roles</str>
+      <str name="facet.limit">10</str>
+      <str name="facet.field">{!ex=dt}type</str>
+    </lst>
+  </requestHandler>
 
-  <initParams path="/update/**,/query,/select,/spell,/reports,/collections,/initiatives,/users,/aterms">
+  <initParams path="/update/**,/query,/select,/spell,/reports,/collections,/initiatives,/users,/groups,/aterms">
     <lst name="defaults">
       <str name="df">all_text</str>
     </lst>
