@@ -191,7 +191,7 @@
   <field name="data_owner" type="text_en"/>
   <field name="certification" type="text_general"  stored="true" indexed="true" />
   <field name="description" type="text_en" multiValued="true" stored="true" indexed="true" />
-  <field name="documented" type="plong" />
+  <field name="documented" type="text_en" />
   <field name="do_not_purge" type="text_en" />
   <field name="enabled_for_hyperspace" type="text_en" />
   <field name="epic_master_file" type="text_en"/>
@@ -268,6 +268,7 @@
   <field name="maintenance_schedule_text" type="non_split_text" indexed="true" stored="false" multiValued="true" />
   <field name="enabled_for_hyperspace_text" type="non_split_text" indexed="true" stored="false" multiValued="true" />
   <field name="do_not_purge_text" type="non_split_text" indexed="true" stored="false" multiValued="true" />
+  <field name="documented_text" type="non_split_text" indexed="true" stored="false" multiValued="true" />
   <field name="related_collections_text" type="non_split_text" indexed="true" stored="false" multiValued="true" />
   <field name="related_initiatives_text" type="non_split_text" indexed="true" stored="false" multiValued="true" />
   <field name="approved_text" type="non_split_text" indexed="true" stored="false" multiValued="true" />
@@ -411,6 +412,7 @@
   <copyField source="maintenance_schedule" dest="maintenance_schedule_text" />
   <copyField source="enabled_for_hyperspace" dest="enabled_for_hyperspace_text" />
   <copyField source="do_not_purge" dest="do_not_purge_text" />
+  <copyField source="documented" dest="documented_text" />
   <copyField source="related_collections" dest="related_collections_text" />
   <copyField source="related_initiatives" dest="related_initiatives_text" />
   <copyField source="approved" dest="approved_text" />
