@@ -865,7 +865,7 @@
       <str name="echoParams">explicit</str>
       <str name="wt">json</str>
       <str name="indent">true</str>
-      <str name="fl">id name description report_type documented atlas_id certification</str>
+      <str name="fl">id name description type report_type documented atlas_id certification</str>
       <str name="fq">{!tag=visibility_text}visible:Y</str>
       <str name="fq">orphan:N</str>
       <str name="facet">on</str>
