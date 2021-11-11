@@ -831,6 +831,7 @@ CREATE TABLE [app].[ReportObject_doc](
     [EnabledForHyperspace] [nchar](1) NULL,
     [DoNotPurge] [nchar](1) NULL,
     [Hidden] [nchar](1) NULL,
+    [DeveloperNotes] [nvarchar](max) NULL,
 PRIMARY KEY CLUSTERED 
 (
     [ReportObjectID] ASC
