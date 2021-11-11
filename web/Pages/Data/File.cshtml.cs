@@ -30,7 +30,9 @@ using System.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using Atlas_Web.Helpers;
 using Microsoft.Extensions.Caching.Memory;
-
+using System.Text;
+using System.Xml;
+using static Atlas_Web.Pages.Reports.IndexModel;
 
 namespace Atlas_Web.Pages.Data
 {
@@ -47,7 +49,13 @@ namespace Atlas_Web.Pages.Data
             _cache = cache;
         }
 
-        public async Task<ActionResult> OnGet(int id)
+        public object ReportServer { get; private set; }
+        public class ReportData
+        {
+            public string server { get; set; }
+        }
+
+            public async Task<ActionResult> OnGet(int id)
         {
 
             var MyFile = await _context.DpAttachments.Where(x => x.AttachmentId == id).ToListAsync();
@@ -59,6 +67,18 @@ namespace Atlas_Web.Pages.Data
                 return File(ThisFile.AttachmentData, "application/octet-stream", ThisFile.AttachmentName);
             }
             return Content("");
+        }
+
+        public  async Task<ActionResult> OnGetCube(int id)
+        {
+
+            string text = System.IO.File.ReadAllText("wwwroot/Cube.xml");
+            var cube = await _context.ReportObjects.Where(x => x.ReportObjectId == id).FirstAsync();
+            text = text.Replace("server", cube.SourceServer);
+            text = text.Replace("Catalog_Name", cube.Name);
+            byte[] bytes = Encoding.ASCII.GetBytes(text);
+            HttpContext.Response.Headers.Remove("Cache-Control");
+            return File(bytes, "text/plain", cube.Name + ".odc");
         }
     }
 }

@@ -1247,6 +1247,48 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
+CREATE TABLE [dbo].[ReportObjectTags](
+    [TagID] [int] IDENTITY(1,1) NOT NULL,
+    [EpicTagID] [numeric](18, 0) NULL,
+    [TagName] [varchar](200) NULL,
+ CONSTRAINT [PK_ReportObjectTags] PRIMARY KEY CLUSTERED 
+(
+    [TagID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[ReportObjectTagMemberships](
+    [TagMembershipID] [int] IDENTITY(1,1) NOT NULL,
+    [ReportObjectID] [int] NOT NULL,
+    [TagID] [int] NOT NULL,
+    [Line] [int] NULL,
+ CONSTRAINT [PK_ReportObjectTagMemberships] PRIMARY KEY CLUSTERED 
+(
+    [TagMembershipID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[ReportObjectTagMemberships]  WITH CHECK ADD  CONSTRAINT [FK_ReportObjectTagMemberships_ReportObject] FOREIGN KEY([ReportObjectID])
+REFERENCES [dbo].[ReportObject] ([ReportObjectID])
+GO
+ALTER TABLE [dbo].[ReportObjectTagMemberships] CHECK CONSTRAINT [FK_ReportObjectTagMemberships_ReportObject]
+GO
+ALTER TABLE [dbo].[ReportObjectTagMemberships]  WITH CHECK ADD  CONSTRAINT [FK_ReportObjectTagMemberships_ReportObjectTags] FOREIGN KEY([TagID])
+REFERENCES [dbo].[ReportObjectTags] ([TagID])
+GO
+ALTER TABLE [dbo].[ReportObjectTagMemberships] CHECK CONSTRAINT [FK_ReportObjectTagMemberships_ReportObjectTags]
+GO
+
+
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
 CREATE TABLE [app].[TermConversationMessage](
     [TermConversationMessageID] [int] IDENTITY(1,1) NOT NULL,
     [TermConversationId] [int] NOT NULL,
