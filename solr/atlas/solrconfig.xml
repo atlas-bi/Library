@@ -848,7 +848,7 @@
       <str name="facet.limit">10</str>
       <str name="facet.mincount">1</str>
       <str name="facet.field">type</str>
-      <str name="facet.field">{!ex=certification}certification</str>
+      <str name="facet.field">{!ex=certification_text}certification_text</str>
       <str name="facet.range">last_updated</str>
       <str name="facet.range.start">NOW/MONTH-12MONTH</str>
       <str name="facet.range.end">NOW/MONTH</str>
@@ -870,7 +870,7 @@
       <str name="fq">orphan:N</str>
       <str name="facet">on</str>
       <str name="facet.field">{!ex=type}type</str>
-      <str name="facet.field">{!ex=certification}certification</str>
+      <str name="facet.field">{!ex=certification_text}certification_text</str>
       <str name="facet.field">{!ex=visibility_text key=visible}visibility_text</str>
       <str name="facet.range">created</str>
       <str name="facet.field">{!ex=documented}documented</str>
