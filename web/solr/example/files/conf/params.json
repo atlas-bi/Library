@@ -1,0 +1,53 @@
+{
+  "params": {
+    "browse": {
+      "": {
+        "v": 0
+      },
+      "_appends_": {
+        "fq": "{!switch v=$type tag=type case='*:*' case.all='*:*' case.unknown='-doc_type:[* TO *]' default=$type_fq}"
+      },
+      "debug": "true",
+      "echoParams": "explicit",
+      "hl": "on",
+      "hl.fl": "content",
+      "hl.simple.post": "HL_END",
+      "hl.simple.pre": "HL_START",
+      "type_fq": "{!field f=doc_type v=$type}",
+      "v.locale": "${locale}"
+    },
+    "facets": {
+      "": {
+        "v": 0
+      },
+      "f.doc_type.facet.mincount": "0",
+      "f.doc_type.facet.missing": true,
+      "f.text_shingles.facet.limit": 10,
+      "facet": "on",
+      "facet.field": [
+        "text_shingles",
+        "{!ex=type}doc_type",
+        "language"
+      ],
+      "facet.mincount": "1",
+      "facet.query": "{!ex=type key=all_types}*:*"
+    },
+    "query": {
+      "": {
+        "v": 0
+      },
+      "defType": "edismax",
+      "fl": "*,score",
+      "q.alt": "*:*",
+      "rows": "10"
+    },
+    "velocity": {
+      "": {
+        "v": 0
+      },
+      "v.layout": "layout",
+      "v.template": "browse",
+      "wt": "velocity"
+    }
+  }
+}

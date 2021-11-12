@@ -1,0 +1,19 @@
+{
+  "initArgs": {
+    "format": "solr",
+    "ignoreCase": true
+  },
+  "managedMap": {
+    "GB": [
+      "GiB",
+      "Gigabyte"
+    ],
+    "TV": [
+      "Television"
+    ],
+    "happy": [
+      "glad",
+      "joyful"
+    ]
+  }
+}

@@ -102,19 +102,11 @@
     }
 
     // attempt to get existing search params from url
-    var url_Path = window.location.pathname.toLowerCase() == "/search",
-      urlParams = getUrlVars(decodeURI(window.location.search)),
-      url_sf = url_Path && urlParams["sf"] ? "&sf=" + urlParams["sf"] : "",
-      url_f = url_Path && urlParams["f"] ? "&f=" + urlParams["f"] : "",
-      url_h = url_Path && urlParams["h"] ? "&h=" + urlParams["h"] : "",
-      url_t = url_Path && urlParams["t"] ? "&t=" + urlParams["t"] : "",
-      url_c = url_Path && urlParams["c"] ? "&c=" + urlParams["c"] : "",
-      url_o = url_Path && urlParams["o"] ? "&o=" + urlParams["o"] : "";
+    var url_Path = window.location.pathname.toLowerCase() == "/search";
 
-    var s =
-        "/Search?" +
-        (url || "s=" + value + url_sf + url_f + url_h + url_t + url_o + url_c),
-      u = s.replace("/Search?s=", "");
+    var s = url || "/Search?Query=" + value,
+      u = s.replace("/Search?Query=", "");
+
     start = new Date();
     if (
       (typeof value !== "undefined" && value !== null && value.length > 0) ||
@@ -142,7 +134,7 @@
           search: string,
         },
         document.title,
-        w.location.origin + "/Search?s=" + encodeURI(decodeURI(u))
+        w.location.origin + "/Search?Query=" + encodeURI(decodeURI(u))
       );
 
       if (cache.exists(s)) {
@@ -211,7 +203,7 @@
         search: value,
       },
       document.title,
-      w.location.origin + "/Search?s=" + encodeURI(decodeURI(u))
+      w.location.origin + "/Search?Query=" + encodeURI(decodeURI(u))
     );
 
     currentPathname = document.location.pathname;
@@ -272,29 +264,29 @@
     grp.classList.remove("sr-grp-f-win");
   });
 
-  i.addEventListener("click", function (e) {
-    hst.style.display = "none";
+  // i.addEventListener("click", function (e) {
+  //   hst.style.display = "none";
 
-    if (hAjx !== null) {
-      hAjx.abort();
-    }
+  //   if (hAjx !== null) {
+  //     hAjx.abort();
+  //   }
 
-    hAjx = new XMLHttpRequest();
-    hAjx.open("get", "/Users?Handler=SearchHistory", true);
-    hAjx.setRequestHeader(
-      "Content-Type",
-      "application/x-www-form-urlencoded; charset=UTF-8"
-    );
-    hAjx.setRequestHeader("X-Requested-With", "XMLHttpRequest");
-    hAjx.send();
+  //   hAjx = new XMLHttpRequest();
+  //   hAjx.open("get", "/Users?Handler=SearchHistory", true);
+  //   hAjx.setRequestHeader(
+  //     "Content-Type",
+  //     "application/x-www-form-urlencoded; charset=UTF-8"
+  //   );
+  //   hAjx.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+  //   hAjx.send();
 
-    hAjx.onreadystatechange = function (e) {
-      if (this.readyState == 4 && this.status == 200) {
-        hst.innerHTML = this.responseText;
-        hst.style.removeProperty("display");
-      }
-    };
-  });
+  //   hAjx.onreadystatechange = function (e) {
+  //     if (this.readyState == 4 && this.status == 200) {
+  //       hst.innerHTML = this.responseText;
+  //       hst.style.removeProperty("display");
+  //     }
+  //   };
+  // });
 
   // only search if the user has stopped typing for 1/5 second.
   var searchTimeout = 250,
@@ -314,120 +306,16 @@
     var g, c, f, i;
     if (e.target.matches(".search-filter input")) {
       e.preventDefault();
-      f = e.target.closest("form");
-      i = f.querySelector('input[name="f"]');
-
-      // if filter is already in input then remove it
-      pattern = new RegExp(e.target.getAttribute("value") + ",?");
-
-      if (i.value.match(pattern) != null) {
-        i.value = i.value.replace(pattern, "");
-      } else {
-        // remove 0 from start and middle of string
-        i.value = i.value.split("").reverse().join("");
-        i.value = i.value.replace(/,?0/, "");
-        i.value = i.value.split("").reverse().join("");
-        i.value += "," + e.target.getAttribute("value") + ",";
-      }
-      // remove leading and trailing comma
-      i.value = i.value.replace(/,$/g, "").replace(/^,/g, "");
-
-      // find 15, 36, 38, but not 3 and check the box for "show hidden type"
-      if (i.value.match(/(?:15|4,18)/g)) {
-        document.querySelector('input[name="t"]').setAttribute("value", "1");
-        document
-          .querySelector('input[name="t"]')
-          .setAttribute("checked", "checked");
-      }
-
-      // if metric show hidden
-      if (i.value.match(/(?:15)/g)) {
-        document.querySelector('input[name="h"]').setAttribute("value", "1");
-        document
-          .querySelector('input[name="h"]')
-          .setAttribute("checked", "checked");
-      }
-
-      submit(f);
+      submit(e.target.closest(".search-filter input").value);
       return !1;
     } else if (e.target.matches(".page-link")) {
-      e.preventDefault();
-      var h = document.querySelector("#searchForm"),
-        j = document.createElement("input");
-      j.type = "hidden";
-      j.value = e.target.getAttribute("value");
-      j.name = e.target.getAttribute("name");
-      h.appendChild(j);
-      submit(h);
-      return !1;
-    } else if (e.target.matches(".search-advanced-filter input")) {
-      e.preventDefault(); // if "on" set to 1, if "off" set to 0
-
-      g = e.target;
-      c = g.getAttribute("checked");
-
-      if (c) {
-        g.removeAttribute("checked");
-        g.value = 0;
-      } else {
-        g.setAttribute("checked", "");
-        g.value = 1;
-      }
-
-      submit(g.closest("form"));
-      return !1;
-    } else if (e.target.matches(".search-field-filter input")) {
-      e.preventDefault();
-      g = e.target;
-      c = g.hasAttribute("checked");
-
-      if (c) {
-        g.removeAttribute("checked");
-        g.value = 0;
-      } else {
-        g.setAttribute("checked", "");
-        g.value = 1;
-      }
-
-      var tg = document.querySelectorAll(".search-field-filter input[checked]");
-
-      var st = "";
-      for (var x = 0; x < tg.length; x++) {
-        st += tg[x].getAttribute("mvalue") + ",";
-      }
-      st = st.slice(0, -1);
-      f = e.target.closest("form");
-      i = f.querySelector('input[name="sf"]');
-      i.value = st;
-      submit(f);
-      return !1;
-      // get all checked, concat and submit form.
-    } else if (e.target.matches(".search-category input")) {
-      e.preventDefault(); // if "on" set to 1, if "off" set to 0
-
-      g = e.target;
-      f = g.closest("form");
-      i = f.querySelector('input[name="c"]');
-      if (g.hasAttribute("checked")) {
-        g.removeAttribute("checked");
-        i.removeAttribute("value");
-      } else {
-        g.setAttribute("checked", "checked");
-        i.value = g.value;
-      }
-      submit(f);
+      submit(e.target.closest(".search-filter input").value);
       return !1;
     }
   });
 
   function submit(l) {
-    // change all checkboxes to 1
-    var c = l.querySelectorAll('input[type="checkbox"][checked');
-    [].forEach.call(c, function (i) {
-      i.value = 1;
-    });
-    var p = serialize(l);
-    AjaxSearch(null, p, document.querySelector(".sr-grp input").value);
+    AjaxSearch(null, l, null);
   }
 
   scls.addEventListener("click", function (e) {

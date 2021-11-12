@@ -446,6 +446,7 @@ button .icon-sm {
 .snippet-right {
   flex: 1;
   padding-left: 10px;
+  min-width: 1px;
 }
 
 /**
