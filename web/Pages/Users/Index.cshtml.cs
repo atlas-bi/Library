@@ -359,12 +359,7 @@ namespace Atlas_Web.Pages.Users
                                                select new SearchHistoryData
                                                {
                                                    SearchUrl = a.Search.Replace("%25", "%"),
-                                                   SearchString = Regex.Match(a.Search + " ", @"s=(.*?)[&|?|\s]").Groups[1].Value.Replace("%25", "%").Replace("%20", " ").Replace("%2C", ","),
-                                                   ReportType = Regex.Match(a.Search + " ", @"f=(.*?)[&|?|\s]").Groups[1].Value.Replace("%20", " ").Replace("%2C", ","),
-                                                   HiddenTypes = Regex.Match(a.Search + " ", @"t=(.*?)[&|?|\s]").Groups[1].Value.Replace("%25", "%").Replace("%25", "%").Replace("%20", " "),
-                                                   Hidden = Regex.Match(a.Search + " ", @"h=(.*?)[&|?|\s]").Groups[1].Value.Replace("%25", "%").Replace("%20", " "),
-                                                   Orphans = Regex.Match(a.Search + " ", @"o=(.*?)[&|?|\s]").Groups[1].Value.Replace("%25", "%").Replace("%20", " "),
-                                                   SearchField = Regex.Match(a.Search + " ", @"sf=(.*?)[&|?|\s]").Groups[1].Value.Replace("%25", "%").Replace("%20", " ").Replace("%2C", " & ")
+                                                   SearchString = Regex.Match(a.Search + " ", @"Query=(.*?)[&|?|\s]").Groups[1].Value.Replace("%25", "%").Replace("%20", " ").Replace("%2C", ","),
                                                }).Take(7).ToListAsync();
 
             ViewData["SearchFavorites"] = await _cache.GetOrCreateAsync<List<SearchHistoryData>>("SearchFavorites-" + MyUser.UserId,

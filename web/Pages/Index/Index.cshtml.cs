@@ -208,7 +208,6 @@ namespace Atlas_Web.Pages
 
             HttpContext.Response.Headers.Remove("Cache-Control");
             HttpContext.Response.Headers.Add("Cache-Control", "max-age=7200");
-            //return Partial((".+?"));
 
             return new PartialViewResult()
             {
@@ -239,7 +238,6 @@ namespace Atlas_Web.Pages
                                                    }).Take(10).ToListAsync();
             HttpContext.Response.Headers.Remove("Cache-Control");
             HttpContext.Response.Headers.Add("Cache-Control", "max-age=7200");
-            //return Partial((".+?"));
 
             return new PartialViewResult()
             {
