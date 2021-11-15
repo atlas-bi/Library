@@ -81,6 +81,26 @@
     );
   }
 
+  function replaceUrlParam(url, paramName, paramValue) {
+    if (paramValue == null) {
+      paramValue = "";
+    }
+    var pattern = new RegExp("\\b(" + paramName + "=).*?(&|#|$)");
+    if (url.search(pattern) >= 0) {
+      if (paramValue == "") {
+        return url.replace(pattern, "");
+      }
+      return url.replace(pattern, "$1" + paramValue + "$2");
+    }
+    url = url.replace(/[?#]$/, "");
+    if (paramValue == "") {
+      return url;
+    }
+    return (
+      url + (url.indexOf("?") > 0 ? "&" : "?") + paramName + "=" + paramValue
+    );
+  }
+
   function AjaxSearch(value, url, string) {
     // remove nav links
     if (document.querySelectorAll(".sideNav .nav-link:not(#nav-search)")) {
@@ -104,8 +124,26 @@
     // attempt to get existing search params from url
     var url_Path = window.location.pathname.toLowerCase() == "/search";
 
-    var s = url || "/Search?Query=" + value,
-      u = s.replace("/Search?Query=", "");
+    var s = url;
+
+    // if we are on the search page already, keep filters.
+    if (url_Path) {
+      s =
+        url ||
+        replaceUrlParam(
+          replaceUrlParam(
+            window.location.href.replace(window.location.origin, ""),
+            "Query",
+            value
+          ),
+          "PageIndex",
+          ""
+        );
+    } else {
+      s = url || "/Search?Query=" + value;
+    }
+
+    var u = s.replace("/Search?Query=", "");
 
     start = new Date();
     if (
@@ -230,7 +268,7 @@
     e.stopPropagation();
   });
 
-  // conbinatino of mousedown and mouseup allow event to fire before blur
+  // combination of mousedown and mouseup allow event to fire before blur
   hst.addEventListener("mousedown", function (e) {
     e.preventDefault();
   });

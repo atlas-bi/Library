@@ -138,9 +138,9 @@
                             <h5 class="fav-nav">
                                 <a href="@result.Id">Details</a>
                                 @{
-                                                    var RunReportUrl = HtmlHelpers.ReportUrlFromParams( @Configuration["AppSettings:org_domain"], HttpContext, result.ReportObjectUrl, result.Name, result.ReportType, result.EpicTemplateId, result.EpicRecordId, result.EpicMasterFile, @result.EnabledForHyperspace);
-                                                                        var ManageReportUrl = HtmlHelpers.ReportManageUrlFromParams( @Configuration["AppSettings:org_domain"], HttpContext, result.Name, result.ReportServerPath, result.SourceServer);
-                                                                        var EditReportUrl = HtmlHelpers.EditReportFromParams( @Configuration["AppSettings:org_domain"], HttpContext, result.ReportServerPath, result.SourceServer, result.EpicMasterFile, result.EpicTemplateId, result.EpicRecordId);
+                                    var RunReportUrl = HtmlHelpers.ReportUrlFromParams( @Configuration["AppSettings:org_domain"], HttpContext, result.ReportObjectUrl, result.Name, result.ReportType, result.EpicTemplateId, result.EpicRecordId, result.EpicMasterFile, @result.EnabledForHyperspace);
+                                    var ManageReportUrl = HtmlHelpers.ReportManageUrlFromParams( @Configuration["AppSettings:org_domain"], HttpContext, result.Name, result.ReportServerPath, result.SourceServer);
+                                    var EditReportUrl = HtmlHelpers.EditReportFromParams( @Configuration["AppSettings:org_domain"], HttpContext, result.ReportServerPath, result.SourceServer, result.EpicMasterFile, result.EpicTemplateId, result.EpicRecordId);
                                 }
                                 @if (result.ReportObjectUrl != null && RunReportUrl != "")
                                                 {

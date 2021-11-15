@@ -231,7 +231,7 @@ namespace Atlas_Web.Pages.Search
                                                  }).Distinct().ToList();
             }
 
-
+            SearchString = Query;
             ViewData["MyRole"] = UserHelpers.GetMyRole(_cache, _context, User.Identity.Name);
             ViewData["Fullname"] = PublicUser.Fullname_Cust;
             Permissions = UserHelpers.GetUserPermissions(_cache, _context, User.Identity.Name);

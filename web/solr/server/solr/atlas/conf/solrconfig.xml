@@ -996,7 +996,7 @@
       <str name="indent">true</str>
       <str name="fl">id name email epic_record_id type group_type atlas_id</str>
       <str name="facet">on</str>
-      <str name="facet.field">group_type</str>
+      <str name="facet.field">group_type_text</str>
       <str name="facet.limit">10</str>
 	  <str name="facet.mincount">1</str>
       <str name="facet.field">{!ex=dt}type</str>
