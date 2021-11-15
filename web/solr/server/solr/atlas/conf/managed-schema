@@ -229,6 +229,7 @@
   <field name="fragility_text" type="non_split_text" multiValued="true" indexed="true" stored="false"/>
   <field name="group_source" type="text_general"/>
   <field name="group_type" type="text_general"/>
+  <field name="group_type_text" type="non_split_text" indexed="true" stored="false"/>
   <field name="has_external_standard" type="text_en"/>
   <field name="has_external_standard_text" type="non_split_text" multiValued="true" indexed="true" stored="false"/>
   <field name="id" type="string" multiValued="false" indexed="true" required="true" stored="true"/>
@@ -353,6 +354,8 @@
   <copyField source="financial_impact" dest="all_text"/>
   <copyField source="financial_impact" dest="financial_impact_text"/>
   <copyField source="fragility" dest="all_text"/>
+  <copyField source="group_type" dest="all_text"/>
+  <copyField source="group_type" dest="group_type_text"/>
   <copyField source="fragility" dest="fragility_text"/>
   <copyField source="fragility_tags" dest="fragility_tags_text"/>
   <copyField source="has_external_standard" dest="has_external_standard_text"/>
