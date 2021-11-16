@@ -175,14 +175,17 @@
 
                                 <div class="markdown noleft">
                                     @if (result.Description != null)
-                                                    {
-
-
-                                    @Html.Raw(@Helpers.HtmlHelpers.MarkdownToHtml(String.Join("<br>", @result.Description))) }
-                                                    else
-                                                    {
+                                    {
+                                         @Html.Raw(@Helpers.HtmlHelpers.MarkdownToHtml(String.Join("<br>", @result.Description)))
+                                    }
+                                    else if (result.Email != null)
+                                    {
+                                        @Html.Raw(@result.Email)
+                                    }
+                                    else
+                                    {
                                     @:Open in Atlas to see details.
-                            }
+                                    }
                                 </div>
                             </div>
                         </div>
