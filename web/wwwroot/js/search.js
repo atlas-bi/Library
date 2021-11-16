@@ -101,7 +101,17 @@
     );
   }
 
-  function AjaxSearch(value, url, string) {
+  function getQueryStringParams(params, url) {
+    // first decode URL to get readable data
+    var href = decodeURIComponent(url || window.location.href);
+    // regular expression to get value
+    var regEx = new RegExp("[?&]" + params + "=([^&#]*)", "i");
+    var value = regEx.exec(href);
+    // return the value if exist
+    return value ? value[1] : null;
+  }
+
+  function AjaxSearch(value, url) {
     // remove nav links
     if (document.querySelectorAll(".sideNav .nav-link:not(#nav-search)")) {
       var navLinks = Array.prototype.slice.call(
@@ -128,6 +138,7 @@
 
     // if we are on the search page already, keep filters.
     if (url_Path) {
+      value = value || getQueryStringParams("Query", url);
       s =
         url ||
         replaceUrlParam(
@@ -169,7 +180,7 @@
       history.pushState(
         {
           state: "ajax",
-          search: string,
+          search: value,
         },
         document.title,
         w.location.origin + "/Search?Query=" + encodeURI(decodeURI(u))
@@ -192,7 +203,7 @@
         sAjx.send();
 
         sAjx.onload = function () {
-          l(sAjx.responseText, hst, a, m, d, atmr, s, u, string);
+          l(sAjx.responseText, hst, a, m, d, atmr, s, u, value);
           var ccHeader =
             sAjx.getResponseHeader("Cache-Control") != null
               ? (sAjx.getResponseHeader("Cache-Control").match(/\d+/) || [
@@ -279,7 +290,7 @@
       var q = e.target,
         str = q.getElementsByClassName("searchString")[0].textContent.trim();
       i.value = str;
-      AjaxSearch(str, q.getAttribute("search"), str);
+      AjaxSearch(str, q.getAttribute("search"));
     }
   });
 
@@ -333,7 +344,7 @@
     window.clearTimeout(searchTimerId);
     searchTimerId = window.setTimeout(function () {
       if (i.value.trim() !== "") {
-        AjaxSearch(i.value, null, i.value);
+        AjaxSearch(i.value, null);
         window.clearTimeout(searchTimerId);
       }
     }, searchTimeout);
@@ -353,7 +364,7 @@
   });
 
   function submit(l) {
-    AjaxSearch(null, l, null);
+    AjaxSearch(null, l);
   }
 
   scls.addEventListener("click", function (e) {
