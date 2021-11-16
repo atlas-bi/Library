@@ -41,5 +41,7 @@ document.addEventListener("DOMContentLoaded", function () {
     a("/Profile?id=" + getUrlVars().id);
   } else if (window.location.pathname.toLowerCase() === "/collections") {
     a("/Profile?handler=Collections&id=" + +getUrlVars().id);
+  } else if (window.location.pathname.toLowerCase() === "/terms") {
+    a("/Profile?handler=Terms&id=" + +getUrlVars().id);
   }
 });
