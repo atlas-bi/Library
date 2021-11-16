@@ -414,7 +414,7 @@ namespace Atlas_Web.Helpers
                 {
                     NewUrl = "EpicAct:WM_DASHBOARD_LAUNCHER,runparams:" + EpicRecordId;
                 }
-                else if ((ReportType == "SSRS Report" || ReportType == "SSRS File" || ReportType == "Tableau Workbook" || ReportType == "Tableau Dashboard") && Epic)
+                else if ((ReportType == "SSRS Report" || ReportType == "SSRS File") && Epic)
                 {
                     if (EnabledForHyperspace == "Y")
                     {
