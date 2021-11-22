@@ -118,29 +118,36 @@ namespace Atlas_Web.Pages.Search
                 return $"name:({search_string})^6 OR name:({Fuzzy})^3 OR ({search_string})^5 OR ({Fuzzy})";
 
             }
-            static IReadOnlyList<FacetModel> BuildFacetModels(IDictionary<string, ICollection<KeyValuePair<string, int>>> facetResults) =>
-            facetResults
-                .Select(f => new FacetModel(
-                    Key: f.Key,
-                    Values: f.Value.Select(v => new FacetValueModel(v.Key, v.Value)).ToList()
-                ))
-                .ToList();
 
-            static ISolrQuery[] BuildFilterQuery(Microsoft.AspNetCore.Http.IQueryCollection query)
+
+
+            static IReadOnlyList<FacetModel> BuildFacetModels(IDictionary<string, ICollection<KeyValuePair<string, int>>> facetResults)
+            {
+                // set the order of some facets. Otherwise solr is count > alpha
+                String[] FacetOrder = { "epic_master_file_text", "organizational_value_text", "estimated_run_frequency_text", "maintenance_schedule_text", "fragility_text", "executive_visiblity_text", "visible_text", "certification_text", "report_type_text", "type" };
+                return facetResults.OrderByDescending(x => Array.IndexOf(FacetOrder, x.Key))
+                    .Select(f => new FacetModel(
+                        Key: f.Key,
+                        Values: f.Value.Select(v => new FacetValueModel(v.Key, v.Value)).ToList()
+                    ))
+                    .ToList();
+            }
+
+            static ISolrQuery[] BuildFilterQuery(Microsoft.AspNetCore.Http.IQueryCollection query, IMemoryCache _cache, Atlas_WebContext _context, System.Security.Claims.ClaimsPrincipal User)
             {
                 var FilterQuery = new List<SolrQuery>();
 
-                if (query["visibility_text"] == "Y")
-                {
-                    FilterQuery.Add(new SolrQuery("{!tag=visibility_text}visibility_text:Y"));
-                }
-                else
-                {
-                    FilterQuery.Add(new SolrQuery("{!tag=visibility_text}visibility_text:Y"));
-                }
 
+                var checkpoint = UserHelpers.CheckUserPermissions(_cache, _context, User.Identity.Name, 46);
+                if (!checkpoint)
+                {
+                    // user cannot access advanced search, so we pass an arg to hide numbers for 
+                    // hidden objects.
+                    FilterQuery.Add(new SolrQuery("visible_text:(Y)"));
 
-                var ExcludedKeys = new List<string> { "visibility_text", "PageIndex", "Query", "type" };
+                }
+                // also exclude the two global keywords, EPIC and msg.
+                var ExcludedKeys = new List<string> { "PageIndex", "Query", "type", "EPIC", "msg" };
 
                 foreach (string key in query.Keys)
                 {
@@ -171,7 +178,7 @@ namespace Atlas_Web.Pages.Search
             {
 
                 var search_string_built = BuildSearchString(Query);
-                var search_filter_built = BuildFilterQuery(Request.Query);
+                var search_filter_built = BuildFilterQuery(Request.Query, _cache, _context, User);
 
                 var results = await _solr.QueryAsync(new SolrQuery(search_string_built),
                     new QueryOptions
@@ -180,8 +187,7 @@ namespace Atlas_Web.Pages.Search
                         StartOrCursor = new StartOrCursor.Start((PageIndex - 1) * 10),
                         Rows = 10,
                         FilterQueries = search_filter_built,
-                        ExtraParams = new Dictionary<string, string> {    
-                           // {"fq",search_filter_built },
+                        ExtraParams = new Dictionary<string, string> {
                             {"rq", "{!rerank reRankQuery=$rqq reRankDocs=1000 reRankWeight=10}"},
                             {"rqq", "(documented:Y OR executive_visibility_text:Y OR enabled_for_hyperspace_text:Y OR certification_text:\"Analytics Certified\")" },
                         }

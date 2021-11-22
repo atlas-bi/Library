@@ -42,10 +42,15 @@
     <PackageReference Include="WebMarkupMin.AspNetCore5" Version="2.9.2" />
     
   </ItemGroup>
+	<ItemGroup>
+		<None Update="solr\**\*"  CopyToOutputDirectory="PreserveNewest"  />
+	</ItemGroup>
+	<ItemGroup>
+		<None Include="solr\**\*" CopyToPublishDirectory="PreserveNewest"/>
+	</ItemGroup>
   <ItemGroup>
     <Folder Include="Pages\API\Partials\" />
     <Folder Include="Pages\Groups\Sections\" />
-    <None Update="solr\**" CopyToPublishDirectory="PreserveNewest" />
   </ItemGroup>
 
 </Project>

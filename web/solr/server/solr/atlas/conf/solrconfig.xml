@@ -841,20 +841,20 @@
       <str name="echoParams">explicit</str>
       <str name="wt">json</str>
       <str name="indent">true</str>
-      <str name="fl">id name description type atlas_id certification documented email</str>
-      <str name="fq">visible:Y</str>
-      <str name="fq">orphan:N</str>
+      <str name="fl">id name description type report_type atlas_id certification documented email</str>
       <str name="facet">on</str>
       <str name="facet.limit">10</str>
       <str name="facet.mincount">1</str>
-      <str name="facet.field">type</str>
+      <str name="facet.field">{!ex=dt}type</str>
       <str name="facet.field">{!ex=certification_text}certification_text</str>
+	  <str name="facet.field">{!ex=visible_text}visible_text</str>
+	  <str name="f.visible_text.facet.mincount">0</str>
       <str name="facet.range">last_updated</str>
       <str name="facet.range.start">NOW/MONTH-12MONTH</str>
       <str name="facet.range.end">NOW/MONTH</str>
       <str name="facet.range.gap">+1MONTH</str>
       <str name="facet.field">updated_by_text</str>
-      <str name="facet.field">{!key=report_type}report_type_text</str>
+      <str name="facet.field">{!ex=report_type_text}report_type_text</str>
     </lst>
   </requestHandler>
   <requestHandler name="/reports" class="solr.SearchHandler">
@@ -866,19 +866,19 @@
       <str name="wt">json</str>
       <str name="indent">true</str>
       <str name="fl">id name description type report_type documented atlas_id certification epic_master_file epic_record_id server_path source_server epic_template executive_visiblity enabled_for_hyperspace run_url</str>
-      <str name="fq">{!tag=visibility_text}visible:Y</str>
-      <str name="fq">orphan:N</str>
       <str name="facet">on</str>
 	  <str name="facet.limit">10</str>
 	  <str name="facet.mincount">1</str>
-      <str name="facet.field">{!ex=type}type</str>
-      <str name="facet.field">{!ex=certification_text}certification_text</str>
-      <str name="facet.field">{!ex=visibility_text key=visible}visibility_text</str>
-      <str name="facet.range">created</str>
+	  <str name="facet.field">{!ex=dt}type</str>
+	  <str name="f.type.facet.mincount">0</str>
+	  <str name="facet.field">{!ex=report_type_text}report_type_text</str>
+	  <str name="facet.field">{!ex=visible_text}visible_text</str>
+	  <str name="f.visible_text.facet.mincount">0</str>
+      <str name="facet.field">{!ex=certification_text}certification_text</str>  
       <str name="facet.field">{!ex=documented}documented</str>
+	  <str name="facet.range">created</str>
       <str name="facet.field">{!ex=source_server_text}source_server_text</str>
       <str name="facet.field">{!ex=source_database_text}source_database_text</str>
-      <str name="facet.field">{!ex=report_type_text}report_type_text</str>
       <str name="facet.range">report_last_updated</str>
       <str name="facet.field">{!ex=report_last_updated_by_text}report_last_updated_by_text</str>
       <str name="facet.field">{!ex=epic_master_file_text}epic_master_file_text</str>
@@ -913,13 +913,16 @@
       <str name="facet.limit">10</str>
 	  <str name="facet.mincount">1</str>
       <str name="facet.field">{!ex=dt}type</str>
-      <str name="facet.field">approved_text</str>
-      <str name="facet.field">related_reports_text</str>
+	  <str name="f.type.facet.mincount">0</str>
+	  <str name="facet.field">{!ex=visible_text}visible_text</str>
+	  <str name="f.visible_text.facet.mincount">0</str>
+      <str name="facet.field">{!ex=approved_text}approved_text</str>
+      <str name="facet.field">{!ex=related_reports_text}related_reports_text</str>
       <str name="facet.range">approval_date</str>
-      <str name="facet.field">has_external_standard_text</str>
+      <str name="facet.field">{!ex=has_external_standard_text}has_external_standard_text</str>
       <str name="facet.range">valid_from</str>
       <str name="facet.range">valid_to</str>
-      <str name="facet.field">updated_by_text</str>
+      <str name="facet.field">{!ex=updated_by_text}updated_by_text</str>
       <str name="facet.Range">last_updated</str>
       <str name="facet.range.start">NOW/MONTH-12MONTH</str>
       <str name="facet.range.end">NOW/MONTH</str>
@@ -939,12 +942,15 @@
       <str name="facet.limit">10</str>
 	  <str name="facet.mincount">1</str>
       <str name="facet.field">{!ex=dt}type</str>
-      <str name="facet.field">financial_impact_text</str>
-      <str name="facet.field">strategic_importance_text</str>
-      <str name="facet.field">updated_by_text</str>
+	  <str name="f.type.facet.mincount">0</str>
+	  <str name="facet.field">{!ex=visible_text}visible_text</str>
+	  <str name="f.visible_text.facet.mincount">0</str>
+      <str name="facet.field">{!ex=financial_impact_text}financial_impact_text</str>
+      <str name="facet.field">{!ex=strategic_importance_text}strategic_importance_text</str>
+	  <str name="facet.field">{!ex=updated_by_text}updated_by_text</str>
       <str name="facet.range">last_updated</str>
-      <str name="facet.field">operations_owner_text</str>
-      <str name="facet.field">executive_owner_text</str>
+      <str name="facet.field">{!ex=operations_owner_text}operations_owner_text</str>
+      <str name="facet.field">{!ex=executive_owner_text}executive_owner_text</str>
       <str name="facet.range.start">NOW/MONTH-12MONTH</str>
       <str name="facet.range.end">NOW/MONTH</str>
       <str name="facet.range.gap">+1MONTH</str>
@@ -963,8 +969,11 @@
       <str name="facet.limit">10</str>
 	  <str name="facet.mincount">1</str>
       <str name="facet.field">{!ex=dt}type</str>
+	  <str name="f.type.facet.mincount">0</str>
+	  <str name="facet.field">{!ex=visible_text}visible_text</str>
+	  <str name="f.visible_text.facet.mincount">0</str>
       <str name="facet.range">last_updated</str>
-      <str name="facet.field">updated_by_text</str>
+      <str name="facet.field">{!ex=updated_by_text}updated_by_text</str>
       <str name="facet.range.start">NOW/MONTH-12MONTH</str>
       <str name="facet.range.end">NOW/MONTH</str>
       <str name="facet.range.gap">+1MONTH</str>
@@ -980,10 +989,14 @@
       <str name="indent">true</str>
       <str name="fl">id name email epic_record_id type atlas_id</str>
       <str name="facet">on</str>
-      <str name="facet.field">user_roles</str>
       <str name="facet.limit">10</str>
 	  <str name="facet.mincount">1</str>
       <str name="facet.field">{!ex=dt}type</str>
+	  <str name="f.type.facet.mincount">0</str>
+	  <str name="facet.field">{!ex=visible_text}visible_text</str>
+	  <str name="f.visible_text.facet.mincount">0</str>
+	  <str name="facet.field">{!ex=user_roles_text}user_roles_text</str>
+	  <str name="facet.field">{!ex=user_groups_text}user_groups_text</str>
     </lst>
   </requestHandler>
   <requestHandler name="/groups" class="solr.SearchHandler">
@@ -1000,6 +1013,9 @@
       <str name="facet.limit">10</str>
 	  <str name="facet.mincount">1</str>
       <str name="facet.field">{!ex=dt}type</str>
+	  <str name="f.type.facet.mincount">0</str>
+	  <str name="facet.field">{!ex=visible_text}visible_text</str>
+	  <str name="f.visible_text.facet.mincount">0</str>
     </lst>
   </requestHandler>
 
@@ -1014,8 +1030,8 @@
       <str name="wt">json</str>
       <str name="indent">true</str>
       <str name="df">name</str>
-      <str name="fq">visible:Y</str>
-      <str name="fq">orphan:N</str>
+      <str name="fq">{!tag=visible_text}visible_text:Y</str>
+      <str name="fq">{!tag=orphan_text}orphan_text:N</str>
     </lst>
   </initParams>
 

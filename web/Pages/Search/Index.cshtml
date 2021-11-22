@@ -110,28 +110,31 @@
                                 </span>
                                 <div class="fav-type">
                                     @if (result.Certification != null)
-                                                    {
-                                    @if (result.Certification.FirstOrDefault() == "Analytics Certified")
+                                    {
+                                @if (result.Certification.FirstOrDefault() == "Analytics Certified")
                                 {<span class="srch-fieldHunterGreen">@result.Certification.FirstOrDefault()</span>}
-                                    @if (result.Certification.FirstOrDefault() == "Analytics Reviewed")
+                                                        @if (result.Certification.FirstOrDefault() == "Analytics Reviewed")
                                                         {<span class="srch-fieldGreen">@result.Certification.FirstOrDefault()</span>}
-                                    @if (result.Certification.FirstOrDefault() == "Epic Released")
+                                                                                @if (result.Certification.FirstOrDefault() == "Epic Released")
                                                                                 {<span class="srch-fieldOrange">@result.Certification.FirstOrDefault()</span>}
-                                    @if (result.Certification.FirstOrDefault() == "Legacy")
+                                                                                                        @if (result.Certification.FirstOrDefault() == "Legacy")
                                                                                                         {<span class="srch-fieldOrange">@result.Certification.FirstOrDefault()</span>}
-                                    @if (result.Certification.FirstOrDefault() == "High Risk")
+                                                                                                                                @if (result.Certification.FirstOrDefault() == "High Risk")
                                                                                                                                 {<span class="srch-fieldRed">@result.Certification.FirstOrDefault()</span>}
-                                    @if (result.Certification.FirstOrDefault() == "Self-Service")
+                                                                                                                                                        @if (result.Certification.FirstOrDefault() == "Self-Service")
                                                                                                                                                         {<span class="srch-fieldBlue">@result.Certification.FirstOrDefault()</span>}}
-                                    @if (@result.ReportType == null && result.Type != null)
-                                                    {<span class="srch-field">
-                                        @System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(@result.Type.FirstOrDefault().ToLower())
-                                    </span>}
-                                                    else if (result.ReportType != null)
-                                                    {<span class="srch-field">
-                                        @System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(@result.ReportType)
 
-                                    </span>}
+
+                                    @if (result.ReportType != null)
+                                    {<span class="srch-field">
+                                            @System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(@result.ReportType)
+
+                                        </span>}
+                                    else if(result.Type != null)
+                                    {<span class="srch-field">
+                                            @System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(@result.Type.FirstOrDefault().ToLower())
+                                        </span>}
+
 
                                 </div>
                             </h5>
@@ -142,33 +145,39 @@
                                     var ManageReportUrl = HtmlHelpers.ReportManageUrlFromParams( @Configuration["AppSettings:org_domain"], HttpContext, result.Name, result.ReportServerPath, result.SourceServer);
                                     var EditReportUrl = HtmlHelpers.EditReportFromParams( @Configuration["AppSettings:org_domain"], HttpContext, result.ReportServerPath, result.SourceServer, result.EpicMasterFile, result.EpicTemplateId, result.EpicRecordId);
                                 }
-                                @if (result.ReportObjectUrl != null && RunReportUrl != "")
-                                                {
-                                    <a target="_blank" rel="noopener" href="@RunReportUrl">Run</a> }
-                                                        else
-                                                        {
-                                                            if (result.EpicMasterFile == "IDB")
-                                                            {
-                                    <div style="position: relative;">
-                                        <span class="tt-top" style="color:grey;position: relative;cursor:default" data-tooltip="Open a related dashboard that uses this.">Run</span>
-                                    </div> }
-                                                            else if (EditReportUrl != null && @Model.Permissions.Contains(38))
-                                                            {
-                                    <div style="position: relative;">
-                                        <span class="tt-top" style="color:grey;position: relative;white-space: nowrap;cursor:default" data-tooltip="Open in report library.">Run</span>
-                                    </div> }
-                                                            else
-                                                            {
-                                    <div style="position: relative;">
-                                        <span class="tt-top" style="color:grey;position: relative;white-space: nowrap;cursor:default" data-tooltip="Login to Hyperspace to run report.">Run</span>
-                                    </div>}
-                                                        }
-                                                @if (EditReportUrl != null && @Model.Permissions.Contains(38))
-                                                {
-                                    <a target="_blank" rel="noopener" href="@EditReportUrl">Edit</a>}
-                                                @if (ManageReportUrl != null && @Model.Permissions.Contains(38))
-                                                {
-                                    <a target="_blank" rel="noopener" href="@ManageReportUrl">Manage</a>}
+                                @if (result.Type.First() == "reports" && result.ReportObjectUrl != null && RunReportUrl != "")
+                                {
+                                    <a target="_blank" rel="noopener" href="@RunReportUrl">Run</a>
+                                }
+                                else if (result.Type.First() == "reports")
+                                {
+                                    if (result.EpicMasterFile == "IDB")
+                                    {
+                                        <div style="position: relative;">
+                                            <span class="tt-top" style="color:grey;position: relative;cursor:default" data-tooltip="Open a related dashboard that uses this.">Run</span>
+                                        </div>
+                                    }
+                                    else if (EditReportUrl != null && @Model.Permissions.Contains(38))
+                                    {
+                                        <div style="position: relative;">
+                                            <span class="tt-top" style="color:grey;position: relative;white-space: nowrap;cursor:default" data-tooltip="Open in report library.">Run</span>
+                                        </div> 
+                                    }
+                                    else
+                                    {
+                                        <div style="position: relative;">
+                                            <span class="tt-top" style="color:grey;position: relative;white-space: nowrap;cursor:default" data-tooltip="Login to Hyperspace to run report.">Run</span>
+                                        </div>
+                                    }
+                                 }
+                                @if (result.Type.First() == "reports" && EditReportUrl != null && @Model.Permissions.Contains(38))
+                                {
+                                    <a target="_blank" rel="noopener" href="@EditReportUrl">Edit</a>
+                                }
+                                @if (result.Type.First() == "reports" && ManageReportUrl != null && @Model.Permissions.Contains(38))
+                                {
+                                    <a target="_blank" rel="noopener" href="@ManageReportUrl">Manage</a>
+                                }
                             </h5>
 
                             <div class="clps fav-dtls" id="clps-@result.Id">
