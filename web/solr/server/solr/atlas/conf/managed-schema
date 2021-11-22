@@ -259,8 +259,6 @@
   <field name="report_last_updated_by" type="text_en"/>
   <field name="report_last_updated_by_text" type="non_split_text" multiValued="true" indexed="true" stored="false"/>
   <field name="report_type" type="text_en"/>
-  <field name="report_type_short" type="text_en"/>
-  <field name="report_type_short_text" type="non_split_text" multiValued="true" indexed="true" stored="false"/>
   <field name="report_type_text" type="non_split_text" multiValued="true" indexed="true" stored="false"/>
   <field name="requester" type="text_en"/>
   <field name="requester_text" type="non_split_text" multiValued="true" indexed="true" stored="false"/>
@@ -383,8 +381,6 @@
   <copyField source="report_last_updated_by" dest="report_last_updated_by_text"/>
   <copyField source="report_type" dest="all_text"/>
   <copyField source="report_type" dest="report_type_text"/>
-  <copyField source="report_type_short" dest="all_text"/>
-  <copyField source="report_type_short" dest="report_type_short_text"/>
   <copyField source="requester" dest="requester_text"/>
   <copyField source="run_user" dest="run_user_text"/>
   <copyField source="run_user_id" dest="run_user_id_text"/>
@@ -424,7 +420,6 @@
   <copyField source="created_by" dest="created_by_str" maxChars="256"/>
   <copyField source="run_user" dest="run_user_str" maxChars="256"/>
   <copyField source="report_type" dest="report_type_str" maxChars="256"/>
-  <copyField source="report_type_short" dest="report_type_str" maxChars="256"/>
   <copyField source="requester" dest="requester_str" maxChars="256"/>
   <copyField source="orphan" dest="orphan_str" maxChars="256"/>
   <copyField source="name" dest="name_str" maxChars="256"/>

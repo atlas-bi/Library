@@ -18,12 +18,21 @@ namespace Atlas_Web.Helpers
         public static string SetParameters(HttpContext helper, IDictionary<string, string> parameters)
         {
             var qs = QueryHelpers.ParseQuery(helper.Request.QueryString.Value ?? "");
-            // if we are chaning type, we should remove all other filters.
-            if (qs.ContainsKey("type") && parameters.ContainsKey("type"))
+            // if we are changing type, we should remove all other filters.
+            if (parameters.ContainsKey("type"))
             {
+                foreach (var p in qs)
+                {
+                    if (p.Key != "type" && p.Key != "Query" && !(parameters["type"] == "reports" && p.Key == "report_type_text"))
+                    {
+                        qs.Remove(p.Key);
+                    }
+
+                }
                 foreach (var p in parameters)
                 {
-                    if (p.Key != "type" || qs.ContainsKey(p.Key) && qs[p.Key] == p.Value)
+                    // if we need an "uncheck" url, the pop the key.
+                    if (qs.ContainsKey(p.Key) && qs[p.Key] == p.Value)
                     {
                         qs.Remove(p.Key);
                     }
@@ -44,6 +53,10 @@ namespace Atlas_Web.Helpers
                     else
                     {
                         qs[p.Key] = p.Value;
+                        if (p.Key == "report_type_text")
+                        {
+                            qs["type"] = "reports";
+                        }
                     }
             }
             return helper.Request.Path + QueryString.Create(qs);
@@ -67,9 +80,10 @@ namespace Atlas_Web.Helpers
         }
 
         [Pure]
-        public static bool SetSearchFacetChecked(HttpContext helper, SolrAtlasParameters parameter, string facet, string value)
-        {
-            return parameter.Filters.ContainsKey(facet) && parameter.Filters[facet].Contains(value);
-        }
+        public static bool SetSearchFacetChecked(HttpContext helper, SolrAtlasParameters parameter, string facet, string value) => parameter.Filters.ContainsKey(facet) && parameter.Filters[facet].Contains(value);
+
+        [Pure]
+        public static bool HasFacet(HttpContext helper, SolrAtlasParameters parameter, string facet) => parameter.Filters.ContainsKey(facet);
+
     }
 }

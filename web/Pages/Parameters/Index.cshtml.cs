@@ -52,6 +52,7 @@ namespace Atlas_Web.Pages.Parameters
         public IEnumerable<ValueListData> MilestoneTemplateList { get; set; }
         public IEnumerable<ContactListData> DpContactList { get; set; }
         public List<UserPreference> Preferences { get; set; }
+        public List<ReportObjectType> ReportTypes { get; set; }
         [BindProperty] public OrganizationalValue OrganizationalValue { get; set; }
         [BindProperty] public EstimatedRunFrequency EstimatedRunFrequency { get; set; }
         [BindProperty] public MaintenanceSchedule MaintenanceSchedule { get; set; }
@@ -108,6 +109,32 @@ namespace Atlas_Web.Pages.Parameters
                 ViewData = ViewData
             };
         }
+
+        public async Task<IActionResult> OnGetSearchSettings()
+        {
+            ViewData["GlobalSettings"] = await (from o in _context.GlobalSiteSettings
+                                                select new GlobalSettingsData
+                                                {
+                                                    Id = o.Id,
+                                                    Name = o.Name,
+                                                    Description = o.Description,
+                                                    Value = o.Value
+                                                }).ToListAsync();
+            ViewData["Permissions"] = UserHelpers.GetUserPermissions(_cache, _context, User.Identity.Name);
+            ViewData["SiteMessage"] = HtmlHelpers.SiteMessage(HttpContext, _context);
+
+            ReportTypes = await _context.ReportObjectTypes.ToListAsync();
+
+            return new PartialViewResult()
+            {
+                ViewName = "Partials/_Search",
+                ViewData = ViewData
+            };
+        }
+
+
+
+
 
         public ActionResult OnGetDeleteGlobalSetting(int Id)
         {

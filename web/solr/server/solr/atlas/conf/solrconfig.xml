@@ -841,11 +841,12 @@
       <str name="echoParams">explicit</str>
       <str name="wt">json</str>
       <str name="indent">true</str>
-      <str name="fl">id name description type report_type atlas_id certification documented email</str>
+      <str name="fl">id name description type report_type documented atlas_id certification epic_master_file epic_record_id server_path source_server epic_template executive_visiblity enabled_for_hyperspace run_url</str>
       <str name="facet">on</str>
       <str name="facet.limit">10</str>
       <str name="facet.mincount">1</str>
       <str name="facet.field">{!ex=dt}type</str>
+	  <str name="f.type.facet.mincount">0</str>
       <str name="facet.field">{!ex=certification_text}certification_text</str>
 	  <str name="facet.field">{!ex=visible_text}visible_text</str>
 	  <str name="f.visible_text.facet.mincount">0</str>
@@ -855,6 +856,7 @@
       <str name="facet.range.gap">+1MONTH</str>
       <str name="facet.field">updated_by_text</str>
       <str name="facet.field">{!ex=report_type_text}report_type_text</str>
+	  <str name="f.report_type_text.facet.limit">-1</str>
     </lst>
   </requestHandler>
   <requestHandler name="/reports" class="solr.SearchHandler">
@@ -872,6 +874,7 @@
 	  <str name="facet.field">{!ex=dt}type</str>
 	  <str name="f.type.facet.mincount">0</str>
 	  <str name="facet.field">{!ex=report_type_text}report_type_text</str>
+	  <str name="f.report_type_text.facet.limit">-1</str>
 	  <str name="facet.field">{!ex=visible_text}visible_text</str>
 	  <str name="f.visible_text.facet.mincount">0</str>
       <str name="facet.field">{!ex=certification_text}certification_text</str>  

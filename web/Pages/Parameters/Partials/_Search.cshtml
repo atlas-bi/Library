@@ -1,0 +1,107 @@
+﻿
+@model Atlas_Web.Pages.Parameters.IndexModel
+
+<div>
+    <h1>Search Settings</h1>
+
+    <div class="table-responsive">
+        <table class="table sort table-border">
+            <thead>
+                <tr>
+                    <th>Report Type</th>
+                    <th>Search Name Override</th>
+                    <th>Visible In Basic Search</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var t in Model.ReportTypes)
+                {
+    <tr>
+        <td>
+            @t.Name @if (@t.DefaultEpicMasterFile != null)
+            {<span>(@t.DefaultEpicMasterFile)</span>}
+        </td>
+        <td>@t.ShortName</td>
+
+        <td>
+            <div class='form-check' style="width:15px;margin-right:Calc(50% - 15px - 7.5px) !important" typeId="@t.ReportObjectTypeId">
+                <input type="checkbox" class="role-permissions" @if (t.Visible == "Y") { <text> checked="checked" </text> } />
+                <input type="hidden">
+            </div>
+        </td>
+
+    </tr>}
+            </tbody>
+        </table>
+    </div>
+
+
+    <div class="table-responsive">
+        <table class="table sort table-border">
+            <thead>
+                <tr>
+                    <th>Object Type</th>
+                    <th>Visible In Basic Search</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                <tr>
+                    <td>Users</td>
+                    <td>
+                        <div class='form-check' style="width:15px;margin-right:Calc(50% - 15px - 7.5px) !important" typeId="users">
+                            <input type="checkbox" class="role-permissions" checked="checked" } />
+                            <input type="hidden">
+                        </div>
+                    </td>
+
+                </tr>
+                <tr>
+                    <td>Groups</td>
+                    <td>
+                        <div class='form-check' style="width:15px;margin-right:Calc(50% - 15px - 7.5px) !important" typeId="users">
+                            <input type="checkbox" class="role-permissions" checked="checked" } />
+                            <input type="hidden">
+                        </div>
+                    </td>
+
+                </tr>
+                <tr>
+                    <td>Terms</td>
+                    <td>
+                        <div class='form-check' style="width:15px;margin-right:Calc(50% - 15px - 7.5px) !important" typeId="users">
+                            <input type="checkbox" class="role-permissions" checked="checked" } />
+                            <input type="hidden">
+                        </div>
+                    </td>
+
+                </tr>
+                <tr>
+                    <td>Initiaitves</td>
+                    <td>
+                        <div class='form-check' style="width:15px;margin-right:Calc(50% - 15px - 7.5px) !important" typeId="users">
+                            <input type="checkbox" class="role-permissions" checked="checked" } />
+                            <input type="hidden">
+                        </div>
+                    </td>
+
+                </tr>
+                <tr>
+                    <td>Collections</td>
+                    <td>
+                        <div class='form-check' style="width:15px;margin-right:Calc(50% - 15px - 7.5px) !important" typeId="users">
+                            <input type="checkbox" class="role-permissions" checked="checked" } />
+                            <input type="hidden">
+                        </div>
+                    </td>
+
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+
+
+
+
+</div>
