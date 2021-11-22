@@ -245,7 +245,7 @@
   <field name="organizational_value" type="text_en"/>
   <field name="organizational_value_text" type="non_split_text" multiValued="true" indexed="true" stored="false"/>
   <field name="orphan" type="text_en"/>
-  <field name="orphaned_text" type="non_split_text" multiValued="true" indexed="true" stored="false"/>
+  <field name="orphan_text" type="non_split_text" multiValued="true" indexed="true" stored="false"/>
   <field name="query" type="text_en" multiValued="true"/>
   <field name="related_collections" type="text_general" multiValued="true"/>
   <field name="related_collections_text" type="non_split_text" multiValued="true" indexed="true" stored="false"/>
@@ -280,12 +280,14 @@
   <field name="type" type="text_general"/>
   <field name="updated_by" type="text_en"/>
   <field name="updated_by_text" type="non_split_text" multiValued="true" indexed="true" stored="false"/>
-  <field name="user_groups" type="text_general"/>
-  <field name="user_roles" type="text_en" multiValued="true" indexed="true" stored="true"/>
+  <field name="user_groups" type="text_general"  multiValued="true"/>
+  <field name="user_groups_text" type="non_split_text" multiValued="true" indexed="true" stored="true"/>
+  <field name="user_roles" type="text_en" multiValued="true" />
+  <field name="user_roles_text" type="non_split_text" multiValued="true" indexed="true" stored="true"/>
   <field name="user_runs" type="_nest_path_"/>
   <field name="valid_from" type="pdate"/>
   <field name="valid_to" type="pdate"/>
-  <field name="visibility_text" type="non_split_text" multiValued="true" indexed="true" stored="false"/>
+  <field name="visible_text" type="non_split_text" multiValued="true" indexed="true" stored="false"/>
   <field name="visible" type="text_en"/>
   <dynamicField name="*_txt_en_split_tight" type="text_en_splitting_tight" indexed="true" stored="true"/>
   <dynamicField name="*_descendent_path" type="descendent_path" indexed="true" stored="true"/>
@@ -367,7 +369,7 @@
   <copyField source="operations_owner" dest="all_text"/>
   <copyField source="operations_owner" dest="operations_owner_text"/>
   <copyField source="organizational_value" dest="organizational_value_text"/>
-  <copyField source="orphan" dest="orphaned_text"/>
+  <copyField source="orphan" dest="orphan_text"/>
   <copyField source="query" dest="all_text"/>
   <copyField source="related_collections" dest="all_text"/>
   <copyField source="related_collections" dest="related_collections_text"/>
@@ -394,7 +396,10 @@
   <copyField source="updated_by" dest="all_text"/>
   <copyField source="updated_by" dest="updated_by_text"/>
   <copyField source="user_roles" dest="all_text"/>
-  <copyField source="visible" dest="visibility_text"/>
+  <copyField source="user_roles" dest="user_roles_text"/>
+  <copyField source="user_groups" dest="all_text"/>
+  <copyField source="user_groups" dest="user_groups_text"/>
+  <copyField source="visible" dest="visible_text"/>
   <copyField source="related_reports" dest="related_Reports_str" maxChars="256"/>
   <copyField source="related_terms" dest="related_Terms_str" maxChars="256"/>
   <copyField source="description" dest="description_str" maxChars="256"/>
