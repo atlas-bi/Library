@@ -151,7 +151,24 @@
           ""
         );
     } else {
-      s = url || "/Search?Query=" + value;
+      if (url) {
+        s = url;
+      } else {
+        s = "/Search?Query=" + value;
+
+        // add default filters for type depending on url
+        if (window.location.pathname.toLowerCase() == "/users") {
+          s += "&type=users";
+        } else if (window.location.pathname.toLowerCase() == "/terms") {
+          s += "&type=terms";
+        } else if (window.location.pathname.toLowerCase() == "/groups") {
+          s += "&type=groups";
+        } else if (window.location.pathname.toLowerCase() == "/collections") {
+          s += "&type=collections";
+        } else if (window.location.pathname.toLowerCase() == "/initiatives") {
+          s += "&type=initiatives";
+        }
+      }
     }
 
     var u = s.replace("/Search?Query=", "");
