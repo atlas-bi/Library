@@ -1,11 +1,1 @@
-.pageNav-link,
-.pageNav-link:hover {
-  color: #0084db;
-  text-decoration: none;
-}
-.back-to-top:active,
-.back-to-top:focus,
-.back-to-top:hover {
-  outline: none;
-  text-decoration: none;
-}
+.pageNav-link,.pageNav-link:hover{color:#0084db;text-decoration:none}.back-to-top:active,.back-to-top:focus,.back-to-top:hover{outline:none;text-decoration:none}

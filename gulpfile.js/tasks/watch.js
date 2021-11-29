@@ -10,7 +10,7 @@ var gulp = require('gulp');
 var path = require('path');
 
 const paths = ({
-    'style:scss': path.join('./web/wwwroot/static/**/*.scss'),
+    'style:scss': path.join('./web/wwwroot/**/*.scss'),
     'packages:fontawesome': path.join('./gulpfile.js/packages.js'),
 });
 

@@ -1,0 +1,113 @@
+@import "./include/color.scss";
+@import "./include/font.scss";
+
+$family-sans-serif: "Inter", BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+$family-serif: "Rasa", "Georgia", "Times New Roman", serif;
+
+$title-family: $family-serif;
+
+@import "../../../node_modules/bulma/bulma";
+@import "../../../node_modules/@creativebulma/bulma-badge/src/sass/index";
+@import "../../../node_modules/bulma-switch/src/sass/index";
+@import "../../../node_modules/@creativebulma/bulma-tooltip/src/sass/index";
+
+
+@media screen and (min-width: $desktop) {
+  .atlas-navbar .navbar-start {
+    padding-top: 0 !important;
+  }
+}
+
+@media screen and (min-width: $desktop) {
+  .hide-desktop {
+    display: none !important;
+  }
+}
+
+div.column.is-narrow:empty {
+  padding: 0 !important;
+}
+
+/* remove tooltip underline*/
+span {
+  &[data-tooltip]{
+    border-bottom: unset;
+    border-bottom-color: unset;
+}}
+
+/* card colors */
+
+$card-colors: ("warning": $warning, "danger": $danger, "success": $success, "info": $info);
+@each $code, $color in $card-colors {
+  .card.is-#{$code} {
+      box-shadow: 0 0.5em 1em -0.125em rgba($color, 0.7), 0 0px 0 1px rgba($scheme-invert, 0.02)
+  }
+  .card.is-#{$code}:hover {
+      box-shadow: 0 0 1.5em -0.125em rgba($color, 0.7), 0 0px 0 2px rgba($scheme-invert, 0.02)
+  }
+  // .card.is-#{$code} .card-header {
+  //   background:$color;
+  //   color:$white
+  // }
+}
+
+/* load image */
+img[data-src] {
+  width: 25px !important;
+  height: 25px !important;
+  margin: auto;
+}
+
+/* search */
+
+
+#search-results {
+  position:absolute;
+  top:50px;
+  left:0;
+  right:0;
+  display:none;
+  border-radius: $radius;
+  max-height:90vh;
+  overflow:scroll;
+}
+
+#search-results:empty {
+  display: none !important;
+}
+
+.search-wrap:active .search-results-wrap,
+#search-form:focus-within #search-results
+{
+  display:block;
+  box-shadow: $shadow;
+  border: 1px solid $border;
+}
+
+#search-results:active {
+  display:block;
+  box-shadow: $shadow;
+  border: 1px solid $border;
+}
+
+#search-results .panel-block:first-of-type {
+  border-top-left-radius: inherit;
+  border-top-right-radius: inherit;
+}
+
+#search-results em {
+  background-color: $info-light;
+  color: $info;
+}
+
+#search-form .button:hover {
+  color: $grey-darker !important;
+}
+
+/* badge in headings */
+
+.title.is-2 .badge {
+  height:25px;
+  font-size: 50%;
+  padding: 6px;
+}

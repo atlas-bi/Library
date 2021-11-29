@@ -1,5 +1,5 @@
 exclude:
-  Data_Governance_ETL* | venv | .venv | .tox | .vs | docs | node_modules* | package-lock.json | .cache*
+  Data_Governance_ETL* | venv | .venv | .tox | .vs | docs | node_modules* | package-lock.json | .cache* | web/wwwroot/css/
 
 repos:
   # reformat c#

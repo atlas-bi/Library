@@ -1,18 +1,1 @@
-.success-message {
-  color: #0084db;
-  left: 20px;
-  position: fixed;
-  top: 20px;
-}
-.border-after {
-  position: relative;
-}
-.border-after:not(:last-of-type):after {
-  background-color: #dbd7d8;
-  content: "";
-  height: 75%;
-  position: absolute;
-  right: -1px;
-  top: 12.5%;
-  width: 1px;
-}
+.success-message{color:#0084db;left:20px;position:fixed;top:20px}.border-after{position:relative}.border-after:not(:last-of-type):after{background-color:#dbd7d8;content:"";height:75%;position:absolute;right:-1px;top:12.5%;width:1px}
