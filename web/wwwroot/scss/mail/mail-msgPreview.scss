@@ -1,0 +1,119 @@
+/*
+    Atlas of Information Management business intelligence library and documentation database.
+    Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
+.mlbx-msgs {
+  background-color: #fff;
+  border-right: 1px solid #d2d2d2;
+  flex: 0 0 25%;
+  height: 100%;
+  max-width: 25%;
+  overflow: hidden;
+  user-select: none;
+}
+
+.mlbx-msgsMsgSndr {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  line-height: 15px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mlbx-msgsMsgSbj {
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mlbx-msgsMsgMsg {
+  color: gray;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  line-height: 14px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mlbx-msgsSort {
+  background-color: #f5f5f5;
+  font-weight: 700;
+  height: 22px;
+  letter-spacing: 0.3px;
+  padding-top: 2px;
+}
+
+.mlbx-msgsScroll {
+  height: calc(100% - 23px);
+  scroll-behavior: smooth;
+}
+
+.mlbx-msgsMsg {
+  background-color: #fff;
+  cursor: default;
+  padding: 6px 15px;
+  position: relative;
+  transition: all 0.1s;
+}
+
+.mlbx-msgsMsgSndr .float-right {
+  color: #969696;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.mlbx-msgsMsg.active {
+  background-color: #0058dd;
+}
+
+.mlbx-msgsMsg.active .mlbx-msgsMsgSndr {
+  color: #fff;
+  font-weight: 600;
+  letter-spacing: 0.8px;
+}
+
+.mlbx-msgsMsg.active .mlbx-msgsMsgSndr .float-right {
+  color: #fff;
+  font-weight: 400;
+  letter-spacing: 0.8px;
+}
+
+.mlbx-msgsMsg.active .mlbx-msgsMsgSbj {
+  color: #fff;
+  font-weight: 600;
+}
+
+.mlbx-msgsMsg.active .mlbx-msgsMsgMsg {
+  color: #80abee;
+}
+
+.mlbx-msgsMsg.unread::before {
+  background-color: #0058dd;
+  border-radius: 4px;
+  content: "";
+  height: 8px;
+  left: 3px;
+  position: absolute;
+  top: 9px;
+  width: 8px;
+}

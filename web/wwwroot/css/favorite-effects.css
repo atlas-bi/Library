@@ -1,48 +1,25 @@
-/*
-    Atlas of Information Management business intelligence library and documentation database.
-    Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*/
 .fav-folder:hover {
   background-color: #ced3db;
 }
-
 .fav:hover .fav-links {
   visibility: visible;
 }
-
 .fav-links .fav-star:hover i {
   color: #e6c300;
 }
-
 .fav-links .fav-star.disabled:hover i {
-  color: #ffd700;
+  color: gold;
 }
-
 .fav-folder:hover > .folder-grip,
-.fav-folder > .folder-grip:hover,
+.fav-folder > .folder-grip:active,
 .fav-folder > .folder-grip:focus,
-.fav-folder > .folder-grip:active {
+.fav-folder > .folder-grip:hover {
   visibility: visible;
 }
-
 .fav-folder.draggable {
   z-index: 9999;
 }
-
 .fav-folder.hover,
 .show-all.hover {
-  border: 2px red dashed;
+  border: 2px dashed red;
 }

@@ -1,0 +1,185 @@
+/*
+    Atlas of Information Management business intelligence library and documentation database.
+    Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
+.mlbx {
+  border-radius: 6px;
+  border: 1px solid rgb(202, 202, 200);
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  box-shadow: 0 0 30px 10px rgb(209, 209, 209);
+  font-family: sf, "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+  flex: 1;
+  margin-bottom: 50px;
+  margin-top: 30px;
+  position: relative;
+  color: rgb(39, 39, 39);
+  letter-spacing: 0.4px;
+  font-weight: 600;
+}
+
+.mlbx-dvdr {
+  height: 1px;
+  background-color: rgb(230, 230, 230);
+}
+
+.mlbx-dvdr.medium {
+  background-color: rgb(201, 201, 201);
+}
+
+.mlbx-dvdr.dark {
+  background-color: rgb(166, 166, 166);
+}
+
+.mlbx-bd::after {
+  position: absolute;
+  content: "";
+  bottom: -35px;
+  height: 35px;
+  background: #fff;
+  left: -30px;
+  right: -30px;
+  z-index: 1;
+}
+
+.mlbx-bd::before {
+  content: "";
+  height: 50px;
+  margin-top: -35px;
+  background: #fff;
+  background: linear-gradient(rgba(255, 255, 255, 0), #fff);
+  position: absolute;
+  bottom: 0;
+  left: -30px;
+  right: -30px;
+  border-bottom: 3px solid #fff;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.mlbx-bd {
+  background-color: rgb(255, 255, 255);
+  border-bottom-right-radius: inherit;
+  border-bottom-left-radius: inherit;
+  font-size: 14px;
+  height: 600px;
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+  position: relative;
+}
+
+.mailbox-filters-outer {
+  height: 30px;
+  background: rgb(208, 208, 208);
+  background: -moz-linear-gradient(
+    180deg,
+    rgba(208, 208, 208, 1) 35%,
+    rgba(201, 201, 201, 1) 100%
+  );
+  background: -webkit-linear-gradient(
+    180deg,
+    rgba(208, 208, 208, 1) 35%,
+    rgba(201, 201, 201, 1) 100%
+  );
+  background: linear-gradient(
+    180deg,
+    rgba(208, 208, 208, 1) 35%,
+    rgba(201, 201, 201, 1) 100%
+  );
+  filter: progid:dximagetransform.microsoft.gradient(startColorstr="#d0d0d0", endColorstr="#c9c9c9", GradientType=1);
+}
+
+.new-mail-badge {
+  background-color: #fc433a;
+  border: 1px solid #f4f5f6;
+  border-radius: 18px;
+  color: #fff;
+  display: none;
+  font-family: sf, "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 16px;
+  min-width: 18px;
+  padding: 0 4px 0 5px;
+  position: absolute;
+  right: 0;
+  top: -4px;
+}
+
+.mlbx-shareMsg {
+  font-family: sf, "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  height: 400px;
+  letter-spacing: 0.4px;
+}
+
+.mlbx-shareMsg .mlbx-newMsgMsg {
+  margin-top: 10px;
+}
+
+.mlbx-usrDrp {
+  color: transparent;
+  display: inline;
+  margin-left: 5px;
+  margin-right: 1px;
+  position: relative;
+  transition: color 0.1s;
+}
+
+:hover > .mlbx-usrDrp {
+  color: inherit;
+}
+
+.mlbx-usrDrpCtr {
+  background-color: #f0eff0;
+  border: 1px solid #c6c6c6;
+  border-radius: 6px;
+  box-shadow: 0 5px 20px 2px #e1e1e1;
+  display: none;
+  height: auto;
+  left: 2px;
+  padding: 3px 0;
+  position: absolute;
+  top: 5px;
+  width: 150px;
+  z-index: 1;
+}
+
+.mlbx-usrDrpCtr .separator {
+  background-color: #dfe0df;
+  height: 2px;
+  margin: 3px 0;
+}
+
+.mlbx-usrDrpItm {
+  height: 22px;
+  padding-left: 15px;
+  padding-right: 15px;
+  width: 100%;
+}
+
+.mlbx-usrDrpItm a {
+  color: inherit;
+  cursor: default;
+  text-decoration: none;
+}
+
+.mlbx-usrDrpItm:hover {
+  background-color: #3f8bf6;
+  color: #fff;
+}
