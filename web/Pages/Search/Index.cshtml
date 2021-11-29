@@ -145,7 +145,7 @@
                                     var ManageReportUrl = HtmlHelpers.ReportManageUrlFromParams( @Configuration["AppSettings:org_domain"], HttpContext, result.ReportType, result.ReportServerPath, result.SourceServer);
                                     var EditReportUrl = HtmlHelpers.EditReportFromParams( @Configuration["AppSettings:org_domain"], HttpContext, result.ReportServerPath, result.SourceServer, result.EpicMasterFile, result.EpicTemplateId, result.EpicRecordId);
                                 }
-                                @if (result.Type.First() == "reports" && result.ReportObjectUrl != null && RunReportUrl != "")
+                                @if (result.Type.First() == "reports" && RunReportUrl != "")
                                 {
                                     <a target="_blank" rel="noopener" href="@RunReportUrl">Run</a>
                                 }
