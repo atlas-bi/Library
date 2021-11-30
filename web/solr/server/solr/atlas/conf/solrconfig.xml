@@ -1025,6 +1025,8 @@
   <initParams path="/update/**,/query,/select,/spell,/reports,/collections,/initiatives,/users,/groups,/aterms">
     <lst name="defaults">
       <str name="df">all_text</str>
+	  <str name="hl">true</str>
+	  <str name="hl.fl">*</str>
     </lst>
   </initParams>
   <initParams path="/suggest">

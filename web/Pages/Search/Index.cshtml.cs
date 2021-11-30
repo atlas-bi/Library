@@ -98,7 +98,7 @@ namespace Atlas_Web.Pages.Search
             int PageIndex = Int32.Parse(Request.Query["PageIndex"].FirstOrDefault() ?? "1");
             string Type = Request.Query["type"].FirstOrDefault() ?? "query";
 
-            static string BuildSearchString(string search_string)
+            static string BuildSearchString(string search_string, Microsoft.AspNetCore.Http.IQueryCollection query)
             {
                 static string BuildFuzzy(string substr)
                 {
@@ -115,11 +115,44 @@ namespace Atlas_Web.Pages.Search
 
                 string Fuzzy = String.Join(" ", search_string.Split(' ').Where(s => !String.IsNullOrEmpty(s)).Select(x => BuildFuzzy(x)));
 
+                if (query.Keys.Contains("field"))
+                {
+                    string field = query["field"];
+                    return $"{field}:({search_string})^6 OR {field}:({Fuzzy})^3";
+                }
+
                 return $"name:({search_string})^6 OR name:({Fuzzy})^3 OR ({search_string})^5 OR ({Fuzzy})";
 
             }
 
+            static IReadOnlyList<HighlightModel> BuildHighlightModels(IDictionary<string, SolrNet.Impl.HighlightedSnippets> highlightResults)
+            {
+                return highlightResults
+                    .Select(f => new HighlightModel(
+                        Key: f.Key,
+                        Values: f.Value.Select(v => new HighlightValueModel(v.Key, v.Value.First())).ToList()
+                    ))
+                    .ToList();
+            }
 
+
+            static IReadOnlyList<FilterFields> BuildFilterFields(string query)
+            {
+                List<FilterFields> filters = new List<FilterFields>();
+
+
+                if (query == "reports")
+                {
+                    filters.Add(new FilterFields("name", "Name"));
+                    filters.Add(new FilterFields("description", "Description"));
+                    filters.Add(new FilterFields("query", "Query"));
+                    filters.Add(new FilterFields("description", "Description"));
+                    filters.Add(new FilterFields("epic_record_id", "Epic ID"));
+                    filters.Add(new FilterFields("epic_template", "Epic Template ID"));
+                }
+
+                return filters;
+            }
 
             static IReadOnlyList<FacetModel> BuildFacetModels(IDictionary<string, ICollection<KeyValuePair<string, int>>> facetResults)
             {
@@ -147,7 +180,7 @@ namespace Atlas_Web.Pages.Search
 
                 }
                 // also exclude the two global keywords, EPIC and msg.
-                var ExcludedKeys = new List<string> { "PageIndex", "Query", "type", "EPIC", "msg" };
+                var ExcludedKeys = new List<string> { "PageIndex", "Query", "type", "EPIC", "msg", "field" };
 
                 foreach (string key in query.Keys)
                 {
@@ -176,8 +209,15 @@ namespace Atlas_Web.Pages.Search
 
             if (Query != null)
             {
+                string hl = "*";
+                string hl_match = "false";
+                if (Request.Query.Keys.Contains("field"))
+                {
+                    hl = Request.Query["field"];
+                    hl_match = "true";
+                }
 
-                var search_string_built = BuildSearchString(Query);
+                var search_string_built = BuildSearchString(Query, Request.Query);
                 var search_filter_built = BuildFilterQuery(Request.Query, _cache, _context, User);
 
                 var results = await _solr.QueryAsync(new SolrQuery(search_string_built),
@@ -190,13 +230,15 @@ namespace Atlas_Web.Pages.Search
                         ExtraParams = new Dictionary<string, string> {
                             {"rq", "{!rerank reRankQuery=$rqq reRankDocs=1000 reRankWeight=10}"},
                             {"rqq", "(documented:Y OR executive_visibility_text:Y OR enabled_for_hyperspace_text:Y OR certification_text:\"Analytics Certified\")" },
+                            {"hl.fl", hl },
+                            {"hl.requireFieldMatch",hl_match }
                         }
                     }
                 );
 
                 SolrAtlasParameters parameters = new SolrAtlasParameters { Query = Query, PageIndex = PageIndex, Filters = BuildFilterDict(Request.Query) };
 
-                SearchResults = new SolrAtlasResults(results, BuildFacetModels(results.FacetFields), results.NumFound, results.Header.QTime, parameters);
+                SearchResults = new SolrAtlasResults(results, BuildFacetModels(results.FacetFields), BuildHighlightModels(results.Highlights), BuildFilterFields(Type), results.NumFound, results.Header.QTime, parameters);
             }
 
             PublicUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);

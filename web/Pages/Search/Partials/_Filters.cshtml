@@ -1,29 +1,42 @@
 @using Atlas_Web.Helpers
-<h2 class="fav-col-title">Filters</h2>
-<form id="searchForm">
 
-    @foreach(var field in Model.SearchResults.FacetFields){
-    @* if there is only one value, do not show.*@
-
-    @if ((ViewBag.Permissions.Contains(46) && field.FriendlyName == "Visible") || (field.FriendlyName != "Visible" && field.Values.Count > 1) || field.FriendlyName == "Type" || UrlHelpers.HasFacet(Context, Model.SearchResults.Parameters, field.Key))
-{
-    <h5 class="fav-col-sub-title">@field.FriendlyName</h5>
-    <div class="srch-fltr">
-
-
-        @foreach (var value in field.Values)
-        {@* hide filters with 0 matches, or show advanced search *@
-        
-        @if ((ViewBag.Permissions.Contains(46) && field.FriendlyName == "Visible") || (field.FriendlyName != "Visible" && (@value.Count > 0 || field.FriendlyName == "Visible" || field.FriendlyName == "Type" || UrlHelpers.SetSearchFacetChecked(Context, Model.SearchResults.Parameters, field.Key, value.Value))))
+    <h2 class="fav-col-title">Filters</h2>
+    <form id="searchForm">
+        @if (Model.SearchResults.FilterFields.Count > 0)
         {
-            <div class='form-check search-filter'>
-                <input type="checkbox" value="@UrlHelpers.SetSearchFacetUrl(Context, Model.SearchResults.Parameters, @field.Key, @value.Value)" checked="@UrlHelpers.SetSearchFacetChecked(Context, Model.SearchResults.Parameters, @field.Key, @value.Value)" />
-                <input type="hidden" />
-                <label>@value.FriendlyName<span class="search-badge">@value.Count</span></label>
-            </div>}}
+    <h5 class="fav-col-sub-title">Search Fields</h5>
+    <div class="srch-fltr">
+        @foreach (var field in Model.SearchResults.FilterFields)
+        {
+    <div class='form-check search-filter'>
+        <input type="checkbox"
+               value="@UrlHelpers.SetSearchFacetUrl(Context, Model.SearchResults.Parameters, "field", @field.Key)"
+               checked="@UrlHelpers.SetSearchFacetChecked(Context, Model.SearchResults.Parameters, "field", field.Key)" />
+        <input type="hidden" />
+        <label>@field.FriendlyName</label>
+    </div>}
+    </div>}
 
-     </div>
+                        @foreach (var field in Model.SearchResults.FacetFields)
+                        {@* if there is only one value, do not show.*@
 
-        } }
+                                            @if ((ViewBag.Permissions.Contains(46) && field.FriendlyName == "Visible") || (field.FriendlyName != "Visible" && field.Values.Count > 1) || field.FriendlyName == "Type" || UrlHelpers.HasFacet(Context, Model.SearchResults.Parameters, field.Key))
+                                            {
+                        <h5 class="fav-col-sub-title">@field.FriendlyName</h5>
+                                                <div class="srch-fltr">
 
-</form>
+
+                                                    @foreach (var value in field.Values)
+                                                    {@* hide filters with 0 matches, or show advanced search *@
+
+                                                                                @if ((ViewBag.Permissions.Contains(46) && field.FriendlyName == "Visible") || (field.FriendlyName != "Visible" && (@value.Count > 0 || field.FriendlyName == "Visible" || field.FriendlyName == "Type" || UrlHelpers.SetSearchFacetChecked(Context, Model.SearchResults.Parameters, field.Key, value.Value))))
+                                                                                {
+                                                    <div class='form-check search-filter'>
+                                                        <input type="checkbox" value="@UrlHelpers.SetSearchFacetUrl(Context, Model.SearchResults.Parameters, @field.Key, @value.Value)" checked="@UrlHelpers.SetSearchFacetChecked(Context, Model.SearchResults.Parameters, @field.Key, @value.Value)" />
+                                                        <input type="hidden" />
+                                                        <label>@value.FriendlyName<span class="search-badge">@value.Count</span></label>
+                                                    </div>}}
+
+                                                </div>}}
+
+                </form>

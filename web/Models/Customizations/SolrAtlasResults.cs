@@ -8,6 +8,18 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Atlas_Web.Models
 {
 
+    public record FilterFields(
+        string Key,
+        string FriendlyName
+       );
+    public record HighlightValueModel(
+        string Key,
+        string Value
+       )
+    {
+        public string FriendlyName => System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(Key.Replace("_", " ").Replace("text", "").Trim());
+    };
+
     public record FacetValueModel(
         string Value,
         int Count
@@ -30,6 +42,11 @@ namespace Atlas_Web.Models
         }
     };
 
+    public record HighlightModel(
+        string Key,
+        IReadOnlyList<HighlightValueModel> Values
+       );
+
     public record FacetModel(
         string Key,
         IReadOnlyList<FacetValueModel> Values
@@ -41,6 +58,9 @@ namespace Atlas_Web.Models
     public record SolrAtlasResults(
             IReadOnlyList<SolrAtlas> Results,
             IReadOnlyList<FacetModel> FacetFields,
+            IReadOnlyList<HighlightModel> Highlights,
+            IReadOnlyList<FilterFields> FilterFields,
+
 
             int NumFound,
             int QTime,
@@ -63,6 +83,10 @@ namespace Atlas_Web.Models
         }
 
         public int LastPage => (int)Math.Floor(((decimal)NumFound - 1) / Parameters.PageSize) + 1;
+
+
+
+
 
     }
 
