@@ -1027,6 +1027,7 @@
       <str name="df">all_text</str>
 	  <str name="hl">true</str>
 	  <str name="hl.fl">*</str>
+	  <str name="hl.fragsize">0</str>
     </lst>
   </initParams>
   <initParams path="/suggest">
