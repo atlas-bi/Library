@@ -19,16 +19,17 @@
 @page
 @model Atlas_Web.Pages.Parameters.IndexModel
 
-@{
-    Layout = HttpContext.Request.Headers["x-requested-with"] == "XMLHttpRequest" ? "../Shared/_AjaxLayout.cshtml" : "../Shared/_Layout.cshtml";
-    ViewData["Title"] = "Parameters";
-}
+@{ Layout = HttpContext.Request.Headers["x-requested-with"] == "XMLHttpRequest" ? "../Shared/_AjaxLayout.cshtml" : "../Shared/_Layout.cshtml";
+                ViewData["Title"] = "Parameters"; }
 
 @section css {
     <link rel="stylesheet" href="/css/editor.min.css" media="print" onload="this.onload=null;this.removeAttribute('media')" />
 }
 
 @section js {
+    
+     <script async src="/js/parameters.min.js" inline></script>
+
     <textarea class="postLoadScripts">@if(!Request.Headers["User-Agent"].ToString().Contains("Trident")){<script>hljs.highlightAll();</script>}<script src="/js/editor.min.js" async></script></textarea>
 }
 

@@ -112,18 +112,16 @@ namespace Atlas_Web.Pages.Parameters
 
         public async Task<IActionResult> OnGetSearchSettings()
         {
-            ViewData["GlobalSettings"] = await (from o in _context.GlobalSiteSettings
-                                                select new GlobalSettingsData
-                                                {
-                                                    Id = o.Id,
-                                                    Name = o.Name,
-                                                    Description = o.Description,
-                                                    Value = o.Value
-                                                }).ToListAsync();
             ViewData["Permissions"] = UserHelpers.GetUserPermissions(_cache, _context, User.Identity.Name);
             ViewData["SiteMessage"] = HtmlHelpers.SiteMessage(HttpContext, _context);
 
             ReportTypes = await _context.ReportObjectTypes.ToListAsync();
+
+            ViewData["UserVis"] = await _context.GlobalSiteSettings.Where(x => x.Name == "users_search_visibility").FirstOrDefaultAsync();
+            ViewData["GroupVis"] = await _context.GlobalSiteSettings.Where(x => x.Name == "groups_search_visibility").FirstOrDefaultAsync();
+            ViewData["TermVis"] = await _context.GlobalSiteSettings.Where(x => x.Name == "terms_search_visibility").FirstOrDefaultAsync();
+            ViewData["InitiativeVis"] = await _context.GlobalSiteSettings.Where(x => x.Name == "initiatives_search_visibility").FirstOrDefaultAsync();
+            ViewData["CollectionVis"] = await _context.GlobalSiteSettings.Where(x => x.Name == "collections_search_visibility").FirstOrDefaultAsync();
 
             return new PartialViewResult()
             {
@@ -132,7 +130,47 @@ namespace Atlas_Web.Pages.Parameters
             };
         }
 
+        public async Task<IActionResult> OnPostSearchUpdateVisibility(string TypeId, int? GroupId, int Type)
+        {
 
+            // type 1 = add
+            // type 2 = remove
+
+            if (TypeId == "reports" && GroupId != null)
+            {
+                var report_type = await _context.ReportObjectTypes.Where(x => x.ReportObjectTypeId == GroupId).FirstOrDefaultAsync();
+                if (report_type != null && Type == 2)
+                {
+                    report_type.Visible = "N";
+                }
+                else if (report_type != null)
+                {
+                    report_type.Visible = "Y";
+                }
+            }
+            else
+            {
+                var current_vis = await _context.GlobalSiteSettings.Where(x => x.Name == TypeId + "_search_visibility").FirstOrDefaultAsync();
+
+                if (current_vis == null)
+                {
+                    _context.Add(new GlobalSiteSetting { Name = TypeId + "_search_visibility", Value = "Y" });
+                }
+                else
+                {
+                    if (Type == 2)
+                    {
+                        current_vis.Value = "N";
+                    }
+                    else
+                    {
+                        current_vis.Value = "N";
+                    }
+                }
+            }
+            _context.SaveChangesAsync();
+            return Content("success");
+        }
 
 
 

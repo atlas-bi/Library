@@ -161,6 +161,7 @@ namespace Atlas_Web
                 pipeline.AddJavaScriptBundle("/js/milestone-checklist.min.js", "js/milestone-checklist.js");
 
                 pipeline.AddJavaScriptBundle("/js/access.min.js", "js/access.js");
+                pipeline.AddJavaScriptBundle("/js/parameters.min.js", "js/parameters.js");
 
                 pipeline.AddJavaScriptBundle("/js/profile.min.js", "js/profile.js");
 
