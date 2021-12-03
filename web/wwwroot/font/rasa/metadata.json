@@ -1,0 +1,42 @@
+{
+  "category": "serif",
+  "defSubset": "latin",
+  "fontId": "rasa",
+  "fontName": "Rasa",
+  "lastModified": "2021-08-18",
+  "license": "https://fonts.google.com/attribution",
+  "source": "https://fonts.google.com/",
+  "styles": [
+    "italic",
+    "normal"
+  ],
+  "subsets": [
+    "gujarati",
+    "latin",
+    "latin-ext",
+    "vietnamese"
+  ],
+  "type": "google",
+  "variable": {
+    "ital": {
+      "default": "0",
+      "max": "1",
+      "min": "0",
+      "step": "1"
+    },
+    "wght": {
+      "default": "400",
+      "max": "700",
+      "min": "300",
+      "step": "1"
+    }
+  },
+  "version": "v8",
+  "weights": [
+    300,
+    400,
+    500,
+    600,
+    700
+  ]
+}

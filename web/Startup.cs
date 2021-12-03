@@ -63,7 +63,8 @@ namespace Atlas_Web
 
             services.AddWebOptimizer(pipeline =>
             {
-                pipeline.AddCssBundle("/css/main.min.css", "css/essential.css",
+                pipeline.AddCssBundle("/css/main.min.css", "css/theme.css",
+                                                            "css/essential.css",
                                                             "lib/fonts/impmin/stylesheet.css",
                                                             "lib/fonts/cheltmin/stylesheet.css",
                                                             "lib/fonts/sfmin/stylesheet.css",
@@ -75,7 +76,8 @@ namespace Atlas_Web
                                                             "css/search.css",
                                                             "css/utility/collapse.css",
                                                             "css/utility/modal.css",
-                                                            "css/utility/tabs.css");
+                                                            "css/utility/tabs.css"
+                                                            );
 
                 pipeline.AddCssBundle("/css/differed.min.css", "css/nav-effects.css",
                                                             "css/page-effects.css",

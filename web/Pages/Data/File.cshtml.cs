@@ -55,7 +55,7 @@ namespace Atlas_Web.Pages.Data
             public string server { get; set; }
         }
 
-            public async Task<ActionResult> OnGet(int id)
+        public async Task<ActionResult> OnGet(int id)
         {
 
             var MyFile = await _context.DpAttachments.Where(x => x.AttachmentId == id).ToListAsync();
@@ -69,7 +69,7 @@ namespace Atlas_Web.Pages.Data
             return Content("");
         }
 
-        public  async Task<ActionResult> OnGetCube(int id)
+        public async Task<ActionResult> OnGetCube(int id)
         {
 
             string text = System.IO.File.ReadAllText("wwwroot/Cube.xml");
