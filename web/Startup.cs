@@ -13,6 +13,9 @@ using System.Collections.Generic;
 using System.IO.Compression;
 using WebMarkupMin.AspNet.Common.Compressors;
 using WebMarkupMin.AspNetCore5;
+using SolrNet;
+using SolrNet.Microsoft.DependencyInjection;
+
 
 namespace Atlas_Web
 {
@@ -44,6 +47,7 @@ namespace Atlas_Web
                 options.Conventions.ConfigureFilter(new IgnoreAntiforgeryTokenAttribute());
             });
 
+            services.AddSolrNet<SolrAtlas>(Configuration["solr:atlas_address"]);
 
             var connection = Configuration.GetConnectionString("AtlasDatabase");
 
@@ -159,6 +163,7 @@ namespace Atlas_Web
                 pipeline.AddJavaScriptBundle("/js/milestone-checklist.min.js", "js/milestone-checklist.js");
 
                 pipeline.AddJavaScriptBundle("/js/access.min.js", "js/access.js");
+                pipeline.AddJavaScriptBundle("/js/parameters.min.js", "js/parameters.js");
 
                 pipeline.AddJavaScriptBundle("/js/profile.min.js", "js/profile.js");
 

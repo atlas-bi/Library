@@ -1,205 +1,55 @@
-@*
-    Atlas of Information Management business intelligence library and documentation database.
-    Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
+@using Atlas_Web.Helpers
 
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+    <h2 class="fav-col-title">Filters</h2>
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*@
-
-<h2 class="fav-col-title">Filters</h2>
-<form id="searchForm">
-    <input type="hidden" value="@Model.SearchString" name="s" />
-    <input type="hidden" value="@Model.SearchFilter" name="f" />
-    <input type="hidden" value="@Model.SearchField" name="sf" />
-    <input type="hidden" value="@Model.Category" name="c" />
-
-    <h5 class="fav-col-sub-title">Report Type</h5>
-    <div class="srch-fltr">
-        <div class='form-check search-filter'>
-            <input type="checkbox" @if (Model.SearchFilter != null && Model.SearchFilter.Contains("28")) { <text> checked="checked" </text> } value='28' />
-            <input type="hidden" />
-            <label>SSRS</label>
-        </div>
-        <div class='form-check search-filter'>
-            <input type="checkbox" @if (Model.SearchFilter != null && Model.SearchFilter.Contains("20")) { <text> checked="checked" </text> } value='20' />
-            <input type="hidden" />
-            <label>Dashboard</label>
-        </div>
-        <div class='form-check search-filter'>
-            <input type="checkbox" @if (Model.SearchFilter != null && Model.SearchFilter.Contains("21")) { <text> checked="checked" </text> } value='21' />
-            <input type="hidden" />
-            <label>Dash Component</label>
-        </div>
-        <div class='form-check search-filter'>
-            <input type="checkbox" @if (Model.SearchFilter != null && (Model.SearchFilter.StartsWith("3,") || Model.SearchFilter.EndsWith(",3") || Model.SearchFilter == "3")) { <text> checked="checked" </text> } value='3' />
-            <input type="hidden" />
-            <label>Crystal</label>
-        </div>
-        <div class='form-check search-filter'>
-            <input type="checkbox" @if (Model.SearchFilter != null && Model.SearchFilter.Contains("17")) { <text> checked="checked" </text> } value='17' />
-            <input type="hidden" />
-            <label>Workbench</label>
-        </div>
-        <div class='form-check search-filter'>
-            <input type="checkbox" @if (Model.SearchFilter != null && Model.SearchFilter.Contains("4,18")) { <text> checked="checked" </text> } value='4,18' />
-            <input type="hidden" />
-            <label>Templates</label>
-        </div>
-        <div class='form-check search-filter'>
-            <input type="checkbox" @if (Model.SearchFilter != null && Model.SearchFilter.Contains("15")) { <text> checked="checked" </text> } value='15' />
-            <input type="hidden" />
-            <label>Metric</label>
-        </div>
-        <div class='form-check search-filter'>
-            <input type="checkbox" @if (Model.SearchFilter != null && Model.SearchFilter.Contains("36,38")) { <text> checked="checked" </text> } value='36,38' />
-            <input type="hidden" />
-            <label>Tableau</label>
-        </div>
-        <div class='form-check search-filter'>
-            <input type="checkbox" @if (Model.SearchFilter != null && Model.SearchFilter.Contains("37,41")) { <text> checked="checked" </text> } value='37,41' />
-            <input type="hidden" />
-            <label>SlicerDicer</label>
-        </div>
-        <div class='form-check search-filter'>
-            <input type="checkbox" @if (Model.SearchFilter != null && Model.SearchFilter.Contains("42")) { <text> checked="checked" </text> } value='42' />
-            <input type="hidden" />
-            <label>Cubes</label>
-        </div>
-    </div>
-    <h5 class="fav-col-sub-title">Category</h5>
-    <div class="srch-fltr">
-        <div class='form-check search-category'>
-            <input type="checkbox" @if (Model.Category != null && Model.Category.Replace("%20", " ") == "Analytics Certified") { <text> checked="checked" </text> } value='Analytics Certified' />
-            <input type="hidden" />
-            <label>Analytics Certified</label>
-        </div>
-        <div class='form-check search-category'>
-            <input type="checkbox" @if (Model.Category != null && Model.Category.Replace("%20", " ") == "Analytics Reviewed") { <text> checked="checked" </text> } value='Analytics Reviewed' />
-            <input type="hidden" />
-            <label>Analytics Reviewed</label>
-        </div>
-        <div class='form-check search-category'>
-            <input type="checkbox" @if (Model.Category != null && Model.Category.Replace("%20", " ") == "Epic Released") { <text> checked="checked" </text> } value='Epic Released' />
-            <input type="hidden" />
-            <label>Epic Released</label>
-        </div>
-        <div class='form-check search-category'>
-            <input type="checkbox" @if (Model.Category != null && Model.Category.Replace("%20", " ") == "Legacy") { <text> checked="checked" </text> } value='Legacy' />
-            <input type="hidden" />
-            <label>Legacy</label>
-        </div>
-        <div class='form-check search-category'>
-            <input type="checkbox" @if (Model.Category != null && Model.Category.Replace("%20", " ") == "High Risk") { <text> checked="checked" </text> } value='High Risk' />
-            <input type="hidden" />
-            <label>High Risk</label>
-        </div>
-    </div>
-    @if (Model.Permissions.Contains(46))
-    {
-        <h5 class="fav-col-sub-title">Advanced</h5>
+    <form id="searchForm">
+        @if (ViewBag.Permissions.Contains(46)){
+        var advanced = @Model.SearchResults.Advanced == "Y" ? "N" : "Y";
         <div class="srch-fltr">
-            <div class='form-check search-advanced-filter'>
-                <input type="checkbox" @if (Model.ShowHidden > 0) { <text> checked="checked" value="1"</text> } name="h" />
+            
+            <div class='form-check search-filter'>
+                <input type="checkbox"
+                       value="@UrlHelpers.SetSearchFacetUrl(Context, Model.SearchResults.Parameters, "advanced", @advanced)"
+                       checked="@UrlHelpers.SetSearchFacetChecked(Context, Model.SearchResults.Parameters, "advanced",  "Y")" />
                 <input type="hidden" />
-                <label>Show Hidden</label>    
+                <label>Show Advanced Filters</label>
             </div>
-            <div class='form-check search-advanced-filter'>
-                <input type="checkbox" @if (Model.ShowAllTypes > 0) { <text> checked="checked" value="1" </text> } name="t" />
+        </div>}
+        @if (Model.SearchResults.FilterFields.Count > 0)
+        {
+        <h5 class="fav-col-sub-title">Search Fields</h5>
+        <div class="srch-fltr">
+            @foreach (var field in Model.SearchResults.FilterFields)
+        {
+            <div class='form-check search-filter'>
+                <input type="checkbox"
+                       value="@UrlHelpers.SetSearchFacetUrl(Context, Model.SearchResults.Parameters, "field", @field.Key)"
+                       checked="@UrlHelpers.SetSearchFacetChecked(Context, Model.SearchResults.Parameters, "field", field.Key)" />
                 <input type="hidden" />
-                <label>Show Hidden Types</label>    
-            </div>
-            <div class='form-check search-advanced-filter'>
-                <input type="checkbox" @if (Model.ShowOrphans > 0) { <text> checked="checked" value="1" </text> } name="o" />
-                <input type="hidden" />
-                <label>Show Orphans</label>    
-            </div>
-        </div>
-    }
-    <h5 class="fav-col-sub-title">Search Field</h5>
-    <div class="srch-fltr">
-        @{
-            var name = @Model.SearchField!= null ? Array.IndexOf(@Model.SearchField.Replace("%20","").Replace(" ","").Split(","),"Name") : -1;
-            var displaytitle = @Model.SearchField != null ? Array.IndexOf(@Model.SearchField.Replace("%20", "").Replace(" ", "").Split(","), "DisplayTitle") : -1;
-            var detdesc = @Model.SearchField!= null ? Array.IndexOf(@Model.SearchField.Replace("%20","").Replace(" ", "").Split(","),"DetailedDescription") : -1;
-            var keyassum = @Model.SearchField!= null ? Array.IndexOf(@Model.SearchField.Replace("%20","").Replace(" ", "").Split(","),"KeyAssumptions") : -1;
-            var devdesc = @Model.SearchField!= null ? Array.IndexOf(@Model.SearchField.Replace("%20","").Replace(" ", "").Split(","),"DeveloperDescription") : -1;
-            var desc = @Model.SearchField!= null ? Array.IndexOf(@Model.SearchField.Replace("%20","").Replace(" ", "").Split(","),"Description") : -1;
-            var query = @Model.SearchField!= null ? Array.IndexOf(@Model.SearchField.Replace("%20","").Replace(" ", "").Split(","),"Query") : -1;
-            var epicid = @Model.SearchField!= null ? Array.IndexOf(@Model.SearchField.Replace("%20","").Replace(" ", "").Split(","),"EpicId") : -1;
-            var epictempid = @Model.SearchField!= null ? Array.IndexOf(@Model.SearchField.Replace("%20","").Replace(" ", "").Split(","),"EpicTemplateId") : -1;
-            var termname = @Model.SearchField!= null ? Array.IndexOf(@Model.SearchField.Replace("%20","").Replace(" ", "").Split(","),"TermName") : -1;
-            var termsum = @Model.SearchField!= null ? Array.IndexOf(@Model.SearchField.Replace("%20","").Replace(" ", "").Split(","),"TermSummary") : -1;
-            var termdef = @Model.SearchField!= null ? Array.IndexOf(@Model.SearchField.Replace("%20","").Replace(" ", "").Split(","),"TermTechnicalDefinition") : -1;
-        }
-        <div class='form-check search-field-filter'>
-            <input type="checkbox" @if (name > -1) { <text> checked="checked" </text> } mvalue="Name" />
+                <label>@field.FriendlyName</label>
+            </div>}
+        </div>}
+
+        @foreach (var field in Model.SearchResults.FacetFields)
+                        {@* if there is only one value, do not show.*@
+
+                        @if ( Model.SearchResults.Advanced == "Y" && (ViewBag.Permissions.Contains(46) && field.FriendlyName == "Visible") || (field.FriendlyName != "Visible" && field.Values.Count > 1) || field.FriendlyName == "Type" || UrlHelpers.HasFacet(Context, Model.SearchResults.Parameters, field.Key))
+                                            {
+                        <h5 class="fav-col-sub-title">@field.FriendlyName</h5>
+                        <div class="srch-fltr">
+
+
+                            @foreach (var value in field.Values)
+                                                    {@* hide filters with 0 matches, or show advanced search *@
+
+        @if ((ViewBag.Permissions.Contains(46) && field.FriendlyName == "Visible") || (field.FriendlyName != "Visible" && (@value.Count > 0 || field.FriendlyName == "Visible" || field.FriendlyName == "Type" || UrlHelpers.SetSearchFacetChecked(Context, Model.SearchResults.Parameters, field.Key, value.Value))))
+                                                                                {
+        <div class='form-check search-filter'>
+            <input type="checkbox" value="@UrlHelpers.SetSearchFacetUrl(Context, Model.SearchResults.Parameters, @field.Key, @value.Value)" checked="@UrlHelpers.SetSearchFacetChecked(Context, Model.SearchResults.Parameters, @field.Key, @value.Value)" />
             <input type="hidden" />
-            <label>Name</label>    
-        </div>
-        <div class='form-check search-field-filter'>
-            <input type="checkbox" @if (displaytitle > -1) { <text> checked="checked" </text> } mvalue="Display Title" />
-            <input type="hidden" />
-            <label>Display Title</label>    
-        </div>
-        <div class='form-check search-field-filter'>
-            <input type="checkbox" @if (detdesc > -1) { <text> checked="checked" </text> } mvalue="Detailed Description"/>
-            <input type="hidden" />
-            <label>Detailed Description</label>    
-        </div>
-        <div class='form-check search-field-filter'>
-            <input type="checkbox" @if (keyassum > -1) { <text> checked="checked" </text> } mvalue="Key Assumptions"/>
-            <input type="hidden" />
-            <label>Key Assumptions</label>    
-        </div>
-        <div class='form-check search-field-filter'>
-            <input type="checkbox" @if (devdesc > -1) { <text> checked="checked" </text>}  mvalue="Developer Description" />
-            <input type="hidden" />
-            <label>Developer Description</label>    
-        </div>
-        <div class='form-check search-field-filter'>
-            <input type="checkbox" @if (desc > -1) { <text> checked="checked" </text> } mvalue="Description"/>
-            <input type="hidden" />
-            <label>Description</label>    
-        </div>
-        <div class='form-check search-field-filter'>
-            <input type="checkbox" @if (query > -1) { <text> checked="checked" </text> } mvalue="Query"/>
-            <input type="hidden" />
-            <label>Query</label>    
-        </div>
-        <div class='form-check search-field-filter'>
-            <input type="checkbox"  @if (epicid > -1) { <text> checked="checked" </text> } mvalue="Epic Id"/>
-            <input type="hidden" />
-            <label>Epic Id</label>    
-        </div>
-        <div class='form-check search-field-filter'>
-            <input type="checkbox" @if (epictempid > -1) { <text> checked="checked" </text> } mvalue="Epic Template Id"/>
-            <input type="hidden" />
-            <label>Epic Template Id</label>    
-        </div>
-        <div class='form-check search-field-filter'>
-            <input type="checkbox" @if (termname > -1) { <text> checked="checked" </text> } mvalue="Term Name"/>
-            <input type="hidden" />
-            <label>Term Name</label>    
-        </div>
-        <div class='form-check search-field-filter'>
-            <input type="checkbox" @if (termsum > -1) { <text> checked="checked" </text> } mvalue="Term Summary"/>
-            <input type="hidden" />
-            <label>Term Summary</label>    
-        </div>
-        <div class='form-check search-field-filter'>
-            <input type="checkbox" @if (termdef > -1) { <text> checked="checked" </text> } mvalue="Term Technical Definition"/>
-            <input type="hidden" />
-            <label>Term Definition</label>    
-        </div>       
-    </div>
-</form>
+            <label>@value.FriendlyName<span class="search-badge">@value.Count</span></label>
+        </div>}}
+
+        </div>}}
+
+    </form>

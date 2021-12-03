@@ -30,7 +30,7 @@ using System.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using Atlas_Web.Helpers;
 using Microsoft.Extensions.Caching.Memory;
-
+using System.Text;
 
 namespace Atlas_Web.Pages.Data
 {
@@ -58,6 +58,23 @@ namespace Atlas_Web.Pages.Data
                 return File(img.First().ImageData, "application/octet-stream", id + ".png");
             }
             return Content("");
+        }
+        public async Task<ActionResult> OnGetFirst(int id)
+        {
+
+            var img = await _context.ReportObjectImagesDocs.Where(x => x.ReportObjectId == id).ToListAsync();
+            HttpContext.Response.Headers.Remove("Cache-Control");
+            HttpContext.Response.Headers.Add("Cache-Control", "max-age=315360000");
+
+            if (img.Count > 0)
+            {
+                return File(img.First().ImageData, "application/octet-stream", id + ".png");
+            }
+
+
+            byte[] bytes = System.IO.File.ReadAllBytes("wwwroot/img/placeholder.png");
+            return File(bytes, "application/octet-stream", "placeholder.png");
+
         }
     }
 }

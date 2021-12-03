@@ -29,6 +29,8 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Caching.Memory;
+using SolrNet;
+using SolrNet.Commands.Parameters;
 
 
 namespace Atlas_Web.Pages.Search
@@ -51,13 +53,15 @@ namespace Atlas_Web.Pages.Search
     {
         private readonly Atlas_WebContext _context;
         private readonly IConfiguration _config;
+        private readonly ISolrReadOnlyOperations<SolrAtlas> _solr;
         private IMemoryCache _cache;
 
-        public IndexModel(Atlas_WebContext context, IConfiguration config, IMemoryCache cache)
+        public IndexModel(Atlas_WebContext context, IConfiguration config, IMemoryCache cache, ISolrReadOnlyOperations<SolrAtlas> solr)
         {
             _context = context;
             _config = config;
             _cache = cache;
+            _solr = solr;
         }
 
         public class SearchCollectionData
@@ -72,8 +76,9 @@ namespace Atlas_Web.Pages.Search
         public List<UserFavorite> Favorites { get; set; }
         public List<AdList> AdLists { get; set; }
         public List<SearchCollectionData> Collections { get; set; }
+
         [BindProperty] public List<ReportObjectType> AvailableFilters { get { return _context.ReportObjectTypes.ToList(); } set { } }
-        [BindProperty(SupportsGet = true)] public List<SearchResult> SearchResults { get; set; }
+        public SolrAtlasResults SearchResults { get; set; }
         [BindProperty] public List<ObjectSearch> ObjectSearch { get; set; }
         [BindProperty] public List<ObjectSearch> UserSearch { get; set; }
         [BindProperty] public int ShowHidden { get; set; }
@@ -88,131 +93,214 @@ namespace Atlas_Web.Pages.Search
         [BindProperty(SupportsGet = true)] public List<string> AppliedFilters { get; set; }
         public User PublicUser { get; set; }
 
-        public ActionResult OnGet(string s, string f, int p, int h, int t, int o, string sf, string c)
+        public async Task<IActionResult> OnGet(string Query)
         {
-            PublicUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
-            // var is copied to SearchString so it can be rendered in html view.
-            SearchString = s.Replace("'", "").Replace("–", "-");
+            int PageIndex = Int32.Parse(Request.Query["PageIndex"].FirstOrDefault() ?? "1");
+            string Type = Request.Query["type"].FirstOrDefault() ?? "query";
 
-            SearchFilter = ("" + f).Replace("%2C", ",");
-
-            SearchField = "";
-            if (sf != null)
+            static string BuildSearchString(string search_string, Microsoft.AspNetCore.Http.IQueryCollection query)
             {
-                SearchField = sf.Replace("%2C", ",").Replace("%252C", ",").Replace("%20", " ").Replace("–", "-");
-            }
-            Category = null;
-            if (c != null)
-            {
-                Category = c.Replace("%2C", ",").Replace("%252C", ",").Replace("%20", " ").Replace("–", "-");
-            }
-            SearchPage = p;
-            ShowHidden = h;
-            ShowAllTypes = t;
-            ShowOrphans = o;
-            PageSize = 20;
-
-            // if string is empty no results will be added.
-            if (SearchString != null && SearchString.Length > 0)
-            {
-                using (var connection = new SqlConnection(_config.GetConnectionString("AtlasDatabase")))
+                static string BuildFuzzy(string substr)
                 {
-                    using (var command = connection.CreateCommand())
+                    if (substr.Length > 1)
                     {
-                        command.CommandType = System.Data.CommandType.StoredProcedure;
-                        command.CommandText = "Search";
-                        command.Parameters.Add(new SqlParameter("@searchTerm", SearchString));
-                        // 10 results per page
-                        command.Parameters.Add(new SqlParameter("@pageSize", PageSize));
+                        return substr + "~" + Math.Max(substr.Length / 3, 1).ToString();
+                    }
+                    else if (substr.Length == 1)
+                    {
+                        return substr + "*~";
+                    }
+                    return substr;
+                }
 
-                        command.Parameters.Add(new SqlParameter("@showHidden", ShowHidden));
-                        command.Parameters.Add(new SqlParameter("@showAllTypes", ShowAllTypes));
-                        command.Parameters.Add(new SqlParameter("@showOrphans", ShowOrphans));
-                        command.Parameters.Add(new SqlParameter("@category", Category));
+                string Fuzzy = String.Join(" ", search_string.Split(' ').Where(s => !String.IsNullOrEmpty(s)).Select(x => BuildFuzzy(x)));
 
-                        if (SearchField != null && SearchField.Length > 0)
-                        {
-                            command.Parameters.Add(new SqlParameter("@searchField", SearchField));
-                        }
-                        // if page is specified, get the specified page
-                        if (SearchPage > 0)
-                        {
-                            command.Parameters.Add(new SqlParameter("@currentPage", p));
-                        }
+                if (query.Keys.Contains("field"))
+                {
+                    string field = query["field"];
+                    return $"{field}:({search_string})^6 OR {field}:({Fuzzy})^3";
+                }
 
-                        if (SearchFilter != null && SearchFilter.Length > 0 && SearchFilter != "0")
-                        {
-                            command.Parameters.Add(new SqlParameter("@reportObjectTypes", String.Join(",", SearchFilter.Split(","))));
-                        }
-                        connection.Open();
-                        var datareader = command.ExecuteReader();
+                return $"name:({search_string})^6 OR name:({Fuzzy})^3 OR ({search_string})^5 OR ({Fuzzy})";
 
-                        while (datareader.Read())
-                        {
-                            SearchResults.Add(new SearchResult
-                            {
-                                Id = (int)datareader["ItemId"],
-                                Name = datareader["Name"].ToString(),
-                                ItemType = datareader["ItemType"].ToString(),
-                                SearchField = datareader["SearchField"].ToString(),
-                                TotalRecords = (int)datareader["TotalRecords"],
-                                EpicRecordId = datareader["EpicRecordId"].ToString(),
-                                EpicReleased = datareader["CertificationTag"].ToString(),
-                                EpicMasterFile = datareader["EpicMasterFile"].ToString(),
-                                SourceServer = datareader["SourceServer"].ToString(),
-                                ReportServerPath = datareader["ReportServerPath"].ToString(),
-                                Description = datareader["Description"].ToString(),
-                                ReportType = datareader["ReportType"].ToString(),
-                                Documented = (int)datareader["Documented"],
-                                Image = _context.ReportObjectImagesDocs.Where(x => x.ReportObjectId.Equals(datareader["ItemId"])).Any() ? "/data/img?id=" + _context.ReportObjectImagesDocs.Where(x => x.ReportObjectId.Equals(datareader["ItemId"])).First().ImageId : "",
-                                EpicReportTemplateId = datareader["EpicReportTemplateId"].ToString(),
-                                ReportUrl = Helpers.HtmlHelpers.ReportUrlFromParams(_config["AppSettings:org_domain"], HttpContext, datareader["ReportObjectURL"].ToString(),
-                                                                        datareader["Name"].ToString(),
-                                                                        datareader["ReportType"].ToString(),
-                                                                        datareader["EpicReportTemplateId"].ToString(),
-                                                                        datareader["EpicRecordId"].ToString(),
-                                                                        datareader["EpicMasterFile"].ToString(),
-                                                                        datareader["EnabledForHyperspace"].ToString()
-                                                                        ),
-                                ManageReportUrl = HtmlHelpers.ReportManageUrlFromParams(_config["AppSettings:org_domain"], HttpContext, datareader["ReportType"].ToString(), datareader["ReportServerPath"].ToString(), datareader["SourceServer"].ToString()),
-                                EditReportUrl = HtmlHelpers.EditReportFromParams(_config["AppSettings:org_domain"], HttpContext, datareader["ReportServerPath"].ToString(), datareader["SourceServer"].ToString(), datareader["EpicMasterFile"].ToString(), datareader["EpicReportTemplateId"].ToString(), datareader["EpicRecordId"].ToString()),
-                                Hidden = (int)datareader["Hidden"],
-                                VisibleType = (int)datareader["VisibleType"],
-                                Orphaned = (int)datareader["Orphaned"],
-                            });
+            }
+
+            static IReadOnlyList<HighlightModel> BuildHighlightModels(IDictionary<string, SolrNet.Impl.HighlightedSnippets> highlightResults)
+            {
+                return highlightResults
+                    .Select(f => new HighlightModel(
+                        Key: f.Key,
+                        Values: f.Value.Select(v => new HighlightValueModel(v.Key, v.Value.First())).ToList()
+                    ))
+                    .ToList();
+            }
+
+
+            static IReadOnlyList<FilterFields> BuildFilterFields(string query)
+            {
+                List<FilterFields> filters = new List<FilterFields>();
+
+
+                if (query == "reports")
+                {
+                    filters.Add(new FilterFields("name", "Name"));
+                    filters.Add(new FilterFields("description", "Description"));
+                    filters.Add(new FilterFields("query", "Query"));
+                    filters.Add(new FilterFields("description", "Description"));
+                    filters.Add(new FilterFields("epic_record_id", "Epic ID"));
+                    filters.Add(new FilterFields("epic_template", "Epic Template ID"));
+                }
+
+                return filters;
+            }
+
+            static IReadOnlyList<FacetModel> BuildFacetModels(IDictionary<string, ICollection<KeyValuePair<string, int>>> facetResults)
+            {
+                // set the order of some facets. Otherwise solr is count > alpha
+                String[] FacetOrder = { "epic_master_file_text", "organizational_value_text", "estimated_run_frequency_text", "maintenance_schedule_text", "fragility_text", "executive_visiblity_text", "visible_text", "certification_text", "report_type_text", "type" };
+                return facetResults.OrderByDescending(x => Array.IndexOf(FacetOrder, x.Key))
+                    .Select(f => new FacetModel(
+                        Key: f.Key,
+                        Values: f.Value.Select(v => new FacetValueModel(v.Key, v.Value)).ToList()
+                    ))
+                    .ToList();
+            }
+
+            static ISolrQuery[] BuildFilterQuery(Microsoft.AspNetCore.Http.IQueryCollection query, IMemoryCache _cache, Atlas_WebContext _context, System.Security.Claims.ClaimsPrincipal User)
+            {
+                var FilterQuery = new List<SolrQuery>();
+
+
+                var checkpoint = UserHelpers.CheckUserPermissions(_cache, _context, User.Identity.Name, 46);
+                if (!checkpoint || !query.ContainsKey("advanced") || query.ContainsKey("advanced") && query["advanced"] != "Y")
+                {
+                    // user cannot access advanced search, so we pass an arg to hide numbers for 
+                    // hidden objects.
+                    FilterQuery.Add(new SolrQuery("visible_text:(Y)"));
+
+                }
+                // also exclude the two global keywords, EPIC and msg.
+                var ExcludedKeys = new List<string> { "PageIndex", "Query", "type", "EPIC", "msg", "field", "advanced" };
+
+                foreach (string key in query.Keys)
+                {
+                    if (ExcludedKeys.IndexOf(key) == -1)
+                    {
+                        FilterQuery.Add(new SolrQuery($"{{!tag={key}}}{key}:({query[key]})"));
+                    }
+
+                }
+
+                return FilterQuery.ToArray();
+
+            }
+
+
+            static Dictionary<string, string> BuildFilterDict(Microsoft.AspNetCore.Http.IQueryCollection query)
+            {
+                var FilterQuery = new Dictionary<string, string>();
+                foreach (string key in query.Keys)
+                {
+                    FilterQuery.Add(key.ToLower(), query[key].First());
+                }
+
+                return FilterQuery;
+            }
+
+            if (Query != null)
+            {
+                string hl = "*";
+                string hl_match = "false";
+                if (Request.Query.Keys.Contains("field"))
+                {
+                    hl = Request.Query["field"];
+                    hl_match = "true";
+                }
+
+                var search_string_built = BuildSearchString(Query, Request.Query);
+                var search_filter_built = BuildFilterQuery(Request.Query, _cache, _context, User);
+
+                var results = await _solr.QueryAsync(new SolrQuery(search_string_built),
+                    new QueryOptions
+                    {
+                        RequestHandler = new RequestHandlerParameters("/" + Type.Replace("terms", "aterms")),
+                        StartOrCursor = new StartOrCursor.Start((PageIndex - 1) * 10),
+                        Rows = 10,
+                        FilterQueries = search_filter_built,
+                        ExtraParams = new Dictionary<string, string> {
+                            {"rq", "{!rerank reRankQuery=$rqq reRankDocs=100 reRankWeight=10}" },
+                            {"rqq", "(type:collections^1 OR documented:Y OR executive_visibility_text:Y OR enabled_for_hyperspace_text:Y OR certification_text:\"Analytics Certified\"^1)" },
+                            {"hl.fl", hl },
+                            {"hl.requireFieldMatch",hl_match }
                         }
                     }
+                );
+
+                var checkpoint = UserHelpers.CheckUserPermissions(_cache, _context, User.Identity.Name, 46);
+                var advanced = "N";
+                if (checkpoint && Request.Query.ContainsKey("advanced") && Request.Query["advanced"] == "Y")
+                {
+                    advanced = "Y";
                 }
+
+                SolrAtlasParameters parameters = new SolrAtlasParameters { Query = Query, PageIndex = PageIndex, Filters = BuildFilterDict(Request.Query) };
+
+                SearchResults = new SolrAtlasResults(results, BuildFacetModels(results.FacetFields), BuildHighlightModels(results.Highlights), BuildFilterFields(Type), results.NumFound, results.Header.QTime, parameters, advanced);
             }
 
-
-
-            Collections = (from dp in _context.DpReportAnnotations
-                           where (SearchResults.Select(x => x.Id).ToList().Contains((int)dp.ReportId)) && (dp.DataProject.Hidden ?? "N") == "N"
-                           select new SearchCollectionData
-                           {
-                               CollectionId = (int)dp.DataProjectId,
-                               Annotation = dp.DataProject.Purpose ?? dp.DataProject.Description,
-                               Name = dp.DataProject.Name,
-
-                           }).Distinct().ToList();
+            PublicUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
 
 
 
+            //if (Type != "collections" && SearchResults != null)
+            //{
+
+            //    List<int> TermIds = SearchResults.Results.Where(x => x.Type.First() == "terms").Select(x => Int32.Parse(x.AtlasId.First())).ToList();
+            //    List<int> ReportIds = SearchResults.Results.Where(x => x.Type.First() == "reports").Select(x => Int32.Parse(x.AtlasId.First())).ToList();
+            //    List<int> InitiativeIds = SearchResults.Results.Where(x => x.Type.First() == "initiatives").Select(x => Int32.Parse(x.AtlasId.First())).ToList();
+
+
+            //    Collections = (from dp in _context.DpReportAnnotations
+            //                   where (ReportIds.Contains((int)dp.ReportId) && (dp.DataProject.Hidden ?? "N") == "N")
+            //                   select new SearchCollectionData
+            //                   {
+            //                       CollectionId = (int)dp.DataProjectId,
+            //                       Annotation = dp.DataProject.Purpose ?? dp.DataProject.Description,
+            //                       Name = dp.DataProject.Name,
+
+            //                   }).Union(from dp in _context.DpTermAnnotations
+            //                            where (TermIds.Contains((int)dp.TermId) && (dp.DataProject.Hidden ?? "N") == "N")
+            //                            select new SearchCollectionData
+            //                            {
+            //                                CollectionId = (int)dp.DataProjectId,
+            //                                Annotation = dp.DataProject.Purpose ?? dp.DataProject.Description,
+            //                                Name = dp.DataProject.Name,
+
+            //                            }).Union(from dp in _context.DpDataProjects
+            //                                     where (InitiativeIds.Contains((int)dp.DataInitiativeId) && (dp.Hidden ?? "N") == "N")
+            //                                     select new SearchCollectionData
+            //                                     {
+            //                                         CollectionId = (int)dp.DataProjectId,
+            //                                         Annotation = dp.Purpose ?? dp.Description,
+            //                                         Name = dp.Name
+            //                                     }).Distinct().ToList();
+            //}
+
+            SearchString = Query;
             ViewData["MyRole"] = UserHelpers.GetMyRole(_cache, _context, User.Identity.Name);
             ViewData["Fullname"] = PublicUser.Fullname_Cust;
             Permissions = UserHelpers.GetUserPermissions(_cache, _context, User.Identity.Name);
             ViewData["Permissions"] = Permissions;
             ViewData["SiteMessage"] = HtmlHelpers.SiteMessage(HttpContext, _context);
 
-            var ReportId = string.Join(",", SearchResults.Select(x => x.Id.ToString()));
+            //ReportId = string.Join(",", SearchResults.Results.Where(x => x.Type.First() == "reports").Select(x => x.AtlasId.First()).ToList());
             AdLists = new List<AdList>
             {
                 new AdList { Url = "/Users?handler=SharedObjects", Column = 2},
                 new AdList { Url = "/?handler=RecentReports", Column = 2 },
                 new AdList { Url = "/?handler=RecentTerms", Column = 2 },
                 new AdList { Url = "/?handler=RecentInitiatives", Column = 2 },
-                new AdList { Url = "/?handler=RecenCollections", Column = 2 }
+                new AdList { Url = "/?handler=RecentCollections", Column = 2 }
             };
             ViewData["AdLists"] = AdLists;
 

@@ -427,7 +427,7 @@ namespace Atlas_Web.Pages.Reports
                                                            Definition = r.Term.TechnicalDefinition,
                                                        }).ToListAsync();
 
-            ViewerReportTerms = report_terms.Union(child_report_terms).Union(grandchild_report_terms).Union(great_grandchild_report_terms).Distinct().Select(x => new ReportTermsData { Name = x.Name, Id = x.Id, Summary = x.Summary, Definition = x.Definition }).ToList();
+            ViewerReportTerms = report_terms.Union(child_report_terms).Union(grandchild_report_terms).Union(great_grandchild_report_terms).GroupBy(x => x.Id, x => x).Select(x => x.First()).Select(x => new ReportTermsData { Name = x.Name, Id = x.Id, Summary = x.Summary, Definition = x.Definition }).ToList();
             ReportTerms = report_terms.Select(x => new ReportTermsData { Name = x.Name, Id = x.Id, Summary = x.Summary, Definition = x.Definition, ReportId = id, LinkId = x.LinkId }).ToList();
 
 
