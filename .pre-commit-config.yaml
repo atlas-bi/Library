@@ -1,5 +1,5 @@
 exclude:
-  Data_Governance_ETL* | venv | .venv | .tox | .vs | docs | node_modules* | package-lock.json | .cache*
+  Data_Governance_ETL* | venv | .venv | .tox | .vs | docs | node_modules* | package-lock.json | .cache* | web/wwwroot/css/
 
 repos:
   # reformat c#
@@ -38,62 +38,6 @@ repos:
     hooks:
       - id: black
         files:  \.py$
-
-  # reformat js
-  # - repo: https://github.com/pre-commit/mirrors-prettier
-  #   rev: 'v2.3.2'
-  #   hooks:
-  #     - id: prettier
-  #       name: prettier-js
-  #       args: [--write,--loglevel=error]
-  #       types: [javascript]
-  #       files: wwwroot/js/.*.js$
-
-  # reformat js
-  - repo: https://github.com/pre-commit/mirrors-eslint
-    rev: 'v7.29.0'
-    hooks:
-      - id: eslint
-        args: [--fix]
-        files:  wwwroot/js/.*.js$
-        types: [file]
-        additional_dependencies:
-        - eslint-config-prettier@^7.1.0
-        - eslint-plugin-prettier@^3.3.1
-
-  # reformat css
-  - repo: https://github.com/pre-commit/mirrors-prettier
-    rev: 'v2.3.2'
-    hooks:
-      - id: prettier
-        name: prettier-css
-        args: [--write,--loglevel=error]
-        types: [css]
-        files: wwwroot/css/.*.css$
-
-  # reformat css
-  - repo: https://github.com/awebdeveloper/pre-commit-stylelint
-    rev: '0.0.2'
-    hooks:
-      - id: stylelint
-        files: wwwroot/css/.*.css$
-        args: [--fix]
-        additional_dependencies:
-        - prettier@^2.2.1
-        - stylelint@13.2.1
-        - stylelint-config-standard@20.0.0
-        - stylelint-config-prettier@^8.0.2
-        - stylelint-config-standard@^20.0.0
-        - stylelint-prettier@^1.1.2
-
-  # check with css lint - doesn't support css grid yet
-  # - repo: https://github.com/pre-commit/mirrors-csslint
-  #   rev: 'v1.0.5'
-  #   hooks:
-  #   - id: csslint
-  #     files: wwwroot/css/.*.css$
-  #     args: [--quiet,--format=compact,--errors=errors,]
-
   - repo: https://github.com/atlas-bi/pre-commit-hooks
     rev: 0.0.1 # Get the latest from: https://github.com/atlas-bi/pre-commit-hooks/releases
     hooks:

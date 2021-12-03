@@ -52,5 +52,7 @@
     <Folder Include="Pages\API\Partials\" />
     <Folder Include="Pages\Groups\Sections\" />
   </ItemGroup>
-
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+    <Exec Command="npm install" />
+  </Target>
 </Project>
