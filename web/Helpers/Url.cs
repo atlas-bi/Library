@@ -23,7 +23,7 @@ namespace Atlas_Web.Helpers
             {
                 foreach (var p in qs)
                 {
-                    if (p.Key != "type" && p.Key != "Query" && !(parameters["type"] == "reports" && p.Key == "report_type_text"))
+                    if (p.Key != "type" && p.Key != "Query" && p.Key != "advanced" && !(parameters["type"] == "reports" && p.Key == "report_type_text"))
                     {
                         qs.Remove(p.Key);
                     }

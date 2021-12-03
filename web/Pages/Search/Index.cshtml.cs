@@ -172,7 +172,7 @@ namespace Atlas_Web.Pages.Search
 
 
                 var checkpoint = UserHelpers.CheckUserPermissions(_cache, _context, User.Identity.Name, 46);
-                if (!checkpoint)
+                if (!checkpoint || !query.ContainsKey("advanced") || query.ContainsKey("advanced") && query["advanced"] != "Y")
                 {
                     // user cannot access advanced search, so we pass an arg to hide numbers for 
                     // hidden objects.
@@ -180,7 +180,7 @@ namespace Atlas_Web.Pages.Search
 
                 }
                 // also exclude the two global keywords, EPIC and msg.
-                var ExcludedKeys = new List<string> { "PageIndex", "Query", "type", "EPIC", "msg", "field" };
+                var ExcludedKeys = new List<string> { "PageIndex", "Query", "type", "EPIC", "msg", "field", "advanced" };
 
                 foreach (string key in query.Keys)
                 {
@@ -228,56 +228,63 @@ namespace Atlas_Web.Pages.Search
                         Rows = 10,
                         FilterQueries = search_filter_built,
                         ExtraParams = new Dictionary<string, string> {
-                            {"rq", "{!rerank reRankQuery=$rqq reRankDocs=1000 reRankWeight=10}"},
-                            {"rqq", "(documented:Y OR executive_visibility_text:Y OR enabled_for_hyperspace_text:Y OR certification_text:\"Analytics Certified\")" },
+                            {"rq", "{!rerank reRankQuery=$rqq reRankDocs=100 reRankWeight=10}" },
+                            {"rqq", "(type:collections^1 OR documented:Y OR executive_visibility_text:Y OR enabled_for_hyperspace_text:Y OR certification_text:\"Analytics Certified\"^1)" },
                             {"hl.fl", hl },
                             {"hl.requireFieldMatch",hl_match }
                         }
                     }
                 );
 
+                var checkpoint = UserHelpers.CheckUserPermissions(_cache, _context, User.Identity.Name, 46);
+                var advanced = "N";
+                if (checkpoint && Request.Query.ContainsKey("advanced") && Request.Query["advanced"] == "Y")
+                {
+                    advanced = "Y";
+                }
+
                 SolrAtlasParameters parameters = new SolrAtlasParameters { Query = Query, PageIndex = PageIndex, Filters = BuildFilterDict(Request.Query) };
 
-                SearchResults = new SolrAtlasResults(results, BuildFacetModels(results.FacetFields), BuildHighlightModels(results.Highlights), BuildFilterFields(Type), results.NumFound, results.Header.QTime, parameters);
+                SearchResults = new SolrAtlasResults(results, BuildFacetModels(results.FacetFields), BuildHighlightModels(results.Highlights), BuildFilterFields(Type), results.NumFound, results.Header.QTime, parameters, advanced);
             }
 
             PublicUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
 
 
 
-            if (Type != "collections" && SearchResults != null)
-            {
+            //if (Type != "collections" && SearchResults != null)
+            //{
 
-                List<int> TermIds = SearchResults.Results.Where(x => x.Type.First() == "terms").Select(x => Int32.Parse(x.AtlasId.First())).ToList();
-                List<int> ReportIds = SearchResults.Results.Where(x => x.Type.First() == "reports").Select(x => Int32.Parse(x.AtlasId.First())).ToList();
-                List<int> InitiativeIds = SearchResults.Results.Where(x => x.Type.First() == "initiatives").Select(x => Int32.Parse(x.AtlasId.First())).ToList();
+            //    List<int> TermIds = SearchResults.Results.Where(x => x.Type.First() == "terms").Select(x => Int32.Parse(x.AtlasId.First())).ToList();
+            //    List<int> ReportIds = SearchResults.Results.Where(x => x.Type.First() == "reports").Select(x => Int32.Parse(x.AtlasId.First())).ToList();
+            //    List<int> InitiativeIds = SearchResults.Results.Where(x => x.Type.First() == "initiatives").Select(x => Int32.Parse(x.AtlasId.First())).ToList();
 
 
-                Collections = (from dp in _context.DpReportAnnotations
-                               where (ReportIds.Contains((int)dp.ReportId) && (dp.DataProject.Hidden ?? "N") == "N")
-                               select new SearchCollectionData
-                               {
-                                   CollectionId = (int)dp.DataProjectId,
-                                   Annotation = dp.DataProject.Purpose ?? dp.DataProject.Description,
-                                   Name = dp.DataProject.Name,
+            //    Collections = (from dp in _context.DpReportAnnotations
+            //                   where (ReportIds.Contains((int)dp.ReportId) && (dp.DataProject.Hidden ?? "N") == "N")
+            //                   select new SearchCollectionData
+            //                   {
+            //                       CollectionId = (int)dp.DataProjectId,
+            //                       Annotation = dp.DataProject.Purpose ?? dp.DataProject.Description,
+            //                       Name = dp.DataProject.Name,
 
-                               }).Union(from dp in _context.DpTermAnnotations
-                                        where (TermIds.Contains((int)dp.TermId) && (dp.DataProject.Hidden ?? "N") == "N")
-                                        select new SearchCollectionData
-                                        {
-                                            CollectionId = (int)dp.DataProjectId,
-                                            Annotation = dp.DataProject.Purpose ?? dp.DataProject.Description,
-                                            Name = dp.DataProject.Name,
+            //                   }).Union(from dp in _context.DpTermAnnotations
+            //                            where (TermIds.Contains((int)dp.TermId) && (dp.DataProject.Hidden ?? "N") == "N")
+            //                            select new SearchCollectionData
+            //                            {
+            //                                CollectionId = (int)dp.DataProjectId,
+            //                                Annotation = dp.DataProject.Purpose ?? dp.DataProject.Description,
+            //                                Name = dp.DataProject.Name,
 
-                                        }).Union(from dp in _context.DpDataProjects
-                                                 where (InitiativeIds.Contains((int)dp.DataInitiativeId) && (dp.Hidden ?? "N") == "N")
-                                                 select new SearchCollectionData
-                                                 {
-                                                     CollectionId = (int)dp.DataProjectId,
-                                                     Annotation = dp.Purpose ?? dp.Description,
-                                                     Name = dp.Name
-                                                 }).Distinct().ToList();
-            }
+            //                            }).Union(from dp in _context.DpDataProjects
+            //                                     where (InitiativeIds.Contains((int)dp.DataInitiativeId) && (dp.Hidden ?? "N") == "N")
+            //                                     select new SearchCollectionData
+            //                                     {
+            //                                         CollectionId = (int)dp.DataProjectId,
+            //                                         Annotation = dp.Purpose ?? dp.Description,
+            //                                         Name = dp.Name
+            //                                     }).Distinct().ToList();
+            //}
 
             SearchString = Query;
             ViewData["MyRole"] = UserHelpers.GetMyRole(_cache, _context, User.Identity.Name);

@@ -64,7 +64,8 @@ namespace Atlas_Web.Models
 
             int NumFound,
             int QTime,
-            SolrAtlasParameters Parameters
+            SolrAtlasParameters Parameters,
+            string Advanced
         )
     {
         const int PageSlide = 2;
