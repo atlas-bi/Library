@@ -6,15 +6,15 @@
   "_location": "/@fontsource/rasa",
   "_phantomChildren": {},
   "_requested": {
-    "escapedName": "@fontsource%2frasa",
-    "fetchSpec": "^4.5.2",
-    "name": "@fontsource/rasa",
-    "raw": "@fontsource/rasa@^4.5.2",
-    "rawSpec": "^4.5.2",
+    "type": "range",
     "registry": true,
-    "saveSpec": null,
+    "raw": "@fontsource/rasa@^4.5.2",
+    "name": "@fontsource/rasa",
+    "escapedName": "@fontsource%2frasa",
     "scope": "@fontsource",
-    "type": "range"
+    "rawSpec": "^4.5.2",
+    "saveSpec": null,
+    "fetchSpec": "^4.5.2"
   },
   "_requiredBy": [
     "#DEV:/"
@@ -24,8 +24,8 @@
   "_spec": "@fontsource/rasa@^4.5.2",
   "_where": "C:\\Users\\chris-pickering\\Documents\\r_source\\atlas-public",
   "author": {
-    "email": "declininglotus@gmail.com",
-    "name": "Lotus"
+    "name": "Lotus",
+    "email": "declininglotus@gmail.com"
   },
   "bugs": {
     "url": "https://github.com/fontsource/fontsource/issues"
@@ -50,9 +50,9 @@
     "access": "public"
   },
   "repository": {
-    "directory": "packages/rasa",
     "type": "git",
-    "url": "git+https://github.com/fontsource/fontsource.git"
+    "url": "git+https://github.com/fontsource/fontsource.git",
+    "directory": "packages/rasa"
   },
   "version": "4.5.2"
 }
