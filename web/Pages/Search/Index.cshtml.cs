@@ -102,11 +102,11 @@ namespace Atlas_Web.Pages.Search
             {
                 static string BuildFuzzy(string substr)
                 {
-                    if (substr.Length > 1)
+                    if (substr.Length > 2)
                     {
                         return substr + "~" + Math.Max(substr.Length / 3, 1).ToString();
                     }
-                    else if (substr.Length == 1)
+                    else if (substr.Length == 2)
                     {
                         return substr + "*~";
                     }
@@ -228,8 +228,8 @@ namespace Atlas_Web.Pages.Search
                         Rows = 10,
                         FilterQueries = search_filter_built,
                         ExtraParams = new Dictionary<string, string> {
-                            {"rq", "{!rerank reRankQuery=$rqq reRankDocs=100 reRankWeight=10}" },
-                            {"rqq", "(type:collections^1 OR documented:Y OR executive_visibility_text:Y OR enabled_for_hyperspace_text:Y OR certification_text:\"Analytics Certified\"^1)" },
+                            {"rq", "{!rerank reRankQuery=$rqq reRankDocs=1000 reRankWeight=10}" },
+                            {"rqq", "(type:collections^2 OR documented:Y OR executive_visibility_text:Y OR enabled_for_hyperspace_text:Y OR certification_text:\"Analytics Certified\"^1)" },
                             {"hl.fl", hl },
                             {"hl.requireFieldMatch",hl_match }
                         }
@@ -245,7 +245,7 @@ namespace Atlas_Web.Pages.Search
 
                 SolrAtlasParameters parameters = new SolrAtlasParameters { Query = Query, PageIndex = PageIndex, Filters = BuildFilterDict(Request.Query) };
 
-                SearchResults = new SolrAtlasResults(results, BuildFacetModels(results.FacetFields), BuildHighlightModels(results.Highlights), BuildFilterFields(Type), results.NumFound, results.Header.QTime, parameters, advanced);
+                SearchResults = new SolrAtlasResults(results.OrderBy(x => x.Type.First() == "collections" ? 0 : 1).Select(x => x).ToList(), BuildFacetModels(results.FacetFields), BuildHighlightModels(results.Highlights), BuildFilterFields(Type), results.NumFound, results.Header.QTime, parameters, advanced);
             }
 
             PublicUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);

@@ -1121,7 +1121,7 @@ namespace Atlas_Web.Pages.Reports
                 _context.Add(ManageEngineTicket);
                 _context.SaveChanges();
             }
-
+            ViewData["Id"] = ManageEngineTicket.ReportObjectId;
             ViewData["ManageEngineTickets"] = await (from t in _context.ReportManageEngineTickets
                                                      where t.ReportObjectId == ManageEngineTicket.ReportObjectId
                                                      select new ManageEngineTicketsData

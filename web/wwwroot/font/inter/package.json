@@ -6,15 +6,15 @@
   "_location": "/@fontsource/inter",
   "_phantomChildren": {},
   "_requested": {
-    "escapedName": "@fontsource%2finter",
-    "fetchSpec": "^4.5.0",
-    "name": "@fontsource/inter",
-    "raw": "@fontsource/inter@^4.5.0",
-    "rawSpec": "^4.5.0",
+    "type": "range",
     "registry": true,
-    "saveSpec": null,
+    "raw": "@fontsource/inter@^4.5.0",
+    "name": "@fontsource/inter",
+    "escapedName": "@fontsource%2finter",
     "scope": "@fontsource",
-    "type": "range"
+    "rawSpec": "^4.5.0",
+    "saveSpec": null,
+    "fetchSpec": "^4.5.0"
   },
   "_requiredBy": [
     "#DEV:/"
@@ -24,8 +24,8 @@
   "_spec": "@fontsource/inter@^4.5.0",
   "_where": "C:\\Users\\chris-pickering\\Documents\\r_source\\atlas-public",
   "author": {
-    "email": "declininglotus@gmail.com",
-    "name": "Lotus"
+    "name": "Lotus",
+    "email": "declininglotus@gmail.com"
   },
   "bugs": {
     "url": "https://github.com/fontsource/fontsource/issues"
@@ -49,9 +49,9 @@
     "access": "public"
   },
   "repository": {
-    "directory": "packages/inter",
     "type": "git",
-    "url": "git+https://github.com/fontsource/fontsource.git"
+    "url": "git+https://github.com/fontsource/fontsource.git",
+    "directory": "packages/inter"
   },
   "version": "4.5.1"
 }
