@@ -69,7 +69,7 @@
       } // request access
       else if (e.target.matches(".request-access")) {
         data = {
-          reportName: document.title,
+          reportName: document.querySelector(".report-name-clean").innerHTML,
           directorName: d.getElementById("director-name").value,
           reportUrl: window.location.href,
         };

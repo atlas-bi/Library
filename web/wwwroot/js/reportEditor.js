@@ -60,7 +60,7 @@
           );
         }, 750);
       };
-      form.reset();
+      //form.reset();
     }
   );
 
