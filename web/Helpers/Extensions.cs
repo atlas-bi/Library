@@ -404,7 +404,7 @@ namespace Atlas_Web.Helpers
             string ReportName = Name.Replace("|", " ").Replace("=", " ");
             bool Epic = IsEpic(Context);
 
-            if (((Url != "" && Url != null) || (ReportType != "SSRS Report" && ReportType != "SSRS File" && Epic && ReportType != "Source Radar Dashboard Component")) && ReportType != "Epic-Crystal Report")
+            if (((Url != "" && Url != null) || (ReportType != "SSRS Report" && ReportType != "SSRS File" && Epic && ReportType != "Source Radar Dashboard Component")) && ReportType != "Epic-Crystal Report" && ReportType != "Crystal Report")
             {
                 if (EpicMasterFile == "HRX" && ReportType != "SlicerDicer Session")
                 {
