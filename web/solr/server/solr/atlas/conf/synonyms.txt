@@ -36,7 +36,7 @@ w/ => with
 w/0 => without
 cbo => corporate billing office
 ccc => coal city campus
-ed,er,emergency department, emergency room
+ed,er,emergency department, emergency room, emergency
 slicer dicer, slicerdicer, slicer, dicer
 np => nurse practitioner
 ct => imaging
