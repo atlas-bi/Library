@@ -186,7 +186,7 @@ namespace Atlas_Web.Pages.Search
                 {
                     if (ExcludedKeys.IndexOf(key) == -1)
                     {
-                        FilterQuery.Add(new SolrQuery($"{{!tag={key}}}{key}:({query[key]})"));
+                        FilterQuery.Add(new SolrQuery($"{{!tag={key}}}{key}:({query[key].ToString().Trim()})"));
                     }
 
                 }
