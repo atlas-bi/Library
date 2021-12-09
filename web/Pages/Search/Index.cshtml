@@ -155,7 +155,7 @@ else
                                                                 <h5 class="fav-nav">
                                                                     <a href="@result.Id">Details</a>
 
-                                                                    @if (result.Type.First() == "reports" && RunReportUrl != "")
+                                                                    @if (result.Type.First() == "reports" && RunReportUrl != null && RunReportUrl != "")
                                                                     {
                                                 <a target="_blank" rel="noopener" href="@RunReportUrl">Run</a> }
                                             else if (result.Type.First() == "reports")
