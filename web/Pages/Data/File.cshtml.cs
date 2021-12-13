@@ -93,6 +93,7 @@ namespace Atlas_Web.Pages.Data
 
             // get data
             byte[] bytes = System.IO.File.ReadAllBytes(attachment.Path);
+            HttpContext.Response.Headers.Add("Content-Disposition", "inline");
             return File(bytes, "application/pdf", attachment.Name);
 
         }
