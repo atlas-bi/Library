@@ -96,6 +96,7 @@ namespace Atlas_Web.Pages.Reports
             public string LastLoadDate { get; set; }
             public string EpicReleased { get; set; }
             public IEnumerable<ManageEngineTicketsData> ManageEngineTickets { get; set; }
+            public IEnumerable<ReportObjectAttachment> CyrstalRunAttachments { get; set; }
         }
 
         public class ManageEngineTicketsData
@@ -339,6 +340,7 @@ namespace Atlas_Web.Pages.Reports
                                 EpicTemplateId = r.EpicReportTemplateId,
                                 LastLoadDate = r.LastLoadDateDisplayString,
                                 Favorite = rfi.ItemId == null ? "no" : "yes",
+                                CyrstalRunAttachments = r.ReportObjectAttachments.Where(x => x.Type == "crystal-run").OrderByDescending(x => x.CreationDate).Select(x => x).ToList(),
                                 RunReportUrl = HtmlHelpers.ReportUrlFromParams(_config["AppSettings:org_domain"], HttpContext, r.ReportObjectUrl, r.Name, r.ReportObjectType.Name, r.EpicReportTemplateId.ToString(), r.EpicRecordId.ToString(), r.EpicMasterFile, r.ReportObjectDoc.EnabledForHyperspace),
                                 EditReportUrl = HtmlHelpers.EditReportFromParams(_config["AppSettings:org_domain"], HttpContext, r.ReportServerPath, r.SourceServer, r.EpicMasterFile, r.EpicReportTemplateId.ToString(), r.EpicRecordId.ToString()),
                                 RecordViewerUrl = HtmlHelpers.RecordViewerLink(_config["AppSettings:org_domain"], HttpContext, r.EpicMasterFile, r.EpicRecordId.ToString()),

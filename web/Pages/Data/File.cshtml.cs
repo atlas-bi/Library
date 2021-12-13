@@ -80,5 +80,21 @@ namespace Atlas_Web.Pages.Data
             HttpContext.Response.Headers.Remove("Cache-Control");
             return File(bytes, "text/plain", cube.Name + ".odc");
         }
+
+        public async Task<ActionResult> OnGetCrystalRun(int id)
+        {
+            // check permissions first!
+            var attachment = _context.ReportObjectAttachments.Where(x => x.ReportObjectAttachmentId.Equals(id)).FirstOrDefault();
+
+            if (attachment == null)
+            {
+                return Content("File does not exists");
+            }
+
+            // get data
+            byte[] bytes = System.IO.File.ReadAllBytes(attachment.Path);
+            return File(bytes, "application/pdf", attachment.Name);
+
+        }
     }
 }

@@ -12,6 +12,7 @@ namespace Atlas_Web.Models
             DpReportAnnotations = new HashSet<DpReportAnnotation>();
             ReportGroupsMemberships = new HashSet<ReportGroupsMembership>();
             ReportManageEngineTickets = new HashSet<ReportManageEngineTicket>();
+            ReportObjectAttachments = new HashSet<ReportObjectAttachment>();
             ReportObjectConversationDocs = new HashSet<ReportObjectConversationDoc>();
             ReportObjectHierarchyChildReportObjects = new HashSet<ReportObjectHierarchy>();
             ReportObjectHierarchyParentReportObjects = new HashSet<ReportObjectHierarchy>();
@@ -51,6 +52,7 @@ namespace Atlas_Web.Models
         public string EpicReleased { get; set; }
         public string CertificationTag { get; set; }
         public string Availability { get; set; }
+        public int? CertificationTagId { get; set; }
 
         public virtual User AuthorUser { get; set; }
         public virtual User LastModifiedByUser { get; set; }
@@ -59,6 +61,7 @@ namespace Atlas_Web.Models
         public virtual ICollection<DpReportAnnotation> DpReportAnnotations { get; set; }
         public virtual ICollection<ReportGroupsMembership> ReportGroupsMemberships { get; set; }
         public virtual ICollection<ReportManageEngineTicket> ReportManageEngineTickets { get; set; }
+        public virtual ICollection<ReportObjectAttachment> ReportObjectAttachments { get; set; }
         public virtual ICollection<ReportObjectConversationDoc> ReportObjectConversationDocs { get; set; }
         public virtual ICollection<ReportObjectHierarchy> ReportObjectHierarchyChildReportObjects { get; set; }
         public virtual ICollection<ReportObjectHierarchy> ReportObjectHierarchyParentReportObjects { get; set; }

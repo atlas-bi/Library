@@ -100,6 +100,10 @@ namespace Atlas_Web.Pages.Search
 
             static string BuildSearchString(string search_string, Microsoft.AspNetCore.Http.IQueryCollection query)
             {
+
+                string[] illegal_chars = new string[] { "\\", "+", "-", "&&", "||", "!", "(", ")", "{", "}", "[", "]", "^", "\"", "~", "*", "?", ":", "/", };
+                search_string = String.Join("", search_string.Split(illegal_chars, StringSplitOptions.RemoveEmptyEntries));
+
                 static string BuildFuzzy(string substr)
                 {
                     if (substr.Length > 2)
