@@ -25,6 +25,9 @@ namespace Atlas_Web.Models
         [SolrField("report_type")]
         public string ReportType { get; set; }
 
+        [SolrField("report_type_id")]
+        public ICollection<int> ReportTypeId { get; set; }
+
         [SolrField("email")]
         public string Email { get; set; }
 
@@ -32,7 +35,7 @@ namespace Atlas_Web.Models
         public string Documented { get; set; }
 
         [SolrField("atlas_id")]
-        public ICollection<string> AtlasId { get; set; }
+        public ICollection<int> AtlasId { get; set; }
         [SolrField("certification")]
         public ICollection<string> Certification { get; set; }
 

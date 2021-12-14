@@ -164,7 +164,7 @@ namespace Atlas_Web.Pages.Parameters
                     }
                     else
                     {
-                        current_vis.Value = "N";
+                        current_vis.Value = "Y";
                     }
                 }
             }

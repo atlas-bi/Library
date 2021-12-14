@@ -458,14 +458,7 @@ namespace Atlas_Web.Pages.Users
                                 EpicMasterFile = ro.EpicMasterFile,
                                 ReportServerPath = ro.ReportServerPath,
                                 SourceServer = ro.SourceServer,
-                                ReportUrl = HtmlHelpers.ReportUrlFromParams(_config["AppSettings:org_domain"], HttpContext, ro.ReportObjectUrl,
-                                                                      ro.Name,
-                                                                      ro.ReportObjectType.Name,
-                                                                      ro.EpicReportTemplateId.ToString(),
-                                                                      ro.EpicRecordId.ToString(),
-                                                                      ro.EpicMasterFile,
-                                                                      ro.ReportObjectDoc.EnabledForHyperspace
-                                                                      ),
+                                ReportUrl = HtmlHelpers.ReportUrlFromParams(_config["AppSettings:org_domain"], HttpContext, ro, _context, User.Identity.Name),
                                 ManageReportUrl = HtmlHelpers.ReportManageUrlFromParams(_config["AppSettings:org_domain"], HttpContext, ro.ReportObjectType.Name, ro.ReportServerPath, ro.SourceServer),
                                 EditReportUrl = HtmlHelpers.EditReportFromParams(_config["AppSettings:org_domain"], HttpContext, ro.ReportServerPath, ro.SourceServer, ro.EpicMasterFile, ro.EpicReportTemplateId.ToString(), ro.EpicRecordId.ToString()),
 
@@ -523,14 +516,7 @@ namespace Atlas_Web.Pages.Users
                                 EpicMasterFile = d.ReportObject.EpicMasterFile,
                                 ReportServerPath = d.ReportObject.ReportServerPath,
                                 SourceServer = d.ReportObject.SourceServer,
-                                ReportUrl = Helpers.HtmlHelpers.ReportUrlFromParams(_config["AppSettings:org_domain"], HttpContext, d.ReportObject.ReportObjectUrl,
-                                                                       d.ReportObject.Name,
-                                                                       d.ReportObject.ReportObjectType.Name,
-                                                                       d.ReportObject.EpicReportTemplateId.ToString(),
-                                                                       d.ReportObject.EpicRecordId.ToString(),
-                                                                       d.ReportObject.EpicMasterFile,
-                                                                       d.ReportObject.ReportObjectDoc.EnabledForHyperspace
-                                                                       ),
+                                ReportUrl = Helpers.HtmlHelpers.ReportUrlFromParams(_config["AppSettings:org_domain"], HttpContext, d.ReportObject, _context, User.Identity.Name),
                                 EditReportUrl = HtmlHelpers.EditReportFromParams(_config["AppSettings:org_domain"], HttpContext, d.ReportObject.ReportServerPath, d.ReportObject.SourceServer, d.ReportObject.EpicMasterFile, d.ReportObject.EpicReportTemplateId.ToString(), d.ReportObject.EpicRecordId.ToString()),
                             }).Take(10).ToListAsync();
                 });

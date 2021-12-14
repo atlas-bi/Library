@@ -283,7 +283,7 @@ namespace Atlas_Web.Pages.Collections
                                                               Annotation = r.Report.ReportObjectDoc.DeveloperDescription,
                                                               Image = r.Report.ReportObjectImagesDocs.Any() ? "/data/img?id=" + r.Report.ReportObjectImagesDocs.First().ImageId : "",
                                                               Favorite = rfi.ItemId == null ? "no" : "yes",
-                                                              RunReportUrl = Helpers.HtmlHelpers.ReportUrlFromParams(_config["AppSettings:org_domain"], HttpContext, r.Report.ReportObjectUrl, r.Report.Name, r.Report.ReportObjectType.Name, r.Report.EpicReportTemplateId.ToString(), r.Report.EpicRecordId.ToString(), r.Report.EpicMasterFile, r.Report.ReportObjectDoc.EnabledForHyperspace),
+                                                              RunReportUrl = Helpers.HtmlHelpers.ReportUrlFromParams(_config["AppSettings:org_domain"], HttpContext, r.Report, _context, User.Identity.Name),
                                                               ManageReportUrl = HtmlHelpers.ReportManageUrlFromParams(_config["AppSettings:org_domain"], HttpContext, r.Report.ReportObjectType.Name, r.Report.ReportServerPath, r.Report.SourceServer),
                                                               EditReportUrl = HtmlHelpers.EditReportFromParams(_config["AppSettings:org_domain"], HttpContext, r.Report.ReportServerPath, r.Report.SourceServer, r.Report.EpicMasterFile, r.Report.EpicReportTemplateId.ToString(), r.Report.EpicRecordId.ToString()),
                                                           }).ToList(),
@@ -410,7 +410,7 @@ namespace Atlas_Web.Pages.Collections
                                                         Annotation = r.Report.ReportObjectDoc.DeveloperDescription == null ? r.Report.Description : r.Report.ReportObjectDoc.DeveloperDescription,
                                                         Image = r.Report.ReportObjectImagesDocs.Any() ? "/data/img?id=" + r.Report.ReportObjectImagesDocs.First().ImageId : "",
                                                         Favorite = rfi.ItemId == null ? "no" : "yes",
-                                                        RunReportUrl = Helpers.HtmlHelpers.ReportUrlFromParams(_config["AppSettings:org_domain"], HttpContext, r.Report.ReportObjectUrl, r.Report.Name, r.Report.ReportObjectType.Name, r.Report.EpicReportTemplateId.ToString(), r.Report.EpicRecordId.ToString(), r.Report.EpicMasterFile, r.Report.ReportObjectDoc.EnabledForHyperspace),
+                                                        RunReportUrl = Helpers.HtmlHelpers.ReportUrlFromParams(_config["AppSettings:org_domain"], HttpContext, r.Report, _context, User.Identity.Name),
                                                         ManageReportUrl = HtmlHelpers.ReportManageUrlFromParams(_config["AppSettings:org_domain"], HttpContext, r.Report.ReportObjectType.Name, r.Report.ReportServerPath, r.Report.SourceServer),
                                                         EditReportUrl = HtmlHelpers.EditReportFromParams(_config["AppSettings:org_domain"], HttpContext, r.Report.ReportServerPath, r.Report.SourceServer, r.Report.EpicMasterFile, r.Report.EpicReportTemplateId.ToString(), r.Report.EpicRecordId.ToString()),
                                                     }).ToListAsync();
@@ -587,7 +587,7 @@ namespace Atlas_Web.Pages.Collections
                                                     Annotation = r.Report.ReportObjectDoc.DeveloperDescription,
                                                     Image = r.Report.ReportObjectImagesDocs.Any() ? "/data/img?id=" + r.Report.ReportObjectImagesDocs.First().ImageId : "",
                                                     Favorite = rfi.ItemId == null ? "no" : "yes",
-                                                    RunReportUrl = Helpers.HtmlHelpers.ReportUrlFromParams(_config["AppSettings:org_domain"], HttpContext, r.Report.ReportObjectUrl, r.Report.Name, r.Report.ReportObjectType.Name, r.Report.EpicReportTemplateId.ToString(), r.Report.EpicRecordId.ToString(), r.Report.EpicMasterFile, r.Report.ReportObjectDoc.EnabledForHyperspace),
+                                                    RunReportUrl = Helpers.HtmlHelpers.ReportUrlFromParams(_config["AppSettings:org_domain"], HttpContext, r.Report, _context, User.Identity.Name),
                                                     ManageReportUrl = HtmlHelpers.ReportManageUrlFromParams(_config["AppSettings:org_domain"], HttpContext, r.Report.ReportObjectType.Name, r.Report.ReportServerPath, r.Report.SourceServer),
                                                     EditReportUrl = HtmlHelpers.EditReportFromParams(_config["AppSettings:org_domain"], HttpContext, r.Report.ReportServerPath, r.Report.SourceServer, r.Report.EpicMasterFile, r.Report.EpicReportTemplateId.ToString(), r.Report.EpicRecordId.ToString()),
                                                 }).ToListAsync();
@@ -635,7 +635,7 @@ namespace Atlas_Web.Pages.Collections
                                                     Annotation = r.Report.ReportObjectDoc.DeveloperDescription,
                                                     Image = r.Report.ReportObjectImagesDocs.Any() ? "/data/img?id=" + r.Report.ReportObjectImagesDocs.First().ImageId : "",
                                                     Favorite = rfi.ItemId == null ? "no" : "yes",
-                                                    RunReportUrl = Helpers.HtmlHelpers.ReportUrlFromParams(_config["AppSettings:org_domain"], HttpContext, r.Report.ReportObjectUrl, r.Report.Name, r.Report.ReportObjectType.Name, r.Report.EpicReportTemplateId.ToString(), r.Report.EpicRecordId.ToString(), r.Report.EpicMasterFile, r.Report.ReportObjectDoc.EnabledForHyperspace),
+                                                    RunReportUrl = Helpers.HtmlHelpers.ReportUrlFromParams(_config["AppSettings:org_domain"], HttpContext, r.Report, _context, User.Identity.Name),
                                                     ManageReportUrl = HtmlHelpers.ReportManageUrlFromParams(_config["AppSettings:org_domain"], HttpContext, r.Report.ReportObjectType.Name, r.Report.ReportServerPath, r.Report.SourceServer),
                                                     EditReportUrl = HtmlHelpers.EditReportFromParams(_config["AppSettings:org_domain"], HttpContext, r.Report.ReportServerPath, r.Report.SourceServer, r.Report.EpicMasterFile, r.Report.EpicReportTemplateId.ToString(), r.Report.EpicRecordId.ToString()),
                                                 }).ToListAsync();
@@ -683,7 +683,7 @@ namespace Atlas_Web.Pages.Collections
                                                     Annotation = r.Report.ReportObjectDoc.DeveloperDescription,
                                                     Image = r.Report.ReportObjectImagesDocs.Any() ? "/data/img?id=" + r.Report.ReportObjectImagesDocs.First().ImageId : "",
                                                     Favorite = rfi.ItemId == null ? "no" : "yes",
-                                                    RunReportUrl = Helpers.HtmlHelpers.ReportUrlFromParams(_config["AppSettings:org_domain"], HttpContext, r.Report.ReportObjectUrl, r.Report.Name, r.Report.ReportObjectType.Name, r.Report.EpicReportTemplateId.ToString(), r.Report.EpicRecordId.ToString(), r.Report.EpicMasterFile, r.Report.ReportObjectDoc.EnabledForHyperspace),
+                                                    RunReportUrl = Helpers.HtmlHelpers.ReportUrlFromParams(_config["AppSettings:org_domain"], HttpContext, r.Report, _context, User.Identity.Name),
                                                     ManageReportUrl = HtmlHelpers.ReportManageUrlFromParams(_config["AppSettings:org_domain"], HttpContext, r.Report.ReportObjectType.Name, r.Report.ReportServerPath, r.Report.SourceServer),
                                                     EditReportUrl = HtmlHelpers.EditReportFromParams(_config["AppSettings:org_domain"], HttpContext, r.Report.ReportServerPath, r.Report.SourceServer, r.Report.EpicMasterFile, r.Report.EpicReportTemplateId.ToString(), r.Report.EpicRecordId.ToString()),
                                                 }).ToListAsync();

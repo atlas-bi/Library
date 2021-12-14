@@ -67,21 +67,21 @@ namespace Atlas_Web
 
             services.AddWebOptimizer(pipeline =>
             {
-                pipeline.AddCssBundle("/css/main.min.css", "css/theme.css",
-                                                            "css/essential.css",
-                                                            "lib/fonts/impmin/stylesheet.css",
-                                                            "lib/fonts/cheltmin/stylesheet.css",
-                                                            "lib/fonts/sfmin/stylesheet.css",
-                                                            "lib/fonts/marckscript/stylesheet.css",
-                                                            "css/nav.css",
-                                                            "css/favorite.css",
-                                                            "css/page.css",
-                                                            "css/video.css",
-                                                            "css/search.css",
-                                                            "css/utility/collapse.css",
-                                                            "css/utility/modal.css",
-                                                            "css/utility/tabs.css"
-                                                            );
+                pipeline.AddCssBundle("/css/theme.min.css", "css/theme.css");
+                pipeline.AddCssBundle("/css/main.min.css", "css/essential.css",
+                                                             "lib/fonts/impmin/stylesheet.css",
+                                                             "lib/fonts/cheltmin/stylesheet.css",
+                                                             "lib/fonts/sfmin/stylesheet.css",
+                                                             "lib/fonts/marckscript/stylesheet.css",
+                                                             "css/nav.css",
+                                                             "css/favorite.css",
+                                                             "css/page.css",
+                                                             "css/video.css",
+                                                             "css/search.css",
+                                                             "css/utility/collapse.css",
+                                                             "css/utility/modal.css",
+                                                             "css/utility/tabs.css"
+                                                             );
 
                 pipeline.AddCssBundle("/css/differed.min.css", "css/nav-effects.css",
                                                             "css/page-effects.css",

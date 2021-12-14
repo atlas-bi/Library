@@ -402,7 +402,7 @@ namespace Atlas_Web.Pages.Tasks
                                                             Name = r.DisplayName,
                                                             ReportType = r.ReportObjectType.Name,
                                                             Epic = r.EpicMasterFile + " " + r.EpicRecordId.ToString(),
-                                                            RunReportUrl = Helpers.HtmlHelpers.ReportUrlFromParams(_config["AppSettings:org_domain"], HttpContext, r.ReportObjectUrl, r.Name, r.ReportObjectType.Name, r.EpicReportTemplateId.ToString(), r.EpicRecordId.ToString(), r.EpicMasterFile, r.ReportObjectDoc.EnabledForHyperspace),
+                                                            RunReportUrl = Helpers.HtmlHelpers.ReportUrlFromParams(_config["AppSettings:org_domain"], HttpContext, r, _context, User.Identity.Name),
                                                             EditReportUrl = Helpers.HtmlHelpers.EditReportFromParams(_config["AppSettings:org_domain"], HttpContext, r.ReportServerPath, r.SourceServer, r.EpicMasterFile, r.EpicReportTemplateId.ToString(), r.EpicRecordId.ToString()),
                                                             RecordViewerUrl = Helpers.HtmlHelpers.RecordViewerLink(_config["AppSettings:org_domain"], HttpContext, r.EpicMasterFile, r.EpicRecordId.ToString()),
                                                             Runs = ((int?)f.Cnt ?? 0)

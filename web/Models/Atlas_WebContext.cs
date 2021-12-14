@@ -52,9 +52,11 @@ namespace Atlas_Web.Models
         public virtual DbSet<MaintenanceLogStatus> MaintenanceLogStatuses { get; set; }
         public virtual DbSet<MaintenanceSchedule> MaintenanceSchedules { get; set; }
         public virtual DbSet<OrganizationalValue> OrganizationalValues { get; set; }
+        public virtual DbSet<ReportCertificationTag> ReportCertificationTags { get; set; }
         public virtual DbSet<ReportGroupsMembership> ReportGroupsMemberships { get; set; }
         public virtual DbSet<ReportManageEngineTicket> ReportManageEngineTickets { get; set; }
         public virtual DbSet<ReportObject> ReportObjects { get; set; }
+        public virtual DbSet<ReportObjectAttachment> ReportObjectAttachments { get; set; }
         public virtual DbSet<ReportObjectConversationDoc> ReportObjectConversationDocs { get; set; }
         public virtual DbSet<ReportObjectConversationMessageDoc> ReportObjectConversationMessageDocs { get; set; }
         public virtual DbSet<ReportObjectDoc> ReportObjectDocs { get; set; }
@@ -106,7 +108,6 @@ namespace Atlas_Web.Models
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-
 
             }
         }
@@ -799,6 +800,15 @@ namespace Atlas_Web.Models
                 entity.Property(e => e.OrganizationalValueId).HasColumnName("OrganizationalValueID");
             });
 
+            modelBuilder.Entity<ReportCertificationTag>(entity =>
+            {
+                entity.HasKey(e => e.CertId);
+
+                entity.Property(e => e.CertId)
+                    .ValueGeneratedNever()
+                    .HasColumnName("Cert_ID");
+            });
+
             modelBuilder.Entity<ReportGroupsMembership>(entity =>
             {
                 entity.HasKey(e => e.MembershipId)
@@ -839,6 +849,8 @@ namespace Atlas_Web.Models
                 entity.Property(e => e.ReportObjectId).HasColumnName("ReportObjectID");
 
                 entity.Property(e => e.AuthorUserId).HasColumnName("AuthorUserID");
+
+                entity.Property(e => e.CertificationTagId).HasColumnName("CertificationTagID");
 
                 entity.Property(e => e.DefaultVisibilityYn)
                     .HasMaxLength(1)
@@ -902,6 +914,21 @@ namespace Atlas_Web.Models
                     .HasForeignKey(d => d.ReportObjectTypeId)
                     .OnDelete(DeleteBehavior.SetNull)
                     .HasConstraintName("FK__ReportObj__Repor__3750728B");
+            });
+
+            modelBuilder.Entity<ReportObjectAttachment>(entity =>
+            {
+                entity.Property(e => e.CreationDate).HasColumnType("datetime");
+
+                entity.Property(e => e.Name).IsRequired();
+
+                entity.Property(e => e.Path).IsRequired();
+
+                entity.HasOne(d => d.ReportObject)
+                    .WithMany(p => p.ReportObjectAttachments)
+                    .HasForeignKey(d => d.ReportObjectId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_ReportObjectAttachments_ReportObject");
             });
 
             modelBuilder.Entity<ReportObjectConversationDoc>(entity =>
