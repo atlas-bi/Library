@@ -162,7 +162,7 @@ namespace Atlas_Web.Pages.Terms
                                              select new
                                              {
                                                  Id = r.ReportObjectId,
-                                                 Url = Helpers.HtmlHelpers.ReportUrlFromParams(_config["AppSettings:org_domain"], HttpContext, r.ReportObject.ReportObject.ReportObjectUrl, r.ReportObject.ReportObject.Name, r.ReportObject.ReportObject.ReportObjectType.Name, r.ReportObject.ReportObject.EpicReportTemplateId.ToString(), r.ReportObject.ReportObject.EpicRecordId.ToString(), r.ReportObject.ReportObject.EpicMasterFile, r.ReportObject.ReportObject.ReportObjectDoc.EnabledForHyperspace),
+                                                 Url = Helpers.HtmlHelpers.ReportUrlFromParams(_config["AppSettings:org_domain"], HttpContext, r.ReportObject.ReportObject, _context, User.Identity.Name),
                                                  Name = r.ReportObject.ReportObject.DisplayName
                                              }).ToListAsync();
 
@@ -178,7 +178,7 @@ namespace Atlas_Web.Pages.Terms
                                                     select new
                                                     {
                                                         Id = p.ParentReportObjectId,
-                                                        Url = Helpers.HtmlHelpers.ReportUrlFromParams(_config["AppSettings:org_domain"], HttpContext, p.ParentReportObject.ReportObjectUrl, p.ParentReportObject.Name, p.ParentReportObject.ReportObjectType.Name, p.ParentReportObject.EpicReportTemplateId.ToString(), p.ParentReportObject.EpicRecordId.ToString(), p.ParentReportObject.EpicMasterFile, p.ParentReportObject.ReportObjectDoc.EnabledForHyperspace),
+                                                        Url = Helpers.HtmlHelpers.ReportUrlFromParams(_config["AppSettings:org_domain"], HttpContext, p.ParentReportObject, _context, User.Identity.Name),
                                                         Name = p.ParentReportObject.DisplayName
                                                     }).Distinct().ToListAsync();
 
@@ -195,7 +195,7 @@ namespace Atlas_Web.Pages.Terms
                                                          select new
                                                          {
                                                              Id = gp.ParentReportObjectId,
-                                                             Url = Helpers.HtmlHelpers.ReportUrlFromParams(_config["AppSettings:org_domain"], HttpContext, gp.ParentReportObject.ReportObjectUrl, gp.ParentReportObject.Name, gp.ParentReportObject.ReportObjectType.Name, gp.ParentReportObject.EpicReportTemplateId.ToString(), gp.ParentReportObject.EpicRecordId.ToString(), gp.ParentReportObject.EpicMasterFile, gp.ParentReportObject.ReportObjectDoc.EnabledForHyperspace),
+                                                             Url = Helpers.HtmlHelpers.ReportUrlFromParams(_config["AppSettings:org_domain"], HttpContext, gp.ParentReportObject, _context, User.Identity.Name),
                                                              Name = gp.ParentReportObject.DisplayName
                                                          }).Distinct().ToListAsync();
 
@@ -215,7 +215,7 @@ namespace Atlas_Web.Pages.Terms
                                                                select new
                                                                {
                                                                    Id = ggp.ParentReportObjectId,
-                                                                   Url = Helpers.HtmlHelpers.ReportUrlFromParams(_config["AppSettings:org_domain"], HttpContext, ggp.ParentReportObject.ReportObjectUrl, ggp.ParentReportObject.Name, ggp.ParentReportObject.ReportObjectType.Name, ggp.ParentReportObject.EpicReportTemplateId.ToString(), ggp.ParentReportObject.EpicRecordId.ToString(), ggp.ParentReportObject.EpicMasterFile, ggp.ParentReportObject.ReportObjectDoc.EnabledForHyperspace),
+                                                                   Url = Helpers.HtmlHelpers.ReportUrlFromParams(_config["AppSettings:org_domain"], HttpContext, ggp.ParentReportObject, _context, User.Identity.Name),
                                                                    Name = ggp.ParentReportObject.DisplayName
                                                                }).Distinct().ToListAsync();
 

@@ -7,7 +7,12 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Atlas_Web.Models
 {
+    public record SearchResult(
+        List<ReportObjectAttachment> AttachedFiles,
+        SolrAtlas Result,
+        string RunUrl
 
+    );
     public record FilterFields(
         string Key,
         string FriendlyName
@@ -56,7 +61,7 @@ namespace Atlas_Web.Models
     };
 
     public record SolrAtlasResults(
-            IReadOnlyList<SolrAtlas> Results,
+            IReadOnlyList<SearchResult> Results,
             IReadOnlyList<FacetModel> FacetFields,
             IReadOnlyList<HighlightModel> Highlights,
             IReadOnlyList<FilterFields> FilterFields,

@@ -341,7 +341,7 @@ namespace Atlas_Web.Pages.Reports
                                 LastLoadDate = r.LastLoadDateDisplayString,
                                 Favorite = rfi.ItemId == null ? "no" : "yes",
                                 CyrstalRunAttachments = r.ReportObjectAttachments.Where(x => x.Type == "crystal-run").OrderByDescending(x => x.CreationDate).Select(x => x).ToList(),
-                                RunReportUrl = HtmlHelpers.ReportUrlFromParams(_config["AppSettings:org_domain"], HttpContext, r.ReportObjectUrl, r.Name, r.ReportObjectType.Name, r.EpicReportTemplateId.ToString(), r.EpicRecordId.ToString(), r.EpicMasterFile, r.ReportObjectDoc.EnabledForHyperspace),
+                                RunReportUrl = HtmlHelpers.ReportUrlFromParams(_config["AppSettings:org_domain"], HttpContext, r, _context, User.Identity.Name),
                                 EditReportUrl = HtmlHelpers.EditReportFromParams(_config["AppSettings:org_domain"], HttpContext, r.ReportServerPath, r.SourceServer, r.EpicMasterFile, r.EpicReportTemplateId.ToString(), r.EpicRecordId.ToString()),
                                 RecordViewerUrl = HtmlHelpers.RecordViewerLink(_config["AppSettings:org_domain"], HttpContext, r.EpicMasterFile, r.EpicRecordId.ToString()),
                                 ManageReportUrl = HtmlHelpers.ReportManageUrlFromParams(_config["AppSettings:org_domain"], HttpContext, r.ReportObjectType.Name, r.ReportServerPath, r.SourceServer)
@@ -467,7 +467,7 @@ namespace Atlas_Web.Pages.Reports
                                         ,
                                         Query = q.Query.Replace("&#x0A;", "")
                                         ,
-                                        Url = Helpers.HtmlHelpers.ReportUrlFromParams(_config["AppSettings:org_domain"], HttpContext, q.ReportObject.ReportObjectUrl, q.ReportObject.Name, q.ReportObject.ReportObjectType.Name, q.ReportObject.EpicReportTemplateId.ToString(), q.ReportObject.EpicRecordId.ToString(), q.ReportObject.EpicMasterFile, q.ReportObject.ReportObjectDoc.EnabledForHyperspace),
+                                        Url = Helpers.HtmlHelpers.ReportUrlFromParams(_config["AppSettings:org_domain"], HttpContext, q.ReportObject, _context, User.Identity.Name),
                                     }).ToListAsync();
 
 
@@ -1319,14 +1319,8 @@ namespace Atlas_Web.Pages.Reports
                                     Id = (int)datareader["Id"],
                                     Name = datareader["Name"].ToString(),
                                     Favorite = datareader["Favorite"].ToString(),
-                                    ReportUrl = HtmlHelpers.ReportUrlFromParams(_config["AppSettings:org_domain"], HttpContext, datareader["ReportObjectUrl"].ToString(),
-                                                                                            datareader["Name"].ToString(),
-                                                                                            datareader["ReportObjectType"].ToString(),
-                                                                                            datareader["EpicReportTemplateId"].ToString(),
-                                                                                            datareader["EpicRecordId"].ToString(),
-                                                                                            datareader["EpicMasterFile"].ToString(),
-                                                                                            datareader["EnabledForHyperspace"].ToString()
-                                                                                            )
+                                    ReportUrl = HtmlHelpers.ReportUrlFromParams(_config["AppSettings:org_domain"], HttpContext, _context.ReportObjects.Where(x => x.ReportObjectId == (int)datareader["Id"]).First(), _context, User.Identity.Name),
+
                                 });
                             }
                         }

@@ -91,10 +91,22 @@ namespace Atlas_Web.Pages.Data
                 return Content("File does not exists");
             }
 
-            // get data
-            byte[] bytes = System.IO.File.ReadAllBytes(attachment.Path);
-            HttpContext.Response.Headers.Add("Content-Disposition", "inline");
-            return File(bytes, "application/pdf", attachment.Name);
+            if (!Helpers.UserHelpers.CheckHrxPermissions(_context, id, User.Identity.Name))
+            {
+                return Content("Your are not authorized to view this page.");
+            }
+
+            // headers to attempt to open pdf vs download
+
+            System.Net.Mime.ContentDisposition cd = new System.Net.Mime.ContentDisposition
+            {
+                FileName = attachment.Name,
+                Inline = true
+            };
+            Response.Headers.Add("Content-Disposition", cd.ToString());
+            Response.Headers.Add("X-Content-Type-Options", "nosniff");
+
+            return File(System.IO.File.ReadAllBytes(attachment.Path), "application/pdf");
 
         }
     }

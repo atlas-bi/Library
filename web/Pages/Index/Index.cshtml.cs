@@ -166,14 +166,7 @@ namespace Atlas_Web.Pages
                                                    Name = dp.ReportObject.Name,
                                                    Id = dp.ReportObjectId,
                                                    Favorite = fi.ItemId == null ? "no" : "yes",
-                                                   ReportUrl = Helpers.HtmlHelpers.ReportUrlFromParams(_config["AppSettings:org_domain"], HttpContext, dp.ReportObject.ReportObjectUrl,
-                                                                                  dp.ReportObject.Name,
-                                                                                  dp.ReportObject.ReportObjectType.Name,
-                                                                                  dp.ReportObject.EpicReportTemplateId.ToString(),
-                                                                                  dp.ReportObject.EpicRecordId.ToString(),
-                                                                                  dp.ReportObject.EpicMasterFile,
-                                                                                  dp.ReportObject.ReportObjectDoc.EnabledForHyperspace
-                                                                                  )
+                                                   ReportUrl = Helpers.HtmlHelpers.ReportUrlFromParams(_config["AppSettings:org_domain"], HttpContext, dp.ReportObject, _context, User.Identity.Name)
                                                }).Take(10).ToListAsync();
             HttpContext.Response.Headers.Remove("Cache-Control");
             HttpContext.Response.Headers.Add("Cache-Control", "max-age=7200");

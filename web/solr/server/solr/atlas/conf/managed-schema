@@ -260,6 +260,7 @@
   <field name="report_last_updated_by_text" type="non_split_text" multiValued="true" indexed="true" stored="false"/>
   <field name="report_type" type="text_en"/>
   <field name="report_type_text" type="non_split_text" multiValued="true" indexed="true" stored="false"/>
+  <field name="report_type_id" type="plongs" indexed="true" stored="true"/>
   <field name="requester" type="text_en"/>
   <field name="requester_text" type="non_split_text" multiValued="true" indexed="true" stored="false"/>
   <field name="run_user" type="text_en"/>

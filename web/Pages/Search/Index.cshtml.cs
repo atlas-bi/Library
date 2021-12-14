@@ -249,46 +249,27 @@ namespace Atlas_Web.Pages.Search
 
                 SolrAtlasParameters parameters = new SolrAtlasParameters { Query = Query, PageIndex = PageIndex, Filters = BuildFilterDict(Request.Query) };
 
-                SearchResults = new SolrAtlasResults(results.OrderBy(x => x.Type.First() == "collections" ? 0 : 1).Select(x => x).ToList(), BuildFacetModels(results.FacetFields), BuildHighlightModels(results.Highlights), BuildFilterFields(Type), results.NumFound, results.Header.QTime, parameters, advanced);
+                SearchResults = new SolrAtlasResults(
+                        results.OrderBy(x => x.Type.First() == "collections" ? 0 : 1).Select(x => new SearchResult
+                                                                                                        (
+
+                                                                                                       x.ReportTypeId != null && (x.ReportTypeId.First() == 3 || x.ReportTypeId.First() == 17) && Helpers.UserHelpers.CheckHrxPermissions(_context, x.AtlasId.First(), User.Identity.Name) ? _context.ReportObjectAttachments.Where(y => y.ReportObjectId == x.AtlasId.First() && x.Type.First() == "reports").OrderByDescending(y => y.CreationDate).ToList() : new List<ReportObjectAttachment>(),
+                                                                                                         x,
+                                                                                                          x.Type.First() == "reports" ? HtmlHelpers.ReportUrlFromParams(_config["AppSettings:org_domain"], HttpContext, _context.ReportObjects.Where(y => y.ReportObjectId == x.AtlasId.First()).First(), _context, User.Identity.Name) : null
+                                                                                                       )
+                                                                                                ).ToList(),
+                        BuildFacetModels(results.FacetFields),
+                        BuildHighlightModels(results.Highlights),
+                        BuildFilterFields(Type),
+                        results.NumFound,
+                        results.Header.QTime,
+                        parameters,
+                        advanced
+                    );
             }
 
             PublicUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
 
-
-
-            //if (Type != "collections" && SearchResults != null)
-            //{
-
-            //    List<int> TermIds = SearchResults.Results.Where(x => x.Type.First() == "terms").Select(x => Int32.Parse(x.AtlasId.First())).ToList();
-            //    List<int> ReportIds = SearchResults.Results.Where(x => x.Type.First() == "reports").Select(x => Int32.Parse(x.AtlasId.First())).ToList();
-            //    List<int> InitiativeIds = SearchResults.Results.Where(x => x.Type.First() == "initiatives").Select(x => Int32.Parse(x.AtlasId.First())).ToList();
-
-
-            //    Collections = (from dp in _context.DpReportAnnotations
-            //                   where (ReportIds.Contains((int)dp.ReportId) && (dp.DataProject.Hidden ?? "N") == "N")
-            //                   select new SearchCollectionData
-            //                   {
-            //                       CollectionId = (int)dp.DataProjectId,
-            //                       Annotation = dp.DataProject.Purpose ?? dp.DataProject.Description,
-            //                       Name = dp.DataProject.Name,
-
-            //                   }).Union(from dp in _context.DpTermAnnotations
-            //                            where (TermIds.Contains((int)dp.TermId) && (dp.DataProject.Hidden ?? "N") == "N")
-            //                            select new SearchCollectionData
-            //                            {
-            //                                CollectionId = (int)dp.DataProjectId,
-            //                                Annotation = dp.DataProject.Purpose ?? dp.DataProject.Description,
-            //                                Name = dp.DataProject.Name,
-
-            //                            }).Union(from dp in _context.DpDataProjects
-            //                                     where (InitiativeIds.Contains((int)dp.DataInitiativeId) && (dp.Hidden ?? "N") == "N")
-            //                                     select new SearchCollectionData
-            //                                     {
-            //                                         CollectionId = (int)dp.DataProjectId,
-            //                                         Annotation = dp.Purpose ?? dp.Description,
-            //                                         Name = dp.Name
-            //                                     }).Distinct().ToList();
-            //}
 
             SearchString = Query;
             ViewData["MyRole"] = UserHelpers.GetMyRole(_cache, _context, User.Identity.Name);

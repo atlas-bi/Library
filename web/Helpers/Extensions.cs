@@ -173,7 +173,47 @@ namespace Atlas_Web.Helpers
                     return myPermissions;
                 });
         }
+        public static Boolean CheckHrxPermissions(Atlas_WebContext _context, int ReportObjectId, string username)
+        {
+            username = username ?? "default";
 
+            var report = _context.ReportObjects.Where(x => x.ReportObjectId == ReportObjectId).FirstOrDefault();
+
+            //Epic - Crystal Report = 3
+            // Reporting Workbench Report = 17
+
+            if (report != null && report.ReportObjectTypeId != 3 && report.ReportObjectTypeId != 17)
+            {
+                return true;
+            }
+
+            // check hrx
+
+            var hrx = (from g in _context.ReportGroupsMemberships
+                       where g.ReportId == ReportObjectId
+                          && (from ug in _context.UserGroupsMemberships
+                              where ug.User.Username == username
+                              select ug.GroupId).Contains(g.GroupId)
+                       select g.GroupId).ToList().Count();
+            if (hrx > 1)
+            {
+                return true;
+            }
+
+            var hrg = (from g in _context.ReportGroupsMemberships
+                       join h in _context.ReportObjectHierarchies.Where(x => x.ChildReportObjectId == ReportObjectId) on g.ReportId equals h.ParentReportObjectId
+                       where (from ug in _context.UserGroupsMemberships
+                              where ug.User.Username == username
+                              select ug.GroupId).Contains(g.GroupId)
+                       select g.GroupId).ToList().Count();
+            if (hrg > 1)
+            {
+                return true;
+            }
+
+            return false;
+
+        }
         public static Boolean CheckUserPermissions(IMemoryCache cache, Atlas_WebContext _context, string username, int Access)
         {
             username = username ?? "default";
@@ -397,8 +437,21 @@ namespace Atlas_Web.Helpers
 
             return Url;
         }
-        public static string ReportUrlFromParams(string Domain, HttpContext Context, string Url, string Name, string ReportType, string EpicReportTemplateId, string EpicRecordId, string EpicMasterFile, string EnabledForHyperspace)
+
+        public static string ReportUrlFromParams(string Domain, HttpContext Context, ReportObject reportObject, Atlas_WebContext _context, string username)
         {
+            if (reportObject == null)
+            {
+                return null;
+            }
+            string Url = reportObject.ReportObjectUrl;
+            string Name = reportObject.Name;
+            string ReportType = _context.ReportObjectTypes.Where(x => x.ReportObjectTypeId == reportObject.ReportObjectTypeId).First().Name;
+            int ReportTypeId = (int)reportObject.ReportObjectTypeId;
+            string EpicReportTemplateId = reportObject.EpicReportTemplateId.ToString();
+            string EpicRecordId = reportObject.EpicRecordId.ToString();
+            string EpicMasterFile = reportObject.EpicMasterFile;
+            string EnabledForHyperspace = (reportObject.ReportObjectDoc != null ? reportObject.ReportObjectDoc.EnabledForHyperspace : "N") ?? "N";
             string NewUrl = null;
             if (Name is null) { return null; }
             string ReportName = Name.Replace("|", " ").Replace("=", " ");
@@ -406,7 +459,7 @@ namespace Atlas_Web.Helpers
 
             if (((Url != "" && Url != null) || (ReportType != "SSRS Report" && ReportType != "SSRS File" && Epic && ReportType != "Source Radar Dashboard Component")) && ReportType != "Epic-Crystal Report" && ReportType != "Crystal Report")
             {
-                if (EpicMasterFile == "HRX" && ReportType != "SlicerDicer Session")
+                if (EpicMasterFile == "HRX" && ReportType != "SlicerDicer Session" && (((ReportTypeId == 3 || ReportTypeId == 17) && UserHelpers.CheckHrxPermissions(_context, reportObject.ReportObjectId, username)) || (ReportTypeId != 3 && ReportTypeId != 17)))
                 {
                     NewUrl = "EpicAct:AC_RW_STATUS,RUNPARAMS:" + EpicReportTemplateId + "|" + EpicRecordId;
                 }
