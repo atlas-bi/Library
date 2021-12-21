@@ -168,7 +168,7 @@ namespace Atlas_Web.Pages.Parameters
                     }
                 }
             }
-            _context.SaveChangesAsync();
+            _context.SaveChanges();
             return Content("success");
         }
 
