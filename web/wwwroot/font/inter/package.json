@@ -1,37 +1,5 @@
 {
-  "_from": "@fontsource/inter@^4.5.0",
-  "_id": "@fontsource/inter@4.5.1",
-  "_inBundle": false,
-  "_integrity": "sha512-mvtOvXNNVLlF1p/UbLgLrmz2RCOl6Ow+TqyiK10SosoLKX7edsXYiHFHb7XIZdjII6F2sJVPPsJXWhBnbXT2DQ==",
-  "_location": "/@fontsource/inter",
-  "_phantomChildren": {},
-  "_requested": {
-    "type": "range",
-    "registry": true,
-    "raw": "@fontsource/inter@^4.5.0",
-    "name": "@fontsource/inter",
-    "escapedName": "@fontsource%2finter",
-    "scope": "@fontsource",
-    "rawSpec": "^4.5.0",
-    "saveSpec": null,
-    "fetchSpec": "^4.5.0"
-  },
-  "_requiredBy": [
-    "#DEV:/"
-  ],
-  "_resolved": "https://registry.npmjs.org/@fontsource/inter/-/inter-4.5.1.tgz",
-  "_shasum": "058d8a02354f3c78e369d452c15d33557ec1b705",
-  "_spec": "@fontsource/inter@^4.5.0",
-  "_where": "C:\\Users\\chris-pickering\\Documents\\r_source\\atlas-public",
-  "author": {
-    "name": "Lotus",
-    "email": "declininglotus@gmail.com"
-  },
-  "bugs": {
-    "url": "https://github.com/fontsource/fontsource/issues"
-  },
-  "bundleDependencies": false,
-  "deprecated": false,
+  "author": "Lotus <declininglotus@gmail.com>",
   "description": "Self-host the Inter font in a neatly bundled NPM package.",
   "homepage": "https://github.com/fontsource/fontsource/tree/master/packages/inter#readme",
   "keywords": [
@@ -49,9 +17,9 @@
     "access": "public"
   },
   "repository": {
+    "directory": "packages/inter",
     "type": "git",
-    "url": "git+https://github.com/fontsource/fontsource.git",
-    "directory": "packages/inter"
+    "url": "https://github.com/fontsource/fontsource.git"
   },
   "version": "4.5.1"
 }

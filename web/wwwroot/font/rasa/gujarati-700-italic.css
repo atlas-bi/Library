@@ -4,6 +4,6 @@
   font-style: italic;
   font-display: swap;
   font-weight: 700;
-  src: url('/static/font/rasa/files/rasa-gujarati-700-italic.woff2') format('woff2'), url('/static/font/rasa/files/rasa-gujarati-700-italic.woff') format('woff');
+  src: url('/font/rasa/files/rasa-gujarati-700-italic.woff2') format('woff2'), url('/font/rasa/files/rasa-gujarati-700-italic.woff') format('woff');
   
 }

@@ -1,6 +1,6 @@
 
 
-$fontDir: "/static/font/inter/";
+$fontDir: "/font/inter/";
 @import "../../../../node_modules/@fontsource/inter/scss/mixins";
 
 @include fontFace(
@@ -8,7 +8,7 @@ $fontDir: "/static/font/inter/";
   $weight: 400,
   $display: swap,
   $unicodeMap: latin,
-  $fontDir: "/static/font/inter/files/"
+  $fontDir: "/font/inter/files/"
 );
 
 @include fontFace(
@@ -16,7 +16,7 @@ $fontDir: "/static/font/inter/";
   $weight: 600,
   $display: swap,
   $unicodeMap: latin,
-  $fontDir: "/static/font/inter/files/"
+  $fontDir: "/font/inter/files/"
 );
 
 @include fontFace(
@@ -24,10 +24,10 @@ $fontDir: "/static/font/inter/";
   $weight: 700,
   $display: swap,
   $unicodeMap: latin,
-  $fontDir: "/static/font/inter/files/"
+  $fontDir: "/font/inter/files/"
 );
 
-$fontDir: "/static/font/rasa/";
+$fontDir: "/font/rasa/";
 @import "../../../../node_modules/@fontsource/rasa/scss/mixins";
 
 @include fontFace(
@@ -35,7 +35,7 @@ $fontDir: "/static/font/rasa/";
   $weight: 600,
   $display: swap,
   $unicodeMap: latin,
-  $fontDir: "/static/font/rasa/files/"
+  $fontDir: "/font/rasa/files/"
 );
 
 @import "../../font/fontawesome/stylesheet";

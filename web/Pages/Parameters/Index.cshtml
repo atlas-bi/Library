@@ -22,9 +22,6 @@
 @{ Layout = HttpContext.Request.Headers["x-requested-with"] == "XMLHttpRequest" ? "../Shared/_AjaxLayout.cshtml" : "../Shared/_Layout.cshtml";
                 ViewData["Title"] = "Parameters"; }
 
-@section css {
-    <link rel="stylesheet" href="/css/editor.min.css" media="print" onload="this.onload=null;this.removeAttribute('media')" />
-}
 
 @section js {
     

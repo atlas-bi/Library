@@ -33,13 +33,7 @@
                 var collections = Model.RelatedCollections.Count() > 0;
                 var maintlog = Model.ReportMaintLogs.Count() > 0; }
 
-@section css {
-    <link rel="stylesheet" href="/css/reports.min.css" inline />
 
-    @if (Model.Permissions.Contains(12))
-    {
-<link rel="stylesheet" href="/css/editor.min.css" media="print" onload="this.onload=null;this.removeAttribute('media')" />}
-}
 @section Side_Links {
     @if (Model.Permissions.Contains(12))
     {<!-- edit -->

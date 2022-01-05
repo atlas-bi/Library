@@ -21,9 +21,6 @@
 @{ Layout = HttpContext.Request.Headers["x-requested-with"] == "XMLHttpRequest" ? "../Shared/_AjaxLayout.cshtml" : "../Shared/_Layout.cshtml"; }
 @{ ViewData["Title"] = @Model.Group.Name; }
 
-@section css {
-    <link rel="stylesheet" href="/css/users.min.css" inline />  
-}
 <div class="pageTitle">
     <h2 class="pageTitle-head"><span>@Model.Group.Name</span></h2>
 

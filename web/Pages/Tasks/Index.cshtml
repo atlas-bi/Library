@@ -22,9 +22,6 @@
     ViewData["Title"] = "Tasks";
     Layout = HttpContext.Request.Headers["x-requested-with"] == "XMLHttpRequest" ? "../Shared/_AjaxLayout.cshtml" : "../Shared/_Layout.cshtml";
 }
-@section css {
-    <link rel="stylesheet" href="/css/tasks.min.css" inline />  
-}
 
 <div class="pageTitle">
     <h2 class="pageTitle-head">Maintenance Tasks</h2>

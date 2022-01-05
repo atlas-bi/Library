@@ -1,0 +1,35 @@
+@font-face {
+    font-family: 'nytcheltenham';
+    src: url('/lib/fonts/cheltmin/subset-NYTCheltenham-Medium.woff2') format('woff2'),
+        url('/lib/fonts/cheltmin/subset-NYTCheltenham-Medium.woff') format('woff');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'nytcheltenham';
+    src: url('/lib/fonts/cheltmin/subset-NYTCheltenham-Bold.woff2') format('woff2'),
+        url('/lib/fonts/cheltmin/subset-NYTCheltenham-Bold.woff') format('woff');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'nytcheltenham';
+    src: url('/lib/fonts/cheltmin/subset-NYTCheltenham-MediumItalic.woff2') format('woff2'),
+        url('/lib/fonts/cheltmin/subset-NYTCheltenham-MediumItalic.woff') format('woff');
+    font-weight: 500;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'nytcheltenham';
+    src: url('/lib/fonts/cheltmin/subset-NYTCheltenhamWide-Regular.woff2') format('woff2'),
+        url('/lib/fonts/cheltmin/subset-NYTCheltenhamWide-Regular.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}

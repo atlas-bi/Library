@@ -68,61 +68,7 @@ namespace Atlas_Web
             services.AddWebOptimizer(pipeline =>
             {
                 pipeline.AddCssBundle("/css/theme.min.css", "css/theme.css");
-                pipeline.AddCssBundle("/css/main.min.css", "css/essential.css",
-                                                             "lib/fonts/impmin/stylesheet.css",
-                                                             "lib/fonts/cheltmin/stylesheet.css",
-                                                             "lib/fonts/sfmin/stylesheet.css",
-                                                             "lib/fonts/marckscript/stylesheet.css",
-                                                             "css/nav.css",
-                                                             "css/favorite.css",
-                                                             "css/page.css",
-                                                             "css/video.css",
-                                                             "css/search.css",
-                                                             "css/utility/collapse.css",
-                                                             "css/utility/modal.css",
-                                                             "css/utility/tabs.css"
-                                                             );
 
-                pipeline.AddCssBundle("/css/differed.min.css", "css/nav-effects.css",
-                                                            "css/page-effects.css",
-                                                            "css/favorite-effects.css",
-                                                            "lib/fonts/fontawesome/css/mine.css",
-                                                            "css/utility/tooltip.css",
-                                                            "css/utility/drag.css",
-                                                            "css/utility/progressbar.css",
-                                                            "lib/fonts/fasmin/css/fas.css",
-                                                            "lib/fonts/farmin/css/far.css",
-                                                            "css/utility/chart.css",
-                                                            "css/utility/table.css",
-                                                            "css/milestone.css",
-                                                            "css/input.css",
-                                                            "css/comments.css",
-                                                            "css/dropdown.css",
-                                                            "css/markdown.css",
-                                                            "css/messagebox.css",
-                                                            "lib/scrollbars/simple-scrollbar.css",
-                                                            "lib/highlight/rainbow.css",
-                                                            "css/mail/mail-newMessage.css",
-                                                             "css/query.css");
-
-                pipeline.AddCssBundle("/css/reports.min.css", "css/reports.css", "css/utility/carousel.css");
-                pipeline.AddCssBundle("/css/access.min.css", "css/access.css");
-                pipeline.AddCssBundle("/css/tasks.min.css", "css/tasks.css");
-                pipeline.AddCssBundle("/css/users.min.css", "css/users.css");
-                pipeline.AddCssBundle("/css/error.min.css", "css/error.css");
-
-                pipeline.AddCssBundle("/css/mail.min.css", "css/mail/mail.css",
-                                                           "css/mail/mail-folders.css",
-                                                           "css/mail/mail-menu.css",
-                                                           "css/mail/mail-msgPreview.css",
-                                                           "css/mail/mail-notification.css",
-                                                           "css/mail/mail-reader.css");
-
-                pipeline.AddCssBundle("/css/editor.min.css", "lib/codemirror/mycss.css",
-                                                             "css/live-editor.css");
-
-                /************ auto prefix css ************/
-                pipeline.MinifyCssFiles().AutoPrefixCss();
 
                 /************   javascript   *************/
 

@@ -23,7 +23,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
 <link rel="stylesheet" href="/css/theme.min.css" />
-<link rel="stylesheet" href="/css/main.min.css" />
 
 <link rel="preload" href="/js/main.min.js" as="script" />
 <link rel="preload" href="/js/search.min.js" as="script" />
@@ -32,7 +31,6 @@
 <!-- page specific css -->
 @RenderSection("css", required: false)
 
-<link rel="stylesheet" href="/css/differed.min.css" media="print" onload="this.onload=null;this.removeAttribute('media')" />
 
 @RenderSection("startJs", required: false)
 
@@ -244,24 +242,9 @@ else
 
 <div class="no-loader" data-ajax="yes" data-url="/index?Handler=WelcomeVideo" data-loadtag=".video"></div>
 
-<!-- preload items -->
-    <!-- text -->
-    <link rel="preload" href="/lib/fonts/impmin/subset-NYTImperial-Regular.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href="/lib/fonts/impmin/subset-NYTImperial-Bold.woff2" as="font" type="font/woff2" crossorigin />
-
-    <!-- headings -->
-    <link rel="preload" href="/lib/fonts/cheltmin/subset-NYTCheltenham-Medium.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href="/lib/fonts/cheltmin/subset-NYTCheltenham-Bold.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href="/lib/fonts/cheltmin/subset-NYTCheltenham-MediumItalic.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href="/lib/fonts/cheltmin/subset-NYTCheltenhamWide-Regular.woff2" as="font" type="font/woff2" crossorigin />
-
-    <!-- san serif -->
-    <link rel="preload" href="/lib/fonts/sfmin/subset-SFProDisplay-Regular.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href="/lib/fonts/sfmin/subset-SFProDisplay-Medium.woff2" as="font" type="font/woff2" crossorigin />
-
-    <!-- icon font generated at fontello.comm -->
-    <link rel="preload" href="/lib/fonts/farmin/font/far.woff2?4069908" as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href="/lib/fonts/fasmin/font/fas.woff2?1540027" as="font" type="font/woff2" crossorigin />
+<link rel="preload" href="/font/fontawesome/webfonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin />
+<link rel="preload" href="/font/fontawesome/webfonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin />
+<link rel="preload" href="/font/inter/files/inter-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin />
 
 <!-- javascript.. insane way to load js in order to keep c# hashtag -->
 <textarea style="display:none" class="postLoadScripts"><script src="/js/search.min.js" async></script><script src="/js/utility.min.js" async></script>@if(!Context.Request.Headers["User-Agent"].ToString().Contains("Trident")){<script src="/js/code.min.js" async></script>}</textarea>

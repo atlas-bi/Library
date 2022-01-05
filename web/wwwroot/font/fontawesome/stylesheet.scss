@@ -3,7 +3,7 @@
 @import "_variables";
 
 
-$fa-font-path: "/wwwroot/font/fontawesome/webfonts";
+$fa-font-path: "/font/fontawesome/webfonts";
 
 /* from font awesome */
 @font-face {
@@ -128,7 +128,30 @@ $icons: (
         play-circle: $fa-var-play-circle,
         universal-access: $fa-var-universal-access,
         sliders-h: $fa-var-sliders-h,
+        code: $fa-var-code,
+        quote-left: $fa-var-quote-left,
+        reply: $fa-var-reply,
+        reply-all: $fa-var-reply-all,
+        paper-plan: $fa-var-paper-plane,
+        heading: $fa-var-heading,
+        times: $fa-var-times,
+        folder: $fa-var-folder,
+        check: $fa-var-check,
+        play: $fa-var-play,
+        folder-plus: $fa-var-folder-plus,
+        file-upload: $fa-var-file-upload,
+        save: $fa-var-save,
+        angle-down: $fa-var-angle-down,
+        sort: $fa-var-sort,
+        folder-open: $fa-var-folder-open,
+        link: $fa-var-link,
+        grip-lines: $fa-var-grip-lines,
+        italic: $fa-var-italic,
+        list-ol: $fa-var-list-ol,
+        bold: $fa-var-bold,
+        trash-alt: $fa-var-trash-alt,
 );
+
 
 @each $key, $value in $icons {
     .#{$fa-css-prefix}-#{$key}:before {
