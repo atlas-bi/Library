@@ -1,5 +1,5 @@
-@import "./include/color.scss";
-@import "./include/font.scss";
+@import "./include/color";
+@import "./include/font";
 
 $family-sans-serif: "Inter", BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
 $family-serif: "Rasa", "Georgia", "Times New Roman", serif;
@@ -10,6 +10,58 @@ $title-family: $family-serif;
 @import "../../../node_modules/@creativebulma/bulma-badge/src/sass/index";
 @import "../../../node_modules/bulma-switch/src/sass/index";
 //@import "../../../node_modules/@creativebulma/bulma-tooltip/src/sass/index";
+
+
+@import "./mail/mail";
+@import "./mail/mail-folders";
+@import "./mail/mail-menu";
+@import "./mail/mail-msgPreview";
+@import "./mail/mail-notification";
+@import "./mail/mail-reader";
+@import "./live-editor";
+@import "./reports";
+@import "./utility/carousel";
+@import "./access";
+@import "./tasks";
+@import "./users";
+@import "./error";
+
+
+
+@import  "../lib/codemirror/mycss";
+
+@import "./essential";
+@import "../lib/fonts/impmin/stylesheet";
+@import "../lib/fonts/cheltmin/stylesheet";
+@import "../lib/fonts/sfmin/stylesheet";
+@import "../lib/fonts/marckscript/stylesheet";
+@import "./nav";
+@import "./favorite";
+@import "./page";
+@import "./video";
+@import "./search";
+@import "./utility/collapse";
+@import "./utility/modal";
+@import "./utility/tabs";
+
+@import "./nav-effects";
+@import "./page-effects";
+@import "./favorite-effects";
+@import "./utility/tooltip";
+@import "./utility/drag";
+@import "./utility/progressbar";
+@import "./utility/chart";
+@import "./utility/table";
+@import "./milestone";
+@import "./input";
+@import "./comments";
+@import "./dropdown";
+@import "./markdown";
+@import "./messagebox";
+@import "../lib/scrollbars/simple-scrollbar";
+@import "../lib/highlight/rainbow";
+@import "./mail/mail-newMessage";
+@import "./query";
 
 
 @media screen and (min-width: $desktop) {
@@ -25,8 +77,9 @@ $title-family: $family-serif;
 }
 
 div.column.is-narrow:empty {
-  padding: 0 !important;
+   padding: 0 !important;
 }
+
 
 /* remove tooltip underline*/
 // span {
@@ -45,7 +98,7 @@ $card-colors: ("warning": $warning, "danger": $danger, "success": $success, "inf
   .card.is-#{$code}:hover {
       box-shadow: 0 0 1.5em -0.125em rgba($color, 0.7), 0 0px 0 2px rgba($scheme-invert, 0.02)
   }
-  // .card.is-#{$code} .card-header {
+  // .card.is-#{$code} .card-headeFr {
   //   background:$color;
   //   color:$white
   // }

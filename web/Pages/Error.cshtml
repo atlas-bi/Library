@@ -22,9 +22,7 @@
     Layout = HttpContext.Request.Headers["x-requested-with"] == "XMLHttpRequest" ? "/Shared/_AjaxLayout.cshtml" : "./Shared/_Layout.cshtml";
     ViewData["Title"] = "Error :/";
 }
-@section css {
-    <link rel="stylesheet" href="/css/error.min.css" inline />  
-}
+
 <div class="error">
 Something went wrong :: @Model.Error
 <img class="error-img" src="~/img/broken.png" />

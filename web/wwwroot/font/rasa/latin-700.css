@@ -4,6 +4,6 @@
   font-style: normal;
   font-display: swap;
   font-weight: 700;
-  src: url('/static/font/rasa/files/rasa-latin-700-normal.woff2') format('woff2'), url('/static/font/rasa/files/rasa-latin-700-normal.woff') format('woff');
+  src: url('/font/rasa/files/rasa-latin-700-normal.woff2') format('woff2'), url('/font/rasa/files/rasa-latin-700-normal.woff') format('woff');
   
 }

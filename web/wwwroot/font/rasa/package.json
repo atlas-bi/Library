@@ -1,39 +1,6 @@
 {
-  "_from": "@fontsource/rasa@^4.5.2",
-  "_id": "@fontsource/rasa@4.5.2",
-  "_inBundle": false,
-  "_integrity": "sha512-en9FfRYMitdP3aR7EVFHQJm9ximFIcpgqhLdobUvHhOY+VRQlEPsUzvlDEbzRsWSPSFmefwtM7daHJpoPetuHQ==",
-  "_location": "/@fontsource/rasa",
-  "_phantomChildren": {},
-  "_requested": {
-    "type": "range",
-    "registry": true,
-    "raw": "@fontsource/rasa@^4.5.2",
-    "name": "@fontsource/rasa",
-    "escapedName": "@fontsource%2frasa",
-    "scope": "@fontsource",
-    "rawSpec": "^4.5.2",
-    "saveSpec": null,
-    "fetchSpec": "^4.5.2"
-  },
-  "_requiredBy": [
-    "#DEV:/"
-  ],
-  "_resolved": "https://registry.npmjs.org/@fontsource/rasa/-/rasa-4.5.2.tgz",
-  "_shasum": "963cf2fed2f3381fa4a23573ea04a6190ab0fc08",
-  "_spec": "@fontsource/rasa@^4.5.2",
-  "_where": "C:\\Users\\chris-pickering\\Documents\\r_source\\atlas-public",
-  "author": {
-    "name": "Lotus",
-    "email": "declininglotus@gmail.com"
-  },
-  "bugs": {
-    "url": "https://github.com/fontsource/fontsource/issues"
-  },
-  "bundleDependencies": false,
-  "deprecated": false,
+  "author": "Lotus <declininglotus@gmail.com>",
   "description": "Self-host the Rasa font in a neatly bundled NPM package.",
-  "gitHead": "82c412e376eb24fc0150fb8cb9af703ad11f6b57",
   "homepage": "https://github.com/fontsource/fontsource/tree/master/packages/rasa#readme",
   "keywords": [
     "fontsource",
@@ -50,9 +17,9 @@
     "access": "public"
   },
   "repository": {
+    "directory": "packages/rasa",
     "type": "git",
-    "url": "git+https://github.com/fontsource/fontsource.git",
-    "directory": "packages/rasa"
+    "url": "https://github.com/fontsource/fontsource.git"
   },
-  "version": "4.5.2"
+  "version": "4.5.3"
 }

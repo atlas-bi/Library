@@ -221,7 +221,13 @@ namespace Atlas_Web.Pages.Users
             var MyUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
             if (actionType == 1)
             {
-                _context.Add(new UserFavorite { UserId = MyUser.UserId, ItemRank = -1, ItemId = objectId, ItemType = favoriteType, ItemName = objectName == "null" ? null : objectName });
+                var type = favoriteType;
+                if (favoriteType.EndsWith("s"))
+                {
+                    type = favoriteType.Remove(favoriteType.Length - 1);
+                }
+
+                _context.Add(new UserFavorite { UserId = MyUser.UserId, ItemRank = -1, ItemId = objectId, ItemType = type, ItemName = objectName == "null" ? null : objectName });
             }
             else if (actionType == 0)
             {

@@ -1,0 +1,17 @@
+@font-face {
+    font-family: 'nytimperial';
+    src: url('/lib/fonts/impmin/subset-NYTImperial-Regular.woff2') format('woff2'),
+        url('/lib/fonts/impmin/subset-NYTImperial-Regular.woff') format('woff');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'nytimperial';
+    src: url('/lib/fonts/impmin/subset-NYTImperial-Bold.woff2') format('woff2'),
+        url('/lib/fonts/impmin/subset-NYTImperial-Bold.woff') format('woff');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
