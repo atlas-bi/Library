@@ -11,6 +11,15 @@ $fontDir: "/font/inter/";
   $fontDir: "/font/inter/files/"
 );
 
+
+@include fontFace(
+  $fontName: Inter,
+  $weight: 500,
+  $display: swap,
+  $unicodeMap: latin,
+  $fontDir: "/font/inter/files/"
+);
+
 @include fontFace(
   $fontName: Inter,
   $weight: 600,

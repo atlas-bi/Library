@@ -44,7 +44,7 @@ else
                 <!-- fav links -->
                 <div class="fav-links">
                     <div class="fav-star">
-                        <i fav-type="@result.Type" object-id="@result.AtlasId.First()" class="far fa-star @if (favorite == true) {<text>favorite</text>}"></i>
+                        <i fav-type="@result.Type.First()" object-id="@result.AtlasId.First()" class="far fa-star @if (favorite == true) {<text>favorite</text>}"></i>
                     </div>
                     <div class="fav-share darken" data-toggle="mdl" data-target="shareModal" data-type="report" data-name='@result.Name' data-url="@result.Id">
                         <i class="fas fa-share"></i>
@@ -143,7 +143,7 @@ else
                                                             else
                                                             {
                                 <div style="position: relative;">
-                                    <span class="tt-top" style="color:grey;position: relative;white-space: nowrap;cursor:default" data-tooltip="Login to Hyperspace to run report.">Run</span>
+                                    <span class="tt-top" style="color:grey;position: relative;white-space: nowrap;cursor:default" data-tooltip="Run from the Hyperspace report library.">Run</span>
                                 </div>}
                                                         }
                                 @if (result.Type.First() == "reports" && EditReportUrl != null && @Model.Permissions.Contains(38))

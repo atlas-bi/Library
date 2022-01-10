@@ -1,263 +1,249 @@
-﻿@*
-    Atlas of Information Management business intelligence library and documentation database.
-    Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*@
-
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en-us">
-<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1" />
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<link rel="stylesheet" href="/css/theme.min.css" />
+    <link rel="stylesheet" href="/css/theme.min.css" />
 
-<link rel="preload" href="/js/main.min.js" as="script" />
-<link rel="preload" href="/js/search.min.js" as="script" />
+    <link rel="preload" href="/js/main.min.js" as="script" />
+    <link rel="preload" href="/js/search.min.js" as="script" />
 
-@inject IConfiguration Configuration
-<!-- page specific css -->
-@RenderSection("css", required: false)
+    @inject IConfiguration Configuration
 
-
-@RenderSection("startJs", required: false)
-
-
-@if (ViewData["Title"] != null && ViewData["Title"].ToString().Length > 0)
-{
-    <title>@ViewData["Title"] - Atlas</title>
-}
-else
-{
-    <title>Home - Atlas of Information Management</title>
-}
-
-<!-- site message -->
-@if (@ViewData["SiteMessage"] != null && @ViewData["SiteMessage"].ToString() != "")
-{
-    <div class="site-message">
-        <img src="/img/wave.png" class="site-messageImg" />
-        <p class="site-messageText">
-            @ViewData["SiteMessage"].ToString()
-        </p>
-        <button class="site-messageClose"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 352 512"><path d="M242.72 256l100.07-100.07c12.28-12.28 12.28-32.19 0-44.48l-22.24-22.24c-12.28-12.28-32.19-12.28-44.48 0L176 189.28 75.93 89.21c-12.28-12.28-32.19-12.28-44.48 0L9.21 111.45c-12.28 12.28-12.28 32.19 0 44.48L109.28 256 9.21 356.07c-12.28 12.28-12.28 32.19 0 44.48l22.24 22.24c12.28 12.28 32.2 12.28 44.48 0L176 322.72l100.07 100.07c12.28 12.28 32.2 12.28 44.48 0l22.24-22.24c12.28-12.28 12.28-32.19 0-44.48L242.72 256z" /></svg></button>
-    </div>
-}
-
-<div class="ie-fixMinHeight">
-   
-    <!-- main container -->
-    <div class="ctn">
-        @if (@Configuration["banner_text:site_message"] != null && @Configuration["banner_text:site_message"].ToString() != "")
-        {
-    <div style="padding: 5px; text-align: center; color:red; background-color:lightblue;">@Configuration["banner_text:site_message"]</div>}
-        <nav class="sideNav">
-            @if (@Model.Permissions.Contains(19))
-            {<!-- search -->
-                    <a class="nav-link" id="nav-search" data-toggle="clps" data-target="sr-cls" data-tooltip="Open Search">
-                        <svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z" /></svg>
-                    </a>            }
-            @RenderSection("Side_Links", false)
-        </nav>
-        <nav class="nav">
-            <a class="nav-title" href="/"><span class="nav-a">A</span>tlas of Information Management</a>
-            <div class="nav-links">
-
-                <!-- mail -->
-                @{ var r = new Random();
-                                var randomNumber = r.Next(); }
-                <a class="nav-link" href="/?@randomNumber#mail">
-                    <svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path d="M464 64H48C21.49 64 0 85.49 0 112v288c0 26.51 21.49 48 48 48h416c26.51 0 48-21.49 48-48V112c0-26.51-21.49-48-48-48zm0 48v40.805c-22.422 18.259-58.168 46.651-134.587 106.49-16.841 13.247-50.201 45.072-73.413 44.701-23.208.375-56.579-31.459-73.413-44.701C106.18 199.465 70.425 171.067 48 152.805V112h416zM48 400V214.398c22.914 18.251 55.409 43.862 104.938 82.646 21.857 17.205 60.134 55.186 103.062 54.955 42.717.231 80.509-37.199 103.053-54.947 49.528-38.783 82.032-64.401 104.947-82.653V400H48z" /></svg>
-                    <span class="new-mail-badge mail-unread-cnt" id="nav_unread_message_count">0</span>
-                </a>
+    @RenderSection("css", required: false)
+    @RenderSection("startJs", required: false)
 
 
-                @if (@Model.Permissions.Contains(1) || Model.Permissions.Contains(18) || Model.Permissions.Contains(33) || Model.Permissions.Contains(34))
-                {
-    <div class="nav-drop">
-        <svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path d="m507.73 109.1c-2.24-9.03-13.54-12.09-20.12-5.51l-74.36 74.36-67.88-11.31-11.31-67.88 74.36-74.36c6.62-6.62 3.43-17.9-5.66-20.16-47.38-11.74-99.55 0.91-136.58 37.93-39.64 39.64-50.55 97.1-34.05 147.2l-213.39 213.39c-24.99 24.99-24.99 65.51 0 90.5s65.51 24.99 90.5 0l213.21-213.21c50.12 16.71 107.47 5.68 147.37-34.22 37.07-37.07 49.7-89.32 37.91-136.73zm-443.73 362.9c-13.25 0-24-10.75-24-24 0-13.26 10.75-24 24-24s24 10.74 24 24c0 13.25-10.75 24-24 24z" /></svg>
+    @if (ViewData["Title"] != null && ViewData["Title"].ToString().Length > 0)
+    {
+        <title>@ViewData["Title"] - Atlas</title>
+    }
+    else
+    {
+        <title>Home - Atlas of Information Management</title>
+    }
 
-        <div class="nav-dropBox">
-            <div class="nav-dropLiner">
-                @if (Model.Permissions.Contains(18) || Model.Permissions.Contains(1))
-                {
-    <a href="/accesscontrol">Access Control</a>}
-                @if (Model.Permissions.Contains(33) || Model.Permissions.Contains(34))
-                {
-    <a href="/parameters">Parameters</a>}
-                @if (Model.Permissions.Contains(36))
-                {
-    <a href="/analytics">Analytics</a>}
-                <a href="/tasks">Tasks</a>
-            </div>
+    <link rel="preload" href="/font/fontawesome/webfonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/font/fontawesome/webfonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/font/inter/files/inter-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin />
+</head>
+<body>
+    <!-- site message -->
+    @if (@ViewData["SiteMessage"] != null && @ViewData["SiteMessage"].ToString() != "")
+    {
+        <div class="site-message">
+            <img src="/img/wave.png" class="site-messageImg" />
+            <p class="site-messageText">
+                @ViewData["SiteMessage"].ToString()
+            </p>
+            <button class="site-messageClose"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 352 512"><path d="M242.72 256l100.07-100.07c12.28-12.28 12.28-32.19 0-44.48l-22.24-22.24c-12.28-12.28-32.19-12.28-44.48 0L176 189.28 75.93 89.21c-12.28-12.28-32.19-12.28-44.48 0L9.21 111.45c-12.28 12.28-12.28 32.19 0 44.48L109.28 256 9.21 356.07c-12.28 12.28-12.28 32.19 0 44.48l22.24 22.24c12.28 12.28 32.2 12.28 44.48 0L176 322.72l100.07 100.07c12.28 12.28 32.2 12.28 44.48 0l22.24-22.24c12.28-12.28 12.28-32.19 0-44.48L242.72 256z" /></svg></button>
         </div>
-    </div>}
+    }
+
+    <div class="ie-fixMinHeight">
+       
+        <!-- main container -->
+        <div class="ctn">
+            @if (@Configuration["banner_text:site_message"] != null && @Configuration["banner_text:site_message"].ToString() != "")
+            {
+        <div style="padding: 5px; text-align: center; color:red; background-color:lightblue;">@Configuration["banner_text:site_message"]</div>}
+            <nav class="sideNav">
+                @if (@Model.Permissions.Contains(19))
+                {<!-- search -->
+                        <a class="nav-link" id="nav-search" data-toggle="clps" data-target="sr-cls" data-tooltip="Open Search">
+                           <svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z" /></svg>
+                        </a>            }
+                @RenderSection("Side_Links", false)
+            </nav>
+            <nav class="nav">
+                <a class="nav-title" href="/"><span class="nav-a">A</span>tlas of Information Management</a>
+                <div class="nav-links">
+
+                    <!-- mail -->
+                    @{ var r = new Random();
+                                    var randomNumber = r.Next(); }
+                    <a class="nav-link" href="/?@randomNumber#mail">
+                        <svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path d="M464 64H48C21.49 64 0 85.49 0 112v288c0 26.51 21.49 48 48 48h416c26.51 0 48-21.49 48-48V112c0-26.51-21.49-48-48-48zm0 48v40.805c-22.422 18.259-58.168 46.651-134.587 106.49-16.841 13.247-50.201 45.072-73.413 44.701-23.208.375-56.579-31.459-73.413-44.701C106.18 199.465 70.425 171.067 48 152.805V112h416zM48 400V214.398c22.914 18.251 55.409 43.862 104.938 82.646 21.857 17.205 60.134 55.186 103.062 54.955 42.717.231 80.509-37.199 103.053-54.947 49.528-38.783 82.032-64.401 104.947-82.653V400H48z" /></svg>
+                        <span class="new-mail-badge mail-unread-cnt" id="nav_unread_message_count">0</span>
+                    </a>
 
 
-                <!-- main report groups -->
-                <div class="nav-drop">
-                    <svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path d="M48 48a48 48 0 1 0 48 48 48 48 0 0 0-48-48zm0 160a48 48 0 1 0 48 48 48 48 0 0 0-48-48zm0 160a48 48 0 1 0 48 48 48 48 0 0 0-48-48zm448 16H176a16 16 0 0 0-16 16v32a16 16 0 0 0 16 16h320a16 16 0 0 0 16-16v-32a16 16 0 0 0-16-16zm0-320H176a16 16 0 0 0-16 16v32a16 16 0 0 0 16 16h320a16 16 0 0 0 16-16V80a16 16 0 0 0-16-16zm0 160H176a16 16 0 0 0-16 16v32a16 16 0 0 0 16 16h320a16 16 0 0 0 16-16v-32a16 16 0 0 0-16-16z" /></svg>
+                    @if (@Model.Permissions.Contains(1) || Model.Permissions.Contains(18) || Model.Permissions.Contains(33) || Model.Permissions.Contains(34))
+                    {
+        <div class="nav-drop">
+            <svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path d="m507.73 109.1c-2.24-9.03-13.54-12.09-20.12-5.51l-74.36 74.36-67.88-11.31-11.31-67.88 74.36-74.36c6.62-6.62 3.43-17.9-5.66-20.16-47.38-11.74-99.55 0.91-136.58 37.93-39.64 39.64-50.55 97.1-34.05 147.2l-213.39 213.39c-24.99 24.99-24.99 65.51 0 90.5s65.51 24.99 90.5 0l213.21-213.21c50.12 16.71 107.47 5.68 147.37-34.22 37.07-37.07 49.7-89.32 37.91-136.73zm-443.73 362.9c-13.25 0-24-10.75-24-24 0-13.26 10.75-24 24-24s24 10.74 24 24c0 13.25-10.75 24-24 24z" /></svg>
 
-                    <div class="nav-dropBox">
-                        <div class="nav-dropLiner">
-                            <a href="/initiatives">Initiatives</a>
-                            <a href="/collections">Collections</a>
-                            <a href="/terms">Terms</a>
-                            <a href="/about_analytics">About Analytics</a>
+            <div class="nav-dropBox">
+                <div class="nav-dropLiner">
+                    @if (Model.Permissions.Contains(18) || Model.Permissions.Contains(1))
+                    {
+        <a href="/accesscontrol">Access Control</a>}
+                    @if (Model.Permissions.Contains(33) || Model.Permissions.Contains(34))
+                    {
+        <a href="/parameters">Parameters</a>}
+                    @if (Model.Permissions.Contains(36))
+                    {
+        <a href="/analytics">Analytics</a>}
+                    <a href="/tasks">Tasks</a>
+                </div>
+            </div>
+        </div>}
+
+
+                    <!-- main report groups -->
+                    <div class="nav-drop">
+                        <svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path d="M48 48a48 48 0 1 0 48 48 48 48 0 0 0-48-48zm0 160a48 48 0 1 0 48 48 48 48 0 0 0-48-48zm0 160a48 48 0 1 0 48 48 48 48 0 0 0-48-48zm448 16H176a16 16 0 0 0-16 16v32a16 16 0 0 0 16 16h320a16 16 0 0 0 16-16v-32a16 16 0 0 0-16-16zm0-320H176a16 16 0 0 0-16 16v32a16 16 0 0 0 16 16h320a16 16 0 0 0 16-16V80a16 16 0 0 0-16-16zm0 160H176a16 16 0 0 0-16 16v32a16 16 0 0 0 16 16h320a16 16 0 0 0 16-16v-32a16 16 0 0 0-16-16z" /></svg>
+
+                        <div class="nav-dropBox">
+                            <div class="nav-dropLiner">
+                                <a href="/initiatives">Initiatives</a>
+                                <a href="/collections">Collections</a>
+                                <a href="/terms">Terms</a>
+                                <a href="/about_analytics">About Analytics</a>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <a class="nav-link" href="/users" data-tooltip="Open Profile">
-                    <svg viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><path d="M224 256c70.7 0 128-57.3 128-128S294.7 0 224 0 96 57.3 96 128s57.3 128 128 128zm89.6 32h-16.7c-22.2 10.2-46.9 16-72.9 16s-50.6-5.8-72.9-16h-16.7C60.2 288 0 348.2 0 422.4V464c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48v-41.6c0-74.2-60.2-134.4-134.4-134.4z" /></svg>
-                </a>
+                    <a class="nav-link" href="/users" data-tooltip="Open Profile">
+                        <svg viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><path d="M224 256c70.7 0 128-57.3 128-128S294.7 0 224 0 96 57.3 96 128s57.3 128 128 128zm89.6 32h-16.7c-22.2 10.2-46.9 16-72.9 16s-50.6-5.8-72.9-16h-16.7C60.2 288 0 348.2 0 422.4V464c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48v-41.6c0-74.2-60.2-134.4-134.4-134.4z" /></svg>
+                    </a>
 
 
-                @if (Model.Permissions.Contains(44))
-                {
-    <div class="nav-drop">
-        @{ var ph = "";
-                            if (ViewBag.MyRole != null && ViewBag.MyRole.Name != null && ViewBag.MyRole.Name != "")
-                            {
-                                ph = ViewBag.MyRole.Name;
-                            }
-                            else
-                            {
-                                ph = "change role";
-                            } }
-        @ph
-        <div class="nav-dropBox">
-            <div class="nav-dropLiner" id="role-change">
-            </div>
-        </div>
-
-        <script>
-            q = new XMLHttpRequest();
-            q.open('post', '/Search?handler=ValueList&s=user-roles', true);
-            q.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
-            q.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-            q.send();
-            q.onload = function () {
-                var data = JSON.parse(q.responseText);
-                var el = document.getElementById('role-change');
-                for (x in data) {
-                    el.innerHTML += "<a href='/Users?handler=ChangeRole&Id=" + data[x].ObjectId + "&Url=" + window.location.href.replace(window.location.origin, '') + "'>" + data[x].Name + "</a>"
-                }
-            }
-        </script>
-    </div>}
-
-                <!-- epic navigation -->
-                @if (Helpers.HtmlHelpers.IsEpic(Context) == true)
-                {
-    <a class="nav-link" onclick="history.back()">
-        <svg viewBox="0 0 320 512" xmlns="http://www.w3.org/2000/svg">
-            <path d="M34.52 239.03L228.87 44.69c9.37-9.37 24.57-9.37 33.94 0l22.67 22.67c9.36 9.36 9.37 24.52.04 33.9L131.49 256l154.02 154.75c9.34 9.38 9.32 24.54-.04 33.9l-22.67 22.67c-9.37 9.37-24.57 9.37-33.94 0L34.52 272.97c-9.37-9.37-9.37-24.57 0-33.94z" />
-        </svg>
-    </a>
-                    <a class="nav-link" onclick="history.forward()">
-                        <svg viewBox="0 0 320 512" xmlns="http://www.w3.org/2000/svg"><path d="M285.476 272.971L91.132 467.314c-9.373 9.373-24.569 9.373-33.941 0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941 0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z" /></svg>
-                    </a>}
-            </div>
-        </nav>
-        <div class="nb-cmbsWrp"><ul class="nb-cmbs"></ul></div>
-        <div class="body">
-            <div class="body-main">
-
-                <!-- search -->
-                @if (@Model.Permissions.Contains(19))
-                {
-                    var search_placeholder = "type to search..";
-    @if (Context.Request.Path == "/users")
-    {
-        search_placeholder = "search for users..";
-    }
-    else if (Context.Request.Path == "/terms")
-    {
-        search_placeholder = "search for terms..";
-    }
-    else if (Context.Request.Path == "/collections")
-    {
-        search_placeholder = "search for collections..";
-    }
-    else if (Context.Request.Path == "/initiatives")
-    {
-        search_placeholder = "search for initiatives..";
-    }
-    else if (Context.Request.Path == "/groups")
-    {
-        search_placeholder = "search for groups..";
-    }
-                    <div class='clps clps-o' id="sr-cls">
-                        <div class="sr-grp">
-                            <input type="text" placeholder="@search_placeholder" value='@{try
-                                {@Model.SearchString}catch{}}' maxlength="80" required />
-                            <!--<icon class="sr-fav"><i class="far fa-star"></i></icon>-->
-                            <icon><svg class="icon-sm" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z" /></svg></icon>
-                            <div class="sr-hst"></div>
-                        </div>
-                    </div>}
-
-                <div class="body-mainCtn">
-                    @RenderBody()
-                </div>
-
-            </div>
-
-            <!-- sidebar -->
-            <div class="body-side" id="AdColTwo">
-                @if (ViewBag.AdLists != null)
-                {
-    <div id="related-reports"></div>
-                    @foreach (var ad in ViewBag.AdLists)
+                    @if (Model.Permissions.Contains(44))
                     {
-    <div class="col" data-ajax="yes" data-url="@ad.Url"></div>}}
+        <div class="nav-drop">
+            @{ var ph = "";
+                                if (ViewBag.MyRole != null && ViewBag.MyRole.Name != null && ViewBag.MyRole.Name != "")
+                                {
+                                    ph = ViewBag.MyRole.Name;
+                                }
+                                else
+                                {
+                                    ph = "change role";
+                                } }
+            @ph
+            <div class="nav-dropBox">
+                <div class="nav-dropLiner" id="role-change">
+                </div>
             </div>
+
+            <script>
+                q = new XMLHttpRequest();
+                q.open('post', '/Search?handler=ValueList&s=user-roles', true);
+                q.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+                q.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+                q.send();
+                q.onload = function () {
+                    var data = JSON.parse(q.responseText);
+                    var el = document.getElementById('role-change');
+                    for (x in data) {
+                        el.innerHTML += "<a href='/Users?handler=ChangeRole&Id=" + data[x].ObjectId + "&Url=" + window.location.href.replace(window.location.origin, '') + "'>" + data[x].Name + "</a>"
+                    }
+                }
+            </script>
+        </div>}
+
+                    <!-- epic navigation -->
+                    @if (Helpers.HtmlHelpers.IsEpic(Context) == true)
+                    {
+        <a class="nav-link" onclick="history.back()">
+            <svg viewBox="0 0 320 512" xmlns="http://www.w3.org/2000/svg">
+                <path d="M34.52 239.03L228.87 44.69c9.37-9.37 24.57-9.37 33.94 0l22.67 22.67c9.36 9.36 9.37 24.52.04 33.9L131.49 256l154.02 154.75c9.34 9.38 9.32 24.54-.04 33.9l-22.67 22.67c-9.37 9.37-24.57 9.37-33.94 0L34.52 272.97c-9.37-9.37-9.37-24.57 0-33.94z" />
+            </svg>
+        </a>
+                        <a class="nav-link" onclick="history.forward()">
+                            <svg viewBox="0 0 320 512" xmlns="http://www.w3.org/2000/svg"><path d="M285.476 272.971L91.132 467.314c-9.373 9.373-24.569 9.373-33.941 0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941 0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z" /></svg>
+                        </a>}
+                </div>
+            </nav>
+            <div class="nb-cmbsWrp"><ul class="nb-cmbs"></ul></div>
+            <div class="body">
+                <div class="body-main">
+
+                    <!-- search -->
+                    @if (@Model.Permissions.Contains(19))
+                    {
+                        var search_placeholder = "type to search..";
+        @if (Context.Request.Path == "/users")
+        {
+            search_placeholder = "search for users..";
+        }
+        else if (Context.Request.Path == "/terms")
+        {
+            search_placeholder = "search for terms..";
+        }
+        else if (Context.Request.Path == "/collections")
+        {
+            search_placeholder = "search for collections..";
+        }
+        else if (Context.Request.Path == "/initiatives")
+        {
+            search_placeholder = "search for initiatives..";
+        }
+        else if (Context.Request.Path == "/groups")
+        {
+            search_placeholder = "search for groups..";
+        }
+                        <div class='clps clps-o' id="sr-cls">
+                            <div class="sr-grp">
+                                <input type="text" placeholder="@search_placeholder" value='@{try
+                                    {@Model.SearchString}catch{}}' maxlength="80" required />
+                                <!--<icon class="sr-fav"><i class="far fa-star"></i></icon>-->
+                                <icon><svg class="icon-sm" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z" /></svg></icon>
+                                <div class="sr-hst"></div>
+                            </div>
+                        </div>}
+
+                    <div class="body-mainCtn">
+                        @RenderBody()
+                    </div>
+
+                </div>
+
+                <!-- sidebar -->
+                <div class="body-side" id="AdColTwo">
+                    @if (ViewBag.AdLists != null)
+                    {
+        <div id="related-reports"></div>
+                        @foreach (var ad in ViewBag.AdLists)
+                        {
+        <div class="col" data-ajax="yes" data-url="@ad.Url"></div>}}
+                </div>
+            </div>
+
+            <!-- footer -->
+            <partial name="_Footer" />
+            <button id="back-to-top" class="back-to-top" role="button"><svg class="icon-sm" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" role="img" viewBox="0 0 448 512"><path fill="currentColor" d="M240.971 130.524l194.343 194.343c9.373 9.373 9.373 24.569 0 33.941l-22.667 22.667c-9.357 9.357-24.522 9.375-33.901.04L224 227.495 69.255 381.516c-9.379 9.335-24.544 9.317-33.901-.04l-22.667-22.667c-9.373-9.373-9.373-24.569 0-33.941L207.03 130.525c9.372-9.373 24.568-9.373 33.941-.001z" /></svg></button>
+
         </div>
-
-        <!-- footer -->
-        <partial name="_Footer" />
-        <button id="back-to-top" class="back-to-top" role="button"><svg class="icon-sm" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" role="img" viewBox="0 0 448 512"><path fill="currentColor" d="M240.971 130.524l194.343 194.343c9.373 9.373 9.373 24.569 0 33.941l-22.667 22.667c-9.357 9.357-24.522 9.375-33.901.04L224 227.495 69.255 381.516c-9.379 9.335-24.544 9.317-33.901-.04l-22.667-22.667c-9.373-9.373-9.373-24.569 0-33.941L207.03 130.525c9.372-9.373 24.568-9.373 33.941-.001z" /></svg></button>
-
     </div>
-</div>
 
-<div class="prg"><div class="prg-b" style="width: 0%"></div></div>
-<div class="mail-notification-container"></div>
-<partial name="_Messagebox" />
-<partial name="modals\_Modals" />
-<partial name="modals\_image" />
+    <div class="prg"><div class="prg-b" style="width: 0%"></div></div>
+    <div class="mail-notification-container"></div>
+    <partial name="_Messagebox" />
+    <partial name="modals\_Modals" />
+    <partial name="modals\_image" />
 
-<div class="no-loader" data-ajax="yes" data-url="/index?Handler=WelcomeVideo" data-loadtag=".video"></div>
+    <div class="no-loader" data-ajax="yes" data-url="/index?Handler=WelcomeVideo" data-loadtag=".video"></div>
 
-<link rel="preload" href="/font/fontawesome/webfonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin />
-<link rel="preload" href="/font/fontawesome/webfonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin />
-<link rel="preload" href="/font/inter/files/inter-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin />
+    
 
-<!-- javascript.. insane way to load js in order to keep c# hashtag -->
-<textarea style="display:none" class="postLoadScripts"><script src="/js/search.min.js" async></script><script src="/js/utility.min.js" async></script>@if(!Context.Request.Headers["User-Agent"].ToString().Contains("Trident")){<script src="/js/code.min.js" async></script>}</textarea>
-<textarea style="display:none" class="tabScripts"><script src="/js/tabs.min.js"></script></textarea>
-<textarea style="display:none" class="polyfillScripts"><script src="/js/polyfill.min.js"></script></textarea>
-<textarea style="display:none" class="collapseScripts"><script src="/js/collapse.min.js" async></script></textarea>
-<textarea style="display:none" class="carouselScripts"><script src="/js/carousel.min.js" async></script></textarea>
-<textarea style="display:none" class="tableScripts"><script src="/js/table.min.js" async></script></textarea>
-<textarea style="display:none" class="dragScripts"><script src="/js/drag.min.js" async></script></textarea>
-<textarea style="display:none" class="chartScripts"><script src="/js/charts.min.js" async></script></textarea>
-<textarea style="display:none" class="inputScripts"><script src="/js/input.min.js" async></script></textarea>
-<textarea style="display:none" class="commentsScripts"><script src="/js/comments.min.js" async></script></textarea>
-<textarea style="display:none" class="dropdownScripts"><script src="/js/dropdown.min.js" async></script></textarea>
-<script src="/js/main.min.js"></script>
+    <!-- javascript.. insane way to load js in order to keep c# hashtag -->
+    <textarea style="display:none" class="postLoadScripts"><script src="/js/search.min.js" async></script><script src="/js/utility.min.js" async></script>@if(!Context.Request.Headers["User-Agent"].ToString().Contains("Trident")){<script src="/js/code.min.js" async></script>}</textarea>
+    <textarea style="display:none" class="tabScripts"><script src="/js/tabs.min.js"></script></textarea>
+    <textarea style="display:none" class="polyfillScripts"><script src="/js/polyfill.min.js"></script></textarea>
+    <textarea style="display:none" class="collapseScripts"><script src="/js/collapse.min.js" async></script></textarea>
+    <textarea style="display:none" class="carouselScripts"><script src="/js/carousel.min.js" async></script></textarea>
+    <textarea style="display:none" class="tableScripts"><script src="/js/table.min.js" async></script></textarea>
+    <textarea style="display:none" class="dragScripts"><script src="/js/drag.min.js" async></script></textarea>
+    <textarea style="display:none" class="chartScripts"><script src="/js/charts.min.js" async></script></textarea>
+    <textarea style="display:none" class="inputScripts"><script src="/js/input.min.js" async></script></textarea>
+    <textarea style="display:none" class="commentsScripts"><script src="/js/comments.min.js" async></script></textarea>
+    <textarea style="display:none" class="dropdownScripts"><script src="/js/dropdown.min.js" async></script></textarea>
+    <script src="/js/main.min.js"></script>
 
-@RenderSection("js", required: false)
+    @RenderSection("js", required: false)
+</body>
+</html>

@@ -195,7 +195,7 @@ namespace Atlas_Web.Helpers
                               where ug.User.Username == username
                               select ug.GroupId).Contains(g.GroupId)
                        select g.GroupId).ToList().Count();
-            if (hrx > 1)
+            if (hrx >= 1)
             {
                 return true;
             }
@@ -206,7 +206,7 @@ namespace Atlas_Web.Helpers
                               where ug.User.Username == username
                               select ug.GroupId).Contains(g.GroupId)
                        select g.GroupId).ToList().Count();
-            if (hrg > 1)
+            if (hrg >= 1)
             {
                 return true;
             }
