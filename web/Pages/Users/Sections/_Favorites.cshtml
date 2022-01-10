@@ -71,13 +71,11 @@
                         </div>
                         <div class="fav-body">
                             <div class="snippet-col">
-                                @if (q.Image != null && q.Image != "")
-                                {
-                                    <div class="snippet-left">
-                                        <div class="thumb">
-                                            <img data-src="@q.Image" src="/img/loader.gif" />
-                                        </div>
-                                    </div>}
+                                <div class="snippet-left">
+                                    <figure class="image is-96x96 pop">
+                                        <img data-src="/data/img?handler=Thumb&id=@q.ItemId&size=96x96" src="/img/loader.gif" />
+                                    </figure>
+                                </div>
                                 <div class="snippet-right">
                                     <h5 class="fav-title" data-toggle="clps" data-target="clps-@q.FavoriteId">
                                         @if (q.ItemType == "Search")

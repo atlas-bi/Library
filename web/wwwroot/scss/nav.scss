@@ -15,46 +15,46 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-.new-mail-badge {
-  background-color: #fc433a;
-  border: 1px solid #f4f5f6;
-  border-radius: 18px;
-  color: #fff;
-  display: none;
-  font-family: sf, "Lucida Sans Unicode", "Lucida Grande", sans-serif;
-  font-size: 14px;
-  font-weight: 600;
-  line-height: 16px;
-  min-width: 18px;
-  padding: 0 4px 0 5px;
-  position: absolute;
-  right: 0;
-  top: -4px;
-}
+// .new-mail-badge {
+//   background-color: #fc433a;
+//   border: 1px solid #f4f5f6;
+//   border-radius: 18px;
+//   color: #fff;
+//   display: none;
+//   font-family: sf, "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+//   font-size: 14px;
+//   font-weight: 600;
+//   line-height: 16px;
+//   min-width: 18px;
+//   padding: 0 4px 0 5px;
+//   position: absolute;
+//   right: 0;
+//   top: -4px;
+// }
 
-.nav {
-  padding: 15px;
-  width: 100%;
-}
+// .nav {
+//   padding: 15px;
+//   width: 100%;
+// }
 
-.nav-title {
-  color: #575353;
-  display: inline-block;
-  font-family: "nytcheltenham", "Georgia", "Times New Roman", serif;
-  font-size: 30px;
-  font-stretch: expanded;
-  position: relative;
-  text-decoration: none;
-}
+// .nav-title {
+//   color: #575353;
+//   display: inline-block;
+//   font-family: "nytcheltenham", "Georgia", "Times New Roman", serif;
+//   font-size: 30px;
+//   font-stretch: expanded;
+//   position: relative;
+//   text-decoration: none;
+// }
 
-.nav-a {
-  font-family: "marck_scriptregular", "Georgia", "Times New Roman", serif;
-  font-size: 80px;
-  left: -70px;
-  padding-right: 10px;
-  position: absolute;
-  top: -19px;
-}
+// .nav-a {
+//   font-family: "marck_scriptregular", "Georgia", "Times New Roman", serif;
+//   font-size: 80px;
+//   left: -70px;
+//   padding-right: 10px;
+//   position: absolute;
+//   top: -19px;
+// }
 
 .nav-links {
   display: inline-block;
@@ -179,7 +179,7 @@
 .sideNav {
   left: -40px;
   position: absolute;
-  top: 116px;
+  top: 40px;
   width: auto;
   z-index: 1;
 }

@@ -34,6 +34,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="NUglify" Version="1.13.3" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="1.0.4" />
     <PackageReference Include="SolrNet" Version="1.0.19" />
     <PackageReference Include="SolrNet.Core" Version="1.0.19" />
     <PackageReference Include="SolrNet.Microsoft.DependencyInjection" Version="1.0.19" />
@@ -43,10 +44,10 @@
     
   </ItemGroup>
 	<ItemGroup>
-		<None Update="solr\**\*"  CopyToOutputDirectory="PreserveNewest"  />
+		<None Update="solr\**\*" CopyToOutputDirectory="PreserveNewest" />
 	</ItemGroup>
 	<ItemGroup>
-		<None Include="solr\**\*" CopyToPublishDirectory="PreserveNewest"/>
+		<None Include="solr\**\*" CopyToPublishDirectory="PreserveNewest" />
 	</ItemGroup>
   <ItemGroup>
     <Folder Include="Pages\API\Partials\" />

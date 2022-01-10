@@ -168,3 +168,40 @@ img[data-src] {
 .ss-content pre {
   padding: unset;
 }
+
+
+.atlas-navbar {
+  padding-left: 15px;
+  font-family: $family-sans-serif;
+}
+
+.atlas-navbar .navbar-brand img {
+  width: 130px !important;
+  height: 40px !important;
+  margin-top: 6px;
+  margin-bottom: -2px;
+}
+
+.is-flex-widescreen {
+  display:none !important;
+}
+@media screen and (min-width: $widescreen) {
+  .atlas-navbar {
+    padding: 15px 0;
+  }
+
+  .atlas-navbar .navbar-brand img  {
+    width: 182px !important;
+    height: 56px !important;
+  }
+
+  .is-flex-widescreen {
+    display: flex !important;
+  }
+}
+
+a.navbar-item:hover,
+a.navbar-link:hover,
+.navbar-item.has-dropdown:hover .navbar-link {
+  background: transparent;
+}

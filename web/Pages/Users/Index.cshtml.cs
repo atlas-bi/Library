@@ -453,7 +453,6 @@ namespace Atlas_Web.Pages.Users
                                 FolderId = q.FolderId,
                                 FolderName = q.Folder.FolderName,
                                 ItemRank = q.ItemRank,
-                                Image = ro.ReportObjectImagesDocs.Any() ? "/data/img?id=" + ro.ReportObjectImagesDocs.First().ImageId : "",
                                 EpicReleased = ro.CertificationTag,
                                 FolderRank = q.Folder.FolderRank,
                                 Description = (ro.ReportObjectDoc.DeveloperDescription ?? ro.Description ?? ro.DetailedDescription ?? ro.ReportObjectDoc.KeyAssumptions
