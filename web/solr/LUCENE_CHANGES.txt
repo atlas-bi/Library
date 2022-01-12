@@ -3,6 +3,69 @@ Lucene Change Log
 For more information on past and future Lucene versions, please see:
 http://s.apache.org/luceneversions
 
+======================= Lucene 8.11.1 =======================
+
+Bug Fixes
+---------------------
+(No changes)
+
+======================= Lucene 8.11.0 =======================
+
+API Changes
+---------------------
+(No changes)
+
+New Features
+---------------------
+(No changes)
+
+Improvements
+---------------------
+
+* LUCENE-9662: Make CheckIndex concurrent by parallelizing index check across segments.
+  (Zach Chen, Mike McCandless, Dawid Weiss, Robert Muir)
+
+* LUCENE-10103: Make QueryCache respect Accountable queries. (Haoyu Zhai)
+
+Optimizations
+---------------------
+
+* LUCENE-9673: Substantially improve RAM efficiency of how MemoryIndex stores
+  postings in memory, and reduced a bit of RAM overhead in
+  IndexWriter's internal postings book-keeping (mashudong)
+
+* LUCENE-10196: Improve IntroSorter with 3-ways partitioning. (Bruno Roustant)
+
+Bug Fixes
+---------------------
+
+* LUCENE-10111: Missing calculating the bytes used of DocsWithFieldSet in NormValuesWriter.
+  (Lu Xugang)
+
+* LUCENE-10116: Missing calculating the bytes used of DocsWithFieldSet and currentValues in SortedSetDocValuesWriter.
+  (Lu Xugang)
+
+* LUCENE-10070 Skip deleted docs when accumulating facet counts for all docs. (Ankur Goel, Greg Miller)
+
+* LUCENE-10134: ConcurrentSortedSetDocValuesFacetCounts shouldn't share liveDocs Bits across threads.
+  (Ankur Goel)
+
+* LUCENE-10008: Respect ignoreCase in CommonGramsFilterFactory (Vigya Sharma)
+
+* LUCENE-10154: NumericLeafComparator to define getPointValues. (Mayya Sharipova, Adrien Grand)
+
+* LUCENE-10208: Ensure that the minimum competitive score does not decrease in concurrent search. (Jim Ferenczi, Adrien Grand)
+
+Build
+---------------------
+
+* LUCENE-10104, SOLR-15631: Upgrade forbiddenapis to version 3.2.  (Uwe Schindler)
+
+Other
+---------------------
+
+* LUCENE-10098: Add docs/links to GermanAnalyzer describing how to decompound nouns. (Robert Muir)
+
 ======================= Lucene 8.10.1 =======================
 
 Bug Fixes

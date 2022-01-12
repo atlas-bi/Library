@@ -63,6 +63,16 @@ $title-family: $family-serif;
 @import "./mail/mail-newMessage";
 @import "./query";
 
+html {
+  height: 100%;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  font-weight: 500;
+}
 
 @media screen and (min-width: $desktop) {
   .atlas-navbar .navbar-start {
@@ -173,6 +183,30 @@ img[data-src] {
 .atlas-navbar {
   padding-left: 15px;
   font-family: $family-sans-serif;
+}
+.breadcrumb {
+  font-family: $family-sans-serif;
+}
+.footer {
+  font-family: $family-sans-serif;
+}
+.column {
+  min-width: 1px;
+}
+
+/* fix nav dropdown in IE 11. focus within breaks it all */
+@include desktop {
+    .navbar-item {
+        &.is-hoverable:hover {
+            .navbar-dropdown {
+                display: block;
+            }
+        }
+    }
+}
+
+.icon.is-large .fa-lg .fa-play-circle {
+  font-size: 1.8em !important;
 }
 
 .atlas-navbar .navbar-brand img {

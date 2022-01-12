@@ -1,23 +1,7 @@
-@*
-    Atlas of Information Management business intelligence library and documentation database.
-    Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
 
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*@
 
 @model Atlas_Web.Pages.Collections.IndexModel
-
+@inject IConfiguration Configuration
 
 @if (ViewBag.RelatedReports.Count > 0)
 {
@@ -94,7 +78,8 @@
 
 </div>}}
 
-
+@if (@Configuration["features:enable_terms"] == null || @Configuration["features:enable_terms"].ToString().ToLower() == "true")
+{
 @if (ViewBag.RelatedTerms.Count > 0)
 {
 
@@ -112,4 +97,5 @@
         </div>
     </div>
     }
+}
 }

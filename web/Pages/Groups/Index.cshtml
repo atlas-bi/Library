@@ -1,22 +1,6 @@
-﻿@*
-    Atlas of Information Management business intelligence library and documentation database.
-    Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
+﻿@page
+@inject IConfiguration Configuration
 
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*@
-
-@page
 @model Atlas_Web.Pages.Groups.IndexModel
 @{ Layout = HttpContext.Request.Headers["x-requested-with"] == "XMLHttpRequest" ? "../Shared/_AjaxLayout.cshtml" : "../Shared/_Layout.cshtml"; }
 @{ ViewData["Title"] = @Model.Group.Name; }
@@ -65,7 +49,8 @@
                             @foreach (var s in Model.GroupUsers)
                             {
             <tr>
-                <td><a href="\Users?id=@s.Id">@s.Name</a></td>
+                <td>@if (@Configuration["features:enable_user_profile"] == null || @Configuration["features:enable_user_profile"].ToString().ToLower() == "true")
+                    {<a href="\Users?id=@s.Id">@s.Name</a>} else {@s.Name}</td>
                 <td>
                     @if (s.Email != "")
                     {<a href="mailto:@s.Email">@s.Email</a>}

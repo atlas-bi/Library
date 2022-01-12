@@ -1,7 +1,7 @@
 
 @model Atlas_Web.Pages.Collections.IndexModel
 @using Atlas_Web.Helpers
-
+@inject IConfiguration Configuration
 
 <div class="pageTitle">
     <h2 class="pageTitle-head">
@@ -23,7 +23,9 @@
         @if (Model.Collection.MilestoneTasks.Count() > 0)
         {
     <a href="#milestone" class="pageNav-link">Milestones</a>}
+    @if (@Configuration["features:enable_comments"] == null || @Configuration["features:enable_comments"].ToString().ToLower() == "true"){
         <a href="#comments" class="pageNav-link">Comments</a>
+    }
     </div>
 </div>
 
@@ -61,7 +63,9 @@
 <partial name="Details/_Milestones.cshtml"></partial>}
 </section>
 
+@if (@Configuration["features:enable_comments"] == null || @Configuration["features:enable_comments"].ToString().ToLower() == "true"){
 <section class="pageSection">
     <span class="location" id="comments"></span>
     <div class="comments" data-ajax="yes" data-url="/collections?Handler=Comments&id=@Model.Collection.Id"></div>
 </section>
+}

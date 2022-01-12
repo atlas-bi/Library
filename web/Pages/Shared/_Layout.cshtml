@@ -115,19 +115,28 @@
                         </div>
                         <div class="navbar-dropdown">
                             <hr class=" hide-desktop dropdown-divider">
-                            <a class="navbar-item" href="/initiatives">Initiatives</a>
+                            @if (@Configuration["features:enable_initiatives"] == null || @Configuration["features:enable_initiatives"].ToString().ToLower() == "true")
+                            {
+                                <a class="navbar-item" href="/initiatives">Initiatives</a>
+                            }
                             <a class="navbar-item" href="/collections">Collections</a>
-                            <a class="navbar-item" href="/terms">Terms</a>
+                            @if (@Configuration["features:enable_terms"] == null || @Configuration["features:enable_terms"].ToString().ToLower() == "true")
+                            {
+                                <a class="navbar-item" href="/terms">Terms</a>
+                            }
                             <hr class="dropdown-divider">
                             <a class="navbar-item" href="/about_analytics">About Analytics</a>
                         </div>
                     </div>
+                    @if (@Configuration["features:enable_user_profile"] == null || @Configuration["features:enable_user_profile"].ToString().ToLower() == "true")
+                    {
                     <a class="navbar-item" href="/users}" data-tooltip="Open Profile">
                         <span class="icon is-medium">
                             <i class="fas fa-lg fa-user"></i>
                         </span>
                         <span class="hide-desktop">Profile</span>
                     </a>
+                    }
 
                     @if (Model.Permissions.Contains(44))
                     {
@@ -168,73 +177,84 @@
                     <!-- epic navigation -->
                     @if (Helpers.HtmlHelpers.IsEpic(Context) == true)
                     {
-                    <a class="nav-link" onclick="history.back()">
-                        <span class="icon">
-                            <i class="fas fa-chevron-left"></i>
-                        </span>
-                    </a>
-                    <a class="nav-link" onclick="history.forward()">
-                       <span class="icon">
-                            <i class="fas fa-chevron-right"></i>
-                        </span>
-                    </a>}
+                        <a class="navbar-item"onclick="history.back()">
+                            <span class="icon is-medium">
+                                <i class="fas fa-chevron-left"></i>
+                            </span>
+                        </a>
+                        <a class="navbar-item"onclick="history.forward()">
+                            <span class="icon is-medium">
+                                <i class="fas fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    }
                 </div>
             </div>
         </div>
     </nav>
+    <section class="section my-5 py-0">
+            <div class="container">
+                <nav class="breadcrumb">
+                </nav>
+            </div>
+    </section>
 
 
-    <div class="ie-fixMinHeight">
-
-        <!-- main container -->
-        <div class="ctn">
-
-            <nav class="sideNav">
-                @if (@Model.Permissions.Contains(19))
-                {<!-- search -->
-                <a class="nav-link" id="nav-search" data-toggle="clps" data-target="sr-cls" data-tooltip="Open Search">
-                    <svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z" /></svg>
-                </a>            }
-                @RenderSection("Side_Links", false)
-            </nav>
-
-            <div class="nb-cmbsWrp"><ul class="nb-cmbs"></ul></div>
-            <div class="body">
-                <div class="body-main">
-
-                    <!-- search -->
+    <section class="is-flex-grow-1">
+        <div class="container is-relative">
+            <div class="columns">
+                <div class="column is-narrow">
+                    <aside class="menu sticky">
+                        <ul>
+                            @if (@Model.Permissions.Contains(19))
+                            {<!-- search -->
+                                <li>
+                                    <a class="" id="nav-search" data-toggle="clps" data-target="sr-cls" data-tooltip="Open Search">
+                                        <span class="icon has-text-grey is-large">
+                                            <i class="fas fa-lg fa-search"></i>
+                                        </span>
+                                    </a>
+                                </li>          }
+                            @RenderSection("Side_Links", false)
+                        </ul>
+                    </aside>
+                </div>
+                <div class="column">
                     @if (@Model.Permissions.Contains(19))
                     {
                         var search_placeholder = "type to search..";
-                    @if (Context.Request.Path == "/users")
-        {
-            search_placeholder = "search for users..";
-        }
-        else if (Context.Request.Path == "/terms")
-        {
-            search_placeholder = "search for terms..";
-        }
-        else if (Context.Request.Path == "/collections")
-        {
-            search_placeholder = "search for collections..";
-        }
-        else if (Context.Request.Path == "/initiatives")
-        {
-            search_placeholder = "search for initiatives..";
-        }
-        else if (Context.Request.Path == "/groups")
-        {
-            search_placeholder = "search for groups..";
-        }
-                    <div class='clps clps-o' id="sr-cls">
-                        <div class="sr-grp">
-                            <input type="text" placeholder="@search_placeholder" value='@{try
-                                    {@Model.SearchString}catch{}}' maxlength="80" required />
-                            <!--<icon class="sr-fav"><i class="far fa-star"></i></icon>-->
-                            <icon><svg class="icon-sm" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z" /></svg></icon>
-                            <div class="sr-hst"></div>
+
+                        @if (Context.Request.Path == "/users")
+                        {
+                            search_placeholder = "search for users..";
+                        }
+                        else if (Context.Request.Path == "/terms")
+                        {
+                            search_placeholder = "search for terms..";
+                        }
+                        else if (Context.Request.Path == "/collections")
+                        {
+                            search_placeholder = "search for collections..";
+                        }
+                        else if (Context.Request.Path == "/initiatives")
+                        {
+                            search_placeholder = "search for initiatives..";
+                        }
+                        else if (Context.Request.Path == "/groups")
+                        {
+                            search_placeholder = "search for groups..";
+                        }
+
+                        <div class='clps clps-o' id="sr-cls">
+                            <div class="sr-grp">
+                                <input type="text" placeholder="@search_placeholder" value='@{try
+                                        {@Model.SearchString}catch{}}' maxlength="80" required />
+                                <!--<icon class="sr-fav"><i class="far fa-star"></i></icon>-->
+                                <icon><svg class="icon-sm" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z" /></svg></icon>
+                                <div class="sr-hst"></div>
+                            </div>
                         </div>
-                    </div>}
+                    }
 
                     <div class="body-mainCtn">
                         @RenderBody()
@@ -242,8 +262,8 @@
 
                 </div>
 
+                <div class="column is-one-third is-hidden-mobile" id="AdColTwo">
                 <!-- sidebar -->
-                <div class="body-side" id="AdColTwo">
                     @if (ViewBag.AdLists != null)
                     {
                     <div id="related-reports"></div>
@@ -252,13 +272,10 @@
                     <div class="col" data-ajax="yes" data-url="@ad.Url"></div>}}
                 </div>
             </div>
-
-            <!-- footer -->
-            <partial name="_Footer" />
-            <button id="back-to-top" class="back-to-top" role="button"><svg class="icon-sm" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" role="img" viewBox="0 0 448 512"><path fill="currentColor" d="M240.971 130.524l194.343 194.343c9.373 9.373 9.373 24.569 0 33.941l-22.667 22.667c-9.357 9.357-24.522 9.375-33.901.04L224 227.495 69.255 381.516c-9.379 9.335-24.544 9.317-33.901-.04l-22.667-22.667c-9.373-9.373-9.373-24.569 0-33.941L207.03 130.525c9.372-9.373 24.568-9.373 33.941-.001z" /></svg></button>
-
         </div>
-    </div>
+        </section>
+        <partial name="_Footer" />
+
 
     <div class="prg"><div class="prg-b" style="width: 0%"></div></div>
     <div class="mail-notification-container"></div>
@@ -266,8 +283,9 @@
     <partial name="modals\_Modals" />
     <partial name="modals\_image" />
 
-    <div class="no-loader" data-ajax="yes" data-url="/index?Handler=WelcomeVideo" data-loadtag=".video"></div>
-
+     @if (@Configuration["features:enable_demo_video"] == null || @Configuration["features:enable_demo_video"].ToString().ToLower() == "true"){
+        <div class="no-loader" data-ajax="yes" data-url="/index?Handler=WelcomeVideo" data-loadtag=".video"></div>
+    }
 
 
     <!-- javascript.. insane way to load js in order to keep c# hashtag -->

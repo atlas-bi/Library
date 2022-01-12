@@ -112,51 +112,51 @@
   z-index: 1;
 }
 
-.nb-cmbsWrp {
-  display: inline-block;
-  height: 20px;
-  margin: 0;
-  margin-top: -20px;
-  overflow: hidden;
-  padding: 0;
-  padding-left: 15px;
-  padding-right: 15px;
-}
+// .nb-cmbsWrp {
+//   display: inline-block;
+//   height: 20px;
+//   margin: 0;
+//   margin-top: -20px;
+//   overflow: hidden;
+//   padding: 0;
+//   padding-left: 15px;
+//   padding-right: 15px;
+// }
 
-.nb-cmbs {
-  display: inline-block;
-  font-family: sf, "Lucida Sans Unicode", "Lucida Grande", sans-serif;
-  font-size: 14px;
-  font-weight: 600;
-  height: 20px;
-  letter-spacing: 0.3px;
-  list-style: none;
-  margin: 0;
-  margin-bottom: 10px;
-  min-width: 100%;
-  opacity: 0;
-  overflow: hidden;
-  padding: 0;
-  transition: opacity 0.3s;
-  white-space: nowrap;
-}
+// .nb-cmbs {
+//   display: inline-block;
+//   font-family: sf, "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+//   font-size: 14px;
+//   font-weight: 600;
+//   height: 20px;
+//   letter-spacing: 0.3px;
+//   list-style: none;
+//   margin: 0;
+//   margin-bottom: 10px;
+//   min-width: 100%;
+//   opacity: 0;
+//   overflow: hidden;
+//   padding: 0;
+//   transition: opacity 0.3s;
+//   white-space: nowrap;
+// }
 
-.nb-cmbs li {
-  display: inline-block;
-  max-width: 130px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
+// .nb-cmbs li {
+//   display: inline-block;
+//   max-width: 130px;
+//   overflow: hidden;
+//   text-overflow: ellipsis;
+// }
 
-.nb-cmbs li:first-of-type {
-  color: #0084db;
-}
+// .nb-cmbs li:first-of-type {
+//   color: #0084db;
+// }
 
-.nb-cmbs li + li::before {
-  color: #575353;
-  content: "/";
-  margin: 8px;
-}
+// .nb-cmbs li + li::before {
+//   color: #575353;
+//   content: "/";
+//   margin: 8px;
+// }
 
 .sideNav a {
   border: 1px solid #eee;
@@ -177,14 +177,19 @@
 }
 
 .sideNav {
-  left: -40px;
-  position: absolute;
-  top: 40px;
-  width: auto;
-  z-index: 1;
+  // left: -40px;
+  // position: absolute;
+  // top: 40px;
+  // width: auto;
+  // z-index: 1;
 }
 
 .sideNav.sticky {
   position: fixed;
   top: 42px;
+}
+
+.sticky {
+  position: sticky;
+  top:40px;
 }

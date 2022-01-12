@@ -46,15 +46,19 @@ else
                     <div class="fav-star">
                         <i fav-type="@result.Type.First()" object-id="@result.AtlasId.First()" class="far fa-star @if (favorite == true) {<text>favorite</text>}"></i>
                     </div>
-                    <div class="fav-share darken" data-toggle="mdl" data-target="shareModal" data-type="report" data-name='@result.Name' data-url="@result.Id">
-                        <i class="fas fa-share"></i>
-                    </div>
+                    @if (@Configuration["features:enable_sharing"] == null || @Configuration["features:enable_sharing"].ToString().ToLower() == "true")
+                    {
+                        <div class="fav-share darken" data-toggle="mdl" data-target="shareModal" data-type="report" data-name='@result.Name' data-url="@result.Id">
+                            <i class="fas fa-share"></i>
+                        </div>
+                    }
                     @if (RunReportUrl != null && RunReportUrl != "")
-                                                        {
+                        {
+                        @if (@Configuration["features:enable_request_access"] == null || @Configuration["features:enable_request_access"].ToString().ToLower() == "true"){
                     <div class="fav-access" data-toggle="mdl" data-target="requestAccessModal" data-name="@result.Name" data-name-clean='@result.Name.Replace("_"," ")'>
                         <i class="fas fa-universal-access"></i>
                     </div>
-                                                        }
+                                                        }}
                 </div>
 
 

@@ -73,7 +73,7 @@ namespace Atlas_Web
                 /************   javascript   *************/
 
                 // for ie11
-                pipeline.AddJavaScriptBundle("/js/polyfill.min.js", "js/utility/polyfill.js");
+                pipeline.AddJavaScriptBundle("/js/polyfill.min.js", "js/utility/polyfill.js", "lib/focus-within-polyfill/index.js");
 
                 pipeline.AddJavaScriptBundle("/js/realtime.min.js", "js/realtime.js");
 
@@ -94,7 +94,8 @@ namespace Atlas_Web
                                                                   "js/video.js",
                                                                   "js/messagebox.js",
                                                                   "js/mail.js",
-                                                                  "js/analytics.js");
+                                                                  "js/analytics.js",
+                                                                  "js/utility/hamburger.js");
 
                 pipeline.AddJavaScriptBundle("/js/tabs.min.js", "js/utility/tabs.js");
                 pipeline.AddJavaScriptBundle("/js/collapse.min.js", "js/utility/collapse.js");

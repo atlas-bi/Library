@@ -1,21 +1,4 @@
-@*
-    Atlas of Information Management business intelligence library and documentation database.
-    Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*@
-
+@inject IConfiguration Configuration
 @model Atlas_Web.Pages.Terms.IndexModel
 <div class="pageTitle">
     <div class="page-title">
@@ -39,8 +22,9 @@
         {
             <a href="#reports" class="pageNav-link">Reports</a>
         }
-
+         @if (@Configuration["features:enable_comments"] == null || @Configuration["features:enable_comments"].ToString().ToLower() == "true"){
         <a href="#comments" class="pageNav-link">Comments</a>
+    }
     </div>
 </div>
 
@@ -61,8 +45,9 @@
         <partial name="Details/_Reports">
     </section>
 }
-
+ @if (@Configuration["features:enable_comments"] == null || @Configuration["features:enable_comments"].ToString().ToLower() == "true"){
 <section class="pageSection">
     <span class="location" id="comments"></span>
     <div class="comments" data-ajax="yes" data-url="/terms?Handler=Comments&id=@Model.MyTerm.Id"></div>
 </section>
+}

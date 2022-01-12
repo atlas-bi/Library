@@ -1,69 +1,52 @@
-/*
-    Atlas of Information Management business intelligence library and documentation database.
-    Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
+// .ie-fixMinHeight {
+//   -ms-flex-direction: column;
+//   display: -ms-flexbox;
+// }
 
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+// .ctn {
+//   -webkit-flex-direction: column;
+//   display: -webkit-flex;
+//   display: flex;
+//   flex-direction: column;
+//   justify-content: center;
+//   margin: auto;
+//   max-width: 1500px;
+//   min-height: 100vh;
+//   width: 80vw;
+//   position: relative;
+// }
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+// .body {
+//   -webkit-flex-grow: 1;
+//   display: flex;
+//   flex-direction: row;
+//   flex-grow: 1;
+//   margin-left: 15px;
+//   margin-right: 15px;
+// }
 
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*/
-.ie-fixMinHeight {
-  -ms-flex-direction: column;
-  display: -ms-flexbox;
-}
+// .body-main {
+//   flex: 1;
+//   margin-right: 15px;
+//   min-width: 0;
+// }
 
-.ctn {
-  -webkit-flex-direction: column;
-  display: -webkit-flex;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  margin: auto;
-  max-width: 1500px;
-  min-height: 100vh;
-  width: 80vw;
-  position: relative;
-}
+// .body-mainCtn {
+//   display: block;
+// }
 
-.body {
-  -webkit-flex-grow: 1;
-  display: flex;
-  flex-direction: row;
-  flex-grow: 1;
-  margin-left: 15px;
-  margin-right: 15px;
-}
+// .body-side {
+//   font-size: 80%;
+//   margin-left: 15px;
+//   max-width: 300px;
+//   width: 25%;
+// }
 
-.body-main {
-  flex: 1;
-  margin-right: 15px;
-  min-width: 0;
-}
-
-.body-mainCtn {
-  display: block;
-}
-
-.body-side {
-  font-size: 80%;
-  margin-left: 15px;
-  max-width: 300px;
-  width: 25%;
-}
-
-.body-side a + a::before {
-  color: #575353;
-  content: "/";
-  margin: 8px;
-}
+// .body-side a + a::before {
+//   color: #575353;
+//   content: "/";
+//   margin: 8px;
+// }
 
 .pageTitle {
   background-color: #fff;
