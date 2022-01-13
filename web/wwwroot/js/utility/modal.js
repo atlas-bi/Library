@@ -40,13 +40,15 @@
         url,
         d = document; // open modal
         console.log(e.target.closest('[data-toggle]'))
-      if (e.target.closest('[data-toggle]') != null && e.target.closest('[data-toggle]').getAttribute("data-toggle") == "mdl") {
+      if (e.target.closest('[data-toggle]') && e.target.closest('[data-toggle]').getAttribute("data-toggle") == "mdl") {
         el = d.getElementById(e.target.closest('[data-toggle]').getAttribute("data-target"));
         showModal(el, e.target.closest('[data-toggle]'));
       } // close modal
       else if (
-        e.target.closest('[data-toggle]').getAttribute("data-dismiss") == "mdl" ||
-        e.target.closest(".mdl:not(#editModal)")
+        e.target.closest('[data-toggle]') && e.target.closest('[data-toggle]').getAttribute("data-dismiss") == "mdl" ||
+        e.target.closest(".mdl:not(#editModal)") ||
+        e.target.closest(".editorMdl-close")
+
       ) {
         // close closest modal
         closeModals(e.target.closest(".mdl"));
