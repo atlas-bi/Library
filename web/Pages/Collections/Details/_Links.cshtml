@@ -13,10 +13,11 @@
     @if (t.Image != null && t.Image != "")
     {
 <div class="snippet-left">
-    <div class="thumb">
-        <img data-src="@t.Image" src="/img/loader.gif" />
-    </div>
-</div>}
+    
+                            <figure class="image is-96x96 pop">
+                                <img data-src="/data/img?handler=Thumb&id=@t.Image&size=96x96" src="/img/loader.gif" />
+                            </figure>
+                        </div>}
     <div class="snippet-right">
     <h4>
         @t.Name

@@ -4,16 +4,48 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
 using System.Diagnostics.Contracts;
-
-
-
-
+using Microsoft.Extensions.Caching.Memory;
+using System.IO;
+using System.Security.Cryptography;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 
 namespace Atlas_Web.Helpers
 {
 
     public static class UrlHelpers
     {
+
+        private static string GenerateHash(string content)
+        {
+            using (var algo = SHA1.Create())
+            {
+                byte[] buffer = System.Text.Encoding.UTF8.GetBytes(content);
+                byte[] hash = algo.ComputeHash(buffer);
+                return WebEncoders.Base64UrlEncode(hash);
+            }
+        }
+        [Pure]
+        public static string FontHash(PathString font, IMemoryCache cache, IConfiguration config)
+        {
+            // this function exists because ligershark.assets as a v=? hash to font files in 
+            // the css build, but doesn't add them to the preload tags.
+            // they never get added to the cache, or we could pull the url there,
+            // the code is basically copy/paste from ligershark
+            // we add it to cache to speed up next time
+
+            if (cache.Get(font.Value) != null)
+            {
+                return cache.Get(font.Value).ToString();
+            }
+
+            var info = new FileInfo(Path.Combine("wwwroot/", font.Value.TrimStart('/')));
+            string hash = GenerateHash(info.LastWriteTime.Ticks.ToString());
+            string withHash = font.Value + $"?v={hash}";
+
+            cache.Set(font.Value, withHash);
+            return withHash;
+        }
         [Pure]
         public static string SetParameters(HttpContext helper, IDictionary<string, string> parameters)
         {

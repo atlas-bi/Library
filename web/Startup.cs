@@ -15,7 +15,7 @@ using WebMarkupMin.AspNet.Common.Compressors;
 using WebMarkupMin.AspNetCore5;
 using SolrNet;
 using SolrNet.Microsoft.DependencyInjection;
-
+using Microsoft.Extensions.Caching.Memory;
 
 namespace Atlas_Web
 {
@@ -67,6 +67,8 @@ namespace Atlas_Web
 
             services.AddWebOptimizer(pipeline =>
             {
+
+                
                 pipeline.AddCssBundle("/css/theme.min.css", "css/theme.css");
 
 

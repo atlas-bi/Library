@@ -1,4 +1,7 @@
 ﻿@using Helpers
+@using Microsoft.Extensions.Caching.Memory
+@inject IMemoryCache Cache
+@inject IConfiguration Configuration
 <!DOCTYPE html>
 <html lang="en-us">
 <head>
@@ -26,9 +29,17 @@
     <title>Home | Atlas BI Library</title>
     }
 
-    <link rel="preload" href="/font/fontawesome/webfonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href="/font/fontawesome/webfonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href="/font/inter/files/inter-latin-500-normal.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="@Helpers.UrlHelpers.FontHash("/font/fontawesome/webfonts/fa-regular-400.woff2", Cache, Configuration)" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="@Helpers.UrlHelpers.FontHash("/font/fontawesome/webfonts/fa-solid-900.woff2", Cache, Configuration)" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="@Helpers.UrlHelpers.FontHash("/font/inter/files/inter-latin-500-normal.woff2", Cache, Configuration)" as="font" type="font/woff2" crossorigin />
+
+    <!-- temp preload until fonts are removed -->
+    <link rel="preload" href="@Helpers.UrlHelpers.FontHash("/lib/fonts/impmin/subset-NYTImperial-Regular.woff2", Cache, Configuration)" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="@Helpers.UrlHelpers.FontHash("/lib/fonts/impmin/subset-NYTImperial-Bold.woff2", Cache, Configuration)" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="@Helpers.UrlHelpers.FontHash("/lib/fonts/cheltmin/subset-NYTCheltenham-Medium.woff2", Cache, Configuration)" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="@Helpers.UrlHelpers.FontHash("/lib/fonts/cheltmin/subset-NYTCheltenham-Bold.woff2", Cache, Configuration)" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="@Helpers.UrlHelpers.FontHash("/lib/fonts/cheltmin/subset-NYTCheltenhamWide-Regular.woff2", Cache, Configuration)" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="@Helpers.UrlHelpers.FontHash("/lib/fonts/sfmin/subset-SFProDisplay-Medium.woff2", Cache, Configuration)" as="font" type="font/woff2" crossorigin />
 </head>
 <body>
     <!-- site message -->

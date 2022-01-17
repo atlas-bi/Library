@@ -281,7 +281,7 @@ namespace Atlas_Web.Pages.Collections
                                                               CertTag = r.Report.CertificationTag,
                                                               EpicMasterFile = r.Report.EpicMasterFile,
                                                               Annotation = r.Report.ReportObjectDoc.DeveloperDescription,
-                                                              Image = r.Report.ReportObjectImagesDocs.Any() ? "/data/img?id=" + r.Report.ReportObjectImagesDocs.First().ImageId : "",
+                                                              Image = r.Report.ReportObjectImagesDocs.Any() ? r.Report.ReportObjectImagesDocs.First().ImageId.ToString() : "",
                                                               Favorite = rfi.ItemId == null ? "no" : "yes",
                                                               RunReportUrl = Helpers.HtmlHelpers.ReportUrlFromParams(_config["AppSettings:org_domain"], HttpContext, r.Report, _context, User.Identity.Name),
                                                               ManageReportUrl = HtmlHelpers.ReportManageUrlFromParams(_config["AppSettings:org_domain"], HttpContext, r.Report.ReportObjectType.Name, r.Report.ReportServerPath, r.Report.SourceServer),

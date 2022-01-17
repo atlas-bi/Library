@@ -4,6 +4,8 @@
     load = debounce(function () {
       [].forEach.call(d.querySelectorAll("img[data-src]"), function (img) {
         if (isInViewport(img)) {
+          // set image to nothing to clear, then load new
+          img.setAttribute("src", "");
           img.setAttribute("src", img.getAttribute("data-src"));
           img.removeAttribute("data-src");
         }
