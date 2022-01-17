@@ -1,22 +1,4 @@
-﻿/*
-    Atlas of Information Management business intelligence library and documentation database.
-    Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*/
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
@@ -31,6 +13,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Caching.Memory;
 using SolrNet;
 using SolrNet.Commands.Parameters;
+using System.Text.RegularExpressions;
 
 namespace Atlas_Web.Pages.Search
 {
@@ -153,7 +136,7 @@ namespace Atlas_Web.Pages.Search
                     "[",
                     "]",
                     "^",
-                    "\"",
+                    // "\"",
                     "~",
                     "*",
                     "?",
@@ -163,6 +146,32 @@ namespace Atlas_Web.Pages.Search
                 search_string = String.Join(
                     "",
                     search_string.Split(illegal_chars, StringSplitOptions.RemoveEmptyEntries)
+                );
+
+                // find exact match strings
+                List<string> ExactMatches = new List<string>();
+
+                var literals = Regex.Matches(search_string, @"("")(.+?)("")");
+                if (literals.Count > 0)
+                {
+                    foreach (Match literal in literals)
+                    {
+                        if (query.Keys.Contains("field"))
+                        {
+                            ExactMatches.Add($"{query["field"]}:({literal.Groups[2].Value})");
+                        }
+                        else
+                        {
+                            ExactMatches.Add($"({literal.Groups[2].Value})");
+                        }
+                    }
+                    search_string = Regex.Replace(search_string, @"("".+?"")", "");
+                }
+
+                // clean double quote from search string
+                search_string = String.Join(
+                    "",
+                    search_string.Split("\"", StringSplitOptions.RemoveEmptyEntries)
                 );
 
                 static string BuildFuzzy(string substr)
@@ -178,6 +187,21 @@ namespace Atlas_Web.Pages.Search
                     return substr;
                 }
 
+                static string BuildExact(string wild, List<string> exact)
+                {
+                    if (exact.Count == 0)
+                    {
+                        return wild;
+                    }
+                    var exact_string = string.Join(" AND ", exact);
+
+                    if (wild == "")
+                    {
+                        return exact_string;
+                    }
+
+                    return $"{exact_string} AND ({wild})";
+                }
                 string Fuzzy = String.Join(
                     " ",
                     search_string
@@ -186,13 +210,24 @@ namespace Atlas_Web.Pages.Search
                         .Select(x => BuildFuzzy(x))
                 );
 
+                if (search_string == "")
+                {
+                    return BuildExact("", ExactMatches);
+                }
+
                 if (query.Keys.Contains("field"))
                 {
                     string field = query["field"];
-                    return $"{field}:({search_string})^6 OR {field}:({Fuzzy})^3";
+                    return BuildExact(
+                        $"{field}:({search_string})^6 OR {field}:({Fuzzy})^3",
+                        ExactMatches
+                    );
                 }
 
-                return $"name:({search_string})^6 OR name:({Fuzzy})^3 OR ({search_string})^5 OR ({Fuzzy})";
+                return BuildExact(
+                    $"name:({search_string})^6 OR name:({Fuzzy})^3 OR ({search_string})^5 OR ({Fuzzy})",
+                    ExactMatches
+                );
             }
 
             static IReadOnlyList<HighlightModel> BuildHighlightModels(
