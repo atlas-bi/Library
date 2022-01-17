@@ -4,37 +4,34 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations.Schema;
 
-
 namespace Atlas_Web.Models
 {
     public record SearchResult(
         List<ReportObjectAttachment> AttachedFiles,
         SolrAtlas Result,
         string RunUrl
-
     );
-    public record FilterFields(
-        string Key,
-        string FriendlyName
-       );
-    public record HighlightValueModel(
-        string Key,
-        string Value
-       )
+
+    public record FilterFields(string Key, string FriendlyName);
+
+    public record HighlightValueModel(string Key, string Value)
     {
-        public string FriendlyName => System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(Key.Replace("_", " ").Replace("text", "").Trim());
+        public string FriendlyName =>
+            System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(
+                Key.Replace("_", " ").Replace("text", "").Trim()
+            );
     };
 
-    public record FacetValueModel(
-        string Value,
-        int Count
-    )
+    public record FacetValueModel(string Value, int Count)
     {
         public string FriendlyName => FriendlyNameBuilder(Value);
 
         private static string FriendlyNameBuilder(string Name)
         {
-            string NewName = System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(Name.Replace("_", " ").Replace("text", "").Trim());
+            string NewName =
+                System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(
+                    Name.Replace("_", " ").Replace("text", "").Trim()
+                );
             if (NewName == "N")
             {
                 return "No";
@@ -47,31 +44,26 @@ namespace Atlas_Web.Models
         }
     };
 
-    public record HighlightModel(
-        string Key,
-        IReadOnlyList<HighlightValueModel> Values
-       );
+    public record HighlightModel(string Key, IReadOnlyList<HighlightValueModel> Values);
 
-    public record FacetModel(
-        string Key,
-        IReadOnlyList<FacetValueModel> Values
-    )
+    public record FacetModel(string Key, IReadOnlyList<FacetValueModel> Values)
     {
-        public string FriendlyName => System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(Key.Replace("_", " ").Replace("text", "").Trim());
+        public string FriendlyName =>
+            System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(
+                Key.Replace("_", " ").Replace("text", "").Trim()
+            );
     };
 
     public record SolrAtlasResults(
-            IReadOnlyList<SearchResult> Results,
-            IReadOnlyList<FacetModel> FacetFields,
-            IReadOnlyList<HighlightModel> Highlights,
-            IReadOnlyList<FilterFields> FilterFields,
-
-
-            int NumFound,
-            int QTime,
-            SolrAtlasParameters Parameters,
-            string Advanced
-        )
+        IReadOnlyList<SearchResult> Results,
+        IReadOnlyList<FacetModel> FacetFields,
+        IReadOnlyList<HighlightModel> Highlights,
+        IReadOnlyList<FilterFields> FilterFields,
+        int NumFound,
+        int QTime,
+        SolrAtlasParameters Parameters,
+        string Advanced
+    )
     {
         const int PageSlide = 2;
 
@@ -95,5 +87,4 @@ namespace Atlas_Web.Models
 
 
     }
-
 }

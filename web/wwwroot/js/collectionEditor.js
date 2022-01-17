@@ -16,201 +16,201 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 (function () {
-  if (document.querySelector("#editModal") !== null) {
+  if (document.querySelector('#editModal') !== null) {
     function UpdateMilestoneChecklistItems(e) {
-      var t = e.closest("form");
+      var t = e.closest('form');
 
       if (
         null == e.nextElementSibling ||
         (null !== e.nextElementSibling &&
-          !e.nextElementSibling.classList.contains("checklistitem") &&
-          e.nextElementSibling.innerHTML !== "Task")
+          !e.nextElementSibling.classList.contains('checklistitem') &&
+          e.nextElementSibling.innerHTML !== 'Task')
       ) {
         var n = e.cloneNode(!0),
-          l = document.createElement("label");
-        l.innerHTML = "Task";
-        n.value = "";
+          l = document.createElement('label');
+        l.innerHTML = 'Task';
+        n.value = '';
         e.parentNode.insertBefore(n, e.nextSibling);
         n.parentNode.insertBefore(l, n);
       }
 
       var i = t.querySelector('input[name="DpChecklist"]'),
-        h = "",
+        h = '',
         c = 0;
 
-      [].map.call(t.getElementsByClassName("checklistitem"), function (e) {
+      [].map.call(t.getElementsByClassName('checklistitem'), function (e) {
         var t = e.value.trim();
-        if ("" != t) {
+        if ('' != t) {
           h += '"' + (c += 1) + '":"' + t + '",';
         }
       });
       if (h.length > 0) {
-        i.value = "{" + h.substring(0, h.length - 1) + "}";
+        i.value = '{' + h.substring(0, h.length - 1) + '}';
       }
     }
-    document.addEventListener("click", function (e) {
-      if (e.target.matches(".checklistitem"))
+    document.addEventListener('click', function (e) {
+      if (e.target.matches('.checklistitem'))
         UpdateMilestoneChecklistItems(e.target);
     });
-    document.addEventListener("focus", function (e) {
-      if (e.target.matches(".checklistitem"))
+    document.addEventListener('focus', function (e) {
+      if (e.target.matches('.checklistitem'))
         UpdateMilestoneChecklistItems(e.target);
     });
-    document.addEventListener("change", function (e) {
-      if (e.target.matches(".checklistitem"))
+    document.addEventListener('change', function (e) {
+      if (e.target.matches('.checklistitem'))
         UpdateMilestoneChecklistItems(e.target);
     });
-    document.addEventListener("keyup", function (e) {
-      if (e.target.matches(".checklistitem"))
+    document.addEventListener('keyup', function (e) {
+      if (e.target.matches('.checklistitem'))
         UpdateMilestoneChecklistItems(e.target);
     });
 
-    var cli = document.querySelectorAll("form#AddMilestone .checklistitem");
+    var cli = document.querySelectorAll('form#AddMilestone .checklistitem');
     for (var x = 0; x < cli.length; x++) {
       UpdateMilestoneChecklistItems(cli[x]);
     }
 
     document
-      .querySelector("#editModal")
-      .addEventListener("click", function (e) {
+      .querySelector('#editModal')
+      .addEventListener('click', function (e) {
         var q,
           data,
           form,
           url,
           termsContainer = document.getElementById(
-            "collection-editor-currentterms-container"
+            'collection-editor-currentterms-container',
           );
-        if (e.target.closest("#collection-editor-remove-term-form")) {
+        if (e.target.closest('#collection-editor-remove-term-form')) {
           e.preventDefault();
 
-          form = e.target.closest("#collection-editor-remove-term-form");
-          url = form.getAttribute("href");
+          form = e.target.closest('#collection-editor-remove-term-form');
+          url = form.getAttribute('href');
 
           q = new XMLHttpRequest();
-          q.open("get", url, true);
-          q.setRequestHeader("Content-Type", "text/plain;charset=UTF-8`");
-          q.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+          q.open('get', url, true);
+          q.setRequestHeader('Content-Type', 'text/plain;charset=UTF-8`');
+          q.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
           q.send();
           q.onload = function () {
             data = q.responseText;
 
             if (data.trim().length == 0) {
-              termsContainer.innerHTML = "";
+              termsContainer.innerHTML = '';
             } else {
               termsContainer.innerHTML = data;
               // render markdown
-              document.dispatchEvent(new CustomEvent("code-highlight"));
+              document.dispatchEvent(new CustomEvent('code-highlight'));
             }
-            document.getElementById("editorMdl-titleSave").style.visibility =
-              "visible";
+            document.getElementById('editorMdl-titleSave').style.visibility =
+              'visible';
             setTimeout(function () {
               document
-                .getElementById("editorMdl-titleSave")
-                .style.removeProperty("visibility");
+                .getElementById('editorMdl-titleSave')
+                .style.removeProperty('visibility');
             }, 750);
           };
         }
       });
 
     document
-      .querySelector("#editModal")
-      .addEventListener("click", function (e) {
+      .querySelector('#editModal')
+      .addEventListener('click', function (e) {
         var q,
           data,
           form,
           url,
           termsContainer = document.getElementById(
-            "collection-editor-currentreports-container"
+            'collection-editor-currentreports-container',
           );
-        if (e.target.closest("#collection-editor-remove-report-form")) {
+        if (e.target.closest('#collection-editor-remove-report-form')) {
           e.preventDefault();
 
-          form = e.target.closest("#collection-editor-remove-report-form");
-          url = form.getAttribute("href");
+          form = e.target.closest('#collection-editor-remove-report-form');
+          url = form.getAttribute('href');
 
           q = new XMLHttpRequest();
-          q.open("get", url, true);
-          q.setRequestHeader("Content-Type", "text/plain;charset=UTF-8`");
-          q.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+          q.open('get', url, true);
+          q.setRequestHeader('Content-Type', 'text/plain;charset=UTF-8`');
+          q.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
           q.send();
           q.onload = function () {
             data = q.responseText;
 
             if (data.trim().length == 0) {
-              termsContainer.innerHTML = "";
+              termsContainer.innerHTML = '';
             } else {
               termsContainer.innerHTML = data;
               // render markdown
-              document.dispatchEvent(new CustomEvent("code-highlight"));
+              document.dispatchEvent(new CustomEvent('code-highlight'));
             }
-            document.getElementById("editorMdl-titleSave").style.visibility =
-              "visible";
+            document.getElementById('editorMdl-titleSave').style.visibility =
+              'visible';
             setTimeout(function () {
               document
-                .getElementById("editorMdl-titleSave")
-                .style.removeProperty("visibility");
+                .getElementById('editorMdl-titleSave')
+                .style.removeProperty('visibility');
             }, 750);
           };
         }
       });
 
     document
-      .querySelector("#editModal")
-      .addEventListener("submit", function (e) {
+      .querySelector('#editModal')
+      .addEventListener('submit', function (e) {
         var q,
           data,
           form,
           url,
           termsContainer = document.getElementById(
-            "collection-editor-currentterms-container"
+            'collection-editor-currentterms-container',
           );
         if (
-          e.target.closest("#collection-editor-edit-term-form") ||
-          e.target.closest("#collection-editor-add-term-form")
+          e.target.closest('#collection-editor-edit-term-form') ||
+          e.target.closest('#collection-editor-add-term-form')
         ) {
           e.preventDefault();
 
           form =
-            e.target.closest("#collection-editor-edit-term-form") ||
-            e.target.closest("#collection-editor-add-term-form");
-          url = form.getAttribute("action");
+            e.target.closest('#collection-editor-edit-term-form') ||
+            e.target.closest('#collection-editor-add-term-form');
+          url = form.getAttribute('action');
 
           q = new XMLHttpRequest();
           q.open(
-            "post",
-            form.getAttribute("action") + "&" + serialize(form),
-            true
+            'post',
+            form.getAttribute('action') + '&' + serialize(form),
+            true,
           );
-          q.setRequestHeader("Content-Type", "text/plain;charset=UTF-8`");
-          q.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+          q.setRequestHeader('Content-Type', 'text/plain;charset=UTF-8`');
+          q.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
           q.send();
           q.onload = function () {
             data = q.responseText;
 
             if (data.trim().length == 0) {
-              termsContainer.innerHTML = "";
+              termsContainer.innerHTML = '';
             } else {
               termsContainer.innerHTML = data;
               // render markdown
-              document.dispatchEvent(new CustomEvent("code-highlight"));
+              document.dispatchEvent(new CustomEvent('code-highlight'));
             }
-            document.getElementById("editorMdl-titleSave").style.visibility =
-              "visible";
+            document.getElementById('editorMdl-titleSave').style.visibility =
+              'visible';
             setTimeout(function () {
               document
-                .getElementById("editorMdl-titleSave")
-                .style.removeProperty("visibility");
+                .getElementById('editorMdl-titleSave')
+                .style.removeProperty('visibility');
             }, 750);
-            document.dispatchEvent(new CustomEvent("ajax"));
+            document.dispatchEvent(new CustomEvent('ajax'));
             document
-              .querySelector("#editModal")
-              .dispatchEvent(new CustomEvent("mdl-open"));
+              .querySelector('#editModal')
+              .dispatchEvent(new CustomEvent('mdl-open'));
           };
           form.reset();
-          form.querySelector(".dd-vsbl").value = "";
-          form.querySelector("#DpTermAnnotation_Rank").value = "";
-          if (form.querySelector(".CodeMirror")) {
-            form.querySelector(".CodeMirror").CodeMirror.getDoc().setValue("");
+          form.querySelector('.dd-vsbl').value = '';
+          form.querySelector('#DpTermAnnotation_Rank').value = '';
+          if (form.querySelector('.CodeMirror')) {
+            form.querySelector('.CodeMirror').CodeMirror.getDoc().setValue('');
           }
           // document.getElementsByClassName("new-term-summary")[0].innerHTML = "";
           // document.getElementsByClassName("new-term-def")[0].innerHTML = "";
@@ -218,62 +218,62 @@
       });
 
     document
-      .querySelector("#editModal")
-      .addEventListener("submit", function (e) {
+      .querySelector('#editModal')
+      .addEventListener('submit', function (e) {
         var q,
           data,
           form,
           url,
           termsContainer = document.getElementById(
-            "collection-editor-currentreports-container"
+            'collection-editor-currentreports-container',
           );
         if (
-          e.target.closest("#collection-editor-edit-report-form") ||
-          e.target.closest("#collection-editor-add-report-form")
+          e.target.closest('#collection-editor-edit-report-form') ||
+          e.target.closest('#collection-editor-add-report-form')
         ) {
           e.preventDefault();
 
           form =
-            e.target.closest("#collection-editor-edit-report-form") ||
-            e.target.closest("#collection-editor-add-report-form");
-          url = form.getAttribute("action");
+            e.target.closest('#collection-editor-edit-report-form') ||
+            e.target.closest('#collection-editor-add-report-form');
+          url = form.getAttribute('action');
 
           q = new XMLHttpRequest();
           q.open(
-            "post",
-            form.getAttribute("action") + "&" + serialize(form),
-            true
+            'post',
+            form.getAttribute('action') + '&' + serialize(form),
+            true,
           );
-          q.setRequestHeader("Content-Type", "text/plain;charset=UTF-8`");
-          q.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+          q.setRequestHeader('Content-Type', 'text/plain;charset=UTF-8`');
+          q.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
           q.send();
           q.onload = function () {
             data = q.responseText;
 
             if (data.trim().length == 0) {
-              termsContainer.innerHTML = "";
+              termsContainer.innerHTML = '';
             } else {
               termsContainer.innerHTML = data;
               // render markdown
-              document.dispatchEvent(new CustomEvent("code-highlight"));
+              document.dispatchEvent(new CustomEvent('code-highlight'));
             }
-            document.getElementById("editorMdl-titleSave").style.visibility =
-              "visible";
+            document.getElementById('editorMdl-titleSave').style.visibility =
+              'visible';
             setTimeout(function () {
               document
-                .getElementById("editorMdl-titleSave")
-                .style.removeProperty("visibility");
+                .getElementById('editorMdl-titleSave')
+                .style.removeProperty('visibility');
             }, 750);
-            document.dispatchEvent(new CustomEvent("ajax"));
+            document.dispatchEvent(new CustomEvent('ajax'));
             document
-              .querySelector("#editModal")
-              .dispatchEvent(new CustomEvent("mdl-open"));
+              .querySelector('#editModal')
+              .dispatchEvent(new CustomEvent('mdl-open'));
           };
           form.reset();
-          form.querySelector(".dd-vsbl").value = "";
-          form.querySelector("#DpReportAnnotation_Rank").value = "";
-          if (form.querySelector(".CodeMirror")) {
-            form.querySelector(".CodeMirror").CodeMirror.getDoc().setValue("");
+          form.querySelector('.dd-vsbl').value = '';
+          form.querySelector('#DpReportAnnotation_Rank').value = '';
+          if (form.querySelector('.CodeMirror')) {
+            form.querySelector('.CodeMirror').CodeMirror.getDoc().setValue('');
           }
           // document.getElementsByClassName("new-term-summary")[0].innerHTML = "";
           // document.getElementsByClassName("new-term-def")[0].innerHTML = "";

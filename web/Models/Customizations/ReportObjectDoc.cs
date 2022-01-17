@@ -25,7 +25,6 @@ using System.Linq;
 
 namespace Atlas_Web.Models
 {
-
     public class ReportObjectDoc__Metadata
     {
     }
@@ -33,22 +32,33 @@ namespace Atlas_Web.Models
     [ModelMetadataType(typeof(ReportObjectDoc__Metadata))]
     public partial class ReportObjectDoc
     {
-
         [NotMapped]
         public virtual string LastUpdatedDateTimeDisplayString
         // don't display the time portion if > 24 hrs ago
         {
             get
             {
-                if (LastUpdateDateTime == null) { return null; }
+                if (LastUpdateDateTime == null)
+                {
+                    return null;
+                }
 
                 var timeAgo = System.DateTime.Now.Subtract(LastUpdateDateTime ?? DateTime.Now);
-                if (timeAgo.TotalMinutes < 1) { return String.Concat(timeAgo.Seconds.ToString(), " seconds ago"); }
-                if (timeAgo.TotalHours < 1) { return String.Concat(timeAgo.Minutes.ToString(), " minutes ago"); }
-                else if (timeAgo.TotalHours < 24) { return String.Concat(timeAgo.Hours.ToString(), " hours ago"); }
-                else return (LastUpdateDateTime ?? DateTime.Now).ToShortDateString();
+                if (timeAgo.TotalMinutes < 1)
+                {
+                    return String.Concat(timeAgo.Seconds.ToString(), " seconds ago");
+                }
+                if (timeAgo.TotalHours < 1)
+                {
+                    return String.Concat(timeAgo.Minutes.ToString(), " minutes ago");
+                }
+                else if (timeAgo.TotalHours < 24)
+                {
+                    return String.Concat(timeAgo.Hours.ToString(), " hours ago");
+                }
+                else
+                    return (LastUpdateDateTime ?? DateTime.Now).ToShortDateString();
             }
         }
-
     }
 }

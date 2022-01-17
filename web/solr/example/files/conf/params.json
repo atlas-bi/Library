@@ -24,11 +24,7 @@
       "f.doc_type.facet.missing": true,
       "f.text_shingles.facet.limit": 10,
       "facet": "on",
-      "facet.field": [
-        "text_shingles",
-        "{!ex=type}doc_type",
-        "language"
-      ],
+      "facet.field": ["text_shingles", "{!ex=type}doc_type", "language"],
       "facet.mincount": "1",
       "facet.query": "{!ex=type key=all_types}*:*"
     },

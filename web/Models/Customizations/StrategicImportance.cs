@@ -23,7 +23,6 @@ using System.Linq;
 
 namespace Atlas_Web.Models
 {
-
     public class StrategicImportance__Metadata
     {
         [DisplayFormat(NullDisplayText = "Standard")]
@@ -33,6 +32,5 @@ namespace Atlas_Web.Models
     [ModelMetadataType(typeof(StrategicImportance__Metadata))]
     public partial class StrategicImportance
     {
-
     }
 }

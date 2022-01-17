@@ -21,7 +21,7 @@
   margin-left: 0 !important;
   margin-right: 0 !important;
   box-shadow: 0 0 30px 10px rgb(209, 209, 209);
-  font-family: sf, "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+  font-family: sf, 'Lucida Sans Unicode', 'Lucida Grande', sans-serif;
   flex: 1;
   margin-bottom: 50px;
   margin-top: 30px;
@@ -46,7 +46,7 @@
 
 .mlbx-bd::after {
   position: absolute;
-  content: "";
+  content: '';
   bottom: -35px;
   height: 35px;
   background: #fff;
@@ -56,7 +56,7 @@
 }
 
 .mlbx-bd::before {
-  content: "";
+  content: '';
   height: 50px;
   margin-top: -35px;
   background: #fff;
@@ -109,7 +109,7 @@
   border-radius: 18px;
   color: #fff;
   display: none;
-  font-family: sf, "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+  font-family: sf, 'Lucida Sans Unicode', 'Lucida Grande', sans-serif;
   font-size: 14px;
   font-weight: 600;
   line-height: 16px;
@@ -121,7 +121,7 @@
 }
 
 .mlbx-shareMsg {
-  font-family: sf, "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+  font-family: sf, 'Lucida Sans Unicode', 'Lucida Grande', sans-serif;
   font-size: 14px;
   font-weight: 600;
   height: 400px;

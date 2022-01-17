@@ -32,7 +32,6 @@ using Atlas_Web.Helpers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Caching.Memory;
 
-
 namespace Atlas_Web.Pages.Collections
 {
     public class IndexModel : PageModel
@@ -49,16 +48,28 @@ namespace Atlas_Web.Pages.Collections
             _cache = cache;
         }
 
-        [BindProperty] public DpDataProject DpDataProject { get; set; }
-        [BindProperty] public DpReportAnnotation DpReportAnnotation { get; set; }
-        [BindProperty] public DpTermAnnotation DpTermAnnotation { get; set; }
-        [BindProperty] public DpAgreement MyDpAgreement { get; set; }
-        [BindProperty] public int[] DpAgreementUsers { get; set; }
-        [BindProperty] public DpDataProjectConversation NewComment { get; set; }
-        [BindProperty] public DpDataProjectConversationMessage NewCommentReply { get; set; }
-        
-        
-                public List<int?> Permissions { get; set; }
+        [BindProperty]
+        public DpDataProject DpDataProject { get; set; }
+
+        [BindProperty]
+        public DpReportAnnotation DpReportAnnotation { get; set; }
+
+        [BindProperty]
+        public DpTermAnnotation DpTermAnnotation { get; set; }
+
+        [BindProperty]
+        public DpAgreement MyDpAgreement { get; set; }
+
+        [BindProperty]
+        public int[] DpAgreementUsers { get; set; }
+
+        [BindProperty]
+        public DpDataProjectConversation NewComment { get; set; }
+
+        [BindProperty]
+        public DpDataProjectConversationMessage NewCommentReply { get; set; }
+
+        public List<int?> Permissions { get; set; }
         public IEnumerable<AllCollectionsData> AllCollections { get; set; }
         public List<UserFavorite> Favorites { get; set; }
         public IEnumerable<CollectionCommentsData> CollectionComments { get; set; }
@@ -140,8 +151,6 @@ namespace Atlas_Web.Pages.Collections
             public IEnumerable<AgreementUsersData> Users { get; set; }
         }
 
-       
-
         public class AttachmentLinks
         {
             public string Name { get; set; }
@@ -150,7 +159,7 @@ namespace Atlas_Web.Pages.Collections
             public int? Size { get; set; }
             public string Type { get; set; }
         }
-    
+
         public class CollectionTermsData
         {
             public string Name { get; set; }
@@ -159,13 +168,16 @@ namespace Atlas_Web.Pages.Collections
             public string Definition { get; set; }
             public int? ReportId { get; set; }
         }
+
         public class AgreementUsersData
         {
             public int? Id { get; set; }
             public string Name { get; set; }
         }
+
         public List<UserPreference> Preferences { get; set; }
         public User PublicUser { get; set; }
+
         public async Task<IActionResult> OnGetAsync(int? id)
         {
             PublicUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
@@ -180,7 +192,7 @@ namespace Atlas_Web.Pages.Collections
 
             AdLists = new List<AdList>
             {
-                new AdList { Url = "/Users?handler=SharedObjects", Column = 2},
+                new AdList { Url = "/Users?handler=SharedObjects", Column = 2 },
                 new AdList { Url = "/?handler=RecentReports", Column = 2 },
                 new AdList { Url = "/?handler=RecentTerms", Column = 2 },
                 new AdList { Url = "/?handler=RecentInitiatives", Column = 2 },
@@ -191,139 +203,207 @@ namespace Atlas_Web.Pages.Collections
             // if the id null then list all
             if (id != null)
             {
-                Collection = await (from d in _context.DpDataProjects
-                                    where d.DataProjectId == id
-                                    select new CollectionData
+                Collection = await (
+                    from d in _context.DpDataProjects
+                    where d.DataProjectId == id
+                    select new CollectionData
+                    {
+                        Id = d.DataProjectId,
+                        Name = d.Name,
+                        Description = d.Description,
+                        Purpose = d.Purpose,
+                        OpsOwner = d.OperationOwner.Fullname_Cust,
+                        OpsOwnerId = d.OperationOwnerId,
+                        ExOwner = d.ExecutiveOwner.Fullname_Cust,
+                        ExOwnerId = d.ExecutiveOwnerId,
+                        AnOwner = d.AnalyticsOwner.Fullname_Cust,
+                        AnOwnerId = d.AnalyticsOwnerId,
+                        DataOwner = d.DataManager.Fullname_Cust,
+                        DataOwnerId = d.DataManagerId,
+                        FnclImpact = d.FinancialImpactNavigation.Name,
+                        FnclImpactId = d.FinancialImpact,
+                        StrgImport = d.StrategicImportanceNavigation.Name,
+                        StrgImportId = d.StrategicImportance,
+                        Hidden = d.Hidden,
+                        UpdateDate = d.LastUpdatedDateDisplayString,
+                        UpdatedBy = d.LastUpdateUserNavigation.Fullname_Cust,
+                        RelatedReports = (
+                            from r in d.DpReportAnnotations
+                            join q in (
+                                from f in _context.UserFavorites
+                                where f.ItemType.ToLower() == "report" && f.UserId == MyUser.UserId
+                                select new { f.ItemId }
+                            )
+                                on r.ReportId equals q.ItemId
+                                into tmp
+                            from rfi in tmp.DefaultIfEmpty()
+                            orderby r.Report.ReportObjectType.Name ,r.Rank ,r.Report.Name
+                            select new RelatedItemData
+                            {
+                                Id = r.ReportAnnotationId,
+                                ItemId = r.ReportId,
+                                Name = r.Report.DisplayName,
+                                Rank = r.Rank,
+                                ReportType = r.Report.ReportObjectType.Name,
+                                CertTag = r.Report.CertificationTag,
+                                EpicMasterFile = r.Report.EpicMasterFile,
+                                Annotation = r.Report.ReportObjectDoc.DeveloperDescription,
+                                Image = r.Report.ReportObjectImagesDocs.Any()
+                                  ? r.Report.ReportObjectImagesDocs.First().ImageId.ToString()
+                                  : "",
+                                Favorite = rfi.ItemId == null ? "no" : "yes",
+                                RunReportUrl = Helpers.HtmlHelpers.ReportUrlFromParams(
+                                    _config["AppSettings:org_domain"],
+                                    HttpContext,
+                                    r.Report,
+                                    _context,
+                                    User.Identity.Name
+                                ),
+                                ManageReportUrl = HtmlHelpers.ReportManageUrlFromParams(
+                                    _config["AppSettings:org_domain"],
+                                    HttpContext,
+                                    r.Report.ReportObjectType.Name,
+                                    r.Report.ReportServerPath,
+                                    r.Report.SourceServer
+                                ),
+                                EditReportUrl = HtmlHelpers.EditReportFromParams(
+                                    _config["AppSettings:org_domain"],
+                                    HttpContext,
+                                    r.Report.ReportServerPath,
+                                    r.Report.SourceServer,
+                                    r.Report.EpicMasterFile,
+                                    r.Report.EpicReportTemplateId.ToString(),
+                                    r.Report.EpicRecordId.ToString()
+                                ),
+                            }
+                        ).ToList(),
+                        Agreements = (
+                            from r in d.DpAgreements
+                            orderby r.Rank ,r.EffectiveDate
+                            select new AgreementsData
+                            {
+                                Id = r.AgreementId,
+                                Description = r.Description,
+                                Rank = r.Rank,
+                                MeetingDate = r.MeetingDate,
+                                MeetingDateString = r.MeetingDateDisplayString,
+                                EffectiveDate = r.EffectiveDate,
+                                EffectiveDateString = r.EffectiveDateDisplayString,
+                                Users =
+                                    from u in r.DpAgreementUsers
+                                    select new AgreementUsersData
                                     {
-                                        Id = d.DataProjectId,
-                                        Name = d.Name,
-                                        Description = d.Description,
-                                        Purpose = d.Purpose,
-                                        OpsOwner = d.OperationOwner.Fullname_Cust,
-                                        OpsOwnerId = d.OperationOwnerId,
-                                        ExOwner = d.ExecutiveOwner.Fullname_Cust,
-                                        ExOwnerId = d.ExecutiveOwnerId,
-                                        AnOwner = d.AnalyticsOwner.Fullname_Cust,
-                                        AnOwnerId = d.AnalyticsOwnerId,
-                                        DataOwner = d.DataManager.Fullname_Cust,
-                                        DataOwnerId = d.DataManagerId,
-                                        FnclImpact = d.FinancialImpactNavigation.Name,
-                                        FnclImpactId = d.FinancialImpact,
-                                        StrgImport = d.StrategicImportanceNavigation.Name,
-                                        StrgImportId = d.StrategicImportance,
-                                        Hidden = d.Hidden,
-                                        UpdateDate = d.LastUpdatedDateDisplayString,
-                                        UpdatedBy = d.LastUpdateUserNavigation.Fullname_Cust,
-                                        RelatedReports = (from r in d.DpReportAnnotations
-                                                          join q in (from f in _context.UserFavorites
-                                                                     where f.ItemType.ToLower() == "report"
-                                                                        && f.UserId == MyUser.UserId
-                                                                     select new { f.ItemId })
-                                                          on r.ReportId equals q.ItemId into tmp
-                                                          from rfi in tmp.DefaultIfEmpty()
-                                                          orderby r.Report.ReportObjectType.Name, r.Rank, r.Report.Name
-                                                          select new RelatedItemData
-                                                          {
-                                                              Id = r.ReportAnnotationId,
-                                                              ItemId = r.ReportId,
-                                                              Name = r.Report.DisplayName,
-                                                              Rank = r.Rank,
-                                                              ReportType = r.Report.ReportObjectType.Name,
-                                                              CertTag = r.Report.CertificationTag,
-                                                              EpicMasterFile = r.Report.EpicMasterFile,
-                                                              Annotation = r.Report.ReportObjectDoc.DeveloperDescription,
-                                                              Image = r.Report.ReportObjectImagesDocs.Any() ? r.Report.ReportObjectImagesDocs.First().ImageId.ToString() : "",
-                                                              Favorite = rfi.ItemId == null ? "no" : "yes",
-                                                              RunReportUrl = Helpers.HtmlHelpers.ReportUrlFromParams(_config["AppSettings:org_domain"], HttpContext, r.Report, _context, User.Identity.Name),
-                                                              ManageReportUrl = HtmlHelpers.ReportManageUrlFromParams(_config["AppSettings:org_domain"], HttpContext, r.Report.ReportObjectType.Name, r.Report.ReportServerPath, r.Report.SourceServer),
-                                                              EditReportUrl = HtmlHelpers.EditReportFromParams(_config["AppSettings:org_domain"], HttpContext, r.Report.ReportServerPath, r.Report.SourceServer, r.Report.EpicMasterFile, r.Report.EpicReportTemplateId.ToString(), r.Report.EpicRecordId.ToString()),
-                                                          }).ToList(),
+                                        Id = u.UserId,
+                                        Name = u.User.Fullname_Cust
+                                    }
+                            }
+                        ).ToList(),
+                        Favorite = (
+                            from f in _context.UserFavorites
+                            where
+                                f.ItemType == "collection"
+                                && f.UserId == MyUser.UserId
+                                && f.ItemId == d.DataProjectId
+                            select new { f.ItemId }
+                        ).Any()
+                          ? "yes"
+                          : "no"
+                    }
+                ).FirstOrDefaultAsync();
 
+                ViewData["Attachments"] = await (
+                    from a in _context.DpAttachments
+                    where a.DataProjectId == id
+                    orderby a.Rank ascending
+                    select new AttachmentLinks
+                    {
+                        Name = a.AttachmentName,
+                        Src = "/data/File?id=" + a.AttachmentId,
+                        Id = a.AttachmentId,
+                        Size = a.AttachmentSize,
+                        Type = a.AttachmentType
+                    }
+                ).ToListAsync();
 
-                                        Agreements = (from r in d.DpAgreements
-                                                      orderby r.Rank, r.EffectiveDate
-                                                      select new AgreementsData
-                                                      {
-                                                          Id = r.AgreementId,
-                                                          Description = r.Description,
-                                                          Rank = r.Rank,
-                                                          MeetingDate = r.MeetingDate,
-                                                          MeetingDateString = r.MeetingDateDisplayString,
-                                                          EffectiveDate = r.EffectiveDate,
-                                                          EffectiveDateString = r.EffectiveDateDisplayString,
-                                                          Users = from u in r.DpAgreementUsers
-                                                                  select new AgreementUsersData
-                                                                  {
-                                                                      Id = u.UserId,
-                                                                      Name = u.User.Fullname_Cust
-                                                                  }
-                                                      }).ToList(),
-                                        Favorite = (from f in _context.UserFavorites
-                                                    where f.ItemType == "collection"
-                                                       && f.UserId == MyUser.UserId
-                                                       && f.ItemId == d.DataProjectId
-                                                    select new { f.ItemId }).Any() ? "yes" : "no"
+                ViewData["RelatedTerms"] = await (
+                    from r in _context.DpTermAnnotations
+                    where r.DataProjectId == id
+                    join q in (
+                        from f in _context.UserFavorites
+                        where f.ItemType.ToLower() == "term" && f.UserId == MyUser.UserId
+                        select new { f.ItemId }
+                    )
+                        on r.TermId equals q.ItemId
+                        into tmp
+                    from tfi in tmp.DefaultIfEmpty()
+                    orderby r.Rank ,r.Term.Name
+                    select new RelatedItemData
+                    {
+                        Id = r.TermAnnotationId,
+                        CollectionId = r.DataProjectId,
+                        ItemId = r.TermId,
+                        Name = r.Term.Name,
+                        Rank = r.Rank,
+                        Annotation = r.Annotation ?? r.Term.Summary,
+                        Favorite = tfi.ItemId == null ? "no" : "yes"
+                    }
+                ).ToListAsync();
 
-                                    }).FirstOrDefaultAsync();
-
-                ViewData["Attachments"] = await (from a in _context.DpAttachments
-                                                 where a.DataProjectId == id
-                                                 orderby a.Rank ascending
-                                                 select new AttachmentLinks
-                                                 {
-                                                     Name = a.AttachmentName,
-                                                     Src = "/data/File?id=" + a.AttachmentId,
-                                                     Id = a.AttachmentId,
-                                                     Size = a.AttachmentSize,
-                                                     Type = a.AttachmentType
-                                                 }).ToListAsync();
-
-                ViewData["RelatedTerms"] = await (from r in _context.DpTermAnnotations
-                                                  where r.DataProjectId == id
-                                                  join q in (from f in _context.UserFavorites
-                                                             where f.ItemType.ToLower() == "term"
-                                                                && f.UserId == MyUser.UserId
-                                                             select new { f.ItemId })
-                                                    on r.TermId equals q.ItemId into tmp
-                                                  from tfi in tmp.DefaultIfEmpty()
-                                                  orderby r.Rank, r.Term.Name
-                                                  select new RelatedItemData
-                                                  {
-                                                      Id = r.TermAnnotationId,
-                                                      CollectionId = r.DataProjectId,
-                                                      ItemId = r.TermId,
-                                                      Name = r.Term.Name,
-                                                      Rank = r.Rank,
-                                                      Annotation = r.Annotation ?? r.Term.Summary,
-                                                      Favorite = tfi.ItemId == null ? "no" : "yes"
-                                                  }).ToListAsync();
-
-                ViewData["RelatedReports"] = await (from r in _context.DpReportAnnotations
-                                                    where r.DataProjectId == id
-                                                    join q in (from f in _context.UserFavorites
-                                                               where f.ItemType.ToLower() == "report"
-                                                                  && f.UserId == MyUser.UserId
-                                                               select new { f.ItemId })
-                                              on r.ReportId equals q.ItemId into tmp
-                                                    from rfi in tmp.DefaultIfEmpty()
-                                                    orderby r.Report.ReportObjectType.Name, r.Rank, r.Report.Name
-                                                    select new RelatedItemData
-                                                    {
-                                                        Id = r.ReportAnnotationId,
-                                                        CollectionId = r.DataProjectId,
-                                                        ItemId = r.ReportId,
-                                                        Name = r.Report.DisplayName,
-                                                        Rank = r.Rank,
-                                                        ReportType = r.Report.ReportObjectType.Name,
-                                                        CertTag = r.Report.CertificationTag,
-                                                        EpicMasterFile = r.Report.EpicMasterFile,
-                                                        Annotation = r.Report.ReportObjectDoc.DeveloperDescription == null ? r.Report.Description : r.Report.ReportObjectDoc.DeveloperDescription,
-                                                        Image = r.Report.ReportObjectImagesDocs.Any() ? "/data/img?id=" + r.Report.ReportObjectImagesDocs.First().ImageId : "",
-                                                        Favorite = rfi.ItemId == null ? "no" : "yes",
-                                                        RunReportUrl = Helpers.HtmlHelpers.ReportUrlFromParams(_config["AppSettings:org_domain"], HttpContext, r.Report, _context, User.Identity.Name),
-                                                        ManageReportUrl = HtmlHelpers.ReportManageUrlFromParams(_config["AppSettings:org_domain"], HttpContext, r.Report.ReportObjectType.Name, r.Report.ReportServerPath, r.Report.SourceServer),
-                                                        EditReportUrl = HtmlHelpers.EditReportFromParams(_config["AppSettings:org_domain"], HttpContext, r.Report.ReportServerPath, r.Report.SourceServer, r.Report.EpicMasterFile, r.Report.EpicReportTemplateId.ToString(), r.Report.EpicRecordId.ToString()),
-                                                    }).ToListAsync();
+                ViewData["RelatedReports"] = await (
+                    from r in _context.DpReportAnnotations
+                    where r.DataProjectId == id
+                    join q in (
+                        from f in _context.UserFavorites
+                        where f.ItemType.ToLower() == "report" && f.UserId == MyUser.UserId
+                        select new { f.ItemId }
+                    )
+                        on r.ReportId equals q.ItemId
+                        into tmp
+                    from rfi in tmp.DefaultIfEmpty()
+                    orderby r.Report.ReportObjectType.Name ,r.Rank ,r.Report.Name
+                    select new RelatedItemData
+                    {
+                        Id = r.ReportAnnotationId,
+                        CollectionId = r.DataProjectId,
+                        ItemId = r.ReportId,
+                        Name = r.Report.DisplayName,
+                        Rank = r.Rank,
+                        ReportType = r.Report.ReportObjectType.Name,
+                        CertTag = r.Report.CertificationTag,
+                        EpicMasterFile = r.Report.EpicMasterFile,
+                        Annotation =
+                            r.Report.ReportObjectDoc.DeveloperDescription == null
+                                ? r.Report.Description
+                                : r.Report.ReportObjectDoc.DeveloperDescription,
+                        Image = r.Report.ReportObjectImagesDocs.Any()
+                          ? "/data/img?id=" + r.Report.ReportObjectImagesDocs.First().ImageId
+                          : "",
+                        Favorite = rfi.ItemId == null ? "no" : "yes",
+                        RunReportUrl = Helpers.HtmlHelpers.ReportUrlFromParams(
+                            _config["AppSettings:org_domain"],
+                            HttpContext,
+                            r.Report,
+                            _context,
+                            User.Identity.Name
+                        ),
+                        ManageReportUrl = HtmlHelpers.ReportManageUrlFromParams(
+                            _config["AppSettings:org_domain"],
+                            HttpContext,
+                            r.Report.ReportObjectType.Name,
+                            r.Report.ReportServerPath,
+                            r.Report.SourceServer
+                        ),
+                        EditReportUrl = HtmlHelpers.EditReportFromParams(
+                            _config["AppSettings:org_domain"],
+                            HttpContext,
+                            r.Report.ReportServerPath,
+                            r.Report.SourceServer,
+                            r.Report.EpicMasterFile,
+                            r.Report.EpicReportTemplateId.ToString(),
+                            r.Report.EpicRecordId.ToString()
+                        ),
+                    }
+                ).ToListAsync();
 
                 if (Collection != null)
                 {
@@ -331,56 +411,71 @@ namespace Atlas_Web.Pages.Collections
                 }
             }
 
-            AllCollections = await (from i in _context.DpDataProjects
-                                    orderby i.LastUpdateDate descending
-                                    select new AllCollectionsData
-                                    {
-                                        Id = i.DataProjectId,
-                                        Name = i.Name,
-                                        Description = string.IsNullOrEmpty(i.Description) ? i.Purpose : i.Description,
-                                        Favorite = (from f in _context.UserFavorites
-                                                    where f.ItemType == "collection"
-                                                       && f.UserId == MyUser.UserId
-                                                       && f.ItemId == i.DataProjectId
-                                                    select new { f.ItemId }).Any() ? "yes" : "no"
-                                    }).ToListAsync();
+            AllCollections = await (
+                from i in _context.DpDataProjects
+                orderby i.LastUpdateDate descending
+                select new AllCollectionsData
+                {
+                    Id = i.DataProjectId,
+                    Name = i.Name,
+                    Description = string.IsNullOrEmpty(i.Description) ? i.Purpose : i.Description,
+                    Favorite = (
+                        from f in _context.UserFavorites
+                        where
+                            f.ItemType == "collection"
+                            && f.UserId == MyUser.UserId
+                            && f.ItemId == i.DataProjectId
+                        select new { f.ItemId }
+                    ).Any()
+                      ? "yes"
+                      : "no"
+                }
+            ).ToListAsync();
             return Page();
         }
 
         public async Task<ActionResult> OnGetComments(int id)
         {
-            ViewData["Comments"] = await (from c in _context.DpDataProjectConversationMessages
-                                          where c.DataProjectConversation.DataProjectId == id
-                                          orderby c.DataProjectConversationId descending, c.DataProjectConversationMessageId ascending
-                                          select new CollectionCommentsData
-                                          {
-                                              CollectionId = id,
-                                              Date = c.PostDateTimeDisplayString,
-                                              ConvId = c.DataProjectConversationId,
-                                              MessId = c.DataProjectConversationMessageId,
-                                              User = c.User.Fullname_Cust,
-                                              Text = c.MessageText
-                                          }).ToListAsync();
+            ViewData["Comments"] = await (
+                from c in _context.DpDataProjectConversationMessages
+                where c.DataProjectConversation.DataProjectId == id
+                orderby c.DataProjectConversationId descending,c.DataProjectConversationMessageId ascending
+                select new CollectionCommentsData
+                {
+                    CollectionId = id,
+                    Date = c.PostDateTimeDisplayString,
+                    ConvId = c.DataProjectConversationId,
+                    MessId = c.DataProjectConversationMessageId,
+                    User = c.User.Fullname_Cust,
+                    Text = c.MessageText
+                }
+            ).ToListAsync();
             ViewData["Id"] = id;
-            ViewData["Permissions"] = UserHelpers.GetUserPermissions(_cache, _context, User.Identity.Name);
+            ViewData["Permissions"] = UserHelpers.GetUserPermissions(
+                _cache,
+                _context,
+                User.Identity.Name
+            );
             //s//return Partial((".+?"));
-            return new PartialViewResult()
-            {
-                ViewName = "Details/_Comments",
-                ViewData = ViewData
-            };
+            return new PartialViewResult() { ViewName = "Details/_Comments", ViewData = ViewData };
         }
 
         // new project
         public ActionResult OnPostNewCollection()
         {
-            var checkpoint = UserHelpers.CheckUserPermissions(_cache, _context, User.Identity.Name, 26);
+            var checkpoint = UserHelpers.CheckUserPermissions(
+                _cache,
+                _context,
+                User.Identity.Name,
+                26
+            );
             if (!ModelState.IsValid || DpDataProject.Name is null || !checkpoint)
             {
                 return RedirectToPage("/Collections/Index");
             }
 
-            DpDataProject.LastUpdateUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name).UserId;
+            DpDataProject.LastUpdateUser =
+                UserHelpers.GetUser(_cache, _context, User.Identity.Name).UserId;
             DpDataProject.LastUpdateDate = DateTime.Now;
             _context.DpDataProjects.Add(DpDataProject);
             _context.SaveChanges();
@@ -390,27 +485,45 @@ namespace Atlas_Web.Pages.Collections
 
         public ActionResult OnGetDeleteCollection(int Id)
         {
-            var checkpoint = UserHelpers.CheckUserPermissions(_cache, _context, User.Identity.Name, 27);
+            var checkpoint = UserHelpers.CheckUserPermissions(
+                _cache,
+                _context,
+                User.Identity.Name,
+                27
+            );
             if (!checkpoint)
             {
-                return RedirectToPage("/Collections/Index", new { id = DpDataProject.DataProjectId });
+                return RedirectToPage(
+                    "/Collections/Index",
+                    new { id = DpDataProject.DataProjectId }
+                );
             }
 
             // delete report annotations, term annotations and agreements
             // then delete project and save.
-            _context.RemoveRange(_context.DpDataProjectConversationMessages.Where(x => x.DataProjectConversation.DataProjectId == Id));
+            _context.RemoveRange(
+                _context.DpDataProjectConversationMessages.Where(
+                    x => x.DataProjectConversation.DataProjectId == Id
+                )
+            );
             _context.SaveChanges();
-            _context.RemoveRange(_context.DpDataProjectConversations.Where(x => x.DataProjectId == Id));
+            _context.RemoveRange(
+                _context.DpDataProjectConversations.Where(x => x.DataProjectId == Id)
+            );
             _context.SaveChanges();
             _context.RemoveRange(_context.DpReportAnnotations.Where(m => m.DataProjectId == Id));
             _context.SaveChanges();
             _context.RemoveRange(_context.DpTermAnnotations.Where(m => m.DataProjectId == Id));
             _context.SaveChanges();
-            _context.RemoveRange(_context.DpAgreementUsers.Where(x => x.Agreement.DataProjectId == Id));
+            _context.RemoveRange(
+                _context.DpAgreementUsers.Where(x => x.Agreement.DataProjectId == Id)
+            );
             _context.SaveChanges();
             _context.RemoveRange(_context.DpAgreements.Where(m => m.DataProjectId == Id));
             _context.SaveChanges();
-                        _context.Remove(_context.DpDataProjects.Where(m => m.DataProjectId == Id).FirstOrDefault());
+            _context.Remove(
+                _context.DpDataProjects.Where(m => m.DataProjectId == Id).FirstOrDefault()
+            );
             _context.SaveChanges();
 
             return RedirectToPage("/Collections/Index");
@@ -419,17 +532,28 @@ namespace Atlas_Web.Pages.Collections
         // edit projects
         public ActionResult OnPostEditCollection()
         {
-            var checkpoint = UserHelpers.CheckUserPermissions(_cache, _context, User.Identity.Name, 28);
+            var checkpoint = UserHelpers.CheckUserPermissions(
+                _cache,
+                _context,
+                User.Identity.Name,
+                28
+            );
             if (!ModelState.IsValid || !checkpoint)
             {
-                return RedirectToPage("/Collections/Index", new { id = DpDataProject.DataProjectId });
+                return RedirectToPage(
+                    "/Collections/Index",
+                    new { id = DpDataProject.DataProjectId }
+                );
             }
 
             // we get a copy of the project and then will only update several fields.
-            DpDataProject NewDpDataProject = _context.DpDataProjects.Where(m => m.DataProjectId == DpDataProject.DataProjectId).FirstOrDefault();
+            DpDataProject NewDpDataProject = _context.DpDataProjects
+                .Where(m => m.DataProjectId == DpDataProject.DataProjectId)
+                .FirstOrDefault();
 
             // update last update values & update remaining fields
-            NewDpDataProject.LastUpdateUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name).UserId;
+            NewDpDataProject.LastUpdateUser =
+                UserHelpers.GetUser(_cache, _context, User.Identity.Name).UserId;
             NewDpDataProject.LastUpdateDate = DateTime.Now;
             NewDpDataProject.Name = DpDataProject.Name;
             NewDpDataProject.Description = DpDataProject.Description;
@@ -451,48 +575,95 @@ namespace Atlas_Web.Pages.Collections
 
         public async Task<ActionResult> OnPostAddLinkedReport()
         {
-            var checkpoint = UserHelpers.CheckUserPermissions(_cache, _context, User.Identity.Name, 28);
-            if (ModelState.IsValid && DpReportAnnotation.DataProjectId > 0 && DpReportAnnotation.ReportId > 0 && checkpoint)
+            var checkpoint = UserHelpers.CheckUserPermissions(
+                _cache,
+                _context,
+                User.Identity.Name,
+                28
+            );
+            if (
+                ModelState.IsValid
+                && DpReportAnnotation.DataProjectId > 0
+                && DpReportAnnotation.ReportId > 0
+                && checkpoint
+            )
             {
-                if (!_context.DpReportAnnotations.Any(x => x.ReportId == DpReportAnnotation.ReportId && x.DataProjectId == DpReportAnnotation.DataProjectId))
+                if (
+                    !_context.DpReportAnnotations.Any(
+                        x =>
+                            x.ReportId == DpReportAnnotation.ReportId
+                            && x.DataProjectId == DpReportAnnotation.DataProjectId
+                    )
+                )
                 {
                     _context.Add(DpReportAnnotation);
 
-                    // update last update date on report. 
-                    _context.DpDataProjects.Where(d => d.DataProjectId == DpReportAnnotation.DataProjectId).FirstOrDefault().LastUpdateDate = DateTime.Now;
-                    _context.DpDataProjects.Where(d => d.DataProjectId == DpReportAnnotation.DataProjectId).FirstOrDefault().LastUpdateUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name).UserId;
+                    // update last update date on report.
+                    _context.DpDataProjects
+                        .Where(d => d.DataProjectId == DpReportAnnotation.DataProjectId)
+                        .FirstOrDefault().LastUpdateDate = DateTime.Now;
+                    _context.DpDataProjects
+                        .Where(d => d.DataProjectId == DpReportAnnotation.DataProjectId)
+                        .FirstOrDefault().LastUpdateUser =
+                        UserHelpers.GetUser(_cache, _context, User.Identity.Name).UserId;
                     await _context.SaveChangesAsync();
                 }
             }
 
             var MyUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
 
-            ViewData["RelatedReports"] = await (from r in _context.DpReportAnnotations
-                                                where r.DataProjectId == DpReportAnnotation.DataProjectId
-                                                join q in (from f in _context.UserFavorites
-                                                           where f.ItemType.ToLower() == "report"
-                                                              && f.UserId == MyUser.UserId
-                                                           select new { f.ItemId })
-                                              on r.ReportId equals q.ItemId into tmp
-                                                from rfi in tmp.DefaultIfEmpty()
-                                                orderby r.Report.ReportObjectType.Name, r.Rank, r.Report.Name
-                                                select new RelatedItemData
-                                                {
-                                                    Id = r.ReportAnnotationId,
-                                                    CollectionId = r.DataProjectId,
-                                                    ItemId = r.ReportId,
-                                                    Name = r.Report.DisplayName,
-                                                    Rank = r.Rank,
-                                                    ReportType = r.Report.ReportObjectType.Name,
-                                                    CertTag = r.Report.CertificationTag,
-                                                    EpicMasterFile = r.Report.EpicMasterFile,
-                                                    Annotation = r.Report.ReportObjectDoc.DeveloperDescription,
-                                                    Image = r.Report.ReportObjectImagesDocs.Any() ? "/data/img?id=" + r.Report.ReportObjectImagesDocs.First().ImageId : "",
-                                                    Favorite = rfi.ItemId == null ? "no" : "yes",
-                                                    RunReportUrl = Helpers.HtmlHelpers.ReportUrlFromParams(_config["AppSettings:org_domain"], HttpContext, r.Report, _context, User.Identity.Name),
-                                                    ManageReportUrl = HtmlHelpers.ReportManageUrlFromParams(_config["AppSettings:org_domain"], HttpContext, r.Report.ReportObjectType.Name, r.Report.ReportServerPath, r.Report.SourceServer),
-                                                    EditReportUrl = HtmlHelpers.EditReportFromParams(_config["AppSettings:org_domain"], HttpContext, r.Report.ReportServerPath, r.Report.SourceServer, r.Report.EpicMasterFile, r.Report.EpicReportTemplateId.ToString(), r.Report.EpicRecordId.ToString()),
-                                                }).ToListAsync();
+            ViewData["RelatedReports"] = await (
+                from r in _context.DpReportAnnotations
+                where r.DataProjectId == DpReportAnnotation.DataProjectId
+                join q in (
+                    from f in _context.UserFavorites
+                    where f.ItemType.ToLower() == "report" && f.UserId == MyUser.UserId
+                    select new { f.ItemId }
+                )
+                    on r.ReportId equals q.ItemId
+                    into tmp
+                from rfi in tmp.DefaultIfEmpty()
+                orderby r.Report.ReportObjectType.Name ,r.Rank ,r.Report.Name
+                select new RelatedItemData
+                {
+                    Id = r.ReportAnnotationId,
+                    CollectionId = r.DataProjectId,
+                    ItemId = r.ReportId,
+                    Name = r.Report.DisplayName,
+                    Rank = r.Rank,
+                    ReportType = r.Report.ReportObjectType.Name,
+                    CertTag = r.Report.CertificationTag,
+                    EpicMasterFile = r.Report.EpicMasterFile,
+                    Annotation = r.Report.ReportObjectDoc.DeveloperDescription,
+                    Image = r.Report.ReportObjectImagesDocs.Any()
+                      ? "/data/img?id=" + r.Report.ReportObjectImagesDocs.First().ImageId
+                      : "",
+                    Favorite = rfi.ItemId == null ? "no" : "yes",
+                    RunReportUrl = Helpers.HtmlHelpers.ReportUrlFromParams(
+                        _config["AppSettings:org_domain"],
+                        HttpContext,
+                        r.Report,
+                        _context,
+                        User.Identity.Name
+                    ),
+                    ManageReportUrl = HtmlHelpers.ReportManageUrlFromParams(
+                        _config["AppSettings:org_domain"],
+                        HttpContext,
+                        r.Report.ReportObjectType.Name,
+                        r.Report.ReportServerPath,
+                        r.Report.SourceServer
+                    ),
+                    EditReportUrl = HtmlHelpers.EditReportFromParams(
+                        _config["AppSettings:org_domain"],
+                        HttpContext,
+                        r.Report.ReportServerPath,
+                        r.Report.SourceServer,
+                        r.Report.EpicMasterFile,
+                        r.Report.EpicReportTemplateId.ToString(),
+                        r.Report.EpicRecordId.ToString()
+                    ),
+                }
+            ).ToListAsync();
             //return Partial((".+?"));
             return new PartialViewResult()
             {
@@ -503,11 +674,17 @@ namespace Atlas_Web.Pages.Collections
 
         public async Task<ActionResult> OnPostEditLinkedReport()
         {
-
-            var checkpoint = UserHelpers.CheckUserPermissions(_cache, _context, User.Identity.Name, 28);
+            var checkpoint = UserHelpers.CheckUserPermissions(
+                _cache,
+                _context,
+                User.Identity.Name,
+                28
+            );
             if (ModelState.IsValid && DpReportAnnotation.ReportAnnotationId > 0 && checkpoint)
             {
-                var q = _context.DpReportAnnotations.Where(x => x.ReportAnnotationId == DpReportAnnotation.ReportAnnotationId).FirstOrDefault();
+                var q = _context.DpReportAnnotations
+                    .Where(x => x.ReportAnnotationId == DpReportAnnotation.ReportAnnotationId)
+                    .FirstOrDefault();
                 q.Annotation = DpReportAnnotation.Annotation;
                 q.Rank = DpReportAnnotation.Rank;
                 await _context.SaveChangesAsync();
@@ -515,32 +692,58 @@ namespace Atlas_Web.Pages.Collections
 
             var MyUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
 
-            ViewData["RelatedReports"] = await (from r in _context.DpReportAnnotations
-                                                where r.DataProjectId == DpReportAnnotation.DataProjectId
-                                                join q in (from f in _context.UserFavorites
-                                                           where f.ItemType.ToLower() == "report"
-                                                              && f.UserId == MyUser.UserId
-                                                           select new { f.ItemId })
-                                              on r.ReportId equals q.ItemId into tmp
-                                                from rfi in tmp.DefaultIfEmpty()
-                                                orderby r.Report.ReportObjectType.Name, r.Rank, r.Report.Name
-                                                select new RelatedItemData
-                                                {
-                                                    Id = r.ReportAnnotationId,
-                                                    CollectionId = r.DataProjectId,
-                                                    ItemId = r.ReportId,
-                                                    Name = r.Report.DisplayName,
-                                                    Rank = r.Rank,
-                                                    ReportType = r.Report.ReportObjectType.Name,
-                                                    CertTag = r.Report.CertificationTag,
-                                                    EpicMasterFile = r.Report.EpicMasterFile,
-                                                    Annotation = r.Report.ReportObjectDoc.DeveloperDescription,
-                                                    Image = r.Report.ReportObjectImagesDocs.Any() ? "/data/img?id=" + r.Report.ReportObjectImagesDocs.First().ImageId : "",
-                                                    Favorite = rfi.ItemId == null ? "no" : "yes",
-                                                    RunReportUrl = Helpers.HtmlHelpers.ReportUrlFromParams(_config["AppSettings:org_domain"], HttpContext, r.Report, _context, User.Identity.Name),
-                                                    ManageReportUrl = HtmlHelpers.ReportManageUrlFromParams(_config["AppSettings:org_domain"], HttpContext, r.Report.ReportObjectType.Name, r.Report.ReportServerPath, r.Report.SourceServer),
-                                                    EditReportUrl = HtmlHelpers.EditReportFromParams(_config["AppSettings:org_domain"], HttpContext, r.Report.ReportServerPath, r.Report.SourceServer, r.Report.EpicMasterFile, r.Report.EpicReportTemplateId.ToString(), r.Report.EpicRecordId.ToString()),
-                                                }).ToListAsync();
+            ViewData["RelatedReports"] = await (
+                from r in _context.DpReportAnnotations
+                where r.DataProjectId == DpReportAnnotation.DataProjectId
+                join q in (
+                    from f in _context.UserFavorites
+                    where f.ItemType.ToLower() == "report" && f.UserId == MyUser.UserId
+                    select new { f.ItemId }
+                )
+                    on r.ReportId equals q.ItemId
+                    into tmp
+                from rfi in tmp.DefaultIfEmpty()
+                orderby r.Report.ReportObjectType.Name ,r.Rank ,r.Report.Name
+                select new RelatedItemData
+                {
+                    Id = r.ReportAnnotationId,
+                    CollectionId = r.DataProjectId,
+                    ItemId = r.ReportId,
+                    Name = r.Report.DisplayName,
+                    Rank = r.Rank,
+                    ReportType = r.Report.ReportObjectType.Name,
+                    CertTag = r.Report.CertificationTag,
+                    EpicMasterFile = r.Report.EpicMasterFile,
+                    Annotation = r.Report.ReportObjectDoc.DeveloperDescription,
+                    Image = r.Report.ReportObjectImagesDocs.Any()
+                      ? "/data/img?id=" + r.Report.ReportObjectImagesDocs.First().ImageId
+                      : "",
+                    Favorite = rfi.ItemId == null ? "no" : "yes",
+                    RunReportUrl = Helpers.HtmlHelpers.ReportUrlFromParams(
+                        _config["AppSettings:org_domain"],
+                        HttpContext,
+                        r.Report,
+                        _context,
+                        User.Identity.Name
+                    ),
+                    ManageReportUrl = HtmlHelpers.ReportManageUrlFromParams(
+                        _config["AppSettings:org_domain"],
+                        HttpContext,
+                        r.Report.ReportObjectType.Name,
+                        r.Report.ReportServerPath,
+                        r.Report.SourceServer
+                    ),
+                    EditReportUrl = HtmlHelpers.EditReportFromParams(
+                        _config["AppSettings:org_domain"],
+                        HttpContext,
+                        r.Report.ReportServerPath,
+                        r.Report.SourceServer,
+                        r.Report.EpicMasterFile,
+                        r.Report.EpicReportTemplateId.ToString(),
+                        r.Report.EpicRecordId.ToString()
+                    ),
+                }
+            ).ToListAsync();
             //return Partial((".+?"));
             return new PartialViewResult()
             {
@@ -551,44 +754,80 @@ namespace Atlas_Web.Pages.Collections
 
         public async Task<ActionResult> OnGetDeleteLinkedReport(int id)
         {
-
-            var checkpoint = UserHelpers.CheckUserPermissions(_cache, _context, User.Identity.Name, 28);
-            var ta = _context.DpReportAnnotations.Where(x => x.ReportAnnotationId == id).FirstOrDefault().DataProjectId;
+            var checkpoint = UserHelpers.CheckUserPermissions(
+                _cache,
+                _context,
+                User.Identity.Name,
+                28
+            );
+            var ta =
+                _context.DpReportAnnotations
+                    .Where(x => x.ReportAnnotationId == id)
+                    .FirstOrDefault().DataProjectId;
             if (checkpoint)
             {
-                _context.DpReportAnnotations.Remove(_context.DpReportAnnotations.Where(x => x.ReportAnnotationId == id).FirstOrDefault());
+                _context.DpReportAnnotations.Remove(
+                    _context.DpReportAnnotations
+                        .Where(x => x.ReportAnnotationId == id)
+                        .FirstOrDefault()
+                );
                 await _context.SaveChangesAsync();
             }
 
             var MyUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
 
-
-            ViewData["RelatedReports"] = await (from r in _context.DpReportAnnotations
-                                                where r.DataProjectId == ta
-                                                join q in (from f in _context.UserFavorites
-                                                           where f.ItemType.ToLower() == "report"
-                                                              && f.UserId == MyUser.UserId
-                                                           select new { f.ItemId })
-                                              on r.ReportId equals q.ItemId into tmp
-                                                from rfi in tmp.DefaultIfEmpty()
-                                                orderby r.Report.ReportObjectType.Name, r.Rank, r.Report.Name
-                                                select new RelatedItemData
-                                                {
-                                                    Id = r.ReportAnnotationId,
-                                                    CollectionId = r.DataProjectId,
-                                                    ItemId = r.ReportId,
-                                                    Name = r.Report.DisplayName,
-                                                    Rank = r.Rank,
-                                                    ReportType = r.Report.ReportObjectType.Name,
-                                                    CertTag = r.Report.CertificationTag,
-                                                    EpicMasterFile = r.Report.EpicMasterFile,
-                                                    Annotation = r.Report.ReportObjectDoc.DeveloperDescription,
-                                                    Image = r.Report.ReportObjectImagesDocs.Any() ? "/data/img?id=" + r.Report.ReportObjectImagesDocs.First().ImageId : "",
-                                                    Favorite = rfi.ItemId == null ? "no" : "yes",
-                                                    RunReportUrl = Helpers.HtmlHelpers.ReportUrlFromParams(_config["AppSettings:org_domain"], HttpContext, r.Report, _context, User.Identity.Name),
-                                                    ManageReportUrl = HtmlHelpers.ReportManageUrlFromParams(_config["AppSettings:org_domain"], HttpContext, r.Report.ReportObjectType.Name, r.Report.ReportServerPath, r.Report.SourceServer),
-                                                    EditReportUrl = HtmlHelpers.EditReportFromParams(_config["AppSettings:org_domain"], HttpContext, r.Report.ReportServerPath, r.Report.SourceServer, r.Report.EpicMasterFile, r.Report.EpicReportTemplateId.ToString(), r.Report.EpicRecordId.ToString()),
-                                                }).ToListAsync();
+            ViewData["RelatedReports"] = await (
+                from r in _context.DpReportAnnotations
+                where r.DataProjectId == ta
+                join q in (
+                    from f in _context.UserFavorites
+                    where f.ItemType.ToLower() == "report" && f.UserId == MyUser.UserId
+                    select new { f.ItemId }
+                )
+                    on r.ReportId equals q.ItemId
+                    into tmp
+                from rfi in tmp.DefaultIfEmpty()
+                orderby r.Report.ReportObjectType.Name ,r.Rank ,r.Report.Name
+                select new RelatedItemData
+                {
+                    Id = r.ReportAnnotationId,
+                    CollectionId = r.DataProjectId,
+                    ItemId = r.ReportId,
+                    Name = r.Report.DisplayName,
+                    Rank = r.Rank,
+                    ReportType = r.Report.ReportObjectType.Name,
+                    CertTag = r.Report.CertificationTag,
+                    EpicMasterFile = r.Report.EpicMasterFile,
+                    Annotation = r.Report.ReportObjectDoc.DeveloperDescription,
+                    Image = r.Report.ReportObjectImagesDocs.Any()
+                      ? "/data/img?id=" + r.Report.ReportObjectImagesDocs.First().ImageId
+                      : "",
+                    Favorite = rfi.ItemId == null ? "no" : "yes",
+                    RunReportUrl = Helpers.HtmlHelpers.ReportUrlFromParams(
+                        _config["AppSettings:org_domain"],
+                        HttpContext,
+                        r.Report,
+                        _context,
+                        User.Identity.Name
+                    ),
+                    ManageReportUrl = HtmlHelpers.ReportManageUrlFromParams(
+                        _config["AppSettings:org_domain"],
+                        HttpContext,
+                        r.Report.ReportObjectType.Name,
+                        r.Report.ReportServerPath,
+                        r.Report.SourceServer
+                    ),
+                    EditReportUrl = HtmlHelpers.EditReportFromParams(
+                        _config["AppSettings:org_domain"],
+                        HttpContext,
+                        r.Report.ReportServerPath,
+                        r.Report.SourceServer,
+                        r.Report.EpicMasterFile,
+                        r.Report.EpicReportTemplateId.ToString(),
+                        r.Report.EpicRecordId.ToString()
+                    ),
+                }
+            ).ToListAsync();
             //return Partial((".+?"));
             return new PartialViewResult()
             {
@@ -599,59 +838,85 @@ namespace Atlas_Web.Pages.Collections
 
         public async Task<ActionResult> OnPostAddLinkedTerm()
         {
-            var checkpoint = UserHelpers.CheckUserPermissions(_cache, _context, User.Identity.Name, 28);
+            var checkpoint = UserHelpers.CheckUserPermissions(
+                _cache,
+                _context,
+                User.Identity.Name,
+                28
+            );
 
-            if (ModelState.IsValid && DpTermAnnotation.DataProjectId > 0 && DpTermAnnotation.TermId > 0 && checkpoint)
+            if (
+                ModelState.IsValid
+                && DpTermAnnotation.DataProjectId > 0
+                && DpTermAnnotation.TermId > 0
+                && checkpoint
+            )
             {
-
                 // only add link if not existing.
-                if (!_context.DpTermAnnotations.Any(x => x.TermId == DpTermAnnotation.TermId && x.DataProjectId == DpTermAnnotation.DataProjectId))
+                if (
+                    !_context.DpTermAnnotations.Any(
+                        x =>
+                            x.TermId == DpTermAnnotation.TermId
+                            && x.DataProjectId == DpTermAnnotation.DataProjectId
+                    )
+                )
                 {
                     _context.Add(DpTermAnnotation);
 
-                    // update last update date on report. 
-                    _context.DpDataProjects.Where(d => d.DataProjectId == DpTermAnnotation.DataProjectId).FirstOrDefault().LastUpdateDate = DateTime.Now;
-                    _context.DpDataProjects.Where(d => d.DataProjectId == DpTermAnnotation.DataProjectId).FirstOrDefault().LastUpdateUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name).UserId;
+                    // update last update date on report.
+                    _context.DpDataProjects
+                        .Where(d => d.DataProjectId == DpTermAnnotation.DataProjectId)
+                        .FirstOrDefault().LastUpdateDate = DateTime.Now;
+                    _context.DpDataProjects
+                        .Where(d => d.DataProjectId == DpTermAnnotation.DataProjectId)
+                        .FirstOrDefault().LastUpdateUser =
+                        UserHelpers.GetUser(_cache, _context, User.Identity.Name).UserId;
                     await _context.SaveChangesAsync();
                 }
             }
 
-
             var MyUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
 
-            ViewData["RelatedTerms"] = await (from r in _context.DpTermAnnotations
-                                              where r.DataProjectId == DpTermAnnotation.DataProjectId
-                                              join q in (from f in _context.UserFavorites
-                                                         where f.ItemType.ToLower() == "term"
-                                                            && f.UserId == MyUser.UserId
-                                                         select new { f.ItemId })
-                                                on r.TermId equals q.ItemId into tmp
-                                              from tfi in tmp.DefaultIfEmpty()
-                                              orderby r.Rank, r.Term.Name
-                                              select new RelatedItemData
-                                              {
-                                                  Id = r.TermAnnotationId,
-                                                  CollectionId = r.DataProjectId,
-                                                  ItemId = r.TermId,
-                                                  Name = r.Term.Name,
-                                                  Rank = r.Rank,
-                                                  Annotation = r.Annotation ?? r.Term.Summary,
-                                                  Favorite = tfi.ItemId == null ? "no" : "yes"
-                                              }).ToListAsync();
+            ViewData["RelatedTerms"] = await (
+                from r in _context.DpTermAnnotations
+                where r.DataProjectId == DpTermAnnotation.DataProjectId
+                join q in (
+                    from f in _context.UserFavorites
+                    where f.ItemType.ToLower() == "term" && f.UserId == MyUser.UserId
+                    select new { f.ItemId }
+                )
+                    on r.TermId equals q.ItemId
+                    into tmp
+                from tfi in tmp.DefaultIfEmpty()
+                orderby r.Rank ,r.Term.Name
+                select new RelatedItemData
+                {
+                    Id = r.TermAnnotationId,
+                    CollectionId = r.DataProjectId,
+                    ItemId = r.TermId,
+                    Name = r.Term.Name,
+                    Rank = r.Rank,
+                    Annotation = r.Annotation ?? r.Term.Summary,
+                    Favorite = tfi.ItemId == null ? "no" : "yes"
+                }
+            ).ToListAsync();
             //return Partial((".+?"));
-            return new PartialViewResult()
-            {
-                ViewName = "Edit/_CurrentTerms",
-                ViewData = ViewData
-            };
+            return new PartialViewResult() { ViewName = "Edit/_CurrentTerms", ViewData = ViewData };
         }
 
         public async Task<ActionResult> OnPostEditLinkedTerm()
         {
-            var checkpoint = UserHelpers.CheckUserPermissions(_cache, _context, User.Identity.Name, 28);
+            var checkpoint = UserHelpers.CheckUserPermissions(
+                _cache,
+                _context,
+                User.Identity.Name,
+                28
+            );
             if (ModelState.IsValid && DpTermAnnotation.TermAnnotationId > 0 && checkpoint)
             {
-                var q = _context.DpTermAnnotations.Where(x => x.TermAnnotationId == DpTermAnnotation.TermAnnotationId).FirstOrDefault();
+                var q = _context.DpTermAnnotations
+                    .Where(x => x.TermAnnotationId == DpTermAnnotation.TermAnnotationId)
+                    .FirstOrDefault();
                 q.Annotation = DpTermAnnotation.Annotation;
                 q.Rank = DpTermAnnotation.Rank;
                 await _context.SaveChangesAsync();
@@ -659,86 +924,112 @@ namespace Atlas_Web.Pages.Collections
 
             var MyUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
 
-            ViewData["RelatedTerms"] = await (from r in _context.DpTermAnnotations
-                                              where r.DataProjectId == DpTermAnnotation.DataProjectId
-                                              join q in (from f in _context.UserFavorites
-                                                         where f.ItemType.ToLower() == "term"
-                                                            && f.UserId == MyUser.UserId
-                                                         select new { f.ItemId })
-                                                on r.TermId equals q.ItemId into tmp
-                                              from tfi in tmp.DefaultIfEmpty()
-                                              orderby r.Rank, r.Term.Name
-                                              select new RelatedItemData
-                                              {
-                                                  Id = r.TermAnnotationId,
-                                                  CollectionId = r.DataProjectId,
-                                                  ItemId = r.TermId,
-                                                  Name = r.Term.Name,
-                                                  Rank = r.Rank,
-                                                  Annotation = r.Annotation ?? r.Term.Summary,
-                                                  Favorite = tfi.ItemId == null ? "no" : "yes"
-                                              }).ToListAsync();
+            ViewData["RelatedTerms"] = await (
+                from r in _context.DpTermAnnotations
+                where r.DataProjectId == DpTermAnnotation.DataProjectId
+                join q in (
+                    from f in _context.UserFavorites
+                    where f.ItemType.ToLower() == "term" && f.UserId == MyUser.UserId
+                    select new { f.ItemId }
+                )
+                    on r.TermId equals q.ItemId
+                    into tmp
+                from tfi in tmp.DefaultIfEmpty()
+                orderby r.Rank ,r.Term.Name
+                select new RelatedItemData
+                {
+                    Id = r.TermAnnotationId,
+                    CollectionId = r.DataProjectId,
+                    ItemId = r.TermId,
+                    Name = r.Term.Name,
+                    Rank = r.Rank,
+                    Annotation = r.Annotation ?? r.Term.Summary,
+                    Favorite = tfi.ItemId == null ? "no" : "yes"
+                }
+            ).ToListAsync();
             //return Partial((".+?"));
-            return new PartialViewResult()
-            {
-                ViewName = "Edit/_CurrentTerms",
-                ViewData = ViewData
-            };
-
+            return new PartialViewResult() { ViewName = "Edit/_CurrentTerms", ViewData = ViewData };
         }
 
         public async Task<ActionResult> OnGetDeleteLinkedTerm(int id)
         {
-            var checkpoint = UserHelpers.CheckUserPermissions(_cache, _context, User.Identity.Name, 28);
-            var ta = _context.DpTermAnnotations.Where(x => x.TermAnnotationId == id).FirstOrDefault().DataProjectId;
+            var checkpoint = UserHelpers.CheckUserPermissions(
+                _cache,
+                _context,
+                User.Identity.Name,
+                28
+            );
+            var ta =
+                _context.DpTermAnnotations
+                    .Where(x => x.TermAnnotationId == id)
+                    .FirstOrDefault().DataProjectId;
             if (checkpoint)
             {
-                _context.DpTermAnnotations.Remove(_context.DpTermAnnotations.Where(x => x.TermAnnotationId == id).FirstOrDefault());
+                _context.DpTermAnnotations.Remove(
+                    _context.DpTermAnnotations.Where(x => x.TermAnnotationId == id).FirstOrDefault()
+                );
                 await _context.SaveChangesAsync();
             }
 
             var MyUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
 
-            ViewData["RelatedTerms"] = await (from r in _context.DpTermAnnotations
-                                              where r.DataProjectId == ta
-                                              join q in (from f in _context.UserFavorites
-                                                         where f.ItemType.ToLower() == "term"
-                                                            && f.UserId == MyUser.UserId
-                                                         select new { f.ItemId })
-                                                on r.TermId equals q.ItemId into tmp
-                                              from tfi in tmp.DefaultIfEmpty()
-                                              orderby r.Rank, r.Term.Name
-                                              select new RelatedItemData
-                                              {
-                                                  Id = r.TermAnnotationId,
-                                                  CollectionId = r.DataProjectId,
-                                                  ItemId = r.TermId,
-                                                  Name = r.Term.Name,
-                                                  Rank = r.Rank,
-                                                  Annotation = r.Annotation ?? r.Term.Summary,
-                                                  Favorite = tfi.ItemId == null ? "no" : "yes"
-                                              }).ToListAsync();
+            ViewData["RelatedTerms"] = await (
+                from r in _context.DpTermAnnotations
+                where r.DataProjectId == ta
+                join q in (
+                    from f in _context.UserFavorites
+                    where f.ItemType.ToLower() == "term" && f.UserId == MyUser.UserId
+                    select new { f.ItemId }
+                )
+                    on r.TermId equals q.ItemId
+                    into tmp
+                from tfi in tmp.DefaultIfEmpty()
+                orderby r.Rank ,r.Term.Name
+                select new RelatedItemData
+                {
+                    Id = r.TermAnnotationId,
+                    CollectionId = r.DataProjectId,
+                    ItemId = r.TermId,
+                    Name = r.Term.Name,
+                    Rank = r.Rank,
+                    Annotation = r.Annotation ?? r.Term.Summary,
+                    Favorite = tfi.ItemId == null ? "no" : "yes"
+                }
+            ).ToListAsync();
             //return Partial((".+?"));
-            return new PartialViewResult()
-            {
-                ViewName = "Edit/_CurrentTerms",
-                ViewData = ViewData
-            };
-
+            return new PartialViewResult() { ViewName = "Edit/_CurrentTerms", ViewData = ViewData };
         }
 
         public ActionResult OnPostAddAgreement()
         {
-            var checkpoint = UserHelpers.CheckUserPermissions(_cache, _context, User.Identity.Name, 28);
+            var checkpoint = UserHelpers.CheckUserPermissions(
+                _cache,
+                _context,
+                User.Identity.Name,
+                28
+            );
             if (ModelState.IsValid && checkpoint)
             {
                 // last updated
-                MyDpAgreement.LastUpdateUserNavigation = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
+                MyDpAgreement.LastUpdateUserNavigation = UserHelpers.GetUser(
+                    _cache,
+                    _context,
+                    User.Identity.Name
+                );
                 MyDpAgreement.LastUpdateDate = DateTime.Now;
                 _context.Add(MyDpAgreement);
 
                 // save any linked users
-                _context.AddRange(DpAgreementUsers.Select(MyUser => new DpAgreementUser { UserId = MyUser, AgreementId = MyDpAgreement.AgreementId }));
+                _context.AddRange(
+                    DpAgreementUsers.Select(
+                        MyUser =>
+                            new DpAgreementUser
+                            {
+                                UserId = MyUser,
+                                AgreementId = MyDpAgreement.AgreementId
+                            }
+                    )
+                );
                 _context.SaveChanges();
             }
 
@@ -747,13 +1038,25 @@ namespace Atlas_Web.Pages.Collections
 
         public ActionResult OnPostRemoveAgreement(int Id)
         {
-            var checkpoint = UserHelpers.CheckUserPermissions(_cache, _context, User.Identity.Name, 28);
+            var checkpoint = UserHelpers.CheckUserPermissions(
+                _cache,
+                _context,
+                User.Identity.Name,
+                28
+            );
             if (checkpoint)
             {
                 // remove any linked users and remove agreement.
-                var ag = _context.DpAgreements.Where(x => x.AgreementId == Id).FirstOrDefault().DataProjectId;
-                _context.DpAgreementUsers.RemoveRange(_context.DpAgreementUsers.Where(x => x.AgreementId == Id));
-                _context.Remove(_context.DpAgreements.Where(x => x.AgreementId == Id).FirstOrDefault());
+                var ag =
+                    _context.DpAgreements
+                        .Where(x => x.AgreementId == Id)
+                        .FirstOrDefault().DataProjectId;
+                _context.DpAgreementUsers.RemoveRange(
+                    _context.DpAgreementUsers.Where(x => x.AgreementId == Id)
+                );
+                _context.Remove(
+                    _context.DpAgreements.Where(x => x.AgreementId == Id).FirstOrDefault()
+                );
                 _context.SaveChanges();
                 return RedirectToPage("/Collections/Index", new { id = Id });
             }
@@ -763,13 +1066,25 @@ namespace Atlas_Web.Pages.Collections
 
         public ActionResult OnPostEditAgreement()
         {
-            var checkpoint = UserHelpers.CheckUserPermissions(_cache, _context, User.Identity.Name, 28);
+            var checkpoint = UserHelpers.CheckUserPermissions(
+                _cache,
+                _context,
+                User.Identity.Name,
+                28
+            );
             if (ModelState.IsValid && checkpoint)
             {
                 var q = MyDpAgreement;
-                DpAgreement EditedDpAgreement = _context.DpAgreements.Where(x => x.AgreementId == MyDpAgreement.AgreementId && x.DataProjectId == MyDpAgreement.DataProjectId).FirstOrDefault();
+                DpAgreement EditedDpAgreement = _context.DpAgreements
+                    .Where(
+                        x =>
+                            x.AgreementId == MyDpAgreement.AgreementId
+                            && x.DataProjectId == MyDpAgreement.DataProjectId
+                    )
+                    .FirstOrDefault();
                 // last updated
-                EditedDpAgreement.LastUpdateUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name).UserId;
+                EditedDpAgreement.LastUpdateUser =
+                    UserHelpers.GetUser(_cache, _context, User.Identity.Name).UserId;
                 EditedDpAgreement.LastUpdateDate = DateTime.Now;
                 EditedDpAgreement.Description = MyDpAgreement.Description;
                 EditedDpAgreement.MeetingDate = MyDpAgreement.MeetingDate;
@@ -780,13 +1095,27 @@ namespace Atlas_Web.Pages.Collections
                 _context.SaveChanges();
 
                 // save any linked users
-                _context.RemoveRange(_context.DpAgreementUsers.Where(x => x.AgreementId.Equals(MyDpAgreement.AgreementId)));
-                _context.AddRange(DpAgreementUsers.Select(MyUser => new DpAgreementUser { UserId = MyUser, AgreementId = MyDpAgreement.AgreementId }));
+                _context.RemoveRange(
+                    _context.DpAgreementUsers.Where(
+                        x => x.AgreementId.Equals(MyDpAgreement.AgreementId)
+                    )
+                );
+                _context.AddRange(
+                    DpAgreementUsers.Select(
+                        MyUser =>
+                            new DpAgreementUser
+                            {
+                                UserId = MyUser,
+                                AgreementId = MyDpAgreement.AgreementId
+                            }
+                    )
+                );
                 _context.SaveChanges();
             }
 
             return RedirectToPage("/Collections/Index", new { id = MyDpAgreement.DataProjectId });
         }
+
         public async Task<ActionResult> OnPostNewComment()
         {
             if (!ModelState.IsValid || NewCommentReply.MessageText is null)
@@ -795,13 +1124,18 @@ namespace Atlas_Web.Pages.Collections
             }
 
             // if missing the conversation ID then create a new conversation.
-            if (!_context.DpDataProjectConversationMessages.Any(x => x.DataProjectConversationId == NewComment.DataProjectConversationId))
+            if (
+                !_context.DpDataProjectConversationMessages.Any(
+                    x => x.DataProjectConversationId == NewComment.DataProjectConversationId
+                )
+            )
             {
                 // create new comment
                 _context.Add(NewComment);
             }
             // add message
-            NewCommentReply.UserId = UserHelpers.GetUser(_cache, _context, User.Identity.Name).UserId;
+            NewCommentReply.UserId =
+                UserHelpers.GetUser(_cache, _context, User.Identity.Name).UserId;
             NewCommentReply.PostDateTime = System.DateTime.Now;
             NewCommentReply.DataProjectConversationId = NewComment.DataProjectConversationId;
             _context.Add(NewCommentReply);
@@ -809,7 +1143,6 @@ namespace Atlas_Web.Pages.Collections
 
             return await OnGetComments(NewComment.DataProjectId);
         }
-
 
         public async Task<ActionResult> OnPostDeleteComment()
         {
@@ -824,17 +1157,27 @@ namespace Atlas_Web.Pages.Collections
 
         public async Task<ActionResult> OnPostDeleteCommentStream()
         {
-            var checkpoint = UserHelpers.CheckUserPermissions(_cache, _context, User.Identity.Name, 25);
+            var checkpoint = UserHelpers.CheckUserPermissions(
+                _cache,
+                _context,
+                User.Identity.Name,
+                25
+            );
             if (ModelState.IsValid && checkpoint)
             {
                 // first delete all replys on comment. Delete comment.
-                _context.RemoveRange(_context.DpDataProjectConversationMessages.Where(x => x.DataProjectConversationId == NewComment.DataProjectConversationId));
+                _context.RemoveRange(
+                    _context.DpDataProjectConversationMessages.Where(
+                        x => x.DataProjectConversationId == NewComment.DataProjectConversationId
+                    )
+                );
                 _context.Remove(NewComment);
                 _context.SaveChanges();
             }
 
             return await OnGetComments(NewComment.DataProjectId);
         }
+
         public bool ValidateFileUpload(IFormFile file)
         {
             try
@@ -843,32 +1186,39 @@ namespace Atlas_Web.Pages.Collections
 
                 if (file == null)
                 {
-                    ModelState.AddModelError(file.Name, "The file was not received by the server. If this issue persists please contact Analytics.");
+                    ModelState.AddModelError(
+                        file.Name,
+                        "The file was not received by the server. If this issue persists please contact Analytics."
+                    );
                     return false;
                 }
                 else if (file.Length > 1024 * 1024)
                 {
-                    ModelState.AddModelError(file.Name, "The file is larger than 1MB. Please use a smaller image.");
+                    ModelState.AddModelError(
+                        file.Name,
+                        "The file is larger than 1MB. Please use a smaller image."
+                    );
                     return false;
                 }
             }
             catch (Exception ex)
             {
-                ModelState.AddModelError(file.Name, $"The file upload failed. Please contact Analytics if this issue persists. Error: {ex.Message}");
+                ModelState.AddModelError(
+                    file.Name,
+                    $"The file upload failed. Please contact Analytics if this issue persists. Error: {ex.Message}"
+                );
                 return false;
             }
             // if there are no errors, return true
             return true;
         }
+
         public ActionResult OnPostAddFile(int Id, IFormFile File)
         {
             if (ValidateFileUpload(File))
             {
                 //ReportObjectImagesDoc img;
-                var MyFile = new DpAttachment
-                {
-                    DataProjectId = Id
-                };
+                var MyFile = new DpAttachment { DataProjectId = Id };
                 using (var stream = new MemoryStream())
                 {
                     var g = File;
@@ -880,14 +1230,15 @@ namespace Atlas_Web.Pages.Collections
                 }
                 _context.Add(MyFile);
                 _context.SaveChanges();
-
             }
             return RedirectToPage("/Collections/Index", new { id = Id });
         }
 
         public ActionResult OnPostRemoveFile(int Id, int FileId)
         {
-            _context.Remove(_context.DpAttachments.Where(t => t.AttachmentId == FileId).FirstOrDefault());
+            _context.Remove(
+                _context.DpAttachments.Where(t => t.AttachmentId == FileId).FirstOrDefault()
+            );
             _context.SaveChanges();
             return RedirectToPage("/Collections/Index", new { id = Id });
         }

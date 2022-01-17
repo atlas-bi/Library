@@ -28,7 +28,6 @@ using Atlas_Web.Helpers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Caching.Memory;
 
-
 namespace Atlas_Dotnet.Pages
 {
     public class AboutModel : PageModel
@@ -43,12 +42,16 @@ namespace Atlas_Dotnet.Pages
             _config = config;
             _cache = cache;
         }
+
         public List<UserFavorite> Favorites { get; set; }
         public List<int?> Permissions { get; set; }
         public int UserId { get; set; }
         public string FirstName { get; set; }
-        [BindProperty] public UserFavoriteFolder Folder { get; set; }
+
+        [BindProperty]
+        public UserFavoriteFolder Folder { get; set; }
         public List<UserPreference> Preferences { get; set; }
+
         public class BasicFavoriteData
         {
             public string Name { get; set; }
@@ -63,12 +66,12 @@ namespace Atlas_Dotnet.Pages
             public string Favorite { get; set; }
             public string ReportUrl { get; set; }
         }
+
         public List<AdList> AdLists { get; set; }
         public User PublicUser { get; set; }
 
         public ActionResult OnGetAsync()
         {
-
             PublicUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
             var MyUser = PublicUser;
             UserId = MyUser.UserId;
@@ -83,6 +86,5 @@ namespace Atlas_Dotnet.Pages
 
             return Page();
         }
-
     }
 }

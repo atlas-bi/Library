@@ -28,6 +28,7 @@ namespace Atlas_Web.Models
     public class Analytics__Metadata
     {
     }
+
     [ModelMetadataType(typeof(Analytics__Metadata))]
     public partial class Analytic
     {
@@ -36,7 +37,10 @@ namespace Atlas_Web.Models
         {
             get
             {
-                if (Search == null) { return 0; }
+                if (Search == null)
+                {
+                    return 0;
+                }
                 int Length;
                 int StartIndex;
 
@@ -53,7 +57,9 @@ namespace Atlas_Web.Models
                     Length = (Search.IndexOf("&") - StartIndex);
                 }
 
-                return Int32.TryParse(Search.Substring(StartIndex, Length), out int result) ? result : 0;
+                return Int32.TryParse(Search.Substring(StartIndex, Length), out int result)
+                  ? result
+                  : 0;
             }
         }
 
@@ -61,7 +67,10 @@ namespace Atlas_Web.Models
         {
             get
             {
-                if (Search == null || Search == "") { return "None"; }
+                if (Search == null || Search == "")
+                {
+                    return "None";
+                }
                 int Length;
                 int StartIndex;
 
@@ -78,7 +87,9 @@ namespace Atlas_Web.Models
                     Length = (Search.IndexOf("&") - StartIndex);
                 }
 
-                return "\"" + Search.Substring(StartIndex, Length).Replace("+", " ").Replace("%20", " ") + "\"";
+                return "\""
+                    + Search.Substring(StartIndex, Length).Replace("+", " ").Replace("%20", " ")
+                    + "\"";
             }
         }
 
@@ -88,12 +99,25 @@ namespace Atlas_Web.Models
         {
             get
             {
-                if (AccessDateTime == null) { return ""; }
+                if (AccessDateTime == null)
+                {
+                    return "";
+                }
                 var timeAgo = System.DateTime.Now.Subtract(AccessDateTime ?? DateTime.Today);
-                if (timeAgo.TotalMinutes < 1) { return String.Concat(timeAgo.Seconds.ToString(), " seconds ago"); }
-                if (timeAgo.TotalHours < 1) { return String.Concat(timeAgo.Minutes.ToString(), " minutes ago"); }
-                else if (timeAgo.TotalHours < 24) { return String.Concat(timeAgo.Hours.ToString(), " hours ago"); }
-                else return (AccessDateTime ?? DateTime.Today).ToShortDateString();
+                if (timeAgo.TotalMinutes < 1)
+                {
+                    return String.Concat(timeAgo.Seconds.ToString(), " seconds ago");
+                }
+                if (timeAgo.TotalHours < 1)
+                {
+                    return String.Concat(timeAgo.Minutes.ToString(), " minutes ago");
+                }
+                else if (timeAgo.TotalHours < 24)
+                {
+                    return String.Concat(timeAgo.Hours.ToString(), " hours ago");
+                }
+                else
+                    return (AccessDateTime ?? DateTime.Today).ToShortDateString();
             }
         }
     }

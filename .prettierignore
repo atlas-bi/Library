@@ -1,0 +1,10 @@
+node_modules/*
+web/wwwroot/css/*
+web/solr/*
+web/bin/*
+web/obj/*
+web/wwwroot/font/rasa/*
+web/wwwroot/font/inter/*
+web/wwwroot/lib/codemirror/*
+web/wwwroot/lib/flowchart/*
+web/wwwroot/lib/highlight/*

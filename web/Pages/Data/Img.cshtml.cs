@@ -38,8 +38,9 @@ namespace Atlas_Web.Pages.Data
 
         public async Task<ActionResult> OnGet(int id)
         {
-
-            var img = await _context.ReportObjectImagesDocs.Where(x => x.ImageId == id).ToListAsync();
+            var img = await _context.ReportObjectImagesDocs
+                .Where(x => x.ImageId == id)
+                .ToListAsync();
             if (img.Count > 0)
             {
                 HttpContext.Response.Headers.Remove("Cache-Control");
@@ -71,9 +72,7 @@ namespace Atlas_Web.Pages.Data
                 hsize = (int)(image.Height * max_ratio);
 
                 image.Mutate(x => x.Resize(wsize, hsize));
-
             }
-
             // if only a width
             else if (Regex.Match(size, @"^\d+x_$", RegexOptions.Multiline).Success)
             {
@@ -95,11 +94,7 @@ namespace Atlas_Web.Pages.Data
 
             //};
 
-            var jpegEncoder = new JpegEncoder()
-            {
-                Quality = 75
-
-            };
+            var jpegEncoder = new JpegEncoder() { Quality = 75 };
 
             using var ms = new MemoryStream();
             image.Save(ms, jpegEncoder);
@@ -108,7 +103,6 @@ namespace Atlas_Web.Pages.Data
 
         public async Task<ActionResult> OnGetThumb(int id, string size, int? imgId)
         {
-
             HttpContext.Response.Headers.Remove("Cache-Control");
             HttpContext.Response.Headers.Add("Cache-Control", "max-age=315360000");
 
@@ -116,12 +110,17 @@ namespace Atlas_Web.Pages.Data
 
             if (imgId.HasValue)
             {
-                img = await _context.ReportObjectImagesDocs.Where(x => x.ImageId == imgId ).FirstOrDefaultAsync();
-            } else
-            {
-                img = await _context.ReportObjectImagesDocs.Where(x => x.ReportObjectId == id).FirstOrDefaultAsync();
+                img = await _context.ReportObjectImagesDocs
+                    .Where(x => x.ImageId == imgId)
+                    .FirstOrDefaultAsync();
             }
-            
+            else
+            {
+                img = await _context.ReportObjectImagesDocs
+                    .Where(x => x.ReportObjectId == id)
+                    .FirstOrDefaultAsync();
+            }
+
             string name;
             byte[] image_data;
             if (img != null)
@@ -134,13 +133,15 @@ namespace Atlas_Web.Pages.Data
                 image_data = System.IO.File.ReadAllBytes("wwwroot/img/report_placeholder.png");
                 name = "placeholder";
             }
-            
+
             return File(BuildImage(image_data, size), "application/octet-stream", id + ".jpeg");
         }
+
         public async Task<ActionResult> OnGetFirst(int id)
         {
-
-            var img = await _context.ReportObjectImagesDocs.Where(x => x.ReportObjectId == id).ToListAsync();
+            var img = await _context.ReportObjectImagesDocs
+                .Where(x => x.ReportObjectId == id)
+                .ToListAsync();
             HttpContext.Response.Headers.Remove("Cache-Control");
             HttpContext.Response.Headers.Add("Cache-Control", "max-age=315360000");
 
@@ -149,10 +150,8 @@ namespace Atlas_Web.Pages.Data
                 return File(img.First().ImageData, "application/octet-stream", id + ".png");
             }
 
-
             byte[] bytes = System.IO.File.ReadAllBytes("wwwroot/img/placeholder.png");
             return File(bytes, "application/octet-stream", "placeholder.png");
-
         }
     }
 }

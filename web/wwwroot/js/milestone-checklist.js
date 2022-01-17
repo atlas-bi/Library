@@ -19,70 +19,70 @@
   var d = document;
 
   [].forEach.call(
-    d.getElementsByClassName("complete-checklist-form"),
+    d.getElementsByClassName('complete-checklist-form'),
     function (el) {
-      var items = el.getElementsByClassName("form-check"),
-        select = el.getElementsByTagName("select")[0];
+      var items = el.getElementsByClassName('form-check'),
+        select = el.getElementsByTagName('select')[0];
 
       if (!select.children.length) {
         [].forEach.call(items, function (e) {
           var check = e.querySelector('input[type="checkbox"]');
           if (
-            check.hasAttribute("checked") &&
-            check.getAttribute("checked") == "checked"
+            check.hasAttribute('checked') &&
+            check.getAttribute('checked') == 'checked'
           ) {
             check.checked = true;
           }
           completed =
-            e.getElementsByClassName("completed").length > 0
+            e.getElementsByClassName('completed').length > 0
               ? 'selected="selected"'
-              : "";
+              : '';
           select.innerHTML +=
             '<option value="' +
-            e.getAttribute("check-id") +
+            e.getAttribute('check-id') +
             '" ' +
             completed +
-            "></option";
+            '></option';
         });
       }
-    }
+    },
   );
 
-  d.addEventListener("click", function (e) {
-    if (e.target.closest(".complete-checklist-form .form-check")) {
-      var i = e.target.closest(".complete-checklist-form .form-check"),
+  d.addEventListener('click', function (e) {
+    if (e.target.closest('.complete-checklist-form .form-check')) {
+      var i = e.target.closest('.complete-checklist-form .form-check'),
         type = 1,
         q,
         url,
         data,
-        f = i.closest("form"),
+        f = i.closest('form'),
         option;
 
-      if (i.getAttribute("checked") == "checked") {
+      if (i.getAttribute('checked') == 'checked') {
         type = 2;
       }
 
       option = f.querySelector(
-        'select option[value="' + i.getAttribute("check-id") + '"]'
+        'select option[value="' + i.getAttribute('check-id') + '"]',
       );
 
       if (option) {
-        if (option.hasAttribute("selected")) {
-          option.removeAttribute("selected");
+        if (option.hasAttribute('selected')) {
+          option.removeAttribute('selected');
         } else {
-          option.setAttribute("selected", "selected");
+          option.setAttribute('selected', 'selected');
         }
 
         url = serialize(f);
         q = new XMLHttpRequest();
-        q.open("post", f.getAttribute("action") + "&" + url, true);
-        q.setRequestHeader("Content-Type", "text/html;charset=UTF-8`");
-        q.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+        q.open('post', f.getAttribute('action') + '&' + url, true);
+        q.setRequestHeader('Content-Type', 'text/html;charset=UTF-8`');
+        q.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
         q.send();
 
         q.onreadystatechange = function (e) {
           if (this.readyState == 4 && this.status == 200) {
-            ShowMessageBox("Changes saved.");
+            ShowMessageBox('Changes saved.');
           }
         };
       }

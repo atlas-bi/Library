@@ -24,7 +24,6 @@ namespace Atlas_Web.Models
 {
     public class TermConversationMessage__Metadata
     {
-
     }
 
     [ModelMetadataType(typeof(TermConversationMessage__Metadata))]
@@ -36,12 +35,25 @@ namespace Atlas_Web.Models
         {
             get
             {
-                if (PostDateTime == null) { return ""; }
+                if (PostDateTime == null)
+                {
+                    return "";
+                }
                 var timeAgo = System.DateTime.Now.Subtract(PostDateTime);
-                if (timeAgo.TotalMinutes < 1) { return String.Concat(timeAgo.Seconds.ToString(), " seconds ago"); }
-                if (timeAgo.TotalHours < 1) { return String.Concat(timeAgo.Minutes.ToString(), " minutes ago"); }
-                else if (timeAgo.TotalHours < 24) { return String.Concat(timeAgo.Hours.ToString(), " hours ago"); }
-                else return PostDateTime.ToShortDateString();
+                if (timeAgo.TotalMinutes < 1)
+                {
+                    return String.Concat(timeAgo.Seconds.ToString(), " seconds ago");
+                }
+                if (timeAgo.TotalHours < 1)
+                {
+                    return String.Concat(timeAgo.Minutes.ToString(), " minutes ago");
+                }
+                else if (timeAgo.TotalHours < 24)
+                {
+                    return String.Concat(timeAgo.Hours.ToString(), " hours ago");
+                }
+                else
+                    return PostDateTime.ToShortDateString();
             }
         }
     }

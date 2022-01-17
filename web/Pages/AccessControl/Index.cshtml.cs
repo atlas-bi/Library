@@ -28,16 +28,17 @@ using Microsoft.Extensions.Caching.Memory;
 
 namespace Atlas_Web.Pages.AccessControl
 {
-
     public class IndexModel : PageModel
     {
         private IMemoryCache _cache;
         private readonly Atlas_WebContext _context;
+
         public IndexModel(Atlas_WebContext context, IMemoryCache cache)
         {
             _context = context;
             _cache = cache;
         }
+
         public List<UserFavorite> Favorites { get; set; }
         public List<int?> Permissions { get; set; }
         public List<UserPreference> Preferences { get; set; }
@@ -45,8 +46,11 @@ namespace Atlas_Web.Pages.AccessControl
         public List<RolePermission> RolePermissions { get; set; }
         public List<PrivilegedUsersData> PrivilegedUsers { get; set; }
 
-        [BindProperty] public UserRole UserRole { get; set; }
-        [BindProperty] public UserRoleLink NewUserRole { get; set; }
+        [BindProperty]
+        public UserRole UserRole { get; set; }
+
+        [BindProperty]
+        public UserRoleLink NewUserRole { get; set; }
         public User PublicUser { get; set; }
 
         public class UserRolesData
@@ -75,23 +79,25 @@ namespace Atlas_Web.Pages.AccessControl
             public string Name { get; set; }
         }
 
-
         public async Task<IActionResult> OnGetAsync()
         {
             PublicUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
 
-            UserRoles = await (from u in _context.UserRoles
-                               select new UserRolesData
-                               {
-                                   Id = u.UserRolesId,
-                                   Name = u.Name,
-                                   Permissions = from p in u.RolePermissionLinks
-                                                 select new RolePermissionsData
-                                                 {
-                                                     Id = p.RolePermissionsId,
-                                                     Name = p.RolePermissions.Name
-                                                 }
-                               }).ToListAsync();
+            UserRoles = await (
+                from u in _context.UserRoles
+                select new UserRolesData
+                {
+                    Id = u.UserRolesId,
+                    Name = u.Name,
+                    Permissions =
+                        from p in u.RolePermissionLinks
+                        select new RolePermissionsData
+                        {
+                            Id = p.RolePermissionsId,
+                            Name = p.RolePermissions.Name
+                        }
+                }
+            ).ToListAsync();
             ViewData["MyRole"] = UserHelpers.GetMyRole(_cache, _context, User.Identity.Name);
             RolePermissions = await _context.RolePermissions.OrderBy(x => x.Name).ToListAsync();
             Preferences = UserHelpers.GetPreferences(_cache, _context, User.Identity.Name);
@@ -100,23 +106,29 @@ namespace Atlas_Web.Pages.AccessControl
             ViewData["SiteMessage"] = HtmlHelpers.SiteMessage(HttpContext, _context);
             Favorites = UserHelpers.GetUserFavorites(_cache, _context, User.Identity.Name);
 
-            PrivilegedUsers = await (from u in _context.Users
-                                     where u.UserRoleLinks.Any(x => x.UserRoles.Name.ToLower() != "user")
-                                     orderby u.Username
-                                     select new PrivilegedUsersData
-                                     {
-                                         Id = u.UserId,
-                                         Name = u.Fullname_Cust,
-                                         Roles = from l in u.UserRoleLinks
-                                                 select new PrivilegedUserRolesData
-                                                 {
-                                                     Id = l.UserRolesId,
-                                                     Name = l.UserRoles.Name,
-                                                 }
-                                     }).ToListAsync();
+            PrivilegedUsers = await (
+                from u in _context.Users
+                where u.UserRoleLinks.Any(x => x.UserRoles.Name.ToLower() != "user")
+                orderby u.Username
+                select new PrivilegedUsersData
+                {
+                    Id = u.UserId,
+                    Name = u.Fullname_Cust,
+                    Roles =
+                        from l in u.UserRoleLinks
+                        select new PrivilegedUserRolesData
+                        {
+                            Id = l.UserRolesId,
+                            Name = l.UserRoles.Name,
+                        }
+                }
+            ).ToListAsync();
             HttpContext.Response.Headers.Remove("Cache-Control");
             HttpContext.Response.Headers.Remove("Pragma");
-            HttpContext.Response.Headers.Add("Cache-Control", "no-cache, no-store, must-revalidate");
+            HttpContext.Response.Headers.Add(
+                "Cache-Control",
+                "no-cache, no-store, must-revalidate"
+            );
             HttpContext.Response.Headers.Add("Pragma", "no-cache"); // HTTP 1.0.
             HttpContext.Response.Headers.Add("Expires", "0"); // Proxies.
             return Page();
@@ -124,10 +136,19 @@ namespace Atlas_Web.Pages.AccessControl
 
         public ActionResult OnGetRemoveUserPermission(int Id, int UserId)
         {
-            var checkpoint = UserHelpers.CheckUserPermissions(_cache, _context, User.Identity.Name, 1);
+            var checkpoint = UserHelpers.CheckUserPermissions(
+                _cache,
+                _context,
+                User.Identity.Name,
+                1
+            );
             if (checkpoint)
             {
-                _context.RemoveRange(_context.UserRoleLinks.Where(x => x.UserId.Equals(UserId) && x.UserRolesId.Equals(Id)));
+                _context.RemoveRange(
+                    _context.UserRoleLinks.Where(
+                        x => x.UserId.Equals(UserId) && x.UserRolesId.Equals(Id)
+                    )
+                );
                 _context.SaveChanges();
             }
 
@@ -143,10 +164,27 @@ namespace Atlas_Web.Pages.AccessControl
 
         public ActionResult OnPostAddUserPermission()
         {
-            var checkpoint = UserHelpers.CheckUserPermissions(_cache, _context, User.Identity.Name, 1);
-            if (ModelState.IsValid && checkpoint && !_context.UserRoleLinks.Any(x => x.UserId == NewUserRole.UserId && x.UserRolesId == NewUserRole.UserRolesId))
+            var checkpoint = UserHelpers.CheckUserPermissions(
+                _cache,
+                _context,
+                User.Identity.Name,
+                1
+            );
+            if (
+                ModelState.IsValid
+                && checkpoint
+                && !_context.UserRoleLinks.Any(
+                    x => x.UserId == NewUserRole.UserId && x.UserRolesId == NewUserRole.UserRolesId
+                )
+            )
             {
-                _context.Add(new UserRoleLink { UserId = NewUserRole.UserId, UserRolesId = NewUserRole.UserRolesId });
+                _context.Add(
+                    new UserRoleLink
+                    {
+                        UserId = NewUserRole.UserId,
+                        UserRolesId = NewUserRole.UserRolesId
+                    }
+                );
                 _context.SaveChanges();
             }
             // clear cache
@@ -161,17 +199,28 @@ namespace Atlas_Web.Pages.AccessControl
 
         public ActionResult OnPostUpdatePermissions(int RoleId, int PermissionId, int Type)
         {
-            var checkpoint = UserHelpers.CheckUserPermissions(_cache, _context, User.Identity.Name, 18);
+            var checkpoint = UserHelpers.CheckUserPermissions(
+                _cache,
+                _context,
+                User.Identity.Name,
+                18
+            );
             if (checkpoint)
             {
                 // type 1 = add
                 // type 2 = remove
 
-                _context.RemoveRange(_context.RolePermissionLinks.Where(x => x.RoleId.Equals(RoleId) && x.RolePermissionsId.Equals(PermissionId)));
+                _context.RemoveRange(
+                    _context.RolePermissionLinks.Where(
+                        x => x.RoleId.Equals(RoleId) && x.RolePermissionsId.Equals(PermissionId)
+                    )
+                );
 
                 if (Type == 1)
                 {
-                    _context.Add(new RolePermissionLink { RoleId = RoleId, RolePermissionsId = PermissionId });
+                    _context.Add(
+                        new RolePermissionLink { RoleId = RoleId, RolePermissionsId = PermissionId }
+                    );
                 }
                 // clear cache
                 var oldPerm = _cache.Get<List<string>>("MasterUserPermissions");
@@ -191,9 +240,19 @@ namespace Atlas_Web.Pages.AccessControl
 
         public ActionResult OnGetDeleteRole(int Id)
         {
-            var checkpoint = UserHelpers.CheckUserPermissions(_cache, _context, User.Identity.Name, 18);
+            var checkpoint = UserHelpers.CheckUserPermissions(
+                _cache,
+                _context,
+                User.Identity.Name,
+                18
+            );
             // cannot delete admin or user role
-            if (Id != 1 && Id != 5 && _context.UserRoles.Where(x => x.UserRolesId == Id).First().Name != "Director" && checkpoint)
+            if (
+                Id != 1
+                && Id != 5
+                && _context.UserRoles.Where(x => x.UserRolesId == Id).First().Name != "Director"
+                && checkpoint
+            )
             {
                 // remove links, then remove role
                 _context.RemoveRange(_context.UserRoleLinks.Where(x => x.UserRolesId == Id));
@@ -212,8 +271,18 @@ namespace Atlas_Web.Pages.AccessControl
 
         public ActionResult OnPostCreateRole()
         {
-            var checkpoint = UserHelpers.CheckUserPermissions(_cache, _context, User.Identity.Name, 18);
-            if (ModelState.IsValid && checkpoint && UserRole.Name != "Administrator" && UserRole.Name != "Director")
+            var checkpoint = UserHelpers.CheckUserPermissions(
+                _cache,
+                _context,
+                User.Identity.Name,
+                18
+            );
+            if (
+                ModelState.IsValid
+                && checkpoint
+                && UserRole.Name != "Administrator"
+                && UserRole.Name != "Director"
+            )
             {
                 _context.Add(UserRole);
                 _context.SaveChanges();

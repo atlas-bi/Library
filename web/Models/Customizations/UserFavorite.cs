@@ -31,7 +31,6 @@ namespace Atlas_Web.Models
     [ModelMetadataType(typeof(UserFavorites__Metadata))]
     public partial class UserFavorite
     {
-
         [NotMapped]
         public string ItemType_Proper
         {

@@ -1,4 +1,3 @@
-
 .success-message {
   color: #0084db;
   left: 20px;
@@ -12,7 +11,7 @@
 
 .border-after:not(:last-of-type)::after {
   background-color: #dbd7d8;
-  content: "";
+  content: '';
   height: 75%;
   position: absolute;
   right: -1px;

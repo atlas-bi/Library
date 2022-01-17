@@ -38,13 +38,25 @@ namespace Atlas_Web.Models
         {
             get
             {
-
-                if (StartDate == null) { return ""; }
+                if (StartDate == null)
+                {
+                    return "";
+                }
                 var timeAgo = System.DateTime.Now.Subtract(StartDate ?? DateTime.Now);
-                if (timeAgo.TotalMinutes < 1) { return String.Concat(timeAgo.Seconds.ToString(), " seconds ago"); }
-                if (timeAgo.TotalHours < 1) { return String.Concat(timeAgo.Minutes.ToString(), " minutes ago"); }
-                else if (timeAgo.TotalHours < 24) { return String.Concat(timeAgo.Hours.ToString(), " hours ago"); }
-                else return (StartDate ?? DateTime.Now).ToShortDateString();
+                if (timeAgo.TotalMinutes < 1)
+                {
+                    return String.Concat(timeAgo.Seconds.ToString(), " seconds ago");
+                }
+                if (timeAgo.TotalHours < 1)
+                {
+                    return String.Concat(timeAgo.Minutes.ToString(), " minutes ago");
+                }
+                else if (timeAgo.TotalHours < 24)
+                {
+                    return String.Concat(timeAgo.Hours.ToString(), " hours ago");
+                }
+                else
+                    return (StartDate ?? DateTime.Now).ToShortDateString();
             }
         }
 
@@ -54,14 +66,26 @@ namespace Atlas_Web.Models
         {
             get
             {
-                if (EndDate == null) { return ""; }
+                if (EndDate == null)
+                {
+                    return "";
+                }
                 var timeAgo = System.DateTime.Now.Subtract(EndDate ?? DateTime.Now);
-                if (timeAgo.TotalMinutes < 1) { return String.Concat(timeAgo.Seconds.ToString(), " seconds ago"); }
-                if (timeAgo.TotalHours < 1) { return String.Concat(timeAgo.Minutes.ToString(), " minutes ago"); }
-                else if (timeAgo.TotalHours < 24) { return String.Concat(timeAgo.Hours.ToString(), " hours ago"); }
-                else return (EndDate ?? DateTime.Now).ToShortDateString();
+                if (timeAgo.TotalMinutes < 1)
+                {
+                    return String.Concat(timeAgo.Seconds.ToString(), " seconds ago");
+                }
+                if (timeAgo.TotalHours < 1)
+                {
+                    return String.Concat(timeAgo.Minutes.ToString(), " minutes ago");
+                }
+                else if (timeAgo.TotalHours < 24)
+                {
+                    return String.Concat(timeAgo.Hours.ToString(), " hours ago");
+                }
+                else
+                    return (EndDate ?? DateTime.Now).ToShortDateString();
             }
         }
-
     }
 }

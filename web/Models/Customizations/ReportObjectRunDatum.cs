@@ -38,14 +38,26 @@ namespace Atlas_Web.Models
         {
             get
             {
-                if (RunStartTime == null) { return ""; }
+                if (RunStartTime == null)
+                {
+                    return "";
+                }
                 var timeAgo = System.DateTime.Now.Subtract(RunStartTime ?? DateTime.Now);
-                if (timeAgo.TotalMinutes < 1) { return String.Concat(timeAgo.Seconds.ToString(), " seconds ago"); }
-                if (timeAgo.TotalHours < 1) { return String.Concat(timeAgo.Minutes.ToString(), " minutes ago"); }
-                else if (timeAgo.TotalHours < 24) { return String.Concat(timeAgo.Hours.ToString(), " hours ago"); }
-                else return (RunStartTime ?? DateTime.Now).ToShortDateString();
+                if (timeAgo.TotalMinutes < 1)
+                {
+                    return String.Concat(timeAgo.Seconds.ToString(), " seconds ago");
+                }
+                if (timeAgo.TotalHours < 1)
+                {
+                    return String.Concat(timeAgo.Minutes.ToString(), " minutes ago");
+                }
+                else if (timeAgo.TotalHours < 24)
+                {
+                    return String.Concat(timeAgo.Hours.ToString(), " hours ago");
+                }
+                else
+                    return (RunStartTime ?? DateTime.Now).ToShortDateString();
             }
         }
-
     }
 }

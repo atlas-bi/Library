@@ -34,7 +34,12 @@ namespace Atlas_Web.Pages.Data
         private IAssetBuilder _assetBuilder;
         private IOptionsSnapshot<WebOptimizerOptions> _options;
 
-        public CodeModel(IMemoryCache cache, IAssetPipeline pipeline, IAssetBuilder assetBuilder, IOptionsSnapshot<WebOptimizerOptions> options)
+        public CodeModel(
+            IMemoryCache cache,
+            IAssetPipeline pipeline,
+            IAssetBuilder assetBuilder,
+            IOptionsSnapshot<WebOptimizerOptions> options
+        )
         {
             _pipeline = pipeline;
             _assetBuilder = assetBuilder;
@@ -53,7 +58,11 @@ namespace Atlas_Web.Pages.Data
 
             var src = GenerateHash(asset);
 
-            IAssetResponse response = await _assetBuilder.BuildAsync(asset, HttpContext, _options.Value);
+            IAssetResponse response = await _assetBuilder.BuildAsync(
+                asset,
+                HttpContext,
+                _options.Value
+            );
             IAssetResponse cachedResponse = response;
             string cacheKey = response.CacheKey;
             HttpContext.Response.ContentType = asset.ContentType;
@@ -64,7 +73,9 @@ namespace Atlas_Web.Pages.Data
             }
 
             HttpContext.Response.Headers[HeaderNames.ETag] = src.Split("v=")[1];
-            return Content(Encoding.UTF8.GetString(cachedResponse.Body, 0, cachedResponse.Body.Length));
+            return Content(
+                Encoding.UTF8.GetString(cachedResponse.Body, 0, cachedResponse.Body.Length)
+            );
         }
 
         public ActionResult OnGet(string id)

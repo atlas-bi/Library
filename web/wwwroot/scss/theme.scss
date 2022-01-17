@@ -1,67 +1,66 @@
-@import "./include/color";
-@import "./include/font";
+@import './include/color';
+@import './include/font';
 
-$family-sans-serif: "Inter", BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
-$family-serif: "Rasa", "Georgia", "Times New Roman", serif;
+$family-sans-serif: 'Inter', BlinkMacSystemFont, -apple-system, 'Segoe UI',
+  'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans',
+  'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+$family-serif: 'Rasa', 'Georgia', 'Times New Roman', serif;
 
 $title-family: $family-serif;
 
-@import "../../../node_modules/bulma/bulma";
-@import "../../../node_modules/@creativebulma/bulma-badge/src/sass/index";
-@import "../../../node_modules/bulma-switch/src/sass/index";
+@import '../../../node_modules/bulma/bulma';
+@import '../../../node_modules/@creativebulma/bulma-badge/src/sass/index';
+@import '../../../node_modules/bulma-switch/src/sass/index';
 //@import "../../../node_modules/@creativebulma/bulma-tooltip/src/sass/index";
 
+@import './mail/mail';
+@import './mail/mail-folders';
+@import './mail/mail-menu';
+@import './mail/mail-msgPreview';
+@import './mail/mail-notification';
+@import './mail/mail-reader';
+@import './live-editor';
+@import './reports';
+@import './utility/carousel';
+@import './access';
+@import './tasks';
+@import './users';
+@import './error';
 
-@import "./mail/mail";
-@import "./mail/mail-folders";
-@import "./mail/mail-menu";
-@import "./mail/mail-msgPreview";
-@import "./mail/mail-notification";
-@import "./mail/mail-reader";
-@import "./live-editor";
-@import "./reports";
-@import "./utility/carousel";
-@import "./access";
-@import "./tasks";
-@import "./users";
-@import "./error";
+@import '../lib/codemirror/mycss';
 
+@import './essential';
+@import '../lib/fonts/impmin/stylesheet';
+@import '../lib/fonts/cheltmin/stylesheet';
+@import '../lib/fonts/sfmin/stylesheet';
+@import '../lib/fonts/marckscript/stylesheet';
+@import './nav';
+@import './favorite';
+@import './page';
+@import './video';
+@import './search';
+@import './utility/collapse';
+@import './utility/modal';
+@import './utility/tabs';
 
-
-@import  "../lib/codemirror/mycss";
-
-@import "./essential";
-@import "../lib/fonts/impmin/stylesheet";
-@import "../lib/fonts/cheltmin/stylesheet";
-@import "../lib/fonts/sfmin/stylesheet";
-@import "../lib/fonts/marckscript/stylesheet";
-@import "./nav";
-@import "./favorite";
-@import "./page";
-@import "./video";
-@import "./search";
-@import "./utility/collapse";
-@import "./utility/modal";
-@import "./utility/tabs";
-
-@import "./nav-effects";
-@import "./page-effects";
-@import "./favorite-effects";
-@import "./utility/tooltip";
-@import "./utility/drag";
-@import "./utility/progressbar";
-@import "./utility/chart";
-@import "./utility/table";
-@import "./milestone";
-@import "./input";
-@import "./comments";
-@import "./dropdown";
-@import "./markdown";
-@import "./messagebox";
-@import "../lib/scrollbars/simple-scrollbar";
-@import "../lib/highlight/rainbow";
-@import "./mail/mail-newMessage";
-@import "./query";
+@import './nav-effects';
+@import './page-effects';
+@import './favorite-effects';
+@import './utility/tooltip';
+@import './utility/drag';
+@import './utility/progressbar';
+@import './utility/chart';
+@import './utility/table';
+@import './milestone';
+@import './input';
+@import './comments';
+@import './dropdown';
+@import './markdown';
+@import './messagebox';
+@import '../lib/scrollbars/simple-scrollbar';
+@import '../lib/highlight/rainbow';
+@import './mail/mail-newMessage';
+@import './query';
 
 html {
   height: 100%;
@@ -87,9 +86,8 @@ body {
 }
 
 div.column.is-narrow:empty {
-   padding: 0 !important;
+  padding: 0 !important;
 }
-
 
 /* remove tooltip underline*/
 // span {
@@ -100,13 +98,20 @@ div.column.is-narrow:empty {
 
 /* card colors */
 
-$card-colors: ("warning": $warning, "danger": $danger, "success": $success, "info": $info);
+$card-colors: (
+  'warning': $warning,
+  'danger': $danger,
+  'success': $success,
+  'info': $info,
+);
 @each $code, $color in $card-colors {
   .card.is-#{$code} {
-      box-shadow: 0 0.5em 1em -0.125em rgba($color, 0.7), 0 0px 0 1px rgba($scheme-invert, 0.02)
+    box-shadow: 0 0.5em 1em -0.125em rgba($color, 0.7),
+      0 0px 0 1px rgba($scheme-invert, 0.02);
   }
   .card.is-#{$code}:hover {
-      box-shadow: 0 0 1.5em -0.125em rgba($color, 0.7), 0 0px 0 2px rgba($scheme-invert, 0.02)
+    box-shadow: 0 0 1.5em -0.125em rgba($color, 0.7),
+      0 0px 0 2px rgba($scheme-invert, 0.02);
   }
   // .card.is-#{$code} .card-headeFr {
   //   background:$color;
@@ -123,16 +128,15 @@ img[data-src] {
 
 /* search */
 
-
 #search-results {
-  position:absolute;
-  top:50px;
-  left:0;
-  right:0;
-  display:none;
+  position: absolute;
+  top: 50px;
+  left: 0;
+  right: 0;
+  display: none;
   border-radius: $radius;
-  max-height:90vh;
-  overflow:scroll;
+  max-height: 90vh;
+  overflow: scroll;
 }
 
 #search-results:empty {
@@ -140,15 +144,14 @@ img[data-src] {
 }
 
 .search-wrap:active .search-results-wrap,
-#search-form:focus-within #search-results
-{
-  display:block;
+#search-form:focus-within #search-results {
+  display: block;
   box-shadow: $shadow;
   border: 1px solid $border;
 }
 
 #search-results:active {
-  display:block;
+  display: block;
   box-shadow: $shadow;
   border: 1px solid $border;
 }
@@ -170,7 +173,7 @@ img[data-src] {
 /* badge in headings */
 
 .title.is-2 .badge {
-  height:25px;
+  height: 25px;
   font-size: 50%;
   padding: 6px;
 }
@@ -178,7 +181,6 @@ img[data-src] {
 .ss-content pre {
   padding: unset;
 }
-
 
 .atlas-navbar {
   padding-left: 15px;
@@ -196,13 +198,13 @@ img[data-src] {
 
 /* fix nav dropdown in IE 11. focus within breaks it all */
 @include desktop {
-    .navbar-item {
-        &.is-hoverable:hover {
-            .navbar-dropdown {
-                display: block;
-            }
-        }
+  .navbar-item {
+    &.is-hoverable:hover {
+      .navbar-dropdown {
+        display: block;
+      }
     }
+  }
 }
 
 .icon.is-large .fa-lg .fa-play-circle {
@@ -217,14 +219,14 @@ img[data-src] {
 }
 
 .is-flex-widescreen {
-  display:none !important;
+  display: none !important;
 }
 @media screen and (min-width: $widescreen) {
   .atlas-navbar {
     padding: 15px 0;
   }
 
-  .atlas-navbar .navbar-brand img  {
+  .atlas-navbar .navbar-brand img {
     width: 182px !important;
     height: 56px !important;
   }

@@ -38,22 +38,33 @@ namespace Atlas_Web.Models
         {
             get
             {
-
-                if (EditDate == null) { return ""; }
+                if (EditDate == null)
+                {
+                    return "";
+                }
                 var timeAgo = System.DateTime.Now.Subtract(EditDate ?? DateTime.Now);
-                if (timeAgo.TotalDays < 1) { return (EditDate ?? DateTime.Now).ToString("h:mm tt"); }
-                else if (timeAgo.TotalHours < 2) { return "Yesterday"; }
-                else return (EditDate ?? DateTime.Now).ToString("M/d/yy");
+                if (timeAgo.TotalDays < 1)
+                {
+                    return (EditDate ?? DateTime.Now).ToString("h:mm tt");
+                }
+                else if (timeAgo.TotalHours < 2)
+                {
+                    return "Yesterday";
+                }
+                else
+                    return (EditDate ?? DateTime.Now).ToString("M/d/yy");
             }
         }
-
 
         [NotMapped]
         public virtual string SmallSubject
         {
             get
             {
-                if (Subject == null) { return ""; }
+                if (Subject == null)
+                {
+                    return "";
+                }
                 return string.Join(" ", Subject.Split(' ').ToList().Take(5));
             }
         }
@@ -63,10 +74,10 @@ namespace Atlas_Web.Models
         {
             get
             {
-                if (MessagePlainText is null) return "";
+                if (MessagePlainText is null)
+                    return "";
                 return string.Join(" ", MessagePlainText.Split(' ').ToList().Take(10));
             }
         }
-
     }
 }

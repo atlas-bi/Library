@@ -26,34 +26,34 @@ var serialize = function serialize(form) {
     if (
       !field.name ||
       field.disabled ||
-      field.type === "file" ||
-      field.type === "reset" ||
-      field.type === "submit" ||
-      field.type === "button"
+      field.type === 'file' ||
+      field.type === 'reset' ||
+      field.type === 'submit' ||
+      field.type === 'button'
     )
       continue; // If a multi-select, get all selections
 
-    if (field.type === "select-multiple") {
+    if (field.type === 'select-multiple') {
       for (var n = 0; n < field.options.length; n++) {
         if (!field.options[n].selected) continue;
         serialized.push(
           encodeURIComponent(field.name) +
-            "=" +
-            encodeURIComponent(field.options[n].value)
+            '=' +
+            encodeURIComponent(field.options[n].value),
         );
       }
     } // Convert field data to a query string
     else if (
-      (field.type !== "checkbox" && field.type !== "radio") ||
+      (field.type !== 'checkbox' && field.type !== 'radio') ||
       field.checked
     ) {
       serialized.push(
-        encodeURIComponent(field.name) + "=" + encodeURIComponent(field.value)
+        encodeURIComponent(field.name) + '=' + encodeURIComponent(field.value),
       );
     }
   }
 
-  return serialized.join("&");
+  return serialized.join('&');
 };
 
 var debounce = function debounce(func, wait, immediate) {
@@ -75,24 +75,24 @@ var debounce = function debounce(func, wait, immediate) {
 };
 
 function setCookie(name, value, days) {
-  var expires = "",
+  var expires = '',
     date = new Date();
 
   days = days || 1;
   date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
-  expires = "; expires=" + date.toUTCString();
+  expires = '; expires=' + date.toUTCString();
 
-  document.cookie = name + "=" + (value || "") + expires + "; path=/";
+  document.cookie = name + '=' + (value || '') + expires + '; path=/';
 }
 
 function getCookie(name) {
-  var nameEQ = name + "=";
-  var ca = document.cookie.split(";");
+  var nameEQ = name + '=';
+  var ca = document.cookie.split(';');
 
   for (var i = 0; i < ca.length; i++) {
     var c = ca[i];
 
-    while (c.charAt(0) == " ") {
+    while (c.charAt(0) == ' ') {
       c = c.substring(1, c.length);
     }
 
@@ -157,26 +157,26 @@ var cache = {
         JSON.stringify({
           data: data,
           _: new Date().getTime() + (t || cache.timeout) * 1000,
-        })
+        }),
       );
     } catch (e) {}
   },
 };
 
 (function () {
-  document.addEventListener("change", function (e) {
-    if (e.target.closest("#change-role")) {
-      e.target.closest("form").querySelector("#MyRole_Url").value =
+  document.addEventListener('change', function (e) {
+    if (e.target.closest('#change-role')) {
+      e.target.closest('form').querySelector('#MyRole_Url').value =
         window.location.href;
-      e.target.closest("form").submit();
+      e.target.closest('form').submit();
     }
   });
 
   try {
-    new Function("async () => {}")();
+    new Function('async () => {}')();
   } catch (error) {
     // import polyfill for IE 11
-    loadScripts(document.getElementsByClassName("polyfillScripts"));
+    loadScripts(document.getElementsByClassName('polyfillScripts'));
   }
 
   function loadScripts(els) {
@@ -185,20 +185,20 @@ var cache = {
     for (var x = 0; x < els.length; x++) {
       var el = els[x];
 
-      var l = document.createElement("div");
+      var l = document.createElement('div');
 
       l.innerHTML = el.value;
 
       el.parentElement.removeChild(el);
 
-      var scripts = l.querySelectorAll("script");
+      var scripts = l.querySelectorAll('script');
 
       for (var y = 0; y < scripts.length; y++) {
         var i = scripts[y],
-          q = document.createElement("script");
+          q = document.createElement('script');
         q.src = i.src;
         q.innerHTML = i.innerHTML;
-        q.type = "text/javascript";
+        q.type = 'text/javascript';
         document.body.appendChild(q);
       }
     }
@@ -206,15 +206,15 @@ var cache = {
 
   function showScrollToTop() {
     if (window.pageYOffset > 50) {
-      document.getElementById("back-to-top").style.visibility = "visible";
+      document.getElementById('back-to-top').style.visibility = 'visible';
     } else {
-      document.getElementById("back-to-top").style.visibility = "hidden";
+      document.getElementById('back-to-top').style.visibility = 'hidden';
     }
   }
 
   showScrollToTop();
-  document.addEventListener("click", function (e) {
-    if (e.target.closest("#back-to-top")) {
+  document.addEventListener('click', function (e) {
+    if (e.target.closest('#back-to-top')) {
       document.documentElement.scrollTop = document.body.scrollTop = 0;
       return false;
     }
@@ -223,57 +223,57 @@ var cache = {
   function downloadJSAtOnload() {
     loadScripts(
       Array.prototype.slice.call(
-        document.getElementsByClassName("postLoadScripts")
-      )
+        document.getElementsByClassName('postLoadScripts'),
+      ),
     );
-    if (!!document.querySelector(".tab-lnk"))
-      loadScripts(document.getElementsByClassName("tabScripts"));
-    if (!!document.querySelector("table.sort"))
-      loadScripts(document.getElementsByClassName("tableScripts"));
+    if (!!document.querySelector('.tab-lnk'))
+      loadScripts(document.getElementsByClassName('tabScripts'));
+    if (!!document.querySelector('table.sort'))
+      loadScripts(document.getElementsByClassName('tableScripts'));
     if (!!document.querySelector('[data-toggle="clps"]'))
-      loadScripts(document.getElementsByClassName("collapseScripts"));
-    if (!!document.querySelector(".crsl"))
-      loadScripts(document.getElementsByClassName("carouselScripts"));
-    if (!!document.querySelector(".drg"))
-      loadScripts(document.getElementsByClassName("dragScripts"));
-    if (!!document.querySelector(".atlas-chart"))
-      loadScripts(document.getElementsByClassName("chartScripts"));
+      loadScripts(document.getElementsByClassName('collapseScripts'));
+    if (!!document.querySelector('.crsl'))
+      loadScripts(document.getElementsByClassName('carouselScripts'));
+    if (!!document.querySelector('.drg'))
+      loadScripts(document.getElementsByClassName('dragScripts'));
+    if (!!document.querySelector('.atlas-chart'))
+      loadScripts(document.getElementsByClassName('chartScripts'));
     if (
       !!document.querySelector(
-        'input[type="nice-input"], textarea[type="nice-input"]'
+        'input[type="nice-input"], textarea[type="nice-input"]',
       )
     )
-      loadScripts(document.getElementsByClassName("inputScripts"));
-    if (!!document.querySelector(".comments-form"))
-      loadScripts(document.getElementsByClassName("commentsScripts"));
+      loadScripts(document.getElementsByClassName('inputScripts'));
+    if (!!document.querySelector('.comments-form'))
+      loadScripts(document.getElementsByClassName('commentsScripts'));
     if (!!document.querySelector('[type="dynamic-dropdown"]'))
-      loadScripts(document.getElementsByClassName("dropdownScripts"));
+      loadScripts(document.getElementsByClassName('dropdownScripts'));
   }
 
   window.addEventListener(
-    "load",
+    'load',
     function () {
       downloadJSAtOnload();
     },
-    false
+    false,
   );
 
-  document.addEventListener("ajax", function () {
+  document.addEventListener('ajax', function () {
     downloadJSAtOnload();
   });
 
-  document.addEventListener("tab-opened", function () {
+  document.addEventListener('tab-opened', function () {
     debounce(downloadJSAtOnload(), 250);
   });
 
   document.addEventListener(
-    "scroll",
+    'scroll',
     function () {
       debounce(downloadJSAtOnload(), 250);
       debounce(showScrollToTop(), 250);
     },
     {
       passive: true,
-    }
+    },
   );
 })();

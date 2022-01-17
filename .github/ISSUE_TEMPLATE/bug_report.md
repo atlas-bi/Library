@@ -1,7 +1,7 @@
 ---
 name: "\U0001F9A0 Bug Report"
 about: You've found a bug?
-title: "[BUG] "
+title: '[BUG] '
 labels: bug
 ---
 
@@ -16,14 +16,16 @@ labels: bug
 - [ ] I've read the [docs](https://www.atlas.bi/docs/bi_library/)
 
 ## System Info
- - Browser: e.g. IE 11
- - OS: e.g. Windows 95
 
+- Browser: e.g. IE 11
+- OS: e.g. Windows 95
 
 ## Issue
+
 <!-- A clear and concise description of what the bug is. -->
 
 ## How To Reproduce
+
 <!-- Steps to reproduce the behavior -->
 
 <!-- Thanks! 🤠 -->

@@ -32,7 +32,6 @@ using Microsoft.Extensions.Caching.Memory;
 using SolrNet;
 using SolrNet.Commands.Parameters;
 
-
 namespace Atlas_Web.Pages.Search
 {
     public class SmallData
@@ -56,7 +55,12 @@ namespace Atlas_Web.Pages.Search
         private readonly ISolrReadOnlyOperations<SolrAtlas> _solr;
         private IMemoryCache _cache;
 
-        public IndexModel(Atlas_WebContext context, IConfiguration config, IMemoryCache cache, ISolrReadOnlyOperations<SolrAtlas> solr)
+        public IndexModel(
+            Atlas_WebContext context,
+            IConfiguration config,
+            IMemoryCache cache,
+            ISolrReadOnlyOperations<SolrAtlas> solr
+        )
         {
             _context = context;
             _config = config;
@@ -67,30 +71,61 @@ namespace Atlas_Web.Pages.Search
         public class SearchCollectionData
         {
             public SearchCollectionData() { }
+
             public int CollectionId { get; set; }
             public string Annotation { get; set; }
             public string Name { get; set; }
         }
+
         public List<UserPreference> Preferences { get; set; }
         public List<int?> Permissions { get; set; }
         public List<UserFavorite> Favorites { get; set; }
         public List<AdList> AdLists { get; set; }
         public List<SearchCollectionData> Collections { get; set; }
 
-        [BindProperty] public List<ReportObjectType> AvailableFilters { get { return _context.ReportObjectTypes.ToList(); } set { } }
+        [BindProperty]
+        public List<ReportObjectType> AvailableFilters
+        {
+            get { return _context.ReportObjectTypes.ToList(); }
+            set { }
+        }
         public SolrAtlasResults SearchResults { get; set; }
-        [BindProperty] public List<ObjectSearch> ObjectSearch { get; set; }
-        [BindProperty] public List<ObjectSearch> UserSearch { get; set; }
-        [BindProperty] public int ShowHidden { get; set; }
-        [BindProperty] public int ShowAllTypes { get; set; }
-        [BindProperty] public int ShowOrphans { get; set; }
-        [BindProperty] public string SearchFilter { get; set; }
-        [BindProperty] public string SearchField { get; set; }
-        [BindProperty] public string Category { get; set; }
-        [BindProperty] public int SearchPage { get; set; }
-        [BindProperty] public int PageSize { get; set; }
-        [BindProperty] public string SearchString { get; set; }
-        [BindProperty(SupportsGet = true)] public List<string> AppliedFilters { get; set; }
+
+        [BindProperty]
+        public List<ObjectSearch> ObjectSearch { get; set; }
+
+        [BindProperty]
+        public List<ObjectSearch> UserSearch { get; set; }
+
+        [BindProperty]
+        public int ShowHidden { get; set; }
+
+        [BindProperty]
+        public int ShowAllTypes { get; set; }
+
+        [BindProperty]
+        public int ShowOrphans { get; set; }
+
+        [BindProperty]
+        public string SearchFilter { get; set; }
+
+        [BindProperty]
+        public string SearchField { get; set; }
+
+        [BindProperty]
+        public string Category { get; set; }
+
+        [BindProperty]
+        public int SearchPage { get; set; }
+
+        [BindProperty]
+        public int PageSize { get; set; }
+
+        [BindProperty]
+        public string SearchString { get; set; }
+
+        [BindProperty(SupportsGet = true)]
+        public List<string> AppliedFilters { get; set; }
         public User PublicUser { get; set; }
 
         public async Task<IActionResult> OnGet(string Query)
@@ -98,11 +133,37 @@ namespace Atlas_Web.Pages.Search
             int PageIndex = Int32.Parse(Request.Query["PageIndex"].FirstOrDefault() ?? "1");
             string Type = Request.Query["type"].FirstOrDefault() ?? "query";
 
-            static string BuildSearchString(string search_string, Microsoft.AspNetCore.Http.IQueryCollection query)
+            static string BuildSearchString(
+                string search_string,
+                Microsoft.AspNetCore.Http.IQueryCollection query
+            )
             {
-
-                string[] illegal_chars = new string[] { "\\", "+", "-", "&&", "||", "!", "(", ")", "{", "}", "[", "]", "^", "\"", "~", "*", "?", ":", "/", };
-                search_string = String.Join("", search_string.Split(illegal_chars, StringSplitOptions.RemoveEmptyEntries));
+                string[] illegal_chars = new string[]
+                {
+                    "\\",
+                    "+",
+                    "-",
+                    "&&",
+                    "||",
+                    "!",
+                    "(",
+                    ")",
+                    "{",
+                    "}",
+                    "[",
+                    "]",
+                    "^",
+                    "\"",
+                    "~",
+                    "*",
+                    "?",
+                    ":",
+                    "/",
+                };
+                search_string = String.Join(
+                    "",
+                    search_string.Split(illegal_chars, StringSplitOptions.RemoveEmptyEntries)
+                );
 
                 static string BuildFuzzy(string substr)
                 {
@@ -117,7 +178,13 @@ namespace Atlas_Web.Pages.Search
                     return substr;
                 }
 
-                string Fuzzy = String.Join(" ", search_string.Split(' ').Where(s => !String.IsNullOrEmpty(s)).Select(x => BuildFuzzy(x)));
+                string Fuzzy = String.Join(
+                    " ",
+                    search_string
+                        .Split(' ')
+                        .Where(s => !String.IsNullOrEmpty(s))
+                        .Select(x => BuildFuzzy(x))
+                );
 
                 if (query.Keys.Contains("field"))
                 {
@@ -126,24 +193,28 @@ namespace Atlas_Web.Pages.Search
                 }
 
                 return $"name:({search_string})^6 OR name:({Fuzzy})^3 OR ({search_string})^5 OR ({Fuzzy})";
-
             }
 
-            static IReadOnlyList<HighlightModel> BuildHighlightModels(IDictionary<string, SolrNet.Impl.HighlightedSnippets> highlightResults)
+            static IReadOnlyList<HighlightModel> BuildHighlightModels(
+                IDictionary<string, SolrNet.Impl.HighlightedSnippets> highlightResults
+            )
             {
                 return highlightResults
-                    .Select(f => new HighlightModel(
-                        Key: f.Key,
-                        Values: f.Value.Select(v => new HighlightValueModel(v.Key, v.Value.First())).ToList()
-                    ))
+                    .Select(
+                        f =>
+                            new HighlightModel(
+                                Key: f.Key,
+                                Values: f.Value
+                                    .Select(v => new HighlightValueModel(v.Key, v.Value.First()))
+                                    .ToList()
+                            )
+                    )
                     .ToList();
             }
-
 
             static IReadOnlyList<FilterFields> BuildFilterFields(string query)
             {
                 List<FilterFields> filters = new List<FilterFields>();
-
 
                 if (query == "reports")
                 {
@@ -158,49 +229,91 @@ namespace Atlas_Web.Pages.Search
                 return filters;
             }
 
-            static IReadOnlyList<FacetModel> BuildFacetModels(IDictionary<string, ICollection<KeyValuePair<string, int>>> facetResults)
+            static IReadOnlyList<FacetModel> BuildFacetModels(
+                IDictionary<string, ICollection<KeyValuePair<string, int>>> facetResults
+            )
             {
                 // set the order of some facets. Otherwise solr is count > alpha
-                String[] FacetOrder = { "epic_master_file_text", "organizational_value_text", "estimated_run_frequency_text", "maintenance_schedule_text", "fragility_text", "executive_visiblity_text", "visible_text", "certification_text", "report_type_text", "type" };
-                return facetResults.OrderByDescending(x => Array.IndexOf(FacetOrder, x.Key))
-                    .Select(f => new FacetModel(
-                        Key: f.Key,
-                        Values: f.Value.Select(v => new FacetValueModel(v.Key, v.Value)).ToList()
-                    ))
+                String[] FacetOrder =
+                {
+                    "epic_master_file_text",
+                    "organizational_value_text",
+                    "estimated_run_frequency_text",
+                    "maintenance_schedule_text",
+                    "fragility_text",
+                    "executive_visiblity_text",
+                    "visible_text",
+                    "certification_text",
+                    "report_type_text",
+                    "type"
+                };
+                return facetResults
+                    .OrderByDescending(x => Array.IndexOf(FacetOrder, x.Key))
+                    .Select(
+                        f =>
+                            new FacetModel(
+                                Key: f.Key,
+                                Values: f.Value
+                                    .Select(v => new FacetValueModel(v.Key, v.Value))
+                                    .ToList()
+                            )
+                    )
                     .ToList();
             }
 
-            static ISolrQuery[] BuildFilterQuery(Microsoft.AspNetCore.Http.IQueryCollection query, IMemoryCache _cache, Atlas_WebContext _context, System.Security.Claims.ClaimsPrincipal User)
+            static ISolrQuery[] BuildFilterQuery(
+                Microsoft.AspNetCore.Http.IQueryCollection query,
+                IMemoryCache _cache,
+                Atlas_WebContext _context,
+                System.Security.Claims.ClaimsPrincipal User
+            )
             {
                 var FilterQuery = new List<SolrQuery>();
 
-
-                var checkpoint = UserHelpers.CheckUserPermissions(_cache, _context, User.Identity.Name, 46);
-                if (!checkpoint || !query.ContainsKey("advanced") || query.ContainsKey("advanced") && query["advanced"] != "Y")
+                var checkpoint = UserHelpers.CheckUserPermissions(
+                    _cache,
+                    _context,
+                    User.Identity.Name,
+                    46
+                );
+                if (
+                    !checkpoint
+                    || !query.ContainsKey("advanced")
+                    || query.ContainsKey("advanced") && query["advanced"] != "Y"
+                )
                 {
-                    // user cannot access advanced search, so we pass an arg to hide numbers for 
+                    // user cannot access advanced search, so we pass an arg to hide numbers for
                     // hidden objects.
                     FilterQuery.Add(new SolrQuery("visible_text:(Y)"));
-
                 }
                 // also exclude the two global keywords, EPIC and msg.
-                var ExcludedKeys = new List<string> { "PageIndex", "Query", "type", "EPIC", "msg", "field", "advanced" };
+                var ExcludedKeys = new List<string>
+                {
+                    "PageIndex",
+                    "Query",
+                    "type",
+                    "EPIC",
+                    "msg",
+                    "field",
+                    "advanced"
+                };
 
                 foreach (string key in query.Keys)
                 {
                     if (ExcludedKeys.IndexOf(key) == -1)
                     {
-                        FilterQuery.Add(new SolrQuery($"{{!tag={key}}}{key}:({query[key].ToString().Trim()})"));
+                        FilterQuery.Add(
+                            new SolrQuery($"{{!tag={key}}}{key}:({query[key].ToString().Trim()})")
+                        );
                     }
-
                 }
 
                 return FilterQuery.ToArray();
-
             }
 
-
-            static Dictionary<string, string> BuildFilterDict(Microsoft.AspNetCore.Http.IQueryCollection query)
+            static Dictionary<string, string> BuildFilterDict(
+                Microsoft.AspNetCore.Http.IQueryCollection query
+            )
             {
                 var FilterQuery = new Dictionary<string, string>();
                 foreach (string key in query.Keys)
@@ -224,52 +337,103 @@ namespace Atlas_Web.Pages.Search
                 var search_string_built = BuildSearchString(Query, Request.Query);
                 var search_filter_built = BuildFilterQuery(Request.Query, _cache, _context, User);
 
-                var results = await _solr.QueryAsync(new SolrQuery(search_string_built),
+                var results = await _solr.QueryAsync(
+                    new SolrQuery(search_string_built),
                     new QueryOptions
                     {
-                        RequestHandler = new RequestHandlerParameters("/" + Type.Replace("terms", "aterms")),
+                        RequestHandler = new RequestHandlerParameters(
+                            "/" + Type.Replace("terms", "aterms")
+                        ),
                         StartOrCursor = new StartOrCursor.Start((PageIndex - 1) * 10),
                         Rows = 10,
                         FilterQueries = search_filter_built,
-                        ExtraParams = new Dictionary<string, string> {
-                            {"rq", "{!rerank reRankQuery=$rqq reRankDocs=1000 reRankWeight=10}" },
-                            {"rqq", "(type:collections^2 OR documented:Y OR executive_visibility_text:Y OR enabled_for_hyperspace_text:Y OR certification_text:\"Analytics Certified\"^1)" },
-                            {"hl.fl", hl },
-                            {"hl.requireFieldMatch",hl_match }
+                        ExtraParams = new Dictionary<string, string>
+                        {
+                            { "rq", "{!rerank reRankQuery=$rqq reRankDocs=1000 reRankWeight=10}" },
+                            {
+                                "rqq",
+                                "(type:collections^2 OR documented:Y OR executive_visibility_text:Y OR enabled_for_hyperspace_text:Y OR certification_text:\"Analytics Certified\"^1)"
+                            },
+                            { "hl.fl", hl },
+                            { "hl.requireFieldMatch", hl_match }
                         }
                     }
                 );
 
-                var checkpoint = UserHelpers.CheckUserPermissions(_cache, _context, User.Identity.Name, 46);
+                var checkpoint = UserHelpers.CheckUserPermissions(
+                    _cache,
+                    _context,
+                    User.Identity.Name,
+                    46
+                );
                 var advanced = "N";
-                if (checkpoint && Request.Query.ContainsKey("advanced") && Request.Query["advanced"] == "Y")
+                if (
+                    checkpoint
+                    && Request.Query.ContainsKey("advanced")
+                    && Request.Query["advanced"] == "Y"
+                )
                 {
                     advanced = "Y";
                 }
 
-                SolrAtlasParameters parameters = new SolrAtlasParameters { Query = Query, PageIndex = PageIndex, Filters = BuildFilterDict(Request.Query) };
+                SolrAtlasParameters parameters = new SolrAtlasParameters
+                {
+                    Query = Query,
+                    PageIndex = PageIndex,
+                    Filters = BuildFilterDict(Request.Query)
+                };
 
                 SearchResults = new SolrAtlasResults(
-                        results.OrderBy(x => x.Type.First() == "collections" ? 0 : 1).Select(x => new SearchResult
-                                                                                                        (
-
-                                                                                                       x.ReportTypeId != null && (x.ReportTypeId.First() == 3 || x.ReportTypeId.First() == 17) && Helpers.UserHelpers.CheckHrxPermissions(_context, x.AtlasId.First(), User.Identity.Name) ? _context.ReportObjectAttachments.Where(y => y.ReportObjectId == x.AtlasId.First() && x.Type.First() == "reports").OrderByDescending(y => y.CreationDate).ToList() : new List<ReportObjectAttachment>(),
-                                                                                                         x,
-                                                                                                          x.Type.First() == "reports" ? HtmlHelpers.ReportUrlFromParams(_config["AppSettings:org_domain"], HttpContext, _context.ReportObjects.Where(y => y.ReportObjectId == x.AtlasId.First()).First(), _context, User.Identity.Name) : null
-                                                                                                       )
-                                                                                                ).ToList(),
-                        BuildFacetModels(results.FacetFields),
-                        BuildHighlightModels(results.Highlights),
-                        BuildFilterFields(Type),
-                        results.NumFound,
-                        results.Header.QTime,
-                        parameters,
-                        advanced
-                    );
+                    results
+                        .OrderBy(x => x.Type.First() == "collections" ? 0 : 1)
+                        .Select(
+                            x =>
+                                new SearchResult(
+                                    x.ReportTypeId != null
+                                        && (
+                                            x.ReportTypeId.First() == 3
+                                            || x.ReportTypeId.First() == 17
+                                        )
+                                        && Helpers.UserHelpers.CheckHrxPermissions(
+                                            _context,
+                                            x.AtlasId.First(),
+                                            User.Identity.Name
+                                        )
+                                      ? _context.ReportObjectAttachments
+                                        .Where(
+                                            y =>
+                                                y.ReportObjectId == x.AtlasId.First()
+                                                && x.Type.First() == "reports"
+                                        )
+                                        .OrderByDescending(y => y.CreationDate)
+                                        .ToList()
+                                      : new List<ReportObjectAttachment>(),
+                                    x,
+                                    x.Type.First() == "reports"
+                                      ? HtmlHelpers.ReportUrlFromParams(
+                                            _config["AppSettings:org_domain"],
+                                            HttpContext,
+                                            _context.ReportObjects
+                                                .Where(y => y.ReportObjectId == x.AtlasId.First())
+                                                .First(),
+                                            _context,
+                                            User.Identity.Name
+                                        )
+                                      : null
+                                )
+                        )
+                        .ToList(),
+                    BuildFacetModels(results.FacetFields),
+                    BuildHighlightModels(results.Highlights),
+                    BuildFilterFields(Type),
+                    results.NumFound,
+                    results.Header.QTime,
+                    parameters,
+                    advanced
+                );
             }
 
             PublicUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
-
 
             SearchString = Query;
             ViewData["MyRole"] = UserHelpers.GetMyRole(_cache, _context, User.Identity.Name);
@@ -281,7 +445,7 @@ namespace Atlas_Web.Pages.Search
             //ReportId = string.Join(",", SearchResults.Results.Where(x => x.Type.First() == "reports").Select(x => x.AtlasId.First()).ToList());
             AdLists = new List<AdList>
             {
-                new AdList { Url = "/Users?handler=SharedObjects", Column = 2},
+                new AdList { Url = "/Users?handler=SharedObjects", Column = 2 },
                 new AdList { Url = "/?handler=RecentReports", Column = 2 },
                 new AdList { Url = "/?handler=RecentTerms", Column = 2 },
                 new AdList { Url = "/?handler=RecentInitiatives", Column = 2 },
@@ -292,7 +456,10 @@ namespace Atlas_Web.Pages.Search
             Favorites = UserHelpers.GetUserFavorites(_cache, _context, User.Identity.Name);
             Preferences = UserHelpers.GetPreferences(_cache, _context, User.Identity.Name);
 
-            HttpContext.Response.Headers.Add("Cache-Control", "no-cache, no-store, must-revalidate");
+            HttpContext.Response.Headers.Add(
+                "Cache-Control",
+                "no-cache, no-store, must-revalidate"
+            );
             HttpContext.Response.Headers.Add("Pragma", "no-cache"); // HTTP 1.0.
             HttpContext.Response.Headers.Add("Expires", "0"); // Proxies.
 
@@ -304,7 +471,9 @@ namespace Atlas_Web.Pages.Search
             if (s != null)
                 SearchString = s;
             {
-                using (var connection = new SqlConnection(_config.GetConnectionString("AtlasDatabase")))
+                using (
+                    var connection = new SqlConnection(_config.GetConnectionString("AtlasDatabase"))
+                )
                 {
                     using (var command = connection.CreateCommand())
                     {
@@ -321,12 +490,14 @@ namespace Atlas_Web.Pages.Search
 
                         while (datareader.Read())
                         {
-                            ObjectSearch.Add(new ObjectSearch
-                            {
-                                ObjectId = (int)datareader["ReportObjectId"],
-                                Name = datareader["ReportObjectName"].ToString(),
-                                Description = datareader["Description"].ToString(),
-                            });
+                            ObjectSearch.Add(
+                                new ObjectSearch
+                                {
+                                    ObjectId = (int)datareader["ReportObjectId"],
+                                    Name = datareader["ReportObjectName"].ToString(),
+                                    Description = datareader["Description"].ToString(),
+                                }
+                            );
                         }
                     }
                 }
@@ -341,9 +512,11 @@ namespace Atlas_Web.Pages.Search
         public ActionResult OnPostTermSearch(string s, string e)
         {
             if (s != null)
-                SearchString = s;//.Replace("'","''").Replace(";","_");
+                SearchString = s; //.Replace("'","''").Replace(";","_");
             {
-                using (var connection = new SqlConnection(_config.GetConnectionString("AtlasDatabase")))
+                using (
+                    var connection = new SqlConnection(_config.GetConnectionString("AtlasDatabase"))
+                )
                 {
                     using (var command = connection.CreateCommand())
                     {
@@ -360,13 +533,14 @@ namespace Atlas_Web.Pages.Search
 
                         while (datareader.Read())
                         {
-                            ObjectSearch.Add(new ObjectSearch
-                            {
-                                ObjectId = (int)datareader["TermId"],
-                                Name = datareader["Name"].ToString(),
-                                Description = datareader["Summary"].ToString(),
-
-                            });
+                            ObjectSearch.Add(
+                                new ObjectSearch
+                                {
+                                    ObjectId = (int)datareader["TermId"],
+                                    Name = datareader["Name"].ToString(),
+                                    Description = datareader["Summary"].ToString(),
+                                }
+                            );
                         }
                     }
                 }
@@ -380,9 +554,11 @@ namespace Atlas_Web.Pages.Search
         public ActionResult OnPostCollectionSearch(string s, string e)
         {
             if (s != null)
-                SearchString = s;//.Replace("'","''").Replace(";","_");
+                SearchString = s; //.Replace("'","''").Replace(";","_");
             {
-                using (var connection = new SqlConnection(_config.GetConnectionString("AtlasDatabase")))
+                using (
+                    var connection = new SqlConnection(_config.GetConnectionString("AtlasDatabase"))
+                )
                 {
                     using (var command = connection.CreateCommand())
                     {
@@ -400,13 +576,14 @@ namespace Atlas_Web.Pages.Search
 
                         while (datareader.Read())
                         {
-                            ObjectSearch.Add(new ObjectSearch
-                            {
-                                ObjectId = (int)datareader["DataProjectId"],
-                                Name = datareader["Name"].ToString(),
-                                Description = datareader["Description"].ToString(),
-
-                            });
+                            ObjectSearch.Add(
+                                new ObjectSearch
+                                {
+                                    ObjectId = (int)datareader["DataProjectId"],
+                                    Name = datareader["Name"].ToString(),
+                                    Description = datareader["Description"].ToString(),
+                                }
+                            );
                         }
                     }
                 }
@@ -420,9 +597,11 @@ namespace Atlas_Web.Pages.Search
         public ActionResult OnPostUserSearch(string s, string e)
         {
             if (s != null)
-                SearchString = s;//.Replace("'","''").Replace(";","_");
+                SearchString = s; //.Replace("'","''").Replace(";","_");
             {
-                using (var connection = new SqlConnection(_config.GetConnectionString("AtlasDatabase")))
+                using (
+                    var connection = new SqlConnection(_config.GetConnectionString("AtlasDatabase"))
+                )
                 {
                     using (var command = connection.CreateCommand())
                     {
@@ -439,13 +618,14 @@ namespace Atlas_Web.Pages.Search
 
                         while (datareader.Read())
                         {
-                            UserSearch.Add(new ObjectSearch
-                            {
-                                ObjectId = (int)datareader["Userid"],
-                                Name = datareader["Username"].ToString(),
-                                Type = datareader["S"].ToString()
-
-                            });
+                            UserSearch.Add(
+                                new ObjectSearch
+                                {
+                                    ObjectId = (int)datareader["Userid"],
+                                    Name = datareader["Username"].ToString(),
+                                    Type = datareader["S"].ToString()
+                                }
+                            );
                         }
                     }
                 }
@@ -459,9 +639,11 @@ namespace Atlas_Web.Pages.Search
         public ActionResult OnPostUserProfileSearch(string s, string e)
         {
             if (s != null)
-                SearchString = s;//.Replace("'","''").Replace(";","_");
+                SearchString = s; //.Replace("'","''").Replace(";","_");
             {
-                using (var connection = new SqlConnection(_config.GetConnectionString("AtlasDatabase")))
+                using (
+                    var connection = new SqlConnection(_config.GetConnectionString("AtlasDatabase"))
+                )
                 {
                     using (var command = connection.CreateCommand())
                     {
@@ -479,13 +661,14 @@ namespace Atlas_Web.Pages.Search
 
                         while (datareader.Read())
                         {
-                            UserSearch.Add(new ObjectSearch
-                            {
-                                ObjectId = (int)datareader["Userid"],
-                                Name = datareader["Username"].ToString(),
-                                Type = datareader["S"].ToString()
-
-                            });
+                            UserSearch.Add(
+                                new ObjectSearch
+                                {
+                                    ObjectId = (int)datareader["Userid"],
+                                    Name = datareader["Username"].ToString(),
+                                    Type = datareader["S"].ToString()
+                                }
+                            );
                         }
                     }
                 }
@@ -499,9 +682,11 @@ namespace Atlas_Web.Pages.Search
         public ActionResult OnPostUserSearchMail(string s, string e)
         {
             if (s != null)
-                SearchString = s;//.Replace("'","''").Replace(";","_");
+                SearchString = s; //.Replace("'","''").Replace(";","_");
             {
-                using (var connection = new SqlConnection(_config.GetConnectionString("AtlasDatabase")))
+                using (
+                    var connection = new SqlConnection(_config.GetConnectionString("AtlasDatabase"))
+                )
                 {
                     using (var command = connection.CreateCommand())
                     {
@@ -519,13 +704,14 @@ namespace Atlas_Web.Pages.Search
 
                         while (datareader.Read())
                         {
-                            UserSearch.Add(new ObjectSearch
-                            {
-                                ObjectId = (int)datareader["Userid"],
-                                Name = datareader["Username"].ToString(),
-                                Type = datareader["S"].ToString()
-
-                            });
+                            UserSearch.Add(
+                                new ObjectSearch
+                                {
+                                    ObjectId = (int)datareader["Userid"],
+                                    Name = datareader["Username"].ToString(),
+                                    Type = datareader["S"].ToString()
+                                }
+                            );
                         }
                     }
                 }
@@ -539,9 +725,11 @@ namespace Atlas_Web.Pages.Search
         public ActionResult OnPostDirector(string s, string e)
         {
             if (s != null)
-                SearchString = s;//.Replace("'","''").Replace(";","_");
+                SearchString = s; //.Replace("'","''").Replace(";","_");
             {
-                using (var connection = new SqlConnection(_config.GetConnectionString("AtlasDatabase")))
+                using (
+                    var connection = new SqlConnection(_config.GetConnectionString("AtlasDatabase"))
+                )
                 {
                     using (var command = connection.CreateCommand())
                     {
@@ -558,12 +746,13 @@ namespace Atlas_Web.Pages.Search
 
                         while (datareader.Read())
                         {
-                            UserSearch.Add(new ObjectSearch
-                            {
-                                Description = (string)datareader["Email"],
-                                Name = datareader["FullName"].ToString()
-
-                            });
+                            UserSearch.Add(
+                                new ObjectSearch
+                                {
+                                    Description = (string)datareader["Email"],
+                                    Name = datareader["FullName"].ToString()
+                                }
+                            );
                         }
                     }
                 }
@@ -576,117 +765,206 @@ namespace Atlas_Web.Pages.Search
 
         public ActionResult OnPostValueList(string s)
         {
-
             List<SmallData> myObject = new List<SmallData>() { new SmallData("0", "error") };
 
             switch (s)
             {
                 case "org-value":
-                    myObject = _cache.GetOrCreate<List<SmallData>>("org-value",
-                       cacheEntry =>
-                       {
-                           cacheEntry.SlidingExpiration = TimeSpan.FromHours(2);
-                           return _context.OrganizationalValues.Select(x => new SmallData(x.OrganizationalValueId.ToString(), x.OrganizationalValueName)).ToList();
-                       });
+                    myObject = _cache.GetOrCreate<List<SmallData>>(
+                        "org-value",
+                        cacheEntry =>
+                        {
+                            cacheEntry.SlidingExpiration = TimeSpan.FromHours(2);
+                            return _context.OrganizationalValues
+                                .Select(
+                                    x =>
+                                        new SmallData(
+                                            x.OrganizationalValueId.ToString(),
+                                            x.OrganizationalValueName
+                                        )
+                                )
+                                .ToList();
+                        }
+                    );
                     break;
 
                 case "run-freq":
-                    myObject = _cache.GetOrCreate<List<SmallData>>("run-freq",
-                      cacheEntry =>
-                      {
-                          cacheEntry.SlidingExpiration = TimeSpan.FromHours(2);
-                          return _context.EstimatedRunFrequencies.Select(x => new SmallData(x.EstimatedRunFrequencyId.ToString(), x.EstimatedRunFrequencyName)).ToList();
-                      });
+                    myObject = _cache.GetOrCreate<List<SmallData>>(
+                        "run-freq",
+                        cacheEntry =>
+                        {
+                            cacheEntry.SlidingExpiration = TimeSpan.FromHours(2);
+                            return _context.EstimatedRunFrequencies
+                                .Select(
+                                    x =>
+                                        new SmallData(
+                                            x.EstimatedRunFrequencyId.ToString(),
+                                            x.EstimatedRunFrequencyName
+                                        )
+                                )
+                                .ToList();
+                        }
+                    );
                     break;
 
                 case "fragility":
-                    myObject = _cache.GetOrCreate<List<SmallData>>("fragility",
-                      cacheEntry =>
-                      {
-                          cacheEntry.SlidingExpiration = TimeSpan.FromHours(2);
-                          return _context.Fragilities.Select(x => new SmallData(x.FragilityId.ToString(), x.FragilityName)).ToList();
-                      });
+                    myObject = _cache.GetOrCreate<List<SmallData>>(
+                        "fragility",
+                        cacheEntry =>
+                        {
+                            cacheEntry.SlidingExpiration = TimeSpan.FromHours(2);
+                            return _context.Fragilities
+                                .Select(
+                                    x => new SmallData(x.FragilityId.ToString(), x.FragilityName)
+                                )
+                                .ToList();
+                        }
+                    );
                     break;
 
                 case "maint-sched":
-                    myObject = _cache.GetOrCreate<List<SmallData>>("maint-sched",
-                      cacheEntry =>
-                      {
-                          cacheEntry.SlidingExpiration = TimeSpan.FromHours(2);
-                          return _context.MaintenanceSchedules.Select(x => new SmallData(x.MaintenanceScheduleId.ToString(), x.MaintenanceScheduleName)).ToList();
-                      });
+                    myObject = _cache.GetOrCreate<List<SmallData>>(
+                        "maint-sched",
+                        cacheEntry =>
+                        {
+                            cacheEntry.SlidingExpiration = TimeSpan.FromHours(2);
+                            return _context.MaintenanceSchedules
+                                .Select(
+                                    x =>
+                                        new SmallData(
+                                            x.MaintenanceScheduleId.ToString(),
+                                            x.MaintenanceScheduleName
+                                        )
+                                )
+                                .ToList();
+                        }
+                    );
                     break;
 
                 case "ro-fragility":
-                    myObject = _cache.GetOrCreate<List<SmallData>>("ro-fragility",
-                     cacheEntry =>
-                     {
-                         cacheEntry.SlidingExpiration = TimeSpan.FromHours(2);
-                         return _context.FragilityTags.Select(x => new SmallData(x.FragilityTagId.ToString(), x.FragilityTagName)).ToList();
-                     });
+                    myObject = _cache.GetOrCreate<List<SmallData>>(
+                        "ro-fragility",
+                        cacheEntry =>
+                        {
+                            cacheEntry.SlidingExpiration = TimeSpan.FromHours(2);
+                            return _context.FragilityTags
+                                .Select(
+                                    x =>
+                                        new SmallData(
+                                            x.FragilityTagId.ToString(),
+                                            x.FragilityTagName
+                                        )
+                                )
+                                .ToList();
+                        }
+                    );
                     break;
 
                 case "maint-log-stat":
-                    myObject = _cache.GetOrCreate<List<SmallData>>("maint-log-stat",
-                     cacheEntry =>
-                     {
-                         cacheEntry.SlidingExpiration = TimeSpan.FromHours(2);
-                         return _context.MaintenanceLogStatuses.Select(x => new SmallData(x.MaintenanceLogStatusId.ToString(), x.MaintenanceLogStatusName)).ToList();
-                     });
+                    myObject = _cache.GetOrCreate<List<SmallData>>(
+                        "maint-log-stat",
+                        cacheEntry =>
+                        {
+                            cacheEntry.SlidingExpiration = TimeSpan.FromHours(2);
+                            return _context.MaintenanceLogStatuses
+                                .Select(
+                                    x =>
+                                        new SmallData(
+                                            x.MaintenanceLogStatusId.ToString(),
+                                            x.MaintenanceLogStatusName
+                                        )
+                                )
+                                .ToList();
+                        }
+                    );
                     break;
 
                 case "ext-cont":
-                    myObject = _cache.GetOrCreate<List<SmallData>>("ext-cont",
-                     cacheEntry =>
-                     {
-                         cacheEntry.SlidingExpiration = TimeSpan.FromHours(2);
-                         return _context.DpContacts.Select(x => new SmallData(x.ContactId.ToString(), x.Name + " - " + x.Company)).ToList();
-                     });
+                    myObject = _cache.GetOrCreate<List<SmallData>>(
+                        "ext-cont",
+                        cacheEntry =>
+                        {
+                            cacheEntry.SlidingExpiration = TimeSpan.FromHours(2);
+                            return _context.DpContacts
+                                .Select(
+                                    x =>
+                                        new SmallData(
+                                            x.ContactId.ToString(),
+                                            x.Name + " - " + x.Company
+                                        )
+                                )
+                                .ToList();
+                        }
+                    );
                     break;
 
                 case "mile-temp":
-                    myObject = _cache.GetOrCreate<List<SmallData>>("mile-temp",
-                     cacheEntry =>
-                     {
-                         cacheEntry.SlidingExpiration = TimeSpan.FromHours(2);
-                         return _context.DpMilestoneFrequencies.Select(x => new SmallData(x.MilestoneTypeId.ToString(), x.Name)).ToList();
-                     });
+                    myObject = _cache.GetOrCreate<List<SmallData>>(
+                        "mile-temp",
+                        cacheEntry =>
+                        {
+                            cacheEntry.SlidingExpiration = TimeSpan.FromHours(2);
+                            return _context.DpMilestoneFrequencies
+                                .Select(x => new SmallData(x.MilestoneTypeId.ToString(), x.Name))
+                                .ToList();
+                        }
+                    );
                     break;
 
                 case "mile-type":
-                    myObject = _cache.GetOrCreate<List<SmallData>>("mile-type",
-                     cacheEntry =>
-                     {
-                         cacheEntry.SlidingExpiration = TimeSpan.FromHours(2);
-                         return _context.DpMilestoneTemplates.Select(x => new SmallData(x.MilestoneTemplateId.ToString(), x.Name)).ToList();
-                     });
+                    myObject = _cache.GetOrCreate<List<SmallData>>(
+                        "mile-type",
+                        cacheEntry =>
+                        {
+                            cacheEntry.SlidingExpiration = TimeSpan.FromHours(2);
+                            return _context.DpMilestoneTemplates
+                                .Select(
+                                    x => new SmallData(x.MilestoneTemplateId.ToString(), x.Name)
+                                )
+                                .ToList();
+                        }
+                    );
                     break;
 
                 case "user-roles":
-                    myObject = _cache.GetOrCreate<List<SmallData>>("user-roles",
-                     cacheEntry =>
-                     {
-                         cacheEntry.SlidingExpiration = TimeSpan.FromHours(2);
-                         return _context.UserRoles.Select(x => new SmallData(x.UserRolesId.ToString(), x.Name)).ToList();
-                     });
+                    myObject = _cache.GetOrCreate<List<SmallData>>(
+                        "user-roles",
+                        cacheEntry =>
+                        {
+                            cacheEntry.SlidingExpiration = TimeSpan.FromHours(2);
+                            return _context.UserRoles
+                                .Select(x => new SmallData(x.UserRolesId.ToString(), x.Name))
+                                .ToList();
+                        }
+                    );
                     break;
 
                 case "financial-impact":
-                    myObject = _cache.GetOrCreate<List<SmallData>>("financial-impact",
-                     cacheEntry =>
-                     {
-                         cacheEntry.SlidingExpiration = TimeSpan.FromHours(2);
-                         return _context.FinancialImpacts.Select(x => new SmallData(x.FinancialImpactId.ToString(), x.Name)).ToList();
-                     });
+                    myObject = _cache.GetOrCreate<List<SmallData>>(
+                        "financial-impact",
+                        cacheEntry =>
+                        {
+                            cacheEntry.SlidingExpiration = TimeSpan.FromHours(2);
+                            return _context.FinancialImpacts
+                                .Select(x => new SmallData(x.FinancialImpactId.ToString(), x.Name))
+                                .ToList();
+                        }
+                    );
                     break;
 
                 case "strategic-importance":
-                    myObject = _cache.GetOrCreate<List<SmallData>>("strategic-importance",
-                     cacheEntry =>
-                     {
-                         cacheEntry.SlidingExpiration = TimeSpan.FromHours(2);
-                         return _context.StrategicImportances.Select(x => new SmallData(x.StrategicImportanceId.ToString(), x.Name)).ToList();
-                     });
+                    myObject = _cache.GetOrCreate<List<SmallData>>(
+                        "strategic-importance",
+                        cacheEntry =>
+                        {
+                            cacheEntry.SlidingExpiration = TimeSpan.FromHours(2);
+                            return _context.StrategicImportances
+                                .Select(
+                                    x => new SmallData(x.StrategicImportanceId.ToString(), x.Name)
+                                )
+                                .ToList();
+                        }
+                    );
                     break;
             }
 

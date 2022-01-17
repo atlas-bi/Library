@@ -16,30 +16,30 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 function loadFlowcharts() {
-    var d = document,
-        m = d.getElementsByClassName('mermaid');
-    [].forEach.call(m, function(e) {
-        if (e.getElementsByTagName('svg').length == 0) {
-            var t = document.createElement('textarea');
-            t.innerHTML = e.innerHTML;
-            var chart, code = t.value;
-            e.innerHTML = '';
-            t= null;
-            if (code.trim() != '') {
-                try {
-                    chart = flowchart.parse(code);
-                    chart.drawSVG(e);
-
-                } catch (l) {}
-            }
-        }
-    });
+  var d = document,
+    m = d.getElementsByClassName('mermaid');
+  [].forEach.call(m, function (e) {
+    if (e.getElementsByTagName('svg').length == 0) {
+      var t = document.createElement('textarea');
+      t.innerHTML = e.innerHTML;
+      var chart,
+        code = t.value;
+      e.innerHTML = '';
+      t = null;
+      if (code.trim() != '') {
+        try {
+          chart = flowchart.parse(code);
+          chart.drawSVG(e);
+        } catch (l) {}
+      }
+    }
+  });
 }
 
 loadFlowcharts();
 
-document.addEventListener('load-charts', function() {
-    setTimeout(function() {
-        loadFlowcharts();
-    }, 0);
+document.addEventListener('load-charts', function () {
+  setTimeout(function () {
+    loadFlowcharts();
+  }, 0);
 });

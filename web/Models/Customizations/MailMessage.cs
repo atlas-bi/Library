@@ -38,12 +38,21 @@ namespace Atlas_Web.Models
         {
             get
             {
-
-                if (SendDate == null) { return ""; }
+                if (SendDate == null)
+                {
+                    return "";
+                }
                 var timeAgo = System.DateTime.Now.Subtract(SendDate ?? DateTime.Now);
-                if (timeAgo.TotalDays < 1) { return (SendDate ?? DateTime.Now).ToString("h:mm tt"); }
-                else if (timeAgo.TotalHours < 2) { return "Yesterday"; }
-                else return (SendDate ?? DateTime.Now).ToString("M/d/yy");
+                if (timeAgo.TotalDays < 1)
+                {
+                    return (SendDate ?? DateTime.Now).ToString("h:mm tt");
+                }
+                else if (timeAgo.TotalHours < 2)
+                {
+                    return "Yesterday";
+                }
+                else
+                    return (SendDate ?? DateTime.Now).ToString("M/d/yy");
             }
         }
 
@@ -53,22 +62,35 @@ namespace Atlas_Web.Models
         {
             get
             {
-
-                if (SendDate == null) { return ""; }
+                if (SendDate == null)
+                {
+                    return "";
+                }
                 var timeAgo = System.DateTime.Now.Subtract(SendDate ?? DateTime.Now);
-                if (timeAgo.TotalDays < 1) { return (SendDate ?? DateTime.Now).ToString("h:mm tt"); }
-                else if (timeAgo.TotalHours < 2) { return string.Concat("Yesterday at ", (SendDate ?? DateTime.Now).ToString("h:mm tt")); }
-                else return string.Concat((SendDate ?? DateTime.Now).ToString("M/d/yy"), " at ", (SendDate ?? DateTime.Now).ToString("h:mm tt"));
+                if (timeAgo.TotalDays < 1)
+                {
+                    return (SendDate ?? DateTime.Now).ToString("h:mm tt");
+                }
+                else if (timeAgo.TotalHours < 2)
+                {
+                    return string.Concat(
+                        "Yesterday at ",
+                        (SendDate ?? DateTime.Now).ToString("h:mm tt")
+                    );
+                }
+                else
+                    return string.Concat(
+                        (SendDate ?? DateTime.Now).ToString("M/d/yy"),
+                        " at ",
+                        (SendDate ?? DateTime.Now).ToString("h:mm tt")
+                    );
             }
         }
 
         [NotMapped]
         public virtual string SmallSubject
         {
-            get
-            {
-                return string.Join(" ", Subject.Split(' ').ToList().Take(5));
-            }
+            get { return string.Join(" ", Subject.Split(' ').ToList().Take(5)); }
         }
 
         [NotMapped]
@@ -76,10 +98,10 @@ namespace Atlas_Web.Models
         {
             get
             {
-                if (MessagePlainText is null) return "";
+                if (MessagePlainText is null)
+                    return "";
                 return string.Join(" ", MessagePlainText.Split(' ').ToList().Take(10));
             }
         }
-
     }
 }

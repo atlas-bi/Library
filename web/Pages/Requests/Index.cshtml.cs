@@ -52,10 +52,7 @@ namespace Atlas_Web.Pages.Requests
             _cache = cache;
         }
 
-        public void OnGet()
-        {
-
-        }
+        public void OnGet() { }
 
         public class ApiResponse
         {
@@ -80,7 +77,13 @@ namespace Atlas_Web.Pages.Requests
                 // (note the plural)
                 {
                     // a "Details" request will only have one dict to pass back, and doesn't have a "record" element
-                    dictList.Add(xdoc.Descendants("parameter").ToDictionary(d => (string)d.Element("name").Value, d => (string)d.Element("value").Value));
+                    dictList.Add(
+                        xdoc.Descendants("parameter")
+                            .ToDictionary(
+                                d => (string)d.Element("name").Value,
+                                d => (string)d.Element("value").Value
+                            )
+                    );
                     this.details = dictList;
                 }
                 else
@@ -88,13 +91,19 @@ namespace Atlas_Web.Pages.Requests
                     foreach (var record in xdoc.Descendants("record"))
                     {
                         var dict = new Dictionary<string, string>();
-                        dict = record.Descendants("parameter").ToDictionary(d => (string)d.Element("name").Value, d => (string)d.Element("value").Value);
+                        dict = record
+                            .Descendants("parameter")
+                            .ToDictionary(
+                                d => (string)d.Element("name").Value,
+                                d => (string)d.Element("value").Value
+                            );
                         dict.Add("URL", record.Attribute("URI").Value);
                         dictList.Add(dict);
                         this.details = dictList;
                     }
                 }
             }
+
             public string status { get; set; }
             public string message { get; set; }
             public List<Dictionary<string, string>> details { get; set; }
@@ -112,7 +121,11 @@ namespace Atlas_Web.Pages.Requests
             }
         }
 
-        public async Task<ActionResult> OnPostAccessRequest(string reportName, string reportUrl, string directorName)
+        public async Task<ActionResult> OnPostAccessRequest(
+            string reportName,
+            string reportUrl,
+            string directorName
+        )
         {
             string Result;
             string xmlString;
@@ -135,11 +148,17 @@ namespace Atlas_Web.Pages.Requests
                     xmlWriter.WriteEndElement();
                     xmlWriter.WriteStartElement("parameter");
                     xmlWriter.WriteElementString("name", "description");
-                    xmlWriter.WriteElementString("value", "I would like access to the report '" + reportName + "' from " + reportUrl);
+                    xmlWriter.WriteElementString(
+                        "value",
+                        "I would like access to the report '" + reportName + "' from " + reportUrl
+                    );
                     xmlWriter.WriteEndElement();
                     xmlWriter.WriteStartElement("parameter");
                     xmlWriter.WriteElementString("name", "purpose");
-                    xmlWriter.WriteElementString("value", "Atlas Access Request for '" + reportName + "'");
+                    xmlWriter.WriteElementString(
+                        "value",
+                        "Atlas Access Request for '" + reportName + "'"
+                    );
                     xmlWriter.WriteEndElement();
                     xmlWriter.WriteStartElement("parameter");
                     xmlWriter.WriteElementString("name", "Atlas Link");
@@ -151,7 +170,10 @@ namespace Atlas_Web.Pages.Requests
                     xmlWriter.WriteEndElement();
                     xmlWriter.WriteStartElement("parameter");
                     xmlWriter.WriteElementString("name", "requester");
-                    xmlWriter.WriteElementString("value", UserHelpers.GetUser(_cache, _context, User.Identity.Name).Fullname_Cust);
+                    xmlWriter.WriteElementString(
+                        "value",
+                        UserHelpers.GetUser(_cache, _context, User.Identity.Name).Fullname_Cust
+                    );
                     xmlWriter.WriteEndElement();
                     xmlWriter.WriteStartElement("parameter");
                     xmlWriter.WriteElementString("name", "item");
@@ -171,7 +193,10 @@ namespace Atlas_Web.Pages.Requests
                     xmlWriter.WriteEndElement();
                     xmlWriter.WriteStartElement("parameter");
                     xmlWriter.WriteElementString("name", "requesteremail");
-                    xmlWriter.WriteElementString("value", UserHelpers.GetUser(_cache, _context, User.Identity.Name).Email);
+                    xmlWriter.WriteElementString(
+                        "value",
+                        UserHelpers.GetUser(_cache, _context, User.Identity.Name).Email
+                    );
                     xmlWriter.WriteEndElement();
                     xmlWriter.WriteStartElement("parameter");
                     xmlWriter.WriteElementString("name", "director");
@@ -190,23 +215,32 @@ namespace Atlas_Web.Pages.Requests
                 // Compose the http POST request following the API guidelines
                 // https://www.manageengine.com/products/service-desk/help/adminguide/api/request-operations.html#add
                 var values = new Dictionary<string, string>
-                    {
-                       { "OPERATION_NAME", "ADD_REQUEST" },
-                       { "TECHNICIAN_KEY", _config["AppSettings:manage_engine_tech_key"] },
-                       { "INPUT_DATA", xmlString }
-                    };
+                {
+                    { "OPERATION_NAME", "ADD_REQUEST" },
+                    { "TECHNICIAN_KEY", _config["AppSettings:manage_engine_tech_key"] },
+                    { "INPUT_DATA", xmlString }
+                };
 
                 var httpRequest = new FormUrlEncodedContent(values);
                 // send the request asynchronously
-                var httpResponse = await client.PostAsync(_config["AppSettings:manage_engine_server"] + "/sdpapi/request/", httpRequest);
+                var httpResponse = await client.PostAsync(
+                    _config["AppSettings:manage_engine_server"] + "/sdpapi/request/",
+                    httpRequest
+                );
                 // notify the user of the response from the server http://stackoverflow.com/a/13550295/3900824
-                ApiResponse response = new ApiResponse(await httpResponse.Content.ReadAsStringAsync());
+                ApiResponse response = new ApiResponse(
+                    await httpResponse.Content.ReadAsStringAsync()
+                );
                 Result = response.status + " - " + response.message;
             }
             return Content(Result);
         }
 
-        public async Task<ActionResult> OnPostShareFeedback(string reportName, string reportUrl, string description)
+        public async Task<ActionResult> OnPostShareFeedback(
+            string reportName,
+            string reportUrl,
+            string description
+        )
         {
             string Result;
             string xmlString;
@@ -229,7 +263,10 @@ namespace Atlas_Web.Pages.Requests
                     xmlWriter.WriteEndElement();
                     xmlWriter.WriteStartElement("parameter");
                     xmlWriter.WriteElementString("name", "purpose");
-                    xmlWriter.WriteElementString("value", "Atlas feedback reported on '" + reportName + "' from " + reportUrl);
+                    xmlWriter.WriteElementString(
+                        "value",
+                        "Atlas feedback reported on '" + reportName + "' from " + reportUrl
+                    );
                     xmlWriter.WriteEndElement();
                     xmlWriter.WriteStartElement("parameter");
                     xmlWriter.WriteElementString("name", "Atlas Link");
@@ -245,7 +282,10 @@ namespace Atlas_Web.Pages.Requests
                     xmlWriter.WriteEndElement();
                     xmlWriter.WriteStartElement("parameter");
                     xmlWriter.WriteElementString("name", "requester");
-                    xmlWriter.WriteElementString("value", UserHelpers.GetUser(_cache, _context, User.Identity.Name).Fullname_Cust);
+                    xmlWriter.WriteElementString(
+                        "value",
+                        UserHelpers.GetUser(_cache, _context, User.Identity.Name).Fullname_Cust
+                    );
                     xmlWriter.WriteEndElement();
                     xmlWriter.WriteStartElement("parameter");
                     xmlWriter.WriteElementString("name", "item");
@@ -265,7 +305,10 @@ namespace Atlas_Web.Pages.Requests
                     xmlWriter.WriteEndElement();
                     xmlWriter.WriteStartElement("parameter");
                     xmlWriter.WriteElementString("name", "requesteremail");
-                    xmlWriter.WriteElementString("value", UserHelpers.GetUser(_cache, _context, User.Identity.Name).Email);
+                    xmlWriter.WriteElementString(
+                        "value",
+                        UserHelpers.GetUser(_cache, _context, User.Identity.Name).Email
+                    );
                     xmlWriter.WriteEndElement();
                     xmlWriter.WriteStartElement("parameter");
                     xmlWriter.WriteElementString("name", "director");
@@ -288,17 +331,22 @@ namespace Atlas_Web.Pages.Requests
                 // Compose the http POST request following the API guidelines
                 // https://www.manageengine.com/products/service-desk/help/adminguide/api/request-operations.html#add
                 var values = new Dictionary<string, string>
-                    {
-                       { "OPERATION_NAME", "ADD_REQUEST" },
-                       { "TECHNICIAN_KEY", _config["AppSettings:manage_engine_tech_key"] },
-                       { "INPUT_DATA", xmlString }
-                    };
+                {
+                    { "OPERATION_NAME", "ADD_REQUEST" },
+                    { "TECHNICIAN_KEY", _config["AppSettings:manage_engine_tech_key"] },
+                    { "INPUT_DATA", xmlString }
+                };
 
                 var httpRequest = new FormUrlEncodedContent(values);
                 // send the request asynchronously
-                var httpResponse = await client.PostAsync(_config["AppSettings:manage_engine_server"] + "/sdpapi/request/", httpRequest);
+                var httpResponse = await client.PostAsync(
+                    _config["AppSettings:manage_engine_server"] + "/sdpapi/request/",
+                    httpRequest
+                );
                 // notify the user of the response from the server http://stackoverflow.com/a/13550295/3900824
-                ApiResponse response = new ApiResponse(await httpResponse.Content.ReadAsStringAsync());
+                ApiResponse response = new ApiResponse(
+                    await httpResponse.Content.ReadAsStringAsync()
+                );
                 Result = response.status + " - " + response.message;
             }
             return Content(Result);

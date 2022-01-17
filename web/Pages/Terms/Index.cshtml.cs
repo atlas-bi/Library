@@ -39,6 +39,7 @@ namespace Atlas_Web.Pages.Terms
         private readonly Atlas_WebContext _context;
         private readonly IConfiguration _config;
         private IMemoryCache _cache;
+
         public IndexModel(Atlas_WebContext context, IConfiguration config, IMemoryCache cache)
         {
             _context = context;
@@ -49,6 +50,7 @@ namespace Atlas_Web.Pages.Terms
         public List<UserFavorite> Favorites { get; set; }
         public List<UserPreference> Preferences { get; set; }
         public User PublicUser { get; set; }
+
         public class TermCommentsData
         {
             public int TermId { get; set; }
@@ -58,6 +60,7 @@ namespace Atlas_Web.Pages.Terms
             public string User { get; set; }
             public string Text { get; set; }
         }
+
         public class ReportTermsData
         {
             public string Name { get; set; }
@@ -77,11 +80,18 @@ namespace Atlas_Web.Pages.Terms
         public IEnumerable<TermsData> AllTerms { get; set; }
 
         public TermsData MyTerm { get; set; }
-        [BindProperty] public Term NewTerm { get; set; }
-        [BindProperty] public ReportObjectDocTerm NewTermLink { get; set; }
 
-        [BindProperty] public TermConversation NewComment { get; set; }
-        [BindProperty] public TermConversationMessage NewCommentReply { get; set; }
+        [BindProperty]
+        public Term NewTerm { get; set; }
+
+        [BindProperty]
+        public ReportObjectDocTerm NewTermLink { get; set; }
+
+        [BindProperty]
+        public TermConversation NewComment { get; set; }
+
+        [BindProperty]
+        public TermConversationMessage NewCommentReply { get; set; }
         public List<AdList> AdLists { get; set; }
         public List<int?> Permissions { get; set; }
         public List<RelatedReportsData> RelatedReports { get; set; }
@@ -118,7 +128,7 @@ namespace Atlas_Web.Pages.Terms
 
             AdLists = new List<AdList>
             {
-                new AdList { Url = "/Users?handler=SharedObjects", Column = 2},
+                new AdList { Url = "/Users?handler=SharedObjects", Column = 2 },
                 new AdList { Url = "/?handler=RecentReports", Column = 2 },
                 new AdList { Url = "/?handler=RecentTerms", Column = 2 },
                 new AdList { Url = "/?handler=RecentInitiatives", Column = 2 },
@@ -129,102 +139,154 @@ namespace Atlas_Web.Pages.Terms
             if (id != null)
             {
                 // try to get Term by id
-                MyTerm = await (from t in _context.Terms
-                                where t.TermId == id
-                                join q in (from f in _context.UserFavorites
-                                           where f.ItemType.ToLower() == "term"
-                                              && f.UserId == MyUser.UserId
-                                           select new { f.ItemId })
-                                on t.TermId equals q.ItemId into tmp
-                                from rfi in tmp.DefaultIfEmpty()
-                                orderby t.ApprovedYn ?? "N" descending, t.LastUpdatedDateTime descending
-                                select new TermsData
-                                {
-                                    Id = t.TermId,
-                                    Name = t.Name,
-                                    Approved = t.ApprovedYn ?? "N",
-                                    Favorite = rfi.ItemId == null ? "no" : "yes",
-                                    UpdateDate = t.LastUpdatedDateTimeDisplayString,
-                                    Summary = t.Summary,
-                                    Definition = t.TechnicalDefinition,
-                                    UpdatedBy = t.UpdatedByUser.Fullname_Cust,
-                                    ApprovedBy = t.ApprovedByUser.Fullname_Cust,
-                                    ExtStdUrl = t.ExternalStandardUrl,
-                                    ApprovedDate = t.ApprovalDateTimeDisplayString,
-                                    ValidDate = t.ValidFromDateTimeDisplayString
-                                }).FirstOrDefaultAsync();
+                MyTerm = await (
+                    from t in _context.Terms
+                    where t.TermId == id
+                    join q in (
+                        from f in _context.UserFavorites
+                        where f.ItemType.ToLower() == "term" && f.UserId == MyUser.UserId
+                        select new { f.ItemId }
+                    )
+                        on t.TermId equals q.ItemId
+                        into tmp
+                    from rfi in tmp.DefaultIfEmpty()
+                    orderby t.ApprovedYn ?? "N" descending,t.LastUpdatedDateTime descending
+                    select new TermsData
+                    {
+                        Id = t.TermId,
+                        Name = t.Name,
+                        Approved = t.ApprovedYn ?? "N",
+                        Favorite = rfi.ItemId == null ? "no" : "yes",
+                        UpdateDate = t.LastUpdatedDateTimeDisplayString,
+                        Summary = t.Summary,
+                        Definition = t.TechnicalDefinition,
+                        UpdatedBy = t.UpdatedByUser.Fullname_Cust,
+                        ApprovedBy = t.ApprovedByUser.Fullname_Cust,
+                        ExtStdUrl = t.ExternalStandardUrl,
+                        ApprovedDate = t.ApprovalDateTimeDisplayString,
+                        ValidDate = t.ValidFromDateTimeDisplayString
+                    }
+                ).FirstOrDefaultAsync();
 
+                var related_reports = await (
+                    from r in _context.ReportObjectDocTerms
+                    where
+                        r.TermId == id
+                        && (r.ReportObject.Hidden ?? "N") == "N"
+                        && r.ReportObject.ReportObject.DefaultVisibilityYn == "Y"
+                    select new
+                    {
+                        Id = r.ReportObjectId,
+                        Url = Helpers.HtmlHelpers.ReportUrlFromParams(
+                            _config["AppSettings:org_domain"],
+                            HttpContext,
+                            r.ReportObject.ReportObject,
+                            _context,
+                            User.Identity.Name
+                        ),
+                        Name = r.ReportObject.ReportObject.DisplayName
+                    }
+                ).ToListAsync();
 
-                var related_reports = await (from r in _context.ReportObjectDocTerms
-                                             where r.TermId == id
-                                                && (r.ReportObject.Hidden ?? "N") == "N"
-                                                && r.ReportObject.ReportObject.DefaultVisibilityYn == "Y"
-                                             select new
-                                             {
-                                                 Id = r.ReportObjectId,
-                                                 Url = Helpers.HtmlHelpers.ReportUrlFromParams(_config["AppSettings:org_domain"], HttpContext, r.ReportObject.ReportObject, _context, User.Identity.Name),
-                                                 Name = r.ReportObject.ReportObject.DisplayName
-                                             }).ToListAsync();
+                var parent_related_reports = await (
+                    from r in _context.ReportObjectDocTerms
+                    where r.TermId == id
+                    // && (r.ReportObject.Hidden ?? "N") == "N"
+                    // && r.ReportObject.ReportObject.DefaultVisibilityYn == "Y"
+                    join p in _context.ReportObjectHierarchies
+                        on r.ReportObjectId equals p.ChildReportObjectId
+                    where
+                        (p.ParentReportObject.ReportObjectDoc.Hidden ?? "N") == "N"
+                        && p.ParentReportObject.DefaultVisibilityYn == "Y"
+                    select new
+                    {
+                        Id = p.ParentReportObjectId,
+                        Url = Helpers.HtmlHelpers.ReportUrlFromParams(
+                            _config["AppSettings:org_domain"],
+                            HttpContext,
+                            p.ParentReportObject,
+                            _context,
+                            User.Identity.Name
+                        ),
+                        Name = p.ParentReportObject.DisplayName
+                    }
+                ).Distinct().ToListAsync();
 
+                var grandparent_related_reports = await (
+                    from r in _context.ReportObjectDocTerms
+                    where r.TermId == id
+                    //   && (r.ReportObject.Hidden ?? "N") == "N"
+                    //   && r.ReportObject.ReportObject.DefaultVisibilityYn == "Y"
+                    join p in _context.ReportObjectHierarchies
+                        on r.ReportObjectId equals p.ChildReportObjectId
+                    // where (p.ParentReportObject.ReportObjectDoc.Hidden ?? "N") == "N"
+                    //   && p.ParentReportObject.DefaultVisibilityYn == "Y"
+                    join gp in _context.ReportObjectHierarchies
+                        on p.ParentReportObjectId equals gp.ChildReportObjectId
+                    where
+                        (gp.ParentReportObject.ReportObjectDoc.Hidden ?? "N") == "N"
+                        && gp.ParentReportObject.DefaultVisibilityYn == "Y"
+                    select new
+                    {
+                        Id = gp.ParentReportObjectId,
+                        Url = Helpers.HtmlHelpers.ReportUrlFromParams(
+                            _config["AppSettings:org_domain"],
+                            HttpContext,
+                            gp.ParentReportObject,
+                            _context,
+                            User.Identity.Name
+                        ),
+                        Name = gp.ParentReportObject.DisplayName
+                    }
+                ).Distinct().ToListAsync();
 
+                var great_grandparent_related_reports = await (
+                    from r in _context.ReportObjectDocTerms
+                    where r.TermId == id
+                    //   && (r.ReportObject.Hidden ?? "N") == "N"
+                    //   && r.ReportObject.ReportObject.DefaultVisibilityYn == "Y"
+                    join p in _context.ReportObjectHierarchies
+                        on r.ReportObjectId equals p.ChildReportObjectId
+                    //where (p.ParentReportObject.ReportObjectDoc.Hidden ?? "N") == "N"
+                    //  && p.ParentReportObject.DefaultVisibilityYn == "Y"
+                    join gp in _context.ReportObjectHierarchies
+                        on p.ParentReportObjectId equals gp.ChildReportObjectId
+                    //  where (gp.ParentReportObject.ReportObjectDoc.Hidden ?? "N") == "N"
+                    //  && gp.ParentReportObject.DefaultVisibilityYn == "Y"
+                    join ggp in _context.ReportObjectHierarchies
+                        on gp.ParentReportObjectId equals ggp.ChildReportObjectId
+                    where
+                        (ggp.ParentReportObject.ReportObjectDoc.Hidden ?? "N") == "N"
+                        && ggp.ParentReportObject.DefaultVisibilityYn == "Y"
+                    select new
+                    {
+                        Id = ggp.ParentReportObjectId,
+                        Url = Helpers.HtmlHelpers.ReportUrlFromParams(
+                            _config["AppSettings:org_domain"],
+                            HttpContext,
+                            ggp.ParentReportObject,
+                            _context,
+                            User.Identity.Name
+                        ),
+                        Name = ggp.ParentReportObject.DisplayName
+                    }
+                ).Distinct().ToListAsync();
 
-                var parent_related_reports = await (from r in _context.ReportObjectDocTerms
-                                                    where r.TermId == id
-                                                    // && (r.ReportObject.Hidden ?? "N") == "N"
-                                                    // && r.ReportObject.ReportObject.DefaultVisibilityYn == "Y"
-                                                    join p in _context.ReportObjectHierarchies on r.ReportObjectId equals p.ChildReportObjectId
-                                                    where (p.ParentReportObject.ReportObjectDoc.Hidden ?? "N") == "N"
-                                                      && p.ParentReportObject.DefaultVisibilityYn == "Y"
-                                                    select new
-                                                    {
-                                                        Id = p.ParentReportObjectId,
-                                                        Url = Helpers.HtmlHelpers.ReportUrlFromParams(_config["AppSettings:org_domain"], HttpContext, p.ParentReportObject, _context, User.Identity.Name),
-                                                        Name = p.ParentReportObject.DisplayName
-                                                    }).Distinct().ToListAsync();
-
-                var grandparent_related_reports = await (from r in _context.ReportObjectDocTerms
-                                                         where r.TermId == id
-                                                         //   && (r.ReportObject.Hidden ?? "N") == "N"
-                                                         //   && r.ReportObject.ReportObject.DefaultVisibilityYn == "Y"
-                                                         join p in _context.ReportObjectHierarchies on r.ReportObjectId equals p.ChildReportObjectId
-                                                         // where (p.ParentReportObject.ReportObjectDoc.Hidden ?? "N") == "N"
-                                                         //   && p.ParentReportObject.DefaultVisibilityYn == "Y"
-                                                         join gp in _context.ReportObjectHierarchies on p.ParentReportObjectId equals gp.ChildReportObjectId
-                                                         where (gp.ParentReportObject.ReportObjectDoc.Hidden ?? "N") == "N"
-                                                            && gp.ParentReportObject.DefaultVisibilityYn == "Y"
-                                                         select new
-                                                         {
-                                                             Id = gp.ParentReportObjectId,
-                                                             Url = Helpers.HtmlHelpers.ReportUrlFromParams(_config["AppSettings:org_domain"], HttpContext, gp.ParentReportObject, _context, User.Identity.Name),
-                                                             Name = gp.ParentReportObject.DisplayName
-                                                         }).Distinct().ToListAsync();
-
-                var great_grandparent_related_reports = await (from r in _context.ReportObjectDocTerms
-                                                               where r.TermId == id
-                                                               //   && (r.ReportObject.Hidden ?? "N") == "N"
-                                                               //   && r.ReportObject.ReportObject.DefaultVisibilityYn == "Y"
-                                                               join p in _context.ReportObjectHierarchies on r.ReportObjectId equals p.ChildReportObjectId
-                                                               //where (p.ParentReportObject.ReportObjectDoc.Hidden ?? "N") == "N"
-                                                               //  && p.ParentReportObject.DefaultVisibilityYn == "Y"
-                                                               join gp in _context.ReportObjectHierarchies on p.ParentReportObjectId equals gp.ChildReportObjectId
-                                                               //  where (gp.ParentReportObject.ReportObjectDoc.Hidden ?? "N") == "N"
-                                                               //  && gp.ParentReportObject.DefaultVisibilityYn == "Y"
-                                                               join ggp in _context.ReportObjectHierarchies on gp.ParentReportObjectId equals ggp.ChildReportObjectId
-                                                               where (ggp.ParentReportObject.ReportObjectDoc.Hidden ?? "N") == "N"
-                                                                  && ggp.ParentReportObject.DefaultVisibilityYn == "Y"
-                                                               select new
-                                                               {
-                                                                   Id = ggp.ParentReportObjectId,
-                                                                   Url = Helpers.HtmlHelpers.ReportUrlFromParams(_config["AppSettings:org_domain"], HttpContext, ggp.ParentReportObject, _context, User.Identity.Name),
-                                                                   Name = ggp.ParentReportObject.DisplayName
-                                                               }).Distinct().ToListAsync();
-
-                RelatedReports = related_reports.Union(parent_related_reports).Union(grandparent_related_reports).Union(great_grandparent_related_reports).Distinct().Select(x => new RelatedReportsData
-                {
-                    Id = x.Id,
-                    Url = x.Url,
-                    Name = x.Name,
-                }).ToList();
+                RelatedReports = related_reports
+                    .Union(parent_related_reports)
+                    .Union(grandparent_related_reports)
+                    .Union(great_grandparent_related_reports)
+                    .Distinct()
+                    .Select(
+                        x =>
+                            new RelatedReportsData
+                            {
+                                Id = x.Id,
+                                Url = x.Url,
+                                Name = x.Name,
+                            }
+                    )
+                    .ToList();
 
                 if (MyTerm != null)
                 {
@@ -232,48 +294,54 @@ namespace Atlas_Web.Pages.Terms
                 }
             }
 
-            AllTerms = await (from t in _context.Terms
-                              join q in (from f in _context.UserFavorites
-                                         where f.ItemType.ToLower() == "term"
-                                         && f.UserId == MyUser.UserId
-                                         select new { f.ItemId })
-                              on t.TermId equals q.ItemId into tmp
-                              from rfi in tmp.DefaultIfEmpty()
-                              orderby t.ApprovedYn ?? "N" descending, t.LastUpdatedDateTime descending
-                              select new TermsData
-                              {
-                                  Id = t.TermId,
-                                  Name = t.Name,
-                                  Approved = t.ApprovedYn ?? "N",
-                                  Favorite = rfi.ItemId == null ? "no" : "yes",
-                                  UpdateDate = t.LastUpdatedDateTimeDisplayString,
-                                  Summary = t.Summary ?? t.TechnicalDefinition,
-                              }).ToListAsync();
+            AllTerms = await (
+                from t in _context.Terms
+                join q in (
+                    from f in _context.UserFavorites
+                    where f.ItemType.ToLower() == "term" && f.UserId == MyUser.UserId
+                    select new { f.ItemId }
+                )
+                    on t.TermId equals q.ItemId
+                    into tmp
+                from rfi in tmp.DefaultIfEmpty()
+                orderby t.ApprovedYn ?? "N" descending,t.LastUpdatedDateTime descending
+                select new TermsData
+                {
+                    Id = t.TermId,
+                    Name = t.Name,
+                    Approved = t.ApprovedYn ?? "N",
+                    Favorite = rfi.ItemId == null ? "no" : "yes",
+                    UpdateDate = t.LastUpdatedDateTimeDisplayString,
+                    Summary = t.Summary ?? t.TechnicalDefinition,
+                }
+            ).ToListAsync();
             return Page();
         }
 
         public async Task<ActionResult> OnGetComments(int id)
         {
-            ViewData["Comments"] = await (from c in _context.TermConversationMessages
-                                          where c.TermConversation.TermId == id
-                                          orderby c.TermConversationId descending, c.TermConversationMessageId ascending
-                                          select new TermCommentsData
-                                          {
-                                              TermId = id,
-                                              Date = c.PostDateTimeDisplayString,
-                                              ConvId = c.TermConversationId,
-                                              MessId = c.TermConversationMessageId,
-                                              User = c.User.Fullname_Cust,
-                                              Text = c.MessageText
-                                          }).ToListAsync();
+            ViewData["Comments"] = await (
+                from c in _context.TermConversationMessages
+                where c.TermConversation.TermId == id
+                orderby c.TermConversationId descending,c.TermConversationMessageId ascending
+                select new TermCommentsData
+                {
+                    TermId = id,
+                    Date = c.PostDateTimeDisplayString,
+                    ConvId = c.TermConversationId,
+                    MessId = c.TermConversationMessageId,
+                    User = c.User.Fullname_Cust,
+                    Text = c.MessageText
+                }
+            ).ToListAsync();
             ViewData["Id"] = id;
-            ViewData["Permissions"] = UserHelpers.GetUserPermissions(_cache, _context, User.Identity.Name);
+            ViewData["Permissions"] = UserHelpers.GetUserPermissions(
+                _cache,
+                _context,
+                User.Identity.Name
+            );
             //return Partial((".+?"));
-            return new PartialViewResult()
-            {
-                ViewName = "Details/_Comments",
-                ViewData = ViewData
-            };
+            return new PartialViewResult() { ViewName = "Details/_Comments", ViewData = ViewData };
         }
 
         public async Task<ActionResult> OnPostNewTerm()
@@ -283,16 +351,18 @@ namespace Atlas_Web.Pages.Terms
             {
                 if (NewTermLink.ReportObjectId > 0)
                 {
-                    ViewData["ReportTerms"] = await (from r in _context.ReportObjectDocTerms
-                                                     where r.ReportObjectId == NewTermLink.ReportObjectId
-                                                     select new ReportTermsData
-                                                     {
-                                                         Name = r.Term.Name,
-                                                         Id = r.TermId,
-                                                         Summary = r.Term.Summary,
-                                                         Definition = r.Term.TechnicalDefinition,
-                                                         ReportId = r.ReportObjectId
-                                                     }).ToListAsync();
+                    ViewData["ReportTerms"] = await (
+                        from r in _context.ReportObjectDocTerms
+                        where r.ReportObjectId == NewTermLink.ReportObjectId
+                        select new ReportTermsData
+                        {
+                            Name = r.Term.Name,
+                            Id = r.TermId,
+                            Summary = r.Term.Summary,
+                            Definition = r.Term.TechnicalDefinition,
+                            ReportId = r.ReportObjectId
+                        }
+                    ).ToListAsync();
 
                     //return Partial((".+?"));
                     return new PartialViewResult()
@@ -306,13 +376,16 @@ namespace Atlas_Web.Pages.Terms
             }
 
             // all data comes from the form, but we update 2 atribs
-            NewTerm.UpdatedByUserId = UserHelpers.GetUser(_cache, _context, User.Identity.Name).UserId;
+            NewTerm.UpdatedByUserId =
+                UserHelpers.GetUser(_cache, _context, User.Identity.Name).UserId;
             NewTerm.LastUpdatedDateTime = DateTime.Now;
-            NewTerm.HasExternalStandardYn = NewTerm.ExternalStandardUrl != null && NewTerm.ExternalStandardUrl.Length > 0 ? "Y" : "N";
+            NewTerm.HasExternalStandardYn =
+                NewTerm.ExternalStandardUrl != null && NewTerm.ExternalStandardUrl.Length > 0
+                    ? "Y"
+                    : "N";
             NewTerm.ValidFromDateTime = NewTerm.ValidFromDateTime ?? DateTime.Now;
             NewTerm.ValidToDateTime = DateTime.Parse("12/31/9999");
             NewTerm.ApprovedYn = "N";
-
 
             _context.Terms.Add(NewTerm);
             await _context.SaveChangesAsync();
@@ -326,25 +399,35 @@ namespace Atlas_Web.Pages.Terms
 
                 // update last update date on report.
                 // If report doc does not exist we will create.
-                if (!_context.ReportObjectDocs.Any(d => d.ReportObjectId == NewTermLink.ReportObjectId))
+                if (
+                    !_context.ReportObjectDocs.Any(
+                        d => d.ReportObjectId == NewTermLink.ReportObjectId
+                    )
+                )
                 {
-                    _context.Add(new ReportObjectDoc { ReportObjectId = NewTermLink.ReportObjectId });
+                    _context.Add(
+                        new ReportObjectDoc { ReportObjectId = NewTermLink.ReportObjectId }
+                    );
                     await _context.SaveChangesAsync();
                 }
 
-                _context.ReportObjectDocs.Where(d => d.ReportObjectId == NewTermLink.ReportObjectId).FirstOrDefault().LastUpdateDateTime = DateTime.Now;
+                _context.ReportObjectDocs
+                    .Where(d => d.ReportObjectId == NewTermLink.ReportObjectId)
+                    .FirstOrDefault().LastUpdateDateTime = DateTime.Now;
                 await _context.SaveChangesAsync();
 
-                ViewData["ReportTerms"] = await (from r in _context.ReportObjectDocTerms
-                                                 where r.ReportObjectId == NewTermLink.ReportObjectId
-                                                 select new ReportTermsData
-                                                 {
-                                                     Name = r.Term.Name,
-                                                     Id = r.TermId,
-                                                     Summary = r.Term.Summary,
-                                                     Definition = r.Term.TechnicalDefinition,
-                                                     ReportId = r.ReportObjectId
-                                                 }).ToListAsync();
+                ViewData["ReportTerms"] = await (
+                    from r in _context.ReportObjectDocTerms
+                    where r.ReportObjectId == NewTermLink.ReportObjectId
+                    select new ReportTermsData
+                    {
+                        Name = r.Term.Name,
+                        Id = r.TermId,
+                        Summary = r.Term.Summary,
+                        Definition = r.Term.TechnicalDefinition,
+                        ReportId = r.ReportObjectId
+                    }
+                ).ToListAsync();
 
                 //return Partial((".+?"));
                 return new PartialViewResult()
@@ -371,7 +454,16 @@ namespace Atlas_Web.Pages.Terms
             //  report links
             //  initiative term annotations
 
-            _context.RemoveRange(_context.TermConversationMessages.Where(x => x.TermConversationId == _context.TermConversations.Where(g => g.TermId == Id).Select(h => h.TermConversationId).FirstOrDefault()));
+            _context.RemoveRange(
+                _context.TermConversationMessages.Where(
+                    x =>
+                        x.TermConversationId
+                        == _context.TermConversations
+                            .Where(g => g.TermId == Id)
+                            .Select(h => h.TermConversationId)
+                            .FirstOrDefault()
+                )
+            );
             _context.RemoveRange(_context.TermConversations.Where(x => x.TermId == Id));
             _context.RemoveRange(_context.ReportObjectDocTerms.Where(x => x.TermId == Id));
             _context.RemoveRange(_context.DpTermAnnotations.Where(x => x.TermId == Id));
@@ -385,7 +477,9 @@ namespace Atlas_Web.Pages.Terms
         public ActionResult OnPostEditTerm()
         {
             // we get a copy of the initiative and then will only update several fields.
-            Term EditedTerm = _context.Terms.Where(m => m.TermId == NewTerm.TermId).FirstOrDefault();
+            Term EditedTerm = _context.Terms
+                .Where(m => m.TermId == NewTerm.TermId)
+                .FirstOrDefault();
 
             // only these values can be updated
             EditedTerm.Name = NewTerm.Name;
@@ -395,10 +489,21 @@ namespace Atlas_Web.Pages.Terms
 
             var now = DateTime.Now;
             // if status changed to approved then update approval date
-            if ((EditedTerm.ApprovedYn == "N" || EditedTerm.ApprovedYn is null || EditedTerm.ApprovalDateTime is null) && NewTerm.ApprovedYn == "Y")
+            if (
+                (
+                    EditedTerm.ApprovedYn == "N"
+                    || EditedTerm.ApprovedYn is null
+                    || EditedTerm.ApprovalDateTime is null
+                )
+                && NewTerm.ApprovedYn == "Y"
+            )
             {
                 EditedTerm.ApprovalDateTime = now;
-                EditedTerm.ApprovedByUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
+                EditedTerm.ApprovedByUser = UserHelpers.GetUser(
+                    _cache,
+                    _context,
+                    User.Identity.Name
+                );
             }
             EditedTerm.ApprovedYn = NewTerm.ApprovedYn;
 
@@ -422,7 +527,8 @@ namespace Atlas_Web.Pages.Terms
             }
             EditedTerm.ExternalStandardUrl = NewTerm.ExternalStandardUrl;
 
-            EditedTerm.UpdatedByUserId = UserHelpers.GetUser(_cache, _context, User.Identity.Name).UserId;
+            EditedTerm.UpdatedByUserId =
+                UserHelpers.GetUser(_cache, _context, User.Identity.Name).UserId;
             EditedTerm.LastUpdatedDateTime = now;
 
             // save updates
@@ -441,14 +547,19 @@ namespace Atlas_Web.Pages.Terms
             }
 
             // if missing the conversation ID then create a new conversation.
-            if (!_context.TermConversations.Any(x => x.TermConversationId == NewComment.TermConversationId))
+            if (
+                !_context.TermConversations.Any(
+                    x => x.TermConversationId == NewComment.TermConversationId
+                )
+            )
             {
                 // create new comment
                 _context.Add(NewComment);
                 _context.SaveChanges();
             }
             // add message
-            NewCommentReply.UserId = UserHelpers.GetUser(_cache, _context, User.Identity.Name).UserId;
+            NewCommentReply.UserId =
+                UserHelpers.GetUser(_cache, _context, User.Identity.Name).UserId;
             NewCommentReply.PostDateTime = System.DateTime.Now;
             NewCommentReply.TermConversationId = NewComment.TermConversationId;
             _context.Add(NewCommentReply);
@@ -479,7 +590,11 @@ namespace Atlas_Web.Pages.Terms
             }
 
             // first delete all replys on comment. Delete comment.
-            _context.RemoveRange(_context.TermConversationMessages.Where(x => x.TermConversationId == NewComment.TermConversationId));
+            _context.RemoveRange(
+                _context.TermConversationMessages.Where(
+                    x => x.TermConversationId == NewComment.TermConversationId
+                )
+            );
             _context.Remove(NewComment);
             _context.SaveChanges();
 

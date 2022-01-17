@@ -26,10 +26,13 @@ namespace Atlas_Web.Models
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ReportObjectTypeId { get; set; }
+
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public string Name { get; set; }
+
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public string DefaultEpicMasterFile { get; set; }
+
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public virtual ICollection<ReportObject> ReportObject { get; set; }
     }

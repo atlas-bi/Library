@@ -18,40 +18,40 @@
 
 (function () {
   window.addEventListener(
-    "scroll",
+    'scroll',
     function () {
       debounce(
         (function () {
           scrollHead();
         })(),
-        100
+        100,
       );
     },
     {
       passive: true,
-    }
+    },
   );
 
-  window.addEventListener("resize", function () {
+  window.addEventListener('resize', function () {
     debounce(
       (function () {
         scrollHead();
       })(),
-      100
+      100,
     );
   });
 
-  var title = document.querySelector(".pageTitle:not(.loose)"),
-    controls = document.querySelector(".sideNav"),
+  var title = document.querySelector('.pageTitle:not(.loose)'),
+    controls = document.querySelector('.sideNav'),
     sibling,
     sticky,
     siblingPadding;
 
-  document.addEventListener("click", function (e) {
-    if (e.target.closest(".site-messageClose")) {
+  document.addEventListener('click', function (e) {
+    if (e.target.closest('.site-messageClose')) {
       document
-        .querySelector(".site-message")
-        .parentElement.removeChild(document.querySelector(".site-message"));
+        .querySelector('.site-message')
+        .parentElement.removeChild(document.querySelector('.site-message'));
       if (title) {
         sticky = getOffset(title).top;
       }
@@ -59,16 +59,16 @@
   });
 
   if (title) {
-    l = document.getElementsByClassName("location");
+    l = document.getElementsByClassName('location');
     for (x = 0; x < l.length; x++) {
-      l[x].style.top = "-" + title.clientHeight + "px";
+      l[x].style.top = '-' + title.clientHeight + 'px';
     }
 
     sticky = getOffset(title).top;
     sibling = title.nextElementSibling;
     siblingPadding = parseInt(
-      window.getComputedStyle(sibling, null).getPropertyValue("padding-top"),
-      10
+      window.getComputedStyle(sibling, null).getPropertyValue('padding-top'),
+      10,
     );
   }
 
@@ -82,7 +82,7 @@
       body.offsetHeight,
       html.clientHeight,
       html.scrollHeight,
-      html.offsetHeight
+      html.offsetHeight,
     );
 
     if (
@@ -93,25 +93,25 @@
       var w = title.clientWidth;
       if (window.pageYOffset >= sticky) {
         // only add padding if first time adding class
-        if (!title.classList.contains("sticky")) {
-          sibling.style.paddingTop = siblingPadding + title.clientHeight + "px";
+        if (!title.classList.contains('sticky')) {
+          sibling.style.paddingTop = siblingPadding + title.clientHeight + 'px';
         }
-        title.classList.add("sticky");
-        title.style.width = w + "px";
+        title.classList.add('sticky');
+        title.style.width = w + 'px';
       } else {
-        title.classList.remove("sticky");
-        title.style.removeProperty("width");
-        sibling.style.removeProperty("padding-top");
+        title.classList.remove('sticky');
+        title.style.removeProperty('width');
+        sibling.style.removeProperty('padding-top');
       }
     }
     if (controls) {
       if (window.pageYOffset >= sticky) {
         var l = controls.getBoundingClientRect().left;
-        controls.classList.add("sticky");
-        controls.style.left = l + "px";
+        controls.classList.add('sticky');
+        controls.style.left = l + 'px';
       } else {
-        controls.classList.remove("sticky");
-        controls.style.removeProperty("left");
+        controls.classList.remove('sticky');
+        controls.style.removeProperty('left');
       }
     }
   };
@@ -119,13 +119,13 @@
 
   // related reports
   function relatedReports() {
-    var links = document.querySelectorAll(".body-main a[href]"),
+    var links = document.querySelectorAll('.body-main a[href]'),
       ids = [],
       re = /[R|r]eports\?id=(\d+)/,
       m;
 
     for (var x = 0; x < links.length; x++) {
-      m = links[x].getAttribute("href").match(re);
+      m = links[x].getAttribute('href').match(re);
       if (m) {
         ids.push(m[1]);
       }
@@ -136,24 +136,24 @@
     }
 
     if (ids.length > 0) {
-      var div = document.getElementById("related-reports");
+      var div = document.getElementById('related-reports');
       if (!div) {
-        div = document.createElement("div");
-        div.setAttribute("id", "related-reports");
-        document.getElementById("AdColTwo").appendChild(div);
+        div = document.createElement('div');
+        div.setAttribute('id', 'related-reports');
+        document.getElementById('AdColTwo').appendChild(div);
       }
       div.setAttribute(
-        "data-url",
-        "/Reports/?handler=RelatedReports&id=" + ids.slice(0, 5).join(",")
+        'data-url',
+        '/Reports/?handler=RelatedReports&id=' + ids.slice(0, 5).join(','),
       );
-      div.setAttribute("data-ajax", "yes");
+      div.setAttribute('data-ajax', 'yes');
 
-      document.dispatchEvent(new CustomEvent("load-ajax-content"));
+      document.dispatchEvent(new CustomEvent('load-ajax-content'));
     }
   }
   relatedReports();
 
-  document.addEventListener("related-reports", function () {
+  document.addEventListener('related-reports', function () {
     relatedReports();
   });
 })();

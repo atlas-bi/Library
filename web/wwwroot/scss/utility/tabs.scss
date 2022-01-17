@@ -16,14 +16,14 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 .tab {
-  font-family: sf, "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+  font-family: sf, 'Lucida Sans Unicode', 'Lucida Grande', sans-serif;
   font-weight: 600;
   letter-spacing: 0.3px;
 }
 
 .tab .tab-lnk + .tab-lnk::before {
   color: #575353;
-  content: "/";
+  content: '/';
   margin: 8px;
 }
 

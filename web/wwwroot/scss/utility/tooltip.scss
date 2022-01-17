@@ -38,9 +38,9 @@
   box-shadow: 0 5px 20px 2px #e1e1e1;
   color: #575353;
   content: attr(data-tooltip);
-  font-family: sf, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
-    "Segoe UI Symbol";
+  font-family: sf, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    'Helvetica Neue', Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol';
   font-size: 0.875rem;
   font-weight: 500;
   letter-spacing: 0.4px;
@@ -61,7 +61,7 @@
   border: 1px solid #d1d1d1;
   border-bottom-width: 0;
   border-left-width: 0;
-  content: "";
+  content: '';
   height: 10px;
   pointer-events: none;
   position: absolute;

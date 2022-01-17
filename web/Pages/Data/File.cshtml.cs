@@ -50,6 +50,7 @@ namespace Atlas_Web.Pages.Data
         }
 
         public object ReportServer { get; private set; }
+
         public class ReportData
         {
             public string server { get; set; }
@@ -57,21 +58,25 @@ namespace Atlas_Web.Pages.Data
 
         public async Task<ActionResult> OnGet(int id)
         {
-
-            var MyFile = await _context.DpAttachments.Where(x => x.AttachmentId == id).ToListAsync();
+            var MyFile = await _context.DpAttachments
+                .Where(x => x.AttachmentId == id)
+                .ToListAsync();
             if (MyFile.Count > 0)
             {
                 var ThisFile = MyFile.First();
                 HttpContext.Response.Headers.Remove("Cache-Control");
                 HttpContext.Response.Headers.Add("Cache-Control", "max-age=315360000");
-                return File(ThisFile.AttachmentData, "application/octet-stream", ThisFile.AttachmentName);
+                return File(
+                    ThisFile.AttachmentData,
+                    "application/octet-stream",
+                    ThisFile.AttachmentName
+                );
             }
             return Content("");
         }
 
         public async Task<ActionResult> OnGetCube(int id)
         {
-
             string text = System.IO.File.ReadAllText("wwwroot/Cube.xml");
             var cube = await _context.ReportObjects.Where(x => x.ReportObjectId == id).FirstAsync();
             text = text.Replace("server", cube.SourceServer);
@@ -84,7 +89,9 @@ namespace Atlas_Web.Pages.Data
         public async Task<ActionResult> OnGetCrystalRun(int id)
         {
             // check permissions first!
-            var attachment = _context.ReportObjectAttachments.Where(x => x.ReportObjectAttachmentId.Equals(id)).FirstOrDefault();
+            var attachment = _context.ReportObjectAttachments
+                .Where(x => x.ReportObjectAttachmentId.Equals(id))
+                .FirstOrDefault();
 
             if (attachment == null)
             {
@@ -107,7 +114,6 @@ namespace Atlas_Web.Pages.Data
             Response.Headers.Add("X-Content-Type-Options", "nosniff");
 
             return File(System.IO.File.ReadAllBytes(attachment.Path), "application/pdf");
-
         }
     }
 }

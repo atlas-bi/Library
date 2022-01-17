@@ -46,7 +46,6 @@ namespace Atlas_Web.Models
         public string Name { get; set; }
 
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-
         [Display(Name = "System Description")]
         public string Description { get; set; }
 
@@ -78,7 +77,11 @@ namespace Atlas_Web.Models
 
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         [DataType(DataType.Text)]
-        [DisplayFormat(DataFormatString = "{0}", ApplyFormatInEditMode = true, NullDisplayText = "(N/A)")]
+        [DisplayFormat(
+            DataFormatString = "{0}",
+            ApplyFormatInEditMode = true,
+            NullDisplayText = "(N/A)"
+        )]
         [Display(Name = "Epic Record ID")]
         public decimal? EpicRecordId { get; set; }
 
@@ -99,7 +102,6 @@ namespace Atlas_Web.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         [Display(Name = "Type")]
         public virtual ReportObjectType ReportObjectType { get; set; }
-
     }
 
     [ModelMetadataType(typeof(ReportObject__Metadata))]
@@ -111,35 +113,65 @@ namespace Atlas_Web.Models
         {
             get
             {
-                if (LastModifiedDate == null) { return ""; }
+                if (LastModifiedDate == null)
+                {
+                    return "";
+                }
                 var timeAgo = System.DateTime.Now.Subtract(LastModifiedDate ?? DateTime.Now);
-                if (timeAgo.TotalMinutes < 1) { return String.Concat(timeAgo.Seconds.ToString(), " seconds ago"); }
-                if (timeAgo.TotalHours < 1) { return String.Concat(timeAgo.Minutes.ToString(), " minutes ago"); }
-                else if (timeAgo.TotalHours < 24) { return String.Concat(timeAgo.Hours.ToString(), " hours ago"); }
-                else return (LastModifiedDate ?? DateTime.Now).ToShortDateString();
+                if (timeAgo.TotalMinutes < 1)
+                {
+                    return String.Concat(timeAgo.Seconds.ToString(), " seconds ago");
+                }
+                if (timeAgo.TotalHours < 1)
+                {
+                    return String.Concat(timeAgo.Minutes.ToString(), " minutes ago");
+                }
+                else if (timeAgo.TotalHours < 24)
+                {
+                    return String.Concat(timeAgo.Hours.ToString(), " hours ago");
+                }
+                else
+                    return (LastModifiedDate ?? DateTime.Now).ToShortDateString();
             }
         }
+
         [NotMapped]
         public virtual string LastLoadDateDisplayString
         // don't display the time portion if > 24 hrs ago
         {
             get
             {
-                if (LastLoadDate == null) { return ""; }
+                if (LastLoadDate == null)
+                {
+                    return "";
+                }
                 var timeAgo = System.DateTime.Now.Subtract(LastLoadDate ?? DateTime.Now);
-                if (timeAgo.TotalMinutes < 1) { return String.Concat(timeAgo.Seconds.ToString(), " seconds ago"); }
-                if (timeAgo.TotalHours < 1) { return String.Concat(timeAgo.Minutes.ToString(), " minutes ago"); }
-                else if (timeAgo.TotalHours < 24) { return String.Concat(timeAgo.Hours.ToString(), " hours ago"); }
-                else return (LastLoadDate ?? DateTime.Now).ToShortDateString();
+                if (timeAgo.TotalMinutes < 1)
+                {
+                    return String.Concat(timeAgo.Seconds.ToString(), " seconds ago");
+                }
+                if (timeAgo.TotalHours < 1)
+                {
+                    return String.Concat(timeAgo.Minutes.ToString(), " minutes ago");
+                }
+                else if (timeAgo.TotalHours < 24)
+                {
+                    return String.Concat(timeAgo.Hours.ToString(), " hours ago");
+                }
+                else
+                    return (LastLoadDate ?? DateTime.Now).ToShortDateString();
             }
         }
+
         [NotMapped]
         public virtual string DisplayName
-
         {
             get
             {
-                if (DisplayTitle == null) { return Name; }
+                if (DisplayTitle == null)
+                {
+                    return Name;
+                }
                 return DisplayTitle;
             }
         }

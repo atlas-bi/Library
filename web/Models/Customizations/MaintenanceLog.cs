@@ -32,21 +32,32 @@ namespace Atlas_Web.Models
     [ModelMetadataType(typeof(MaintenanceLog__Metadata))]
     public partial class MaintenanceLog
     {
-
         [NotMapped]
         public virtual string MaintenanceDateDisplayString
         // don't display the time portion if > 24 hrs ago
         {
             get
             {
-                if (MaintenanceDate == null) { return ""; }
+                if (MaintenanceDate == null)
+                {
+                    return "";
+                }
                 var timeAgo = System.DateTime.Now.Subtract(MaintenanceDate ?? DateTime.Now);
-                if (timeAgo.TotalMinutes < 1) { return String.Concat(timeAgo.Seconds.ToString(), " seconds ago"); }
-                if (timeAgo.TotalHours < 1) { return String.Concat(timeAgo.Minutes.ToString(), " minutes ago"); }
-                else if (timeAgo.TotalHours < 24) { return String.Concat(timeAgo.Hours.ToString(), " hours ago"); }
-                else return (MaintenanceDate ?? DateTime.Now).ToShortDateString();
+                if (timeAgo.TotalMinutes < 1)
+                {
+                    return String.Concat(timeAgo.Seconds.ToString(), " seconds ago");
+                }
+                if (timeAgo.TotalHours < 1)
+                {
+                    return String.Concat(timeAgo.Minutes.ToString(), " minutes ago");
+                }
+                else if (timeAgo.TotalHours < 24)
+                {
+                    return String.Concat(timeAgo.Hours.ToString(), " hours ago");
+                }
+                else
+                    return (MaintenanceDate ?? DateTime.Now).ToShortDateString();
             }
         }
-
     }
 }

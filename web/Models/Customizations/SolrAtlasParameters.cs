@@ -4,13 +4,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations.Schema;
 
-
 namespace Atlas_Web.Models
 {
     [NotMapped]
     public class SolrAtlasParameters
     {
         public SolrAtlasParameters() { }
+
         public string Query { get; set; }
         public int? PageIndex { get; set; }
 
@@ -21,11 +21,12 @@ namespace Atlas_Web.Models
         public int EffectivePageIndex => PageIndex ?? 1;
         public int Start => (EffectivePageIndex - 1) * PageSize;
 
-        public IReadOnlyList<string> FilteredFields => Filters?.Select(f => f.Key).ToArray() ?? Array.Empty<string>();
+        public IReadOnlyList<string> FilteredFields =>
+            Filters?.Select(f => f.Key).ToArray() ?? Array.Empty<string>();
 
         public override string ToString() =>
-            $"{nameof(Query)}: {Query}, " +
-            $"{nameof(PageIndex)}: {PageIndex}, " +
-            $"{nameof(Filters)}: {string.Join(",", Filters.Select(f => $"{f.Key}={f.Value}"))}";
+            $"{nameof(Query)}: {Query}, "
+            + $"{nameof(PageIndex)}: {PageIndex}, "
+            + $"{nameof(Filters)}: {string.Join(",", Filters.Select(f => $"{f.Key}={f.Value}"))}";
     }
 }

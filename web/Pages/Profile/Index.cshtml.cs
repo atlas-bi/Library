@@ -37,13 +37,16 @@ namespace Atlas_Web.Pages.Profile
         private readonly Atlas_WebContext _context;
         private readonly IConfiguration _config;
         private IMemoryCache _cache;
+
         public IndexModel(Atlas_WebContext context, IConfiguration config, IMemoryCache cache)
         {
             _context = context;
             _config = config;
             _cache = cache;
         }
+
         public List<UserPreference> Preferences { get; set; }
+
         public class TopUsersData
         {
             public string Username { get; set; }
@@ -79,11 +82,13 @@ namespace Atlas_Web.Pages.Profile
             public string LastStatus { get; set; }
             public string LastRun { get; set; }
         }
+
         public class FavoritesData
         {
             public string UserUrl { get; set; }
             public string User { get; set; }
         }
+
         public IEnumerable<TopUsersData> TopUsers { get; set; }
         public IEnumerable<RunTimeData> RunTime { get; set; }
         public IEnumerable<FailedRunsData> FailedRuns { get; set; }
@@ -94,95 +99,119 @@ namespace Atlas_Web.Pages.Profile
 
         public List<UserFavorite> Favorites { get; set; }
         public User PublicUser { get; set; }
+
         public async Task<IActionResult> OnGetAsync(int? id)
         {
             PublicUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
-            TopUsers = await _cache.GetOrCreateAsync<List<TopUsersData>>("TopUsers-Report" + id,
-              cacheEntry =>
-              {
-                  cacheEntry.SlidingExpiration = TimeSpan.FromHours(2);
-                  return (from d in _context.ReportObjectRunData
-                          where d.ReportObjectId == id
-                             && d.RunStatus == "Success"
-                          group d by d.RunUserId into grp
-                          select new { UserId = grp.Key, count = grp.Count(), avg = grp.Average(x => (int)x.RunDurationSeconds), lastRun = grp.Max(x => (DateTime)x.RunStartTime) } into tmp
-                          join u in _context.Users on tmp.UserId equals u.UserId
-                          orderby tmp.count descending
-                          select new TopUsersData
-                          {
-                              Username = u.Fullname_Cust,
-                              UserUrl = "\\users?id=" + u.UserId,
-                              Hits = tmp.count,
-                              RunTime = Math.Round(tmp.avg, 2),
-                              LastRun = tmp.lastRun.ToString("MM/dd/yyyy")
-                          }).ToListAsync();
-              });
+            TopUsers = await _cache.GetOrCreateAsync<List<TopUsersData>>(
+                "TopUsers-Report" + id,
+                cacheEntry =>
+                {
+                    cacheEntry.SlidingExpiration = TimeSpan.FromHours(2);
+                    return (
+                        from d in _context.ReportObjectRunData
+                        where d.ReportObjectId == id && d.RunStatus == "Success"
+                        group d by d.RunUserId into grp
+                        select new
+                        {
+                            UserId = grp.Key,
+                            count = grp.Count(),
+                            avg = grp.Average(x => (int)x.RunDurationSeconds),
+                            lastRun = grp.Max(x => (DateTime)x.RunStartTime)
+                        } into tmp
+                        join u in _context.Users on tmp.UserId equals u.UserId
+                        orderby tmp.count descending
+                        select new TopUsersData
+                        {
+                            Username = u.Fullname_Cust,
+                            UserUrl = "\\users?id=" + u.UserId,
+                            Hits = tmp.count,
+                            RunTime = Math.Round(tmp.avg, 2),
+                            LastRun = tmp.lastRun.ToString("MM/dd/yyyy")
+                        }
+                    ).ToListAsync();
+                }
+            );
 
-            RunTime = await _cache.GetOrCreateAsync<List<RunTimeData>>("RunTime-Report" + id,
-              cacheEntry =>
-              {
-                  cacheEntry.SlidingExpiration = TimeSpan.FromHours(2);
-                  return (from d in _context.ReportObjectReportRunTimes
-                          where d.ReportObjectId == id
-                          orderby d.RunWeek
-                          select new RunTimeData
-                          {
-                              Date = d.RunWeekString,
-                              Avg = (double)d.Duration,
-                              Cnt = (int)d.Runs
-                          }).ToListAsync();
-              });
+            RunTime = await _cache.GetOrCreateAsync<List<RunTimeData>>(
+                "RunTime-Report" + id,
+                cacheEntry =>
+                {
+                    cacheEntry.SlidingExpiration = TimeSpan.FromHours(2);
+                    return (
+                        from d in _context.ReportObjectReportRunTimes
+                        where d.ReportObjectId == id
+                        orderby d.RunWeek
+                        select new RunTimeData
+                        {
+                            Date = d.RunWeekString,
+                            Avg = (double)d.Duration,
+                            Cnt = (int)d.Runs
+                        }
+                    ).ToListAsync();
+                }
+            );
 
-            FailedRuns = await _cache.GetOrCreateAsync<List<FailedRunsData>>("FailedRuns-Report" + id,
-             cacheEntry =>
-             {
-                 cacheEntry.SlidingExpiration = TimeSpan.FromHours(2);
-                 return (from d in _context.ReportObjectRunData
-                         where d.ReportObjectId == id
-                            && d.RunStatus != "Success"
-                         orderby d.RunStartTime descending
-                         select new FailedRunsData
-                         {
-                             Date = d.RunStartTimeDisplayString,
-                             RunUser = d.RunUser.Fullname_Cust,
-                             UserUrl = "\\users?id=" + d.RunUserId,
-                             RunStatus = d.RunStatus
-                         }).ToListAsync();
-             });
+            FailedRuns = await _cache.GetOrCreateAsync<List<FailedRunsData>>(
+                "FailedRuns-Report" + id,
+                cacheEntry =>
+                {
+                    cacheEntry.SlidingExpiration = TimeSpan.FromHours(2);
+                    return (
+                        from d in _context.ReportObjectRunData
+                        where d.ReportObjectId == id && d.RunStatus != "Success"
+                        orderby d.RunStartTime descending
+                        select new FailedRunsData
+                        {
+                            Date = d.RunStartTimeDisplayString,
+                            RunUser = d.RunUser.Fullname_Cust,
+                            UserUrl = "\\users?id=" + d.RunUserId,
+                            RunStatus = d.RunStatus
+                        }
+                    ).ToListAsync();
+                }
+            );
 
-            Subscriptions = await _cache.GetOrCreateAsync<List<SubscriptionData>>("Subscriptions-Report" + id,
-             cacheEntry =>
-             {
-                 cacheEntry.SlidingExpiration = TimeSpan.FromHours(2);
-                 return (from s in _context.ReportObjectSubscriptions
-                         where s.ReportObjectId == id
-                         orderby s.ReportObjectId
-                         select new SubscriptionData
-                         {
-                             UserUrl = "\\users?id=" + s.UserId,
-                             User = s.User.Fullname_Cust,
-                             Subscription = s.SubscriptionTo.Replace(";", "; "),
-                             InactiveFlags = s.InactiveFlags.ToString(),
-                             EmailList = s.EmailList.Replace(";", "; "),
-                             Description = s.Description.Replace(";", "; "),
-                             LastStatus = s.LastStatus.Replace(";", "; "),
-                             LastRun = s.LastRunDisplayString
-                         }).ToListAsync();
-             });
+            Subscriptions = await _cache.GetOrCreateAsync<List<SubscriptionData>>(
+                "Subscriptions-Report" + id,
+                cacheEntry =>
+                {
+                    cacheEntry.SlidingExpiration = TimeSpan.FromHours(2);
+                    return (
+                        from s in _context.ReportObjectSubscriptions
+                        where s.ReportObjectId == id
+                        orderby s.ReportObjectId
+                        select new SubscriptionData
+                        {
+                            UserUrl = "\\users?id=" + s.UserId,
+                            User = s.User.Fullname_Cust,
+                            Subscription = s.SubscriptionTo.Replace(";", "; "),
+                            InactiveFlags = s.InactiveFlags.ToString(),
+                            EmailList = s.EmailList.Replace(";", "; "),
+                            Description = s.Description.Replace(";", "; "),
+                            LastStatus = s.LastStatus.Replace(";", "; "),
+                            LastRun = s.LastRunDisplayString
+                        }
+                    ).ToListAsync();
+                }
+            );
 
-            ProfileFavorites = await _cache.GetOrCreateAsync<List<FavoritesData>>("ProfileFavorites-Report" + id,
-            cacheEntry =>
-            {
-                cacheEntry.SlidingExpiration = TimeSpan.FromMinutes(10);
-                return (from f in _context.UserFavorites
-                        where f.ItemId == id
-                           && f.ItemType.ToLower() == "report"
+            ProfileFavorites = await _cache.GetOrCreateAsync<List<FavoritesData>>(
+                "ProfileFavorites-Report" + id,
+                cacheEntry =>
+                {
+                    cacheEntry.SlidingExpiration = TimeSpan.FromMinutes(10);
+                    return (
+                        from f in _context.UserFavorites
+                        where f.ItemId == id && f.ItemType.ToLower() == "report"
                         select new FavoritesData
                         {
                             UserUrl = "\\users?id=" + f.UserId,
                             User = f.User.Fullname_Cust,
-                        }).ToListAsync();
-            });
+                        }
+                    ).ToListAsync();
+                }
+            );
 
             Permissions = UserHelpers.GetUserPermissions(_cache, _context, User.Identity.Name);
             ViewData["Permissions"] = Permissions;
@@ -194,48 +223,64 @@ namespace Atlas_Web.Pages.Profile
             HttpContext.Response.Headers.Add("Cache-Control", "max-age=360");
             return Page();
         }
+
         public async Task<IActionResult> OnGetCollectionsAsync(int? id)
         {
             PublicUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
-            var ReportList = _context.DpReportAnnotations.Where(x => x.DataProjectId == id).Select(x => x.ReportId).ToList();
+            var ReportList = _context.DpReportAnnotations
+                .Where(x => x.DataProjectId == id)
+                .Select(x => x.ReportId)
+                .ToList();
 
-            TopUsers = await _cache.GetOrCreateAsync<List<TopUsersData>>("TopUsers-Collection" + id,
-              cacheEntry =>
-              {
-                  cacheEntry.SlidingExpiration = TimeSpan.FromHours(2);
-                  return (from d in _context.ReportObjectRunData
-                          where ReportList.Contains(d.ReportObjectId)
-                             && d.RunStatus == "Success"
-                          group d by d.RunUserId into grp
-                          select new { UserId = grp.Key, count = grp.Count(), avg = grp.Average(x => (int)x.RunDurationSeconds), lastRun = grp.Max(x => (DateTime)x.RunStartTime) } into tmp
-                          join u in _context.Users on tmp.UserId equals u.UserId
-                          orderby tmp.count descending
-                          select new TopUsersData
-                          {
-                              Username = u.Fullname_Cust,
-                              UserUrl = "\\users?id=" + u.UserId,
-                              Hits = tmp.count,
-                              RunTime = Math.Round(tmp.avg, 2),
-                              LastRun = tmp.lastRun.ToString("MM/dd/yyyy")
-                          }).ToListAsync();
-              });
+            TopUsers = await _cache.GetOrCreateAsync<List<TopUsersData>>(
+                "TopUsers-Collection" + id,
+                cacheEntry =>
+                {
+                    cacheEntry.SlidingExpiration = TimeSpan.FromHours(2);
+                    return (
+                        from d in _context.ReportObjectRunData
+                        where ReportList.Contains(d.ReportObjectId) && d.RunStatus == "Success"
+                        group d by d.RunUserId into grp
+                        select new
+                        {
+                            UserId = grp.Key,
+                            count = grp.Count(),
+                            avg = grp.Average(x => (int)x.RunDurationSeconds),
+                            lastRun = grp.Max(x => (DateTime)x.RunStartTime)
+                        } into tmp
+                        join u in _context.Users on tmp.UserId equals u.UserId
+                        orderby tmp.count descending
+                        select new TopUsersData
+                        {
+                            Username = u.Fullname_Cust,
+                            UserUrl = "\\users?id=" + u.UserId,
+                            Hits = tmp.count,
+                            RunTime = Math.Round(tmp.avg, 2),
+                            LastRun = tmp.lastRun.ToString("MM/dd/yyyy")
+                        }
+                    ).ToListAsync();
+                }
+            );
 
-            RunTime = await _cache.GetOrCreateAsync<List<RunTimeData>>("RunTime-Collection" + id,
-              cacheEntry =>
-              {
-                  cacheEntry.SlidingExpiration = TimeSpan.FromHours(2);
-                  return (from d in _context.ReportObjectReportRunTimes
-                          where ReportList.Contains(d.ReportObjectId)
-                          group d by new { d.RunWeekString, d.RunWeek } into grp
-                          orderby grp.Key.RunWeek
-                          select new RunTimeData
-                          {
-                              Date = grp.Key.RunWeekString,
-                              Avg = (double)Math.Round(grp.Average(x => x.Duration ?? 0), 2),
-                              Cnt = (int)grp.Sum(x => x.Runs ?? 1)
-                          }).ToListAsync();
-              });
-
+            RunTime = await _cache.GetOrCreateAsync<List<RunTimeData>>(
+                "RunTime-Collection" + id,
+                cacheEntry =>
+                {
+                    cacheEntry.SlidingExpiration = TimeSpan.FromHours(2);
+                    return (
+                        from d in _context.ReportObjectReportRunTimes
+                        where ReportList.Contains(d.ReportObjectId)
+                        group d by new { d.RunWeekString, d.RunWeek } into grp
+                        orderby grp.Key.RunWeek
+                        select new RunTimeData
+                        {
+                            Date = grp.Key.RunWeekString,
+                            Avg = (double)Math.Round(grp.Average(x => x.Duration ?? 0), 2),
+                            Cnt = (int)grp.Sum(x => x.Runs ?? 1)
+                        }
+                    ).ToListAsync();
+                }
+            );
 
             Permissions = UserHelpers.GetUserPermissions(_cache, _context, User.Identity.Name);
             ViewData["Permissions"] = Permissions;
@@ -247,48 +292,64 @@ namespace Atlas_Web.Pages.Profile
             HttpContext.Response.Headers.Add("Cache-Control", "max-age=360");
             return Page();
         }
+
         public async Task<IActionResult> OnGetTermsAsync(int? id)
         {
             PublicUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
-            var ReportList = _context.ReportObjectDocTerms.Where(x => x.TermId == id).Select(x => x.ReportObjectId).ToList();
+            var ReportList = _context.ReportObjectDocTerms
+                .Where(x => x.TermId == id)
+                .Select(x => x.ReportObjectId)
+                .ToList();
 
-            TopUsers = await _cache.GetOrCreateAsync<List<TopUsersData>>("TopUsers-Term" + id,
-              cacheEntry =>
-              {
-                  cacheEntry.SlidingExpiration = TimeSpan.FromHours(2);
-                  return (from d in _context.ReportObjectRunData
-                          where ReportList.Contains(d.ReportObjectId)
-                             && d.RunStatus == "Success"
-                          group d by d.RunUserId into grp
-                          select new { UserId = grp.Key, count = grp.Count(), avg = grp.Average(x => (int)x.RunDurationSeconds), lastRun = grp.Max(x => (DateTime)x.RunStartTime) } into tmp
-                          join u in _context.Users on tmp.UserId equals u.UserId
-                          orderby tmp.count descending
-                          select new TopUsersData
-                          {
-                              Username = u.Fullname_Cust,
-                              UserUrl = "\\users?id=" + u.UserId,
-                              Hits = tmp.count,
-                              RunTime = Math.Round(tmp.avg, 2),
-                              LastRun = tmp.lastRun.ToString("MM/dd/yyyy")
-                          }).ToListAsync();
-              });
+            TopUsers = await _cache.GetOrCreateAsync<List<TopUsersData>>(
+                "TopUsers-Term" + id,
+                cacheEntry =>
+                {
+                    cacheEntry.SlidingExpiration = TimeSpan.FromHours(2);
+                    return (
+                        from d in _context.ReportObjectRunData
+                        where ReportList.Contains(d.ReportObjectId) && d.RunStatus == "Success"
+                        group d by d.RunUserId into grp
+                        select new
+                        {
+                            UserId = grp.Key,
+                            count = grp.Count(),
+                            avg = grp.Average(x => (int)x.RunDurationSeconds),
+                            lastRun = grp.Max(x => (DateTime)x.RunStartTime)
+                        } into tmp
+                        join u in _context.Users on tmp.UserId equals u.UserId
+                        orderby tmp.count descending
+                        select new TopUsersData
+                        {
+                            Username = u.Fullname_Cust,
+                            UserUrl = "\\users?id=" + u.UserId,
+                            Hits = tmp.count,
+                            RunTime = Math.Round(tmp.avg, 2),
+                            LastRun = tmp.lastRun.ToString("MM/dd/yyyy")
+                        }
+                    ).ToListAsync();
+                }
+            );
 
-            RunTime = await _cache.GetOrCreateAsync<List<RunTimeData>>("RunTime-Term" + id,
-              cacheEntry =>
-              {
-                  cacheEntry.SlidingExpiration = TimeSpan.FromHours(2);
-                  return (from d in _context.ReportObjectReportRunTimes
-                          where ReportList.Contains((int)d.ReportObjectId)
-                          group d by new { d.RunWeekString, d.RunWeek } into grp
-                          orderby grp.Key.RunWeek
-                          select new RunTimeData
-                          {
-                              Date = grp.Key.RunWeekString,
-                              Avg = (double)Math.Round(grp.Average(x => x.Duration ?? 0), 2),
-                              Cnt = (int)grp.Sum(x => x.Runs ?? 1)
-                          }).ToListAsync();
-              });
-
+            RunTime = await _cache.GetOrCreateAsync<List<RunTimeData>>(
+                "RunTime-Term" + id,
+                cacheEntry =>
+                {
+                    cacheEntry.SlidingExpiration = TimeSpan.FromHours(2);
+                    return (
+                        from d in _context.ReportObjectReportRunTimes
+                        where ReportList.Contains((int)d.ReportObjectId)
+                        group d by new { d.RunWeekString, d.RunWeek } into grp
+                        orderby grp.Key.RunWeek
+                        select new RunTimeData
+                        {
+                            Date = grp.Key.RunWeekString,
+                            Avg = (double)Math.Round(grp.Average(x => x.Duration ?? 0), 2),
+                            Cnt = (int)grp.Sum(x => x.Runs ?? 1)
+                        }
+                    ).ToListAsync();
+                }
+            );
 
             Permissions = UserHelpers.GetUserPermissions(_cache, _context, User.Identity.Name);
             ViewData["Permissions"] = Permissions;

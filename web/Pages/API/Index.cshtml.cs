@@ -48,7 +48,6 @@ namespace Atlas_Web.Pages.API
             _context = context;
             _config = config;
             _cache = cache;
-
         }
 
         public class Stuffdata
@@ -68,6 +67,7 @@ namespace Atlas_Web.Pages.API
         public List<int?> Permissions { get; set; }
         public List<AdList> AdLists { get; set; }
         public User PublicUser { get; set; }
+
         public void OnGet()
         {
             PublicUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
@@ -77,62 +77,81 @@ namespace Atlas_Web.Pages.API
             ViewData["SiteMessage"] = HtmlHelpers.SiteMessage(HttpContext, _context);
             Favorites = UserHelpers.GetUserFavorites(_cache, _context, User.Identity.Name);
 
-            ViewData["stuff"] = (from u in (from u in _context.Users
-                                            group u by u.Fullname_Cust into grp
-                                            select new
-                                            {
-                                                grp.Key
-                                                ,
-                                                cnt = grp.Count()
-                                            }
-            )
-                                 where u.cnt > 1
-                                 orderby u.cnt descending
-                                 select new Stuffdata { Key = u.Key, Cnt = u.cnt }).ToList();
-            ViewData["summary"] = (from u in (from u in _context.Users
-                                              group u by u.Fullname_Cust into grp
-                                              select new
-                                              {
-                                                  grp.Key
-                                                  ,
-                                                  cnt = grp.Count()
-                                              }
-            )
-                                   where u.cnt > 1
-                                   group u by u.cnt into grp
-                                   orderby grp.Count() descending
-                                   select new Stuffdata { Key = grp.Key.ToString(), Cnt = grp.Count() }).ToList();
+            ViewData["stuff"] = (
+                from u in (
+                    from u in _context.Users
+                    group u by u.Fullname_Cust into grp
+                    select new { grp.Key, cnt = grp.Count() }
+                )
+                where u.cnt > 1
+                orderby u.cnt descending
+                select new Stuffdata { Key = u.Key, Cnt = u.cnt }
+            ).ToList();
+            ViewData["summary"] = (
+                from u in (
+                    from u in _context.Users
+                    group u by u.Fullname_Cust into grp
+                    select new { grp.Key, cnt = grp.Count() }
+                )
+                where u.cnt > 1
+                group u by u.cnt into grp
+                orderby grp.Count() descending
+                select new Stuffdata { Key = grp.Key.ToString(), Cnt = grp.Count() }
+            ).ToList();
 
-            ViewData["alluserrs"] = (from u in _context.Users
-                                     select new Stuffdata
-                                     {
-                                         Key = u.Fullname_Cust
-                                         ,
-                                         Cnt = 0
-                                     }).ToList();
-
+            ViewData["alluserrs"] = (
+                from u in _context.Users
+                select new Stuffdata { Key = u.Fullname_Cust, Cnt = 0 }
+            ).ToList();
         }
 
         public async Task<ActionResult> OnPostShareObject(string to, string url, string name)
         {
             var MyUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
             var AllTo = JsonConvert.DeserializeObject<IEnumerable<MailRecipientJsonData>>(to);
-            var Users = AllTo.Where(x => x.Type != "g" || x.Type is null || x.Type == "").Select(x => new { UserId = (int)Int32.Parse(x.UserId.ToString()) });
-            var Groups = AllTo.Where(x => x.Type == "g").Select(x => new { GroupId = Int32.Parse(x.UserId.ToString()) });
-            var GroupUsers = (from ulm in _context.UserGroupsMemberships
-                              where (from g in Groups select g.GroupId).Contains((int)ulm.GroupId)
-                              select new
-                              {
-                                  ulm.UserId,
-                                  ulm.GroupId
-                              });
+            var Users = AllTo
+                .Where(x => x.Type != "g" || x.Type is null || x.Type == "")
+                .Select(x => new { UserId = (int)Int32.Parse(x.UserId.ToString()) });
+            var Groups = AllTo
+                .Where(x => x.Type == "g")
+                .Select(x => new { GroupId = Int32.Parse(x.UserId.ToString()) });
+            var GroupUsers = (
+                from ulm in _context.UserGroupsMemberships
+                where (from g in Groups select g.GroupId).Contains((int)ulm.GroupId)
+                select new { ulm.UserId, ulm.GroupId }
+            );
 
-            if (Users.Count() < 1 && GroupUsers.Count() < 1) return Content("no users specefied");
+            if (Users.Count() < 1 && GroupUsers.Count() < 1)
+                return Content("no users specefied");
 
-            await _context.AddRangeAsync(Users.Select(x => new SharedItem { Url = url, ShareDate = DateTime.Now, SharedFromUserId = MyUser.UserId, SharedToUserId = x.UserId, Name = name }));
+            await _context.AddRangeAsync(
+                Users.Select(
+                    x =>
+                        new SharedItem
+                        {
+                            Url = url,
+                            ShareDate = DateTime.Now,
+                            SharedFromUserId = MyUser.UserId,
+                            SharedToUserId = x.UserId,
+                            Name = name
+                        }
+                )
+            );
             await _context.SaveChangesAsync();
 
-            await _context.AddRangeAsync(GroupUsers.Select(x => new SharedItem { Url = url, ShareDate = DateTime.Now, SharedFromUserId = MyUser.UserId, SharedToUserId = x.UserId, Name = name }));
+            await _context.AddRangeAsync(
+                GroupUsers.Select(
+                    x =>
+                        new SharedItem
+                        {
+                            Url = url,
+                            ShareDate = DateTime.Now,
+                            SharedFromUserId = MyUser.UserId,
+                            SharedToUserId = x.UserId,
+                            Name = name
+                        }
+                )
+            );
             await _context.SaveChangesAsync();
 
             /*var toUser = _context.User.Where(x => x.UserId == id).FirstOrDefault();
@@ -216,30 +235,21 @@ namespace Atlas_Web.Pages.API
 
         public async Task<ActionResult> OnPostRenderMarkdown()
         {
-
-
             var body = await new System.IO.StreamReader(Request.Body).ReadToEndAsync();
             var package = JObject.Parse(body);
 
             var md = package.Value<string>("md");
             try
             {
-
                 ViewData["html"] = await Task.Run(() => Helpers.HtmlHelpers.MarkdownToHtml(md));
             }
-
             catch
             {
                 ViewData["html"] = md;
-
             }
 
             //return Partial("Partials/_Html");
-            return new PartialViewResult()
-            {
-                ViewName = "Partials/_Html",
-                ViewData = ViewData
-            };
+            return new PartialViewResult() { ViewName = "Partials/_Html", ViewData = ViewData };
         }
     }
 }

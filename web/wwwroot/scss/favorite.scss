@@ -40,7 +40,7 @@
 .favs-cntr::after {
   background: #fff;
   bottom: -35px;
-  content: "";
+  content: '';
   height: 35px;
   left: -30px;
   position: absolute;
@@ -52,7 +52,7 @@
   background: linear-gradient(rgba(255, 255, 255, 0), #fff);
   border-bottom: 3px solid #fff;
   bottom: 0;
-  content: "";
+  content: '';
   height: 50px;
   left: -30px;
   margin-top: -35px;
@@ -117,7 +117,7 @@
 
 #fav-folders {
   color: #262a2d;
-  font-family: sf, "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+  font-family: sf, 'Lucida Sans Unicode', 'Lucida Grande', sans-serif;
   font-weight: 600;
   height: calc(100% - 38px);
   letter-spacing: 0.2px;

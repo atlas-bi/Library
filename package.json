@@ -17,7 +17,7 @@
     "@fontsource/rasa": "^4.5.3",
     "@fortawesome/fontawesome-free": "^5.15.4",
     "bulma": "^0.9.3",
-    "bulma-switch": "^2.0.0",
+    "bulma-switch": "^2.0.4",
     "focus-within": "^3.0.2",
     "fontawesome-subset": "^3.0.0",
     "gulp": "^4.0.2",
@@ -27,7 +27,10 @@
     "gulp-purgecss": "^4.1.3",
     "gulp-replace": "^1.1.3",
     "gulp-sass": "^5.1.0",
+    "husky": "^7.0.0",
+    "lint-staged": "^12.1.7",
     "postcss": "^8.4.5",
+    "prettier": "^2.5.1",
     "sass": "^1.45.2"
   },
   "homepage": "https://demo.atlas.bi",
@@ -41,6 +44,13 @@
   "scripts": {
     "build": "gulp build",
     "install": "gulp build",
-    "watch": "gulp watch"
+    "watch": "gulp watch",
+    "prepare": "husky install",
+    "pre-commit": "lint-staged",
+    "format": "prettier --config .prettierrc \"**/*.{ts,css,less,scss,js,json,md,yaml,html}\" --write",
+    "foramt-cs": "dotnet csharpier ."
+  },
+  "lint-staged": {
+    "*.cs": "dotnet csharpier ."
   }
 }

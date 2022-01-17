@@ -30,7 +30,6 @@ using Microsoft.Extensions.Caching.Memory;
 
 namespace Atlas_Web.Pages
 {
-
     public class ErrorModel : PageModel
     {
         private readonly Atlas_WebContext _context;
@@ -43,12 +42,14 @@ namespace Atlas_Web.Pages
             _config = config;
             _cache = cache;
         }
+
         public List<int?> Permissions { get; set; }
         public int UserId { get; set; }
         public string FirstName { get; set; }
         public List<UserPreference> Preferences { get; set; }
         public int? Error { get; set; }
         public User PublicUser { get; set; }
+
         public ActionResult OnGetAsync(int? id)
         {
             Error = id;

@@ -29,11 +29,11 @@
   var d = document;
 
   function l() {
-    var crsl = document.getElementsByClassName("crsl"),
+    var crsl = document.getElementsByClassName('crsl'),
       x;
 
     for (x = 0; x < crsl.length; x++) {
-      if (crsl[x].classList.contains("crsl-p")) {
+      if (crsl[x].classList.contains('crsl-p')) {
         continue;
       }
 
@@ -43,17 +43,17 @@
 
   function c(b) {
     this.target = b;
-    this.next = b.getElementsByClassName("crsl-next")[0];
-    this.prev = b.getElementsByClassName("crsl-prev")[0];
-    this.dots = b.getElementsByClassName("crsl-dot");
-    this.slides = b.getElementsByClassName("crsl-itm");
-    this.target.classList.add("crsl-p");
-    this.next.addEventListener("click", this.showSlides.bind(this, 1), false);
-    this.prev.addEventListener("click", this.showSlides.bind(this, -1), false);
+    this.next = b.getElementsByClassName('crsl-next')[0];
+    this.prev = b.getElementsByClassName('crsl-prev')[0];
+    this.dots = b.getElementsByClassName('crsl-dot');
+    this.slides = b.getElementsByClassName('crsl-itm');
+    this.target.classList.add('crsl-p');
+    this.next.addEventListener('click', this.showSlides.bind(this, 1), false);
+    this.prev.addEventListener('click', this.showSlides.bind(this, -1), false);
 
     for (var q = 0; q < this.dots.length; q++) {
       var el = this.dots[q];
-      el.addEventListener("click", this.showSlides.bind(this, 0), false);
+      el.addEventListener('click', this.showSlides.bind(this, 0), false);
     }
   }
 
@@ -71,8 +71,8 @@
         aslide,
         dots = this.dots;
       k(function () {
-        if (b.target.matches(".crsl-dot")) {
-          n = b.target.getAttribute("slide");
+        if (b.target.matches('.crsl-dot')) {
+          n = b.target.getAttribute('slide');
         } else {
           for (i = 0; i < slides.length; i++) {
             if (slides[i].offsetHeight > 0 && slides[i].offsetWidth > 0) {
@@ -93,20 +93,20 @@
         }
 
         for (i = 0; i < slides.length; i++) {
-          slides[i].style.display = "none";
+          slides[i].style.display = 'none';
         }
 
         for (i = 0; i < dots.length; i++) {
-          dots[i].classList.remove("active");
+          dots[i].classList.remove('active');
         }
 
-        slides[n].style.display = "block";
-        dots[n].classList.add("active");
+        slides[n].style.display = 'block';
+        dots[n].classList.add('active');
       });
     },
   };
   l();
-  d.addEventListener("load-carousel", function () {
+  d.addEventListener('load-carousel', function () {
     l();
   });
 })();

@@ -40,12 +40,29 @@ namespace Atlas_Web.Models
         {
             get
             {
-                if (LastUpdatedDateTime == null) { return ""; }
-                var timeAgo = System.DateTime.Now.Subtract(LastUpdatedDateTime ?? DateTime.Today.AddYears(-999));
-                if (timeAgo.TotalMinutes < 1) { return String.Concat(timeAgo.Seconds.ToString(), " seconds ago"); }
-                if (timeAgo.TotalHours < 1) { return String.Concat(timeAgo.Minutes.ToString(), " minutes ago"); }
-                else if (timeAgo.TotalHours < 24) { return String.Concat(timeAgo.Hours.ToString(), " hours ago"); }
-                else return (LastUpdatedDateTime ?? DateTime.Today.AddYears(-999)).ToShortDateString();
+                if (LastUpdatedDateTime == null)
+                {
+                    return "";
+                }
+                var timeAgo = System.DateTime.Now.Subtract(
+                    LastUpdatedDateTime ?? DateTime.Today.AddYears(-999)
+                );
+                if (timeAgo.TotalMinutes < 1)
+                {
+                    return String.Concat(timeAgo.Seconds.ToString(), " seconds ago");
+                }
+                if (timeAgo.TotalHours < 1)
+                {
+                    return String.Concat(timeAgo.Minutes.ToString(), " minutes ago");
+                }
+                else if (timeAgo.TotalHours < 24)
+                {
+                    return String.Concat(timeAgo.Hours.ToString(), " hours ago");
+                }
+                else
+                    return (
+                        LastUpdatedDateTime ?? DateTime.Today.AddYears(-999)
+                    ).ToShortDateString();
             }
         }
 
@@ -55,12 +72,25 @@ namespace Atlas_Web.Models
         {
             get
             {
-                if (ValidFromDateTime == null) { return ""; }
+                if (ValidFromDateTime == null)
+                {
+                    return "";
+                }
                 var timeAgo = System.DateTime.Now.Subtract(ValidFromDateTime ?? DateTime.Now);
-                if (timeAgo.TotalMinutes < 1) { return String.Concat(timeAgo.Seconds.ToString(), " seconds ago"); }
-                if (timeAgo.TotalHours < 1) { return String.Concat(timeAgo.Minutes.ToString(), " minutes ago"); }
-                else if (timeAgo.TotalHours < 24) { return String.Concat(timeAgo.Hours.ToString(), " hours ago"); }
-                else return (ValidFromDateTime ?? DateTime.Now).ToShortDateString();
+                if (timeAgo.TotalMinutes < 1)
+                {
+                    return String.Concat(timeAgo.Seconds.ToString(), " seconds ago");
+                }
+                if (timeAgo.TotalHours < 1)
+                {
+                    return String.Concat(timeAgo.Minutes.ToString(), " minutes ago");
+                }
+                else if (timeAgo.TotalHours < 24)
+                {
+                    return String.Concat(timeAgo.Hours.ToString(), " hours ago");
+                }
+                else
+                    return (ValidFromDateTime ?? DateTime.Now).ToShortDateString();
             }
         }
 
@@ -70,12 +100,25 @@ namespace Atlas_Web.Models
         {
             get
             {
-                if (ApprovalDateTime == null) { return ""; }
+                if (ApprovalDateTime == null)
+                {
+                    return "";
+                }
                 var timeAgo = DateTime.Now.Subtract((DateTime)ApprovalDateTime);
-                if (timeAgo.TotalMinutes < 1) { return String.Concat(timeAgo.Seconds.ToString(), " seconds ago"); }
-                if (timeAgo.TotalHours < 1) { return String.Concat(timeAgo.Minutes.ToString(), " minutes ago"); }
-                else if (timeAgo.TotalHours < 24) { return String.Concat(timeAgo.Hours.ToString(), " hours ago"); }
-                else return ((DateTime)ApprovalDateTime).ToShortDateString();
+                if (timeAgo.TotalMinutes < 1)
+                {
+                    return String.Concat(timeAgo.Seconds.ToString(), " seconds ago");
+                }
+                if (timeAgo.TotalHours < 1)
+                {
+                    return String.Concat(timeAgo.Minutes.ToString(), " minutes ago");
+                }
+                else if (timeAgo.TotalHours < 24)
+                {
+                    return String.Concat(timeAgo.Hours.ToString(), " hours ago");
+                }
+                else
+                    return ((DateTime)ApprovalDateTime).ToShortDateString();
             }
         }
     }

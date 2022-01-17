@@ -88,6 +88,7 @@ namespace Atlas_Web.Pages.Initiatives
             public string Phone { get; set; }
             public string Company { get; set; }
         }
+
         public class AllInitiativesData
         {
             public int Id { get; set; }
@@ -96,9 +97,14 @@ namespace Atlas_Web.Pages.Initiatives
             public string Favorite { get; set; }
         }
 
-        [BindProperty] public int[] LinkedCollections { get; set; }
-        [BindProperty] public int?[] LinkedContacts { get; set; }
-        [BindProperty] public DpDataInitiative DpDataInitiative { get; set; }
+        [BindProperty]
+        public int[] LinkedCollections { get; set; }
+
+        [BindProperty]
+        public int?[] LinkedContacts { get; set; }
+
+        [BindProperty]
+        public DpDataInitiative DpDataInitiative { get; set; }
 
         public DataInitiativeData DataInitiative { get; set; }
         public IEnumerable<AllInitiativesData> AllInitiatives { get; set; }
@@ -107,6 +113,7 @@ namespace Atlas_Web.Pages.Initiatives
         public List<UserPreference> Preferences { get; set; }
         public User PublicUser { get; set; }
         public List<AdList> AdLists { get; set; }
+
         public async Task<IActionResult> OnGetAsync(int? id)
         {
             PublicUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
@@ -119,7 +126,7 @@ namespace Atlas_Web.Pages.Initiatives
 
             AdLists = new List<AdList>
             {
-                new AdList { Url = "/Users?handler=SharedObjects", Column = 2},
+                new AdList { Url = "/Users?handler=SharedObjects", Column = 2 },
                 new AdList { Url = "/?handler=RecentReports", Column = 2 },
                 new AdList { Url = "/?handler=RecentTerms", Column = 2 },
                 new AdList { Url = "/?handler=RecentInitiatives", Column = 2 },
@@ -133,82 +140,105 @@ namespace Atlas_Web.Pages.Initiatives
             // if the id null then list all
             if (id != null)
             {
-                DataInitiative = await (from d in _context.DpDataInitiatives
-                                        where d.DataInitiativeId == id
-
-                                        select new DataInitiativeData
-                                        {
-                                            Id = d.DataInitiativeId,
-                                            Name = d.Name,
-                                            OpOwner = d.OperationOwner.Fullname_Cust,
-                                            OpOwnerId = d.OperationOwnerId,
-                                            ExOwner = d.ExecutiveOwner.Fullname_Cust,
-                                            ExOwnerId = d.ExecutiveOwnerId,
-                                            FinancialImp = d.FinancialImpactNavigation.Name,
-                                            FinancialImpId = d.FinancialImpact,
-                                            StrategicImp = d.StrategicImportanceNavigation.Name,
-                                            StrategicImpId = d.StrategicImportance,
-                                            UpdateDate = d.LastUpdatedDateDisplayString,
-                                            UpdatedBy = d.LastUpdateUserNavigation.Fullname_Cust,
-                                            Description = d.Description,
-                                            RelatedCollections = (from p in _context.DpDataProjects
-                                                                  where p.DataInitiativeId == d.DataInitiativeId
-                                                                  select new RelatedCollectionsData
-                                                                  {
-                                                                      Id = p.DataProjectId,
-                                                                      Name = p.Name,
-                                                                      RelatedReports = (from r in _context.DpReportAnnotations
-                                                                                        where r.DataProjectId == p.DataProjectId
-                                                                                        select new RelatedReportsData
-                                                                                        {
-                                                                                            Id = r.ReportId,
-                                                                                            Name = r.Report.Name,
-                                                                                            Annotation = r.Annotation
-                                                                                        }).ToList()
-                                                                  }).ToList(),
-                                            RelatedContacts = (from c in _context.DpContactLinks
-                                                               where c.InitiativeId == d.DataInitiativeId
-                                                               select new RelatedContactsData
-                                                               {
-                                                                   Id = c.ContactId,
-                                                                   Name = c.Contact.Name,
-                                                                   Email = c.Contact.Email,
-                                                                   Phone = c.Contact.Phone,
-                                                                   Company = c.Contact.Company
-                                                               }).ToList(),
-                                            Favorite = (from f in _context.UserFavorites
-                                                        where f.ItemType == "initiative"
-                                                           && f.UserId == MyUser.UserId
-                                                           && f.ItemId == d.DataInitiativeId
-                                                        select new { f.ItemId }).Any() ? "yes" : "no"
-                                        }).FirstOrDefaultAsync();
+                DataInitiative = await (
+                    from d in _context.DpDataInitiatives
+                    where d.DataInitiativeId == id
+                    select new DataInitiativeData
+                    {
+                        Id = d.DataInitiativeId,
+                        Name = d.Name,
+                        OpOwner = d.OperationOwner.Fullname_Cust,
+                        OpOwnerId = d.OperationOwnerId,
+                        ExOwner = d.ExecutiveOwner.Fullname_Cust,
+                        ExOwnerId = d.ExecutiveOwnerId,
+                        FinancialImp = d.FinancialImpactNavigation.Name,
+                        FinancialImpId = d.FinancialImpact,
+                        StrategicImp = d.StrategicImportanceNavigation.Name,
+                        StrategicImpId = d.StrategicImportance,
+                        UpdateDate = d.LastUpdatedDateDisplayString,
+                        UpdatedBy = d.LastUpdateUserNavigation.Fullname_Cust,
+                        Description = d.Description,
+                        RelatedCollections = (
+                            from p in _context.DpDataProjects
+                            where p.DataInitiativeId == d.DataInitiativeId
+                            select new RelatedCollectionsData
+                            {
+                                Id = p.DataProjectId,
+                                Name = p.Name,
+                                RelatedReports = (
+                                    from r in _context.DpReportAnnotations
+                                    where r.DataProjectId == p.DataProjectId
+                                    select new RelatedReportsData
+                                    {
+                                        Id = r.ReportId,
+                                        Name = r.Report.Name,
+                                        Annotation = r.Annotation
+                                    }
+                                ).ToList()
+                            }
+                        ).ToList(),
+                        RelatedContacts = (
+                            from c in _context.DpContactLinks
+                            where c.InitiativeId == d.DataInitiativeId
+                            select new RelatedContactsData
+                            {
+                                Id = c.ContactId,
+                                Name = c.Contact.Name,
+                                Email = c.Contact.Email,
+                                Phone = c.Contact.Phone,
+                                Company = c.Contact.Company
+                            }
+                        ).ToList(),
+                        Favorite = (
+                            from f in _context.UserFavorites
+                            where
+                                f.ItemType == "initiative"
+                                && f.UserId == MyUser.UserId
+                                && f.ItemId == d.DataInitiativeId
+                            select new { f.ItemId }
+                        ).Any()
+                          ? "yes"
+                          : "no"
+                    }
+                ).FirstOrDefaultAsync();
                 if (DataInitiative != null)
                 {
                     return Page();
                 }
             }
 
-            AllInitiatives = await (from i in _context.DpDataInitiatives
-                                    orderby i.LastUpdateDate descending
-                                    select new AllInitiativesData
-                                    {
-                                        Id = i.DataInitiativeId,
-                                        Name = i.Name,
-                                        Description = i.Description,
-                                        Favorite = (from f in _context.UserFavorites
-                                                    where f.ItemType == "initiative"
-                                                       && f.UserId == MyUser.UserId
-                                                       && f.ItemId == i.DataInitiativeId
-                                                    select new { f.ItemId }).Any() ? "yes" : "no"
-                                    }).ToListAsync();
-
+            AllInitiatives = await (
+                from i in _context.DpDataInitiatives
+                orderby i.LastUpdateDate descending
+                select new AllInitiativesData
+                {
+                    Id = i.DataInitiativeId,
+                    Name = i.Name,
+                    Description = i.Description,
+                    Favorite = (
+                        from f in _context.UserFavorites
+                        where
+                            f.ItemType == "initiative"
+                            && f.UserId == MyUser.UserId
+                            && f.ItemId == i.DataInitiativeId
+                        select new { f.ItemId }
+                    ).Any()
+                      ? "yes"
+                      : "no"
+                }
+            ).ToListAsync();
 
             return Page();
         }
 
         public ActionResult OnPostNewDataInitiative()
         {
-            var checkpoint = UserHelpers.CheckUserPermissions(_cache, _context, User.Identity.Name, 20);
+            var checkpoint = UserHelpers.CheckUserPermissions(
+                _cache,
+                _context,
+                User.Identity.Name,
+                20
+            );
             // if invalid inputs redirect to list all
             if (!ModelState.IsValid || DpDataInitiative.Name is null || !checkpoint)
             {
@@ -217,30 +247,56 @@ namespace Atlas_Web.Pages.Initiatives
 
             // all data comes from the form, but we update 2 atribs
             // get last update values and save
-            DpDataInitiative.LastUpdateUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name).UserId;
+            DpDataInitiative.LastUpdateUser =
+                UserHelpers.GetUser(_cache, _context, User.Identity.Name).UserId;
             DpDataInitiative.LastUpdateDate = DateTime.Now;
             _context.Add(DpDataInitiative);
 
             // add any links to the projects
-            _context.DpDataProjects.Where(t => LinkedCollections.Contains(t.DataProjectId)).ToList().ForEach(x => x.DataInitiativeId = DpDataInitiative.DataInitiativeId);
+            _context.DpDataProjects
+                .Where(t => LinkedCollections.Contains(t.DataProjectId))
+                .ToList()
+                .ForEach(x => x.DataInitiativeId = DpDataInitiative.DataInitiativeId);
 
             // add contacts
-            _context.AddRange(LinkedContacts.Select(id => new DpContactLink { ContactId = id, InitiativeId = DpDataInitiative.DataInitiativeId }));
+            _context.AddRange(
+                LinkedContacts.Select(
+                    id =>
+                        new DpContactLink
+                        {
+                            ContactId = id,
+                            InitiativeId = DpDataInitiative.DataInitiativeId
+                        }
+                )
+            );
             _context.SaveChanges();
 
-            return RedirectToPage("/Initiatives/Index", new { id = DpDataInitiative.DataInitiativeId });
+            return RedirectToPage(
+                "/Initiatives/Index",
+                new { id = DpDataInitiative.DataInitiativeId }
+            );
         }
 
         public ActionResult OnGetDeleteInitiative(int Id)
         {
-            var checkpoint = UserHelpers.CheckUserPermissions(_cache, _context, User.Identity.Name, 21);
+            var checkpoint = UserHelpers.CheckUserPermissions(
+                _cache,
+                _context,
+                User.Identity.Name,
+                21
+            );
 
             if (Id > 0 && checkpoint)
             {
                 // remove project links, contacts and remove initiative.
-                _context.DpDataProjects.Where(d => d.DataInitiativeId == Id).ToList().ForEach(x => x.DataInitiativeId = null);
+                _context.DpDataProjects
+                    .Where(d => d.DataInitiativeId == Id)
+                    .ToList()
+                    .ForEach(x => x.DataInitiativeId = null);
                 _context.RemoveRange(_context.DpContactLinks.Where(i => i.InitiativeId == Id));
-                _context.Remove(_context.DpDataInitiatives.Where(x => x.DataInitiativeId == Id).FirstOrDefault());
+                _context.Remove(
+                    _context.DpDataInitiatives.Where(x => x.DataInitiativeId == Id).FirstOrDefault()
+                );
                 _context.SaveChanges();
             }
 
@@ -249,18 +305,29 @@ namespace Atlas_Web.Pages.Initiatives
 
         public ActionResult OnPostEditInitiative()
         {
-            var checkpoint = UserHelpers.CheckUserPermissions(_cache, _context, User.Identity.Name, 22);
+            var checkpoint = UserHelpers.CheckUserPermissions(
+                _cache,
+                _context,
+                User.Identity.Name,
+                22
+            );
 
             if (!ModelState.IsValid || !checkpoint)
             {
-                return RedirectToPage("/Initiatives/Index", new { id = DpDataInitiative.DataInitiativeId });
+                return RedirectToPage(
+                    "/Initiatives/Index",
+                    new { id = DpDataInitiative.DataInitiativeId }
+                );
             }
 
             // we get a copy of the initiative and then will only update several fields.
-            DpDataInitiative NewDpDataInitiative = _context.DpDataInitiatives.Where(m => m.DataInitiativeId == DpDataInitiative.DataInitiativeId).FirstOrDefault();
+            DpDataInitiative NewDpDataInitiative = _context.DpDataInitiatives
+                .Where(m => m.DataInitiativeId == DpDataInitiative.DataInitiativeId)
+                .FirstOrDefault();
 
-            // update last update values & values that were posted      
-            NewDpDataInitiative.LastUpdateUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name).UserId;
+            // update last update values & values that were posted
+            NewDpDataInitiative.LastUpdateUser =
+                UserHelpers.GetUser(_cache, _context, User.Identity.Name).UserId;
             NewDpDataInitiative.LastUpdateDate = DateTime.Now;
             NewDpDataInitiative.Name = DpDataInitiative.Name;
             NewDpDataInitiative.Description = DpDataInitiative.Description;
@@ -272,17 +339,42 @@ namespace Atlas_Web.Pages.Initiatives
             _context.Attach(NewDpDataInitiative).State = EntityState.Modified;
 
             // updated any linked data projects that were added and remove any that were delinked.
-            _context.DpDataProjects.Where(d => LinkedCollections.Contains(d.DataProjectId)).ToList().ForEach(x => x.DataInitiativeId = DpDataInitiative.DataInitiativeId);
-            _context.DpDataProjects.Where(d => d.DataInitiativeId == DpDataInitiative.DataInitiativeId).Except(_context.DpDataProjects.Where(d => LinkedCollections.Contains(d.DataProjectId))).ToList().ForEach(x => x.DataInitiativeId = null);
+            _context.DpDataProjects
+                .Where(d => LinkedCollections.Contains(d.DataProjectId))
+                .ToList()
+                .ForEach(x => x.DataInitiativeId = DpDataInitiative.DataInitiativeId);
+            _context.DpDataProjects
+                .Where(d => d.DataInitiativeId == DpDataInitiative.DataInitiativeId)
+                .Except(
+                    _context.DpDataProjects.Where(d => LinkedCollections.Contains(d.DataProjectId))
+                )
+                .ToList()
+                .ForEach(x => x.DataInitiativeId = null);
             // first delete contacts
-            _context.RemoveRange(_context.DpContactLinks.Where(i => i.InitiativeId == DpDataInitiative.DataInitiativeId));
+            _context.RemoveRange(
+                _context.DpContactLinks.Where(
+                    i => i.InitiativeId == DpDataInitiative.DataInitiativeId
+                )
+            );
 
             // add contacts
-            _context.AddRange(LinkedContacts.Select(id => new DpContactLink { ContactId = id, InitiativeId = DpDataInitiative.DataInitiativeId }));
+            _context.AddRange(
+                LinkedContacts.Select(
+                    id =>
+                        new DpContactLink
+                        {
+                            ContactId = id,
+                            InitiativeId = DpDataInitiative.DataInitiativeId
+                        }
+                )
+            );
             _context.SaveChanges();
 
             // redirect back to same initiative
-            return RedirectToPage("/Initiatives/Index", new { id = DpDataInitiative.DataInitiativeId });
+            return RedirectToPage(
+                "/Initiatives/Index",
+                new { id = DpDataInitiative.DataInitiativeId }
+            );
         }
     }
 }

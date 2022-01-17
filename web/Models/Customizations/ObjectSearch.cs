@@ -28,6 +28,7 @@ namespace Atlas_Web.Models
     public class ObjectSearch
     {
         public ObjectSearch() { }
+
         public int ObjectId { get; set; }
         public string Type { get; set; }
         public string Name { get; set; }

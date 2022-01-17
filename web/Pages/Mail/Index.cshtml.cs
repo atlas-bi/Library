@@ -44,7 +44,9 @@ namespace Atlas_Web.Pages.Mail
             _config = config;
             _cache = cache;
         }
+
         public User PublicUser { get; set; }
+
         public class MessageCountData
         {
             public int MessageCount { get; set; }
@@ -120,10 +122,7 @@ namespace Atlas_Web.Pages.Mail
         public List<int?> Permissions { get; set; }
         public string FirstName { get; set; }
 
-        public void OnGet()
-        {
-
-        }
+        public void OnGet() { }
 
         public List<UserPreference> Preferences { get; set; }
 
@@ -139,42 +138,53 @@ namespace Atlas_Web.Pages.Mail
 
             // get all mail
 
-            var AllMail = await (from m in _context.MailMessages
-                                 join mr in _context.MailRecipients on m.MessageId equals mr.MessageId into tmp
-                                 from mr in tmp.DefaultIfEmpty()
-                                 where mr.ToUserId == MyUser.UserId
-                                 select new AllMailData
-                                 {
-                                     MessId = mr.Message.MessageId,
-                                     RepId = mr.Id,
-                                     From = mr.Message.FromUser.UserNameDatum.Fullname,
-                                     FromId = (int)mr.Message.FromUserId,
-                                     Message = mr.Message.SmallMessage,
-                                     Subject = mr.Message.SmallSubject,
-                                     Sent_Preview = mr.Message.SendDate_MessagePreview,
-                                     Sent = (DateTime)mr.Message.SendDate,
-                                     Read = mr.ReadDate != null ? 1 : 0,
-                                     Type = mr.Message.MessageType.Name,
-                                     TypeId = mr.Message.MessageTypeId,
-                                     ConvId = mr.Message.MailConversations.Select(x => x.ConversationId).FirstOrDefault(),
-                                     AlertDisplayed = (mr.AlertDisplayed ?? 0)
-                                 }).ToListAsync();
+            var AllMail = await (
+                from m in _context.MailMessages
+                join mr in _context.MailRecipients on m.MessageId equals mr.MessageId into tmp
+                from mr in tmp.DefaultIfEmpty()
+                where mr.ToUserId == MyUser.UserId
+                select new AllMailData
+                {
+                    MessId = mr.Message.MessageId,
+                    RepId = mr.Id,
+                    From = mr.Message.FromUser.UserNameDatum.Fullname,
+                    FromId = (int)mr.Message.FromUserId,
+                    Message = mr.Message.SmallMessage,
+                    Subject = mr.Message.SmallSubject,
+                    Sent_Preview = mr.Message.SendDate_MessagePreview,
+                    Sent = (DateTime)mr.Message.SendDate,
+                    Read = mr.ReadDate != null ? 1 : 0,
+                    Type = mr.Message.MessageType.Name,
+                    TypeId = mr.Message.MessageTypeId,
+                    ConvId = mr.Message.MailConversations
+                        .Select(x => x.ConversationId)
+                        .FirstOrDefault(),
+                    AlertDisplayed = (mr.AlertDisplayed ?? 0)
+                }
+            ).ToListAsync();
 
             // what to do if this is null. can't use "count" in the html
-            var NewMail = (from m in AllMail
-                           where m.AlertDisplayed == 0
-                           select new NewMailAlertData
-                           {
-                               From = m.From,
-                               Message = m.Message,
-                               Subject = m.Subject
-                           }).ToList();
+            var NewMail = (
+                from m in AllMail
+                where m.AlertDisplayed == 0
+                select new NewMailAlertData
+                {
+                    From = m.From,
+                    Message = m.Message,
+                    Subject = m.Subject
+                }
+            ).ToList();
 
             // update flag for alert displayed
-            (from mr in _context.MailRecipients
-             where mr.ToUserId == MyUser.UserId
-                && (mr.AlertDisplayed == 0 || mr.AlertDisplayed == null)
-             select mr).ToList().ForEach(x => x.AlertDisplayed = 1);
+            (
+                from mr in _context.MailRecipients
+                where
+                    mr.ToUserId == MyUser.UserId
+                    && (mr.AlertDisplayed == 0 || mr.AlertDisplayed == null)
+                select mr
+            )
+                .ToList()
+                .ForEach(x => x.AlertDisplayed = 1);
 
             await _context.SaveChangesAsync();
 
@@ -187,13 +197,12 @@ namespace Atlas_Web.Pages.Mail
                 ViewData["NewMail"] = NewMail;
             }
 
-            var UnreadMessageCount = (from m in AllMail
-                                      where m.Read == 0
-                                      group m by 1 into grp
-                                      select new MessageCountData
-                                      {
-                                          MessageCount = grp.Count()
-                                      }).FirstOrDefault();
+            var UnreadMessageCount = (
+                from m in AllMail
+                where m.Read == 0
+                group m by 1 into grp
+                select new MessageCountData { MessageCount = grp.Count() }
+            ).FirstOrDefault();
             if (UnreadMessageCount is null)
             {
                 ViewData["UnreadMessageCount"] = 0;
@@ -203,12 +212,11 @@ namespace Atlas_Web.Pages.Mail
                 ViewData["UnreadMessageCount"] = UnreadMessageCount.MessageCount;
             }
 
-            var MessageCount = (from m in AllMail
-                                group m by 1 into grp
-                                select new MessageCountData
-                                {
-                                    MessageCount = grp.Count()
-                                }).FirstOrDefault();
+            var MessageCount = (
+                from m in AllMail
+                group m by 1 into grp
+                select new MessageCountData { MessageCount = grp.Count() }
+            ).FirstOrDefault();
 
             if (MessageCount is null)
             {
@@ -218,32 +226,33 @@ namespace Atlas_Web.Pages.Mail
             {
                 ViewData["MessageCount"] = MessageCount.MessageCount;
             }
-            ViewData["DraftMessageCount"] = _context.MailDrafts.Where(x => x.FromUserId == MyUser.UserId).Count();
+            ViewData["DraftMessageCount"] = _context.MailDrafts
+                .Where(x => x.FromUserId == MyUser.UserId)
+                .Count();
 
             ViewData["AllMail"] = new List<AllMailData>();
 
+            var newMessagePreviews = (
+                from m in AllMail
+                orderby m.Sent descending
+                select new AllMailData
+                {
+                    MessId = m.MessId,
+                    RepId = m.RepId,
+                    From = m.From,
+                    Message = m.Message,
+                    Subject = m.Subject,
+                    Sent_Preview = m.Sent_Preview,
+                    Sent = m.Sent,
+                    Read = m.Read,
+                    Type = m.Type,
+                    TypeId = m.TypeId,
+                    ConvId = m.ConvId
+                }
+            ).ToList();
 
-
-            var newMessagePreviews = (from m in AllMail
-                                      orderby m.Sent descending
-                                      select new AllMailData
-                                      {
-                                          MessId = m.MessId,
-                                          RepId = m.RepId,
-                                          From = m.From,
-                                          Message = m.Message,
-                                          Subject = m.Subject,
-                                          Sent_Preview = m.Sent_Preview,
-                                          Sent = m.Sent,
-                                          Read = m.Read,
-                                          Type = m.Type,
-                                          TypeId = m.TypeId,
-                                          ConvId = m.ConvId
-                                      }).ToList();
-
-            if (newMessagePreviews != null && newMessagePreviews.Count() > 0) ViewData["AllMail"] = newMessagePreviews;
-
-
+            if (newMessagePreviews != null && newMessagePreviews.Count() > 0)
+                ViewData["AllMail"] = newMessagePreviews;
 
             //return Partial((".+?"));
             return new PartialViewResult()
@@ -258,7 +267,10 @@ namespace Atlas_Web.Pages.Mail
             HttpContext.Response.Headers.Remove("Cache-Control");
             HttpContext.Response.Headers.Remove("Pragma");
 
-            HttpContext.Response.Headers.Add("Cache-Control", "no-cache, no-store, must-revalidate");
+            HttpContext.Response.Headers.Add(
+                "Cache-Control",
+                "no-cache, no-store, must-revalidate"
+            );
             HttpContext.Response.Headers.Add("Pragma", "no-cache"); // HTTP 1.0.
             HttpContext.Response.Headers.Add("Expires", "0"); // Proxies.
             Permissions = UserHelpers.GetUserPermissions(_cache, _context, User.Identity.Name);
@@ -275,49 +287,59 @@ namespace Atlas_Web.Pages.Mail
 
             FirstName = MyUser.Firstname_Cust;
 
-            var AllMail = await (from r in _context.MailRecipients
-                                 where r.ToUserId == MyUser.UserId
-                                 orderby r.Message.SendDate descending
-                                 select new AllMailData
-                                 {
-                                     MessId = r.Message.MessageId,
-                                     RepId = r.Id,
-                                     From = r.Message.FromUser.UserNameDatum.Fullname,
-                                     Message = r.Message.SmallMessage,
-                                     Subject = r.Message.SmallSubject,
-                                     Sent_Preview = r.Message.SendDate_MessagePreview,
-                                     Sent = (DateTime)r.Message.SendDate,
-                                     Read = r.ReadDate != null ? 1 : 0,
-                                     Type = r.Message.MessageType.Name,
-                                     TypeId = r.Message.MessageTypeId,
-                                     ConvId = r.Message.MailConversations.Select(x => x.ConversationId).FirstOrDefault()
-                                 }).ToListAsync();
+            var AllMail = await (
+                from r in _context.MailRecipients
+                where r.ToUserId == MyUser.UserId
+                orderby r.Message.SendDate descending
+                select new AllMailData
+                {
+                    MessId = r.Message.MessageId,
+                    RepId = r.Id,
+                    From = r.Message.FromUser.UserNameDatum.Fullname,
+                    Message = r.Message.SmallMessage,
+                    Subject = r.Message.SmallSubject,
+                    Sent_Preview = r.Message.SendDate_MessagePreview,
+                    Sent = (DateTime)r.Message.SendDate,
+                    Read = r.ReadDate != null ? 1 : 0,
+                    Type = r.Message.MessageType.Name,
+                    TypeId = r.Message.MessageTypeId,
+                    ConvId = r.Message.MailConversations
+                        .Select(x => x.ConversationId)
+                        .FirstOrDefault()
+                }
+            ).ToListAsync();
 
             if (AllMail is null)
             {
                 ViewData["AllMail"] = new List<AllMailData>();
                 ViewData["UnreadMail"] = "";
-
             }
             else
             {
                 ViewData["AllMail"] = AllMail;
                 ViewData["UnreadMail"] = AllMail.Where(x => x.Read == 0).Count();
             }
-            ViewData["Drafts"] = _context.MailDrafts.Where(x => x.FromUserId == MyUser.UserId).Count();
+            ViewData["Drafts"] = _context.MailDrafts
+                .Where(x => x.FromUserId == MyUser.UserId)
+                .Count();
             //return Partial((".+?"));
-            return new PartialViewResult()
-            {
-                ViewName = "Partials/_Mailbox",
-                ViewData = ViewData
-            };
+            return new PartialViewResult() { ViewName = "Partials/_Mailbox", ViewData = ViewData };
         }
 
         public async Task<ActionResult> OnPostMarkMessageRead(int id)
         {
             // only update read flag if the auth user has read it.
             var MyUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
-            _context.MailRecipients.Where(i => i.Id == id && i.ToUserId == MyUser.UserId).ToList().ForEach(x => { x.ReadDate = DateTime.Now; x.AlertDisplayed = 1; });
+            _context.MailRecipients
+                .Where(i => i.Id == id && i.ToUserId == MyUser.UserId)
+                .ToList()
+                .ForEach(
+                    x =>
+                    {
+                        x.ReadDate = DateTime.Now;
+                        x.AlertDisplayed = 1;
+                    }
+                );
             await _context.SaveChangesAsync();
             return Content("ok");
         }
@@ -326,34 +348,37 @@ namespace Atlas_Web.Pages.Mail
 
         public async Task<ActionResult> OnGetMessageDetails(int id)
         {
-
             var MyUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
 
-            var Message = await (from r in _context.MailRecipients
-                                 where r.Id == id
-                                    && r.ToUserId == MyUser.UserId
-                                 select new MessageData
-                                 {
-                                     MessId = (int)r.MessageId,
-                                     RepId = r.Id,
-                                     From = r.Message.FromUser.UserNameDatum.Fullname,
-                                     FromId = (int)r.Message.FromUserId,
-                                     Message = r.Message.Message,
-                                     Subject = r.Message.Subject,
-                                     Sent_Read = r.Message.SendDate_MessageReader,
-
-                                     To = (from u in _context.MailRecipients.AsEnumerable()
-                                           where u.MessageId == r.MessageId
-                                           select new MailRecipientsData
-                                           {
-                                               Id = (int)(u.ToGroupId ?? u.ToUserId),
-                                               Fullname = u.ToGroup.GroupName ?? u.ToUser.UserNameDatum.Fullname,
-                                               Type = u.ToGroupId == null ? "" : "group"
-                                           }).ToList(),
-                                     Type = r.Message.MessageType.Name,
-                                     TypeId = r.Message.MessageTypeId,
-                                     ConvId = r.Message.MailConversations.Select(x => x.ConversationId).FirstOrDefault()
-                                 }).FirstOrDefaultAsync();
+            var Message = await (
+                from r in _context.MailRecipients
+                where r.Id == id && r.ToUserId == MyUser.UserId
+                select new MessageData
+                {
+                    MessId = (int)r.MessageId,
+                    RepId = r.Id,
+                    From = r.Message.FromUser.UserNameDatum.Fullname,
+                    FromId = (int)r.Message.FromUserId,
+                    Message = r.Message.Message,
+                    Subject = r.Message.Subject,
+                    Sent_Read = r.Message.SendDate_MessageReader,
+                    To = (
+                        from u in _context.MailRecipients.AsEnumerable()
+                        where u.MessageId == r.MessageId
+                        select new MailRecipientsData
+                        {
+                            Id = (int)(u.ToGroupId ?? u.ToUserId),
+                            Fullname = u.ToGroup.GroupName ?? u.ToUser.UserNameDatum.Fullname,
+                            Type = u.ToGroupId == null ? "" : "group"
+                        }
+                    ).ToList(),
+                    Type = r.Message.MessageType.Name,
+                    TypeId = r.Message.MessageTypeId,
+                    ConvId = r.Message.MailConversations
+                        .Select(x => x.ConversationId)
+                        .FirstOrDefault()
+                }
+            ).FirstOrDefaultAsync();
             if (Message is null)
             {
                 ViewData["Message"] = new MessageData();
@@ -369,24 +394,26 @@ namespace Atlas_Web.Pages.Mail
                 ViewData = ViewData
             };
         }
+
         public async Task<ActionResult> OnGetDraftDetails(int id)
         {
             var MyUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
-            var Message = await (from r in _context.MailDrafts
-                                 where r.DraftId == id
-                                    && r.FromUserId == MyUser.UserId
-                                 select new DraftData
-                                 {
-                                     DraftId = r.DraftId,
-                                     From = r.FromUser.UserNameDatum.Fullname,
-                                     FromId = (int)r.FromUserId,
-                                     To = r.Recipients,
-                                     Message = r.Message,
-                                     Subject = r.Subject,
-                                     Edited = r.EditDate_MessagePreview,
-                                     MsgId = r.ReplyToMessageId,
-                                     ConvId = r.ReplyToConvId
-                                 }).FirstOrDefaultAsync();
+            var Message = await (
+                from r in _context.MailDrafts
+                where r.DraftId == id && r.FromUserId == MyUser.UserId
+                select new DraftData
+                {
+                    DraftId = r.DraftId,
+                    From = r.FromUser.UserNameDatum.Fullname,
+                    FromId = (int)r.FromUserId,
+                    To = r.Recipients,
+                    Message = r.Message,
+                    Subject = r.Subject,
+                    Edited = r.EditDate_MessagePreview,
+                    MsgId = r.ReplyToMessageId,
+                    ConvId = r.ReplyToConvId
+                }
+            ).FirstOrDefaultAsync();
             if (Message is null)
             {
                 ViewData["Message"] = new DraftData();
@@ -420,30 +447,54 @@ namespace Atlas_Web.Pages.Mail
             int? ConvId = (int?)package["ConvId"];
 
             var AllTo = JsonConvert.DeserializeObject<IEnumerable<MailRecipientJsonData>>(To);
-            var Users = AllTo.Where(x => x.Type != "g" || x.Type is null || x.Type == "").Select(x => new { UserId = (int)Int32.Parse(x.UserId.ToString()) });
-            var Groups = AllTo.Where(x => x.Type == "g").Select(x => new { GroupId = Int32.Parse(x.UserId.ToString()) });
+            var Users = AllTo
+                .Where(x => x.Type != "g" || x.Type is null || x.Type == "")
+                .Select(x => new { UserId = (int)Int32.Parse(x.UserId.ToString()) });
+            var Groups = AllTo
+                .Where(x => x.Type == "g")
+                .Select(x => new { GroupId = Int32.Parse(x.UserId.ToString()) });
 
-            var GroupUsers = (from ulm in _context.UserGroupsMemberships
-                              where (from g in Groups select g.GroupId).Contains((int)ulm.GroupId)
-                              select new
-                              {
-                                  ulm.UserId,
-                                  ulm.GroupId
-                              });
+            var GroupUsers = (
+                from ulm in _context.UserGroupsMemberships
+                where (from g in Groups select g.GroupId).Contains((int)ulm.GroupId)
+                select new { ulm.UserId, ulm.GroupId }
+            );
 
-            if (Users.Count() < 1 && GroupUsers.Count() < 1) return Content("no users specefied");
+            if (Users.Count() < 1 && GroupUsers.Count() < 1)
+                return Content("no users specefied");
 
             var MyUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
 
             // insert message
-            MailMessage newMessage = new MailMessage { Subject = Subject, Message = Message, SendDate = DateTime.Now, FromUserId = MyUser.UserId, MessagePlainText = Text };
+            MailMessage newMessage = new MailMessage
+            {
+                Subject = Subject,
+                Message = Message,
+                SendDate = DateTime.Now,
+                FromUserId = MyUser.UserId,
+                MessagePlainText = Text
+            };
             _context.Add(newMessage);
             await _context.SaveChangesAsync();
             // add users
-            await _context.AddRangeAsync(Users.Select(x => new MailRecipient { MessageId = newMessage.MessageId, ToUserId = x.UserId }));
+            await _context.AddRangeAsync(
+                Users.Select(
+                    x => new MailRecipient { MessageId = newMessage.MessageId, ToUserId = x.UserId }
+                )
+            );
             await _context.SaveChangesAsync();
             // add group users
-            await _context.AddRangeAsync(GroupUsers.Select(x => new MailRecipient { MessageId = newMessage.MessageId, ToUserId = x.UserId, ToGroupId = x.GroupId }));
+            await _context.AddRangeAsync(
+                GroupUsers.Select(
+                    x =>
+                        new MailRecipient
+                        {
+                            MessageId = newMessage.MessageId,
+                            ToUserId = x.UserId,
+                            ToGroupId = x.GroupId
+                        }
+                )
+            );
             await _context.SaveChangesAsync();
 
             if (DraftId >= 0)
@@ -457,17 +508,29 @@ namespace Atlas_Web.Pages.Mail
             {
                 foreach (var user in Users)
                 {
-                    SharedItem newShare = new SharedItem { SharedFromUserId = MyUser.UserId, SharedToUserId = user.UserId, ShareDate = DateTime.Now, Name = ShareName, Url = ShareUrl };
+                    SharedItem newShare = new SharedItem
+                    {
+                        SharedFromUserId = MyUser.UserId,
+                        SharedToUserId = user.UserId,
+                        ShareDate = DateTime.Now,
+                        Name = ShareName,
+                        Url = ShareUrl
+                    };
                     _context.Add(newShare);
-
                 }
                 foreach (var user in GroupUsers)
                 {
-                    SharedItem newShare = new SharedItem { SharedFromUserId = MyUser.UserId, SharedToUserId = user.UserId, ShareDate = DateTime.Now, Name = ShareName, Url = ShareUrl };
+                    SharedItem newShare = new SharedItem
+                    {
+                        SharedFromUserId = MyUser.UserId,
+                        SharedToUserId = user.UserId,
+                        ShareDate = DateTime.Now,
+                        Name = ShareName,
+                        Url = ShareUrl
+                    };
                     _context.Add(newShare);
                 }
                 await _context.SaveChangesAsync();
-
             }
 
             return Content("peace");
@@ -476,7 +539,16 @@ namespace Atlas_Web.Pages.Mail
         public async Task<ActionResult> OnPostDeleteMessage(int id)
         {
             var Old = await _context.MailRecipients.Where(x => x.Id == id).FirstOrDefaultAsync();
-            await _context.AddAsync(new MailRecipientsDeleted { AlertDisplayed = Old.AlertDisplayed, MessageId = Old.MessageId, ReadDate = Old.ReadDate, ToUserId = Old.ToUserId, ToGroupId = Old.ToGroupId });
+            await _context.AddAsync(
+                new MailRecipientsDeleted
+                {
+                    AlertDisplayed = Old.AlertDisplayed,
+                    MessageId = Old.MessageId,
+                    ReadDate = Old.ReadDate,
+                    ToUserId = Old.ToUserId,
+                    ToGroupId = Old.ToGroupId
+                }
+            );
             _context.Remove(Old);
             await _context.SaveChangesAsync();
             return Content("ok");
@@ -496,7 +568,6 @@ namespace Atlas_Web.Pages.Mail
             var body = await new System.IO.StreamReader(Request.Body).ReadToEndAsync();
             var package = JObject.Parse(body);
 
-
             int? DraftId = (int?)package["DraftId"];
             string To = package.Value<string>("To") ?? "";
             string Subject = package.Value<string>("Subject") ?? "";
@@ -507,7 +578,9 @@ namespace Atlas_Web.Pages.Mail
 
             if (DraftId >= 0)
             {
-                var Draft = _context.MailDrafts.Where(x => x.DraftId == (int)DraftId).FirstOrDefault();
+                var Draft = _context.MailDrafts
+                    .Where(x => x.DraftId == (int)DraftId)
+                    .FirstOrDefault();
                 Draft.EditDate = DateTime.Now;
                 Draft.Message = Message;
                 Draft.MessagePlainText = Text;
@@ -520,7 +593,17 @@ namespace Atlas_Web.Pages.Mail
             }
             else
             {
-                var Draft = new MailDraft { EditDate = DateTime.Now, Message = Message, MessagePlainText = Text, Recipients = To, Subject = Subject, ReplyToConvId = ConvId, ReplyToMessageId = MsgId, FromUserId = MyUser.UserId };
+                var Draft = new MailDraft
+                {
+                    EditDate = DateTime.Now,
+                    Message = Message,
+                    MessagePlainText = Text,
+                    Recipients = To,
+                    Subject = Subject,
+                    ReplyToConvId = ConvId,
+                    ReplyToMessageId = MsgId,
+                    FromUserId = MyUser.UserId
+                };
                 await _context.AddAsync(Draft);
                 await _context.SaveChangesAsync();
                 return Content(Draft.DraftId.ToString());
@@ -533,20 +616,22 @@ namespace Atlas_Web.Pages.Mail
 
             if (folder == "drafts")
             {
-                var AllDrafts = await (from r in _context.MailDrafts
-                                       where r.FromUserId == MyUser.UserId
-                                       orderby r.EditDate descending
-                                       select new DraftData
-                                       {
-                                           DraftId = r.DraftId,
-                                           From = r.FromUser.UserNameDatum.Fullname,
-                                           To = r.Recipients,
-                                           Message = r.SmallMessage,
-                                           Subject = r.SmallSubject,
-                                           Edited = r.EditDate_MessagePreview,
-                                           MsgId = r.ReplyToMessageId,
-                                           ConvId = r.ReplyToConvId
-                                       }).ToListAsync();
+                var AllDrafts = await (
+                    from r in _context.MailDrafts
+                    where r.FromUserId == MyUser.UserId
+                    orderby r.EditDate descending
+                    select new DraftData
+                    {
+                        DraftId = r.DraftId,
+                        From = r.FromUser.UserNameDatum.Fullname,
+                        To = r.Recipients,
+                        Message = r.SmallMessage,
+                        Subject = r.SmallSubject,
+                        Edited = r.EditDate_MessagePreview,
+                        MsgId = r.ReplyToMessageId,
+                        ConvId = r.ReplyToConvId
+                    }
+                ).ToListAsync();
 
                 if (AllDrafts is null)
                 {
@@ -565,23 +650,27 @@ namespace Atlas_Web.Pages.Mail
             }
             else if (folder == "inbox")
             {
-                var AllMail = await (from r in _context.MailRecipients
-                                     where r.ToUserId == MyUser.UserId
-                                     orderby r.Message.SendDate descending
-                                     select new AllMailData
-                                     {
-                                         MessId = r.Message.MessageId,
-                                         RepId = r.Id,
-                                         From = r.Message.FromUser.UserNameDatum.Fullname,
-                                         Message = r.Message.SmallMessage,
-                                         Subject = r.Message.SmallSubject,
-                                         Sent_Preview = r.Message.SendDate_MessagePreview,
-                                         Sent = (DateTime)r.Message.SendDate,
-                                         Read = r.ReadDate != null ? 1 : 0,
-                                         Type = r.Message.MessageType.Name,
-                                         TypeId = r.Message.MessageTypeId,
-                                         ConvId = r.Message.MailConversations.Select(x => x.ConversationId).FirstOrDefault()
-                                     }).ToListAsync();
+                var AllMail = await (
+                    from r in _context.MailRecipients
+                    where r.ToUserId == MyUser.UserId
+                    orderby r.Message.SendDate descending
+                    select new AllMailData
+                    {
+                        MessId = r.Message.MessageId,
+                        RepId = r.Id,
+                        From = r.Message.FromUser.UserNameDatum.Fullname,
+                        Message = r.Message.SmallMessage,
+                        Subject = r.Message.SmallSubject,
+                        Sent_Preview = r.Message.SendDate_MessagePreview,
+                        Sent = (DateTime)r.Message.SendDate,
+                        Read = r.ReadDate != null ? 1 : 0,
+                        Type = r.Message.MessageType.Name,
+                        TypeId = r.Message.MessageTypeId,
+                        ConvId = r.Message.MailConversations
+                            .Select(x => x.ConversationId)
+                            .FirstOrDefault()
+                    }
+                ).ToListAsync();
 
                 if (AllMail is null)
                 {
@@ -599,9 +688,18 @@ namespace Atlas_Web.Pages.Mail
                     ViewData = ViewData
                 };
             }
-            else if (folder == "deleted") { return Content("no folders existing"); }
-            else if (folder == "sent") { return Content("no folders existing"); }
-            else if (folderId >= 0) { return Content("no folders existing"); }
+            else if (folder == "deleted")
+            {
+                return Content("no folders existing");
+            }
+            else if (folder == "sent")
+            {
+                return Content("no folders existing");
+            }
+            else if (folderId >= 0)
+            {
+                return Content("no folders existing");
+            }
             else
             {
                 return Content("no folder selected");

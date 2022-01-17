@@ -30,6 +30,5 @@ namespace Atlas_Web.Models
         public string Url { get; set; }
         public int Column { get; set; }
         public string Params { get; set; }
-
     }
 }

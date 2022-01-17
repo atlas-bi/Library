@@ -17,13 +17,13 @@
 */
 
 /* before render */
-input[type="dynamic-dropdown"] {
+input[type='dynamic-dropdown'] {
   border: 1px solid #c8c8c8;
   border-radius: 0.4px;
   color: #363636;
   cursor: text;
   display: block;
-  font-family: sf, "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+  font-family: sf, 'Lucida Sans Unicode', 'Lucida Grande', sans-serif;
   font-size: 14px;
   font-weight: 600;
   height: 30px;
@@ -41,7 +41,7 @@ input[type="dynamic-dropdown"] {
   color: #363636;
   cursor: text;
   display: inline-flex;
-  font-family: sf, "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+  font-family: sf, 'Lucida Sans Unicode', 'Lucida Grande', sans-serif;
   font-size: 14px;
   font-weight: 600;
   height: auto;
@@ -160,7 +160,7 @@ input[type="dynamic-dropdown"] {
   border: none;
   color: #272727;
   display: table-cell;
-  font-family: sf, "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+  font-family: sf, 'Lucida Sans Unicode', 'Lucida Grande', sans-serif;
   font-size: 14px;
   font-weight: 600;
   height: 22px;
@@ -191,7 +191,7 @@ input[type="dynamic-dropdown"] {
 .dd-wrp > input::placeholder,
 .dd-wrp .dd-inpt > .dd-vsbl::placeholder {
   color: #6c757d;
-  font-family: sf, "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+  font-family: sf, 'Lucida Sans Unicode', 'Lucida Grande', sans-serif;
   font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.4px;
@@ -223,9 +223,9 @@ input[type="dynamic-dropdown"] {
 
 .dd-phdr {
   color: #aaa;
-  content: "data-placeholder";
+  content: 'data-placeholder';
   flex: 1 1 auto;
-  font-family: sf, "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+  font-family: sf, 'Lucida Sans Unicode', 'Lucida Grande', sans-serif;
   font-weight: 500;
   letter-spacing: 0.4px;
   margin-left: -12px;

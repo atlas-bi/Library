@@ -42,12 +42,16 @@ namespace Atlas_Web.Pages
             _config = config;
             _cache = cache;
         }
+
         public List<UserFavorite> Favorites { get; set; }
         public List<int?> Permissions { get; set; }
         public int UserId { get; set; }
         public string FirstName { get; set; }
-        [BindProperty] public UserFavoriteFolder Folder { get; set; }
+
+        [BindProperty]
+        public UserFavoriteFolder Folder { get; set; }
         public List<UserPreference> Preferences { get; set; }
+
         public class BasicFavoriteData
         {
             public string Name { get; set; }
@@ -62,6 +66,7 @@ namespace Atlas_Web.Pages
             public string Favorite { get; set; }
             public string ReportUrl { get; set; }
         }
+
         public List<AdList> AdLists { get; set; }
         public User PublicUser { get; set; }
 
@@ -82,10 +87,15 @@ namespace Atlas_Web.Pages
             return Page();
         }
 
-
         public async Task<ActionResult> OnGetWelcomeVideo()
         {
-            var Pref = await Task.Run(() => UserHelpers.GetPreferences(_cache, _context, User.Identity.Name).Where(x => x.ItemType == "WelcomeToAtlasVideo").FirstOrDefault());
+            var Pref = await Task.Run(
+                () =>
+                    UserHelpers
+                        .GetPreferences(_cache, _context, User.Identity.Name)
+                        .Where(x => x.ItemType == "WelcomeToAtlasVideo")
+                        .FirstOrDefault()
+            );
             if (Pref != null)
             {
                 ViewData["Open"] = Pref.ItemValue;
@@ -101,35 +111,32 @@ namespace Atlas_Web.Pages
                 ViewName = "Partials/_WelcomeVideo",
                 ViewData = ViewData
             };
-
         }
 
         public async Task<ActionResult> OnGetRecentTerms()
         {
             var user = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
-            var NewestApprovedTerms = await (from dp in _context.Terms
-                                             where dp.ApprovedYn == "Y"
-                                                && dp.ValidFromDateTime > DateTime.Now.AddDays(-30)
-                                             orderby dp.ValidFromDateTime descending
-                                             select new BasicFavoriteData
-                                             {
-                                                 Name = dp.Name,
-                                                 Id = dp.TermId,
-                                             }).Take(10).ToListAsync();
+            var NewestApprovedTerms = await (
+                from dp in _context.Terms
+                where dp.ApprovedYn == "Y" && dp.ValidFromDateTime > DateTime.Now.AddDays(-30)
+                orderby dp.ValidFromDateTime descending
+                select new BasicFavoriteData { Name = dp.Name, Id = dp.TermId, }
+            )
+                .Take(10)
+                .ToListAsync();
             ViewData["NewestApprovedTerms"] = NewestApprovedTerms;
 
             int myLength = 10 - NewestApprovedTerms.Count;
             if (myLength > 0)
             {
-                ViewData["NewestTerms"] = await (from dp in _context.Terms
-                                                 where dp.ApprovedYn == "N"
-                                                    && dp.ValidFromDateTime > DateTime.Now.AddDays(-30)
-                                                 orderby dp.LastUpdatedDateTime descending
-                                                 select new BasicFavoriteData
-                                                 {
-                                                     Name = dp.Name,
-                                                     Id = dp.TermId,
-                                                 }).Take(myLength).ToListAsync();
+                ViewData["NewestTerms"] = await (
+                    from dp in _context.Terms
+                    where dp.ApprovedYn == "N" && dp.ValidFromDateTime > DateTime.Now.AddDays(-30)
+                    orderby dp.LastUpdatedDateTime descending
+                    select new BasicFavoriteData { Name = dp.Name, Id = dp.TermId, }
+                )
+                    .Take(myLength)
+                    .ToListAsync();
             }
             else
             {
@@ -144,7 +151,6 @@ namespace Atlas_Web.Pages
                 ViewName = "Partials/_RecentTerms",
                 ViewData = ViewData
             };
-
         }
 
         public async Task<ActionResult> OnGetRecentReports()
@@ -153,21 +159,31 @@ namespace Atlas_Web.Pages
 
             ViewData["UserId"] = user.UserId;
 
-            ViewData["NewestReports"] = await (from dp in _context.ReportObjectDocs
-                                               join q in (from f in _context.UserFavorites
-                                                          where f.ItemType.ToLower() == "report"
-                                                             && f.UserId == user.UserId
-                                                          select new { f.ItemId })
-                                                on dp.ReportObjectId equals q.ItemId into tmp
-                                               from fi in tmp.DefaultIfEmpty()
-                                               orderby dp.LastUpdateDateTime descending
-                                               select new BasicFavoriteReportData
-                                               {
-                                                   Name = dp.ReportObject.Name,
-                                                   Id = dp.ReportObjectId,
-                                                   Favorite = fi.ItemId == null ? "no" : "yes",
-                                                   ReportUrl = Helpers.HtmlHelpers.ReportUrlFromParams(_config["AppSettings:org_domain"], HttpContext, dp.ReportObject, _context, User.Identity.Name)
-                                               }).Take(10).ToListAsync();
+            ViewData["NewestReports"] = await (
+                from dp in _context.ReportObjectDocs
+                join q in (
+                    from f in _context.UserFavorites
+                    where f.ItemType.ToLower() == "report" && f.UserId == user.UserId
+                    select new { f.ItemId }
+                )
+                    on dp.ReportObjectId equals q.ItemId
+                    into tmp
+                from fi in tmp.DefaultIfEmpty()
+                orderby dp.LastUpdateDateTime descending
+                select new BasicFavoriteReportData
+                {
+                    Name = dp.ReportObject.Name,
+                    Id = dp.ReportObjectId,
+                    Favorite = fi.ItemId == null ? "no" : "yes",
+                    ReportUrl = Helpers.HtmlHelpers.ReportUrlFromParams(
+                        _config["AppSettings:org_domain"],
+                        HttpContext,
+                        dp.ReportObject,
+                        _context,
+                        User.Identity.Name
+                    )
+                }
+            ).Take(10).ToListAsync();
             HttpContext.Response.Headers.Remove("Cache-Control");
             HttpContext.Response.Headers.Add("Cache-Control", "max-age=7200");
             //return Partial("Partials/_RecentReports");
@@ -184,20 +200,24 @@ namespace Atlas_Web.Pages
 
             ViewData["UserId"] = user.UserId;
 
-            ViewData["NewestCollections"] = await (from dp in _context.DpDataProjects
-                                                   join q in (from f in _context.UserFavorites
-                                                              where f.ItemType.ToLower() == "collection"
-                                                              && f.UserId == user.UserId
-                                                              select new { f.ItemId })
-                                                   on dp.DataProjectId equals q.ItemId into tmp
-                                                   from fi in tmp.DefaultIfEmpty()
-                                                   orderby dp.LastUpdateDate descending
-                                                   select new BasicFavoriteData
-                                                   {
-                                                       Name = dp.Name,
-                                                       Id = dp.DataProjectId,
-                                                       Favorite = fi.ItemId == null ? "no" : "yes"
-                                                   }).Take(10).ToListAsync();
+            ViewData["NewestCollections"] = await (
+                from dp in _context.DpDataProjects
+                join q in (
+                    from f in _context.UserFavorites
+                    where f.ItemType.ToLower() == "collection" && f.UserId == user.UserId
+                    select new { f.ItemId }
+                )
+                    on dp.DataProjectId equals q.ItemId
+                    into tmp
+                from fi in tmp.DefaultIfEmpty()
+                orderby dp.LastUpdateDate descending
+                select new BasicFavoriteData
+                {
+                    Name = dp.Name,
+                    Id = dp.DataProjectId,
+                    Favorite = fi.ItemId == null ? "no" : "yes"
+                }
+            ).Take(10).ToListAsync();
 
             HttpContext.Response.Headers.Remove("Cache-Control");
             HttpContext.Response.Headers.Add("Cache-Control", "max-age=7200");
@@ -215,20 +235,24 @@ namespace Atlas_Web.Pages
 
             ViewData["UserId"] = user.UserId;
 
-            ViewData["NewestInitiatives"] = await (from di in _context.DpDataInitiatives
-                                                   join q in (from f in _context.UserFavorites
-                                                              where f.ItemType.ToLower() == "initiative"
-                                                              && f.UserId == user.UserId
-                                                              select new { f.ItemId })
-                                                   on di.DataInitiativeId equals q.ItemId into tmp
-                                                   from fi in tmp.DefaultIfEmpty()
-                                                   orderby di.LastUpdateDate descending
-                                                   select new BasicFavoriteData
-                                                   {
-                                                       Name = di.Name,
-                                                       Id = di.DataInitiativeId,
-                                                       Favorite = fi.ItemId == null ? "no" : "yes"
-                                                   }).Take(10).ToListAsync();
+            ViewData["NewestInitiatives"] = await (
+                from di in _context.DpDataInitiatives
+                join q in (
+                    from f in _context.UserFavorites
+                    where f.ItemType.ToLower() == "initiative" && f.UserId == user.UserId
+                    select new { f.ItemId }
+                )
+                    on di.DataInitiativeId equals q.ItemId
+                    into tmp
+                from fi in tmp.DefaultIfEmpty()
+                orderby di.LastUpdateDate descending
+                select new BasicFavoriteData
+                {
+                    Name = di.Name,
+                    Id = di.DataInitiativeId,
+                    Favorite = fi.ItemId == null ? "no" : "yes"
+                }
+            ).Take(10).ToListAsync();
             HttpContext.Response.Headers.Remove("Cache-Control");
             HttpContext.Response.Headers.Add("Cache-Control", "max-age=7200");
 

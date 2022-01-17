@@ -23,12 +23,12 @@ using System.Linq;
 
 namespace Atlas_Web.Models
 {
-
     public class FinancialImpact__Metadata
     {
         [DisplayFormat(NullDisplayText = "Standard")]
         public string Name { get; set; }
     }
+
     [ModelMetadataType(typeof(FinancialImpact__Metadata))]
     public partial class FinancialImpact
     {

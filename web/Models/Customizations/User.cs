@@ -31,30 +31,33 @@ namespace Atlas_Web.Models
     [ModelMetadataType(typeof(User__Metadata))]
     public partial class User
     {
-
         [NotMapped]
         public string Fullname_Cust
         {
             get
             {
-
-                if (FullName != null && FullName != "") { return FullName; }
-
+                if (FullName != null && FullName != "")
+                {
+                    return FullName;
+                }
                 else if (AccountName != null && AccountName != "")
                 {
                     try
                     {
                         if (AccountName.Contains(","))
                         {
-                            var newString = AccountName.ToLower().Replace(", ", ",").Split(' ')[0].Split(',');
+                            var newString = AccountName.ToLower().Replace(", ", ",").Split(' ')[
+                                0
+                            ].Split(',');
                             string Result = newString[1] + " " + newString[0];
                             TextInfo textInfo = CultureInfo.CurrentCulture.TextInfo;
                             return textInfo.ToTitleCase(Result.ToLower());
-
                         }
                         else
                         {
-                            var tryName = AccountName.Replace(Settings.Property("org_ad_domain") + "\\", "").Replace("-", " ");
+                            var tryName = AccountName
+                                .Replace(Settings.Property("org_ad_domain") + "\\", "")
+                                .Replace("-", " ");
                             TextInfo textInfo = CultureInfo.CurrentCulture.TextInfo;
                             return textInfo.ToTitleCase(tryName.ToLower());
                         }
@@ -63,24 +66,26 @@ namespace Atlas_Web.Models
                     {
                         return AccountName;
                     }
-
                 }
-
                 else if (Username != null && Username != "")
                 {
                     try
                     {
                         if (Username.Contains(","))
                         {
-                            var newString = Username.ToLower().Replace(", ", ",").Split(' ')[0].Split(',');
+                            var newString = Username.ToLower().Replace(", ", ",").Split(' ')[
+                                0
+                            ].Split(',');
                             string Result = newString[1] + " " + newString[0];
                             TextInfo textInfo = CultureInfo.CurrentCulture.TextInfo;
                             return textInfo.ToTitleCase(Result.ToLower());
-
                         }
                         else
                         {
-                            var tryName = Username.ToLower().Replace(Settings.Property("org_ad_domain").ToLower() + @"\", "").Replace("-", " ");
+                            var tryName = Username
+                                .ToLower()
+                                .Replace(Settings.Property("org_ad_domain").ToLower() + @"\", "")
+                                .Replace("-", " ");
                             TextInfo textInfo = CultureInfo.CurrentCulture.TextInfo;
                             return textInfo.ToTitleCase(tryName.ToLower());
                         }
@@ -99,23 +104,28 @@ namespace Atlas_Web.Models
         {
             get
             {
-                if (FirstName != null && FirstName != "") { return FirstName; }
-
+                if (FirstName != null && FirstName != "")
+                {
+                    return FirstName;
+                }
                 else if (AccountName != null && AccountName != "")
                 {
                     try
                     {
                         if (AccountName.Contains(","))
                         {
-                            var newString = AccountName.ToLower().Replace(", ", ",").Split(' ')[0].Split(',');
+                            var newString = AccountName.ToLower().Replace(", ", ",").Split(' ')[
+                                0
+                            ].Split(',');
                             string Result = newString[1];
                             TextInfo textInfo = CultureInfo.CurrentCulture.TextInfo;
                             return textInfo.ToTitleCase(Result.ToLower());
-
                         }
                         else
                         {
-                            var tryName = AccountName.Replace(Settings.Property("org_ad_domain") + "\\", "").Split('-')[0];
+                            var tryName = AccountName
+                                .Replace(Settings.Property("org_ad_domain") + "\\", "")
+                                .Split('-')[0];
                             TextInfo textInfo = CultureInfo.CurrentCulture.TextInfo;
                             return textInfo.ToTitleCase(tryName.ToLower());
                         }
@@ -124,25 +134,26 @@ namespace Atlas_Web.Models
                     {
                         return AccountName;
                     }
-
                 }
-
                 else if (Username != null && Username != "")
                 {
                     //try
                     // {
                     if (Username.Contains(","))
                     {
-                        var newString = Username.ToLower().Replace(", ", ",").Split(' ')[0].Split(',');
+                        var newString = Username.ToLower().Replace(", ", ",").Split(' ')[0].Split(
+                            ','
+                        );
                         string Result = newString[1];
                         TextInfo textInfo = CultureInfo.CurrentCulture.TextInfo;
                         return textInfo.ToTitleCase(Result.ToLower());
-
                     }
                     else
                     {
                         var l = Settings.Property("org_ad_domain");
-                        var tryName = Username.Replace(Settings.Property("org_ad_domain") + "\\", "").Split('-')[0];
+                        var tryName = Username
+                            .Replace(Settings.Property("org_ad_domain") + "\\", "")
+                            .Split('-')[0];
                         TextInfo textInfo = CultureInfo.CurrentCulture.TextInfo;
                         return textInfo.ToTitleCase(tryName.ToLower());
                     }

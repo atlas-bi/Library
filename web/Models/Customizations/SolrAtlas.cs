@@ -22,6 +22,7 @@ namespace Atlas_Web.Models
 
         [SolrField("description")]
         public ICollection<string> Description { get; set; }
+
         [SolrField("report_type")]
         public string ReportType { get; set; }
 
@@ -36,11 +37,13 @@ namespace Atlas_Web.Models
 
         [SolrField("atlas_id")]
         public ICollection<int> AtlasId { get; set; }
+
         [SolrField("certification")]
         public ICollection<string> Certification { get; set; }
 
         [SolrField("epic_master_file")]
         public string EpicMasterFile { get; set; }
+
         [SolrField("epic_record_id")]
         public string EpicRecordId { get; set; }
 
@@ -55,6 +58,7 @@ namespace Atlas_Web.Models
 
         [SolrField("epic_template")]
         public string EpicTemplateId { get; set; }
+
         [SolrField("executive_visibility")]
         public string ExecutiveVisiblity { get; set; }
 

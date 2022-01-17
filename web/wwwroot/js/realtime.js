@@ -15,7 +15,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener('DOMContentLoaded', function () {
   var e = document,
     t = null,
     getActiveUsers = function () {
@@ -24,23 +24,23 @@ document.addEventListener("DOMContentLoaded", function () {
       }
 
       t = new XMLHttpRequest();
-      t.open("get", "/analytics?handler=LiveUsers", !0);
+      t.open('get', '/analytics?handler=LiveUsers', !0);
       t.setRequestHeader(
-        "Content-Type",
-        "application/x-www-form-urlencoded; charset=UTF-8"
+        'Content-Type',
+        'application/x-www-form-urlencoded; charset=UTF-8',
       );
       t.send();
       t.onload = function () {
-        if (e.getElementById("active-users")) {
-          e.getElementById("active-users").innerHTML = t.responseText;
-          e.dispatchEvent(new CustomEvent("ajax"));
+        if (e.getElementById('active-users')) {
+          e.getElementById('active-users').innerHTML = t.responseText;
+          e.dispatchEvent(new CustomEvent('ajax'));
         }
       };
     };
 
   getActiveUsers();
   setInterval(function () {
-    if (e.getElementById("active-users")) {
+    if (e.getElementById('active-users')) {
       getActiveUsers();
     }
   }, 1e4);
