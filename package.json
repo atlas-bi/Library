@@ -46,7 +46,7 @@
     "install": "gulp build",
     "watch": "gulp watch",
     "prepare": "husky install",
-    "pre-commit": "lint-staged",
+    "my-pre-commit": "lint-staged",
     "format": "prettier --config .prettierrc \"**/*.{ts,css,less,scss,js,json,md,yaml,html}\" --write",
     "foramt-cs": "dotnet csharpier ."
   },
