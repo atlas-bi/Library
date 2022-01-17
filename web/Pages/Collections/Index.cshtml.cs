@@ -54,15 +54,11 @@ namespace Atlas_Web.Pages.Collections
         [BindProperty] public DpTermAnnotation DpTermAnnotation { get; set; }
         [BindProperty] public DpAgreement MyDpAgreement { get; set; }
         [BindProperty] public int[] DpAgreementUsers { get; set; }
-        [BindProperty] public DpMilestoneTask DpMilestone { get; set; }
-        [BindProperty] public DpMilestoneTasksCompleted MilestoneCompleteTask { get; set; }
         [BindProperty] public DpDataProjectConversation NewComment { get; set; }
         [BindProperty] public DpDataProjectConversationMessage NewCommentReply { get; set; }
-        [BindProperty] public string DpChecklist { get; set; }
-        [BindProperty] public DpMilestoneChecklistCompleted CompletedChecklist { get; set; }
-        [BindProperty] public int?[] CompletedChecklistItems { get; set; }
-
-        public List<int?> Permissions { get; set; }
+        
+        
+                public List<int?> Permissions { get; set; }
         public IEnumerable<AllCollectionsData> AllCollections { get; set; }
         public List<UserFavorite> Favorites { get; set; }
         public IEnumerable<CollectionCommentsData> CollectionComments { get; set; }
@@ -112,9 +108,6 @@ namespace Atlas_Web.Pages.Collections
             public IEnumerable<RelatedItemData> RelatedTerms { get; set; }
             public IEnumerable<AgreementsData> Agreements { get; set; }
             public string Favorite { get; set; }
-            public IEnumerable<MilestoneTasksData> MilestoneTasks { get; set; }
-            public IEnumerable<ChecklistCompletedData> ChecklistCompleted { get; set; }
-            public IEnumerable<MilestoneTasksCompletedData> MilestoneTasksCompleted { get; set; }
         }
 
         public class RelatedItemData
@@ -147,22 +140,7 @@ namespace Atlas_Web.Pages.Collections
             public IEnumerable<AgreementUsersData> Users { get; set; }
         }
 
-        public class ChecklistCompletedData
-        {
-            public int? Id { get; set; }
-            public int? TaskId { get; set; }
-            public DateTime? Date { get; set; }
-            public int? CollectionId { get; set; }
-            public int? ChecklistId { get; set; }
-            public string CompletedBy { get; set; }
-            public string CompletionDate { get; set; }
-        }
-
-        public class ChecklistData
-        {
-            public int? Id { get; set; }
-            public string Item { get; set; }
-        }
+       
 
         public class AttachmentLinks
         {
@@ -172,25 +150,7 @@ namespace Atlas_Web.Pages.Collections
             public int? Size { get; set; }
             public string Type { get; set; }
         }
-        public class MilestoneTasksData
-        {
-            public int? Id { get; set; }
-            public string Description { get; set; }
-            public string Template { get; set; }
-            public int? TemplateId { get; set; }
-            public DateTime? StartDate { get; set; }
-            public string StartDateInput { get; set; }
-            public string StartDateString { get; set; }
-            public DateTime? EndDate { get; set; }
-            public string EndDateString { get; set; }
-            public string EndDateInput { get; set; }
-            public string Owner { get; set; }
-            public int? OwnerId { get; set; }
-            public int? Interval { get; set; }
-            public string Frequency { get; set; }
-            public IEnumerable<ChecklistData> Checklist { get; set; }
-        }
-
+    
         public class CollectionTermsData
         {
             public string Name { get; set; }
@@ -199,15 +159,6 @@ namespace Atlas_Web.Pages.Collections
             public string Definition { get; set; }
             public int? ReportId { get; set; }
         }
-        public class MilestoneTasksCompletedData
-        {
-            public int Id { get; set; }
-            public string DueDate { get; set; }
-            public string CompletionDate { get; set; }
-            public string CompletedBy { get; set; }
-            public string Comments { get; set; }
-        }
-
         public class AgreementUsersData
         {
             public int? Id { get; set; }
@@ -311,49 +262,8 @@ namespace Atlas_Web.Pages.Collections
                                                     where f.ItemType == "collection"
                                                        && f.UserId == MyUser.UserId
                                                        && f.ItemId == d.DataProjectId
-                                                    select new { f.ItemId }).Any() ? "yes" : "no",
-                                        MilestoneTasks = (from mt in d.DpMilestoneTasks
-                                                          select new MilestoneTasksData
-                                                          {
-                                                              Id = mt.MilestoneTaskId,
-                                                              Description = mt.Description,
-                                                              Template = mt.MilestoneTemplate.Name,
-                                                              Frequency = mt.MilestoneTemplate.MilestoneType.Name,
-                                                              TemplateId = mt.MilestoneTemplateId,
-                                                              StartDateString = mt.StartDatePretty,
-                                                              StartDateInput = mt.StartDate.HasValue ? ((DateTime)mt.StartDate).ToString("yyyy-MM-dd") : "",
-                                                              EndDateInput = mt.EndDate.HasValue ? ((DateTime)mt.EndDate).ToString("yyyy-MM-dd") : "",
-                                                              EndDateString = mt.EndDatePretty,
-                                                              Owner = mt.Owner.Fullname_Cust,
-                                                              OwnerId = mt.OwnerId,
-                                                              Interval = mt.MilestoneTemplate.Interval,
-                                                              Checklist = (from c in mt.DpMilestoneChecklists
-                                                                           select new ChecklistData
-                                                                           {
-                                                                               Item = c.Item,
-                                                                               Id = c.MilestoneChecklistId
-                                                                           }).ToList()
-                                                          }).ToList(),
-                                        ChecklistCompleted = (from cc in d.DpMilestoneChecklistCompleteds
-                                                              select new ChecklistCompletedData
-                                                              {
-                                                                  Id = cc.MilestoneChecklistCompletedId,
-                                                                  TaskId = cc.TaskId,
-                                                                  Date = cc.TaskDate,
-                                                                  CollectionId = cc.DataProjectId,
-                                                                  ChecklistId = cc.MilestoneChecklistId,
-                                                                  CompletedBy = cc.CompletionUserNavigation.Fullname_Cust,
-                                                                  CompletionDate = cc.CompletionDatePretty
-                                                              }).ToList(),
-                                        MilestoneTasksCompleted = (from r in d.DpMilestoneTasksCompleteds
-                                                                   select new MilestoneTasksCompletedData
-                                                                   {
-                                                                       Id = r.MilestoneTaskCompletedId,
-                                                                       DueDate = r.DueDatePretty,
-                                                                       CompletionDate = r.CompletionDatePretty,
-                                                                       CompletedBy = r.CompletionUser,
-                                                                       Comments = r.Comments
-                                                                   }).ToList()
+                                                    select new { f.ItemId }).Any() ? "yes" : "no"
+
                                     }).FirstOrDefaultAsync();
 
                 ViewData["Attachments"] = await (from a in _context.DpAttachments
@@ -500,15 +410,7 @@ namespace Atlas_Web.Pages.Collections
             _context.SaveChanges();
             _context.RemoveRange(_context.DpAgreements.Where(m => m.DataProjectId == Id));
             _context.SaveChanges();
-            _context.RemoveRange(_context.DpMilestoneChecklists.Where(m => m.MilestoneTask.DataProjectId == Id));
-            _context.SaveChanges();
-            _context.RemoveRange(_context.DpMilestoneTasks.Where(m => m.DataProjectId == Id));
-            _context.SaveChanges();
-            _context.RemoveRange(_context.DpMilestoneTasksCompleteds.Where(m => m.DataProjectId == Id));
-            _context.SaveChanges();
-            _context.RemoveRange(_context.DpMilestoneChecklistCompleteds.Where(m => m.DataProjectId == Id));
-            _context.SaveChanges();
-            _context.Remove(_context.DpDataProjects.Where(m => m.DataProjectId == Id).FirstOrDefault());
+                        _context.Remove(_context.DpDataProjects.Where(m => m.DataProjectId == Id).FirstOrDefault());
             _context.SaveChanges();
 
             return RedirectToPage("/Collections/Index");
@@ -885,158 +787,6 @@ namespace Atlas_Web.Pages.Collections
 
             return RedirectToPage("/Collections/Index", new { id = MyDpAgreement.DataProjectId });
         }
-
-        public ActionResult OnPostAddMilestone()
-        {
-            var checkpoint = UserHelpers.CheckUserPermissions(_cache, _context, User.Identity.Name, 28);
-            if (!ModelState.IsValid || DpMilestone.StartDate is null || DpMilestone.MilestoneTemplateId is null || !checkpoint)
-            {
-                return RedirectToPage("/Collections/Index", new { id = DpMilestone.DataProjectId });
-            }
-
-            DpMilestone.LastUpdateUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name).UserId;
-            DpMilestone.LastUpdateDate = DateTime.Now;
-            _context.Add(DpMilestone);
-
-            if (DpChecklist != null)
-            {
-
-                JObject json = JObject.Parse(DpChecklist);
-
-                foreach (JProperty property in json.Properties())
-                {
-                    bool isNumeric = int.TryParse(property.Name, out int n);
-
-                    if (isNumeric == true && property.Value.ToString() != "")
-                    {
-                        _context.Add(new DpMilestoneChecklist { Item = property.Value.ToString(), MilestoneTaskId = DpMilestone.MilestoneTaskId });
-                    }
-                }
-            }
-
-            _context.SaveChanges();
-
-            return RedirectToPage("/Collections/Index", new { id = DpMilestone.DataProjectId });
-        }
-
-        public ActionResult OnPostDeleteMilestone(int id)
-        {
-            var checkpoint = UserHelpers.CheckUserPermissions(_cache, _context, User.Identity.Name, 28);
-            if (checkpoint)
-            {
-                var ms = _context.DpMilestoneTasks.Where(x => x.MilestoneTaskId == id).FirstOrDefault().DataProjectId;
-                _context.RemoveRange(_context.DpMilestoneChecklists.Where(x => x.MilestoneTaskId.Equals(DpMilestone.MilestoneTaskId)));
-                _context.Remove(DpMilestone);
-                _context.SaveChanges();
-                return RedirectToPage("/Collections/Index", new { id = ms });
-            }
-
-            return RedirectToPage("/Collections/Index");
-        }
-
-        public ActionResult OnPostEditMilestone()
-        {
-            var checkpoint = UserHelpers.CheckUserPermissions(_cache, _context, User.Identity.Name, 28);
-            if (!ModelState.IsValid || DpMilestone.StartDate is null || DpMilestone.MilestoneTemplateId is null || !checkpoint)
-            {
-                return RedirectToPage("/Collections/Index", new { id = DpMilestone.DataProjectId });
-            }
-
-            DpMilestoneTask EditedDpMilestone = _context.DpMilestoneTasks.Where(x => x.MilestoneTaskId.Equals(DpMilestone.MilestoneTaskId)).FirstOrDefault();
-
-
-            EditedDpMilestone.LastUpdateUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name).UserId;
-            EditedDpMilestone.LastUpdateDate = DateTime.Now;
-            EditedDpMilestone.Description = DpMilestone.Description;
-            EditedDpMilestone.StartDate = DpMilestone.StartDate;
-            EditedDpMilestone.EndDate = DpMilestone.EndDate;
-            EditedDpMilestone.MilestoneTemplateId = DpMilestone.MilestoneTemplateId;
-            EditedDpMilestone.OwnerId = DpMilestone.OwnerId;
-
-            _context.SaveChanges();
-
-            if (DpChecklist != null)
-            {
-                // remove old list then add new
-                _context.RemoveRange(_context.DpMilestoneChecklists.Where(x => x.MilestoneTaskId.Equals(DpMilestone.MilestoneTaskId)));
-                JObject json = JObject.Parse(DpChecklist);
-
-                foreach (JProperty property in json.Properties())
-                {
-                    bool isNumeric = int.TryParse(property.Name, out int n);
-
-                    if (isNumeric == true && property.Value.ToString() != "")
-                    {
-                        _context.Add(new DpMilestoneChecklist { Item = property.Value.ToString(), MilestoneTaskId = DpMilestone.MilestoneTaskId });
-                    }
-                }
-            }
-
-            _context.SaveChanges();
-
-            return RedirectToPage("/Collections/Index", new { id = DpMilestone.DataProjectId });
-        }
-
-        public ActionResult OnPostCompleteTask(int Id, string Comments, DateTime DueDate)
-        {
-            var checkpoint = UserHelpers.CheckUserPermissions(_cache, _context, User.Identity.Name, 29);
-            DpMilestoneTask OldTask = _context.DpMilestoneTasks.Where(x => x.MilestoneTaskId == Id).Include(x => x.Owner).FirstOrDefault();
-            if (!checkpoint)
-            {
-                return RedirectToPage("/Collections/Index", new { id = OldTask.DataProjectId });
-            }
-
-            var MyUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
-            DpMilestoneTasksCompleted MyTask = new DpMilestoneTasksCompleted
-            {
-                Owner = OldTask.Owner.Fullname_Cust,
-                DueDate = DueDate,
-                DataProjectId = OldTask.DataProjectId,
-                Comments = Comments,
-                CompletionDate = DateTime.Now,
-                CompletionUser = MyUser.Fullname_Cust
-            };
-
-            _context.Add(MyTask);
-            _context.SaveChanges();
-
-            return RedirectToPage("/Collections/Index", new { id = OldTask.DataProjectId });
-        }
-
-        public ActionResult OnPostCompleteChecklist()
-        {
-            var checkpoint = UserHelpers.CheckUserPermissions(_cache, _context, User.Identity.Name, 30);
-            var MyUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
-            if (!ModelState.IsValid || CompletedChecklist.TaskId is null || CompletedChecklist.DataProjectId is null || CompletedChecklistItems.Length == 0 || !checkpoint)
-            {
-                return Content("error");
-            }
-
-            // remove any "unchecked" items.
-            _context.RemoveRange(_context.DpMilestoneChecklistCompleteds.Where(x => x.DataProjectId == CompletedChecklist.DataProjectId && x.TaskId == CompletedChecklist.TaskId && x.TaskDate == CompletedChecklist.TaskDate && !CompletedChecklistItems.Contains(x.MilestoneChecklistId)));
-            _context.SaveChanges();
-            // get existing values
-            int?[] ExistingItems = _context.DpMilestoneChecklistCompleteds.Where(x => x.DataProjectId == CompletedChecklist.DataProjectId && x.TaskId == CompletedChecklist.TaskId && x.TaskDate == CompletedChecklist.TaskDate && CompletedChecklistItems.Contains(x.MilestoneChecklistId)).Select(x => x.MilestoneChecklistId).ToArray();
-
-            // add completions. get time before so all entries match.. but do not add doubles.
-            DateTime TheCompletionDate = DateTime.Now;
-            var q = CompletedChecklistItems.Where(x => !ExistingItems.Contains(x))
-                .Select(x => new DpMilestoneChecklistCompleted
-                {
-                    MilestoneChecklistId = x,
-                    TaskId = CompletedChecklist.TaskId,
-                    TaskDate = CompletedChecklist.TaskDate,
-                    DataProjectId = CompletedChecklist.DataProjectId,
-                    CompletionDate = TheCompletionDate,
-                    CompletionUser = MyUser.UserId
-                });
-            _context.AddRange(q);
-
-            _context.SaveChanges();
-
-            return Content("ok");
-        }
-
         public async Task<ActionResult> OnPostNewComment()
         {
             if (!ModelState.IsValid || NewCommentReply.MessageText is null)
