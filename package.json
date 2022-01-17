@@ -51,6 +51,7 @@
     "foramt-cs": "dotnet csharpier ."
   },
   "lint-staged": {
-    "*.cs": "dotnet csharpier ."
+    "*.cs": "dotnet csharpier .",
+    "**/*.{ts,css,less,scss,js,json,md,yaml,html}": "npm run format"
   }
 }
