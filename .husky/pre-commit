@@ -1,4 +1,4 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
-env FORCE_COLOR=1; npm run pre-commit
+FORCE_COLOR=1; npm run pre-commit
