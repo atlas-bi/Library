@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 using Atlas_Web.Models;
 using Atlas_Web.Helpers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Caching.Memory;
@@ -36,19 +34,22 @@ namespace Atlas_Web.Pages.Search
         private readonly Atlas_WebContext _context;
         private readonly IConfiguration _config;
         private readonly ISolrReadOnlyOperations<SolrAtlas> _solr;
+        private readonly ISolrReadOnlyOperations<SolrAtlasLookups> _solrLookup;
         private IMemoryCache _cache;
 
         public IndexModel(
             Atlas_WebContext context,
             IConfiguration config,
             IMemoryCache cache,
-            ISolrReadOnlyOperations<SolrAtlas> solr
+            ISolrReadOnlyOperations<SolrAtlas> solr,
+            ISolrReadOnlyOperations<SolrAtlasLookups> solrLookup
         )
         {
             _context = context;
             _config = config;
             _cache = cache;
             _solr = solr;
+            _solrLookup = solrLookup;
         }
 
         public class SearchCollectionData
@@ -111,124 +112,124 @@ namespace Atlas_Web.Pages.Search
         public List<string> AppliedFilters { get; set; }
         public User PublicUser { get; set; }
 
+        public static string BuildSearchString(
+            string search_string,
+            Microsoft.AspNetCore.Http.IQueryCollection query
+        )
+        {
+            string[] illegal_chars = new string[]
+            {
+                "\\",
+                "+",
+                "-",
+                "&&",
+                "||",
+                "!",
+                "(",
+                ")",
+                "{",
+                "}",
+                "[",
+                "]",
+                "^",
+                // "\"",
+                "~",
+                "*",
+                "?",
+                ":",
+                "/",
+            };
+            search_string = String.Join(
+                "",
+                search_string.Split(illegal_chars, StringSplitOptions.RemoveEmptyEntries)
+            );
+
+            // find exact match strings
+            List<string> ExactMatches = new List<string>();
+
+            var literals = Regex.Matches(search_string, @"("")(.+?)("")");
+            if (literals.Count > 0)
+            {
+                foreach (Match literal in literals)
+                {
+                    if (query.Keys.Contains("field"))
+                    {
+                        ExactMatches.Add($"{query["field"]}:({literal.Groups[2].Value})");
+                    }
+                    else
+                    {
+                        ExactMatches.Add($"({literal.Groups[2].Value})");
+                    }
+                }
+                search_string = Regex.Replace(search_string, @"("".+?"")", "");
+            }
+
+            // clean double quote from search string
+            search_string = String.Join(
+                "",
+                search_string.Split("\"", StringSplitOptions.RemoveEmptyEntries)
+            );
+
+            static string BuildFuzzy(string substr)
+            {
+                if (substr.Length > 2)
+                {
+                    return substr + "~" + Math.Max(substr.Length / 3, 1).ToString();
+                }
+                else if (substr.Length == 2)
+                {
+                    return substr + "*~";
+                }
+                return substr;
+            }
+
+            static string BuildExact(string wild, List<string> exact)
+            {
+                if (exact.Count == 0)
+                {
+                    return wild;
+                }
+                var exact_string = string.Join(" AND ", exact);
+
+                if (wild == "")
+                {
+                    return exact_string;
+                }
+
+                return $"{exact_string} AND ({wild})";
+            }
+            string Fuzzy = String.Join(
+                " ",
+                search_string
+                    .Split(' ')
+                    .Where(s => !String.IsNullOrEmpty(s))
+                    .Select(x => BuildFuzzy(x))
+            );
+
+            if (search_string == "")
+            {
+                return BuildExact("", ExactMatches);
+            }
+
+            if (query.Keys.Contains("field"))
+            {
+                string field = query["field"];
+                return BuildExact(
+                    $"{field}:({search_string})^6 OR {field}:({Fuzzy})^3",
+                    ExactMatches
+                );
+            }
+
+            return BuildExact(
+                $"name:({search_string})^6 OR name:({Fuzzy})^3 OR ({search_string})^5 OR ({Fuzzy})",
+                ExactMatches
+            );
+        }
+
         public async Task<IActionResult> OnGet(string Query)
         {
             int PageIndex = Int32.Parse(Request.Query["PageIndex"].FirstOrDefault() ?? "1");
             string Type = Request.Query["type"].FirstOrDefault() ?? "query";
-
-            static string BuildSearchString(
-                string search_string,
-                Microsoft.AspNetCore.Http.IQueryCollection query
-            )
-            {
-                string[] illegal_chars = new string[]
-                {
-                    "\\",
-                    "+",
-                    "-",
-                    "&&",
-                    "||",
-                    "!",
-                    "(",
-                    ")",
-                    "{",
-                    "}",
-                    "[",
-                    "]",
-                    "^",
-                    // "\"",
-                    "~",
-                    "*",
-                    "?",
-                    ":",
-                    "/",
-                };
-                search_string = String.Join(
-                    "",
-                    search_string.Split(illegal_chars, StringSplitOptions.RemoveEmptyEntries)
-                );
-
-                // find exact match strings
-                List<string> ExactMatches = new List<string>();
-
-                var literals = Regex.Matches(search_string, @"("")(.+?)("")");
-                if (literals.Count > 0)
-                {
-                    foreach (Match literal in literals)
-                    {
-                        if (query.Keys.Contains("field"))
-                        {
-                            ExactMatches.Add($"{query["field"]}:({literal.Groups[2].Value})");
-                        }
-                        else
-                        {
-                            ExactMatches.Add($"({literal.Groups[2].Value})");
-                        }
-                    }
-                    search_string = Regex.Replace(search_string, @"("".+?"")", "");
-                }
-
-                // clean double quote from search string
-                search_string = String.Join(
-                    "",
-                    search_string.Split("\"", StringSplitOptions.RemoveEmptyEntries)
-                );
-
-                static string BuildFuzzy(string substr)
-                {
-                    if (substr.Length > 2)
-                    {
-                        return substr + "~" + Math.Max(substr.Length / 3, 1).ToString();
-                    }
-                    else if (substr.Length == 2)
-                    {
-                        return substr + "*~";
-                    }
-                    return substr;
-                }
-
-                static string BuildExact(string wild, List<string> exact)
-                {
-                    if (exact.Count == 0)
-                    {
-                        return wild;
-                    }
-                    var exact_string = string.Join(" AND ", exact);
-
-                    if (wild == "")
-                    {
-                        return exact_string;
-                    }
-
-                    return $"{exact_string} AND ({wild})";
-                }
-                string Fuzzy = String.Join(
-                    " ",
-                    search_string
-                        .Split(' ')
-                        .Where(s => !String.IsNullOrEmpty(s))
-                        .Select(x => BuildFuzzy(x))
-                );
-
-                if (search_string == "")
-                {
-                    return BuildExact("", ExactMatches);
-                }
-
-                if (query.Keys.Contains("field"))
-                {
-                    string field = query["field"];
-                    return BuildExact(
-                        $"{field}:({search_string})^6 OR {field}:({Fuzzy})^3",
-                        ExactMatches
-                    );
-                }
-
-                return BuildExact(
-                    $"name:({search_string})^6 OR name:({Fuzzy})^3 OR ({search_string})^5 OR ({Fuzzy})",
-                    ExactMatches
-                );
-            }
 
             static IReadOnlyList<HighlightModel> BuildHighlightModels(
                 IDictionary<string, SolrNet.Impl.HighlightedSnippets> highlightResults
@@ -506,38 +507,28 @@ namespace Atlas_Web.Pages.Search
             if (s != null)
                 SearchString = s;
             {
-                using (
-                    var connection = new SqlConnection(_config.GetConnectionString("AtlasDatabase"))
-                )
-                {
-                    using (var command = connection.CreateCommand())
-                    {
-                        command.CommandType = System.Data.CommandType.StoredProcedure;
-                        command.CommandText = "BasicReportSearch";
-                        command.Parameters.Add(new SqlParameter("@searchTerm", SearchString));
-                        command.Parameters.Add(new SqlParameter("@results", 20));
-                        if (e != null)
+                ObjectSearch = _solr
+                    .Query(
+                        new SolrQuery(BuildSearchString(SearchString, Request.Query)),
+                        new QueryOptions
                         {
-                            command.Parameters.Add(new SqlParameter("@exclude", e));
+                            RequestHandler = new RequestHandlerParameters("/reports"),
+                            StartOrCursor = new StartOrCursor.Start(0),
+                            Rows = 20,
                         }
-                        connection.Open();
-                        var datareader = command.ExecuteReader();
-
-                        while (datareader.Read())
-                        {
-                            ObjectSearch.Add(
-                                new ObjectSearch
-                                {
-                                    ObjectId = (int)datareader["ReportObjectId"],
-                                    Name = datareader["ReportObjectName"].ToString(),
-                                    Description = datareader["Description"].ToString(),
-                                }
-                            );
-                        }
-                    }
-                }
+                    )
+                    .Select(
+                        x =>
+                            new ObjectSearch
+                            {
+                                ObjectId = x.AtlasId.First(),
+                                Name = x.Name,
+                                Description =
+                                    x.Description != null ? x.Description.FirstOrDefault() : ""
+                            }
+                    )
+                    .ToList();
                 var json = JsonConvert.SerializeObject(ObjectSearch);
-
                 HttpContext.Response.Headers.Remove("Cache-Control");
                 HttpContext.Response.Headers.Add("Cache-Control", "max-age=7200");
                 return Content(json);
@@ -549,36 +540,27 @@ namespace Atlas_Web.Pages.Search
             if (s != null)
                 SearchString = s; //.Replace("'","''").Replace(";","_");
             {
-                using (
-                    var connection = new SqlConnection(_config.GetConnectionString("AtlasDatabase"))
-                )
-                {
-                    using (var command = connection.CreateCommand())
-                    {
-                        command.CommandType = System.Data.CommandType.StoredProcedure;
-                        command.CommandText = "BasicTermSearch";
-                        command.Parameters.Add(new SqlParameter("@searchTerm", SearchString));
-                        command.Parameters.Add(new SqlParameter("@results", 20));
-                        if (e != null)
+                ObjectSearch = _solr
+                    .Query(
+                        new SolrQuery(BuildSearchString(SearchString, Request.Query)),
+                        new QueryOptions
                         {
-                            command.Parameters.Add(new SqlParameter("@exclude", e));
+                            RequestHandler = new RequestHandlerParameters("/aterms"),
+                            StartOrCursor = new StartOrCursor.Start(0),
+                            Rows = 20,
                         }
-                        connection.Open();
-                        var datareader = command.ExecuteReader();
-
-                        while (datareader.Read())
-                        {
-                            ObjectSearch.Add(
-                                new ObjectSearch
-                                {
-                                    ObjectId = (int)datareader["TermId"],
-                                    Name = datareader["Name"].ToString(),
-                                    Description = datareader["Summary"].ToString(),
-                                }
-                            );
-                        }
-                    }
-                }
+                    )
+                    .Select(
+                        x =>
+                            new ObjectSearch
+                            {
+                                ObjectId = x.AtlasId.First(),
+                                Name = x.Name,
+                                Description =
+                                    x.Description != null ? x.Description.FirstOrDefault() : ""
+                            }
+                    )
+                    .ToList();
                 var json = JsonConvert.SerializeObject(ObjectSearch);
                 HttpContext.Response.Headers.Remove("Cache-Control");
                 HttpContext.Response.Headers.Add("Cache-Control", "max-age=7200");
@@ -591,37 +573,28 @@ namespace Atlas_Web.Pages.Search
             if (s != null)
                 SearchString = s; //.Replace("'","''").Replace(";","_");
             {
-                using (
-                    var connection = new SqlConnection(_config.GetConnectionString("AtlasDatabase"))
-                )
-                {
-                    using (var command = connection.CreateCommand())
-                    {
-                        command.CommandType = System.Data.CommandType.StoredProcedure;
-                        command.CommandText = "BasicProjectSearch";
-                        command.Parameters.Add(new SqlParameter("@searchTerm", SearchString));
-                        command.Parameters.Add(new SqlParameter("@results", 20));
-                        if (e != null)
+                ObjectSearch = _solr
+                    .Query(
+                        new SolrQuery(BuildSearchString(SearchString, Request.Query)),
+                        new QueryOptions
                         {
-                            command.Parameters.Add(new SqlParameter("@exclude", e));
+                            RequestHandler = new RequestHandlerParameters("/collections"),
+                            StartOrCursor = new StartOrCursor.Start(0),
+                            Rows = 20,
                         }
+                    )
+                    .Select(
+                        x =>
+                            new ObjectSearch
+                            {
+                                ObjectId = x.AtlasId.First(),
+                                Name = x.Name,
+                                Description =
+                                    x.Description != null ? x.Description.FirstOrDefault() : ""
+                            }
+                    )
+                    .ToList();
 
-                        connection.Open();
-                        var datareader = command.ExecuteReader();
-
-                        while (datareader.Read())
-                        {
-                            ObjectSearch.Add(
-                                new ObjectSearch
-                                {
-                                    ObjectId = (int)datareader["DataProjectId"],
-                                    Name = datareader["Name"].ToString(),
-                                    Description = datareader["Description"].ToString(),
-                                }
-                            );
-                        }
-                    }
-                }
                 var json = JsonConvert.SerializeObject(ObjectSearch);
                 HttpContext.Response.Headers.Remove("Cache-Control");
                 HttpContext.Response.Headers.Add("Cache-Control", "max-age=7200");
@@ -634,79 +607,27 @@ namespace Atlas_Web.Pages.Search
             if (s != null)
                 SearchString = s; //.Replace("'","''").Replace(";","_");
             {
-                using (
-                    var connection = new SqlConnection(_config.GetConnectionString("AtlasDatabase"))
-                )
-                {
-                    using (var command = connection.CreateCommand())
-                    {
-                        command.CommandType = System.Data.CommandType.StoredProcedure;
-                        command.CommandText = "BasicUserSearch";
-                        command.Parameters.Add(new SqlParameter("@searchTerm", SearchString));
-                        command.Parameters.Add(new SqlParameter("@results", 20));
-                        if (e != null)
+                UserSearch = _solr
+                    .Query(
+                        new SolrQuery(BuildSearchString(SearchString, Request.Query)),
+                        new QueryOptions
                         {
-                            command.Parameters.Add(new SqlParameter("@exclude", e));
+                            RequestHandler = new RequestHandlerParameters("/users"),
+                            StartOrCursor = new StartOrCursor.Start(0),
+                            Rows = 20,
                         }
-                        connection.Open();
-                        var datareader = command.ExecuteReader();
+                    )
+                    .Select(
+                        x =>
+                            new ObjectSearch
+                            {
+                                ObjectId = x.AtlasId.First(),
+                                Name = x.Name,
+                                Type = "u"
+                            }
+                    )
+                    .ToList();
 
-                        while (datareader.Read())
-                        {
-                            UserSearch.Add(
-                                new ObjectSearch
-                                {
-                                    ObjectId = (int)datareader["Userid"],
-                                    Name = datareader["Username"].ToString(),
-                                    Type = datareader["S"].ToString()
-                                }
-                            );
-                        }
-                    }
-                }
-                var json = JsonConvert.SerializeObject(UserSearch);
-                HttpContext.Response.Headers.Remove("Cache-Control");
-                HttpContext.Response.Headers.Add("Cache-Control", "max-age=7200");
-                return Content(json);
-            }
-        }
-
-        public ActionResult OnPostUserProfileSearch(string s, string e)
-        {
-            if (s != null)
-                SearchString = s; //.Replace("'","''").Replace(";","_");
-            {
-                using (
-                    var connection = new SqlConnection(_config.GetConnectionString("AtlasDatabase"))
-                )
-                {
-                    using (var command = connection.CreateCommand())
-                    {
-                        command.CommandType = System.Data.CommandType.StoredProcedure;
-                        command.CommandText = "BasicUserSearch";
-                        command.Parameters.Add(new SqlParameter("@searchTerm", SearchString));
-                        command.Parameters.Add(new SqlParameter("@results", 20));
-                        command.Parameters.Add(new SqlParameter("@type", "a"));
-                        if (e != null)
-                        {
-                            command.Parameters.Add(new SqlParameter("@exclude", e));
-                        }
-                        connection.Open();
-                        var datareader = command.ExecuteReader();
-
-                        while (datareader.Read())
-                        {
-                            UserSearch.Add(
-                                new ObjectSearch
-                                {
-                                    ObjectId = (int)datareader["Userid"],
-                                    Name = datareader["Username"].ToString(),
-                                    Type = datareader["S"].ToString()
-                                }
-                            );
-                        }
-                    }
-                }
                 var json = JsonConvert.SerializeObject(UserSearch);
                 HttpContext.Response.Headers.Remove("Cache-Control");
                 HttpContext.Response.Headers.Add("Cache-Control", "max-age=7200");
@@ -719,37 +640,27 @@ namespace Atlas_Web.Pages.Search
             if (s != null)
                 SearchString = s; //.Replace("'","''").Replace(";","_");
             {
-                using (
-                    var connection = new SqlConnection(_config.GetConnectionString("AtlasDatabase"))
-                )
-                {
-                    using (var command = connection.CreateCommand())
-                    {
-                        command.CommandType = System.Data.CommandType.StoredProcedure;
-                        command.CommandText = "BasicUserSearch";
-                        command.Parameters.Add(new SqlParameter("@searchTerm", SearchString));
-                        command.Parameters.Add(new SqlParameter("@results", 20));
-                        command.Parameters.Add(new SqlParameter("@type", "a"));
-                        if (e != null)
+                UserSearch = _solr
+                    .Query(
+                        new SolrQuery(BuildSearchString(SearchString, Request.Query)),
+                        new QueryOptions
                         {
-                            command.Parameters.Add(new SqlParameter("@exclude", e));
+                            RequestHandler = new RequestHandlerParameters("/users"),
+                            StartOrCursor = new StartOrCursor.Start(0),
+                            Rows = 20,
                         }
-                        connection.Open();
-                        var datareader = command.ExecuteReader();
+                    )
+                    .Select(
+                        x =>
+                            new ObjectSearch
+                            {
+                                ObjectId = x.AtlasId.First(),
+                                Name = x.Name,
+                                Type = "u"
+                            }
+                    )
+                    .ToList();
 
-                        while (datareader.Read())
-                        {
-                            UserSearch.Add(
-                                new ObjectSearch
-                                {
-                                    ObjectId = (int)datareader["Userid"],
-                                    Name = datareader["Username"].ToString(),
-                                    Type = datareader["S"].ToString()
-                                }
-                            );
-                        }
-                    }
-                }
                 var json = JsonConvert.SerializeObject(UserSearch);
                 HttpContext.Response.Headers.Remove("Cache-Control");
                 HttpContext.Response.Headers.Add("Cache-Control", "max-age=7200");
@@ -762,35 +673,22 @@ namespace Atlas_Web.Pages.Search
             if (s != null)
                 SearchString = s; //.Replace("'","''").Replace(";","_");
             {
-                using (
-                    var connection = new SqlConnection(_config.GetConnectionString("AtlasDatabase"))
-                )
-                {
-                    using (var command = connection.CreateCommand())
-                    {
-                        command.CommandType = System.Data.CommandType.StoredProcedure;
-                        command.CommandText = "BasicDirectorSearch";
-                        command.Parameters.Add(new SqlParameter("@searchTerm", SearchString));
-                        command.Parameters.Add(new SqlParameter("@results", 20));
-                        if (e != null)
+                UserSearch = _solr
+                    .Query(
+                        new SolrQuery(
+                            BuildSearchString(SearchString, Request.Query)
+                                + " AND user_roles:(Director)"
+                        ),
+                        new QueryOptions
                         {
-                            command.Parameters.Add(new SqlParameter("@exclude", e));
+                            RequestHandler = new RequestHandlerParameters("/users"),
+                            StartOrCursor = new StartOrCursor.Start(0),
+                            Rows = 20,
                         }
-                        connection.Open();
-                        var datareader = command.ExecuteReader();
+                    )
+                    .Select(x => new ObjectSearch { Description = x.Email, Name = x.Name })
+                    .ToList();
 
-                        while (datareader.Read())
-                        {
-                            UserSearch.Add(
-                                new ObjectSearch
-                                {
-                                    Description = (string)datareader["Email"],
-                                    Name = datareader["FullName"].ToString()
-                                }
-                            );
-                        }
-                    }
-                }
                 var json = JsonConvert.SerializeObject(UserSearch);
                 HttpContext.Response.Headers.Remove("Cache-Control");
                 HttpContext.Response.Headers.Add("Cache-Control", "max-age=7200");
@@ -801,206 +699,64 @@ namespace Atlas_Web.Pages.Search
         public ActionResult OnPostValueList(string s)
         {
             List<SmallData> myObject = new List<SmallData>() { new SmallData("0", "error") };
-
+            string index_type = "";
             switch (s)
             {
                 case "org-value":
-                    myObject = _cache.GetOrCreate<List<SmallData>>(
-                        "org-value",
-                        cacheEntry =>
-                        {
-                            cacheEntry.SlidingExpiration = TimeSpan.FromHours(2);
-                            return _context.OrganizationalValues
-                                .Select(
-                                    x =>
-                                        new SmallData(
-                                            x.OrganizationalValueId.ToString(),
-                                            x.OrganizationalValueName
-                                        )
-                                )
-                                .ToList();
-                        }
-                    );
+                    index_type = "organizational_value";
                     break;
 
                 case "run-freq":
-                    myObject = _cache.GetOrCreate<List<SmallData>>(
-                        "run-freq",
-                        cacheEntry =>
-                        {
-                            cacheEntry.SlidingExpiration = TimeSpan.FromHours(2);
-                            return _context.EstimatedRunFrequencies
-                                .Select(
-                                    x =>
-                                        new SmallData(
-                                            x.EstimatedRunFrequencyId.ToString(),
-                                            x.EstimatedRunFrequencyName
-                                        )
-                                )
-                                .ToList();
-                        }
-                    );
+                    index_type = "run_frequency";
                     break;
 
                 case "fragility":
-                    myObject = _cache.GetOrCreate<List<SmallData>>(
-                        "fragility",
-                        cacheEntry =>
-                        {
-                            cacheEntry.SlidingExpiration = TimeSpan.FromHours(2);
-                            return _context.Fragilities
-                                .Select(
-                                    x => new SmallData(x.FragilityId.ToString(), x.FragilityName)
-                                )
-                                .ToList();
-                        }
-                    );
+                    index_type = "fragility";
                     break;
 
                 case "maint-sched":
-                    myObject = _cache.GetOrCreate<List<SmallData>>(
-                        "maint-sched",
-                        cacheEntry =>
-                        {
-                            cacheEntry.SlidingExpiration = TimeSpan.FromHours(2);
-                            return _context.MaintenanceSchedules
-                                .Select(
-                                    x =>
-                                        new SmallData(
-                                            x.MaintenanceScheduleId.ToString(),
-                                            x.MaintenanceScheduleName
-                                        )
-                                )
-                                .ToList();
-                        }
-                    );
+                    index_type = "maintenance_schedule";
                     break;
 
                 case "ro-fragility":
-                    myObject = _cache.GetOrCreate<List<SmallData>>(
-                        "ro-fragility",
-                        cacheEntry =>
-                        {
-                            cacheEntry.SlidingExpiration = TimeSpan.FromHours(2);
-                            return _context.FragilityTags
-                                .Select(
-                                    x =>
-                                        new SmallData(
-                                            x.FragilityTagId.ToString(),
-                                            x.FragilityTagName
-                                        )
-                                )
-                                .ToList();
-                        }
-                    );
+                    index_type = "fragility_tag";
                     break;
 
                 case "maint-log-stat":
-                    myObject = _cache.GetOrCreate<List<SmallData>>(
-                        "maint-log-stat",
-                        cacheEntry =>
-                        {
-                            cacheEntry.SlidingExpiration = TimeSpan.FromHours(2);
-                            return _context.MaintenanceLogStatuses
-                                .Select(
-                                    x =>
-                                        new SmallData(
-                                            x.MaintenanceLogStatusId.ToString(),
-                                            x.MaintenanceLogStatusName
-                                        )
-                                )
-                                .ToList();
-                        }
-                    );
+                    index_type = "maintenance_log_status";
                     break;
 
                 case "ext-cont":
-                    myObject = _cache.GetOrCreate<List<SmallData>>(
-                        "ext-cont",
-                        cacheEntry =>
-                        {
-                            cacheEntry.SlidingExpiration = TimeSpan.FromHours(2);
-                            return _context.DpContacts
-                                .Select(
-                                    x =>
-                                        new SmallData(
-                                            x.ContactId.ToString(),
-                                            x.Name + " - " + x.Company
-                                        )
-                                )
-                                .ToList();
-                        }
-                    );
-                    break;
-
-                case "mile-temp":
-                    myObject = _cache.GetOrCreate<List<SmallData>>(
-                        "mile-temp",
-                        cacheEntry =>
-                        {
-                            cacheEntry.SlidingExpiration = TimeSpan.FromHours(2);
-                            return _context.DpMilestoneFrequencies
-                                .Select(x => new SmallData(x.MilestoneTypeId.ToString(), x.Name))
-                                .ToList();
-                        }
-                    );
-                    break;
-
-                case "mile-type":
-                    myObject = _cache.GetOrCreate<List<SmallData>>(
-                        "mile-type",
-                        cacheEntry =>
-                        {
-                            cacheEntry.SlidingExpiration = TimeSpan.FromHours(2);
-                            return _context.DpMilestoneTemplates
-                                .Select(
-                                    x => new SmallData(x.MilestoneTemplateId.ToString(), x.Name)
-                                )
-                                .ToList();
-                        }
-                    );
+                    index_type = "initiative_contacts";
                     break;
 
                 case "user-roles":
-                    myObject = _cache.GetOrCreate<List<SmallData>>(
-                        "user-roles",
-                        cacheEntry =>
-                        {
-                            cacheEntry.SlidingExpiration = TimeSpan.FromHours(2);
-                            return _context.UserRoles
-                                .Select(x => new SmallData(x.UserRolesId.ToString(), x.Name))
-                                .ToList();
-                        }
-                    );
+                    index_type = "user_roles";
                     break;
 
                 case "financial-impact":
-                    myObject = _cache.GetOrCreate<List<SmallData>>(
-                        "financial-impact",
-                        cacheEntry =>
-                        {
-                            cacheEntry.SlidingExpiration = TimeSpan.FromHours(2);
-                            return _context.FinancialImpacts
-                                .Select(x => new SmallData(x.FinancialImpactId.ToString(), x.Name))
-                                .ToList();
-                        }
-                    );
+                    index_type = "financial_impact";
                     break;
 
                 case "strategic-importance":
-                    myObject = _cache.GetOrCreate<List<SmallData>>(
-                        "strategic-importance",
-                        cacheEntry =>
-                        {
-                            cacheEntry.SlidingExpiration = TimeSpan.FromHours(2);
-                            return _context.StrategicImportances
-                                .Select(
-                                    x => new SmallData(x.StrategicImportanceId.ToString(), x.Name)
-                                )
-                                .ToList();
-                        }
-                    );
+                    index_type = "strategic_importance";
                     break;
+            }
+
+            if (index_type != "")
+            {
+                myObject = _solrLookup
+                    .Query(
+                        new SolrQuery($"item_type:({index_type})"),
+                        new QueryOptions
+                        {
+                            RequestHandler = new RequestHandlerParameters("/query"),
+                            StartOrCursor = new StartOrCursor.Start(0),
+                            Rows = 9999,
+                        }
+                    )
+                    .Select(x => new SmallData(x.AtlasId.ToString(), x.Name))
+                    .ToList();
             }
 
             var json = JsonConvert.SerializeObject(myObject);

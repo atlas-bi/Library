@@ -49,10 +49,10 @@
         showModal(el, e.target.closest('[data-toggle]'));
       } // close modal
       else if (
-        (e.target.closest('[data-toggle]') &&
-          e.target.closest('[data-toggle]').getAttribute('data-dismiss') ==
+        (e.target.closest('[data-dismiss]') &&
+          e.target.closest('[data-dismiss]').getAttribute('data-dismiss') ==
             'mdl') ||
-        e.target.closest('.mdl:not(#editModal)') ||
+        //e.target.closest('.mdl:not(#editModal)') ||
         e.target.closest('.editorMdl-close')
       ) {
         // close closest modal

@@ -52,6 +52,7 @@ namespace Atlas_Web
                 );
 
             services.AddSolrNet<SolrAtlas>(Configuration["solr:atlas_address"]);
+            services.AddSolrNet<SolrAtlasLookups>(Configuration["solr:atlas_lookups_address"]);
 
             var connection = Configuration.GetConnectionString("AtlasDatabase");
 

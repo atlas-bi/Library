@@ -7,18 +7,12 @@ using Microsoft.EntityFrameworkCore;
 using Atlas_Web.Models;
 using Microsoft.AspNetCore.Http;
 using System.IO;
-using System.Collections.Generic;
-using System.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
-using Atlas_Web.Helpers;
 using Microsoft.Extensions.Caching.Memory;
-using System.Text;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
 using SixLabors.ImageSharp.PixelFormats;
 using System.Text.RegularExpressions;
-using SixLabors.ImageSharp.Formats;
-using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp.Formats.Jpeg;
 
 namespace Atlas_Web.Pages.Data
