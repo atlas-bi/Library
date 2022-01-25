@@ -111,6 +111,23 @@ $fa-font-path: '/font/fontawesome/webfonts';
   line-height: 1;
 }
 
+.#{$fa-css-prefix}-spin {
+  animation: fa-spin 2s infinite linear;
+}
+
+.#{$fa-css-prefix}-pulse {
+  animation: fa-spin 1s infinite steps(8);
+}
+
+@keyframes fa-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
 /* build icon list */
 $icons: (
   envelope: $fa-var-envelope,
@@ -154,6 +171,11 @@ $icons: (
   trash-alt: $fa-var-trash-alt,
   external-link-square-alt: $fa-var-external-link-square-alt,
   cogs: $fa-var-cogs,
+  circle-notch: $fa-var-circle-notch,
+  long-arrow-alt-left: $fa-var-long-arrow-alt-left,
+  long-arrow-alt-right: $fa-var-long-arrow-alt-right,
+  eye: $fa-var-eye,
+  eye-slash: $fa-var-eye-slash,
 );
 
 @each $key, $value in $icons {

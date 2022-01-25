@@ -51,8 +51,7 @@ namespace Atlas_Web.Pages.Parameters
         public IEnumerable<ValueListData> MaintenanceLogStatusList { get; set; }
         public IEnumerable<ValueListData> FinancialImpactList { get; set; }
         public IEnumerable<ValueListData> StrategicImportanceList { get; set; }
-        public IEnumerable<ValueListData> MilestoneTemplateList { get; set; }
-        public IEnumerable<ContactListData> DpContactList { get; set; }
+
         public List<UserPreference> Preferences { get; set; }
         public List<ReportObjectType> ReportTypes { get; set; }
 
@@ -79,12 +78,6 @@ namespace Atlas_Web.Pages.Parameters
 
         [BindProperty]
         public StrategicImportance StrategicImportance { get; set; }
-
-        [BindProperty]
-        public DpMilestoneTemplate MilestoneTemplates { get; set; }
-
-        [BindProperty]
-        public DpContact DpContact { get; set; }
 
         [BindProperty]
         public GlobalSiteSetting GlobalSiteSettings { get; set; }
@@ -452,57 +445,6 @@ namespace Atlas_Web.Pages.Parameters
             };
         }
 
-        public async Task<IActionResult> OnGetMilestoneTemplateList()
-        {
-            ViewData["MilestoneTemplateList"] = await (
-                from o in _context.DpMilestoneTemplates
-                select new ValueListData
-                {
-                    Id = o.MilestoneTemplateId,
-                    Name = o.Name,
-                    Used = o.DpMilestoneTasks.Count()
-                }
-            ).ToListAsync();
-            ViewData["Permissions"] = UserHelpers.GetUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name
-            );
-            //return Partial((".+?"));
-            return new PartialViewResult()
-            {
-                ViewName = "Partials/_MilestoneTemplateList",
-                ViewData = ViewData
-            };
-        }
-
-        public async Task<IActionResult> OnGetDpContactList()
-        {
-            ViewData["DpContactList"] = await (
-                from o in _context.DpContacts
-                select new ContactListData
-                {
-                    Id = o.ContactId,
-                    Name = o.Name,
-                    Phone = o.Phone,
-                    Email = o.Email,
-                    Company = o.Company,
-                    Used = o.DpContactLinks.Count()
-                }
-            ).ToListAsync();
-            ViewData["Permissions"] = UserHelpers.GetUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name
-            );
-            //return Partial((".+?"));
-            return new PartialViewResult()
-            {
-                ViewName = "Partials/_DpContactList",
-                ViewData = ViewData
-            };
-        }
-
         public ActionResult OnGet()
         {
             PublicUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
@@ -792,59 +734,6 @@ namespace Atlas_Web.Pages.Parameters
             return RedirectToPage("/Parameters/Index");
         }
 
-        public ActionResult OnPostCreateMilestoneTemplates()
-        {
-            var checkpoint = UserHelpers.CheckUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name,
-                33
-            );
-            if (
-                ModelState.IsValid
-                && MilestoneTemplates.MilestoneTypeId != null
-                && MilestoneTemplates.Interval > 0
-                && checkpoint
-            )
-            {
-                MilestoneTemplates.Name = Helpers.HtmlHelpers.MilestoneFrequencyName(
-                    MilestoneTemplates,
-                    _context.DpMilestoneFrequencies
-                        .Where(x => x.MilestoneTypeId == MilestoneTemplates.MilestoneTypeId)
-                        .FirstOrDefault().Name
-                );
-                MilestoneTemplates.LastUpdateUser =
-                    UserHelpers.GetUser(_cache, _context, User.Identity.Name).UserId;
-                MilestoneTemplates.LastUpdateDate = DateTime.Now;
-                _context.Add(MilestoneTemplates);
-                _context.SaveChanges();
-            }
-            _cache.Remove("mile-temp");
-            return RedirectToPage("/Parameters/Index");
-        }
-
-        public ActionResult OnPostDeleteMilestoneTemplate()
-        {
-            var checkpoint = UserHelpers.CheckUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name,
-                34
-            );
-            if (ModelState.IsValid && MilestoneTemplates.MilestoneTemplateId > 0 && checkpoint)
-            {
-                _context.RemoveRange(
-                    _context.DpMilestoneTasks.Where(
-                        x => x.MilestoneTemplateId.Equals(MilestoneTemplates.MilestoneTemplateId)
-                    )
-                );
-                _context.Remove(MilestoneTemplates);
-                _context.SaveChanges();
-            }
-            _cache.Remove("mile-temp");
-            return RedirectToPage("/Parameters/Index");
-        }
-
         public ActionResult OnPostCreateFinancialImpact()
         {
             var checkpoint = UserHelpers.CheckUserPermissions(
@@ -933,41 +822,6 @@ namespace Atlas_Web.Pages.Parameters
             return RedirectToPage("/Parameters/Index");
         }
 
-        public ActionResult OnPostCreateDpContact()
-        {
-            var checkpoint = UserHelpers.CheckUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name,
-                33
-            );
-            if (ModelState.IsValid && DpContact.Name != null && checkpoint)
-            {
-                _context.DpContacts.Add(DpContact);
-                _context.SaveChanges();
-            }
-            _cache.Remove("ext-cont");
-            return RedirectToPage("/Parameters/Index");
-        }
 
-        public ActionResult OnPostDeleteDpContact()
-        {
-            var checkpoint = UserHelpers.CheckUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name,
-                34
-            );
-            if (ModelState.IsValid && DpContact.ContactId > 0 && checkpoint)
-            {
-                _context.RemoveRange(
-                    _context.DpContactLinks.Where(d => d.ContactId.Equals(DpContact.ContactId))
-                );
-                _context.Remove(DpContact);
-                _context.SaveChanges();
-            }
-            _cache.Remove("ext-cont");
-            return RedirectToPage("/Parameters/Index");
-        }
     }
 }

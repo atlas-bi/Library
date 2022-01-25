@@ -23,17 +23,29 @@ using Microsoft.AspNetCore.Http;
 using Markdig;
 using Microsoft.Extensions.Caching.Memory;
 using System.Data.SqlClient;
+using Microsoft.AspNetCore.Mvc.Razor;
+using Microsoft.Extensions.DependencyInjection;
+using WebOptimizer;
 
 namespace Atlas_Web.Helpers
 {
-    public class TaskData
+    public static class PageExtensions
     {
-        public int Year { get; set; }
-        public int Month { get; set; }
-        public int Day { get; set; }
-        public int TaskId { get; set; }
-        public string MonthName { get; set; }
-        public string Date { get; set; }
+        //https://github.com/ligershark/WebOptimizer/issues/87
+        public static string AddBundleVersionToPath(this IRazorPage page, string path)
+        {
+            var context = page.ViewContext.HttpContext;
+            var assetPipeline = context.RequestServices.GetService<WebOptimizer.IAssetPipeline>();
+
+            if (assetPipeline.TryGetAssetFromRoute(path, out IAsset asset))
+            {
+                return string.Concat(path, "?v=", asset.GenerateCacheKey(context));
+            }
+            else
+            {
+                return path;
+            }
+        }
     }
 
     public class UserHelpers

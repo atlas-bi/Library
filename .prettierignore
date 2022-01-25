@@ -8,3 +8,4 @@ web/wwwroot/font/inter/*
 web/wwwroot/lib/codemirror/*
 web/wwwroot/lib/flowchart/*
 web/wwwroot/lib/highlight/*
+*.min.js

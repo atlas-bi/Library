@@ -115,15 +115,16 @@
 @if (Model.Permissions.Contains(26) || Model.Permissions.Contains(28)){
 
     @section js {
-        <textarea class="postLoadScripts"><script src="/js/flowchart.min.js" async></script><script src="/js/editor.min.js" async></script><script src="/js/milestone-checklist.min.js" async></script>@if(!Request.Headers["User-Agent"].ToString().Contains("Trident")){<script>hljs.highlightAll();</script>}<script src="/js/collection-editor.min.js" async></script></textarea>
+         <script src="/js/flowchart.min.js" defer></script>
+        <script src="/js/editor.min.js" defer></script>
+        
+        @*@if(!Request.Headers["User-Agent"].ToString().Contains("Trident")){<script>hljs.highlightAll();</script>}*@
     }
 
 } else {
     @section js {
-        <textarea class="postLoadScripts"><script src="/js/flowchart.min.js" async></script><script src="/js/milestone-checklist.min.js" async></script>@if(!Request.Headers["User-Agent"].ToString().Contains("Trident")){<script>hljs.highlightAll();</script>}
-    }
-}
 
-@section startJs {
-    <script async src="/js/profile.min.js" inline></script>
+        "@this.AddBundleVersionToPath("/js/flowchart.min.js")",
+       @* @if(!Request.Headers["User-Agent"].ToString().Contains("Trident")){<script>hljs.highlightAll();</script>}*@
+    }
 }

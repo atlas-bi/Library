@@ -1,4 +1,3 @@
-@import './include/color';
 @import './include/font';
 
 $family-sans-serif: 'Inter', BlinkMacSystemFont, -apple-system, 'Segoe UI',
@@ -9,6 +8,25 @@ $family-serif: 'Rasa', 'Georgia', 'Times New Roman', serif;
 $title-family: $family-serif;
 
 @import '../../../node_modules/bulma/bulma';
+
+/* reset pre */
+pre {
+  -webkit-overflow-scrolling: touch;
+  background-color: transparent;
+  background-color: unset;
+  // color: unset;
+  font-size: 1em;
+  font-size: unset;
+  overflow-x: hidden;
+  overflow-x: unset;
+  padding: 0;
+  padding: unset;
+  white-space: normal;
+  white-space: unset;
+  word-wrap: normal;
+  word-wrap: unset;
+}
+
 @import '../../../node_modules/@creativebulma/bulma-badge/src/sass/index';
 @import '../../../node_modules/bulma-switch/src/sass/index';
 //@import "../../../node_modules/@creativebulma/bulma-tooltip/src/sass/index";
@@ -26,8 +44,9 @@ $title-family: $family-serif;
 @import './tasks';
 @import './users';
 @import './error';
-
+/* purgecss start ignore */
 @import '../lib/codemirror/mycss';
+/* purgecss end ignore */
 
 @import './essential';
 @import '../lib/fonts/impmin/stylesheet';
@@ -37,7 +56,7 @@ $title-family: $family-serif;
 @import './nav';
 @import './favorite';
 @import './page';
-@import './video';
+
 @import './search';
 @import './utility/collapse';
 @import './utility/modal';
@@ -57,10 +76,14 @@ $title-family: $family-serif;
 @import './dropdown';
 @import './markdown';
 @import './messagebox';
+/* purgecss start ignore */
 @import '../lib/scrollbars/simple-scrollbar';
 @import '../lib/highlight/rainbow';
+/* purgecss end ignore */
 @import './mail/mail-newMessage';
 @import './query';
+
+@import './mini';
 
 html {
   height: 100%;
@@ -178,7 +201,9 @@ img[data-src] {
   padding: 6px;
 }
 
-.ss-content pre {
+.ss-content pre,
+.CodeMirror pre {
+  padding: 0;
   padding: unset;
 }
 
@@ -196,6 +221,11 @@ img[data-src] {
   min-width: 1px;
 }
 
+.field,
+.button,
+.card {
+  font-family: $family-sans-serif;
+}
 /* fix nav dropdown in IE 11. focus within breaks it all */
 @include desktop {
   .navbar-item {
@@ -240,4 +270,25 @@ a.navbar-item:hover,
 a.navbar-link:hover,
 .navbar-item.has-dropdown:hover .navbar-link {
   background: transparent;
+}
+
+.card .tag {
+  min-height: 2em;
+  height: auto;
+  height: unset;
+  white-space: normal;
+  white-space: unset;
+}
+
+.is-min-h-96 {
+  min-height: 96px;
+}
+
+.fa-2_3x {
+  font-size: 2.3em;
+}
+
+/* flex overflow fix */
+.is-flex {
+  min-width: 1px;
 }

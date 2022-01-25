@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function () {
+(function () {
   var d = document,
     a = function (url) {
       if (cache.exists(url)) {
@@ -44,4 +44,4 @@ document.addEventListener('DOMContentLoaded', function () {
   } else if (window.location.pathname.toLowerCase() === '/terms') {
     a('/Profile?handler=Terms&id=' + +getUrlVars().id);
   }
-});
+})();

@@ -221,7 +221,7 @@ namespace Atlas_Web.Pages.Search
             }
 
             return BuildExact(
-                $"name:({search_string})^6 OR name:({Fuzzy})^3 OR ({search_string})^5 OR ({Fuzzy})",
+                $"name:({search_string})^8 OR name:({Fuzzy})^3 OR ({search_string})^5 OR ({Fuzzy})",
                 ExactMatches
             );
         }
@@ -331,7 +331,10 @@ namespace Atlas_Web.Pages.Search
                     "EPIC",
                     "msg",
                     "field",
-                    "advanced"
+                    "advanced",
+                    "error",
+                    "success",
+                    "warning"
                 };
 
                 foreach (string key in query.Keys)
@@ -380,15 +383,15 @@ namespace Atlas_Web.Pages.Search
                         RequestHandler = new RequestHandlerParameters(
                             "/" + Type.Replace("terms", "aterms")
                         ),
-                        StartOrCursor = new StartOrCursor.Start((PageIndex - 1) * 10),
-                        Rows = 10,
+                        StartOrCursor = new StartOrCursor.Start((PageIndex - 1) * 20),
+                        Rows = 20,
                         FilterQueries = search_filter_built,
                         ExtraParams = new Dictionary<string, string>
                         {
                             { "rq", "{!rerank reRankQuery=$rqq reRankDocs=1000 reRankWeight=10}" },
                             {
                                 "rqq",
-                                "(type:collections^2 OR documented:Y OR executive_visibility_text:Y OR enabled_for_hyperspace_text:Y OR certification_text:\"Analytics Certified\"^1)"
+                                "(type:collections^2 OR documented:Y OR executive_visibility_text:Y OR enabled_for_hyperspace_text:Y OR certification_text:\"Analytics Certified\"^1 OR certification_text:\"Analytics Reviewed\"^1)"
                             },
                             { "hl.fl", hl },
                             { "hl.requireFieldMatch", hl_match }
@@ -514,7 +517,7 @@ namespace Atlas_Web.Pages.Search
                         {
                             RequestHandler = new RequestHandlerParameters("/reports"),
                             StartOrCursor = new StartOrCursor.Start(0),
-                            Rows = 20,
+                            Rows = 10,
                         }
                     )
                     .Select(
@@ -547,7 +550,7 @@ namespace Atlas_Web.Pages.Search
                         {
                             RequestHandler = new RequestHandlerParameters("/aterms"),
                             StartOrCursor = new StartOrCursor.Start(0),
-                            Rows = 20,
+                            Rows = 10,
                         }
                     )
                     .Select(
@@ -580,7 +583,7 @@ namespace Atlas_Web.Pages.Search
                         {
                             RequestHandler = new RequestHandlerParameters("/collections"),
                             StartOrCursor = new StartOrCursor.Start(0),
-                            Rows = 20,
+                            Rows = 10,
                         }
                     )
                     .Select(
@@ -614,7 +617,7 @@ namespace Atlas_Web.Pages.Search
                         {
                             RequestHandler = new RequestHandlerParameters("/users"),
                             StartOrCursor = new StartOrCursor.Start(0),
-                            Rows = 20,
+                            Rows = 10,
                         }
                     )
                     .Select(

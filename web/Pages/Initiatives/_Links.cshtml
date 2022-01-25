@@ -1,0 +1,14 @@
+@model Atlas_Web.Pages.Initiatives.IndexModel
+<nav class="breadcrumb">
+    <ul>
+        <li>
+            <a href="#details">Details</a>
+        </li>
+       @if(@Model.Initiative.DpDataProjects.Count > 0)
+       {
+            <li>
+                <a href="#collections">Linked Collections</a>
+            </li>
+        }
+    </ul>
+</nav>

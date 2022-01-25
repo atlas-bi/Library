@@ -1,0 +1,36 @@
+
+$mini-z: 40 !default
+
+.mini
+  @extend %overlay
+  bottom: unset
+  top:100%
+  background-color: $scheme-main
+  box-shadow: 0 8px 8px bulmaRgba($scheme-invert, 0.1)
+  border-bottom-left-radius: $navbar-dropdown-radius
+  border-bottom-right-radius: $navbar-dropdown-radius
+  display: none
+  flex-direction: column
+  justify-content: center
+  overflow: hidden
+  position: absolute
+  z-index: $mini-z
+  font-family: $family-sans-serif
+  font-size: 0.875rem
+  line-height: 1.5
+  // Modifiers
+  &.is-active
+    display: flex
+  a.mini-item
+    padding: 0.375rem 1rem
+    white-space: nowrap
+    color: $dropdown-item-color
+    &:focus,
+    &:hover
+      background-color: $navbar-dropdown-item-hover-background-color
+      color: $navbar-dropdown-item-hover-color
+    &.is-active
+      background-color: $navbar-dropdown-item-active-background-color
+      color: $navbar-dropdown-item-active-color
+  .mini-waiting
+    padding: 0.375rem 1rem

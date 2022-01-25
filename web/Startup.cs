@@ -89,17 +89,14 @@ namespace Atlas_Web
             services.AddWebOptimizer(
                 pipeline =>
                 {
-                    pipeline.AddCssBundle("/css/theme.min.css", "css/theme.css");
+                    pipeline.AddCssBundle("/css/site.min.css", "css/site.min.css");
 
                     /************   javascript   *************/
 
                     // for ie11
-                    pipeline.AddJavaScriptBundle(
-                        "/js/polyfill.min.js",
-                        "js/utility/polyfill.js",
-                        "lib/focus-within-polyfill/index.js"
-                    );
+                    pipeline.AddJavaScriptBundle("/js/polyfill.min.js", "/js/polyfill.min.js");
 
+                    pipeline.AddJavaScriptBundle("/js/shared.min.js", "/js/shared.min.js");
                     pipeline.AddJavaScriptBundle("/js/realtime.min.js", "js/realtime.js");
 
                     // required for page load
@@ -112,40 +109,12 @@ namespace Atlas_Web
                     pipeline.AddJavaScriptBundle(
                         "/js/search.min.js",
                         "js/search.js",
-                        "js/utility/progressbar.js"
+                        "js/utility/progressbar.js",
+                        "/js/error.js"
                     );
 
                     // used on all pages, but not for load
-                    pipeline.AddJavaScriptBundle(
-                        "/js/utility.min.js",
-                        "js/utility/modal.js",
-                        "js/utility/lazyload.js",
-                        "js/utility/crumbs.js",
-                        "js/page.js",
-                        "js/hyperspace.js",
-                        "js/ajax-content.js",
-                        "js/favorites.js",
-                        "js/video.js",
-                        "js/messagebox.js",
-                        "js/mail.js",
-                        "js/analytics.js",
-                        "js/utility/hamburger.js"
-                    );
-
-                    pipeline.AddJavaScriptBundle("/js/tabs.min.js", "js/utility/tabs.js");
-                    pipeline.AddJavaScriptBundle("/js/collapse.min.js", "js/utility/collapse.js");
-                    pipeline.AddJavaScriptBundle("/js/carousel.min.js", "js/utility/carousel.js");
-                    pipeline.AddJavaScriptBundle("/js/table.min.js", "js/utility/table.js");
-                    pipeline.AddJavaScriptBundle("/js/drag.min.js", "js/utility/drag.js");
-                    pipeline.AddJavaScriptBundle("/js/charts.min.js", "js/utility/charts.js");
-                    pipeline.AddJavaScriptBundle("/js/input.min.js", "js/input.js");
-                    pipeline.AddJavaScriptBundle("/js/comments.min.js", "js/comments.js");
-                    pipeline.AddJavaScriptBundle("/js/dropdown.min.js", "js/dropdown.js");
-
-                    pipeline.AddJavaScriptBundle(
-                        "/js/milestone-checklist.min.js",
-                        "js/milestone-checklist.js"
-                    );
+                    pipeline.AddJavaScriptBundle("/js/utility.min.js", "js/utility.min.js");
 
                     pipeline.AddJavaScriptBundle("/js/access.min.js", "js/access.js");
                     pipeline.AddJavaScriptBundle("/js/parameters.min.js", "js/parameters.js");
@@ -163,6 +132,7 @@ namespace Atlas_Web
 
                     pipeline.AddJavaScriptBundle(
                         "/js/editor.min.js",
+                        "lib/markdown-it/markdown-it.min.js",
                         "lib/codemirror/codemirror.js",
                         "lib/codemirror/autorefresh.js",
                         "lib/codemirror/overlay.js",
@@ -173,13 +143,7 @@ namespace Atlas_Web
                         "lib/codemirror/shell.js",
                         "lib/codemirror/sql.js",
                         "lib/codemirror/spellcheck.js",
-                        "js/editor.js",
-                        "js/utility/checkbox.js"
-                    );
-                    pipeline.AddJavaScriptBundle("/js/report-editor.min.js", "js/reportEditor.js");
-                    pipeline.AddJavaScriptBundle(
-                        "/js/collection-editor.min.js",
-                        "js/collectionEditor.js"
+                        "/js/editor.min.js"
                     );
                 }
             );

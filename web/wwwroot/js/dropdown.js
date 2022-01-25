@@ -1,21 +1,3 @@
-/*
-    Atlas of Information Management business intelligence library and documentation database.
-    Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*/
-
 (function () {
   var d = document,
     q;
@@ -140,7 +122,7 @@
     this.ddInpt.appendChild(this.ddPhdr);
     s = Array.prototype.slice.call(b.getElementsByTagName('option'));
 
-    for (o = 0; o < s.length; o++) {
+    for (var o = 0; o < s.length; o++) {
       this.ddHdn.appendChild(s[o]);
       var ddItm = document.createElement('div');
       ddItm.classList.add('dd-itm');
@@ -430,7 +412,7 @@
 
       k(function () {
         e = r.getElementsByClassName('active');
-        for (x = 0; x < e.length; x++) {
+        for (var x = 0; x < e.length; x++) {
           e[x].classList.remove('active');
         }
         if (!!l) {
@@ -493,7 +475,7 @@
             rs.innerHTML =
               '<div class="dd-rslt disabled">No matches found</div>';
           } else {
-            for (i = 0; i < data.length; i++) {
+            for (var i = 0; i < data.length; i++) {
               el = data[i];
               var hiddenClass = '';
               if (active.indexOf(el.ObjectId) !== -1) {
@@ -689,7 +671,7 @@
               }
             }
 
-            for (g = 0; g < myItms.length; g++) {
+            for (var g = 0; g < myItms.length; g++) {
               var itmL = getOffset(myItms[g]).left,
                 itmC = itmL + myItms[g].clientWidth / 2,
                 iptL = getOffset(ipt).left;
@@ -809,7 +791,7 @@
               } else {
                 rs.innerHTML = '';
                 var result = '';
-                for (x = 0; x < data.length; x++) {
+                for (var x = 0; x < data.length; x++) {
                   var id = data[x].ObjectId || data[x].Description;
 
                   var div = document.createElement('div');

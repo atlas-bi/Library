@@ -1,21 +1,3 @@
-/*
-    Atlas of Information Management business intelligence library and documentation database.
-    Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*/
-// user search
 (function () {
   document
     .querySelector('.user-search')
@@ -36,10 +18,14 @@
     w = window,
     grp = d.getElementsByClassName('sr-grp')[0],
     m = d.getElementsByClassName('body-mainCtn')[0],
-    hst = d.getElementsByClassName('sr-hst')[0],
-    i = grp.querySelector('.sr-grp input'),
-    cls = d.getElementById('sr-cls'),
-    scls = d.getElementById('nav-search'),
+    hst = d.getElementsByClassName('sr-hst')[0];
+
+  if (grp == undefined) {
+    // no search on the current page
+    return !1;
+  }
+
+  var i = grp.querySelector('.sr-grp input'),
     sAjx = null,
     hAjx = null,
     atmr,
@@ -63,12 +49,6 @@
 
   function close(url) {
     a.href = url || oldHref;
-
-    if (a.pathname == '/') {
-      cls.classList.add('clps-o');
-    } else {
-      cls.classList.remove('clps-o');
-    }
 
     i.value = '';
     d.title = lastTitle;
@@ -375,7 +355,9 @@
       submit(e.target.closest('.search-filter input').value);
       return !1;
     } else if (e.target.matches('.page-link')) {
-      submit(e.target.closest('.search-filter input').value);
+      if (e.target.closest('.search-filter input')) {
+        submit(e.target.closest('.search-filter input').value);
+      }
       return !1;
     }
   });
@@ -383,19 +365,6 @@
   function submit(l) {
     AjaxSearch(null, l);
   }
-
-  scls.addEventListener('click', function (e) {
-    if (cls.classList.contains('clps-o')) {
-      close();
-    } else {
-      i.focus();
-      var val = i.value; //store the value of the element
-
-      i.value = ''; //clear the value of the element
-
-      i.value = val;
-    }
-  });
 
   w.onpopstate = function (e) {
     if (document.location.pathname == '/Search' || w.oldPopState == '/Search') {

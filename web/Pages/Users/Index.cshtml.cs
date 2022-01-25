@@ -722,65 +722,6 @@ namespace Atlas_Web.Pages.Users
             };
         }
 
-        public ActionResult OnPostWelcomeToAtlasState(int State)
-        {
-            var MyUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
-            var MyItemType = "WelcomeToAtlasVideo";
-            _cache.Remove("Preferences-" + User.Identity.Name);
-            var CurrentState = _context.UserPreferences
-                .Where(x => x.UserId == MyUser.UserId && x.ItemType == MyItemType)
-                .FirstOrDefault();
-            if (State == 1)
-            {
-                if (CurrentState != null)
-                {
-                    CurrentState.ItemValue = 1;
-                    _context.Attach(CurrentState).State = EntityState.Modified;
-                    _context.SaveChanges();
-
-                    return Content("ok");
-                }
-                else
-                {
-                    _context.Add(
-                        new UserPreference
-                        {
-                            UserId = MyUser.UserId,
-                            ItemType = MyItemType,
-                            ItemValue = 1
-                        }
-                    );
-                    _context.SaveChanges();
-                    return Content("ok");
-                }
-            }
-            else if (State == 0)
-            {
-                if (CurrentState != null)
-                {
-                    CurrentState.ItemValue = 0;
-                    _context.Attach(CurrentState).State = EntityState.Modified;
-                    _context.SaveChanges();
-                    return Content("ok");
-                }
-                else
-                {
-                    _context.Add(
-                        new UserPreference
-                        {
-                            UserId = MyUser.UserId,
-                            ItemType = MyItemType,
-                            ItemValue = 0
-                        }
-                    );
-                    _context.SaveChanges();
-                    return Content("ok");
-                }
-            }
-
-            return Content("ok");
-        }
-
         public ActionResult OnGetChangeRole(int Id, string Url)
         {
             var MyUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);

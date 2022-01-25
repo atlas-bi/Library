@@ -1,53 +1,3 @@
-// .ie-fixMinHeight {
-//   -ms-flex-direction: column;
-//   display: -ms-flexbox;
-// }
-
-// .ctn {
-//   -webkit-flex-direction: column;
-//   display: -webkit-flex;
-//   display: flex;
-//   flex-direction: column;
-//   justify-content: center;
-//   margin: auto;
-//   max-width: 1500px;
-//   min-height: 100vh;
-//   width: 80vw;
-//   position: relative;
-// }
-
-// .body {
-//   -webkit-flex-grow: 1;
-//   display: flex;
-//   flex-direction: row;
-//   flex-grow: 1;
-//   margin-left: 15px;
-//   margin-right: 15px;
-// }
-
-// .body-main {
-//   flex: 1;
-//   margin-right: 15px;
-//   min-width: 0;
-// }
-
-// .body-mainCtn {
-//   display: block;
-// }
-
-// .body-side {
-//   font-size: 80%;
-//   margin-left: 15px;
-//   max-width: 300px;
-//   width: 25%;
-// }
-
-// .body-side a + a::before {
-//   color: #575353;
-//   content: "/";
-//   margin: 8px;
-// }
-
 .pageTitle {
   background-color: #fff;
   max-width: 100%;
@@ -55,7 +5,6 @@
 
 .pageTitle-head {
   margin: 0;
-  padding: 40px 0 0;
   z-index: 999;
 }
 

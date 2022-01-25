@@ -122,10 +122,13 @@ else
 @if (Model.Permissions.Contains(13) || Model.Permissions.Contains(7))
 {
 
-                @section js {
-                    <textarea class="postLoadScripts"><script src="/js/flowchart.min.js" async></script>@if(!Request.Headers["User-Agent"].ToString().Contains("Trident")){<script>hljs.highlightAll();</script>}@if (ViewBag.Permissions.Contains(12)){<script src="/js/editor.min.js" async></script>}</textarea>
-                }}
-
-@section startJs {
-    <script async src="/js/profile.min.js" inline></script>
-}
+@section js {
+    <script src="/js/flowchart.min.js" defer></script>
+    
+   @* @if(!Request.Headers["User-Agent"].ToString().Contains("Trident")){
+        <script>hljs.highlightAll();</script>
+    }*@
+    @if (ViewBag.Permissions.Contains(12)){
+        <script src="/js/editor.min.js" defer></script>
+    }
+    }}

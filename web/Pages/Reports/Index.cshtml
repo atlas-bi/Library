@@ -22,7 +22,7 @@
     <li>
         <a class="" data-toggle="mdl" data-target="runModal" data-tooltip="Run Report" data-runurl="@Model.Report.RunReportUrl">
             <span class="icon is-large has-text-success">
-                <i class="far fa-lg fa-play-circle"></i>
+                <i class="far fa-2_3x fa-play-circle"></i>
             </span>
         </a>
     </li>
@@ -32,7 +32,7 @@
     <li>
         <a class="" target="_blank" data-tooltip="Run Report" href="@Model.Report.RunReportUrl">
             <span class="icon is-large has-text-success">
-                <i class="far fa-lg fa-play-circle"></i>
+                <i class="far fa-2_3x fa-play-circle"></i>
             </span>
         </a>
     </li>
@@ -44,7 +44,7 @@
     <li>
         <a class="is-disabled" data-tooltip="Open a related dashboard that uses this.">
             <span class="icon is-large has-text-grey-light">
-                <i class="far fa-lg fa-play-circle"></i>
+                <i class="far fa-2_3x fa-play-circle"></i>
             </span>
         </a>
     </li>
@@ -54,7 +54,7 @@
     <li>
         <a class="is-disabled" data-tooltip="Open in report library.">
             <span class="icon is-large has-text-grey-light">
-                <i class="far fa-lg fa-play-circle"></i>
+                <i class="far fa-2_3x fa-play-circle"></i>
             </span>
         </a>
     </li>
@@ -64,7 +64,7 @@
     <li>
         <a class="is-disabled" data-tooltip="Run from the Hyperspace report library.">
             <span class="icon is-large has-text-grey-light">
-                <i class="far fa-lg fa-play-circle"></i>
+                <i class="far fa-2_3x fa-play-circle"></i>
             </span>
         </a>
     </li>
@@ -322,11 +322,9 @@ else
 <partial name="modals\_reportProfile" />
 
 @section js {
-    <textarea class="postLoadScripts">
-    <script src="/js/flowchart.min.js" async></script>@if(!Request.Headers["User-Agent"].ToString().Contains("Trident")){<script>hljs.highlightAll();</script>}@if (ViewBag.Permissions.Contains(12)){<script src="/js/editor.min.js" async></script><script src="/js/report-editor.min.js" async></script>}
-    </textarea>
-
-}
-@section startJs {
-    <script async src="/js/profile.min.js" inline></script>
+    <script src="/js/flowchart.min.js" defer></script>
+    @*@if(!Request.Headers["User-Agent"].ToString().Contains("Trident")){<script>hljs.highlightAll();</script>}*@
+    @if (ViewBag.Permissions.Contains(12)){
+        <script src="/js/editor.min.js" defer></script>
+    }
 }

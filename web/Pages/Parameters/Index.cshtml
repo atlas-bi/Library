@@ -24,10 +24,9 @@
 
 
 @section js {
-    
-     <script async src="/js/parameters.min.js" inline></script>
+    <script src="/js/parameters.min.js" defer></script>
 
-    <textarea class="postLoadScripts">@if(!Request.Headers["User-Agent"].ToString().Contains("Trident")){<script>hljs.highlightAll();</script>}<script src="/js/editor.min.js" async></script></textarea>
+    @*@if(!Request.Headers["User-Agent"].ToString().Contains("Trident")){<script>hljs.highlightAll();</script>}<script src="/js/editor.min.js" async></script>*@
 }
 
 <div class="pageTitle">
@@ -127,16 +126,6 @@
             <div class="drop-box">
 
                 <div data-ajax="yes" data-url="/parameters?Handler=StrategicImportanceList"></div>
-            </div>
-        </div>
-        <h4 class="drop" data-toggle="clps" data-target="collapse-dpcontacts">
-            Data Initiative Contacts
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M31.3 192h257.3c17.8 0 26.7 21.5 14.1 34.1L174.1 354.8c-7.8 7.8-20.5 7.8-28.3 0L17.2 226.1C4.6 213.5 13.5 192 31.3 192z" /></svg>
-        </h4>
-        <div id="collapse-dpcontacts" class="clps">
-            <div class="drop-box">
-
-                <div data-ajax="yes" data-url="/parameters?Handler=DpContactList"></div>
             </div>
         </div>
     </div>

@@ -2,7 +2,7 @@
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <AspNetCoreHostingModel>OutOfProcess</AspNetCoreHostingModel>
-    <RootNamespace>Atlas_Dotnet</RootNamespace>
+    <RootNamespace>Atlas_Web</RootNamespace>
     <UserSecretsId>934f839a-c16a-47a3-845c-ff0d6b817faf</UserSecretsId>
     <StartupObject>Atlas_Web.Program</StartupObject>
   </PropertyGroup>
@@ -12,7 +12,7 @@
 	<PropertyGroup>
   <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
   <OutputType>Exe</OutputType>
-  <AssemblyName>Atlas_Dotnet</AssemblyName>
+  <AssemblyName>Atlas_Web</AssemblyName>
 </PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
 	  <PlatformTarget>AnyCPU</PlatformTarget>

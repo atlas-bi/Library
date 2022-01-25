@@ -1,21 +1,3 @@
-/*
-    Atlas of Information Management business intelligence library and documentation database.
-    Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*/
-
 (function () {
   document.execCommand('defaultParagraphSeparator', false, 'div');
   var mail_check_rate = 10 * 1000,
@@ -60,7 +42,7 @@
           draftMsg > 0 ? draftMsg : '';
       }
 
-      for (x; x < unreadMsg.length; x++) {
+      for (var x; x < unreadMsg.length; x++) {
         if (newUnreadMsg > 0) {
           unreadMsg[x].style.display = 'inline-block';
           unreadMsg[x].innerHTML = newUnreadMsg;
@@ -70,7 +52,7 @@
         }
       }
 
-      for (x; x < allMsg.length; x++) {
+      for (var x; x < allMsg.length; x++) {
         allMsg[x].innerHTML = newAllMsg;
       }
 
@@ -102,7 +84,7 @@
               d.querySelectorAll('.mlbx-msgsMsg[data-rep-id]'),
             ),
             el;
-          for (x = 0; x < msg.length; x++) {
+          for (var x = 0; x < msg.length; x++) {
             el = div.querySelector(
               '.mlbx-msgsMsg[data-rep-id="' +
                 msg[x].getAttribute('data-rep-id') +

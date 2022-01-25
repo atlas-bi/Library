@@ -131,6 +131,20 @@ namespace Atlas_Web.Pages.Data
             return File(BuildImage(image_data, size), "application/octet-stream", id + ".jpeg");
         }
 
+        public async Task<ActionResult> OnGetPlaceholder(string size)
+        {
+            HttpContext.Response.Headers.Remove("Cache-Control");
+            HttpContext.Response.Headers.Add("Cache-Control", "max-age=315360000");
+
+            string name;
+            byte[] image_data;
+
+            image_data = System.IO.File.ReadAllBytes("wwwroot/img/report_placeholder.png");
+            name = "placeholder";
+
+            return File(BuildImage(image_data, size), "application/octet-stream", name + ".jpeg");
+        }
+
         public async Task<ActionResult> OnGetFirst(int id)
         {
             var img = await _context.ReportObjectImagesDocs

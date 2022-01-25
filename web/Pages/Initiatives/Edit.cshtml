@@ -1,0 +1,172 @@
+﻿@page
+@model Atlas_Web.Pages.Initiatives.EditModel
+
+@{
+    ViewData["Title"] = "Editing " + @Model.Initiative.Name;
+}
+
+@section SideBar {}
+@section SearchBar {}
+@section js {
+    <script src="/js/flowchart.min.js" defer></script>
+ @*   @if(!Request.Headers["User-Agent"].ToString().Contains("Trident")){<script>hljs.highlightAll();</script>}*@
+    <script src="/js/editor.min.js" defer></script>
+}
+
+<form class="mb-5" action="/Initiatives/Edit/?id=@Model.Initiative.DataInitiativeId" method="post" >
+    <h1 class="title is-1">Editing @Model.Initiative.Name</h1>
+    <p class="buttons is-flex is-justify-content-space-between">
+        <a class="button p-5" href="/Initiatives/?id=@Model.Initiative.DataInitiativeId">
+            <span class="icon">
+              <i class="fas fa-lg fa-long-arrow-alt-left"></i>
+            </span>
+            <span><strong>Cancel</strong><br>Go Back</span>
+        </a>
+        <button class="button p-5" type="submit">
+            <span><strong>Save</strong><br>and Continue</span>
+            <span class="icon ">
+              <i class="fas fa-lg fa-long-arrow-alt-right"></i>
+            </span>
+        </button>
+    </p>
+
+    <input asp-for="Initiative.DataInitiativeId" type="hidden" value="@Model.Initiative.DataInitiativeId" />
+
+    <div class="field">
+        <label class="label">Name</label>
+        <div class="control">
+            <input class="input" placeholder="e.g Data Sorting" asp-for="Initiative.Name" data-initial-content="Name" required value="@Model.Initiative.Name" />
+        </div>
+    </div>
+    <div class="field">
+        <label class="label">Description</label>
+        <div class="editor" data-inputName="Initiative.Description" data-inputId="Initiative_Description"><textarea>@Html.Raw(Model.Initiative.Description)</textarea></div>
+    </div>
+    <div class="field">
+        <label class="label">Operations Owner</label>
+        <div class="field is-grouped">
+            <div class="control is-relative is-expanded">
+                <input class="input input-mini" placeholder="type to search.."  value="@if(@Model.Initiative.OperationOwner!= null){@Model.Initiative.OperationOwner.Fullname_Cust}" search-area="UserSearch" />
+                <input type="hidden" asp-for="Initiative.OperationOwnerId" value='@Model.Initiative.OperationOwnerId'/>
+                <div class="mini">
+                    <div class="mini-waiting">
+                        <span class="icon">
+                            <i class="fas fa-circle-notch fa-spin"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="control">
+                <a class="button mini-clear">
+                    <span class="icon">
+                        <i class="fas fa-times"></i>
+                    </span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="field">
+        <label class="label">Executive Owner</label>
+        <div class="field is-grouped">
+            <div class="control is-relative is-expanded">
+                <input class="input input-mini" placeholder="type to search.."  value="@if(@Model.Initiative.ExecutiveOwner!=null){@Model.Initiative.ExecutiveOwner.Fullname_Cust}" search-area="UserSearch" />
+                <input type="hidden" asp-for="Initiative.ExecutiveOwnerId" value='@Model.Initiative.ExecutiveOwnerId'/>
+                <div class="mini">
+                    <div class="mini-waiting">
+                        <span class="icon">
+                            <i class="fas fa-circle-notch fa-spin"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="control">
+                <a class="button mini-clear">
+                    <span class="icon">
+                        <i class="fas fa-times"></i>
+                    </span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class='field'>
+        <label class="label">Financial Impact</label>
+        <div class="field is-grouped">
+            <div class="control is-relative is-expanded">
+                <input readonly class="input input-mini" placeholder="click to select.."  value="@if(@Model.Initiative.FinancialImpactNavigation!=null){@Model.Initiative.FinancialImpactNavigation.Name}" lookup-area="financial-impact" />
+                <input type="hidden" asp-for="Initiative.FinancialImpact" value='@Model.Initiative.FinancialImpact'/>
+                <div class="mini">
+                    <div class="mini-waiting">
+                        <span class="icon">
+                            <i class="fas fa-circle-notch fa-spin"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="control">
+                <a class="button mini-clear">
+                    <span class="icon">
+                        <i class="fas fa-times"></i>
+                    </span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="field">
+        <label class="label">Strategic Importance</label>
+        <div class="field is-grouped">
+            <div class="control is-relative is-expanded">
+                <input readonly class="input input-mini" placeholder="click to select.."  value="@if(@Model.Initiative.StrategicImportanceNavigation!=null){@Model.Initiative.StrategicImportanceNavigation.Name}" lookup-area="strategic-importance" />
+                <input type="hidden" asp-for="Initiative.StrategicImportance" value='@Model.Initiative.StrategicImportance'/>
+                <div class="mini">
+                    <div class="mini-waiting">
+                        <span class="icon">
+                            <i class="fas fa-circle-notch fa-spin"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="control">
+                <a class="button mini-clear">
+                    <span class="icon">
+                        <i class="fas fa-times"></i>
+                    </span>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="field">
+        <label class="label">Linked Collections</label>
+        <div class="mini-tags field is-grouped is-grouped-multiline">
+            @foreach (var d in @Model.Initiative.DpDataProjects)
+            {
+                <div class="control">
+                    <div class="tags has-addons">
+                        <span class="tag is-link">@d.Name</span>
+                        <a class="tag is-delete" value="@d.DataProjectId"></a>
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="field">
+            <div class="control is-relative is-expanded">
+                <input class="input input-mini" placeholder="search for collections.." search-area="CollectionSearch" />
+                <select class="is-hidden" asp-for="Projects" >
+                    @foreach (var d in @Model.Initiative.DpDataProjects)
+                    {
+                        <option selected="selected" value="@d.DataProjectId">@d.Name</option>
+                    }
+                </select>
+                <div class="mini">
+                    <div class="mini-waiting">
+                        <span class="icon">
+                            <i class="fas fa-circle-notch fa-spin"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

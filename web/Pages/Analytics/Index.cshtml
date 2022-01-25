@@ -3,8 +3,8 @@
 @{ Layout = HttpContext.Request.Headers["x-requested-with"] == "XMLHttpRequest" ? "../Shared/_AjaxLayout.cshtml" : "../Shared/_Layout.cshtml"; }
 @{ ViewData["Title"] = "Analytics"; }
 
-@section startJs {
-    <script async src="/js/realtime.min.js" inline></script>
+@section js {
+    <script async src="/js/realtime.min.js" defer></script>
 }
 
 <div class="pageTitle">
