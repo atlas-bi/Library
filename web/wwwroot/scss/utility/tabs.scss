@@ -15,12 +15,14 @@
   padding-top: 15px;
 }
 
-.tab-cnt > .tab-dta {
+.tab-cnt > .tab-dta,
+.panel-tab-data {
   animation: fadein 0.1s;
   display: none;
   width: 100%;
 }
 
-.tab-cnt > .tab-dta.active {
+.tab-cnt > .tab-dta.active,
+.panel-tab-data.is-active {
   display: block;
 }

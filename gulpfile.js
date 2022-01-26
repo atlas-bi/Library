@@ -83,6 +83,8 @@ gulp.task('font:fontawesome', function (done) {
         'long-arrow-alt-right',
         'eye',
         'eye-slash',
+        'palette',
+        'database',
       ],
     },
     'web/wwwroot/font/fontawesome/webfonts',

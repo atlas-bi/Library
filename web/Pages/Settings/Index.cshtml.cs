@@ -1,22 +1,4 @@
-﻿/*
-    Atlas of Information Management business intelligence library and documentation database.
-    Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*/
-
-using System;
+﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -27,7 +9,7 @@ using System.Collections.Generic;
 using Atlas_Web.Helpers;
 using Microsoft.Extensions.Caching.Memory;
 
-namespace Atlas_Web.Pages.Parameters
+namespace Atlas_Web.Pages.Settings
 {
     public class IndexModel : PageModel
     {
@@ -233,7 +215,7 @@ namespace Atlas_Web.Pages.Parameters
                 _context.SaveChanges();
             }
 
-            return RedirectToPage("/Parameters/Index");
+            return RedirectToPage("/Settings/Index");
         }
 
         public ActionResult OnPostAddGlobalSetting()
@@ -250,7 +232,7 @@ namespace Atlas_Web.Pages.Parameters
                 _context.SaveChanges();
             }
 
-            return RedirectToPage("/Parameters/Index");
+            return RedirectToPage("/Settings/Index");
         }
 
         public async Task<IActionResult> OnGetOrganizationalValueList()
@@ -476,7 +458,7 @@ namespace Atlas_Web.Pages.Parameters
                 _context.SaveChanges();
             }
             _cache.Remove("org-value");
-            return RedirectToPage("/Parameters/Index");
+            return RedirectToPage("/Settings/Index");
         }
 
         public ActionResult OnPostDeleteOrganizationalValue()
@@ -502,7 +484,7 @@ namespace Atlas_Web.Pages.Parameters
                 _context.SaveChanges();
             }
             _cache.Remove("org-value");
-            return RedirectToPage("/Parameters/Index");
+            return RedirectToPage("/Settings/Index");
         }
 
         public ActionResult OnPostCreateEstimatedRunFrequency()
@@ -523,7 +505,7 @@ namespace Atlas_Web.Pages.Parameters
                 _context.SaveChanges();
             }
             _cache.Remove("run-freq");
-            return RedirectToPage("/Parameters/Index");
+            return RedirectToPage("/Settings/Index");
         }
 
         public ActionResult OnPostDeleteEstimatedRunFrequency()
@@ -553,7 +535,7 @@ namespace Atlas_Web.Pages.Parameters
                 _context.SaveChanges();
             }
             _cache.Remove("run-freq");
-            return RedirectToPage("/Parameters/Index");
+            return RedirectToPage("/Settings/Index");
         }
 
         public ActionResult OnPostCreateFragility()
@@ -570,7 +552,7 @@ namespace Atlas_Web.Pages.Parameters
                 _context.SaveChanges();
             }
             _cache.Remove("fragility");
-            return RedirectToPage("/Parameters/Index");
+            return RedirectToPage("/Settings/Index");
         }
 
         public ActionResult OnPostDeleteFragility()
@@ -591,7 +573,7 @@ namespace Atlas_Web.Pages.Parameters
                 _context.SaveChanges();
             }
             _cache.Remove("fragility");
-            return RedirectToPage("/Parameters/Index");
+            return RedirectToPage("/Settings/Index");
         }
 
         public ActionResult OnPostCreateMaintenanceSchedule()
@@ -612,7 +594,7 @@ namespace Atlas_Web.Pages.Parameters
                 _context.SaveChanges();
             }
             _cache.Remove("maint-sched");
-            return RedirectToPage("/Parameters/Index");
+            return RedirectToPage("/Settings/Index");
         }
 
         public ActionResult OnPostDeleteMaintenanceSchedule()
@@ -638,7 +620,7 @@ namespace Atlas_Web.Pages.Parameters
                 _context.SaveChanges();
             }
             _cache.Remove("maint-sched");
-            return RedirectToPage("/Parameters/Index");
+            return RedirectToPage("/Settings/Index");
         }
 
         public ActionResult OnPostCreateFragilityTag()
@@ -655,7 +637,7 @@ namespace Atlas_Web.Pages.Parameters
                 _context.SaveChanges();
             }
             _cache.Remove("ro-fragility");
-            return RedirectToPage("/Parameters/Index");
+            return RedirectToPage("/Settings/Index");
         }
 
         public ActionResult OnPostDeleteFragilityTag()
@@ -677,7 +659,7 @@ namespace Atlas_Web.Pages.Parameters
                 _context.SaveChanges();
             }
             _cache.Remove("ro-fragility");
-            return RedirectToPage("/Parameters/Index");
+            return RedirectToPage("/Settings/Index");
         }
 
         public ActionResult OnPostCreateMaintenanceLogStatus()
@@ -698,7 +680,7 @@ namespace Atlas_Web.Pages.Parameters
                 _context.SaveChanges();
             }
             _cache.Remove("maint-log-status");
-            return RedirectToPage("/Parameters/Index");
+            return RedirectToPage("/Settings/Index");
         }
 
         public ActionResult OnPostDeleteMaintenanceLogStatus()
@@ -731,7 +713,7 @@ namespace Atlas_Web.Pages.Parameters
                 _context.SaveChanges();
             }
             _cache.Remove("maint-log-status");
-            return RedirectToPage("/Parameters/Index");
+            return RedirectToPage("/Settings/Index");
         }
 
         public ActionResult OnPostCreateFinancialImpact()
@@ -748,7 +730,7 @@ namespace Atlas_Web.Pages.Parameters
                 _context.SaveChanges();
             }
             _cache.Remove("financial-impact");
-            return RedirectToPage("/Parameters/Index");
+            return RedirectToPage("/Settings/Index");
         }
 
         public ActionResult OnPostDeleteFinancialImpact()
@@ -773,7 +755,7 @@ namespace Atlas_Web.Pages.Parameters
                 _context.SaveChanges();
             }
             _cache.Remove("financial-impact");
-            return RedirectToPage("/Parameters/Index");
+            return RedirectToPage("/Settings/Index");
         }
 
         public ActionResult OnPostCreateStrategicImportance()
@@ -790,7 +772,7 @@ namespace Atlas_Web.Pages.Parameters
                 _context.SaveChanges();
             }
             _cache.Remove("strategic-importance");
-            return RedirectToPage("/Parameters/Index");
+            return RedirectToPage("/Settings/Index");
         }
 
         public ActionResult OnPostDeleteStrategicImportance()
@@ -819,7 +801,51 @@ namespace Atlas_Web.Pages.Parameters
                 _context.SaveChanges();
             }
             _cache.Remove("strategic-importance");
-            return RedirectToPage("/Parameters/Index");
+            return RedirectToPage("/Settings/Index");
+        }
+
+        public async Task<IActionResult> OnGetGlobalCss()
+        {
+            ViewData["GlobalCss"] = await _context.GlobalSiteSettings
+                .Where(x => x.Name == "global_css")
+                .Select(x => x.Value)
+                .FirstOrDefaultAsync();
+
+            ViewData["Permissions"] = UserHelpers.GetUserPermissions(
+                _cache,
+                _context,
+                User.Identity.Name
+            );
+            //return Partial((".+?"));
+            return new PartialViewResult()
+            {
+                ViewName = "Partials/_GlobalCss",
+                ViewData = ViewData
+            };
+        }
+
+        public ActionResult OnPostUpdateGlobalCss()
+        {
+            var global_css = _context.GlobalSiteSettings
+                .Where(x => x.Name == "global_css")
+                .FirstOrDefault();
+
+            if (global_css != null)
+            {
+                global_css.Value = GlobalSiteSettings.Value;
+            }
+            else
+            {
+                _context.Add(
+                    new GlobalSiteSetting { Name = "global_css", Value = GlobalSiteSettings.Value }
+                );
+            }
+
+            _context.SaveChanges();
+
+            _cache.Set("global_css", GlobalSiteSettings.Value);
+
+            return RedirectToPage("/Settings/Index");
         }
 
 

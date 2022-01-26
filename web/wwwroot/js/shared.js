@@ -15,7 +15,7 @@ var debounce = function debounce(func, wait, immediate) {
     if (callNow) func.apply(context, args);
   };
 };
-console.log('load urlvars function');
+
 var getUrlVars = function getUrlVars() {
   var vars = {};
   var parts = window.location.href
@@ -24,6 +24,22 @@ var getUrlVars = function getUrlVars() {
       vars[key] = value;
     });
   return vars;
+};
+
+var getOffset = function getOffset(element) {
+  if (!element.getClientRects().length) {
+    return {
+      top: 0,
+      left: 0,
+    };
+  }
+
+  var rect = element.getBoundingClientRect();
+  var win = element.ownerDocument.defaultView;
+  return {
+    top: rect.top + win.pageYOffset,
+    left: rect.left + win.pageXOffset,
+  };
 };
 
 var serialize = function serialize(form) {

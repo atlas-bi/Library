@@ -1,0 +1,17 @@
+
+@model Atlas_Web.Pages.Settings.IndexModel
+
+<div>
+    <h2 class="title is-2">Global CSS</h1>
+    <form asp-page-handler="UpdateGlobalCss" method="post">
+        <div class="field">
+            <label class="label">Global CSS Styles</label>
+            <div class="control">
+                <input class="input" asp-for="GlobalSiteSettings.Value" placeholder="body { background: pink; }" value="@ViewBag.GlobalCss"></input>
+            </div>
+        </div>
+        <div class="control">
+            <button class="button is-link">Save Changes</button>
+        </div>
+    </form>
+</div>

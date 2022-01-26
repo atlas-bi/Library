@@ -16,6 +16,7 @@ using WebMarkupMin.AspNetCore5;
 using SolrNet;
 using SolrNet.Microsoft.DependencyInjection;
 using Microsoft.Extensions.Caching.Memory;
+using System.Linq;
 
 namespace Atlas_Web
 {
@@ -117,7 +118,7 @@ namespace Atlas_Web
                     pipeline.AddJavaScriptBundle("/js/utility.min.js", "js/utility.min.js");
 
                     pipeline.AddJavaScriptBundle("/js/access.min.js", "js/access.js");
-                    pipeline.AddJavaScriptBundle("/js/parameters.min.js", "js/parameters.js");
+                    pipeline.AddJavaScriptBundle("/js/settings.min.js", "js/settings.js");
 
                     pipeline.AddJavaScriptBundle("/js/profile.min.js", "js/profile.js");
 
@@ -188,7 +189,12 @@ namespace Atlas_Web
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(
+            IApplicationBuilder app,
+            IWebHostEnvironment env,
+            Atlas_WebContext context,
+            IMemoryCache cache
+        )
         {
             app.UseResponseCompression();
 
@@ -232,6 +238,16 @@ namespace Atlas_Web
                     endpoints.MapRazorPages();
                 }
             );
+
+            // load override css
+            var css = context.GlobalSiteSettings
+                .Where(x => x.Name == "global_css")
+                .Select(x => x.Value)
+                .FirstOrDefault();
+            if (css != null)
+            {
+                cache.Set("global_css", css);
+            }
         }
     }
 }

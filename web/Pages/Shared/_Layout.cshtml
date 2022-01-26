@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <link rel="stylesheet" href="/css/site.min.css" />
-
+    <style type="text/css" mini>@Cache.Get("global_css")</style>
 
 
     <link rel="preload" href="/js/main.min.js" as="script" />
@@ -103,7 +103,7 @@
                                 }
                             @if (Model.Permissions.Contains(33) || Model.Permissions.Contains(34))
                                 {
-                            <a class="navbar-item" href="/parameters">Parameters</a>
+                            <a class="navbar-item" href="/settings">Settings</a>
                                 }
                             @if (Model.Permissions.Contains(36))
                                 {

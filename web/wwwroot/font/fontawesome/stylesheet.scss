@@ -176,6 +176,8 @@ $icons: (
   long-arrow-alt-right: $fa-var-long-arrow-alt-right,
   eye: $fa-var-eye,
   eye-slash: $fa-var-eye-slash,
+  palette: $fa-var-palette,
+  database: $fa-var-database,
 );
 
 @each $key, $value in $icons {
