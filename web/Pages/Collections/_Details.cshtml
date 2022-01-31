@@ -1,6 +1,6 @@
 
 @model Atlas_Web.Pages.Collections.IndexModel
-@using Atlas_Web.Helpers
+
 @inject IConfiguration Configuration
 
 <div class="pageTitle">
@@ -10,15 +10,10 @@
 
     <div class="pageNav">
 
-        @if (Model.Collection.RelatedReports.Count() > 0 || ViewBag.RelatedTerms.Count > 0)
+        @if (Model.Collection.DpReportAnnotations.Count() > 0 || ViewBag.RelatedTerms.Count > 0)
         {
     <a href="#links" class="pageNav-link">Linked Content</a>}
-        @if (ViewBag.Attachments.Count > 0)
-        {
-    <a href="#attachments" class="pageNav-link">Attachments</a>}
-        @if (Model.Collection.Agreements.Count() > 0)
-        {
-    <a href="#agreements" class="pageNav-link">Agreements</a>}
+
         <a href="#details" class="pageNav-link">Details</a>
     @if (@Configuration["features:enable_comments"] == null || @Configuration["features:enable_comments"].ToString().ToLower() == "true"){
         <a href="#comments" class="pageNav-link">Comments</a>
@@ -29,23 +24,9 @@
 
 <section class="pageSection">
     <span class="location" id="links"></span>
-    @if (Model.Collection.RelatedReports.Count() > 0 || ViewBag.RelatedTerms.Count > 0)
+    @if (Model.Collection.DpTermAnnotations.Count() > 0 || ViewBag.RelatedTerms.Count > 0)
     {
 <partial name="Details/_Links.cshtml"></partial>}
-</section>
-
-<section class="pageSection">
-    <span class="location" id="attachments"></span>
-    @if (ViewBag.Attachments.Count > 0)
-    {
-<partial name="Details/_Attachments.cshtml"></partial>}
-</section>
-
-<section class="pageSection">
-    <span class="location" id="agreements"></span>
-    @if (Model.Collection.Agreements.Count() > 0)
-    {
-<partial name="Details/_Agreements.cshtml"></partial>}
 </section>
 
 <section class="pageSection">
@@ -56,6 +37,6 @@
 @if (@Configuration["features:enable_comments"] == null || @Configuration["features:enable_comments"].ToString().ToLower() == "true"){
 <section class="pageSection">
     <span class="location" id="comments"></span>
-    <div class="comments" data-ajax="yes" data-url="/collections?Handler=Comments&id=@Model.Collection.Id"></div>
+    <div class="comments" data-ajax="yes" data-url="/collections?Handler=Comments&id=@Model.Collection.DataProjectId"></div>
 </section>
 }

@@ -21,7 +21,7 @@ pre {
   overflow-x: unset;
   padding: 0;
   padding: unset;
-  white-space: normal;
+  white-space: pre;
   white-space: unset;
   word-wrap: normal;
   word-wrap: unset;
@@ -29,6 +29,10 @@ pre {
 
 @import '../../../node_modules/@creativebulma/bulma-badge/src/sass/index';
 @import '../../../node_modules/bulma-switch/src/sass/index';
+
+$steps-active-color: $link;
+$steps-active-color: $link;
+@import '../../../node_modules/bulma-steps-component/bulma-steps';
 //@import "../../../node_modules/@creativebulma/bulma-tooltip/src/sass/index";
 
 @import './mail/mail';
@@ -69,7 +73,7 @@ pre {
 @import './utility/drag';
 @import './utility/progressbar';
 @import './utility/chart';
-@import './utility/table';
+// @import './utility/table';
 @import './milestone';
 @import './input';
 @import './comments';
@@ -209,21 +213,21 @@ img[data-src] {
 
 .atlas-navbar {
   padding-left: 15px;
-  font-family: $family-sans-serif;
 }
-.breadcrumb {
-  font-family: $family-sans-serif;
-}
-.footer {
-  font-family: $family-sans-serif;
-}
+
 .column {
   min-width: 1px;
 }
 
 .field,
 .button,
-.card {
+.card,
+.panel,
+.footer,
+.breadcrumb,
+.atlas-navbar,
+.label,
+.steps {
   font-family: $family-sans-serif;
 }
 /* fix nav dropdown in IE 11. focus within breaks it all */
@@ -291,4 +295,29 @@ a.navbar-link:hover,
 /* flex overflow fix */
 .is-flex {
   min-width: 1px;
+}
+
+/* narrow table column */
+
+.table td.is-narrow,
+.table th.is-narrow {
+  width: 1px;
+  white-space: nowrap;
+}
+
+.table.is-align-middel th,
+.table.is-align-middel td {
+  vertical-align: middle;
+}
+
+/* sticky */
+.is-sticky {
+  position: sticky;
+  align-self: flex-start;
+  top: 0;
+}
+
+.panel-tab.is-active {
+  color: $panel-list-item-hover-color;
+  background-color: $panel-block-hover-background-color;
 }

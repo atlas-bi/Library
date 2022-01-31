@@ -1,9 +1,9 @@
 |docs| |codacy| |climate|
 
-Atlas of Information Management
-===============================
+Atlas BI Library
+================
 
-Atlas of Information Management is a business intelligence library and documentation database. ETL processes collect metadata from various reporting platforms and store it in a centraly located database. A modern web UI is used to add additional documentation to the report objects and also to provide an intuative way to search, favorite and share reporting content.
+Atlas BI Library is a business intelligence library and documentation database. ETL processes collect metadata from various reporting platforms and store it in a centrally located database. A modern web UI is used to add additional documentation to the report objects and also to provide an intuitive way to search, favorite and share reporting content.
 
 See the `project documentation <https://www.atlas.bi/docs/bi-library/>`_
 
@@ -22,6 +22,7 @@ Included Content
 - Slicer-Dicer
 - User Information
 - Report Usage
+- Cubes
 
 Key Features
 ------------
@@ -57,8 +58,6 @@ Coming Soon
 -----------
 
 - powerBI integration
-- SSAS Cube documentation and ETL
-- Slicer Dicer User Saved Sessions
 - Database metadata with linkages from report SQL back to the item number in Epic
 - Expanded documentation for terms and reports related to regulated quality measures, including data submission tracking
 - Tracking and documentation of data flows out of the organization including ETL for Bridges interfaces

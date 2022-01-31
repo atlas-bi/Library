@@ -1,19 +1,7 @@
 @model Atlas_Web.Pages.Initiatives.IndexModel
 @inject IConfiguration Configuration
 
-@if(Model.Initiative is null)
-{
-    @if (Model.Permissions.Contains(20))
-    {
-        <li>
-            <a  href="/Initiatives/New/" data-tooltip="Create New Initiative">
-                <span class="icon has-text-grey is-large ">
-                    <i class="fas fa-lg fa-plus"></i>
-                </span>
-            </a>
-        </li>
-    }
-} else
+@if(Model.Initiative is not null)
 {
     <li>
         <a class=" @Html.Raw((@Model.Favorite=="yes") ? "favorite" : "")" data-tooltip="@Html.Raw((@Model.Favorite=="yes") ? "Remove from Favorites" : "Add to Favorites")" fav-type="initiative" object-id="@Model.Initiative.DataInitiativeId">

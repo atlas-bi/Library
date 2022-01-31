@@ -14,7 +14,7 @@
 }
 
 <form action="/Initiatives/New/" method="post" >
-    <h1 class="title is-1">New Initiative</h1>
+    <h1 class="title is-1">@ViewData["Title"]</h1>
     <p class="buttons is-flex is-justify-content-space-between">
         <a class="button p-5" href="/Initiatives/">
             <span class="icon">
@@ -32,7 +32,7 @@
     <div class="field">
         <label class="label">Name</label>
         <div class="control">
-            <input class="input" placeholder="e.g Data Sorting" asp-for="Initiative.Name" data-initial-content="Name" required/>
+            <input class="input" placeholder="e.g Data Sorting" asp-for="Initiative.Name" required/>
         </div>
     </div>
     <div class="field">
@@ -134,14 +134,13 @@
             </div>
         </div>
     </div>
+
     <div class="field">
         <label class="label">Linked Collections</label>
         <div class="mini-tags field is-grouped is-grouped-multiline"></div>
         <div class="field">
             <div class="control is-relative is-expanded">
-                <input class="input input-mini" placeholder="search for collections.." search-area="CollectionSearch" />
-                <select class="is-hidden" asp-for="Projects" >
-                </select>
+                <input class="input input-mini multiselect" placeholder="search for collections.." search-area="CollectionSearch" data-name="Collections[].DataProjectId" />
                 <div class="mini">
                     <div class="mini-waiting">
                         <span class="icon">

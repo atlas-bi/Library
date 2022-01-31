@@ -385,5 +385,12 @@
       ? (module.exports = p)
       : j && (a.Stickyfill = p);
 })(window, document);
-var elements = document.querySelectorAll('.sticky');
-Stickyfill.add(elements);
+
+// only IE11
+try {
+  new Function('async () => {}')();
+} catch (e) {
+  console.log('using sticky polyfill');
+  var elements = document.querySelectorAll('.is-sticky');
+  Stickyfill.add(elements);
+}

@@ -158,7 +158,9 @@ namespace Atlas_Web.Pages.Search
                     }
                     else
                     {
-                        ExactMatches.Add($"({literal.Groups[2].Value})");
+                        ExactMatches.Add(
+                            $"name:({literal.Groups[2].Value})^8 OR ({literal.Groups[2].Value})^5"
+                        );
                     }
                 }
                 search_string = Regex.Replace(search_string, @"("".+?"")", "");
@@ -178,7 +180,7 @@ namespace Atlas_Web.Pages.Search
                 }
                 else if (substr.Length == 2)
                 {
-                    return substr + "*~";
+                    return substr;
                 }
                 return substr;
             }
@@ -206,6 +208,11 @@ namespace Atlas_Web.Pages.Search
                     .Select(x => BuildFuzzy(x))
             );
 
+            string Wild = String.Join(
+                " ",
+                search_string.Split(' ').Where(s => !String.IsNullOrEmpty(s)).Select(x => x + "*")
+            );
+
             if (search_string == "")
             {
                 return BuildExact("", ExactMatches);
@@ -215,13 +222,13 @@ namespace Atlas_Web.Pages.Search
             {
                 string field = query["field"];
                 return BuildExact(
-                    $"{field}:({search_string})^6 OR {field}:({Fuzzy})^3",
+                    $"{field}:({search_string})^60 OR {field}:({Fuzzy})^3",
                     ExactMatches
                 );
             }
 
             return BuildExact(
-                $"name:({search_string})^8 OR name:({Fuzzy})^3 OR ({search_string})^5 OR ({Fuzzy})",
+                $"name:({search_string})^12 OR name:({Fuzzy})^7 OR name:({Wild})^6 OR ({search_string})^5 OR ({Fuzzy}) OR ({Wild})",
                 ExactMatches
             );
         }
@@ -388,10 +395,10 @@ namespace Atlas_Web.Pages.Search
                         FilterQueries = search_filter_built,
                         ExtraParams = new Dictionary<string, string>
                         {
-                            { "rq", "{!rerank reRankQuery=$rqq reRankDocs=1000 reRankWeight=10}" },
+                            { "rq", "{!rerank reRankQuery=$rqq reRankDocs=1000 reRankWeight=5}" },
                             {
                                 "rqq",
-                                "(type:collections^2 OR documented:Y OR executive_visibility_text:Y OR enabled_for_hyperspace_text:Y OR certification_text:\"Analytics Certified\"^1 OR certification_text:\"Analytics Reviewed\"^1)"
+                                "(type:collections^3 OR type:reports^2 OR documented:Y^0.1 OR executive_visibility_text:Y^0.2  OR certification_text:\"Analytics Certified\"^0.4 OR certification_text:\"Analytics Reviewed\"^0.4)"
                             },
                             { "hl.fl", hl },
                             { "hl.requireFieldMatch", hl_match }
@@ -454,7 +461,7 @@ namespace Atlas_Web.Pages.Search
                                             HttpContext,
                                             _context.ReportObjects
                                                 .Where(y => y.ReportObjectId == x.AtlasId.First())
-                                                .First(),
+                                                .FirstOrDefault(),
                                             _context,
                                             User.Identity.Name
                                         )

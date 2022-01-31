@@ -34,14 +34,26 @@
           'profile-buttonHidden',
         );
       }
-      d.querySelector('#profile-modal .mdl-b').innerHTML = text;
-      d.dispatchEvent(new CustomEvent('load-charts'));
+      var modal = d.querySelector('#profile-modal .mdl-b');
+      if (modal != undefined) {
+        modal.innerHTML = text;
+        d.dispatchEvent(new CustomEvent('load-charts'));
+      }
     };
-  if (window.location.pathname.toLowerCase() === '/reports') {
+  if (
+    window.location.pathname.toLowerCase() === '/reports' &&
+    getUrlVars().id
+  ) {
     a('/Profile?id=' + getUrlVars().id);
-  } else if (window.location.pathname.toLowerCase() === '/collections') {
-    a('/Profile?handler=Collections&id=' + +getUrlVars().id);
-  } else if (window.location.pathname.toLowerCase() === '/terms') {
-    a('/Profile?handler=Terms&id=' + +getUrlVars().id);
+  } else if (
+    window.location.pathname.toLowerCase() === '/collections' &&
+    getUrlVars().id
+  ) {
+    a('/Profile?handler=Collections&id=' + getUrlVars().id);
+  } else if (
+    window.location.pathname.toLowerCase() === '/terms' &&
+    getUrlVars().id
+  ) {
+    a('/Profile?handler=Terms&id=' + getUrlVars().id);
   }
 })();

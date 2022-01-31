@@ -1,55 +1,55 @@
-table {
-  border-collapse: collapse;
-}
+// table {
+//   border-collapse: collapse;
+// }
 
-th {
-  text-align: inherit;
-}
+// th {
+//   text-align: inherit;
+// }
 
-.table {
-  background-color: transparent;
-  margin-bottom: 1rem;
-  max-width: 100%;
-  width: 100%;
-}
+// .table {
+//   background-color: transparent;
+//   margin-bottom: 1rem;
+//   max-width: 100%;
+//   width: 100%;
+// }
 
-.table-border {
-  border: 1px solid #dee2e6;
-}
+// .table-border {
+//   border: 1px solid #dee2e6;
+// }
 
-.table-border th,
-.table-border td {
-  border-right: 1px solid #dee2e6;
-}
+// .table-border th,
+// .table-border td {
+//   border-right: 1px solid #dee2e6;
+// }
 
-.table td,
-.table th {
-  border-top: 1px solid #dee2e6;
-  padding: 0.3rem;
-  vertical-align: top;
-}
+// .table td,
+// .table th {
+//   border-top: 1px solid #dee2e6;
+//   padding: 0.3rem;
+//   vertical-align: top;
+// }
 
-.table thead th {
-  vertical-align: bottom;
-}
+// .table thead th {
+//   vertical-align: bottom;
+// }
 
-.table tbody + tbody {
-  border-top: 2px solid #dee2e6;
-}
+// .table tbody + tbody {
+//   border-top: 2px solid #dee2e6;
+// }
 
-.table thead tr,
-.table tbody th {
-  background: #f8f9fa;
-}
+// .table thead tr,
+// .table tbody th {
+//   background: #f8f9fa;
+// }
 
-.table tbody tr:hover {
-  background-color: rgba(0, 0, 0, 0.075);
-}
+// .table tbody tr:hover {
+//   background-color: rgba(0, 0, 0, 0.075);
+// }
 
-.table-responsive {
-  -ms-overflow-style: -ms-autohiding-scrollbar;
-  -webkit-overflow-scrolling: touch;
-  display: block;
-  overflow-x: auto;
-  width: 100%;
-}
+// .table-responsive {
+//   -ms-overflow-style: -ms-autohiding-scrollbar;
+//   -webkit-overflow-scrolling: touch;
+//   display: block;
+//   overflow-x: auto;
+//   width: 100%;
+// }

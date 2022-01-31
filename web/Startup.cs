@@ -22,12 +22,14 @@ namespace Atlas_Web
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IWebHostEnvironment hostingEnvironment)
         {
             Configuration = configuration;
+            HostingEnvironment = hostingEnvironment;
         }
 
         public IConfiguration Configuration { get; }
+        public IWebHostEnvironment HostingEnvironment { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -87,7 +89,13 @@ namespace Atlas_Web
 
             services.AddMemoryCache();
 
+            var cssSettings = new CssBundlingSettings { Minify = true, FingerprintUrls = true, };
+            var codeSettings = new CodeBundlingSettings { Minify = true, };
+
             services.AddWebOptimizer(
+                HostingEnvironment,
+                cssSettings,
+                codeSettings,
                 pipeline =>
                 {
                     pipeline.AddCssBundle("/css/site.min.css", "css/site.min.css");

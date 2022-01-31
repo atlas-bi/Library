@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Atlas_Web.Pages.Initiatives
+namespace Atlas_Web.Pages.Collections
 {
     public class NewModel : PageModel
     {
@@ -29,10 +29,10 @@ namespace Atlas_Web.Pages.Initiatives
         public User PublicUser { get; set; }
 
         [BindProperty]
-        public DpDataInitiative Initiative { get; set; }
+        public DpDataProject Collection { get; set; }
 
         [BindProperty]
-        public List<DpDataProject> Collections { get; set; }
+        public int[] Terms { get; set; }
 
         public IActionResult OnGet()
         {
@@ -40,7 +40,7 @@ namespace Atlas_Web.Pages.Initiatives
                 _cache,
                 _context,
                 User.Identity.Name,
-                20
+                26
             );
 
             PublicUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
@@ -54,7 +54,7 @@ namespace Atlas_Web.Pages.Initiatives
             if (!checkpoint)
             {
                 return RedirectToPage(
-                    "/Initiatives/Index",
+                    "/Collections/Index",
                     new { error = "You do not have permission to access that page." }
                 );
             }
@@ -68,13 +68,13 @@ namespace Atlas_Web.Pages.Initiatives
                 _cache,
                 _context,
                 User.Identity.Name,
-                20
+                26
             );
 
             if (!checkpoint)
             {
                 return RedirectToPage(
-                    "/Initiatives/Index",
+                    "/Collections/Index",
                     new { error = "You do not have permission to access that page." }
                 );
             }
@@ -82,30 +82,22 @@ namespace Atlas_Web.Pages.Initiatives
             if (!ModelState.IsValid)
             {
                 return RedirectToPage(
-                    "/Initiatives/Index",
+                    "/Collections/Index",
                     new { error = "The data submitted was invalid." }
                 );
             }
 
             // update last update values & values that were posted
-            Initiative.LastUpdateUser =
+            Collection.LastUpdateUser =
                 UserHelpers.GetUser(_cache, _context, User.Identity.Name).UserId;
-            Initiative.LastUpdateDate = DateTime.Now;
+            Collection.LastUpdateDate = DateTime.Now;
 
-            _context.Add(Initiative);
-            _context.SaveChanges();
-
-            // updated any linked data projects that were added and remove any that were delinked.
-            _context.DpDataProjects
-                .Where(d => Collections.Select(x => x.DataProjectId).Contains(d.DataProjectId))
-                .ToList()
-                .ForEach(x => x.DataInitiativeId = Initiative.DataInitiativeId);
-
+            _context.Add(Collection);
             _context.SaveChanges();
 
             return RedirectToPage(
-                "/Initiatives/Index",
-                new { id = Initiative.DataInitiativeId, success = "Changes saved." }
+                "/Collections/Index",
+                new { id = Collection.DataProjectId, success = "Changes saved." }
             );
         }
     }

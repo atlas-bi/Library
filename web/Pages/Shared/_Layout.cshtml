@@ -10,8 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <link rel="stylesheet" href="/css/site.min.css" />
-    <style type="text/css" mini>@Cache.Get("global_css")</style>
-
+    <style type="text/css" minify>@Cache.Get("global_css")</style>
 
     <link rel="preload" href="/js/main.min.js" as="script" />
     <link rel="preload" href="/js/search.min.js" as="script" />
@@ -20,12 +19,10 @@
 
     @if (ViewData["Title"] != null && ViewData["Title"].ToString().Length > 0)
     {
-    <title>@ViewData["Title"] | Atlas BI Library</title>
-    }
-    else
-    {
-    <title>Home | Atlas BI Library</title>
-    }
+<title>@ViewData["Title"] | Atlas BI Library</title> }
+            else
+            {
+<title>Home | Atlas BI Library</title>}
 
     <link rel="preload" href="@Helpers.UrlHelpers.FontHash("/font/fontawesome/webfonts/fa-regular-400.woff2", Cache, Configuration)" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="@Helpers.UrlHelpers.FontHash("/font/fontawesome/webfonts/fa-solid-900.woff2", Cache, Configuration)" as="font" type="font/woff2" crossorigin />
@@ -139,7 +136,7 @@
                     </div>
                     @if (@Configuration["features:enable_user_profile"] == null || @Configuration["features:enable_user_profile"].ToString().ToLower() == "true")
                     {
-                    <a class="navbar-item" href="/users}" data-tooltip="Open Profile">
+                    <a class="navbar-item" href="/users" data-tooltip="Open Profile">
                         <span class="icon is-medium">
                             <i class="fas fa-lg fa-user"></i>
                         </span>
@@ -210,7 +207,7 @@
 
 
     <section class="is-flex-grow-1">
-        <div class="container is-relative">
+        <div class="container is-relative mb-5">
             @if(IsSectionDefined("SearchBar"))
             {
                 @RenderSection("SearchBar")

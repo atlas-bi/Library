@@ -23,10 +23,10 @@
 <div class="listDetails">
        
     <span class="listDetails-title">Last Updated By</span>
-    <span>@Model.Collection.UpdatedBy</span>
+    <span>@Model.Collection.LastUpdateUserNavigation.Fullname_Cust</span>
 
     <span class="listDetails-title">Last Updated</span>
-    <span>@Model.Collection.UpdateDate</span>
+    <span>@Model.Collection.LastUpdatedDateDisplayString</span>
 
     @if (Model.Collection.Hidden == "Y")
 {

@@ -14,7 +14,7 @@
 }
 
 <form class="mb-5" action="/Initiatives/Edit/?id=@Model.Initiative.DataInitiativeId" method="post" >
-    <h1 class="title is-1">Editing @Model.Initiative.Name</h1>
+    <h1 class="title is-1">@ViewData["Title"]</h1>
     <p class="buttons is-flex is-justify-content-space-between">
         <a class="button p-5" href="/Initiatives/?id=@Model.Initiative.DataInitiativeId">
             <span class="icon">
@@ -35,13 +35,15 @@
     <div class="field">
         <label class="label">Name</label>
         <div class="control">
-            <input class="input" placeholder="e.g Data Sorting" asp-for="Initiative.Name" data-initial-content="Name" required value="@Model.Initiative.Name" />
+            <input class="input" placeholder="e.g Data Sorting" asp-for="Initiative.Name" required value="@Model.Initiative.Name" />
         </div>
     </div>
+
     <div class="field">
         <label class="label">Description</label>
         <div class="editor" data-inputName="Initiative.Description" data-inputId="Initiative_Description"><textarea>@Html.Raw(Model.Initiative.Description)</textarea></div>
     </div>
+
     <div class="field">
         <label class="label">Operations Owner</label>
         <div class="field is-grouped">
@@ -140,25 +142,20 @@
     <div class="field">
         <label class="label">Linked Collections</label>
         <div class="mini-tags field is-grouped is-grouped-multiline">
-            @foreach (var d in @Model.Initiative.DpDataProjects)
+            @for (var x = 0; x < @Model.Initiative.DpDataProjects.Count; x++)
             {
-                <div class="control">
-                    <div class="tags has-addons">
-                        <span class="tag is-link">@d.Name</span>
-                        <a class="tag is-delete" value="@d.DataProjectId"></a>
+                    <div class="control">
+                        <div class="tags has-addons">
+                            <span class="tag is-link">@Model.Initiative.DpDataProjects.ToList()[x]..Name</span>
+                            <input type="hidden" name="Collections[@x].DataProjectId" value="@Model.Initiative.DpDataProjects.ToList()[x].DataProjectId" />
+                            <a class="tag is-delete"></a>
+                        </div>
                     </div>
-                </div>
-            }
-        </div>
+                }
+            </div>
         <div class="field">
             <div class="control is-relative is-expanded">
-                <input class="input input-mini" placeholder="search for collections.." search-area="CollectionSearch" />
-                <select class="is-hidden" asp-for="Projects" >
-                    @foreach (var d in @Model.Initiative.DpDataProjects)
-                    {
-                        <option selected="selected" value="@d.DataProjectId">@d.Name</option>
-                    }
-                </select>
+                <input class="input input-mini mulitselect" placeholder="search for collections.." search-area="CollectionSearch" data-name="Collections[].DataProjectId" />
                 <div class="mini">
                     <div class="mini-waiting">
                         <span class="icon">

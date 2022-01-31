@@ -1,7 +1,19 @@
+
 @model Atlas_Web.Pages.Initiatives.IndexModel
 @using Atlas_Web.Models
 
 <h1 class="title is-1">@ViewData["Title"]</h1>
+
+@if (Model.Permissions.Contains(20))
+{
+    <div class="field has-addons">
+        <p class="control">
+            <a href="/Initiatives/New/" class="button" title="new initiatve"><span class="icon"><i class="fas fa-plus"></i></span><span>Create an Initiative</span></a>
+        </p>
+    </div>
+}
+
+
 
 <div class="columns is-multiline">
     @foreach(var i in Model.Initiatives)

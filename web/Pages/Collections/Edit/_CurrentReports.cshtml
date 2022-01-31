@@ -35,11 +35,11 @@
                 <form action="/Collections?handler=EditLinkedReport" method="post" id="collection-editor-edit-report-form">
                     <input asp-for="DpReportAnnotation.ReportAnnotationId" value="@t.Id" type="hidden" />
                     <input asp-for="DpReportAnnotation.DataProjectId" value="@t.CollectionId" type="hidden" />
-
+<!-- rank should be drag drop?
                     <div class="listDetails">
                         <label>Rank</label>
                         <input asp-for="DpReportAnnotation.Rank" type="number" value="@t.Rank" />
-                    </div>
+                    </div>-->
 
 
                     <h3><button class="editor-save" type="submit">Save</button></h3>

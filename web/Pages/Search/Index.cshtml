@@ -166,15 +166,15 @@ else
                                                                         {
 
                                     @foreach (var stuff in @Model.SearchResults.Highlights.Where(x => x.Key == result.Id).First().Values.Where(x => x.Key != "name"))
-                                                    {
+                                    {
                                     @if (stuff.Key == "query")
-                            {
+                                    {
                                     @if (@Request.Headers["User-Agent"].ToString().Contains("Trident"))
-        {
+                                    {
                                     @:Open in Atlas to view query.
     }
-    else
-    {
+                                    else
+                                    {
                                     <div class="query-box">
                                         <div class="query-box-inner light ss-preview" id='query-@result.Id' ss-container>
                                             <pre><code class="sql" id="code-@result.Id">@stuff.Value</code></pre>
@@ -182,7 +182,13 @@ else
                                     </div>} }
                                     else
                                     {
-                                    @Html.Raw(@Helpers.HtmlHelpers.MarkdownToHtml(@stuff.Value))}} }
+                                       
+                                        @Html.Raw(@Helpers.HtmlHelpers.MarkdownToHtml(@stuff.Value))
+                                    }
+                                    }
+                                    }
+                                   
+                                    
 
 
 

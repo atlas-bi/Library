@@ -2,24 +2,22 @@
 @inject IConfiguration Configuration
 @model Atlas_Web.Pages.Initiatives.IndexModel
 @{
-    Layout = HttpContext.Request.Headers["x-requested-with"] == "XMLHttpRequest" ? "../Shared/_AjaxLayout.cshtml" : "../Shared/_Layout.cshtml";
-}
-@{
+    Layout = "../Shared/_Layout.cshtml";
     ViewData["Title"] = "Initiatives";
 }
 @section AdBar {}
 
-@section Side_Links {
-    <partial name="_Nav" />
-}
-
 @if(Model.Initiative is null)
 {
+    @section SideBar {}
     <partial name="_All" />
 } else
 {
     {
         ViewData["Title"] = @Model.Initiative.Name;
+    }
+    @section Side_Links {
+        <partial name="_Nav" />
     }
 
     <partial name="_Details" />

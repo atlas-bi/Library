@@ -32,7 +32,7 @@ namespace Atlas_Web.Pages.Initiatives
         public DpDataInitiative Initiative { get; set; }
 
         [BindProperty]
-        public int[] Projects { get; set; }
+        public List<DpDataProject> Collections { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int id)
         {
@@ -62,7 +62,6 @@ namespace Atlas_Web.Pages.Initiatives
             Initiative = await _context.DpDataInitiatives
                 .Include(x => x.DpDataProjects)
                 .ThenInclude(x => x.DpReportAnnotations)
-                .Include(x => x.DpContactLinks)
                 .Include(x => x.OperationOwner)
                 .Include(x => x.ExecutiveOwner)
                 .Include(x => x.FinancialImpactNavigation)
@@ -118,7 +117,7 @@ namespace Atlas_Web.Pages.Initiatives
 
             // updated any linked data projects that were added and remove any that were delinked.
             _context.DpDataProjects
-                .Where(d => Projects.Contains(d.DataProjectId))
+                .Where(d => Collections.Select(x => x.DataProjectId).Contains(d.DataProjectId))
                 .ToList()
                 .ForEach(x => x.DataInitiativeId = Initiative.DataInitiativeId);
 
@@ -126,7 +125,7 @@ namespace Atlas_Web.Pages.Initiatives
 
             _context.DpDataProjects
                 .Where(d => d.DataInitiativeId == Initiative.DataInitiativeId)
-                .Where(d => !Projects.Contains(d.DataProjectId))
+                .Where(d => !Collections.Select(x => x.DataProjectId).Contains(d.DataProjectId))
                 .ToList()
                 .ForEach(x => x.DataInitiativeId = null);
 

@@ -60,6 +60,7 @@
     "**/*.{ts,css,less,scss,js,json,md,yaml,html}": "npm run format"
   },
   "dependencies": {
+    "bulma-steps-component": "github:atlas-bi/bulma-steps",
     "markdown-it": "^12.3.2"
   }
 }

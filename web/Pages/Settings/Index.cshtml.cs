@@ -199,6 +199,18 @@ namespace Atlas_Web.Pages.Settings
             return Content("success");
         }
 
+        public async Task<IActionResult> OnPostSearchUpdateText(int id, string text)
+        {
+            var report_type = await _context.ReportObjectTypes
+                .Where(x => x.ReportObjectTypeId == id)
+                .FirstOrDefaultAsync();
+
+            report_type.ShortName = text;
+
+            _context.SaveChanges();
+            return Content("success");
+        }
+
         public ActionResult OnGetDeleteGlobalSetting(int Id)
         {
             var checkpoint = UserHelpers.CheckUserPermissions(
@@ -804,7 +816,12 @@ namespace Atlas_Web.Pages.Settings
             return RedirectToPage("/Settings/Index");
         }
 
-        public async Task<IActionResult> OnGetGlobalCss()
+        public async Task<IActionResult> OnGetEtl()
+        {
+            return new PartialViewResult() { ViewName = "Partials/_Etl", ViewData = ViewData };
+        }
+
+        public async Task<IActionResult> OnGetTheme()
         {
             ViewData["GlobalCss"] = await _context.GlobalSiteSettings
                 .Where(x => x.Name == "global_css")
@@ -817,11 +834,7 @@ namespace Atlas_Web.Pages.Settings
                 User.Identity.Name
             );
             //return Partial((".+?"));
-            return new PartialViewResult()
-            {
-                ViewName = "Partials/_GlobalCss",
-                ViewData = ViewData
-            };
+            return new PartialViewResult() { ViewName = "Partials/_Theme", ViewData = ViewData };
         }
 
         public ActionResult OnPostUpdateGlobalCss()

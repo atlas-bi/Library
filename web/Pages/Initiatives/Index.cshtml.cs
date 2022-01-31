@@ -54,12 +54,12 @@ namespace Atlas_Web.Pages.Initiatives
                 Initiative = await _context.DpDataInitiatives
                     .Include(x => x.DpDataProjects)
                     .ThenInclude(x => x.DpReportAnnotations)
-                    .Include(x => x.DpContactLinks)
                     .Include(x => x.OperationOwner)
                     .Include(x => x.ExecutiveOwner)
                     .Include(x => x.FinancialImpactNavigation)
                     .Include(x => x.StrategicImportanceNavigation)
                     .Include(x => x.LastUpdateUserNavigation)
+                    .Include(x => x.StarredInitiatives)
                     .SingleAsync(x => x.DataInitiativeId == id);
 
                 Favorite = (
@@ -78,6 +78,7 @@ namespace Atlas_Web.Pages.Initiatives
 
             Initiatives = await _context.DpDataInitiatives
                 .Include(x => x.DpDataProjects)
+                .Include(x => x.StarredInitiatives)
                 .ToListAsync();
 
             return Page();

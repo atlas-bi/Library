@@ -8,6 +8,7 @@
 
 @section SideBar {}
 @section SearchBar {}
+@section AdBar {}
 @section js {
     <script src="/js/settings.min.js" defer></script>
 }
@@ -16,41 +17,35 @@
 
 
 <div class="columns">
-    <div class="column is-one-quarter">
+    <div class="column is-one-quarter is-sticky">
         <nav class="panel">
-             <a class="panel-block is-active panel-tab"  href="#reports">
-    <span class="panel-icon">
-      <i class="fas fa-book" aria-hidden="true"></i>
+             <a class="panel-block is-active panel-tab py-3"  href="#meta-fields">
+    <span class="icon is-medium mr-2">
+      <i class="fas fa-lg fa-list-ul" aria-hidden="true"></i>
     </span>
-    Reports
+    Meta Fields
   </a>
-  <a class="panel-block panel-tab" href="#collections">
-    <span class="panel-icon">
-      <i class="fas fa-book" aria-hidden="true"></i>
-    </span>
-    Initiatives
-  </a>
-   <a class="panel-block panel-tab" href="#site-message">
-    <span class="panel-icon">
-      <i class="fas fa-book" aria-hidden="true"></i>
+   <a class="panel-block panel-tab py-3" href="#site-message">
+    <span class="icon is-medium mr-2">
+      <i class="fas fa-lg fa-comment-alt" aria-hidden="true"></i>
     </span>
     Site Message
   </a>
-   <a class="panel-block panel-tab" href="#search">
-    <span class="panel-icon">
-      <i class="fas fa-search" aria-hidden="true"></i>
+   <a class="panel-block panel-tab py-3" href="#search">
+    <span class="icon is-medium mr-2">
+      <i class="fas fa-lg fa-search" aria-hidden="true"></i>
     </span>
     Search
   </a>
-  <a class="panel-block panel-tab" href="#css">
-    <span class="panel-icon">
-      <i class="fas fa-palette" aria-hidden="true"></i>
+  <a class="panel-block panel-tab py-3" href="#theme">
+    <span class="icon is-medium mr-2">
+      <i class="fas fa-lg fa-palette" aria-hidden="true"></i>
     </span>
     Theme
   </a>
-  <a class="panel-block panel-tab" href="#etl">
-    <span class="panel-icon">
-      <i class="fas fa-database" aria-hidden="true"></i>
+  <a class="panel-block panel-tab py-3" href="#etl">
+    <span class="icon is-medium mr-2">
+      <i class="fas fa-lg fa-database" aria-hidden="true"></i>
     </span>
     ETL
   </a>
@@ -58,106 +53,48 @@
     </div>
     <div class="column">
 
-<div class="box tab-cnt">
-    <div class="panel-tab-data active" id="reportfields">
-        <h4 class="drop" data-toggle="clps" data-target="collapse-orgvalue">
-            Organizational Value
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M31.3 192h257.3c17.8 0 26.7 21.5 14.1 34.1L174.1 354.8c-7.8 7.8-20.5 7.8-28.3 0L17.2 226.1C4.6 213.5 13.5 192 31.3 192z" /></svg>
-        </h4>
-        <div id="collapse-orgvalue" class="clps">
-            <div class="drop-box">
-                <div data-ajax="yes" data-url="/settings?Handler=OrganizationalValueList"></div>
-            </div>
-        </div>
-        <h4 class="drop" data-toggle="clps" data-target="collapse-runfreq">
-            Estimated Run Frequency
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M31.3 192h257.3c17.8 0 26.7 21.5 14.1 34.1L174.1 354.8c-7.8 7.8-20.5 7.8-28.3 0L17.2 226.1C4.6 213.5 13.5 192 31.3 192z" /></svg>
-        </h4>
-        <div id="collapse-runfreq" class="clps">
-            <div class="drop-box">
-                <div data-ajax="yes" data-url="/settings?Handler=EstimatedRunFrequencyList"></div>
-            </div>
-        </div>
-        <h4 class="drop" data-toggle="clps" data-target="collapse-fragtype">
-            Fragility Types
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M31.3 192h257.3c17.8 0 26.7 21.5 14.1 34.1L174.1 354.8c-7.8 7.8-20.5 7.8-28.3 0L17.2 226.1C4.6 213.5 13.5 192 31.3 192z" /></svg>
-        </h4>
-        <div id="collapse-fragtype" class="clps">
-            <div class="drop-box">
+<div class="box mb-5">
+    <div class="panel-tab-data is-active" id="meta-fields">
+        <h3 class="title is-3 mb-0">Meta Fields</h3>
 
-                <div data-ajax="yes" data-url="/settings?Handler=FragilityList"></div>
-            </div>
-        </div>
-        <h4 class="drop" data-toggle="clps" data-target="collapse-fragtag">
-            Fragility Tags
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M31.3 192h257.3c17.8 0 26.7 21.5 14.1 34.1L174.1 354.8c-7.8 7.8-20.5 7.8-28.3 0L17.2 226.1C4.6 213.5 13.5 192 31.3 192z" /></svg>
-        </h4>
-        <div id="collapse-fragtag" class="clps">
-            <div class="drop-box">
-                <div data-ajax="yes" data-url="/settings?Handler=FragilityTagList"></div>
-            </div>
-        </div>
-        <h4 class="drop" data-toggle="clps" data-target="collapse-maintsched">
-            Maintenance Schedules
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M31.3 192h257.3c17.8 0 26.7 21.5 14.1 34.1L174.1 354.8c-7.8 7.8-20.5 7.8-28.3 0L17.2 226.1C4.6 213.5 13.5 192 31.3 192z" /></svg>
-        </h4>
-        <div id="collapse-maintsched" class="clps">
-            <div class="drop-box">
-                <div data-ajax="yes" data-url="/settings?Handler=MaintenanceScheduleList"></div>
-            </div>
-        </div>
-        <h4 class="drop" data-toggle="clps" data-target="collapse-maintlog">
-            Maintenance Log Status
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M31.3 192h257.3c17.8 0 26.7 21.5 14.1 34.1L174.1 354.8c-7.8 7.8-20.5 7.8-28.3 0L17.2 226.1C4.6 213.5 13.5 192 31.3 192z" /></svg>
-        </h4>
-        <div id="collapse-maintlog" class="clps">
-            <div class="drop-box">
+        <h4 class="title is-4 mt-5">Organizational Value</h4>
+        <div data-ajax="yes" data-url="/settings?Handler=OrganizationalValueList"></div>
 
-                <div data-ajax="yes" data-url="/settings?Handler=MaintenanceLogStatusList"></div>
-            </div>
-        </div>
+        <h4 class="title is-4 mt-5">Estimated Run Frequency</h4>
+        <div data-ajax="yes" data-url="/settings?Handler=EstimatedRunFrequencyList"></div>
+
+        <h4 class="title is-4 mt-5">Fragility Types</h4>
+        <div data-ajax="yes" data-url="/settings?Handler=FragilityList"></div>
+
+        <h4 class="title is-4 mt-5">Fragility Tags</h4>
+        <div data-ajax="yes" data-url="/settings?Handler=FragilityTagList"></div>
+
+        <h4 class="title is-4 mt-5">Maintenance Schedules</h4>
+        <div data-ajax="yes" data-url="/settings?Handler=MaintenanceScheduleList"></div>
+
+        <h4 class="title is-4 mt-5">Maintenance Log Status</h4>
+        <div data-ajax="yes" data-url="/settings?Handler=MaintenanceLogStatusList"></div>
+
+        <h4 class="title is-4 mt-5">Financial Impact</h4>
+        <div data-ajax="yes" data-url="/settings?Handler=FinancialImpactList"></div>
+
+        <h4 class="title is-4 mt-5">Strategic Importance</h4>
+        <div data-ajax="yes" data-url="/settings?Handler=StrategicImportanceList"></div>
+
     </div>
-    <div class="panel-tab-data" id="initiativeproject">
-        <h4 class="drop" data-toggle="clps" data-target="collapse-finimp">
-            Financial Impact
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M31.3 192h257.3c17.8 0 26.7 21.5 14.1 34.1L174.1 354.8c-7.8 7.8-20.5 7.8-28.3 0L17.2 226.1C4.6 213.5 13.5 192 31.3 192z" /></svg>
-        </h4>
-        <div id="collapse-finimp" class="clps">
-            <div class="drop-box">
-
-                <div data-ajax="yes" data-url="/settings?Handler=FinancialImpactList"></div>
-            </div>
-        </div>
-        <h4 class="drop" data-toggle="clps" data-target="collapse-stragimp">
-            Strategic Importance
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M31.3 192h257.3c17.8 0 26.7 21.5 14.1 34.1L174.1 354.8c-7.8 7.8-20.5 7.8-28.3 0L17.2 226.1C4.6 213.5 13.5 192 31.3 192z" /></svg>
-        </h4>
-        <div id="collapse-stragimp" class="clps">
-            <div class="drop-box">
-
-                <div data-ajax="yes" data-url="/settings?Handler=StrategicImportanceList"></div>
-            </div>
-        </div>
-    </div>
-    <div class="panel-tab-data" id="globalsettings">
+    <div class="panel-tab-data" id="site-message">
         <div data-ajax="yes" data-url="/settings?Handler=GlobalSettings"></div>
     </div>
     <div class="panel-tab-data" id="search">
         <div data-ajax="yes" data-url="/settings?Handler=SearchSettings"></div>
     </div>
-    <div class="panel-tab-data" id="css">
-        <div data-ajax="yes" data-url="/settings?Handler=GlobalCss"></div>
+    <div class="panel-tab-data" id="theme">
+        <div data-ajax="yes" data-url="/settings?Handler=Theme"></div>
+    </div>
+     <div class="panel-tab-data" id="etl">
+        <div data-ajax="yes" data-url="/settings?Handler=Etl"></div>
     </div>
 </div>
 
     </div>
 </div>
-
-   <!--  <div class="tab">
-        <a class="tab-lnk active" href="#reportfields">Report Fields</a>
-        <a class="tab-lnk" href="#initiativeproject">Initiative & Collection Fields</a>
-        <a class="tab-lnk" href="#globalsettings">Global Settings</a>
-        <a class="tab-lnk" href="#search">Search</a>
-        <a class="tab-lnk" href="#css">Custom CSS</a>
-    </div> -->
-

@@ -13,18 +13,21 @@
                     <img data-src="/data/img?handler=Placeholder&size=96x96" src="/img/loader.gif" alt="report image" />
                 </figure>
             </div>
-            <div class="media-content is-min-h-96 is-flex is-justify-content-space-between is-flex-direction-column">
-                @if (!string.IsNullOrEmpty(Model.Description))
-                {
-                    @Html.Raw(@Helpers.HtmlHelpers.MarkdownToHtml(Model.Description.Substring(0,Math.Min(160,Model.Description.Length)) + " ..."))
-                } else {
-                    <text>Open to view details.</text>
-                }
-                <div class="tags">
-                    @foreach (var d in Model.DpDataProjects)
+            <!-- extra wrap if to fix IE11 bug https://github.com/philipwalton/flexbugs#flexbug-3 -->
+            <div class="is-flex is-flex-direction-column is-flex-grow-1">
+                <div class="media-content is-flex is-justify-content-space-between is-flex-direction-column is-min-h-96">
+                    @if (!string.IsNullOrEmpty(Model.Description))
                     {
-                        <span class="tag is-link">@d.Name</span>
+                        @Html.Raw(@Helpers.HtmlHelpers.MarkdownToHtml(Model.Description.Substring(0,Math.Min(160,Model.Description.Length)) + " ..."))
+                    } else {
+                        <text>Open to view details.</text>
                     }
+                    <div class="tags">
+                        @foreach (var d in Model.DpDataProjects)
+                        {
+                            <span class="tag is-link">@d.Name</span>
+                        }
+                    </div>
                 </div>
             </div>
         </div>

@@ -3,17 +3,35 @@
     @if (ViewBag.Permissions.Contains(33))
     {
         <form asp-page-handler="CreateOrganizationalValue">
-            <input type="nice-input" class="submit slim" asp-for="OrganizationalValue.OrganizationalValueName" data-initial-content="New Item" required />
+            <div class="field">
+                <label class="label">Add More</label>
+                <div class="field has-addons">
+                    <div class="control">
+                        <input type="text" class="input" placeholder="invaluable" asp-for="OrganizationalValue.OrganizationalValueName" required />
+                    </div>
+                    <div class="control">
+                        <button class="button is-info" type="submit">
+                            Save
+                        </button>
+                    </div>
+                </div>
+            </div>
         </form>
     }
-    @foreach (var i in ViewBag.OrganizationalValueList)
-    {
-        <p>
-            @if (ViewBag.Permissions.Contains(34))
-            {
-                <a href="/Settings?handler=DeleteOrganizationalValue&Id=@i.Id"><svg  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M432 32H312l-9.4-18.7A24 24 0 0 0 281.1 0H166.8a23.72 23.72 0 0 0-21.4 13.3L136 32H16A16 16 0 0 0 0 48v32a16 16 0 0 0 16 16h416a16 16 0 0 0 16-16V48a16 16 0 0 0-16-16zM53.2 467a48 48 0 0 0 47.9 45h245.8a48 48 0 0 0 47.9-45L416 128H32z"/></svg></a>
-            }
-            @i.Name<span class="text-light">&nbsp;&middot;&nbsp;used in @i.Used places</span>
-        </p> 
-    }
+
+    <div class="field is-grouped is-grouped-multiline">
+        @foreach (var i in ViewBag.OrganizationalValueList)
+        {
+            <div class="control">
+                <div class="tags has-addons">
+                  <span class="tag is-link">@i.Name</span>
+                  <span class="tag is-dark">@i.Used uses</span>
+                  @if (ViewBag.Permissions.Contains(34))
+                    {
+                  <a class="tag is-delete" href="/Settings?handler=DeleteOrganizationalValue&Id=@i.Id"></a>
+                    }
+                </div>
+            </div>
+        }
+    </div>
 </div>

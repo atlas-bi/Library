@@ -1,130 +1,25 @@
 ﻿@page
-@model Atlas_Web.Pages.Collections.IndexModel
 @inject IConfiguration Configuration
+@model Atlas_Web.Pages.Collections.IndexModel
 @{
-    Layout = HttpContext.Request.Headers["x-requested-with"] == "XMLHttpRequest" ? "../Shared/_AjaxLayout.cshtml" : "../Shared/_Layout.cshtml";
+    Layout = "../Shared/_Layout.cshtml";
+    ViewData["Title"] = "Collections";
 }
+@section AdBar {}
 
 @if(Model.Collection is null)
 {
-    ViewData["Title"] = "Collections";
-
-    @section Side_Links {
-        @if (Model.Permissions.Contains(26))
-        {
-            <li>
-                <a class="" data-toggle="mdl" data-target="newModal"  data-tooltip="Create New Collection">
-                    <span class="icon has-text-grey is-large ">
-                        <i class="fas fa-lg fa-plus"></i>
-                    </span>
-                </a>
-            </li>
-        }
-    }
+    @section SideBar {}
     <partial name="_All" />
 } else
 {
-    ViewData["Title"] = @Model.Collection.Name;
     {
+        ViewData["Title"] = @Model.Collection.Name;
+    }
         @section Side_Links {
-            <li>
-                <a class="" data-toggle="mdl" data-target="profile-modal" data-tooltip="Open Report Profile">
-                    <span class="icon has-text-grey is-large ">
-                        <i class="fas fa-lg fa-chart-bar"></i>
-                    </span>
-                </a>
-            </li>
-
-            <li>
-                <a class="@Html.Raw((@Model.Collection.Favorite=="yes") ? "favorite" : "")" data-tooltip="@Html.Raw((@Model.Collection.Favorite=="yes") ? "Remove from Favorites" : "Add to Favorites")" fav-type="collection" object-id="@Model.Collection.Id">
-                    <span class="icon has-text-grey is-large ">
-                        <i class="fas fa-lg fa-star"></i>
-                    </span>
-                </a>
-            </li>
-             @if (@Configuration["features:enable_sharing"] == null || @Configuration["features:enable_sharing"].ToString().ToLower() == "true")
-             {
-                <li>
-                    <a class="" data-tooltip="Share" data-toggle="mdl" data-target="shareModal" data-name="@Model.Collection.Name" data-type="collection">
-                        <span class="icon has-text-grey is-large ">
-                            <i class="fas fa-lg fa-share"></i>
-                        </span>
-                    </a>
-                </li>
-            }
-
-            @if (@Configuration["features:enable_feedback"] == null || @Configuration["features:enable_feedback"].ToString().ToLower() == "true"){
-            <li>
-                <a class="" data-tooltip="Share Feedback" data-toggle="mdl" data-target="shareFeedback" data-name="@Model.Collection.Name">
-                    <span class="icon has-text-grey is-large ">
-                        <i class="far fa-lg fa-thumbs-up"></i>
-                    </span>
-                </a>
-            </li>
-            }
-
-            @if (Model.Permissions.Contains(26))
-            {
-                <li>
-                    <a class="" data-toggle="mdl" data-target="newModal"  data-tooltip="Create New Collections">
-                        <span class="icon has-text-grey is-large ">
-                            <i class="fas fa-lg fa-plus"></i>
-                        </span>
-                    </a>
-                </li>
-            }
-             @if (Model.Permissions.Contains(28))
-            {
-                <li>
-                    <a class="" data-toggle="mdl" data-target="editModal" data-tooltip="Open Atlas Editor">
-                        <span class="icon has-text-grey is-large ">
-                            <i class="fas fa-lg fa-edit"></i>
-                        </span>
-                    </a>
-                </li>
-            }
-
-            @if (Model.Permissions.Contains(27))
-            {
-                <li>
-                    <a class="" data-tooltip="Delete this Collection" href="/Collections?handler=DeleteCollection&Id=@Model.Collection.Id" onclick="return confirm('Are you sure you want to remove this?');">
-                        <span class="icon has-text-grey is-large ">
-                            <i class="fas fa-lg fa-trash"></i>
-                        </span>
-                    </a>
-                </li>
-            }
-        }
+           <partial name="_Nav" />
         }
 
     <partial name="_Details" />
-
-    @if (Model.Permissions.Contains(28))
-    {
-        <partial name="_Edit"></partial>
-    }
-}
-
-@if (Model.Permissions.Contains(26))
-{
-    <partial name="_New" />
-}
-
-<partial name="modals\_reportProfile" />
-
-@if (Model.Permissions.Contains(26) || Model.Permissions.Contains(28)){
-
-    @section js {
-         <script src="/js/flowchart.min.js" defer></script>
-        <script src="/js/editor.min.js" defer></script>
-        
-        @*@if(!Request.Headers["User-Agent"].ToString().Contains("Trident")){<script>hljs.highlightAll();</script>}*@
-    }
-
-} else {
-    @section js {
-
-        "@this.AddBundleVersionToPath("/js/flowchart.min.js")",
-       @* @if(!Request.Headers["User-Agent"].ToString().Contains("Trident")){<script>hljs.highlightAll();</script>}*@
-    }
+    <partial name="modals\_reportProfile" />
 }

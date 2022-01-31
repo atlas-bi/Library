@@ -14,6 +14,18 @@
     });
   }
 
+  function updateId(taglist) {
+    var $hiddenInputs = taglist.querySelectorAll('input[type="hidden"][name]');
+    for (var x = 0; x < $hiddenInputs.length; x++) {
+      $hiddenInputs[x].setAttribute(
+        'name',
+        $hiddenInputs[x]
+          .getAttribute('name')
+          .replace(/\[\d*?\]/, '[' + x + ']'),
+      );
+    }
+  }
+
   function load($mini, $data, $hidden, $input, $preload) {
     var data = JSON.parse($data);
     if (data.length === 0) {
@@ -32,21 +44,24 @@
         a.setAttribute('value', el.ObjectId || el.Description);
 
         a.addEventListener('click', function (event) {
-          if ($hidden.tagName == 'INPUT') {
+          if (!$input.classList.contains('multiselect')) {
             $input.value = event.target.innerText;
             $hidden.value = event.target.getAttribute('value');
             closeAllMinis();
-          } else if ($hidden.tagName == 'SELECT') {
-            // add it to the select
-            var opt = document.createElement('option');
-            opt.setAttribute('selected', 'selected');
-            opt.value = event.target.getAttribute('value');
-            $hidden.appendChild(opt);
-
+          } else if ($input.classList.contains('multiselect')) {
+            var taglist = $input
+              .closest('.field')
+              .parentNode.querySelector('.mini-tags');
             // add it to the tag list
             var control = document.createElement('div');
             control.classList.add('control');
 
+            var input = document.createElement('input');
+            input.setAttribute('type', 'hidden');
+            input.setAttribute('value', event.target.getAttribute('value'));
+            if ($input.hasAttribute('data-name')) {
+              input.setAttribute('name', $input.getAttribute('data-name'));
+            }
             var group = document.createElement('div');
             group.classList.add('tags', 'has-addons');
 
@@ -56,33 +71,22 @@
 
             var del = document.createElement('a');
             del.classList.add('tag', 'is-delete');
-            del.setAttribute('value', event.target.getAttribute('value'));
 
             del.addEventListener('click', function (event) {
               var $this = event.target;
-              console.log(
-                $hidden.querySelector(
-                  'option[value="' + $this.getAttribute('value') + '"]',
-                ),
-              );
-              $hidden.removeChild(
-                $hidden.querySelector(
-                  'option[value="' + $this.getAttribute('value') + '"]',
-                ),
-              );
               control.parentElement.removeChild(control);
+              updateId(taglist);
             });
 
             control.appendChild(group);
             group.appendChild(tag);
+            group.appendChild(input);
             group.appendChild(del);
 
-            var taglist =
-              $input.parentNode.parentNode.parentNode.querySelector(
-                '.mini-tags',
-              );
             if (taglist != undefined) {
               taglist.appendChild(control);
+              // update index for c#
+              updateId(taglist);
             }
 
             $input.value = '';
@@ -149,6 +153,18 @@
 
   var searchTimeout = 250,
     searchTimerId = null;
+
+  // delete event for existing tags
+  (document.querySelectorAll('.mini-tags .tag.is-delete') || []).forEach(
+    ($tag) => {
+      $tag.addEventListener('click', function (e) {
+        var $control = $tag.closest('.control');
+        var $taglist = $tag.closest('.mini-tags');
+        $control.parentElement.removeChild($control);
+        updateId($taglist);
+      });
+    },
+  );
 
   // Add a click event on buttons to open a specific mini
   (document.querySelectorAll('.input-mini') || []).forEach(($input) => {
@@ -219,11 +235,11 @@
   (document.querySelectorAll('.mini-tags a.is-delete[value]') || []).forEach(
     ($delete) => {
       $delete.addEventListener('click', function (e) {
-        var $hidden =
-          $delete.parentNode.parentNode.parentNode.parentNode.querySelector(
-            'select.is-hidden',
-          );
-        var $control = $delete.parentNode.parentNode;
+        var $hidden = $delete
+          .closest('.field:not(.mini-tags)')
+          .querySelector('select.is-hidden');
+        var $control = $delete.closest('.control');
+
         $hidden.removeChild(
           $hidden.querySelector(
             'option[value="' + $delete.getAttribute('value') + '"]',

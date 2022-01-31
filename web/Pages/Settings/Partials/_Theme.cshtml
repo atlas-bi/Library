@@ -2,12 +2,12 @@
 @model Atlas_Web.Pages.Settings.IndexModel
 
 <div>
-    <h2 class="title is-2">Global CSS</h1>
+    <h2 class="title is-2">Theme</h1>
     <form asp-page-handler="UpdateGlobalCss" method="post">
         <div class="field">
             <label class="label">Global CSS Styles</label>
             <div class="control">
-                <input class="input" asp-for="GlobalSiteSettings.Value" placeholder="body { background: pink; }" value="@ViewBag.GlobalCss"></input>
+                <textarea class="textarea" id="GlobalSiteSettings_Value" name="GlobalSiteSettings.Value" placeholder="body { background: pink; }">@ViewBag.GlobalCss</textarea>
             </div>
         </div>
         <div class="control">
