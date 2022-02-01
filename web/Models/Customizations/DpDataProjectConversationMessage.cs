@@ -22,9 +22,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Atlas_Web.Models
 {
-    public class DpDataProjectConversationMessage__Metadata
-    {
-    }
+    public class DpDataProjectConversationMessage__Metadata { }
 
     [ModelMetadataType(typeof(DpDataProjectConversationMessage__Metadata))]
     public partial class DpDataProjectConversationMessage

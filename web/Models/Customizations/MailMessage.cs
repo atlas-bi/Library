@@ -25,9 +25,7 @@ using System.Linq;
 
 namespace Atlas_Web.Models
 {
-    public class MailMessages__Metadata
-    {
-    }
+    public class MailMessages__Metadata { }
 
     [ModelMetadataType(typeof(MailMessages__Metadata))]
     public partial class MailMessage

@@ -25,9 +25,7 @@ using System.Linq;
 
 namespace Atlas_Web.Models
 {
-    public class ReportObjectSubscriptions__Metadata
-    {
-    }
+    public class ReportObjectSubscriptions__Metadata { }
 
     [ModelMetadataType(typeof(ReportObjectSubscriptions__Metadata))]
     public partial class ReportObjectSubscription

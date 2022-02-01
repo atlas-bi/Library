@@ -38,7 +38,5 @@ namespace Atlas_Web.Models
     }
 
     [ModelMetadataType(typeof(ReportObjectType__Metadata))]
-    public partial class ReportObjectType
-    {
-    }
+    public partial class ReportObjectType { }
 }

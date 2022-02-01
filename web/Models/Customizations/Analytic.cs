@@ -25,9 +25,7 @@ using System.Linq;
 
 namespace Atlas_Web.Models
 {
-    public class Analytics__Metadata
-    {
-    }
+    public class Analytics__Metadata { }
 
     [ModelMetadataType(typeof(Analytics__Metadata))]
     public partial class Analytic

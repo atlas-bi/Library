@@ -25,9 +25,7 @@ using System.Linq;
 
 namespace Atlas_Web.Models
 {
-    public class DpMilestoneTasks__Metadata
-    {
-    }
+    public class DpMilestoneTasks__Metadata { }
 
     [ModelMetadataType(typeof(DpMilestoneTasks__Metadata))]
     public partial class DpMilestoneTask

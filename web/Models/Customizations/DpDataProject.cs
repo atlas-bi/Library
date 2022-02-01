@@ -25,9 +25,7 @@ using System.Linq;
 
 namespace Atlas_Web.Models
 {
-    public class DpDataProject__Metadata
-    {
-    }
+    public class DpDataProject__Metadata { }
 
     [ModelMetadataType(typeof(DpDataProject__Metadata))]
     public partial class DpDataProject

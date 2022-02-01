@@ -24,9 +24,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace Atlas_Web.Models
 {
-    public class UserFavorites__Metadata
-    {
-    }
+    public class UserFavorites__Metadata { }
 
     [ModelMetadataType(typeof(UserFavorites__Metadata))]
     public partial class UserFavorite

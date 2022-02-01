@@ -25,9 +25,7 @@ using System.Linq;
 
 namespace Atlas_Web.Models
 {
-    public class MaintenanceLog__Metadata
-    {
-    }
+    public class MaintenanceLog__Metadata { }
 
     [ModelMetadataType(typeof(MaintenanceLog__Metadata))]
     public partial class MaintenanceLog

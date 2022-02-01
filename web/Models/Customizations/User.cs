@@ -24,9 +24,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace Atlas_Web.Models
 {
-    public class User__Metadata
-    {
-    }
+    public class User__Metadata { }
 
     [ModelMetadataType(typeof(User__Metadata))]
     public partial class User

@@ -30,7 +30,5 @@ namespace Atlas_Web.Models
     }
 
     [ModelMetadataType(typeof(FinancialImpact__Metadata))]
-    public partial class FinancialImpact
-    {
-    }
+    public partial class FinancialImpact { }
 }

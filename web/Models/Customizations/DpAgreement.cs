@@ -25,9 +25,7 @@ using System.Linq;
 
 namespace Atlas_Web.Models
 {
-    public class DpAgreement__Metadata
-    {
-    }
+    public class DpAgreement__Metadata { }
 
     [ModelMetadataType(typeof(DpAgreement__Metadata))]
     public partial class DpAgreement

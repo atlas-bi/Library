@@ -25,9 +25,7 @@ using System.Linq;
 
 namespace Atlas_Web.Models
 {
-    public class ReportObjectRunData__Metadata
-    {
-    }
+    public class ReportObjectRunData__Metadata { }
 
     [ModelMetadataType(typeof(ReportObjectRunData__Metadata))]
     public partial class ReportObjectRunDatum
