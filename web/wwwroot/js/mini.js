@@ -15,7 +15,9 @@
   }
 
   function updateId(taglist) {
-    var $hiddenInputs = taglist.querySelectorAll('input[type="hidden"][name]');
+    var $hiddenInputs = taglist.querySelectorAll(
+      'input[type="hidden"][name]:not(.drag)',
+    );
     for (var x = 0; x < $hiddenInputs.length; x++) {
       $hiddenInputs[x].setAttribute(
         'name',
@@ -249,4 +251,11 @@
       });
     },
   );
+
+  // on reorder events, update id
+  (document.querySelectorAll('.mini-tags.reorder') || []).forEach(($tag) => {
+    $tag.addEventListener('reorder', function (e) {
+      updateId($tag);
+    });
+  });
 })();

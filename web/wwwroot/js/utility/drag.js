@@ -16,7 +16,7 @@
       dragEl = dragSEl.cloneNode(true);
       dragSEl.classList.add('drag-source');
       dragEl.classList.add('drag');
-      dragEl.style.width = dragSEl.offsetWidth + 'px';
+      dragEl.style.width = dragSEl.offsetWidth + 1 + 'px';
       d1 = e.clientY - getOffset(dragSEl).top;
       d2 = e.clientX - getOffset(dragSEl).left;
       dragSEl.parentElement.style.position = 'relative';
@@ -51,6 +51,8 @@
       );
     },
     dragMouseUp = function dragMouseUp(e) {
+      dragSEl.parentElement.replaceChild(dragEl, dragSEl);
+      dragEl.classList.remove('drag');
       d.dispatchEvent(
         new CustomEvent('dragEnd', {
           cancelable: true,
@@ -61,8 +63,10 @@
           },
         }),
       );
-      dragSEl.parentElement.removeChild(dragSEl);
-      dragEl.classList.remove('drag');
+
+      dragEl.style.width = null;
+      dragEl.style.top = null;
+      dragEl.style.left = null;
       d.removeEventListener('mouseup', dragMouseUp);
       d.removeEventListener('mousemove', dragMouseMove);
     };

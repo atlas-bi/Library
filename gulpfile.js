@@ -147,6 +147,7 @@ gulp.task('js:utility', function () {
       'web/wwwroot/js/utility/carousel.js',
       'web/wwwroot/js/utility/table.js',
       'web/wwwroot/js/utility/drag.js',
+      'web/wwwroot/js/utility/reorder.js',
       'web/wwwroot/js/utility/charts.js',
       'web/wwwroot/js/input.js',
       'web/wwwroot/js/comments.js',

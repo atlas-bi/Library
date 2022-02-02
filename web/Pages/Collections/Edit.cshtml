@@ -92,10 +92,11 @@
         <div class="mini-tags field is-grouped is-grouped-multiline">
             @for(var x = 0; x < @Model.Collection.DpTermAnnotations.Count; x++ )
             {
+                var Terms = @Model.Collection.DpTermAnnotations.OrderBy(x => x.Term.Name).ToList();
                 <div class="control">
                     <div class="tags has-addons">
-                        <span class="tag is-link">@Model.Collection.DpTermAnnotations.ToList()[x].Term.Name</span>
-                        <input type="hidden" name="Terms[@x].TermId" value="@Model.Collection.DpTermAnnotations.ToList()[x].TermId" />
+                        <span class="tag is-link">@Terms[x].Term.Name</span>
+                        <input type="hidden" name="Terms[@x].TermId" value="@Terms[x].TermId" />
                         <a class="tag is-delete"></a>
                     </div>
                 </div>
@@ -116,14 +117,15 @@
     </div>
     <div class="field">
         <label class="label">Linked Reports</label>
-        <div class="mini-tags field is-grouped is-grouped-multiline">
+        <div class="mini-tags field is-grouped is-grouped-multiline reorder">
             @for(var x = 0; x < @Model.Collection.DpReportAnnotations.Count; x++ )
             {
-                <div class="control">
+                var Reports = @Model.Collection.DpReportAnnotations.OrderBy(x => x.Rank).ThenBy(x => x.Report.Name).ToList();
+                <div class="control drg">
                     <div class="tags has-addons">
-                        <span class="tag is-link">@Model.Collection.DpReportAnnotations.ToList()[x].Report.Name</span>
-                        <input type="hidden" name="Reports[@x].ReportId" value="@Model.Collection.DpReportAnnotations.ToList()[x].ReportId" />
-                        <a class="tag is-delete" value="@Model.Collection.DpReportAnnotations.ToList()[x].ReportId"></a>
+                        <span class="tag is-link drg-hdl">@Reports[x].Report.Name</span>
+                        <input type="hidden" name="Reports[@x].ReportId" value="@Reports[x].ReportId" />
+                        <a class="tag is-delete" value="@Reports[x].ReportId"></a>
                     </div>
                 </div>
             }
