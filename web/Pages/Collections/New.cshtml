@@ -16,8 +16,6 @@
 <form action="/Collections/New/" method="post">
 	<h1 class="title is-1">@ViewData["Title"]</h1>
 
-    <div>
-        <div class="step-tab-data is-active" id="meta">
             <p class="buttons is-flex is-justify-content-space-between">
         <a class="button p-5" href="/Collections/">
             <span class="icon">
@@ -25,12 +23,12 @@
             </span>
             <span><strong>Cancel</strong><br>Go Back</span>
         </a>
-        <a class="button p-5 step-tab" href="#reports">
-            <span><strong>Continue</strong><br>to Reports</span>
+        <button class="button p-5" type="submit">
+            <span><strong>Save</strong><br>and Continue</span>
             <span class="icon ">
               <i class="fas fa-lg fa-long-arrow-alt-right"></i>
             </span>
-        </a>
+        </button>
     </p>
 
         <div class="field">
@@ -69,23 +67,7 @@
                 </div>
             </div>
         </div>
-    </div>
-    <div class="step-tab-data" id="reports">
-    <p class="buttons is-flex is-justify-content-space-between">
-        <a class="button p-5 step-tab" href="#meta">
-            <span class="icon">
-              <i class="fas fa-lg fa-long-arrow-alt-left"></i>
-            </span>
-            <span><strong>Back</strong><br>to Meta</span>
-        </a>
-        <button class="button p-5" type="submit">
-            <span><strong>Save</strong><br>and Continue</span>
-            <span class="icon ">
-              <i class="fas fa-lg fa-long-arrow-alt-right"></i>
-            </span>
-        </button>
-    </p>
-    <div class="field">
+        <div class="field">
         <label class="label">Linked Reports</label>
         <div class="mini-tags field is-grouped is-grouped-multiline">
         </div>
@@ -102,6 +84,20 @@
             </div>
         </div>
     </div>
-</div>
-</div>
+    </div>
+    <div class="step-tab-data" id="reports">
+    <p class="buttons is-flex is-justify-content-space-between">
+        <a class="button p-5 step-tab" href="#meta">
+            <span class="icon">
+              <i class="fas fa-lg fa-long-arrow-alt-left"></i>
+            </span>
+            <span><strong>Back</strong><br>to Meta</span>
+        </a>
+        <button class="button p-5" type="submit">
+            <span><strong>Save</strong><br>and Continue</span>
+            <span class="icon ">
+              <i class="fas fa-lg fa-long-arrow-alt-right"></i>
+            </span>
+        </button>
+    </p>
 </form>
