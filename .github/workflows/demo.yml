@@ -6,17 +6,31 @@ on:
 
   workflow_dispatch:
 
+  push:
+    branches:
+      - master
 jobs:
   heroku-deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
         uses: actions/checkout@v2
-      - name: Deploy to Heroku
+
+      - name: Deploy demo search
+        uses: gonuit/heroku-docker-deploy@v1.3.3
+        with:
+          heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
+          heroku_app_name: ${{ secrets.HEROKU_APP_NAME_SEARCH }}
+          email: ${{ secrets.HEROKU_EMAIL }}
+          dockerfile_name: solr.Dockerfile
+          docker_options: --no-cache --build-arg HOST=${{ secrets.SQL_HOST }} --build-arg PASSWORD=${{ secrets.SQL_PASS }} --build-arg USER=${{ secrets.SQL_USER }}
+
+      - name: Deploy demo app
         uses: gonuit/heroku-docker-deploy@v1.3.3
         with:
           heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
           heroku_app_name: ${{ secrets.HEROKU_APP_NAME }}
           email: ${{ secrets.HEROKU_EMAIL }}
           dockerfile_name: Dockerfile
-          docker_options: --no-cache --build-arg HOST="${{SQL_HOST}}" --build-arg PASSWORD="${{SQL_PASS}}" --build-arg USER=${{SQL_USER}}
+          docker_options: --no-cache --build-arg HOST=${{ secrets.SQL_HOST }} --build-arg PASSWORD=${{ secrets.SQL_PASS }} --build-arg USER=${{ secrets.SQL_USER }}
+
