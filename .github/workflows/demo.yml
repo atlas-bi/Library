@@ -27,5 +27,5 @@ jobs:
           heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
           heroku_app_name: ${{ secrets.HEROKU_APP_NAME_SEARCH }}
           email: ${{ secrets.HEROKU_EMAIL }}
-          dockerfile_name: Dockerfile
+          dockerfile_name: solr.Dockerfile
           docker_options: --no-cache --build-arg HOST="${{ secrets.SQL_HOST }}" --build-arg PASSWORD="${{ secrets.SQL_PASS }}" --build-arg USER=${{ secrets.SQL_USER }}
