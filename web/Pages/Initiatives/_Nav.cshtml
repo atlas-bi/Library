@@ -1,65 +1,62 @@
 @model Atlas_Web.Pages.Initiatives.IndexModel
 @inject IConfiguration Configuration
 
-@if(Model.Initiative is not null)
-{
+<li>
+    <a class=" @Html.Raw((@Model.Favorite=="yes") ? "favorite" : "")" data-tooltip="@Html.Raw((@Model.Favorite=="yes") ? "Remove from Favorites" : "Add to Favorites")" fav-type="initiative" object-id="@Model.Initiative.DataInitiativeId">
+        <span class="icon has-text-grey is-large ">
+                <i class="fas fa-lg fa-star"></i>
+            </span>
+    </a>
+</li>
+ @if (@Configuration["features:enable_sharing"] == null || @Configuration["features:enable_sharing"].ToString().ToLower() == "true")
+ {
     <li>
-        <a class=" @Html.Raw((@Model.Favorite=="yes") ? "favorite" : "")" data-tooltip="@Html.Raw((@Model.Favorite=="yes") ? "Remove from Favorites" : "Add to Favorites")" fav-type="initiative" object-id="@Model.Initiative.DataInitiativeId">
+        <a class="" data-tooltip="Share" data-toggle="mdl" data-target="shareModal" data-name="@Model.Initiative.Name" data-type="initiative">
             <span class="icon has-text-grey is-large ">
-                    <i class="fas fa-lg fa-star"></i>
-                </span>
+                <i class="fas fa-lg fa-share"></i>
+            </span>
         </a>
     </li>
-     @if (@Configuration["features:enable_sharing"] == null || @Configuration["features:enable_sharing"].ToString().ToLower() == "true")
-     {
-        <li>
-            <a class="" data-tooltip="Share" data-toggle="mdl" data-target="shareModal" data-name="@Model.Initiative.Name" data-type="initiative">
-                <span class="icon has-text-grey is-large ">
-                    <i class="fas fa-lg fa-share"></i>
-                </span>
-            </a>
-        </li>
-    }
+}
 
-    @if (@Configuration["features:enable_feedback"] == null || @Configuration["features:enable_feedback"].ToString().ToLower() == "true")
-    {
-        <li>
-            <a class="" data-tooltip="Share Feedback" data-toggle="mdl" data-target="shareFeedback" data-name="@Model.Initiative.Name">
-                <span class="icon has-text-grey is-large ">
-                    <i class="far fa-lg fa-thumbs-up"></i>
-                </span>
-            </a>
-        </li>
-    }
-    @if (Model.Permissions.Contains(20))
-    {
-        <li>
-            <a class="" href="/Initiatives/New/" data-tooltip="Create New Initiative">
-                 <span class="icon has-text-grey is-large ">
-                    <i class="fas fa-lg fa-plus"></i>
-                </span>
-            </a>
-        </li>
+@if (@Configuration["features:enable_feedback"] == null || @Configuration["features:enable_feedback"].ToString().ToLower() == "true")
+{
+    <li>
+        <a class="" data-tooltip="Share Feedback" data-toggle="mdl" data-target="shareFeedback" data-name="@Model.Initiative.Name">
+            <span class="icon has-text-grey is-large ">
+                <i class="far fa-lg fa-thumbs-up"></i>
+            </span>
+        </a>
+    </li>
+}
+@if (Model.Permissions.Contains(20))
+{
+    <li>
+        <a class="" href="/Initiatives/New/" data-tooltip="Create New Initiative">
+             <span class="icon has-text-grey is-large ">
+                <i class="fas fa-lg fa-plus"></i>
+            </span>
+        </a>
+    </li>
 
-    }
-    @if (Model.Permissions.Contains(22))
-    {
-        <li>
-            <a class="" href="/Initiatives/Edit/?id=@Model.Initiative.DataInitiativeId" data-tooltip="Open Atlas Editor">
-                <span class="icon has-text-grey is-large ">
-                    <i class="fas fa-lg fa-edit"></i>
-                </span>
-            </a>
-        </li>
-    }
-    @if (Model.Permissions.Contains(21))
-    {
-        <li>
-            <a class="" data-tooltip="Delete this Initaitive" href="/Initiatives?handler=DeleteInitiative&Id=@Model.Initiative.DataInitiativeId"  onclick="return confirm('Are you sure you want to remove this?');">
-                <span class="icon has-text-grey is-large ">
-                    <i class="fas fa-lg fa-trash"></i>
-                </span>
-            </a>
-        </li>
-    }
+}
+@if (Model.Permissions.Contains(22))
+{
+    <li>
+        <a class="" href="/Initiatives/Edit/?id=@Model.Initiative.DataInitiativeId" data-tooltip="Open Atlas Editor">
+            <span class="icon has-text-grey is-large ">
+                <i class="fas fa-lg fa-edit"></i>
+            </span>
+        </a>
+    </li>
+}
+@if (Model.Permissions.Contains(21))
+{
+    <li>
+        <a class="" data-tooltip="Delete this Initaitive" href="/Initiatives?handler=DeleteInitiative&Id=@Model.Initiative.DataInitiativeId"  onclick="return confirm('Are you sure you want to remove this?');">
+            <span class="icon has-text-grey is-large ">
+                <i class="fas fa-lg fa-trash"></i>
+            </span>
+        </a>
+    </li>
 }

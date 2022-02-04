@@ -1,28 +1,15 @@
 @page
 @inject IConfiguration Configuration
 @model Atlas_Web.Pages.Terms.IndexModel
-@{ Layout = HttpContext.Request.Headers["x-requested-with"] == "XMLHttpRequest" ? "../Shared/_AjaxLayout.cshtml" : "../Shared/_Layout.cshtml"; }
+@{
+    Layout =  "../Shared/_Layout.cshtml";
+    ViewData["Title"] = "Terms";
+}
+@section AdBar {}
 
 @if (Model.MyTerm is null)
 {
-    {
-        ViewData["Title"] = "Terms";
-    }
-    @section Side_Links
-    {
-
-        @if (Model.Permissions.Contains(7))
-        {
-            <li>
-                <a class="" data-toggle="mdl" data-target="newModal" data-tooltip="Create New Term">
-                    <span class="icon has-text-grey is-large ">
-                        <i class="fas fa-lg fa-plus"></i>
-                    </span>
-                </a>
-            </li>
-        }
-    }
-
+     @section SideBar {}
     <partial name="_All" />
 }
 else
@@ -33,102 +20,9 @@ else
 
     @section Side_Links
     {
-        <li>
-            <a class="" data-toggle="mdl" data-target="profile-modal" data-tooltip="Open Report Profile">
-                <span class="icon has-text-grey is-large ">
-                    <i class="fas fa-lg fa-chart-bar"></i>
-                </span>
-            </a>
-        </li>
-
-        <li>
-            <a class=" @Html.Raw((@Model.MyTerm.Favorite=="yes") ? "favorite" : "")" data-tooltip="@Html.Raw((@Model.MyTerm.Favorite=="yes") ? "Remove from Favorites" : "Add to Favorites")" fav-type="term" object-id="@Model.MyTerm.Id">
-                <span class="icon has-text-grey is-large ">
-                    <i class="fas fa-lg fa-star"></i>
-                </span>
-            </a>
-        </li>
-
-        @if (@Configuration["features:enable_sharing"] == null || @Configuration["features:enable_sharing"].ToString().ToLower() == "true")
-        {
-            <li>
-                <a class="" data-tooltip="Share" data-toggle="mdl" data-target="shareModal" data-name="@Model.MyTerm.Name" data-type="term">
-                    <span class="icon has-text-grey is-large ">
-                        <i class="fas fa-lg fa-share"></i>
-                    </span>
-                </a>
-            </li>
-        }
-
-        @if (@Configuration["features:enable_feedback"] == null || @Configuration["features:enable_feedback"].ToString().ToLower() == "true")
-        {
-            <li>
-                <a class="" data-tooltip="Share Feedback" data-toggle="mdl" data-target="shareFeedback" data-name="@Model.MyTerm.Name">
-                    <span class="icon has-text-grey is-large ">
-                        <i class="far fa-lg fa-thumbs-up"></i>
-                    </span>
-                </a>
-            </li>
-        }
-
-        @if (Model.Permissions.Contains(7))
-        {
-            <li>
-                <a class="" data-toggle="mdl" data-target="newModal" data-tooltip="Create New Term">
-                    <span class="icon has-text-grey is-large ">
-                        <i class="fas fa-lg fa-plus"></i>
-                    </span>
-                </a>
-            </li>
-        }
-
-        @if ((Model.Permissions.Contains(13) && Model.MyTerm.Approved == "N") || (Model.Permissions.Contains(11) && Model.MyTerm.Approved == "Y"))
-        {
-            <li>
-                <a class="" data-toggle="mdl" data-target="editModal" data-tooltip="Open Atlas Editor">
-                    <span class="icon has-text-grey is-large ">
-                        <i class="fas fa-lg fa-edit"></i>
-                    </span>
-                </a>
-            </li>
-        }
-
-        @if ((Model.Permissions.Contains(9) && Model.MyTerm.Approved == "N") || (Model.Permissions.Contains(8) && Model.MyTerm.Approved == "Y"))
-        {
-            <li>
-                <a class="" data-tooltip="Delete this Term" href="/terms?Handler=DeleteTerm&id=@Model.MyTerm.Id" onclick="return confirm('Are you sure you want to remove this?');">
-                    <span class="icon has-text-grey is-large ">
-                        <i class="fas fa-lg fa-trash"></i>
-                    </span>
-                </a>
-            </li>
-        }
-    }
-
-    @if ((Model.Permissions.Contains(13) && Model.MyTerm.Approved == "N") || (Model.Permissions.Contains(11) && Model.MyTerm.Approved == "Y"))
-    {
-        <partial name="_Edit"></partial>
+        <partial name="_Nav" />
     }
 
     <partial name="_Details" />
+    <partial name="modals\_reportProfile" />
 }
-
-@if (@Model.Permissions.Contains(7))
-{
-<partial name="_New" />}
-
-<partial name="modals\_reportProfile" />
-
-@if (Model.Permissions.Contains(13) || Model.Permissions.Contains(7))
-{
-
-@section js {
-    <script src="/js/flowchart.min.js" defer></script>
-    
-   @* @if(!Request.Headers["User-Agent"].ToString().Contains("Trident")){
-        <script>hljs.highlightAll();</script>
-    }*@
-    @if (ViewBag.Permissions.Contains(12)){
-        <script src="/js/editor.min.js" defer></script>
-    }
-    }}

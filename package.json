@@ -12,7 +12,7 @@
   "description": "Atlas BI Library",
   "devDependencies": {
     "@babel/preset-env": "^7.16.11",
-    "@creativebulma/bulma-badge": "^1.0.1",
+    "@creativebulma/bulma-badge": "github:christopherpickering/bulma-badge",
     "@creativebulma/bulma-tooltip": "^1.2.0",
     "@fontsource/inter": "^4.5.1",
     "@fontsource/rasa": "^4.5.3",
@@ -33,10 +33,10 @@
     "gulp-sass": "^5.1.0",
     "gulp-uglify": "^3.0.2",
     "husky": "^7.0.0",
-    "lint-staged": "^12.2.1",
+    "lint-staged": "^12.3.3",
     "postcss": "^8.4.5",
     "prettier": "^2.5.1",
-    "sass": "^1.49.0"
+    "sass": "^1.49.7"
   },
   "homepage": "https://demo.atlas.bi",
   "license": "AGPL-3.0-or-later",
