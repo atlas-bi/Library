@@ -18,6 +18,8 @@ RUN dotnet restore
 
 COPY ["./web/.", "./web/"]
 WORKDIR "/app/web/"
+# add analytics
+RUN  sed -i -e 's/<\/body>/<script async defer data-website-id="833156f8-3343-4da3-b7d5-45b5fa4f224d" src="https:\/\/analytics.atlas.bi\/umami.js"><\/script><\/body>/g' Pages/Shared/_Layout.cshtml
 RUN dotnet publish -c Release -o out
 
 FROM mcr.microsoft.com/dotnet/sdk:5.0-alpine
