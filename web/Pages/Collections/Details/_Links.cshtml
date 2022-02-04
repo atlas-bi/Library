@@ -3,6 +3,21 @@
 @model Atlas_Web.Pages.Collections.IndexModel
 @inject IConfiguration Configuration
 
+
+@if (Model.Collection.DpReportAnnotations.Count > 0)
+    {
+        <h3>Terms</h3>
+        <div class="columns is-multiline">
+            @foreach (var t in Model.Collection.DpReportAnnotations)
+            {
+                <div class="column is-half ">
+                    <partial name="Reports/_Snippet" model="t.Report" />
+                </div>
+            }
+        </div>
+    }
+
+
 @if (ViewBag.RelatedReports.Count > 0)
 {
 <h3>Linked Reports</h3>
@@ -81,19 +96,16 @@
 
 @if (@Configuration["features:enable_terms"] == null || @Configuration["features:enable_terms"].ToString().ToLower() == "true")
 {
-@if (ViewBag.RelatedTerms.Count > 0)
-{
-
-<h3>Terms</h3>
-                @foreach (var t in ViewBag.RelatedTerms)
-                {
-<div class="snippet">
-    <h4>
-        @t.Name
-</h4>
-
-        <h5><a class="drop-link" href="Terms?id=@t.ItemId">Open This Term</a></h5>
-    </div>
+    @if (Model.Collection.DpTermAnnotations.Count > 0)
+    {
+        <h3>Terms</h3>
+        <div class="columns is-multiline">
+            @foreach (var t in Model.Collection.DpTermAnnotations)
+            {
+                <div class="column is-half ">
+                    <partial name="Terms/_Snippet" model="t.Term" />
+                </div>
+            }
+        </div>
     }
-}
 }

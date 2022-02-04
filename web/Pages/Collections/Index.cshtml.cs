@@ -1,15 +1,10 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Atlas_Web.Models;
-using Microsoft.AspNetCore.Http;
-using System.IO;
 using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Newtonsoft.Json.Linq;
 using Atlas_Web.Helpers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Caching.Memory;
@@ -102,21 +97,19 @@ namespace Atlas_Web.Pages.Collections
             Preferences = UserHelpers.GetPreferences(_cache, _context, User.Identity.Name);
             ViewData["Fullname"] = MyUser.Fullname_Cust;
 
-            AdLists = new List<AdList>
-            {
-                new AdList { Url = "/Users?handler=SharedObjects", Column = 2 },
-                new AdList { Url = "/?handler=RecentReports", Column = 2 },
-                new AdList { Url = "/?handler=RecentTerms", Column = 2 },
-                new AdList { Url = "/?handler=RecentInitiatives", Column = 2 },
-                new AdList { Url = "/?handler=RecentCollections", Column = 2 }
-            };
-            ViewData["AdLists"] = AdLists;
-
             // if the id null then list all
             if (id != null)
             {
                 Collection = await _context.DpDataProjects
                     .Include(x => x.LastUpdateUserNavigation)
+                    .Include(x => x.DpTermAnnotations)
+                    .ThenInclude(x => x.Term)
+                    .Include(x => x.DpReportAnnotations)
+                    .ThenInclude(x => x.Report)
+                    .ThenInclude(x => x.ReportObjectDoc)
+                    .Include(x => x.DpReportAnnotations)
+                    .ThenInclude(x => x.Report)
+                    .ThenInclude(x => x.ReportObjectType)
                     .SingleAsync(x => x.DataProjectId == id);
 
                 Favorite = (
@@ -126,30 +119,6 @@ namespace Atlas_Web.Pages.Collections
                 ).Any()
                   ? "yes"
                   : "no";
-
-                ViewData["RelatedTerms"] = await (
-                    from r in _context.DpTermAnnotations
-                    where r.DataProjectId == id
-                    join q in (
-                        from f in _context.UserFavorites
-                        where f.ItemType.ToLower() == "term" && f.UserId == MyUser.UserId
-                        select new { f.ItemId }
-                    )
-                        on r.TermId equals q.ItemId
-                        into tmp
-                    from tfi in tmp.DefaultIfEmpty()
-                    orderby r.Rank ,r.Term.Name
-                    select new RelatedItemData
-                    {
-                        Id = r.TermAnnotationId,
-                        CollectionId = r.DataProjectId,
-                        ItemId = r.TermId,
-                        Name = r.Term.Name,
-                        Rank = r.Rank,
-                        Annotation = r.Annotation ?? r.Term.Summary,
-                        Favorite = tfi.ItemId == null ? "no" : "yes"
-                    }
-                ).ToListAsync();
 
                 ViewData["RelatedReports"] = await (
                     from r in _context.DpReportAnnotations
@@ -293,7 +262,6 @@ namespace Atlas_Web.Pages.Collections
             return RedirectToPage("/Collections/Index");
         }
 
-      
         public async Task<ActionResult> OnPostNewComment()
         {
             if (!ModelState.IsValid || NewCommentReply.MessageText is null)

@@ -1,33 +1,21 @@
-
 @model Atlas_Web.Pages.Collections.IndexModel
-
 
 <h1 class="title is-1">@ViewData["Title"]</h1>
 
 @if (Model.Permissions.Contains(26))
 {
-	<div class="field has-addons">
+    <div class="field has-addons">
         <p class="control">
             <a href="/Collections/New/" class="button" title="new collection"><span class="icon"><i class="fas fa-plus"></i></span><span>Create a Collection</span></a>
         </p>
     </div>
 }
 
-@foreach(var p in Model.Collections)
-{
-	<h4 class="drop" data-toggle="clps" data-target="collapse-project-@(p.DataProjectId)">@p.Name
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M31.3 192h257.3c17.8 0 26.7 21.5 14.1 34.1L174.1 354.8c-7.8 7.8-20.5 7.8-28.3 0L17.2 226.1C4.6 213.5 13.5 192 31.3 192z"/></svg>
-    </h4>
-
-    <div id="collapse-project-@(p.DataProjectId)" class="clps">
-	    <div class="drop-box">
-	        <h5><a class="drop-link" href="/Collections?id=@p.DataProjectId">Open This Collection</a></h5>
-	        @if (p.Description != null && p.Description != "")
-	        {
-	            <div class="markdown">
-	                @Html.Raw(@Helpers.HtmlHelpers.MarkdownToHtml(p.Description))
-	            </div>
-	        }
-	    </div>
-	</div>
-}
+<div class="columns is-multiline">
+    @foreach (var p in Model.Collections)
+    {
+        <div class="column is-half ">
+            <partial name="Collections/_Snippet" model="p" />
+        </div>
+    }
+</div>

@@ -1,0 +1,96 @@
+
+@model Atlas_Web.Models.ReportObject
+@inject IConfiguration Configuration
+
+
+@{
+    var ManageReportUrl = ""; //HtmlHelpers.ReportManageUrlFromParams(@Configuration["AppSettings:org_domain"], HttpContext, Model.ReportObjectType.Name, Model.ReportServerPath, Model.SourceServer);
+    var EditReportUrl = ""; // HtmlHelpers.EditReportFromParams(@Configuration["AppSettings:org_domain"], HttpContext, Model.ReportServerPath, Model.SourceServer, Model.EpicMasterFile, Model.EpicReportTemplateId.ToString(), Model.EpicRecordId.ToString());
+    var ReportRunUrl = "";
+}
+
+<div class="card">
+    <div class="card-header">
+        <div class="columns is-flex-grow-1">
+            <div class="column is-narrow is-flex is-align-items-center ml-3"><!-- run button here --></div>
+            <div class="column">
+                <p class="card-header-title pl-0 is-justify-content-space-between">
+                    @Model.Name
+                    <span class="tag">
+                        @if (@Model.CertificationTag == "Analytics Certified")
+                        {<span class="tag srch-fieldHunterGreen">@Model.CertificationTag</span>}
+                        @if (@Model.CertificationTag == "Analytics Reviewed")
+                        {<span class="tag srch-fieldGreen">@Model.CertificationTag</span>}
+                        @if (@Model.CertificationTag == "Epic Released")
+                        {<span class="tag srch-fieldOrange">@Model.CertificationTag</span>}
+                        @if (@Model.CertificationTag == "Legacy")
+                        {<span class="tag srch-fieldOrange">@Model.CertificationTag</span>}
+                        @if (@Model.CertificationTag == "High Risk")
+                        {<span class="tag srch-fieldRed">@Model.CertificationTag</span>}
+                        @if (@Model.CertificationTag == "Self-Service")
+                        {<span class="tag srch-fieldBlue">@Model.CertificationTag</span>}
+                    </span>
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="card-content">
+        <div class="media">
+            <div class="media-left">
+                <figure class="image is-96x96">
+                    <img data-src="/data/img?handler=Thumb&id=@Model.ReportObjectId&size=96x96" src="/img/loader.gif" />
+                </figure>
+            </div>
+            <div class="media-content is-min-h-96 is-flex is-justify-content-space-between is-flex-direction-column">
+                @if (!string.IsNullOrEmpty(Model.ReportObjectDoc.DeveloperDescription))
+                {
+                    @Html.Raw(@Helpers.HtmlHelpers.MarkdownToHtml(Model.ReportObjectDoc.DeveloperDescription.Substring(0, Math.Min(160, Model.ReportObjectDoc.DeveloperDescription.Length)) + " ..."))
+                }
+                else if (!string.IsNullOrEmpty(Model.Description))
+                {
+                    @Html.Raw(@Helpers.HtmlHelpers.MarkdownToHtml(Model.Description.Substring(0, Math.Min(160, Model.Description.Length)) + " ..."))
+                }
+                else
+                {
+                    <text>Open to view details.</text>
+                }
+                <div class="tags">
+                    <span class="tag is-link">@Model.ReportObjectType.Name</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer class="card-footer">
+        <a href="/Reports?id=@Model.ReportObjectId" class="card-footer-item">Open</a>
+        @*
+        @if (RunReportUrl != null && RunReportUrl != "")
+        {
+            <a class="drop-link" target="_blank" href="@RunReportUrl">Run</a> }
+        else
+        {
+            if (t.EpicMasterFile == "IDB")
+            {
+                <div style="position: relative;">
+                    <span class="tt-top" style="color:grey;position: relative;cursor:default" data-tooltip="Open a related dashboard that uses this.">Run</span>
+                </div> }
+            else if (t.EditReportUrl != null && @Model.Permissions.Contains(38))
+            {
+                <div style="position: relative;">
+                    <span class="tt-top" style="color:grey;position: relative;white-space: nowrap;cursor:default" data-tooltip="Open in report library.">Run</span>
+                </div> }
+            else
+            {
+                <div style="position: relative;">
+                    <span class="tt-top" style="color:grey;position: relative;white-space: nowrap;cursor:default" data-tooltip="Run from the Hyperspace report library.">Run</span>
+                </div>}
+        }
+        @if (t.EditReportUrl != null && t.EditReportUrl != "" && @Model.Permissions.Contains(38))
+        {
+            <a class="drop-link" target="_blank" href="@t.EditReportUrl">Edit</a>}
+        @if (t.ManageReportUrl != null && t.ManageReportUrl != "" && @Model.Permissions.Contains(38))
+        {
+            <a class="drop-link" taget="_blank" href="@t.ManageReportUrl">Manage</a>}
+        *@
+
+    </footer>
+</div>

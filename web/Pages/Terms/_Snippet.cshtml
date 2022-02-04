@@ -1,0 +1,39 @@
+@model Atlas_Web.Models.Term
+
+<div class="card">
+    <div class="card-header">
+        <p class="card-header-title">
+            @Model.Name
+        </p>
+    </div>
+    <div class="card-content">
+        <div class="media">
+            <div class="media-left">
+                <figure class="image is-96x96">
+                    <img data-src="/data/img?handler=Placeholder&size=96x96" src="/img/loader.gif" alt="report image" />
+                </figure>
+            </div>
+            <div class="media-content is-min-h-96 is-flex is-justify-content-space-between is-flex-direction-column">
+                @if (!string.IsNullOrEmpty(Model.Summary))
+                {
+                    @Html.Raw(@Helpers.HtmlHelpers.MarkdownToHtml(Model.Summary.Substring(0,Math.Min(160,Model.Summary.Length)) + " ..."))
+                } else if (!string.IsNullOrEmpty(Model.TechnicalDefinition))
+                {
+                    @Html.Raw(@Helpers.HtmlHelpers.MarkdownToHtml(Model.TechnicalDefinition.Substring(0,Math.Min(160,Model.TechnicalDefinition.Length)) + " ..."))
+                } else {
+                    <text>Open to view details.</text>
+                }
+                @*<div class="tags">
+                    @foreach (var d in Model.DpDataProjects)
+                    {
+                        <span class="tag is-link">@d.Name</span>
+                    }
+                </div>
+                *@
+            </div>
+        </div>
+    </div>
+    <footer class="card-footer">
+        <a href="/Collections?id=@Model.TermId" class="card-footer-item">Open</a>
+    </footer>
+</div>

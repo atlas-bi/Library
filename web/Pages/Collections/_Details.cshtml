@@ -10,7 +10,7 @@
 
     <div class="pageNav">
 
-        @if (Model.Collection.DpReportAnnotations.Count() > 0 || ViewBag.RelatedTerms.Count > 0)
+        @if (Model.Collection.DpReportAnnotations.Count() > 0 )
         {
     <a href="#links" class="pageNav-link">Linked Content</a>}
 
@@ -24,7 +24,7 @@
 
 <section class="pageSection">
     <span class="location" id="links"></span>
-    @if (Model.Collection.DpTermAnnotations.Count() > 0 || ViewBag.RelatedTerms.Count > 0)
+    @if (Model.Collection.DpTermAnnotations.Count() > 0 )
     {
 <partial name="Details/_Links.cshtml"></partial>}
 </section>
