@@ -6,6 +6,9 @@ on:
 
   workflow_dispatch:
 
+  push:
+    branches:
+      - master
 jobs:
   heroku-deploy:
     runs-on: ubuntu-latest
