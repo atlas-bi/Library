@@ -91,7 +91,7 @@ namespace Atlas_Web.Pages.Data
                 return Content("File does not exists");
             }
 
-            if (!Helpers.UserHelpers.CheckHrxPermissions(_context, id, User.Identity.Name))
+            if (!Helpers.UserHelpers.CheckHrxPermissions(_context, attachment.ReportObjectId, User.Identity.Name))
             {
                 return Content("Your are not authorized to view this page.");
             }

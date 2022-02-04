@@ -43,16 +43,13 @@
     
   </ItemGroup>
 	<ItemGroup>
-		<None Update="solr\**\*"  CopyToOutputDirectory="PreserveNewest"  />
+		<None Update="solr\**\*" CopyToOutputDirectory="PreserveNewest" />
 	</ItemGroup>
 	<ItemGroup>
-		<None Include="solr\**\*" CopyToPublishDirectory="PreserveNewest"/>
+		<None Include="solr\**\*" CopyToPublishDirectory="PreserveNewest" />
 	</ItemGroup>
   <ItemGroup>
     <Folder Include="Pages\API\Partials\" />
     <Folder Include="Pages\Groups\Sections\" />
   </ItemGroup>
-  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-    <Exec Command="npm install" />
-  </Target>
 </Project>

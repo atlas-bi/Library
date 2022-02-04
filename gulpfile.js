@@ -23,7 +23,7 @@ gulp.task('font:rasa', function() {
 gulp.task('font:fontawesome', function(done) {
     //del.sync('web/wwwroot/font/fontawesome/webfonts', {force:true});
     fontawesomeSubset({
-      regular:['envelope', 'thumbs-up', 'play-circle', 'star'],
+      regular:['envelope', 'thumbs-up', 'play-circle', 'star', 'paper-plane'],
       solid: ['code','quote-left', 'reply', 'reply-all', 'paper-plane','heading', 'times', 'folder', 'check', 'play', 'star','folder-plus', 'file-upload', 'save','angle-down','sort', 'folder-open','link','grip-lines', 'sliders-h', 'wrench','italic',  'user', 'list-ol', 'list-ul', 'chevron-left', 'chevron-right','bold', 'search', 'edit', 'trash', 'star', 'share', 'plus', 'chart-bar', 'universal-access', 'trash-alt']
           }, 'web/wwwroot/font/fontawesome/webfonts');
     done();

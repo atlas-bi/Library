@@ -1,109 +1,65 @@
 # to build
-# docker build  --tag atlas_demo . 
+# docker build  --tag atlas_demo . --build-arg HOST=host PASSWORD=password USER=user
 
 # to run locally
-# docker run -i -t -p 1234:1234 -e PORT=1234  -u 0 atlas_demo:latest
-# or 
-# docker run -i -t -p 1234:1234 -e PORT=1234  -u 0 christopherpickering/rmc-atlas-demo:latest
+# docker run -i -t -p 1234:1234 -p 8983:8983 -e PORT=1234  -u 0 atlas_demo:latest
 
-# to run online 
-# https://labs.play-with-docker.com
-# click start, paste in command below. After startup (about 1 min), click "open port 1234" in menu bar.
-# docker run -i -t -p 1234:1234 -e PORT=1234  -u 0 christopherpickering/rmc-atlas-demo:latest
-
-# to access db
-# docker ps (get running container id)
-# docker exec -it <running_cont_id> bash  
-# /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P 'p@ssw0rd' -d DATA_GOVERNANCE
-# to run sql, enter command, hit enter, then type "go" and hit enter.
+# to get in shell
+# docker run --entrypoint sh -i -t -u 0 atlas_demo:latest
 
 # to access webapp
 # http://localhost:1234 
 
-# to publish on dockerhub
-# docker tag atlas_demo christopherpickering/rmc-atlas-demo 
-# docker push christopherpickering/rmc-atlas-demo 
-
-FROM microsoft/dotnet:2.2-sdk-alpine3.8 AS build
+FROM mcr.microsoft.com/dotnet/sdk:5.0-alpine AS build
 WORKDIR /app
 COPY web.sln .
 COPY ["./web/web.csproj", "./web/"]
-RUN ls "./web/"
 RUN dotnet restore
 
 COPY ["./web/.", "./web/"]
 WORKDIR "/app/web/"
 RUN dotnet publish -c Release -o out
 
-# to copy linux build back to host
-# 
-# 1 build
-# docker build --tag atlas .
-# 
-# 2. run container
-# docker run -i -t -u 0 atlas:latest
-#
-# 3. get container id
-# docker container ls
-#
-# 4. copy file
-# docker cp <containerId>:/path/on/container /path/on/host
-
-FROM ubuntu:16.04
-
-ENV DOTNET_CLI_TELEMETRY_OPTOUT=1 \
-    ACCEPT_EULA=Y \
-    SA_PASSWORD=p@ssw0rd \
-    DEBIAN_FRONTEND=noninteractive \
-    MSSQL_PID=Developer
-
-RUN apt-get update || true && \
-    apt-get -yq --no-install-recommends install \
-        wget \
-        apt-utils \
-        curl \
-        apt-transport-https \
-        ca-certificates \
-        || true && \
-    # install dotnet
-    wget https://packages.microsoft.com/config/ubuntu/16.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb && \
-    dpkg -i packages-microsoft-prod.deb && \
-    apt-get update || true && \
-    apt-get install -yq dotnet-sdk-2.2 aspnetcore-runtime-2.2 && \
-    # install full text index
-    curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - && \
-    curl https://packages.microsoft.com/config/ubuntu/16.04/mssql-server-2017.list | tee /etc/apt/sources.list.d/mssql-server.list && \
-    apt-get update || true && \
-    curl https://packages.microsoft.com/config/ubuntu/16.04/prod.list | tee /etc/apt/sources.list.d/msprod.list && \
-    apt-get update || true && \
-    apt-get install -yq \
-        mssql-server \
-        mssql-server-ha \
-        mssql-server-fts \
-        mssql-tools \
-        unixodbc-dev \
-        || true && \
-    # clean up
-    apt-get remove -yq --auto-remove \
-        curl \
-        wget \
-        apt-utils \
-        apt-transport-https \
-        ca-certificates && \
-    apt-get clean || true && \
-    rm -rf /var/lib/apt/lists
-
+FROM python:3.10-alpine as search
 WORKDIR /app
+ARG USER
+ARG PASSWORD
+ARG HOST
+# copy site
+COPY --from=build ["/app/web/out", "./"]
 
-# copy and execute database creation and seed scriptsnot
-COPY ["./web/atlas-creation_script.sql", "create.sql"]
-COPY ["./web/atlas-demo-seed_script.sql", "seed.sql"]
+# startup search and load data
+RUN apk add --no-cache openjdk11 bash lsof python3-dev curl gcc git py3-pip gcc libc-dev g++ libffi-dev libxml2 unixodbc-dev && \
+    pip3 install pyodbc pysolr pytz
 
-# sql server takes about 30 seconds to start.
-RUN /opt/mssql/bin/sqlservr & sleep 30 && \
-    /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P 'p@ssw0rd' -d master -i "create.sql" && echo "Create Complete" && \
-    /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P 'p@ssw0rd' -d master -i "seed.sql"
+# install sql server driver
+RUN curl -O https://download.microsoft.com/download/e/4/e/e4e67866-dffd-428c-aac7-8d28ddafb39b/msodbcsql17_17.8.1.1-1_amd64.apk && \
+    apk add --allow-untrusted msodbcsql17_17.8.1.1-1_amd64.apk
 
-COPY --from=build ["/app/Web/out", "./"]
+# pull solr etl
+RUN mkdir etl && cd etl && git clone --depth 1 https://github.com/atlas-bi/Solr-Search-ETL.git .
 
-CMD /opt/mssql/bin/sqlservr & sleep 30 && ASPNETCORE_URLS=http://*:$PORT dotnet "Web.dll" 
+# create settings
+RUN cd etl && echo "SOLR_URL = \"http://localhost:8983/solr/atlas\"" > settings.py && \
+    echo "SOLR_LOOKUP_URL = \"http://localhost:8983/solr/atlas_lookups\"" >> settings.py && \
+    echo "SQL_CONN = \"SERVER=$HOST;DATABASE=atlas;UID=$USER;PWD=$PASSWORD\"" >> settings.py
+
+# load search
+RUN solr/bin/solr start -force -noprompt -v && sleep 20 && cd etl && python3 atlas_collections.py && python3 atlas_groups.py && python3 atlas_initiatives.py && \
+    python3 atlas_lookups.py && python3 atlas_reports.py && python3 atlas_terms.py && \
+    python3 atlas_users.py
+
+FROM mcr.microsoft.com/dotnet/sdk:5.0-alpine
+WORKDIR /app
+RUN apk add --no-cache openjdk11 bash lsof
+COPY --from=search ["/app", "./"]
+
+ARG USER
+ARG PASSWORD
+ARG HOST
+
+# create config
+RUN echo "{\"solr\": {\"atlas_address\": \"http://localhost:8983/solr/atlas\"},\"ConnectionStrings\": {\"AtlasDatabase\": \"Server=$HOST;Database=atlas;User Id=$USER; Password=$PASSWORD; MultipleActiveResultSets=true\"}}" > appsettings.cust.json
+
+# in release 2022.02.2 we need to change the name from atlas_dotnet to atlas_web
+CMD solr/bin/solr start -force -noprompt && ASPNETCORE_URLS=http://*:$PORT dotnet "Atlas_Dotnet.dll"
