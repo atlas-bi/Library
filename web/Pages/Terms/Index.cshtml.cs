@@ -51,16 +51,6 @@ namespace Atlas_Web.Pages.Terms
         public List<UserPreference> Preferences { get; set; }
         public User PublicUser { get; set; }
 
-        public class TermCommentsData
-        {
-            public int TermId { get; set; }
-            public string Date { get; set; }
-            public int ConvId { get; set; }
-            public int MessId { get; set; }
-            public string User { get; set; }
-            public string Text { get; set; }
-        }
-
         public class ReportTermsData
         {
             public string Name { get; set; }
@@ -87,11 +77,6 @@ namespace Atlas_Web.Pages.Terms
         [BindProperty]
         public ReportObjectDocTerm NewTermLink { get; set; }
 
-        [BindProperty]
-        public TermConversation NewComment { get; set; }
-
-        [BindProperty]
-        public TermConversationMessage NewCommentReply { get; set; }
         public List<AdList> AdLists { get; set; }
         public List<int?> Permissions { get; set; }
         public List<RelatedReportsData> RelatedReports { get; set; }
@@ -318,32 +303,6 @@ namespace Atlas_Web.Pages.Terms
             return Page();
         }
 
-        public async Task<ActionResult> OnGetComments(int id)
-        {
-            ViewData["Comments"] = await (
-                from c in _context.TermConversationMessages
-                where c.TermConversation.TermId == id
-                orderby c.TermConversationId descending,c.TermConversationMessageId ascending
-                select new TermCommentsData
-                {
-                    TermId = id,
-                    Date = c.PostDateTimeDisplayString,
-                    ConvId = c.TermConversationId,
-                    MessId = c.TermConversationMessageId,
-                    User = c.User.Fullname_Cust,
-                    Text = c.MessageText
-                }
-            ).ToListAsync();
-            ViewData["Id"] = id;
-            ViewData["Permissions"] = UserHelpers.GetUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name
-            );
-            //return Partial((".+?"));
-            return new PartialViewResult() { ViewName = "Details/_Comments", ViewData = ViewData };
-        }
-
         public async Task<ActionResult> OnPostNewTerm()
         {
             // if invalid inputs redirect to list all
@@ -537,68 +496,6 @@ namespace Atlas_Web.Pages.Terms
 
             // redirect back to same initiative
             return RedirectToPage("/Terms/Index", new { id = NewTerm.TermId });
-        }
-
-        public async Task<ActionResult> OnPostNewComment()
-        {
-            if (!ModelState.IsValid || NewCommentReply.MessageText is null)
-            {
-                return RedirectToPage("/Terms/Index", new { id = NewComment.TermId });
-            }
-
-            // if missing the conversation ID then create a new conversation.
-            if (
-                !_context.TermConversations.Any(
-                    x => x.TermConversationId == NewComment.TermConversationId
-                )
-            )
-            {
-                // create new comment
-                _context.Add(NewComment);
-                _context.SaveChanges();
-            }
-            // add message
-            NewCommentReply.UserId =
-                UserHelpers.GetUser(_cache, _context, User.Identity.Name).UserId;
-            NewCommentReply.PostDateTime = System.DateTime.Now;
-            NewCommentReply.TermConversationId = NewComment.TermConversationId;
-            _context.Add(NewCommentReply);
-            _context.SaveChanges();
-
-            //return RedirectToPage("/Terms/Index", new { id = NewComment.TermId });
-            return await OnGetComments(NewComment.TermId);
-        }
-
-        public async Task<ActionResult> OnPostDeleteComment()
-        {
-            if (!ModelState.IsValid)
-            {
-                return RedirectToPage("/Terms/Index", new { id = NewComment.TermId });
-            }
-
-            _context.Remove(NewCommentReply);
-            _context.SaveChanges();
-
-            return await OnGetComments(NewComment.TermId);
-        }
-
-        public async Task<ActionResult> OnPostDeleteCommentStream()
-        {
-            if (!ModelState.IsValid)
-            {
-                return RedirectToPage("/Terms/Index", new { id = NewComment.TermId });
-            }
-
-            // first delete all replys on comment. Delete comment.
-            _context.RemoveRange(
-                _context.TermConversationMessages.Where(
-                    x => x.TermConversationId == NewComment.TermConversationId
-                )
-            );
-            _context.Remove(NewComment);
-            _context.SaveChanges();
-
-            return await OnGetComments(NewComment.TermId);
         }
     }
 }

@@ -237,6 +237,7 @@
       html: true,
       linkify: true,
       typographer: true,
+      breaks: true,
     });
 
     this.editorPrevTitleButton.addEventListener(

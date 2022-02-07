@@ -1,12 +1,12 @@
 
 @model Atlas_Web.Models.ReportObject
 @inject IConfiguration Configuration
-
+@inject Atlas_Web.Models.Atlas_WebContext Context
 
 @{
-    var ManageReportUrl = ""; //HtmlHelpers.ReportManageUrlFromParams(@Configuration["AppSettings:org_domain"], HttpContext, Model.ReportObjectType.Name, Model.ReportServerPath, Model.SourceServer);
-    var EditReportUrl = ""; // HtmlHelpers.EditReportFromParams(@Configuration["AppSettings:org_domain"], HttpContext, Model.ReportServerPath, Model.SourceServer, Model.EpicMasterFile, Model.EpicReportTemplateId.ToString(), Model.EpicRecordId.ToString());
-    var ReportRunUrl = "";
+    var ManageReportUrl = HtmlHelpers.ReportManageUrlFromParams(@Configuration["AppSettings:org_domain"], ViewContext.HttpContext, Model.ReportObjectType.Name, Model.ReportServerPath, Model.SourceServer);
+    var EditReportUrl = HtmlHelpers.EditReportFromParams(@Configuration["AppSettings:org_domain"], ViewContext.HttpContext, Model.ReportServerPath, Model.SourceServer, Model.EpicMasterFile, Model.EpicReportTemplateId.ToString(), Model.EpicRecordId.ToString());
+    var RunReportUrl = HtmlHelpers.ReportUrlFromParams(@Configuration["AppSettings:org_domain"], ViewContext.HttpContext, Model, Context, User.Identity.Name);
 }
 
 <div class="card">
@@ -15,8 +15,57 @@
             <div class="column is-narrow is-flex is-align-items-center ml-3"><!-- run button here --></div>
             <div class="column">
                 <p class="card-header-title pl-0 is-justify-content-space-between">
-                    @Model.Name
-                    <span class="tag">
+                    <span class="is-flex is-align-items-center">
+
+                        @if (Model.ReportObjectAttachments.Count() > 0)
+                        {
+                            <a class="is-flex mr-2" data-toggle="mdl" data-target="runModal" data-tooltip="Run Report" data-runurl="@RunReportUrl">
+                                <span class="icon is-large has-text-success">
+                                    <i class="far fa-2_3x fa-play-circle"></i>
+                                </span>
+                            </a>
+                        }
+                        else if (RunReportUrl != null)
+                        {
+                            <a class="is-flex mr-2" target="_blank" data-tooltip="Run Report" href="@RunReportUrl">
+                                <span class="icon is-large has-text-success">
+                                    <i class="far fa-2_3x fa-play-circle"></i>
+                                </span>
+                            </a>
+                        }
+                        else
+                        {
+                            if (@Model.EpicMasterFile != null && @Model.EpicMasterFile.Equals("IDB"))
+                            {
+                                <a class="is-flex mr-2 is-disabled" data-tooltip="Open a related dashboard that uses this.">
+                                    <span class="icon is-large has-text-grey-light">
+                                        <i class="far fa-2_3x fa-play-circle"></i>
+                                    </span>
+                                </a>
+                            }
+                            else if (@EditReportUrl != null)
+                            {
+                                <a class="is-flex mr-2 is-disabled" data-tooltip="Open in report library.">
+                                    <span class="icon is-large has-text-grey-light">
+                                        <i class="far fa-2_3x fa-play-circle"></i>
+                                    </span>
+                                </a>
+                            }
+                            else if (@Model.EpicMasterFile != null)
+                            {
+                                <a class="is-flex mr-2 is-disabled" data-tooltip="Run from the Hyperspace report library.">
+                                    <span class="icon is-large has-text-grey-light">
+                                        <i class="far fa-2_3x fa-play-circle"></i>
+                                    </span>
+                                </a>
+                            }
+
+                        }
+
+                        @Model.Name
+
+                        </span>
+                    <span class="tags">
                         @if (@Model.CertificationTag == "Analytics Certified")
                         {<span class="tag srch-fieldHunterGreen">@Model.CertificationTag</span>}
                         @if (@Model.CertificationTag == "Analytics Reviewed")
@@ -62,35 +111,15 @@
     </div>
     <footer class="card-footer">
         <a href="/Reports?id=@Model.ReportObjectId" class="card-footer-item">Open</a>
-        @*
-        @if (RunReportUrl != null && RunReportUrl != "")
+
+        @if (EditReportUrl != null && EditReportUrl != "" && ViewBag.Permissions.Contains(38))
         {
-            <a class="drop-link" target="_blank" href="@RunReportUrl">Run</a> }
-        else
+            <a class="card-footer-item" target="_blank" href="@EditReportUrl">Edit</a>}
+        @if (ManageReportUrl != null && ManageReportUrl != "" && ViewBag.Permissions.Contains(38))
         {
-            if (t.EpicMasterFile == "IDB")
-            {
-                <div style="position: relative;">
-                    <span class="tt-top" style="color:grey;position: relative;cursor:default" data-tooltip="Open a related dashboard that uses this.">Run</span>
-                </div> }
-            else if (t.EditReportUrl != null && @Model.Permissions.Contains(38))
-            {
-                <div style="position: relative;">
-                    <span class="tt-top" style="color:grey;position: relative;white-space: nowrap;cursor:default" data-tooltip="Open in report library.">Run</span>
-                </div> }
-            else
-            {
-                <div style="position: relative;">
-                    <span class="tt-top" style="color:grey;position: relative;white-space: nowrap;cursor:default" data-tooltip="Run from the Hyperspace report library.">Run</span>
-                </div>}
+            <a class="card-footer-item" target="_blank" href="@ManageReportUrl">Manage</a>
         }
-        @if (t.EditReportUrl != null && t.EditReportUrl != "" && @Model.Permissions.Contains(38))
-        {
-            <a class="drop-link" target="_blank" href="@t.EditReportUrl">Edit</a>}
-        @if (t.ManageReportUrl != null && t.ManageReportUrl != "" && @Model.Permissions.Contains(38))
-        {
-            <a class="drop-link" taget="_blank" href="@t.ManageReportUrl">Manage</a>}
-        *@
+
 
     </footer>
 </div>

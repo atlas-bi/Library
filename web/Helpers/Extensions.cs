@@ -361,30 +361,14 @@ namespace Atlas_Web.Helpers
             }
             var pipeline = new MarkdownPipelineBuilder()
                 .UseAdvancedExtensions()
+                .UseAutoLinks()
+                .UseSoftlineBreakAsHardlineBreak()
                 .UseEmojiAndSmiley()
                 .UseSmartyPants()
                 .UseDiagrams()
+                .UseFootnotes()
                 .Build();
             return Markdown.ToHtml(text, pipeline);
-        }
-
-        public static string MilestoneFrequencyName(DpMilestoneTemplate content, string name)
-        {
-            if (name is null)
-            {
-                return "invalid";
-            }
-            else if (name == "One Time")
-            {
-                return name;
-            }
-            else if (content.Interval <= 0)
-            {
-                return "invalid";
-            }
-
-            return "Every " + content.Interval + " " + name;
-            ;
         }
 
         public static Boolean IsEpic(HttpContext Context)

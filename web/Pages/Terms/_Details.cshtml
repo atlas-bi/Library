@@ -22,9 +22,6 @@
         {
             <a href="#reports" class="pageNav-link">Reports</a>
         }
-         @if (@Configuration["features:enable_comments"] == null || @Configuration["features:enable_comments"].ToString().ToLower() == "true"){
-        <a href="#comments" class="pageNav-link">Comments</a>
-    }
     </div>
 </div>
 
@@ -44,10 +41,4 @@
         <span class="location" id="reports"></span>
         <partial name="Details/_Reports">
     </section>
-}
- @if (@Configuration["features:enable_comments"] == null || @Configuration["features:enable_comments"].ToString().ToLower() == "true"){
-<section class="pageSection">
-    <span class="location" id="comments"></span>
-    <div class="comments" data-ajax="yes" data-url="/terms?Handler=Comments&id=@Model.MyTerm.Id"></div>
-</section>
 }

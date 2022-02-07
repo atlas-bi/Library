@@ -154,16 +154,6 @@ namespace Atlas_Web.Pages.Reports
             public int Id { get; set; }
         }
 
-        public class ReportCommentsData
-        {
-            public int ReportId { get; set; }
-            public string Date { get; set; }
-            public int ConvId { get; set; }
-            public int MessId { get; set; }
-            public string User { get; set; }
-            public string Text { get; set; }
-        }
-
         public class ReportChildrenData
         {
             public string Name { get; set; }
@@ -244,16 +234,10 @@ namespace Atlas_Web.Pages.Reports
         public FileUpload FileUpload { get; set; }
 
         [BindProperty]
-        public ReportObjectConversationDoc NewComment { get; set; }
-
-        [BindProperty]
         public MaintenanceLog NewMaintenanceLog { get; set; }
 
         [BindProperty]
         public ReportObjectDocMaintenanceLog NewMaintenanceLogLink { get; set; }
-
-        [BindProperty]
-        public ReportObjectConversationMessageDoc NewCommentReply { get; set; }
 
         [BindProperty]
         public int[] SelectedFragilityTagIds { get; set; }
@@ -277,7 +261,6 @@ namespace Atlas_Web.Pages.Reports
         public IEnumerable<ReportTermsData> ViewerReportTerms { get; set; }
         public IEnumerable<ReportQueryData> ReportQuery { get; set; }
         public IEnumerable<ReportMaintLogsData> ReportMaintLogs { get; set; }
-        public IEnumerable<ReportCommentsData> ReportComments { get; set; }
         public IEnumerable<ReportChildrenData> ReportChildren { get; set; }
         public IEnumerable<ReportChildrenData> ReportParents { get; set; }
         public IEnumerable<ManageEngineTicketsData> ManageEngineTickets { get; set; }
@@ -732,32 +715,6 @@ namespace Atlas_Web.Pages.Reports
             };
             ViewData["AdLists"] = AdLists;
             return Page();
-        }
-
-        public async Task<ActionResult> OnGetComments(int id)
-        {
-            ViewData["Comments"] = await (
-                from c in _context.ReportObjectConversationMessageDocs
-                where c.Conversation.ReportObjectId == id
-                orderby c.ConversationId descending,c.MessageId ascending
-                select new ReportCommentsData
-                {
-                    ReportId = id,
-                    Date = c.PostDateTimeDisplayString,
-                    ConvId = c.ConversationId,
-                    MessId = c.MessageId,
-                    User = c.User.Fullname_Cust,
-                    Text = c.MessageText
-                }
-            ).ToListAsync();
-            ViewData["Id"] = id;
-            ViewData["Permissions"] = UserHelpers.GetUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name
-            );
-            //s//return Partial((".+?"));
-            return new PartialViewResult() { ViewName = "_Comments", ViewData = ViewData };
         }
 
         public async Task<ActionResult> OnPostNewDescription()
@@ -1376,67 +1333,6 @@ namespace Atlas_Web.Pages.Reports
 
             //return Partial((".+?"));
             return new PartialViewResult() { ViewName = "Editor/_MeTickets", ViewData = ViewData };
-        }
-
-        public async Task<ActionResult> OnPostNewComment()
-        {
-            if (!ModelState.IsValid || NewCommentReply.MessageText is null)
-            {
-                return RedirectToPage("/Reports/Index", new { id = NewComment.ReportObjectId });
-            }
-
-            // if missing the conversation ID then create a new conversation.
-            if (
-                !_context.ReportObjectConversationDocs.Any(
-                    x => x.ConversationId == NewComment.ConversationId
-                )
-            )
-            {
-                // create new comment
-                _context.Add(NewComment);
-                _context.SaveChanges();
-            }
-            // add message
-            NewCommentReply.UserId =
-                UserHelpers.GetUser(_cache, _context, User.Identity.Name).UserId;
-            NewCommentReply.PostDateTime = System.DateTime.Now;
-            NewCommentReply.ConversationId = NewComment.ConversationId;
-            _context.Add(NewCommentReply);
-            _context.SaveChanges();
-
-            return await OnGetComments(NewComment.ReportObjectId);
-        }
-
-        public async Task<ActionResult> OnPostDeleteComment()
-        {
-            if (!ModelState.IsValid)
-            {
-                return RedirectToPage("/Reports/Index", new { id = NewComment.ReportObjectId });
-            }
-
-            _context.Remove(NewCommentReply);
-            _context.SaveChanges();
-
-            return await OnGetComments(NewComment.ReportObjectId);
-        }
-
-        public async Task<ActionResult> OnPostDeleteCommentStream()
-        {
-            if (!ModelState.IsValid)
-            {
-                return RedirectToPage("/Reports/Index", new { id = NewComment.ReportObjectId });
-            }
-
-            // first delete all replys on comment. Delete comment.
-            _context.RemoveRange(
-                _context.ReportObjectConversationMessageDocs.Where(
-                    x => x.ConversationId == NewComment.ConversationId
-                )
-            );
-            _context.Remove(NewComment);
-            _context.SaveChanges();
-
-            return await OnGetComments(NewComment.ReportObjectId);
         }
 
         public ActionResult OnPostAddImage(int Id, IFormFile File)

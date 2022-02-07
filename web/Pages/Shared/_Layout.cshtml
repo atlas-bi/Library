@@ -2,6 +2,7 @@
 @using Microsoft.Extensions.Caching.Memory
 @inject IMemoryCache Cache
 @inject IConfiguration Configuration
+
 <!DOCTYPE html>
 <html lang="en-us">
 <head>
@@ -19,10 +20,12 @@
 
     @if (ViewData["Title"] != null && ViewData["Title"].ToString().Length > 0)
     {
-<title>@ViewData["Title"] | Atlas BI Library</title> }
-            else
-            {
-<title>Home | Atlas BI Library</title>}
+<title>@ViewData["Title"] | Atlas BI Library</title>
+ }
+else
+{
+<title>Home | Atlas BI Library</title>
+}
 
     <link rel="preload" href="@Helpers.UrlHelpers.FontHash("/font/fontawesome/webfonts/fa-regular-400.woff2", Cache, Configuration)" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="@Helpers.UrlHelpers.FontHash("/font/fontawesome/webfonts/fa-solid-900.woff2", Cache, Configuration)" as="font" type="font/woff2" crossorigin />
@@ -40,20 +43,18 @@
     <!-- site message -->
     @if (@ViewData["SiteMessage"] != null && @ViewData["SiteMessage"].ToString() != "")
     {
-    <div class="site-message">
-        <img src="/img/wave.png" class="site-messageImg" />
-        <p class="site-messageText">
-            @Html.Raw(HtmlHelpers.MarkdownToHtml(@ViewData["SiteMessage"].ToString()))
-        </p>
-        <button class="site-messageClose"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 352 512"><path d="M242.72 256l100.07-100.07c12.28-12.28 12.28-32.19 0-44.48l-22.24-22.24c-12.28-12.28-32.19-12.28-44.48 0L176 189.28 75.93 89.21c-12.28-12.28-32.19-12.28-44.48 0L9.21 111.45c-12.28 12.28-12.28 32.19 0 44.48L109.28 256 9.21 356.07c-12.28 12.28-12.28 32.19 0 44.48l22.24 22.24c12.28 12.28 32.2 12.28 44.48 0L176 322.72l100.07 100.07c12.28 12.28 32.2 12.28 44.48 0l22.24-22.24c12.28-12.28 12.28-32.19 0-44.48L242.72 256z" /></svg></button>
-    </div>
-    }
+<div class="site-message">
+    <img src="/img/wave.png" class="site-messageImg" />
+    <p class="site-messageText">
+        @Html.Raw(HtmlHelpers.MarkdownToHtml(@ViewData["SiteMessage"].ToString()))
+    </p>
+    <button class="site-messageClose"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 352 512"><path d="M242.72 256l100.07-100.07c12.28-12.28 12.28-32.19 0-44.48l-22.24-22.24c-12.28-12.28-32.19-12.28-44.48 0L176 189.28 75.93 89.21c-12.28-12.28-32.19-12.28-44.48 0L9.21 111.45c-12.28 12.28-12.28 32.19 0 44.48L109.28 256 9.21 356.07c-12.28 12.28-12.28 32.19 0 44.48l22.24 22.24c12.28 12.28 32.2 12.28 44.48 0L176 322.72l100.07 100.07c12.28 12.28 32.2 12.28 44.48 0l22.24-22.24c12.28-12.28 12.28-32.19 0-44.48L242.72 256z" /></svg></button>
+</div>}
     @if (@Configuration["banner_text:site_message"] != null && @Configuration["banner_text:site_message"].ToString() != "")
     {
-        <div class="notification is-light is-link has-text-centered my-0">
-            @Html.Raw(HtmlHelpers.MarkdownToHtml(@Configuration["banner_text:site_message"]))
-        </div>
-    }
+<div class="notification is-light is-link has-text-centered my-0">
+    @Html.Raw(HtmlHelpers.MarkdownToHtml(@Configuration["banner_text:site_message"]))
+</div>}
     <nav class="navbar is-transparent atlas-navbar has-shadow">
         <div class="container">
             <div class="navbar-brand">
@@ -74,7 +75,7 @@
             <div class="navbar-menu is-flex-grow-0" id="atlas-main-nav">
                 <div class="navbar-end">
                     @{ var r = new Random();
-                                    var randomNumber = r.Next(); }
+                        var randomNumber = r.Next(); }
                     <a class="navbar-item" href="/?@randomNumber#mail">
                         <span class="icon is-medium is-relative">
                             <i class="far fa-lg fa-envelope"></i>
@@ -85,31 +86,27 @@
 
                     @if (@Model.Permissions.Contains(1) || Model.Permissions.Contains(18) || Model.Permissions.Contains(33) || Model.Permissions.Contains(34))
                     {
-                    <div class="navbar-item has-dropdown is-hoverable is-boxed">
-                        <div class="navbar-link is-arrowless">
-                            <span class="icon is-medium">
-                                <i class="fas fa-lg fa-wrench"></i>
-                            </span>
-                            <span class="hide-desktop">Administrative</span>
-                        </div>
-                        <div class="navbar-dropdown">
-                            <hr class="hide-desktop dropdown-divider">
-                            @if (Model.Permissions.Contains(18) || Model.Permissions.Contains(1))
-                                {
-                            <a class="navbar-item" href="/accesscontrol">Access Control</a>
-                                }
-                            @if (Model.Permissions.Contains(33) || Model.Permissions.Contains(34))
-                                {
-                            <a class="navbar-item" href="/settings">Settings</a>
-                                }
-                            @if (Model.Permissions.Contains(36))
-                                {
-                            <a class="navbar-item" href="/analytics">Analytics</a>
-                                }
-                            <a class="navbar-item" href="/tasks">Tasks</a>
-                        </div>
-                    </div>
-                    }
+        <div class="navbar-item has-dropdown is-hoverable is-boxed">
+            <div class="navbar-link is-arrowless">
+                <span class="icon is-medium">
+                    <i class="fas fa-lg fa-wrench"></i>
+                </span>
+                <span class="hide-desktop">Administrative</span>
+            </div>
+            <div class="navbar-dropdown">
+                <hr class="hide-desktop dropdown-divider">
+                @if (Model.Permissions.Contains(18) || Model.Permissions.Contains(1))
+                {
+<a class="navbar-item" href="/accesscontrol">Access Control</a>}
+                @if (Model.Permissions.Contains(33) || Model.Permissions.Contains(34))
+                {
+<a class="navbar-item" href="/settings">Settings</a>}
+                @if (Model.Permissions.Contains(36))
+                {
+<a class="navbar-item" href="/analytics">Analytics</a>}
+                <a class="navbar-item" href="/tasks">Tasks</a>
+            </div>
+        </div>}
 
                     <!-- main report groups -->
                     <div class="navbar-item has-dropdown is-hoverable is-boxed">
@@ -123,46 +120,43 @@
                             <hr class=" hide-desktop dropdown-divider">
                             @if (@Configuration["features:enable_initiatives"] == null || @Configuration["features:enable_initiatives"].ToString().ToLower() == "true")
                             {
-                                <a class="navbar-item" href="/initiatives">Initiatives</a>
-                            }
+                <a class="navbar-item" href="/initiatives">Initiatives</a>}
                             <a class="navbar-item" href="/collections">Collections</a>
                             @if (@Configuration["features:enable_terms"] == null || @Configuration["features:enable_terms"].ToString().ToLower() == "true")
                             {
-                                <a class="navbar-item" href="/terms">Terms</a>
-                            }
+                <a class="navbar-item" href="/terms">Terms</a>}
                             <hr class="dropdown-divider">
                             <a class="navbar-item" href="/about_analytics">About Analytics</a>
                         </div>
                     </div>
                     @if (@Configuration["features:enable_user_profile"] == null || @Configuration["features:enable_user_profile"].ToString().ToLower() == "true")
                     {
-                    <a class="navbar-item" href="/users" data-tooltip="Open Profile">
-                        <span class="icon is-medium">
-                            <i class="fas fa-lg fa-user"></i>
-                        </span>
-                        <span class="hide-desktop">Profile</span>
-                    </a>
-                    }
+        <a class="navbar-item" href="/users" data-tooltip="Open Profile">
+            <span class="icon is-medium">
+                <i class="fas fa-lg fa-user"></i>
+            </span>
+            <span class="hide-desktop">Profile</span>
+        </a>}
 
                     @if (Model.Permissions.Contains(44))
                     {
-                        <div class="navbar-item has-dropdown is-hoverable is-boxed">
-                            <div class="navbar-link">
-                                @{ var ph = "";
-                                        if (ViewBag.MyRole != null && ViewBag.MyRole.Name != null && ViewBag.MyRole.Name != "")
-                                        {
-                                            ph = ViewBag.MyRole.Name;
-                                        }
-                                        else
-                                        {
-                                            ph = "change role";
-                                        } }
-                                @ph
-                            </div>
-                            <div class="navbar-dropdown" id="role-change">
-                                <hr class=" hide-desktop dropdown-divider">
-                            </div>
-                        </div>
+        <div class="navbar-item has-dropdown is-hoverable is-boxed">
+            <div class="navbar-link">
+                @{ var ph = "";
+                    if (ViewBag.MyRole != null && ViewBag.MyRole.Name != null && ViewBag.MyRole.Name != "")
+                    {
+                        ph = ViewBag.MyRole.Name;
+                    }
+                    else
+                    {
+                        ph = "change role";
+                    } }
+                @ph
+            </div>
+            <div class="navbar-dropdown" id="role-change">
+                <hr class=" hide-desktop dropdown-divider">
+            </div>
+        </div>
 
                         <script>
                             q = new XMLHttpRequest();
@@ -177,65 +171,64 @@
                                     el.innerHTML += "<a class='navbar-item' href='/Users?handler=ChangeRole&Id=" + data[x].ObjectId + "&Url=" + window.location.href.replace(window.location.origin, '') + "'>" + data[x].Name + "</a>";
                                 }
                             };
-                        </script>
-                    }
+                        </script>}
 
                     <!-- epic navigation -->
                     @if (Helpers.HtmlHelpers.IsEpic(Context) == true)
                     {
-                        <a class="navbar-item"onclick="history.back()">
-                            <span class="icon is-medium">
-                                <i class="fas fa-chevron-left"></i>
-                            </span>
-                        </a>
-                        <a class="navbar-item"onclick="history.forward()">
+        <a class="navbar-item" onclick="history.back()">
+            <span class="icon is-medium">
+                <i class="fas fa-chevron-left"></i>
+            </span>
+        </a>
+                        <a class="navbar-item" onclick="history.forward()">
                             <span class="icon is-medium">
                                 <i class="fas fa-chevron-right"></i>
                             </span>
-                        </a>
-                    }
+                        </a>}
                 </div>
             </div>
         </div>
     </nav>
     <section class="section my-5 py-0">
-            <div class="container">
-                <nav class="breadcrumb">
-                </nav>
-            </div>
+        <div class="container">
+            <nav class="breadcrumb">
+            </nav>
+        </div>
     </section>
 
 
     <section class="is-flex-grow-1">
         <div class="container is-relative mb-5">
-            @if(IsSectionDefined("SearchBar"))
+            @if (IsSectionDefined("SearchBar"))
             {
-                @RenderSection("SearchBar")
-            } else {
-                @if (@Model.Permissions.Contains(19))
-                {
-                    var search_placeholder = "type to search..";
+@RenderSection("SearchBar") }
+            else
+            {
+@if (@Model.Permissions.Contains(19))
+{
+    var search_placeholder = "type to search..";
 
-                    @if (Context.Request.Path == "/users")
-                    {
-                        search_placeholder = "search for users..";
-                    }
-                    else if (Context.Request.Path == "/terms")
-                    {
-                        search_placeholder = "search for terms..";
-                    }
-                    else if (Context.Request.Path == "/collections")
-                    {
-                        search_placeholder = "search for collections..";
-                    }
-                    else if (Context.Request.Path == "/initiatives")
-                    {
-                        search_placeholder = "search for initiatives..";
-                    }
-                    else if (Context.Request.Path == "/groups")
-                    {
-                        search_placeholder = "search for groups..";
-                    }
+@if (Context.Request.Path == "/users")
+{
+    search_placeholder = "search for users..";
+}
+else if (Context.Request.Path == "/terms")
+{
+    search_placeholder = "search for terms..";
+}
+else if (Context.Request.Path == "/collections")
+{
+    search_placeholder = "search for collections..";
+}
+else if (Context.Request.Path == "/initiatives")
+{
+    search_placeholder = "search for initiatives..";
+}
+else if (Context.Request.Path == "/groups")
+{
+    search_placeholder = "search for groups..";
+}
 
                     <div class="columns">
                         <div class="column">
@@ -248,44 +241,42 @@
                             </div>
                         </div>
                         <div class="column is-one-third is-hidden-mobile"></div>
-                    </div>
-                }
-            }
+                    </div>                }            }
             <div class="columns">
                 <div class="column is-narrow">
-                    @if(IsSectionDefined("SideBar")){
-                        @RenderSection("SideBar")
-                    } else if (IsSectionDefined("Side_Links"))
+                    @if (IsSectionDefined("SideBar"))
                     {
-                        <aside class="menu sticky">
-                            <ul>
-                                @RenderSection("Side_Links", false)
-                            </ul>
-                        </aside>
-                    }
+        @RenderSection("SideBar") }
+                    else if (IsSectionDefined("Side_Links"))
+                    {
+        <aside class="menu sticky">
+            <ul>
+                @RenderSection("Side_Links", false)
+            </ul>
+        </aside>}
                 </div>
                 <div class="column body-mainCtn">
                     @RenderBody()
                 </div>
 
-                @if(IsSectionDefined("AdBar"))
+                @if (IsSectionDefined("AdBar"))
                 {
-                    @RenderSection("AdBar")
-                } else {
-                    <div class="column is-one-third is-hidden-mobile" id="AdColTwo">
-                    <!-- sidebar -->
-                        @if (ViewBag.AdLists != null)
-                        {
-                        <div id="related-reports"></div>
-                        @foreach (var ad in ViewBag.AdLists)
-                            {
-                        <div class="col" data-ajax="yes" data-url="@ad.Url"></div>}}
-                    </div>
-                }
+    @RenderSection("AdBar") }
+                else
+                {
+    <div class="column is-one-third is-hidden-mobile" id="AdColTwo">
+        <!-- sidebar -->
+        @if (ViewBag.AdLists != null)
+        {
+<div id="related-reports"></div>
+                    @foreach (var ad in ViewBag.AdLists)
+                    {
+<div class="col" data-ajax="yes" data-url="@ad.Url"></div>}}
+    </div>}
             </div>
         </div>
-        </section>
-        <partial name="_Footer" />
+    </section>
+    <partial name="_Footer" />
 
 
     <div class="prg"><div class="prg-b" style="width: 0%"></div></div>
@@ -319,6 +310,6 @@
         })()
     </script>
 
-   
+
 </body>
 </html>

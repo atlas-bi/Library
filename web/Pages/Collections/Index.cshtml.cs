@@ -31,28 +31,11 @@ namespace Atlas_Web.Pages.Collections
         [BindProperty]
         public DpReportAnnotation DpReportAnnotation { get; set; }
 
-        [BindProperty]
-        public DpDataProjectConversation NewComment { get; set; }
-
-        [BindProperty]
-        public DpDataProjectConversationMessage NewCommentReply { get; set; }
-
         public List<int?> Permissions { get; set; }
         public IEnumerable<DpDataProject> Collections { get; set; }
         public List<UserFavorite> Favorites { get; set; }
-        public IEnumerable<CollectionCommentsData> CollectionComments { get; set; }
 
         public List<AdList> AdLists { get; set; }
-
-        public class CollectionCommentsData
-        {
-            public string Date { get; set; }
-            public int? ConvId { get; set; }
-            public int? MessId { get; set; }
-            public string User { get; set; }
-            public string Text { get; set; }
-            public int CollectionId { get; set; }
-        }
 
         public class RelatedItemData
         {
@@ -110,6 +93,9 @@ namespace Atlas_Web.Pages.Collections
                     .Include(x => x.DpReportAnnotations)
                     .ThenInclude(x => x.Report)
                     .ThenInclude(x => x.ReportObjectType)
+                    .Include(x => x.DpReportAnnotations)
+                    .ThenInclude(x => x.Report)
+                    .ThenInclude(x => x.ReportObjectAttachments)
                     .SingleAsync(x => x.DataProjectId == id);
 
                 Favorite = (
@@ -198,32 +184,6 @@ namespace Atlas_Web.Pages.Collections
             return Page();
         }
 
-        public async Task<ActionResult> OnGetComments(int id)
-        {
-            ViewData["Comments"] = await (
-                from c in _context.DpDataProjectConversationMessages
-                where c.DataProjectConversation.DataProjectId == id
-                orderby c.DataProjectConversationId descending,c.DataProjectConversationMessageId ascending
-                select new CollectionCommentsData
-                {
-                    CollectionId = id,
-                    Date = c.PostDateTimeDisplayString,
-                    ConvId = c.DataProjectConversationId,
-                    MessId = c.DataProjectConversationMessageId,
-                    User = c.User.Fullname_Cust,
-                    Text = c.MessageText
-                }
-            ).ToListAsync();
-            ViewData["Id"] = id;
-            ViewData["Permissions"] = UserHelpers.GetUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name
-            );
-            //s//return Partial((".+?"));
-            return new PartialViewResult() { ViewName = "Details/_Comments", ViewData = ViewData };
-        }
-
         public ActionResult OnGetDeleteCollection(int Id)
         {
             var checkpoint = UserHelpers.CheckUserPermissions(
@@ -262,66 +222,6 @@ namespace Atlas_Web.Pages.Collections
             return RedirectToPage("/Collections/Index");
         }
 
-        public async Task<ActionResult> OnPostNewComment()
-        {
-            if (!ModelState.IsValid || NewCommentReply.MessageText is null)
-            {
-                return RedirectToPage("/Collections/Index", new { id = NewComment.DataProjectId });
-            }
 
-            // if missing the conversation ID then create a new conversation.
-            if (
-                !_context.DpDataProjectConversationMessages.Any(
-                    x => x.DataProjectConversationId == NewComment.DataProjectConversationId
-                )
-            )
-            {
-                // create new comment
-                _context.Add(NewComment);
-            }
-            // add message
-            NewCommentReply.UserId =
-                UserHelpers.GetUser(_cache, _context, User.Identity.Name).UserId;
-            NewCommentReply.PostDateTime = System.DateTime.Now;
-            NewCommentReply.DataProjectConversationId = NewComment.DataProjectConversationId;
-            _context.Add(NewCommentReply);
-            _context.SaveChanges();
-
-            return await OnGetComments(NewComment.DataProjectId);
-        }
-
-        public async Task<ActionResult> OnPostDeleteComment()
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Remove(NewCommentReply);
-                _context.SaveChanges();
-            }
-
-            return await OnGetComments(NewComment.DataProjectId);
-        }
-
-        public async Task<ActionResult> OnPostDeleteCommentStream()
-        {
-            var checkpoint = UserHelpers.CheckUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name,
-                25
-            );
-            if (ModelState.IsValid && checkpoint)
-            {
-                // first delete all replys on comment. Delete comment.
-                _context.RemoveRange(
-                    _context.DpDataProjectConversationMessages.Where(
-                        x => x.DataProjectConversationId == NewComment.DataProjectConversationId
-                    )
-                );
-                _context.Remove(NewComment);
-                _context.SaveChanges();
-            }
-
-            return await OnGetComments(NewComment.DataProjectId);
-        }
     }
 }
