@@ -1,21 +1,37 @@
-﻿@*
-    Atlas of Information Management business intelligence library and documentation database.
-    Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*@
-
-@{
+﻿@{
     Layout = "_Layout";
+    ViewBag.Permissions = UserHelpers.GetUserPermissions(Cache, DbContext, User.Identity.Name);
+    ViewBag.PublicUser = UserHelpers.GetUser(Cache, DbContext, User.Identity.Name);
+    ViewBag.Preferences = UserHelpers.GetPreferences(Cache, DbContext, User.Identity.Name);
+    ViewBag.Favorites = UserHelpers.GetPreferences(Cache, DbContext, User.Identity.Name);
+    ViewBag.MyRole = UserHelpers.GetMyRole(Cache, DbContext, User.Identity.Name);
+    ViewBag.Fullname = ViewBag.PublicUser.Fullname_Cust;
+    ViewBag.SiteMessage = HtmlHelpers.SiteMessage(ViewContext.HttpContext, DbContext);
+}
+
+
+@if (@ViewBag.Permissions.Contains(19))
+{
+    ViewBag.SearchPlaceholder = "type to search..";
+
+    @if (ViewContext.HttpContext.Request.Path == "/users")
+    {
+        ViewBag.SearchPlaceholder = "search for users..";
+    }
+    else if (ViewContext.HttpContext.Request.Path == "/terms")
+    {
+        ViewBag.SearchPlaceholder = "search for terms..";
+    }
+    else if (ViewContext.HttpContext.Request.Path == "/collections")
+    {
+        ViewBag.SearchPlaceholder = "search for collections..";
+    }
+    else if (ViewContext.HttpContext.Request.Path == "/initiatives")
+    {
+        ViewBag.SearchPlaceholder = "search for initiatives..";
+    }
+    else if (ViewContext.HttpContext.Request.Path == "/groups")
+    {
+        ViewBag.SearchPlaceholder = "search for groups..";
+    }
 }

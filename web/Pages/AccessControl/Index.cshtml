@@ -17,7 +17,7 @@ ViewData["Title"] = "Access Control";
 	<h2 class="pageTitle-head">Access Control</h2>
 	<div class="tab">
 		<a class="tab-lnk active" href="#userroles">User Roles</a>
-		@if (@Model.Permissions.Contains(18))
+		@if (ViewBag.Permissions.Contains(18))
 		{
 			<a class="tab-lnk" href="#rolepriviledges">Role Priviledges</a>
 		}
@@ -28,7 +28,7 @@ ViewData["Title"] = "Access Control";
 	<div class="tab-dta active" id="userroles">
 		<partial name="Pages/_UserRoles.cshtml"></partial>
 	</div>
-	@if (@Model.Permissions.Contains(18))
+	@if (ViewBag.Permissions.Contains(18))
 	{
 		<div class="tab-dta" id="rolepriviledges">
 			<partial name="Pages/_RolePermissions.cshtml"></partial>

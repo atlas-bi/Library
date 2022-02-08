@@ -83,7 +83,7 @@ namespace Atlas_Web.Helpers
                 "Preferences-" + username,
                 cacheEntry =>
                 {
-                    cacheEntry.SlidingExpiration = TimeSpan.FromHours(2);
+                    cacheEntry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20);
                     return _context.UserPreferences
                         .Where(x => x.User.Username == username)
                         .ToList();
@@ -113,7 +113,7 @@ namespace Atlas_Web.Helpers
                 "User-" + username,
                 cacheEntry =>
                 {
-                    cacheEntry.SlidingExpiration = TimeSpan.FromHours(2);
+                    cacheEntry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20);
 
                     return _context.Users.Where(u => u.Username.Equals(username)).FirstOrDefault();
                 }
@@ -131,7 +131,7 @@ namespace Atlas_Web.Helpers
                 "Favorites-" + username,
                 cacheEntry =>
                 {
-                    cacheEntry.SlidingExpiration = TimeSpan.FromHours(2);
+                    cacheEntry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20);
                     return _context.UserFavorites
                         .Where(
                             x =>
@@ -155,7 +155,7 @@ namespace Atlas_Web.Helpers
                 "MasterUserPermissions",
                 cacheEntry =>
                 {
-                    cacheEntry.SlidingExpiration = TimeSpan.FromHours(2);
+                    cacheEntry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20);
                     return new List<String> { "UserPermissions-" + username };
                 }
             );
@@ -164,14 +164,14 @@ namespace Atlas_Web.Helpers
             {
                 // add in new item
                 master.Add("UserPermissions-" + username);
-                cache.Set<List<string>>("MasterUserPermissions", master, TimeSpan.FromHours(2));
+                cache.Set<List<string>>("MasterUserPermissions", master, TimeSpan.FromMinutes(20));
             }
 
             return cache.GetOrCreate<List<int?>>(
                 "UserPermissions-" + username,
                 cacheEntry =>
                 {
-                    cacheEntry.SlidingExpiration = TimeSpan.FromHours(2);
+                    cacheEntry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20);
 
                     // permission table links
                     // user (username) > user role links > user roles > role permissions links > role permissions (activity)

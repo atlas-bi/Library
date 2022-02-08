@@ -1,5 +1,5 @@
 @model Atlas_Web.Pages.Collections.IndexModel
-@inject IConfiguration Configuration
+
 <nav class="breadcrumb">
     <ul>
         <li>
@@ -14,7 +14,7 @@
         @if (@Model.Collection.DpTermAnnotations.Count() > 0)
         {
             <li>
-                <a href="#terms">Linked Reports</a>
+                <a href="#terms">Linked Terms</a>
             </li>
         }
     </ul>

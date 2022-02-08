@@ -87,7 +87,7 @@
         </a>
     </li>
 
-    @if (Model.Permissions.Contains(12))
+    @if (ViewBag.Permissions.Contains(12))
     {<!-- edit -->
     <li>
         <a class="" id="open-editor" data-toggle="mdl" data-target="editModal" data-tooltip="Open Atlas Editor">
@@ -126,7 +126,7 @@
         </a>
     </li>
     }
-    @if (Model.Permissions.Contains(38) && Model.Report.EditReportUrl != null)
+    @if (ViewBag.Permissions.Contains(38) && Model.Report.EditReportUrl != null)
     {
     <li>
         <a class="" data-tooltip="Open Report Editor" target="_blank" href="@Model.Report.EditReportUrl">
@@ -137,7 +137,7 @@
     </li>
     }
 
-    @if (Model.Permissions.Contains(38) && Model.Report.ManageReportUrl != null)
+    @if (ViewBag.Permissions.Contains(38) && Model.Report.ManageReportUrl != null)
     {
     <li>
         <a class="" data-tooltip="Manage Report" rel="noopener" target="_blank" href="@Model.Report.ManageReportUrl">
@@ -168,7 +168,7 @@ else
             @Model.Report.Name.Replace("_", " ")
         </span>
     </h2>
-    @if (Model.Permissions.Contains(12))
+    @if (ViewBag.Permissions.Contains(12))
 {
     <div data-ajax="yes" class="no-loader" data-url="/reports?Handler=MaintStatus&id=@Model.Report.Id"></div>}
     <div class="pageNav">
@@ -268,7 +268,7 @@ else
 </section>
 }
 
-@if (Model.Permissions.Contains(12))
+@if (ViewBag.Permissions.Contains(12))
 {
 <partial name="_Edit" />
 }

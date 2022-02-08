@@ -1,7 +1,12 @@
 @using Atlas_Web
 @using Helpers
-
+@using Atlas_Web.Models
+@using Microsoft.Extensions.Caching.Memory
+@using Microsoft.Extensions.Configuration
 @namespace Atlas_Web.Pages
 @addTagHelper *, WebOptimizer.Core
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
-@using Microsoft.Extensions.Configuration
+
+@inject IConfiguration Configuration
+@inject IMemoryCache Cache
+@inject Atlas_Web.Models.Atlas_WebContext DbContext

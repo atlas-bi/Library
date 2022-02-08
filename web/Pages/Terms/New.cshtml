@@ -5,11 +5,10 @@
     ViewData["Title"] = "New Term";
 }
 
+
 @section SideBar {}
-@section SearchBar {}
 @section js {
     <script src="/js/flowchart.min.js" defer></script>
- @*   @if(!Request.Headers["User-Agent"].ToString().Contains("Trident")){<script>hljs.highlightAll();</script>}*@
     <script src="/js/editor.min.js" defer></script>
 }
 
@@ -47,7 +46,7 @@
         <div class="editor" data-inputName="Term.TechnicalDefinition" data-inputId="Term_TechnicalDefinition"><textarea></textarea></div>
     </div>
 
-    @if (Model.Permissions.Contains(6))
+    @if (ViewBag.Permissions.Contains(6))
     {
         <label class="label">Other Options</label>
         <div class="field toggle" typeId="groups">

@@ -1,13 +1,11 @@
 @page
-@inject IConfiguration Configuration
 @model Atlas_Web.Pages.Terms.IndexModel
 @{
-    Layout =  "../Shared/_Layout.cshtml";
     ViewData["Title"] = "Terms";
 }
 @section AdBar {}
 
-@if (Model.MyTerm is null)
+@if (Model.Term is null)
 {
      @section SideBar {}
     <partial name="_All" />
@@ -15,7 +13,7 @@
 else
 {
     {
-        ViewData["Title"] = @Model.MyTerm.Name;
+        ViewData["Title"] = @Model.Term.Name;
     }
 
     @section Side_Links

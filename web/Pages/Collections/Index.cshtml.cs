@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using Atlas_Web.Helpers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Caching.Memory;
+using System;
 
 namespace Atlas_Web.Pages.Collections
 {
@@ -31,136 +32,34 @@ namespace Atlas_Web.Pages.Collections
         [BindProperty]
         public DpReportAnnotation DpReportAnnotation { get; set; }
 
-        public List<int?> Permissions { get; set; }
         public IEnumerable<DpDataProject> Collections { get; set; }
-        public List<UserFavorite> Favorites { get; set; }
-
-        public List<AdList> AdLists { get; set; }
-
-        public class RelatedItemData
-        {
-            public int? Id { get; set; }
-            public int? ItemId { get; set; }
-            public int? CollectionId { get; set; }
-            public string Name { get; set; }
-            public int? Rank { get; set; }
-            public string Image { get; set; }
-            public string CertTag { get; set; }
-            public string ReportType { get; set; }
-            public string Annotation { get; set; }
-            public string Favorite { get; set; }
-            public string RunReportUrl { get; set; }
-            public string EpicMasterFile { get; set; }
-            public string EditReportUrl { get; set; }
-            public string ManageReportUrl { get; set; }
-        }
-
-        public class CollectionTermsData
-        {
-            public string Name { get; set; }
-            public int? Id { get; set; }
-            public string Summary { get; set; }
-            public string Definition { get; set; }
-            public int? ReportId { get; set; }
-        }
-
-        public List<UserPreference> Preferences { get; set; }
-        public User PublicUser { get; set; }
-        public string Favorite { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            PublicUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
-            var MyUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
-            ViewData["MyRole"] = UserHelpers.GetMyRole(_cache, _context, User.Identity.Name);
-            Permissions = UserHelpers.GetUserPermissions(_cache, _context, User.Identity.Name);
-            ViewData["Permissions"] = Permissions;
-            ViewData["SiteMessage"] = HtmlHelpers.SiteMessage(HttpContext, _context);
-            Favorites = UserHelpers.GetUserFavorites(_cache, _context, User.Identity.Name);
-            Preferences = UserHelpers.GetPreferences(_cache, _context, User.Identity.Name);
-            ViewData["Fullname"] = MyUser.Fullname_Cust;
 
             // if the id null then list all
             if (id != null)
             {
-                Collection = await _context.DpDataProjects
-                    .Include(x => x.LastUpdateUserNavigation)
-                    .Include(x => x.DpTermAnnotations)
-                    .ThenInclude(x => x.Term)
-                    .Include(x => x.DpReportAnnotations)
-                    .ThenInclude(x => x.Report)
-                    .ThenInclude(x => x.ReportObjectDoc)
-                    .Include(x => x.DpReportAnnotations)
-                    .ThenInclude(x => x.Report)
-                    .ThenInclude(x => x.ReportObjectType)
-                    .Include(x => x.DpReportAnnotations)
-                    .ThenInclude(x => x.Report)
-                    .ThenInclude(x => x.ReportObjectAttachments)
-                    .SingleAsync(x => x.DataProjectId == id);
-
-                Favorite = (
-                    from f in _context.UserFavorites
-                    where f.ItemType == "collection" && f.UserId == MyUser.UserId && f.ItemId == id
-                    select new { f.ItemId }
-                ).Any()
-                  ? "yes"
-                  : "no";
-
-                ViewData["RelatedReports"] = await (
-                    from r in _context.DpReportAnnotations
-                    where r.DataProjectId == id
-                    join q in (
-                        from f in _context.UserFavorites
-                        where f.ItemType.ToLower() == "report" && f.UserId == MyUser.UserId
-                        select new { f.ItemId }
-                    )
-                        on r.ReportId equals q.ItemId
-                        into tmp
-                    from rfi in tmp.DefaultIfEmpty()
-                    orderby r.Rank ,r.Report.Name
-                    select new RelatedItemData
+                Collection = await _cache.GetOrCreateAsync<DpDataProject>("collection-" + id,
+                    cacheEntry =>
                     {
-                        Id = r.ReportAnnotationId,
-                        CollectionId = r.DataProjectId,
-                        ItemId = r.ReportId,
-                        Name = r.Report.DisplayName,
-                        Rank = r.Rank,
-                        ReportType = r.Report.ReportObjectType.Name,
-                        CertTag = r.Report.CertificationTag,
-                        EpicMasterFile = r.Report.EpicMasterFile,
-                        Annotation =
-                            r.Report.ReportObjectDoc.DeveloperDescription == null
-                                ? r.Report.Description
-                                : r.Report.ReportObjectDoc.DeveloperDescription,
-                        Image = r.Report.ReportObjectImagesDocs.Any()
-                          ? "/data/img?id=" + r.Report.ReportObjectImagesDocs.First().ImageId
-                          : "",
-                        Favorite = rfi.ItemId == null ? "no" : "yes",
-                        RunReportUrl = Helpers.HtmlHelpers.ReportUrlFromParams(
-                            _config["AppSettings:org_domain"],
-                            HttpContext,
-                            r.Report,
-                            _context,
-                            User.Identity.Name
-                        ),
-                        ManageReportUrl = HtmlHelpers.ReportManageUrlFromParams(
-                            _config["AppSettings:org_domain"],
-                            HttpContext,
-                            r.Report.ReportObjectType.Name,
-                            r.Report.ReportServerPath,
-                            r.Report.SourceServer
-                        ),
-                        EditReportUrl = HtmlHelpers.EditReportFromParams(
-                            _config["AppSettings:org_domain"],
-                            HttpContext,
-                            r.Report.ReportServerPath,
-                            r.Report.SourceServer,
-                            r.Report.EpicMasterFile,
-                            r.Report.EpicReportTemplateId.ToString(),
-                            r.Report.EpicRecordId.ToString()
-                        ),
+                        cacheEntry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20);
+                        return _context.DpDataProjects
+                                .Include(x => x.LastUpdateUserNavigation)
+                                .Include(x => x.DpTermAnnotations)
+                                .ThenInclude(x => x.Term)
+                                .Include(x => x.DpReportAnnotations)
+                                .ThenInclude(x => x.Report)
+                                .ThenInclude(x => x.ReportObjectDoc)
+                                .Include(x => x.DpReportAnnotations)
+                                .ThenInclude(x => x.Report)
+                                .ThenInclude(x => x.ReportObjectType)
+                                .Include(x => x.DpReportAnnotations)
+                                .ThenInclude(x => x.Report)
+                                .ThenInclude(x => x.ReportObjectAttachments)
+                                .SingleAsync(x => x.DataProjectId == id);
                     }
-                ).ToListAsync();
+                );
 
                 if (Collection != null)
                 {
@@ -168,18 +67,13 @@ namespace Atlas_Web.Pages.Collections
                 }
             }
 
-            Collections = await _context.DpDataProjects.ToListAsync();
-            //Favorite = (
-            //    from f in _context.UserFavorites
-            //    where
-            //        f.ItemType == "collection"
-            //        && f.UserId == MyUser.UserId
-            //        && f.ItemId == i.DataProjectId
-            //    select new { f.ItemId }
-            //).Any()
-            //    ? "yes"
-            //    : "no";
-            //    }
+            Collections = await _cache.GetOrCreateAsync<List<DpDataProject>>("collections",
+                cacheEntry =>
+                {
+                    cacheEntry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20);
+                    return _context.DpDataProjects.ToListAsync();
+                }
+            );
 
             return Page();
         }
@@ -218,6 +112,9 @@ namespace Atlas_Web.Pages.Collections
                 _context.DpDataProjects.Where(m => m.DataProjectId == Id).FirstOrDefault()
             );
             _context.SaveChanges();
+
+            _cache.Remove("collection-" + Id);
+            _cache.Remove("collections");
 
             return RedirectToPage("/Collections/Index");
         }

@@ -45,7 +45,6 @@ namespace Atlas_Web.Pages.Profile
             _cache = cache;
         }
 
-        public List<UserPreference> Preferences { get; set; }
 
         public class TopUsersData
         {
@@ -95,19 +94,15 @@ namespace Atlas_Web.Pages.Profile
         public IEnumerable<SubscriptionData> Subscriptions { get; set; }
         public IEnumerable<FavoritesData> ProfileFavorites { get; set; }
 
-        public List<int?> Permissions { get; set; }
-
-        public List<UserFavorite> Favorites { get; set; }
-        public User PublicUser { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            PublicUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
+
             TopUsers = await _cache.GetOrCreateAsync<List<TopUsersData>>(
                 "TopUsers-Report" + id,
                 cacheEntry =>
                 {
-                    cacheEntry.SlidingExpiration = TimeSpan.FromHours(2);
+                    cacheEntry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20);
                     return (
                         from d in _context.ReportObjectRunData
                         where d.ReportObjectId == id && d.RunStatus == "Success"
@@ -137,7 +132,7 @@ namespace Atlas_Web.Pages.Profile
                 "RunTime-Report" + id,
                 cacheEntry =>
                 {
-                    cacheEntry.SlidingExpiration = TimeSpan.FromHours(2);
+                    cacheEntry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20);
                     return (
                         from d in _context.ReportObjectReportRunTimes
                         where d.ReportObjectId == id
@@ -156,7 +151,7 @@ namespace Atlas_Web.Pages.Profile
                 "FailedRuns-Report" + id,
                 cacheEntry =>
                 {
-                    cacheEntry.SlidingExpiration = TimeSpan.FromHours(2);
+                    cacheEntry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20);
                     return (
                         from d in _context.ReportObjectRunData
                         where d.ReportObjectId == id && d.RunStatus != "Success"
@@ -176,7 +171,7 @@ namespace Atlas_Web.Pages.Profile
                 "Subscriptions-Report" + id,
                 cacheEntry =>
                 {
-                    cacheEntry.SlidingExpiration = TimeSpan.FromHours(2);
+                    cacheEntry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20);
                     return (
                         from s in _context.ReportObjectSubscriptions
                         where s.ReportObjectId == id
@@ -213,12 +208,6 @@ namespace Atlas_Web.Pages.Profile
                 }
             );
 
-            Permissions = UserHelpers.GetUserPermissions(_cache, _context, User.Identity.Name);
-            ViewData["Permissions"] = Permissions;
-            ViewData["SiteMessage"] = HtmlHelpers.SiteMessage(HttpContext, _context);
-            Favorites = UserHelpers.GetUserFavorites(_cache, _context, User.Identity.Name);
-            Preferences = UserHelpers.GetPreferences(_cache, _context, User.Identity.Name);
-            ViewData["MyRole"] = UserHelpers.GetMyRole(_cache, _context, User.Identity.Name);
             HttpContext.Response.Headers.Remove("Cache-Control");
             HttpContext.Response.Headers.Add("Cache-Control", "max-age=360");
             return Page();
@@ -226,7 +215,6 @@ namespace Atlas_Web.Pages.Profile
 
         public async Task<IActionResult> OnGetCollectionsAsync(int? id)
         {
-            PublicUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
             var ReportList = _context.DpReportAnnotations
                 .Where(x => x.DataProjectId == id)
                 .Select(x => x.ReportId)
@@ -236,7 +224,7 @@ namespace Atlas_Web.Pages.Profile
                 "TopUsers-Collection" + id,
                 cacheEntry =>
                 {
-                    cacheEntry.SlidingExpiration = TimeSpan.FromHours(2);
+                    cacheEntry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20);
                     return (
                         from d in _context.ReportObjectRunData
                         where ReportList.Contains(d.ReportObjectId) && d.RunStatus == "Success"
@@ -266,7 +254,7 @@ namespace Atlas_Web.Pages.Profile
                 "RunTime-Collection" + id,
                 cacheEntry =>
                 {
-                    cacheEntry.SlidingExpiration = TimeSpan.FromHours(2);
+                    cacheEntry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20);
                     return (
                         from d in _context.ReportObjectReportRunTimes
                         where ReportList.Contains(d.ReportObjectId)
@@ -282,11 +270,6 @@ namespace Atlas_Web.Pages.Profile
                 }
             );
 
-            Permissions = UserHelpers.GetUserPermissions(_cache, _context, User.Identity.Name);
-            ViewData["Permissions"] = Permissions;
-            ViewData["SiteMessage"] = HtmlHelpers.SiteMessage(HttpContext, _context);
-            Favorites = UserHelpers.GetUserFavorites(_cache, _context, User.Identity.Name);
-            Preferences = UserHelpers.GetPreferences(_cache, _context, User.Identity.Name);
             ViewData["MyRole"] = UserHelpers.GetMyRole(_cache, _context, User.Identity.Name);
             HttpContext.Response.Headers.Remove("Cache-Control");
             HttpContext.Response.Headers.Add("Cache-Control", "max-age=360");
@@ -295,7 +278,7 @@ namespace Atlas_Web.Pages.Profile
 
         public async Task<IActionResult> OnGetTermsAsync(int? id)
         {
-            PublicUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
+
             var ReportList = _context.ReportObjectDocTerms
                 .Where(x => x.TermId == id)
                 .Select(x => x.ReportObjectId)
@@ -305,7 +288,7 @@ namespace Atlas_Web.Pages.Profile
                 "TopUsers-Term" + id,
                 cacheEntry =>
                 {
-                    cacheEntry.SlidingExpiration = TimeSpan.FromHours(2);
+                    cacheEntry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20);
                     return (
                         from d in _context.ReportObjectRunData
                         where ReportList.Contains(d.ReportObjectId) && d.RunStatus == "Success"
@@ -335,7 +318,7 @@ namespace Atlas_Web.Pages.Profile
                 "RunTime-Term" + id,
                 cacheEntry =>
                 {
-                    cacheEntry.SlidingExpiration = TimeSpan.FromHours(2);
+                    cacheEntry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20);
                     return (
                         from d in _context.ReportObjectReportRunTimes
                         where ReportList.Contains((int)d.ReportObjectId)
@@ -351,12 +334,6 @@ namespace Atlas_Web.Pages.Profile
                 }
             );
 
-            Permissions = UserHelpers.GetUserPermissions(_cache, _context, User.Identity.Name);
-            ViewData["Permissions"] = Permissions;
-            ViewData["SiteMessage"] = HtmlHelpers.SiteMessage(HttpContext, _context);
-            Favorites = UserHelpers.GetUserFavorites(_cache, _context, User.Identity.Name);
-            Preferences = UserHelpers.GetPreferences(_cache, _context, User.Identity.Name);
-            ViewData["MyRole"] = UserHelpers.GetMyRole(_cache, _context, User.Identity.Name);
             HttpContext.Response.Headers.Remove("Cache-Control");
             HttpContext.Response.Headers.Add("Cache-Control", "max-age=360");
             return Page();

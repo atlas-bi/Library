@@ -25,9 +25,6 @@ namespace Atlas_Web.Pages.Initiatives
             _cache = cache;
         }
 
-        public List<int?> Permissions { get; set; }
-        public User PublicUser { get; set; }
-
         [BindProperty]
         public DpDataInitiative Initiative { get; set; }
 
@@ -42,14 +39,6 @@ namespace Atlas_Web.Pages.Initiatives
                 User.Identity.Name,
                 22
             );
-
-            PublicUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
-            var MyUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
-            ViewData["MyRole"] = UserHelpers.GetMyRole(_cache, _context, User.Identity.Name);
-            Permissions = UserHelpers.GetUserPermissions(_cache, _context, User.Identity.Name);
-            ViewData["Permissions"] = Permissions;
-            ViewData["SiteMessage"] = HtmlHelpers.SiteMessage(HttpContext, _context);
-            ViewData["Fullname"] = MyUser.Fullname_Cust;
 
             if (!checkpoint)
             {
@@ -130,6 +119,9 @@ namespace Atlas_Web.Pages.Initiatives
                 .ForEach(x => x.DataInitiativeId = null);
 
             _context.SaveChanges();
+
+            _cache.Remove("initiative-" + Initiative.DataInitiativeId);
+            _cache.Remove("initatives");
 
             return RedirectToPage(
                 "/Initiatives/Index",

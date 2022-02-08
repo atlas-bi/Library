@@ -43,14 +43,11 @@ namespace Atlas_Web.Pages
             _cache = cache;
         }
 
-        public List<UserFavorite> Favorites { get; set; }
-        public List<int?> Permissions { get; set; }
         public int UserId { get; set; }
         public string FirstName { get; set; }
 
         [BindProperty]
         public UserFavoriteFolder Folder { get; set; }
-        public List<UserPreference> Preferences { get; set; }
 
         public class BasicFavoriteData
         {
@@ -76,13 +73,7 @@ namespace Atlas_Web.Pages
             var MyUser = PublicUser;
             UserId = MyUser.UserId;
             FirstName = MyUser.Firstname_Cust;
-            Permissions = UserHelpers.GetUserPermissions(_cache, _context, User.Identity.Name);
-            ViewData["Permissions"] = Permissions;
-            Favorites = UserHelpers.GetUserFavorites(_cache, _context, User.Identity.Name);
-            Preferences = UserHelpers.GetPreferences(_cache, _context, User.Identity.Name);
-            ViewData["MyRole"] = UserHelpers.GetMyRole(_cache, _context, User.Identity.Name);
-            //        ViewData["SiteMessage"] = HtmlHelpers.SiteMessage(HttpContext, _context);
-            ViewData["Fullname"] = MyUser.Fullname_Cust;
+
 
             return Page();
         }

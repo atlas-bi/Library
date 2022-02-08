@@ -74,29 +74,18 @@ namespace Atlas_Web.Pages.Analytics
             public int Hits { get; set; }
         }
 
-        public List<UserFavorite> Favorites { get; set; }
-        public List<int?> Permissions { get; set; }
         public List<MediumData> TopUsers { get; set; }
         public List<AccessHistoryData> AccessHistory { get; set; }
         public List<AccessHistoryData> SearchHistory { get; set; }
         public List<AccessHistoryData> ReportHistory { get; set; }
         public List<AccessHistoryData> TermHistory { get; set; }
         public List<MediumData> TopPages { get; set; }
-        public List<UserPreference> Preferences { get; set; }
 
         [BindProperty]
         public Models.Analytic NewAnalytic { get; set; }
-        public User PublicUser { get; set; }
 
         public async Task<ActionResult> OnGetAsync()
         {
-            PublicUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
-            ViewData["MyRole"] = UserHelpers.GetMyRole(_cache, _context, User.Identity.Name);
-            Permissions = UserHelpers.GetUserPermissions(_cache, _context, User.Identity.Name);
-            ViewData["Permissions"] = Permissions;
-            ViewData["SiteMessage"] = HtmlHelpers.SiteMessage(HttpContext, _context);
-            Favorites = UserHelpers.GetUserFavorites(_cache, _context, User.Identity.Name);
-            Preferences = UserHelpers.GetPreferences(_cache, _context, User.Identity.Name);
             TopUsers = (
                 from a in (
                     from a in _context.Analytics

@@ -27,8 +27,6 @@ namespace Atlas_Web.Pages.Tasks
             _cache = cache;
         }
 
-        public List<UserPreference> Preferences { get; set; }
-
         public class UndocumentedReports
         {
             public int ReportObjectId { get; set; }
@@ -94,8 +92,6 @@ namespace Atlas_Web.Pages.Tasks
             public string EpicId { get; set; }
         }
 
-        public List<UserFavorite> Favorites { get; set; }
-        public List<int?> Permissions { get; set; }
         public IEnumerable<RecommendRetireReports> RecommendRetire { get; set; }
         public IEnumerable<NextMaint> NextMaintenance { get; set; }
         public List<NextMaint> AuditOnly { get; set; }
@@ -104,16 +100,10 @@ namespace Atlas_Web.Pages.Tasks
         public IEnumerable<UndocumentedReports> NewUndocumented { get; set; }
         public IEnumerable<EditedOutsideAnalyticsData> EditedOutsideAnalytics { get; set; }
         public IEnumerable<DeadData> Dead { get; set; }
-        public User PublicUser { get; set; }
         public List<AdList> AdLists { get; set; }
 
         public IActionResult OnGet(int? id)
         {
-            PublicUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
-            ViewData["MyRole"] = UserHelpers.GetMyRole(_cache, _context, User.Identity.Name);
-            Permissions = UserHelpers.GetUserPermissions(_cache, _context, User.Identity.Name);
-            ViewData["Permissions"] = Permissions;
-            ViewData["SiteMessage"] = HtmlHelpers.SiteMessage(HttpContext, _context);
             AdLists = new List<AdList>
             {
                 new AdList { Url = "/Users?handler=SharedObjects", Column = 2 },
@@ -123,8 +113,6 @@ namespace Atlas_Web.Pages.Tasks
                 new AdList { Url = "/?handler=RecentCollections", Column = 2 }
             };
             ViewData["AdLists"] = AdLists;
-            Favorites = UserHelpers.GetUserFavorites(_cache, _context, User.Identity.Name);
-            Preferences = UserHelpers.GetPreferences(_cache, _context, User.Identity.Name);
             return Page();
         }
 

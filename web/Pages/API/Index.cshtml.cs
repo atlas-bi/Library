@@ -41,20 +41,10 @@ namespace Atlas_Web.Pages.API
             public string Type { get; set; }
         }
 
-        public List<UserFavorite> Favorites { get; set; }
-        public List<UserPreference> Preferences { get; set; }
-        public List<int?> Permissions { get; set; }
         public List<AdList> AdLists { get; set; }
-        public User PublicUser { get; set; }
 
         public void OnGet()
         {
-            PublicUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
-            Preferences = UserHelpers.GetPreferences(_cache, _context, User.Identity.Name);
-            Permissions = UserHelpers.GetUserPermissions(_cache, _context, User.Identity.Name);
-            ViewData["Permissions"] = Permissions;
-            ViewData["SiteMessage"] = HtmlHelpers.SiteMessage(HttpContext, _context);
-            Favorites = UserHelpers.GetUserFavorites(_cache, _context, User.Identity.Name);
 
             ViewData["stuff"] = (
                 from u in (

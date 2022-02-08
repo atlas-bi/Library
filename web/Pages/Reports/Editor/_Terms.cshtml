@@ -62,7 +62,7 @@
         <h4>Technical Definition</h4>
         <div class="editor" data-inputName="NewTerm.TechnicalDefinition" data-inputId="NewTerm_TechnicalDefinition"></div>
            
-        @if (Model.Permissions.Contains(6))
+        @if (ViewBag.Permissions.Contains(6))
         {
             <div class="form-check">
                 <input type="checkbox" class="form-check-input" id="approvedYn">

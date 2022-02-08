@@ -32,7 +32,7 @@
 
 
 
-@if (Model.Permissions.Contains(39) && (TopUsers || RunHistory || FailedRuns || Subscriptions || Favorites))
+@if (ViewBag.Permissions.Contains(39) && (TopUsers || RunHistory || FailedRuns || Subscriptions || Favorites))
 {
     <div class="tab">
         @if(TopUsers)

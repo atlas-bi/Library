@@ -25,9 +25,6 @@ namespace Atlas_Web.Pages.Collections
             _cache = cache;
         }
 
-        public List<int?> Permissions { get; set; }
-        public User PublicUser { get; set; }
-
         [BindProperty]
         public DpDataProject Collection { get; set; }
 
@@ -45,14 +42,6 @@ namespace Atlas_Web.Pages.Collections
                 User.Identity.Name,
                 28
             );
-
-            PublicUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
-            var MyUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
-            ViewData["MyRole"] = UserHelpers.GetMyRole(_cache, _context, User.Identity.Name);
-            Permissions = UserHelpers.GetUserPermissions(_cache, _context, User.Identity.Name);
-            ViewData["Permissions"] = Permissions;
-            ViewData["SiteMessage"] = HtmlHelpers.SiteMessage(HttpContext, _context);
-            ViewData["Fullname"] = MyUser.Fullname_Cust;
 
             if (!checkpoint)
             {
@@ -167,6 +156,9 @@ namespace Atlas_Web.Pages.Collections
                     .Where(d => !Reports.Select(x => x.ReportId).Contains((int)d.ReportId))
             );
             _context.SaveChanges();
+
+            _cache.Remove("collection-" + NewCollection.DataProjectId);
+            _cache.Remove("collections");
 
             return RedirectToPage(
                 "/Collections/Index",

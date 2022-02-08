@@ -161,9 +161,8 @@ namespace Atlas_Web.Pages.Users
         }
 
         public List<AdList> AdLists { get; set; }
-        public List<UserFavorite> Favorites { get; set; }
+
         public User UserDetails { get; set; }
-        public List<int?> Permissions { get; set; }
         public IEnumerable<LastEdited> ReportObjectDocEdits { get; set; }
         public IEnumerable<LastEdited> InitiativeEdits { get; set; }
         public IEnumerable<LastEdited> CollectionEdits { get; set; }
@@ -181,7 +180,7 @@ namespace Atlas_Web.Pages.Users
         public IEnumerable<AtlasHistoryData> AtlasHistory { get; set; }
         public IEnumerable<Group> Groups { get; set; }
         public List<SubscribedReportsData> SubscribedReports { get; set; }
-        public List<UserPreference> Preferences { get; set; }
+
 
         [BindProperty]
         public MyRole MyRole { get; set; }
@@ -191,20 +190,14 @@ namespace Atlas_Web.Pages.Users
 
         [BindProperty]
         public MyRole AsAdmin { get; set; }
-        public User PublicUser { get; set; }
+
 
         public ActionResult OnGet(int? id)
         {
-            PublicUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
-            UserDetails = PublicUser;
+            UserDetails = UserHelpers.GetUser(_cache, _context, User.Identity.Name); ;
             // for the viewing user, not the viewed user
-            Favorites = UserHelpers.GetUserFavorites(_cache, _context, User.Identity.Name);
-            Permissions = UserHelpers.GetUserPermissions(_cache, _context, User.Identity.Name);
-            ViewData["Permissions"] = Permissions;
-            ViewData["SiteMessage"] = HtmlHelpers.SiteMessage(HttpContext, _context);
-            Preferences = UserHelpers.GetPreferences(_cache, _context, User.Identity.Name);
-            MyId = PublicUser.UserId;
-            ViewData["MyRole"] = UserHelpers.GetMyRole(_cache, _context, User.Identity.Name);
+            MyId = UserDetails.UserId;
+
             // can user view others?
             var checkpoint = UserHelpers.CheckUserPermissions(
                 _cache,
@@ -420,7 +413,7 @@ namespace Atlas_Web.Pages.Users
                 "SearchFavorites-" + MyUser.UserId,
                 cacheEntry =>
                 {
-                    cacheEntry.SlidingExpiration = TimeSpan.FromHours(2);
+                    cacheEntry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20);
                     return (
                         from f in _context.UserFavorites
                         where f.ItemType == "search" && f.UserId == MyUser.UserId
@@ -522,7 +515,7 @@ namespace Atlas_Web.Pages.Users
                 "FavoriteReports-" + UserId,
                 cacheEntry =>
                 {
-                    cacheEntry.SlidingExpiration = TimeSpan.FromHours(2);
+                    cacheEntry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20);
                     return (
                         from q in _context.UserFavorites
                         join ro in _context.ReportObjects
@@ -633,7 +626,7 @@ namespace Atlas_Web.Pages.Users
                 "FavoriteFolders-" + UserId,
                 cacheEntry =>
                 {
-                    cacheEntry.SlidingExpiration = TimeSpan.FromHours(2);
+                    cacheEntry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20);
                     return (
                         from l in _context.UserFavoriteFolders
                         join u in _context.Users on l.UserId equals u.UserId
@@ -656,7 +649,7 @@ namespace Atlas_Web.Pages.Users
                     "FavTopRunReports-" + UserId,
                     cacheEntry =>
                     {
-                        cacheEntry.SlidingExpiration = TimeSpan.FromHours(2);
+                        cacheEntry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20);
                         return (
                             from d in _context.ReportObjectTopRuns
                             where d.RunUserId == UserId
@@ -860,7 +853,7 @@ namespace Atlas_Web.Pages.Users
                 "Group-" + UserId,
                 cacheEntry =>
                 {
-                    cacheEntry.SlidingExpiration = TimeSpan.FromHours(12);
+                    cacheEntry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20);
                     return (
                         from a in _context.UserGroupsMemberships
                         where a.UserId == UserId
@@ -912,7 +905,7 @@ namespace Atlas_Web.Pages.Users
                 "SubscribedReports-" + UserId,
                 cacheEntry =>
                 {
-                    cacheEntry.SlidingExpiration = TimeSpan.FromHours(12);
+                    cacheEntry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20);
                     return (
                         from r in _context.ReportObjectSubscriptions
                             .Where(x => x.UserId == UserId)
@@ -1105,7 +1098,7 @@ namespace Atlas_Web.Pages.Users
                 "LoadTime-" + UserId,
                 cacheEntry =>
                 {
-                    cacheEntry.SlidingExpiration = TimeSpan.FromHours(12);
+                    cacheEntry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20);
                     return (
                         from a in _context.Analytics
                         where a.AccessDateTime > DateTime.Now.AddDays(-7) && a.UserId == UserId
@@ -1159,7 +1152,7 @@ namespace Atlas_Web.Pages.Users
                 "ReportRunTime-" + UserId,
                 cacheEntry =>
                 {
-                    cacheEntry.SlidingExpiration = TimeSpan.FromHours(12);
+                    cacheEntry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20);
                     return (
                         from d in _context.ReportObjectRunTimes
                         where d.RunUserId == UserId
@@ -1179,7 +1172,7 @@ namespace Atlas_Web.Pages.Users
                 "TopRunReports-" + UserId,
                 cacheEntry =>
                 {
-                    cacheEntry.SlidingExpiration = TimeSpan.FromHours(12);
+                    cacheEntry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20);
                     return (
                         from d in _context.ReportObjectTopRuns
                         where
@@ -1205,7 +1198,7 @@ namespace Atlas_Web.Pages.Users
                 "FailedRuns-" + UserId,
                 cacheEntry =>
                 {
-                    cacheEntry.SlidingExpiration = TimeSpan.FromHours(12);
+                    cacheEntry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20);
 
                     return (
                         from d in _context.ReportObjectRunData

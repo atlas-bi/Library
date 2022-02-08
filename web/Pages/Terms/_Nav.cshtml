@@ -1,6 +1,4 @@
 @model Atlas_Web.Pages.Terms.IndexModel
-@inject IConfiguration Configuration
-
 <li>
     <a class="" data-toggle="mdl" data-target="profile-modal" data-tooltip="Open Report Profile">
         <span class="icon has-text-grey is-large ">
@@ -9,18 +7,18 @@
     </a>
 </li>
 
-<li>
+@*<li>
     <a class=" @Html.Raw((@Model.MyTerm.Favorite=="yes") ? "favorite" : "")" data-tooltip="@Html.Raw((@Model.MyTerm.Favorite=="yes") ? "Remove from Favorites" : "Add to Favorites")" fav-type="term" object-id="@Model.MyTerm.Id">
         <span class="icon has-text-grey is-large ">
             <i class="fas fa-lg fa-star"></i>
         </span>
     </a>
-</li>
+</li>*@
 
 @if (@Configuration["features:enable_sharing"] == null || @Configuration["features:enable_sharing"].ToString().ToLower() == "true")
 {
     <li>
-        <a class="" data-tooltip="Share" data-toggle="mdl" data-target="shareModal" data-name="@Model.MyTerm.Name" data-type="term">
+        <a class="" data-tooltip="Share" data-toggle="mdl" data-target="shareModal" data-name="@Model.Term.Name" data-type="term">
             <span class="icon has-text-grey is-large ">
                 <i class="fas fa-lg fa-share"></i>
             </span>
@@ -31,7 +29,7 @@
 @if (@Configuration["features:enable_feedback"] == null || @Configuration["features:enable_feedback"].ToString().ToLower() == "true")
 {
     <li>
-        <a class="" data-tooltip="Share Feedback" data-toggle="mdl" data-target="shareFeedback" data-name="@Model.MyTerm.Name">
+        <a class="" data-tooltip="Share Feedback" data-toggle="mdl" data-target="shareFeedback" data-name="@Model.Term.Name">
             <span class="icon has-text-grey is-large ">
                 <i class="far fa-lg fa-thumbs-up"></i>
             </span>
@@ -39,7 +37,7 @@
     </li>
 }
 
-@if (Model.Permissions.Contains(7))
+@if (ViewBag.Permissions.Contains(7))
 {
     <li>
         <a class="" href="/Terms/New/" data-tooltip="Create New Term">
@@ -50,10 +48,10 @@
     </li>
 }
 
-@if ((Model.Permissions.Contains(13) && Model.MyTerm.Approved == "N") || (Model.Permissions.Contains(11) && Model.MyTerm.Approved == "Y"))
+@if ((ViewBag.Permissions.Contains(13) && Model.Term.ApprovedYn == "N") || (ViewBag.Permissions.Contains(11) && Model.Term.ApprovedYn == "Y"))
 {
     <li>
-        <a class="" href="/Terms/Edit/?id=@Model.MyTerm.Id" data-tooltip="Open Atlas Editor">
+        <a class="" href="/Terms/Edit/?id=@Model.Term.TermId" data-tooltip="Open Atlas Editor">
             <span class="icon has-text-grey is-large ">
                 <i class="fas fa-lg fa-edit"></i>
             </span>
@@ -61,10 +59,10 @@
     </li>
 }
 
-@if ((Model.Permissions.Contains(9) && Model.MyTerm.Approved == "N") || (Model.Permissions.Contains(8) && Model.MyTerm.Approved == "Y"))
+@if ((ViewBag.Permissions.Contains(9) && Model.Term.ApprovedYn == "N") || (ViewBag.Permissions.Contains(8) && Model.Term.ApprovedYn == "Y"))
 {
     <li>
-        <a class="" data-tooltip="Delete this Term" href="/terms?Handler=DeleteTerm&id=@Model.MyTerm.Id" onclick="return confirm('Are you sure you want to remove this?');">
+        <a class="" data-tooltip="Delete this Term" href="/terms?Handler=DeleteTerm&id=@Model.Term.TermId" onclick="return confirm('Are you sure you want to remove this?');">
             <span class="icon has-text-grey is-large ">
                 <i class="fas fa-lg fa-trash"></i>
             </span>

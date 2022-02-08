@@ -61,9 +61,6 @@ namespace Atlas_Web.Pages.Search
             public string Name { get; set; }
         }
 
-        public List<UserPreference> Preferences { get; set; }
-        public List<int?> Permissions { get; set; }
-        public List<UserFavorite> Favorites { get; set; }
         public List<AdList> AdLists { get; set; }
         public List<SearchCollectionData> Collections { get; set; }
 
@@ -479,14 +476,8 @@ namespace Atlas_Web.Pages.Search
                 );
             }
 
-            PublicUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
 
             SearchString = Query;
-            ViewData["MyRole"] = UserHelpers.GetMyRole(_cache, _context, User.Identity.Name);
-            ViewData["Fullname"] = PublicUser.Fullname_Cust;
-            Permissions = UserHelpers.GetUserPermissions(_cache, _context, User.Identity.Name);
-            ViewData["Permissions"] = Permissions;
-            ViewData["SiteMessage"] = HtmlHelpers.SiteMessage(HttpContext, _context);
 
             //ReportId = string.Join(",", SearchResults.Results.Where(x => x.Type.First() == "reports").Select(x => x.AtlasId.First()).ToList());
             AdLists = new List<AdList>
@@ -498,9 +489,6 @@ namespace Atlas_Web.Pages.Search
                 new AdList { Url = "/?handler=RecentCollections", Column = 2 }
             };
             ViewData["AdLists"] = AdLists;
-
-            Favorites = UserHelpers.GetUserFavorites(_cache, _context, User.Identity.Name);
-            Preferences = UserHelpers.GetPreferences(_cache, _context, User.Identity.Name);
 
             HttpContext.Response.Headers.Add(
                 "Cache-Control",

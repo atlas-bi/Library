@@ -217,10 +217,6 @@ namespace Atlas_Web.Pages.Reports
             public string RunReportUrl { get; set; }
         }
 
-        public User PublicUser { get; set; }
-        public List<UserFavorite> Favorites { get; set; }
-        public List<UserPreference> Preferences { get; set; }
-        public List<int?> Permissions { get; set; }
         public List<AdList> AdLists { get; set; }
         public List<ComponentQueryData> ComponentQuery { get; set; }
 
@@ -275,10 +271,6 @@ namespace Atlas_Web.Pages.Reports
             }
             ViewData["MyRole"] = UserHelpers.GetMyRole(_cache, _context, User.Identity.Name);
             var MyUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
-
-            ViewData["Fullname"] = MyUser.Fullname_Cust;
-            PublicUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
-            Preferences = UserHelpers.GetPreferences(_cache, _context, User.Identity.Name);
 
             Report = await (
                 from r in _context.ReportObjects
@@ -699,11 +691,6 @@ namespace Atlas_Web.Pages.Reports
             ).ToListAsync();
 
             ViewData["RelatedCollections"] = RelatedCollections;
-
-            Permissions = UserHelpers.GetUserPermissions(_cache, _context, User.Identity.Name);
-            ViewData["Permissions"] = Permissions;
-            ViewData["SiteMessage"] = HtmlHelpers.SiteMessage(HttpContext, _context);
-            Favorites = UserHelpers.GetUserFavorites(_cache, _context, User.Identity.Name);
 
             AdLists = new List<AdList>
             {
@@ -1445,7 +1432,7 @@ namespace Atlas_Web.Pages.Reports
                 "RelatedReports-" + id,
                 cacheEntry =>
                 {
-                    cacheEntry.SlidingExpiration = TimeSpan.FromHours(2);
+                    cacheEntry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20);
                     // id is a number e.g. 1, or a list of numbers e.g. "1,2,3"
                     var user = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
 

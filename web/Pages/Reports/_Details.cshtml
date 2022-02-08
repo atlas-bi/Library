@@ -128,13 +128,13 @@
         </span>
     }
 
-    @if (m.Permissions.Contains(35) && m.Report.DoNotPurge == "Y")
+    @if (ViewBag.Permissions.Contains(35) && m.Report.DoNotPurge == "Y")
     {
         <span class="listDetails-title">Do Not Purge</span>
         <span>Yes</span>
     }
 
-    @if (m.Permissions.Contains(43) && m.Report.Hidden == "Y")
+    @if (ViewBag.Permissions.Contains(43) && m.Report.Hidden == "Y")
     {
         <span class="listDetails-title">Hidden?</span>
         <span>Yes</span>

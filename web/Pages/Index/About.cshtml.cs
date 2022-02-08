@@ -43,14 +43,13 @@ namespace Atlas_Dotnet.Pages
             _cache = cache;
         }
 
-        public List<UserFavorite> Favorites { get; set; }
-        public List<int?> Permissions { get; set; }
+
         public int UserId { get; set; }
         public string FirstName { get; set; }
 
         [BindProperty]
         public UserFavoriteFolder Folder { get; set; }
-        public List<UserPreference> Preferences { get; set; }
+
 
         public class BasicFavoriteData
         {
@@ -68,21 +67,14 @@ namespace Atlas_Dotnet.Pages
         }
 
         public List<AdList> AdLists { get; set; }
-        public User PublicUser { get; set; }
+
 
         public ActionResult OnGetAsync()
         {
-            PublicUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
-            var MyUser = PublicUser;
+            var MyUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name); ;
             UserId = MyUser.UserId;
             FirstName = MyUser.Firstname_Cust;
-            Permissions = UserHelpers.GetUserPermissions(_cache, _context, User.Identity.Name);
-            ViewData["Permissions"] = Permissions;
-            Favorites = UserHelpers.GetUserFavorites(_cache, _context, User.Identity.Name);
-            Preferences = UserHelpers.GetPreferences(_cache, _context, User.Identity.Name);
-            ViewData["MyRole"] = UserHelpers.GetMyRole(_cache, _context, User.Identity.Name);
-            //        ViewData["SiteMessage"] = HtmlHelpers.SiteMessage(HttpContext, _context);
-            ViewData["Fullname"] = MyUser.Fullname_Cust;
+
 
             return Page();
         }

@@ -45,7 +45,7 @@ namespace Atlas_Web.Pages.Mail
             _cache = cache;
         }
 
-        public User PublicUser { get; set; }
+
 
         public class MessageCountData
         {
@@ -118,8 +118,6 @@ namespace Atlas_Web.Pages.Mail
             public int? ConvId { get; set; }
         }
 
-        public List<UserFavorite> Favorites { get; set; }
-        public List<int?> Permissions { get; set; }
         public string FirstName { get; set; }
 
         public void OnGet() { }
@@ -128,12 +126,8 @@ namespace Atlas_Web.Pages.Mail
 
         public async Task<ActionResult> OnPostCheckForMail()
         {
-            Permissions = UserHelpers.GetUserPermissions(_cache, _context, User.Identity.Name);
-            ViewData["SiteMessage"] = HtmlHelpers.SiteMessage(HttpContext, _context);
-            Favorites = UserHelpers.GetUserFavorites(_cache, _context, User.Identity.Name);
-            Preferences = UserHelpers.GetPreferences(_cache, _context, User.Identity.Name);
-            PublicUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
-            var MyUser = PublicUser;
+
+            var MyUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name); ;
             FirstName = MyUser.Firstname_Cust;
 
             // get all mail
@@ -273,13 +267,7 @@ namespace Atlas_Web.Pages.Mail
             );
             HttpContext.Response.Headers.Add("Pragma", "no-cache"); // HTTP 1.0.
             HttpContext.Response.Headers.Add("Expires", "0"); // Proxies.
-            Permissions = UserHelpers.GetUserPermissions(_cache, _context, User.Identity.Name);
-            ViewData["SiteMessage"] = HtmlHelpers.SiteMessage(HttpContext, _context);
-            Favorites = UserHelpers.GetUserFavorites(_cache, _context, User.Identity.Name);
-            Preferences = UserHelpers.GetPreferences(_cache, _context, User.Identity.Name);
-            PublicUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
-            ViewData["Fullname"] = PublicUser.Fullname_Cust;
-            var MyUser = PublicUser;
+            var MyUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
             if (MyUser.UserId != id)
             {
                 return Content("You are unauthorized bro.");

@@ -1,44 +1,96 @@
-@inject IConfiguration Configuration
 @model Atlas_Web.Pages.Terms.IndexModel
-<div class="pageTitle">
-    <div class="page-title">
-        <h2 class="pageTitle-head">
-            @if (@Model.MyTerm.Approved == "Y")
-            {
-                <span class="text-greenModified">Approved</span>
-            }
-            @Model.MyTerm.Name
-        </h2>
+
+
+<h1 class="title is-1 is-flex is-justify-content-space-between">
+    <span>@Model.Term.Name</span>
+    @if (@Model.Term.ApprovedYn == "Y")
+    {
+        <span class="tag is-success">Approved</span>
+    }
+</h1>
+
+<partial name="_Links">
+
+<h2 id="details" class="title is-2">Description</h2>
+
+@if (Model.Term.Summary != null && Model.Term.Summary != "")
+{
+    <h3 class="title is-3">Summary</h3>
+    <div class="markdown">
+        @Html.Raw(@Helpers.HtmlHelpers.MarkdownToHtml(Model.Term.Summary))
     </div>
+}
 
-    <div class="pageNav">
-        @if (Model.MyTerm.Summary != null && Model.MyTerm.Summary != "" && Model.MyTerm.Definition != null && Model.MyTerm.Definition != "")
-        {
-            <a href="#details" class="pageNav-link">Details</a>
-        }
-        <a href="#meta" class="pageNav-link">Metadata</a>
-    
-        @if (Model.RelatedReports.Count() > 0)
-        {
-            <a href="#reports" class="pageNav-link">Reports</a>
-        }
+@if (Model.Term.TechnicalDefinition != null && Model.Term.TechnicalDefinition != "")
+{
+    <h3 class="title is-3">Technical Definition</h3>
+    <div class="markdown">
+        @Html.Raw(@Helpers.HtmlHelpers.MarkdownToHtml(Model.Term.TechnicalDefinition))
     </div>
-</div>
+}
 
-<section class="pageSection">
-    <span class="location" id="details"></span>
-    <partial name="Details/_Details" />
-</section>
-
-<section class="pageSection">
-    <span class="location" id="meta"></span>
-    <partial name="Details/_Meta">
-</section>
 
 @if (Model.RelatedReports.Count() > 0)
 {
-    <section class="pageSection">
-        <span class="location" id="reports"></span>
-        <partial name="Details/_Reports">
-    </section>
+    <h2 id="reports" class="title is-2">Linked Reports</h2>
+
+    <div class="columns is-multiline">
+        @foreach (var r in Model.RelatedReports)
+        {
+            <div class="column is-half ">
+                <partial name="Reports/_Snippet" model="r" />
+            </div>
+        }
+    </div>
 }
+
+<h2 id="meta" class="title is-2">Details</h2>
+
+<div class="table-container mt-5">
+    <table class="table is-narrow">
+        <tbody>
+            @if (Model.Term.ApprovedYn == "Y")
+            {
+                <tr>
+                    <td>Approval Date</td>
+                    <td>@Model.Term.ApprovalDateTimeDisplayString</td>
+                </tr>
+                <tr>
+                    <td>Approved By</td>
+                    <td>
+                        @if (@Configuration["features:enable_user_profile"] == null || @Configuration["features:enable_user_profile"].ToString().ToLower() == "true")
+                        {
+                            <a href="/users?id=@Model.Term.ApprovedByUserId">@Model.Term.ApprovedByUser.Fullname_Cust</a>
+                        } else
+                        {
+                            @Model.Term.ApprovedByUser.Fullname_Cust
+                        }
+                    </td>
+                </tr>
+            }
+            else
+            {
+                <tr>
+                    <td>Has Been Approved</td>
+                    <td>No</td>
+                </tr>
+            }
+            <tr>
+                <td>Last Updated By</td>
+                <td>
+                    @if (@Configuration["features:enable_user_profile"] == null || @Configuration["features:enable_user_profile"].ToString().ToLower() == "true")
+                    {
+                        <a href="/users?id=@Model.Term.UpdatedByUserId">@Model.Term.UpdatedByUser.Fullname_Cust</a>
+                    } else
+                    {
+                        @Model.Term.UpdatedByUser.Fullname_Cust
+                    }
+                </td>
+            </tr>
+            <tr>
+                <td>Last Updated</td>
+                <td>@Model.Term.LastUpdatedDateTimeDisplayString</td>
+            </tr>
+        </tbody>
+    </table>
+</div>

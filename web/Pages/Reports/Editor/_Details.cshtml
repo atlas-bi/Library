@@ -50,7 +50,7 @@
             </div>
         }
 
-        @if (Model.Permissions.Contains(35))
+        @if (ViewBag.Permissions.Contains(35))
         {
             <label>Do not purge report?</label>
             <div class='form-check' >
@@ -59,7 +59,7 @@
             </div>
         }
 
-        @if (Model.Permissions.Contains(43))
+        @if (ViewBag.Permissions.Contains(43))
         {
             <label>Hide Report?</label>
             <div class='form-check' >

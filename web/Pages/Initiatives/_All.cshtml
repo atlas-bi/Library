@@ -1,9 +1,8 @@
 @model Atlas_Web.Pages.Initiatives.IndexModel
-@using Atlas_Web.Models
 
 <h1 class="title is-1">@ViewData["Title"]</h1>
 
-@if (Model.Permissions.Contains(20))
+@if (ViewBag.Permissions.Contains(20))
 {
     <div class="field has-addons">
         <p class="control">

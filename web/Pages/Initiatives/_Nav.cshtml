@@ -1,5 +1,4 @@
 @model Atlas_Web.Pages.Initiatives.IndexModel
-@inject IConfiguration Configuration
 
 <li>
     <a class=" @Html.Raw((@Model.Favorite=="yes") ? "favorite" : "")" data-tooltip="@Html.Raw((@Model.Favorite=="yes") ? "Remove from Favorites" : "Add to Favorites")" fav-type="initiative" object-id="@Model.Initiative.DataInitiativeId">
@@ -29,7 +28,7 @@
         </a>
     </li>
 }
-@if (Model.Permissions.Contains(20))
+@if (ViewBag.Permissions.Contains(20))
 {
     <li>
         <a class="" href="/Initiatives/New/" data-tooltip="Create New Initiative">
@@ -40,7 +39,7 @@
     </li>
 
 }
-@if (Model.Permissions.Contains(22))
+@if (ViewBag.Permissions.Contains(22))
 {
     <li>
         <a class="" href="/Initiatives/Edit/?id=@Model.Initiative.DataInitiativeId" data-tooltip="Open Atlas Editor">
@@ -50,7 +49,7 @@
         </a>
     </li>
 }
-@if (Model.Permissions.Contains(21))
+@if (ViewBag.Permissions.Contains(21))
 {
     <li>
         <a class="" data-tooltip="Delete this Initaitive" href="/Initiatives?handler=DeleteInitiative&Id=@Model.Initiative.DataInitiativeId"  onclick="return confirm('Are you sure you want to remove this?');">

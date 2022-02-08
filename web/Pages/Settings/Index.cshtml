@@ -2,12 +2,10 @@
 @model Atlas_Web.Pages.Settings.IndexModel
 
 @{
-    Layout = "../Shared/_Layout.cshtml";
     ViewData["Title"] = "Settings";
 }
 
 @section SideBar {}
-@section SearchBar {}
 @section AdBar {}
 @section js {
     <script src="/js/settings.min.js" defer></script>
@@ -58,35 +56,35 @@
         <h3 class="title is-3 mb-0">Meta Fields</h3>
 
         <h4 class="title is-4 mt-5">Organizational Value</h4>
-        <div data-ajax="yes" data-url="/settings?Handler=OrganizationalValueList"></div>
+        <div data-ajax="yes" data-url="/settings/tags/?Handler=OrganizationalValueList"></div>
 
         <h4 class="title is-4 mt-5">Estimated Run Frequency</h4>
-        <div data-ajax="yes" data-url="/settings?Handler=EstimatedRunFrequencyList"></div>
+        <div data-ajax="yes" data-url="/settings/tags/?Handler=EstimatedRunFrequencyList"></div>
 
         <h4 class="title is-4 mt-5">Fragility Types</h4>
-        <div data-ajax="yes" data-url="/settings?Handler=FragilityList"></div>
+        <div data-ajax="yes" data-url="/settings/tags/?Handler=FragilityList"></div>
 
         <h4 class="title is-4 mt-5">Fragility Tags</h4>
-        <div data-ajax="yes" data-url="/settings?Handler=FragilityTagList"></div>
+        <div data-ajax="yes" data-url="/settings/tags/?Handler=FragilityTagList"></div>
 
         <h4 class="title is-4 mt-5">Maintenance Schedules</h4>
-        <div data-ajax="yes" data-url="/settings?Handler=MaintenanceScheduleList"></div>
+        <div data-ajax="yes" data-url="/settings/tags/?Handler=MaintenanceScheduleList"></div>
 
         <h4 class="title is-4 mt-5">Maintenance Log Status</h4>
-        <div data-ajax="yes" data-url="/settings?Handler=MaintenanceLogStatusList"></div>
+        <div data-ajax="yes" data-url="/settings/tags/?Handler=MaintenanceLogStatusList"></div>
 
         <h4 class="title is-4 mt-5">Financial Impact</h4>
-        <div data-ajax="yes" data-url="/settings?Handler=FinancialImpactList"></div>
+        <div data-ajax="yes" data-url="/settings/tags/?Handler=FinancialImpactList"></div>
 
         <h4 class="title is-4 mt-5">Strategic Importance</h4>
-        <div data-ajax="yes" data-url="/settings?Handler=StrategicImportanceList"></div>
+        <div data-ajax="yes" data-url="/settings/tags/?Handler=StrategicImportanceList"></div>
 
     </div>
     <div class="panel-tab-data" id="site-message">
-        <div data-ajax="yes" data-url="/settings?Handler=GlobalSettings"></div>
+        <div data-ajax="yes" data-url="/settings?Handler=SiteMessages"></div>
     </div>
     <div class="panel-tab-data" id="search">
-        <div data-ajax="yes" data-url="/settings?Handler=SearchSettings"></div>
+        <div data-ajax="yes" data-url="/settings/search"></div>
     </div>
     <div class="panel-tab-data" id="theme">
         <div data-ajax="yes" data-url="/settings?Handler=Theme"></div>

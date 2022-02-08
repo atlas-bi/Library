@@ -1,0 +1,47 @@
+@model Atlas_Web.Pages.Settings.IndexModel
+
+<div>
+    <h2 class="title is-2">URL Based Messages</h2>
+    <p class="content">Url messages are accessed using a url parameter of <i>msg</i>. For example, <i>http://atlas?msg=1</i> will should you message with an ID of 1.</p>
+    @if (ViewBag.Permissions.Contains(45))
+    {
+        <form asp-page-handler="AddSiteMessage">
+            <h3 class="title is-3">Add More</h3>
+            <div class="field">
+                <label class="label">ID</label>
+                <div class="control">
+                    <input type="text" class="input" placeholder="12" asp-for="GlobalSiteSettings.Value" required />
+                </div>
+            </div>
+            <div class="field">
+                <label class="label">Message</label>
+                 <div class="control">
+                    <textarea type="text" class="textarea" placeholder="Hey, Welcome to Atlas!" name="GlobalSiteSettings.Description" id="GlobalSiteSettings_Descriptionrequired"></textarea>
+                </div>
+            </div>
+            <div class="field">
+                <div class="control">
+                    <button class="button is-info" type="submit">
+                        Save
+                    </button>
+                </div>
+            </div>
+        </form>
+    }
+
+    @if (Model.Messages.Count > 0)
+    {
+        @foreach (var i in Model.Messages)
+        {
+            <h3 class="title is-3 is-flex is-justify-content-space-between"><span>Message @i.Value</span> @if(ViewBag.Permissions.Contains(44))
+                    {
+                        <a href="/Settings?handler=DeleteSiteMessage&Id=@i.Id">Delete</a>
+                    }</h3>
+
+            <label class="label">Preview</label>
+            <div class="notification is-light is-info has-text-centered my-0">
+                @Html.Raw(HtmlHelpers.MarkdownToHtml(i.Description))
+            </div>
+        }
+    }
+</div>

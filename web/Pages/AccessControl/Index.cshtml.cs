@@ -39,9 +39,6 @@ namespace Atlas_Web.Pages.AccessControl
             _cache = cache;
         }
 
-        public List<UserFavorite> Favorites { get; set; }
-        public List<int?> Permissions { get; set; }
-        public List<UserPreference> Preferences { get; set; }
         public List<UserRolesData> UserRoles { get; set; }
         public List<RolePermission> RolePermissions { get; set; }
         public List<PrivilegedUsersData> PrivilegedUsers { get; set; }
@@ -51,7 +48,7 @@ namespace Atlas_Web.Pages.AccessControl
 
         [BindProperty]
         public UserRoleLink NewUserRole { get; set; }
-        public User PublicUser { get; set; }
+
 
         public class UserRolesData
         {
@@ -81,7 +78,6 @@ namespace Atlas_Web.Pages.AccessControl
 
         public async Task<IActionResult> OnGetAsync()
         {
-            PublicUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
 
             UserRoles = await (
                 from u in _context.UserRoles
@@ -98,13 +94,9 @@ namespace Atlas_Web.Pages.AccessControl
                         }
                 }
             ).ToListAsync();
-            ViewData["MyRole"] = UserHelpers.GetMyRole(_cache, _context, User.Identity.Name);
+
             RolePermissions = await _context.RolePermissions.OrderBy(x => x.Name).ToListAsync();
-            Preferences = UserHelpers.GetPreferences(_cache, _context, User.Identity.Name);
-            Permissions = UserHelpers.GetUserPermissions(_cache, _context, User.Identity.Name);
-            ViewData["Permissions"] = Permissions;
-            ViewData["SiteMessage"] = HtmlHelpers.SiteMessage(HttpContext, _context);
-            Favorites = UserHelpers.GetUserFavorites(_cache, _context, User.Identity.Name);
+
 
             PrivilegedUsers = await (
                 from u in _context.Users

@@ -6,10 +6,8 @@
 }
 
 @section SideBar {}
-@section SearchBar {}
 @section js {
     <script src="/js/flowchart.min.js" defer></script>
- @*   @if(!Request.Headers["User-Agent"].ToString().Contains("Trident")){<script>hljs.highlightAll();</script>}*@
     <script src="/js/editor.min.js" defer></script>
 }
 
@@ -48,14 +46,16 @@
         <div class="editor" data-inputName="Term.TechnicalDefinition" data-inputId="Term_TechnicalDefinition"><textarea>@Html.Raw(Model.Term.TechnicalDefinition)</textarea></div>
     </div>
 
-    @if (Model.Permissions.Contains(6))
+    @if (ViewBag.Permissions.Contains(6))
     {
         <label class="label">Other Options</label>
         <div class="field toggle" typeId="groups">
             <input type="hidden" asp-for="Term.ApprovedYn" value="@Model.Term.ApprovedYn">
-            <input id="switch-groups" type="checkbox" name="switch-groups" class="switch is-rounded is-info settings-search-visiblity" @if(Model.Term.ApprovedYn == "Y"){ <text>checked="checked"</text> }>
+            <input id="switch-groups" type="checkbox" name="switch-groups" class="switch is-rounded is-info settings-search-visiblity"
+            @if(Model.Term.ApprovedYn == "Y"){
+                <text>checked="checked"</text>
+            } >
             <label for="switch-groups">Approved?</label>
         </div>
     }
-
 </form>

@@ -1,5 +1,4 @@
 ﻿@page
-@using Atlas_Web.Helpers
 @inject IConfiguration Configuration
 
 @model Atlas_Web.Pages.Search.IndexModel
@@ -15,8 +14,9 @@ else
 } }
 
 @{ // url w/out page #
+    IEnumerable<dynamic> favs = ViewBag.Favorites;
     var searchUrl = "s=" + Model.SearchString + "&f=" + Model.SearchFilter;
-    var searchFavorite = Model.Favorites.Any(x => x.ItemType.ToLower().Equals("search") && x.ItemName.Equals(searchUrl)); }
+    var searchFavorite = favs.Any(x => x.ItemType.ToLower().Equals("search") && x.ItemName.Equals(searchUrl)); }
 
 <div class="srch">
 
@@ -30,14 +30,14 @@ else
             {
 
             @foreach (var record in Model.SearchResults.Results)
-                                            {
-                                                var result = record.Result;
+            {
+                var result = record.Result;
 
-
-                                                var favorite = Model.Favorites.Any(x => x.ItemType.ToLower().Equals("report") && x.ItemId.Equals(result.Id));
-                                                var RunReportUrl = record.RunUrl;
-                                                var ManageReportUrl = HtmlHelpers.ReportManageUrlFromParams(@Configuration["AppSettings:org_domain"], HttpContext, result.ReportType, result.ReportServerPath, result.SourceServer);
-                                                var EditReportUrl = HtmlHelpers.EditReportFromParams(@Configuration["AppSettings:org_domain"], HttpContext, result.ReportServerPath, result.SourceServer, result.EpicMasterFile, result.EpicTemplateId, result.EpicRecordId);
+               
+               var favorite = favs.Any(x => x.ItemType.ToLower().Equals("report") && x.ItemId.Equals(result.Id));
+                var RunReportUrl = record.RunUrl;
+                var ManageReportUrl = HtmlHelpers.ReportManageUrlFromParams(@Configuration["AppSettings:org_domain"], HttpContext, result.ReportType, result.ReportServerPath, result.SourceServer);
+                var EditReportUrl = HtmlHelpers.EditReportFromParams(@Configuration["AppSettings:org_domain"], HttpContext, result.ReportServerPath, result.SourceServer, result.EpicMasterFile, result.EpicTemplateId, result.EpicRecordId);
 
             <div class="srch-result">
 
@@ -139,7 +139,7 @@ else
                                 <div style="position: relative;">
                                     <span class="tt-top" style="color:grey;position: relative;cursor:default" data-tooltip="Open a related dashboard that uses this.">Run</span>
                                 </div> }
-                                                            else if (EditReportUrl != null && @Model.Permissions.Contains(38))
+                                                            else if (EditReportUrl != null && @ViewBag.Permissions.Contains(38))
                                                             {
                                 <div style="position: relative;">
                                     <span class="tt-top" style="color:grey;position: relative;white-space: nowrap;cursor:default" data-tooltip="Open in report library.">Run</span>
@@ -150,10 +150,10 @@ else
                                     <span class="tt-top" style="color:grey;position: relative;white-space: nowrap;cursor:default" data-tooltip="Run from the Hyperspace report library.">Run</span>
                                 </div>}
                                                         }
-                                @if (result.Type.First() == "reports" && EditReportUrl != null && @Model.Permissions.Contains(38))
+                                @if (result.Type.First() == "reports" && EditReportUrl != null && @ViewBag.Permissions.Contains(38))
                                                                     {
                                 <a target="_blank" rel="noopener" href="@EditReportUrl">Edit</a>}
-                                @if (result.Type.First() == "reports" && ManageReportUrl != null && @Model.Permissions.Contains(38))
+                                @if (result.Type.First() == "reports" && ManageReportUrl != null && @ViewBag.Permissions.Contains(38))
                                                                     {
                                 <a target="_blank" rel="noopener" href="@ManageReportUrl">Manage</a>}
                             </h5>

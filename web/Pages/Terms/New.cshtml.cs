@@ -25,9 +25,6 @@ namespace Atlas_Web.Pages.Terms
             _cache = cache;
         }
 
-        public List<int?> Permissions { get; set; }
-        public User PublicUser { get; set; }
-
         [BindProperty]
         public Term Term { get; set; }
 
@@ -42,14 +39,6 @@ namespace Atlas_Web.Pages.Terms
                 User.Identity.Name,
                 7
             );
-
-            PublicUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
-            var MyUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
-            ViewData["MyRole"] = UserHelpers.GetMyRole(_cache, _context, User.Identity.Name);
-            Permissions = UserHelpers.GetUserPermissions(_cache, _context, User.Identity.Name);
-            ViewData["Permissions"] = Permissions;
-            ViewData["SiteMessage"] = HtmlHelpers.SiteMessage(HttpContext, _context);
-            ViewData["Fullname"] = MyUser.Fullname_Cust;
 
             if (!checkpoint)
             {
@@ -107,6 +96,8 @@ namespace Atlas_Web.Pages.Terms
             _context.Add(Term);
             _context.SaveChanges();
 
+            _cache.Remove("terms");
+            
             return RedirectToPage(
                 "/Terms/Index",
                 new { id = Term.TermId, success = "Changes saved." }
