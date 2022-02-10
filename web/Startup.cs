@@ -17,6 +17,7 @@ using SolrNet;
 using SolrNet.Microsoft.DependencyInjection;
 using Microsoft.Extensions.Caching.Memory;
 using System.Linq;
+using Atlas_Web.Middleware;
 
 namespace Atlas_Web
 {
@@ -42,7 +43,7 @@ namespace Atlas_Web
                     options.MinimumSameSitePolicy = Microsoft.AspNetCore.Http.SameSiteMode.None;
                 }
             );
-
+            services.AddResponseCaching();
             services
                 .AddRazorPages()
                 .AddRazorPagesOptions(
@@ -125,8 +126,7 @@ namespace Atlas_Web
                     // used on all pages, but not for load
                     pipeline.AddJavaScriptBundle("/js/utility.min.js", "js/utility.min.js");
 
-                    pipeline.AddJavaScriptBundle("/js/access.min.js", "js/access.js");
-                    pipeline.AddJavaScriptBundle("/js/settings.min.js", "js/settings.js");
+                    pipeline.AddJavaScriptBundle("/js/settings.min.js", "js/settings.min.js");
 
                     pipeline.AddJavaScriptBundle("/js/profile.min.js", "js/profile.js");
 
@@ -237,7 +237,7 @@ namespace Atlas_Web
             );
 
             //app.UseCookiePolicy();
-
+            app.UseETagger();
             app.UseRouting();
             // app.UseAuthorization();
             app.UseEndpoints(
@@ -246,6 +246,18 @@ namespace Atlas_Web
                     endpoints.MapRazorPages();
                 }
             );
+
+            app.UseResponseCaching();
+            app.Use(async (context, next) =>
+            {
+                context.Response.GetTypedHeaders().CacheControl =
+                    new Microsoft.Net.Http.Headers.CacheControlHeaderValue()
+                    {
+                        Public = true,
+                        MaxAge = TimeSpan.FromMinutes(20)
+                    };
+                await next();
+            });
 
             // load override css
             var css = context.GlobalSiteSettings

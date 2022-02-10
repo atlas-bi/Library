@@ -87,7 +87,11 @@
         <div class="media">
             <div class="media-left">
                 <figure class="image is-128x128">
-                    <img data-src="/data/img?handler=Thumb&id=@Model.ReportObjectId&size=128x128" src="/img/loader.gif" />
+                    <picture>
+                        <source data-srcset="/data/img?handler=Thumb&id=@Model.ReportObjectId&size=128x128&type=webp" srcset="/img/report_placeholder_128x128.webp" type="image/webp" loading="lazy">
+                        <source srcset="/data/img?handler=Thumb&id=@Model.ReportObjectId&size=128x128" type="image/jpeg" loading="lazy">
+                        <img data-src="/data/img?handler=Thumb&id=@Model.ReportObjectId&size=128x128" src="/img/report_placeholder_128x128.png" alt="report image" loading="lazy">
+                    </picture>
                 </figure>
             </div>
             <div class="media-content is-min-h-96 is-flex is-justify-content-space-between is-flex-direction-column">

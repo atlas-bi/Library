@@ -11,25 +11,18 @@ using System.Text;
 
 namespace Atlas_Web.Pages.Data
 {
+    [ResponseCache(Duration = 20*60)]
     public class FileModel : PageModel
     {
         private readonly Atlas_WebContext _context;
-        private readonly IConfiguration _config;
-        private IMemoryCache _cache;
 
-        public FileModel(Atlas_WebContext context, IConfiguration config, IMemoryCache cache)
+        public FileModel(Atlas_WebContext context)
         {
             _context = context;
-            _config = config;
-            _cache = cache;
         }
 
         public object ReportServer { get; private set; }
 
-        public class ReportData
-        {
-            public string server { get; set; }
-        }
 
         public async Task<ActionResult> OnGet(int id)
         {
@@ -39,8 +32,6 @@ namespace Atlas_Web.Pages.Data
             if (MyFile.Count > 0)
             {
                 var ThisFile = MyFile.First();
-                HttpContext.Response.Headers.Remove("Cache-Control");
-                HttpContext.Response.Headers.Add("Cache-Control", "max-age=315360000");
                 return File(
                     ThisFile.AttachmentData,
                     "application/octet-stream",
@@ -57,16 +48,16 @@ namespace Atlas_Web.Pages.Data
             text = text.Replace("server", cube.SourceServer);
             text = text.Replace("Catalog_Name", cube.Name);
             byte[] bytes = Encoding.ASCII.GetBytes(text);
-            HttpContext.Response.Headers.Remove("Cache-Control");
+
             return File(bytes, "text/plain", cube.Name + ".odc");
         }
 
         public async Task<ActionResult> OnGetCrystalRun(int id)
         {
             // check permissions first!
-            var attachment = _context.ReportObjectAttachments
+            var attachment = await _context.ReportObjectAttachments
                 .Where(x => x.ReportObjectAttachmentId.Equals(id))
-                .FirstOrDefault();
+                .FirstOrDefaultAsync();
 
             if (attachment == null)
             {
@@ -86,7 +77,7 @@ namespace Atlas_Web.Pages.Data
 
             // headers to attempt to open pdf vs download
 
-            System.Net.Mime.ContentDisposition cd = new System.Net.Mime.ContentDisposition
+            System.Net.Mime.ContentDisposition cd = new()
             {
                 FileName = attachment.Name,
                 Inline = true

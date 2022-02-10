@@ -11,10 +11,11 @@ using Microsoft.Extensions.Caching.Memory;
 
 namespace Atlas_Web.Pages.Settings
 {
+    [ResponseCache(NoStore = true)]
     public class TagsModel : PageModel
     {
         private readonly Atlas_WebContext _context;
-        private IMemoryCache _cache;
+        private readonly IMemoryCache _cache;
 
         public TagsModel(Atlas_WebContext context, IMemoryCache cache)
         {
@@ -70,7 +71,7 @@ namespace Atlas_Web.Pages.Settings
                 {
                     Id = o.OrganizationalValueId,
                     Name = o.OrganizationalValueName,
-                    Used = o.ReportObjectDocs.Count()
+                    Used = o.ReportObjectDocs.Count
                 }
             ).ToListAsync();
             ViewData["Permissions"] = UserHelpers.GetUserPermissions(
@@ -94,7 +95,7 @@ namespace Atlas_Web.Pages.Settings
                 {
                     Id = o.EstimatedRunFrequencyId,
                     Name = o.EstimatedRunFrequencyName,
-                    Used = o.ReportObjectDocs.Count()
+                    Used = o.ReportObjectDocs.Count
                 }
             ).ToListAsync();
             ViewData["Permissions"] = UserHelpers.GetUserPermissions(
@@ -118,7 +119,7 @@ namespace Atlas_Web.Pages.Settings
                 {
                     Id = o.MaintenanceScheduleId,
                     Name = o.MaintenanceScheduleName,
-                    Used = o.ReportObjectDocs.Count()
+                    Used = o.ReportObjectDocs.Count
                 }
             ).ToListAsync();
             ViewData["Permissions"] = UserHelpers.GetUserPermissions(
@@ -142,7 +143,7 @@ namespace Atlas_Web.Pages.Settings
                 {
                     Id = o.FragilityId,
                     Name = o.FragilityName,
-                    Used = o.ReportObjectDocs.Count()
+                    Used = o.ReportObjectDocs.Count
                 }
             ).ToListAsync();
             ViewData["Permissions"] = UserHelpers.GetUserPermissions(
@@ -166,7 +167,7 @@ namespace Atlas_Web.Pages.Settings
                 {
                     Id = o.FragilityTagId,
                     Name = o.FragilityTagName,
-                    Used = o.ReportObjectDocFragilityTags.Count()
+                    Used = o.ReportObjectDocFragilityTags.Count
                 }
             ).ToListAsync();
             ViewData["Permissions"] = UserHelpers.GetUserPermissions(
@@ -190,7 +191,7 @@ namespace Atlas_Web.Pages.Settings
                 {
                     Id = o.MaintenanceLogStatusId,
                     Name = o.MaintenanceLogStatusName,
-                    Used = o.MaintenanceLogs.Count()
+                    Used = o.MaintenanceLogs.Count
                 }
             ).ToListAsync();
             ViewData["Permissions"] = UserHelpers.GetUserPermissions(
@@ -214,7 +215,7 @@ namespace Atlas_Web.Pages.Settings
                 {
                     Id = o.FinancialImpactId,
                     Name = o.Name,
-                    Used = o.DpDataInitiatives.Count() + o.DpDataProjects.Count()
+                    Used = o.DpDataInitiatives.Count + o.DpDataProjects.Count
                 }
             ).ToListAsync();
             ViewData["Permissions"] = UserHelpers.GetUserPermissions(
@@ -238,7 +239,7 @@ namespace Atlas_Web.Pages.Settings
                 {
                     Id = o.StrategicImportanceId,
                     Name = o.Name,
-                    Used = o.DpDataInitiatives.Count() + o.DpDataProjects.Count()
+                    Used = o.DpDataInitiatives.Count + o.DpDataProjects.Count
                 }
             ).ToListAsync();
             ViewData["Permissions"] = UserHelpers.GetUserPermissions(

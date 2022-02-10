@@ -4,8 +4,7 @@
       e.target.matches('.role-permissions[type="checkbox"]') &&
       e.target.tagName == 'INPUT'
     ) {
-      var p = e.target.parentElement,
-        i = e.target,
+      var i = e.target,
         type = 1,
         q,
         url,
@@ -19,8 +18,8 @@
       }
 
       data = {
-        RoleId: p.getAttribute('roleid'),
-        PermissionId: p.getAttribute('permissionid'),
+        RoleId: i.getAttribute('roleid'),
+        PermissionId: i.getAttribute('permissionid'),
         Type: type,
       };
       url = Object.keys(data)
@@ -29,7 +28,7 @@
         })
         .join('&');
       q = new XMLHttpRequest();
-      q.open('post', '/AccessControl?handler=UpdatePermissions&' + url, true);
+      q.open('post', '/Settings/Roles/?handler=UpdatePermissions&' + url, true);
       q.setRequestHeader('Content-Type', 'text/html;charset=UTF-8`');
       q.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
       q.send();

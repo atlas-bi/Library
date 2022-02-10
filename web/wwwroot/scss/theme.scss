@@ -6,7 +6,7 @@ $family-sans-serif: 'Inter', BlinkMacSystemFont, -apple-system, 'Segoe UI',
 $family-serif: 'Rasa', 'Georgia', 'Times New Roman', serif;
 
 $title-family: $family-serif;
-
+@import '../../../node_modules/bulma-checkradio/src/sass/index';
 @import '../../../node_modules/bulma/bulma';
 
 /* reset pre */
@@ -30,6 +30,7 @@ pre {
 @import '../../../node_modules/@creativebulma/bulma-badge/src/sass/index';
 @import '../../../node_modules/bulma-switch/src/sass/index';
 
+
 $steps-active-color: $link;
 $steps-active-color: $link;
 @import '../../../node_modules/bulma-steps-component/bulma-steps';
@@ -44,7 +45,6 @@ $steps-active-color: $link;
 @import './live-editor';
 @import './reports';
 @import './utility/carousel';
-@import './access';
 @import './tasks';
 @import './users';
 @import './error';
@@ -74,9 +74,7 @@ $steps-active-color: $link;
 @import './utility/progressbar';
 @import './utility/chart';
 // @import './utility/table';
-@import './milestone';
 @import './input';
-@import './comments';
 @import './dropdown';
 @import './markdown';
 @import './messagebox';
@@ -147,7 +145,8 @@ $card-colors: (
 }
 
 /* load image */
-img[data-src] {
+img[data-src="/img/loader.gif"],
+source[data-srcset="/img/loader.webp"] {
   width: 25px !important;
   height: 25px !important;
   margin: auto;
@@ -227,7 +226,8 @@ img[data-src] {
 .breadcrumb,
 .atlas-navbar,
 .label,
-.steps {
+.steps,
+.table {
   font-family: $family-sans-serif;
 }
 /* fix nav dropdown in IE 11. focus within breaks it all */

@@ -14,37 +14,23 @@ using SixLabors.ImageSharp.Processing;
 using SixLabors.ImageSharp.PixelFormats;
 using System.Text.RegularExpressions;
 using SixLabors.ImageSharp.Formats.Jpeg;
+using SixLabors.ImageSharp.Formats.Webp;
 
 namespace Atlas_Web.Pages.Data
 {
+    [ResponseCache(Duration = 20*60)]
     public class ImgModel : PageModel
     {
         private readonly Atlas_WebContext _context;
-        private readonly IConfiguration _config;
-        private IMemoryCache _cache;
+        private readonly IMemoryCache _cache;
 
-        public ImgModel(Atlas_WebContext context, IConfiguration config, IMemoryCache cache)
+        public ImgModel(Atlas_WebContext context, IMemoryCache cache)
         {
             _context = context;
-            _config = config;
             _cache = cache;
         }
 
-        public async Task<ActionResult> OnGet(int id)
-        {
-            var img = await _context.ReportObjectImagesDocs
-                .Where(x => x.ImageId == id)
-                .ToListAsync();
-            if (img.Count > 0)
-            {
-                HttpContext.Response.Headers.Remove("Cache-Control");
-                HttpContext.Response.Headers.Add("Cache-Control", "max-age=315360000");
-                return File(img.First().ImageData, "application/octet-stream", id + ".png");
-            }
-            return Content("");
-        }
-
-        private byte[] BuildImage(byte[] image_data, string size)
+        private static byte[] BuildImage(byte[] image_data, string size, string extension)
         {
             int wsize;
             int hsize;
@@ -83,83 +69,75 @@ namespace Atlas_Web.Pages.Data
 
             }
 
-            //var webpEncoder = new WebPEncoder()
-            //{
-
-            //};
-
-            var jpegEncoder = new JpegEncoder() { Quality = 75 };
-
             using var ms = new MemoryStream();
-            image.Save(ms, jpegEncoder);
+            if (extension == "webp") {
+                var webpEncoder = new WebpEncoder() { Quality = 75 };
+                image.Save(ms, webpEncoder);
+            } else
+            {
+                var jpegEncoder = new JpegEncoder() { Quality = 75 };
+                image.Save(ms, jpegEncoder);
+            }
+           
             return ms.ToArray();
         }
 
-        public async Task<ActionResult> OnGetThumb(int id, string size, int? imgId)
+        public ActionResult OnGetThumb(int id, string size, int? imgId, string type)
         {
-            HttpContext.Response.Headers.Remove("Cache-Control");
-            HttpContext.Response.Headers.Add("Cache-Control", "max-age=315360000");
+            return _cache.GetOrCreate<FileContentResult>($"thumb-{id}-{size}-{imgId ?? 0}-{type}",
+                cacheEntry =>
+                {
+                    cacheEntry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20);
 
-            ReportObjectImagesDoc img;
+                    string Extension = type ?? "jpeg";
+                    ReportObjectImagesDoc img;
 
-            if (imgId.HasValue)
-            {
-                img = await _context.ReportObjectImagesDocs
-                    .Where(x => x.ImageId == imgId)
-                    .FirstOrDefaultAsync();
-            }
-            else
-            {
-                img = await _context.ReportObjectImagesDocs
-                    .Where(x => x.ReportObjectId == id)
-                    .FirstOrDefaultAsync();
-            }
+                    if (imgId.HasValue)
+                    {
+                        img = _context.ReportObjectImagesDocs
+                            .Where(x => x.ImageId == imgId)
+                            .FirstOrDefault();
+                    }
+                    else
+                    {
+                        img = _context.ReportObjectImagesDocs
+                            .Where(x => x.ReportObjectId == id)
+                            .FirstOrDefault();
+                    }
 
-            string name;
-            byte[] image_data;
-            if (img != null)
-            {
-                image_data = img.ImageData;
-                name = id.ToString();
-            }
-            else
-            {
-                image_data = System.IO.File.ReadAllBytes("wwwroot/img/report_placeholder.png");
-                name = "placeholder";
-            }
+                    string name;
+                    byte[] image_data;
+                    if (img != null)
+                    {
+                        image_data = img.ImageData;
+                        name = id.ToString();
+                    }
+                    else
+                    {
+                        image_data = System.IO.File.ReadAllBytes("wwwroot/img/report_placeholder.png");
+                        name = "placeholder";
+                    }
 
-            return File(BuildImage(image_data, size), "application/octet-stream", id + ".jpeg");
+                    return File(BuildImage(image_data, size, Extension), "application/octet-stream",  $"{id}.{Extension}");
+                }
+            );
         }
 
-        public async Task<ActionResult> OnGetPlaceholder(string size)
+        public ActionResult OnGetPlaceholder(string size)
         {
-            HttpContext.Response.Headers.Remove("Cache-Control");
-            HttpContext.Response.Headers.Add("Cache-Control", "max-age=315360000");
+            return _cache.GetOrCreate<FileContentResult>("placeholder",
+                cacheEntry =>
+                {
+                    cacheEntry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20);
+                    string name;
+                    byte[] image_data;
 
-            string name;
-            byte[] image_data;
+                    image_data = System.IO.File.ReadAllBytes("wwwroot/img/report_placeholder.png");
+                    name = "placeholder";
 
-            image_data = System.IO.File.ReadAllBytes("wwwroot/img/report_placeholder.png");
-            name = "placeholder";
-
-            return File(BuildImage(image_data, size), "application/octet-stream", name + ".jpeg");
-        }
-
-        public async Task<ActionResult> OnGetFirst(int id)
-        {
-            var img = await _context.ReportObjectImagesDocs
-                .Where(x => x.ReportObjectId == id)
-                .ToListAsync();
-            HttpContext.Response.Headers.Remove("Cache-Control");
-            HttpContext.Response.Headers.Add("Cache-Control", "max-age=315360000");
-
-            if (img.Count > 0)
-            {
-                return File(img.First().ImageData, "application/octet-stream", id + ".png");
-            }
-
-            byte[] bytes = System.IO.File.ReadAllBytes("wwwroot/img/placeholder.png");
-            return File(bytes, "application/octet-stream", "placeholder.png");
+                    return File(BuildImage(image_data, size, "jpeg"), "application/octet-stream", $"{name}.jpeg");
+                }
+            );
         }
     }
 }

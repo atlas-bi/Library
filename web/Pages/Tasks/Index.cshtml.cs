@@ -5,9 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Atlas_Web.Models;
-using Atlas_Web.Helpers;
-using Microsoft.AspNetCore.Http;
-using System.IO;
 using System.Collections.Generic;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Caching.Memory;
@@ -18,13 +15,11 @@ namespace Atlas_Web.Pages.Tasks
     {
         private readonly Atlas_WebContext _context;
         private readonly IConfiguration _config;
-        private IMemoryCache _cache;
 
-        public IndexModel(Atlas_WebContext context, IConfiguration config, IMemoryCache cache)
+        public IndexModel(Atlas_WebContext context, IConfiguration config)
         {
             _context = context;
             _config = config;
-            _cache = cache;
         }
 
         public class UndocumentedReports
@@ -102,7 +97,7 @@ namespace Atlas_Web.Pages.Tasks
         public IEnumerable<DeadData> Dead { get; set; }
         public List<AdList> AdLists { get; set; }
 
-        public IActionResult OnGet(int? id)
+        public IActionResult OnGet()
         {
             AdLists = new List<AdList>
             {
@@ -527,7 +522,7 @@ namespace Atlas_Web.Pages.Tasks
                                     ? "Crystal"
                                     : "SSRS"
                     ),
-                    Runs = r.ReportObjectRunData.Count(),
+                    Runs = r.ReportObjectRunData.Count,
                     LastMaintained = (r.LastModifiedDate ?? DateTime.Today.AddYears(-1)),
                     LastRun = (r.ReportObjectRunData.Max(x => x.RunStartTime) ?? DateTime.Now),
                     Favs = (
@@ -592,7 +587,7 @@ namespace Atlas_Web.Pages.Tasks
                                     ? "Crystal"
                                     : "SSRS"
                     ),
-                    Runs = r.ReportObjectRunData.Count(),
+                    Runs = r.ReportObjectRunData.Count,
                     LastMaintained = (r.LastModifiedDate ?? DateTime.Today.AddYears(-1)),
                     LastRun = (r.ReportObjectRunData.Max(x => x.RunStartTime) ?? DateTime.Now),
                     Favs = (

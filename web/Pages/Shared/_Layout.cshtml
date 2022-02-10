@@ -87,7 +87,7 @@ else
                 <div class="navbar-end">
                     @{ var r = new Random();
                         var randomNumber = r.Next(); }
-                    <a class="navbar-item" href="/?@randomNumber#mail">
+                    <a class="navbar-item" href="/#mail">
                         <span class="icon is-medium is-relative">
                             <i class="far fa-lg fa-envelope"></i>
                             <span title="mail count" class="badge" id="nav_unread_message_count">0</span>
@@ -106,10 +106,7 @@ else
             </div>
             <div class="navbar-dropdown">
                 <hr class="hide-desktop dropdown-divider">
-                @if (ViewBag.Permissions.Contains(18) || ViewBag.Permissions.Contains(1))
-                {
-<a class="navbar-item" href="/accesscontrol">Access Control</a>}
-                @if (ViewBag.Permissions.Contains(33) || ViewBag.Permissions.Contains(34))
+                @if (ViewBag.Permissions.Contains(33) || ViewBag.Permissions.Contains(34) || ViewBag.Permissions.Contains(18) || ViewBag.Permissions.Contains(1))
                 {
 <a class="navbar-item" href="/settings">Settings</a>}
                 @if (ViewBag.Permissions.Contains(36))

@@ -29,13 +29,14 @@ namespace Atlas_Web.Pages.Search
 
     }
 
+    [ResponseCache(NoStore = true)]
     public class IndexModel : PageModel
     {
         private readonly Atlas_WebContext _context;
         private readonly IConfiguration _config;
         private readonly ISolrReadOnlyOperations<SolrAtlas> _solr;
         private readonly ISolrReadOnlyOperations<SolrAtlasLookups> _solrLookup;
-        private IMemoryCache _cache;
+        private readonly IMemoryCache _cache;
 
         public IndexModel(
             Atlas_WebContext context,
@@ -142,7 +143,7 @@ namespace Atlas_Web.Pages.Search
             );
 
             // find exact match strings
-            List<string> ExactMatches = new List<string>();
+            List<string> ExactMatches = new();
 
             var literals = Regex.Matches(search_string, @"("")(.+?)("")");
             if (literals.Count > 0)
@@ -254,7 +255,7 @@ namespace Atlas_Web.Pages.Search
 
             static IReadOnlyList<FilterFields> BuildFilterFields(string query)
             {
-                List<FilterFields> filters = new List<FilterFields>();
+                List<FilterFields> filters = new();
 
                 if (query == "reports")
                 {
@@ -419,7 +420,7 @@ namespace Atlas_Web.Pages.Search
                     advanced = "Y";
                 }
 
-                SolrAtlasParameters parameters = new SolrAtlasParameters
+                SolrAtlasParameters parameters = new()
                 {
                     Query = Query,
                     PageIndex = PageIndex,
@@ -490,17 +491,10 @@ namespace Atlas_Web.Pages.Search
             };
             ViewData["AdLists"] = AdLists;
 
-            HttpContext.Response.Headers.Add(
-                "Cache-Control",
-                "no-cache, no-store, must-revalidate"
-            );
-            HttpContext.Response.Headers.Add("Pragma", "no-cache"); // HTTP 1.0.
-            HttpContext.Response.Headers.Add("Expires", "0"); // Proxies.
-
             return Page();
         }
 
-        public ActionResult OnPostReportSearch(string s, string e)
+        public ActionResult OnPostReportSearch(string s)
         {
             if (s != null)
                 SearchString = s;
@@ -527,13 +521,11 @@ namespace Atlas_Web.Pages.Search
                     )
                     .ToList();
                 var json = JsonConvert.SerializeObject(ObjectSearch);
-                HttpContext.Response.Headers.Remove("Cache-Control");
-                HttpContext.Response.Headers.Add("Cache-Control", "max-age=7200");
                 return Content(json);
             }
         }
 
-        public ActionResult OnPostTermSearch(string s, string e)
+        public ActionResult OnPostTermSearch(string s)
         {
             if (s != null)
                 SearchString = s; //.Replace("'","''").Replace(";","_");
@@ -560,13 +552,12 @@ namespace Atlas_Web.Pages.Search
                     )
                     .ToList();
                 var json = JsonConvert.SerializeObject(ObjectSearch);
-                HttpContext.Response.Headers.Remove("Cache-Control");
-                HttpContext.Response.Headers.Add("Cache-Control", "max-age=7200");
+
                 return Content(json);
             }
         }
 
-        public ActionResult OnPostCollectionSearch(string s, string e)
+        public ActionResult OnPostCollectionSearch(string s)
         {
             if (s != null)
                 SearchString = s; //.Replace("'","''").Replace(";","_");
@@ -594,13 +585,12 @@ namespace Atlas_Web.Pages.Search
                     .ToList();
 
                 var json = JsonConvert.SerializeObject(ObjectSearch);
-                HttpContext.Response.Headers.Remove("Cache-Control");
-                HttpContext.Response.Headers.Add("Cache-Control", "max-age=7200");
+
                 return Content(json);
             }
         }
 
-        public ActionResult OnPostUserSearch(string s, string e)
+        public ActionResult OnPostUserSearch(string s)
         {
             if (s != null)
                 SearchString = s; //.Replace("'","''").Replace(";","_");
@@ -627,13 +617,12 @@ namespace Atlas_Web.Pages.Search
                     .ToList();
 
                 var json = JsonConvert.SerializeObject(UserSearch);
-                HttpContext.Response.Headers.Remove("Cache-Control");
-                HttpContext.Response.Headers.Add("Cache-Control", "max-age=7200");
+
                 return Content(json);
             }
         }
 
-        public ActionResult OnPostUserSearchMail(string s, string e)
+        public ActionResult OnPostUserSearchMail(string s)
         {
             if (s != null)
                 SearchString = s; //.Replace("'","''").Replace(";","_");
@@ -660,13 +649,12 @@ namespace Atlas_Web.Pages.Search
                     .ToList();
 
                 var json = JsonConvert.SerializeObject(UserSearch);
-                HttpContext.Response.Headers.Remove("Cache-Control");
-                HttpContext.Response.Headers.Add("Cache-Control", "max-age=7200");
+
                 return Content(json);
             }
         }
 
-        public ActionResult OnPostDirector(string s, string e)
+        public ActionResult OnPostDirector(string s)
         {
             if (s != null)
                 SearchString = s; //.Replace("'","''").Replace(";","_");
@@ -688,15 +676,14 @@ namespace Atlas_Web.Pages.Search
                     .ToList();
 
                 var json = JsonConvert.SerializeObject(UserSearch);
-                HttpContext.Response.Headers.Remove("Cache-Control");
-                HttpContext.Response.Headers.Add("Cache-Control", "max-age=7200");
+
                 return Content(json);
             }
         }
 
         public ActionResult OnPostValueList(string s)
         {
-            List<SmallData> myObject = new List<SmallData>() { new SmallData("0", "error") };
+            List<SmallData> myObject = new() { new SmallData("0", "error") };
             string index_type = "";
             switch (s)
             {
@@ -758,8 +745,7 @@ namespace Atlas_Web.Pages.Search
             }
 
             var json = JsonConvert.SerializeObject(myObject);
-            HttpContext.Response.Headers.Remove("Cache-Control");
-            HttpContext.Response.Headers.Add("Cache-Control", "max-age=0");
+
             return Content(json);
         }
     }

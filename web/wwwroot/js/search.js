@@ -291,16 +291,16 @@
   //   }
   // });
 
-  d.addEventListener(
-    'scroll',
-    function () {
-      i.blur();
-      hst.style.display = 'none';
-    },
-    {
-      passive: true,
-    },
-  );
+  // d.addEventListener(
+  //   'scroll',
+  //   function () {
+  //     i.blur();
+  //     hst.style.display = 'none';
+  //   },
+  //   {
+  //     passive: true,
+  //   },
+  // );
 
   i.addEventListener('focus', function (e) {
     grp.classList.add('sr-grp-f-win');

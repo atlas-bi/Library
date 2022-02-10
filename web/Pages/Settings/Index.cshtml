@@ -17,82 +17,110 @@
 <div class="columns">
     <div class="column is-one-quarter is-sticky">
         <nav class="panel">
-             <a class="panel-block is-active panel-tab py-3"  href="#meta-fields">
-    <span class="icon is-medium mr-2">
-      <i class="fas fa-lg fa-list-ul" aria-hidden="true"></i>
-    </span>
-    Meta Fields
-  </a>
-   <a class="panel-block panel-tab py-3" href="#site-message">
-    <span class="icon is-medium mr-2">
-      <i class="fas fa-lg fa-comment-alt" aria-hidden="true"></i>
-    </span>
-    Site Message
-  </a>
-   <a class="panel-block panel-tab py-3" href="#search">
-    <span class="icon is-medium mr-2">
-      <i class="fas fa-lg fa-search" aria-hidden="true"></i>
-    </span>
-    Search
-  </a>
-  <a class="panel-block panel-tab py-3" href="#theme">
-    <span class="icon is-medium mr-2">
-      <i class="fas fa-lg fa-palette" aria-hidden="true"></i>
-    </span>
-    Theme
-  </a>
-  <a class="panel-block panel-tab py-3" href="#etl">
-    <span class="icon is-medium mr-2">
-      <i class="fas fa-lg fa-database" aria-hidden="true"></i>
-    </span>
-    ETL
-  </a>
+            @if (ViewBag.Permissions.Contains(18))
+            {
+                <a class="panel-block is-active panel-tab py-3" href="#roles">
+                    <span class="icon is-medium mr-2">
+                        <i class="fas fa-lg fa-lock" aria-hidden="true"></i>
+                    </span>
+                    Role Configuration
+                </a>
+            }
+            @if (ViewBag.Permissions.Contains(1))
+            {
+                <a class="panel-block panel-tab py-3 @if (!ViewBag.Permissions.Contains(18)){<text> is-active</text>}" href="#user-roles">
+                    <span class="icon is-medium mr-2">
+                        <i class="fas fa-lg fa-user-lock" aria-hidden="true"></i>
+                    </span>
+                    User Roles
+                </a>
+            }
+            <a class="panel-block panel-tab py-3 @if (!ViewBag.Permissions.Contains(18) && !ViewBag.Permissions.Contains(1)){<text> is-active</text>}" href="#meta-fields">
+                <span class="icon is-medium mr-2">
+                    <i class="fas fa-lg fa-list-ul" aria-hidden="true"></i>
+                </span>
+                Meta Fields
+            </a>
+            <a class="panel-block panel-tab py-3" href="#site-message">
+                <span class="icon is-medium mr-2">
+                    <i class="fas fa-lg fa-comment-alt" aria-hidden="true"></i>
+                </span>
+                Site Message
+            </a>
+            <a class="panel-block panel-tab py-3" href="#search">
+                <span class="icon is-medium mr-2">
+                    <i class="fas fa-lg fa-search" aria-hidden="true"></i>
+                </span>
+                Search
+            </a>
+            <a class="panel-block panel-tab py-3" href="#theme">
+                <span class="icon is-medium mr-2">
+                    <i class="fas fa-lg fa-palette" aria-hidden="true"></i>
+                </span>
+                Theme
+            </a>
+            <a class="panel-block panel-tab py-3" href="#etl">
+                <span class="icon is-medium mr-2">
+                    <i class="fas fa-lg fa-database" aria-hidden="true"></i>
+                </span>
+                ETL
+            </a>
         </nav>
     </div>
     <div class="column">
+        <div class="box mb-5">
+            @if (ViewBag.Permissions.Contains(18))
+            {
+                <div class="panel-tab-data is-active" id="roles">
+                    <div data-ajax="yes" data-url="/settings/roles/"></div>
+                </div>
+            }
+            @if (ViewBag.Permissions.Contains(1))
+            {
+                <div class="panel-tab-data  @if (!ViewBag.Permissions.Contains(18)){<text> is-active</text>}" id="user-roles">
+                    <div data-ajax="yes" data-url="/settings/userroles/"></div>
+                </div>
+            }
+            <div class="panel-tab-data @if (!ViewBag.Permissions.Contains(18) && !ViewBag.Permissions.Contains(1)){<text> is-active</text>}" id="meta-fields">
+                <h3 class="title is-3 mb-0">Meta Fields</h3>
 
-<div class="box mb-5">
-    <div class="panel-tab-data is-active" id="meta-fields">
-        <h3 class="title is-3 mb-0">Meta Fields</h3>
+                <h4 class="title is-4 mt-5">Organizational Value</h4>
+                <div data-ajax="yes" data-url="/settings/tags/?Handler=OrganizationalValueList"></div>
 
-        <h4 class="title is-4 mt-5">Organizational Value</h4>
-        <div data-ajax="yes" data-url="/settings/tags/?Handler=OrganizationalValueList"></div>
+                <h4 class="title is-4 mt-5">Estimated Run Frequency</h4>
+                <div data-ajax="yes" data-url="/settings/tags/?Handler=EstimatedRunFrequencyList"></div>
 
-        <h4 class="title is-4 mt-5">Estimated Run Frequency</h4>
-        <div data-ajax="yes" data-url="/settings/tags/?Handler=EstimatedRunFrequencyList"></div>
+                <h4 class="title is-4 mt-5">Fragility Types</h4>
+                <div data-ajax="yes" data-url="/settings/tags/?Handler=FragilityList"></div>
 
-        <h4 class="title is-4 mt-5">Fragility Types</h4>
-        <div data-ajax="yes" data-url="/settings/tags/?Handler=FragilityList"></div>
+                <h4 class="title is-4 mt-5">Fragility Tags</h4>
+                <div data-ajax="yes" data-url="/settings/tags/?Handler=FragilityTagList"></div>
 
-        <h4 class="title is-4 mt-5">Fragility Tags</h4>
-        <div data-ajax="yes" data-url="/settings/tags/?Handler=FragilityTagList"></div>
+                <h4 class="title is-4 mt-5">Maintenance Schedules</h4>
+                <div data-ajax="yes" data-url="/settings/tags/?Handler=MaintenanceScheduleList"></div>
 
-        <h4 class="title is-4 mt-5">Maintenance Schedules</h4>
-        <div data-ajax="yes" data-url="/settings/tags/?Handler=MaintenanceScheduleList"></div>
+                <h4 class="title is-4 mt-5">Maintenance Log Status</h4>
+                <div data-ajax="yes" data-url="/settings/tags/?Handler=MaintenanceLogStatusList"></div>
 
-        <h4 class="title is-4 mt-5">Maintenance Log Status</h4>
-        <div data-ajax="yes" data-url="/settings/tags/?Handler=MaintenanceLogStatusList"></div>
+                <h4 class="title is-4 mt-5">Financial Impact</h4>
+                <div data-ajax="yes" data-url="/settings/tags/?Handler=FinancialImpactList"></div>
 
-        <h4 class="title is-4 mt-5">Financial Impact</h4>
-        <div data-ajax="yes" data-url="/settings/tags/?Handler=FinancialImpactList"></div>
+                <h4 class="title is-4 mt-5">Strategic Importance</h4>
+                <div data-ajax="yes" data-url="/settings/tags/?Handler=StrategicImportanceList"></div>
 
-        <h4 class="title is-4 mt-5">Strategic Importance</h4>
-        <div data-ajax="yes" data-url="/settings/tags/?Handler=StrategicImportanceList"></div>
-
-    </div>
-    <div class="panel-tab-data" id="site-message">
-        <div data-ajax="yes" data-url="/settings?Handler=SiteMessages"></div>
-    </div>
-    <div class="panel-tab-data" id="search">
-        <div data-ajax="yes" data-url="/settings/search"></div>
-    </div>
-    <div class="panel-tab-data" id="theme">
-        <div data-ajax="yes" data-url="/settings?Handler=Theme"></div>
-    </div>
-     <div class="panel-tab-data" id="etl">
-        <div data-ajax="yes" data-url="/settings?Handler=Etl"></div>
-    </div>
-</div>
-
+            </div>
+            <div class="panel-tab-data" id="site-message">
+                <div data-ajax="yes" data-url="/settings?Handler=SiteMessages"></div>
+            </div>
+            <div class="panel-tab-data" id="search">
+                <div data-ajax="yes" data-url="/settings/search"></div>
+            </div>
+            <div class="panel-tab-data" id="theme">
+                <div data-ajax="yes" data-url="/settings?Handler=Theme"></div>
+            </div>
+             <div class="panel-tab-data" id="etl">
+                <div data-ajax="yes" data-url="/settings?Handler=Etl"></div>
+            </div>
+        </div>
     </div>
 </div>

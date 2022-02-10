@@ -88,6 +88,8 @@ gulp.task('font:fontawesome', function (done) {
         'comment-alt',
         'info',
         'paperclip',
+        'user-lock',
+        'lock',
       ],
     },
     'web/wwwroot/font/fontawesome/webfonts',
@@ -202,6 +204,19 @@ gulp.task('js:shared', function () {
     .pipe(gulp.dest('web/wwwroot/js/'));
 });
 
+gulp.task('js:settings', function () {
+  return gulp
+    .src(['web/wwwroot/js/settings.js', 'web/wwwroot/js/access.js'])
+    .pipe(concat('settings.min.js'))
+    .pipe(
+      babel({
+        presets: ['@babel/preset-env'],
+      }),
+    )
+    .pipe(uglify())
+    .pipe(gulp.dest('web/wwwroot/js/'));
+});
+
 gulp.task('js:editor', function () {
   return gulp
     .src([
@@ -229,6 +244,8 @@ gulp.task(
     'js:utility',
     'js:polyfill',
     'js:editor',
+    'js:settings',
+    'js:shared',
     gulp.series('font:fontawesome', 'sass'),
   ),
 );
@@ -240,7 +257,7 @@ gulp.task(
     gulp.watch('web/wwwroot/**/*.sass', gulp.series('sass'));
     gulp.watch(
       ['web/wwwroot/**/*.js', '!web/wwwroot/**/*.min.js'],
-      gulp.parallel('js:shared', 'js:editor', 'js:utility', 'sass'),
+      gulp.parallel('js:settings', 'js:shared', 'js:editor', 'js:utility', 'sass'),
     );
     gulp.watch(
       'web/wwwroot/js/polyfill/**/*.js',

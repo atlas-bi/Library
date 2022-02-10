@@ -19,13 +19,11 @@ namespace Atlas_Web.Pages.Terms
     {
         // import model
         private readonly Atlas_WebContext _context;
-        private readonly IConfiguration _config;
-        private IMemoryCache _cache;
+        private readonly IMemoryCache _cache;
 
-        public IndexModel(Atlas_WebContext context, IConfiguration config, IMemoryCache cache)
+        public IndexModel(Atlas_WebContext context, IMemoryCache cache)
         {
             _context = context;
-            _config = config;
             _cache = cache;
         }
 
@@ -120,8 +118,30 @@ namespace Atlas_Web.Pages.Terms
         {
             if (!_context.Terms.Any(x => x.TermId == Id))
             {
-                return RedirectToPage("/Terms/Index", new { id = Id });
+                return RedirectToPage("/Terms/Index", new { id = Id, error= "That term does not exist." });
             }
+
+            var checkpoint_approved = UserHelpers.CheckUserPermissions(
+                _cache,
+                _context,
+                User.Identity.Name,
+                8
+            );
+
+            var checkpoint_uapproved = UserHelpers.CheckUserPermissions(
+                _cache,
+                _context,
+                User.Identity.Name,
+                9
+            );
+
+            Term OldTerm = _context.Terms.Where(x => x.TermId == Id).FirstOrDefault();
+
+            if((OldTerm.ApprovedYn == "Y" && !checkpoint_approved) || (OldTerm.ApprovedYn != "Y" && !checkpoint_uapproved))
+            {
+                return RedirectToPage("/Terms/Index", new { id = Id, error = "You do not have permission to access that page." });
+            }
+
 
             // delete:
             //  comments

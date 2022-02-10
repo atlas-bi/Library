@@ -16,7 +16,10 @@
         <div class="media">
             <div class="media-left">
                 <figure class="image is-128x128">
-                    <img data-src="/data/img?handler=Placeholder&size=128x128" src="/img/loader.gif" alt="report image" />
+                    <picture>
+                        <source srcset="/img/report_placeholder_128x128.webp" type="image/webp" loading="lazy">
+                        <img src="/img/report_placeholder_128x128.png" alt="placeholder image" loading="lazy">
+                    </picture>
                 </figure>
             </div>
             <div class="media-content is-min-h-96 is-flex is-justify-content-space-between is-flex-direction-column">

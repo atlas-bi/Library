@@ -6,7 +6,6 @@ using Microsoft.EntityFrameworkCore;
 using Atlas_Web.Models;
 using System.Collections.Generic;
 using Atlas_Web.Helpers;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Caching.Memory;
 using System;
 
@@ -15,13 +14,11 @@ namespace Atlas_Web.Pages.Initiatives
     public class IndexModel : PageModel
     {
         private readonly Atlas_WebContext _context;
-        private readonly IConfiguration _config;
-        private IMemoryCache _cache;
+        private readonly IMemoryCache _cache;
 
-        public IndexModel(Atlas_WebContext context, IConfiguration config, IMemoryCache cache)
+        public IndexModel(Atlas_WebContext context, IMemoryCache cache)
         {
             _context = context;
-            _config = config;
             _cache = cache;
         }
 
@@ -83,19 +80,24 @@ namespace Atlas_Web.Pages.Initiatives
                 21
             );
 
-            if (Id > 0 && checkpoint)
+            if (!checkpoint)
             {
-                // remove project links, contacts and remove initiative.
-                _context.DpDataProjects
-                    .Where(d => d.DataInitiativeId == Id)
-                    .ToList()
-                    .ForEach(x => x.DataInitiativeId = null);
-
-                _context.Remove(
-                    _context.DpDataInitiatives.Where(x => x.DataInitiativeId == Id).FirstOrDefault()
+                return RedirectToPage(
+                    "/Initiatives/Index",
+                    new { error = "You do not have permission to access that page." }
                 );
-                _context.SaveChanges();
             }
+
+            // remove project links, contacts and remove initiative.
+            _context.DpDataProjects
+                .Where(d => d.DataInitiativeId == Id)
+                .ToList()
+                .ForEach(x => x.DataInitiativeId = null);
+
+            _context.Remove(
+                _context.DpDataInitiatives.Where(x => x.DataInitiativeId == Id).FirstOrDefault()
+            );
+            _context.SaveChanges();
 
             _cache.Remove("initiative-" + Id);
             _cache.Remove("initiatives");

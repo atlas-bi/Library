@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,13 +14,11 @@ namespace Atlas_Web.Pages.Initiatives
     public class EditModel : PageModel
     {
         private readonly Atlas_WebContext _context;
-        private readonly IConfiguration _config;
-        private IMemoryCache _cache;
+        private readonly IMemoryCache _cache;
 
-        public EditModel(Atlas_WebContext context, IConfiguration config, IMemoryCache cache)
+        public EditModel(Atlas_WebContext context, IMemoryCache cache)
         {
             _context = context;
-            _config = config;
             _cache = cache;
         }
 
@@ -44,7 +41,7 @@ namespace Atlas_Web.Pages.Initiatives
             {
                 return RedirectToPage(
                     "/Initiatives/Index",
-                    new { id = id, error = "You do not have permission to access that page." }
+                    new { id, error = "You do not have permission to access that page." }
                 );
             }
 
@@ -73,7 +70,7 @@ namespace Atlas_Web.Pages.Initiatives
             {
                 return RedirectToPage(
                     "/Initiatives/Index",
-                    new { id = id, error = "You do not have permission to access that page." }
+                    new { id, error = "You do not have permission to access that page." }
                 );
             }
 
@@ -81,7 +78,7 @@ namespace Atlas_Web.Pages.Initiatives
             {
                 return RedirectToPage(
                     "/Initiatives/Index",
-                    new { id = id, error = "The data submitted was invalid." }
+                    new { id, error = "The data submitted was invalid." }
                 );
             }
 
@@ -125,7 +122,7 @@ namespace Atlas_Web.Pages.Initiatives
 
             return RedirectToPage(
                 "/Initiatives/Index",
-                new { id = id, success = "Changes saved." }
+                new { id, success = "Changes saved." }
             );
         }
     }

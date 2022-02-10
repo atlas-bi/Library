@@ -14,7 +14,7 @@ namespace Atlas_Web.Pages.Settings
     public class IndexModel : PageModel
     {
         private readonly Atlas_WebContext _context;
-        private IMemoryCache _cache;
+        private readonly IMemoryCache _cache;
 
         public IndexModel(Atlas_WebContext context, IMemoryCache cache)
         {
@@ -87,7 +87,7 @@ namespace Atlas_Web.Pages.Settings
             return RedirectToPage("/Settings/Index");
         }
 
-        public async Task<IActionResult> OnGetEtl()
+        public IActionResult OnGetEtl()
         {
             return new PartialViewResult() { ViewName = "Partials/_Etl", ViewData = ViewData };
         }
@@ -104,7 +104,7 @@ namespace Atlas_Web.Pages.Settings
                 _context,
                 User.Identity.Name
             );
-            //return Partial((".+?"));
+            
             return new PartialViewResult() { ViewName = "Partials/_Theme", ViewData = ViewData };
         }
 

@@ -15,13 +15,11 @@ namespace Atlas_Web.Pages.Terms
     public class NewModel : PageModel
     {
         private readonly Atlas_WebContext _context;
-        private readonly IConfiguration _config;
-        private IMemoryCache _cache;
+        private readonly IMemoryCache _cache;
 
-        public NewModel(Atlas_WebContext context, IConfiguration config, IMemoryCache cache)
+        public NewModel(Atlas_WebContext context, IMemoryCache cache)
         {
             _context = context;
-            _config = config;
             _cache = cache;
         }
 
@@ -31,7 +29,7 @@ namespace Atlas_Web.Pages.Terms
         [BindProperty]
         public List<Term> Terms { get; set; }
 
-        public async Task<IActionResult> OnGetAsync()
+        public IActionResult OnGetAsync()
         {
             var checkpoint = UserHelpers.CheckUserPermissions(
                 _cache,
@@ -71,7 +69,7 @@ namespace Atlas_Web.Pages.Terms
             {
                 return RedirectToPage(
                     "/Terms/Index",
-                    new { id = id, error = "You do not have permission to access that page." }
+                    new { id, error = "You do not have permission to access that page." }
                 );
             }
 
@@ -79,7 +77,7 @@ namespace Atlas_Web.Pages.Terms
             {
                 return RedirectToPage(
                     "/Terms/Index",
-                    new { id = id, error = "The data submitted was invalid." }
+                    new { id, error = "The data submitted was invalid." }
                 );
             }
 

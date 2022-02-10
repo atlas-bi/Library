@@ -6,7 +6,6 @@ using Microsoft.EntityFrameworkCore;
 using Atlas_Web.Models;
 using System.Collections.Generic;
 using Atlas_Web.Helpers;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Caching.Memory;
 using System;
 
@@ -14,15 +13,12 @@ namespace Atlas_Web.Pages.Collections
 {
     public class IndexModel : PageModel
     {
-        // import model
         private readonly Atlas_WebContext _context;
-        private readonly IConfiguration _config;
-        private IMemoryCache _cache;
+        private readonly IMemoryCache _cache;
 
-        public IndexModel(Atlas_WebContext context, IConfiguration config, IMemoryCache cache)
+        public IndexModel(Atlas_WebContext context, IMemoryCache cache)
         {
             _context = context;
-            _config = config;
             _cache = cache;
         }
 
@@ -88,7 +84,7 @@ namespace Atlas_Web.Pages.Collections
             );
             if (!checkpoint)
             {
-                return RedirectToPage("/Collections/Index", new { id = Collection.DataProjectId });
+                return RedirectToPage("/Collections/Index", new { id = Collection.DataProjectId, error = "You do not have permission to access that page." });
             }
 
             // delete report annotations and term annotations

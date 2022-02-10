@@ -15,13 +15,11 @@ namespace Atlas_Web.Pages.Initiatives
     public class NewModel : PageModel
     {
         private readonly Atlas_WebContext _context;
-        private readonly IConfiguration _config;
-        private IMemoryCache _cache;
+        private readonly IMemoryCache _cache;
 
-        public NewModel(Atlas_WebContext context, IConfiguration config, IMemoryCache cache)
+        public NewModel(Atlas_WebContext context, IMemoryCache cache)
         {
             _context = context;
-            _config = config;
             _cache = cache;
         }
 

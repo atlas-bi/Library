@@ -181,6 +181,8 @@ $icons: (
   comment-alt: $fa-var-comment-alt,
   info: $fa-var-info,
   paperclip: $fa-var-paperclip,
+  user-lock: $fa-var-user-lock,
+  lock: $fa-var-lock,
 );
 
 @each $key, $value in $icons {

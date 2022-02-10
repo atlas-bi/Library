@@ -1,0 +1,73 @@
+@page
+@{
+	Layout = null;
+}
+@model Atlas_Web.Pages.Settings.RolesModel
+
+<div>
+	<h2 class="title is-2">Role Configuration</h2>
+
+	<form asp-page-handler="CreateRole" method="post">
+		<div class="field">
+		    <label class="label">Add a New Role</label>
+			<div class="field has-addons">
+	            <div class="control">
+	                <input class="input" asp-for="UserRole.Name" type="text" placeholder="executive" required />
+	            </div>
+	            <div class="control">
+	                <button class="button is-info" type="submit">
+	                    Save
+	                </button>
+	            </div>
+	        </div>
+	    </div>
+	</form>
+
+	<div class="table-container">
+		<table class="table is-narrow is-fullwidth is-align-middel">
+			<thead>
+				<tr>
+					<th>Permission</th>
+					@foreach(var r in Model.UserRoles)
+					{
+						<th>
+							@if( r.Id != 1 && r.Id != 5 && r.Name != "Director")
+							{
+								@r.Name<a href="/Settings/Roles/?handler=DeleteRole&Id=@r.Id" onclick="return confirm('Are you sure you want to remove this?');">
+									<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M432 32H312l-9.4-18.7A24 24 0 0 0 281.1 0H166.8a23.72 23.72 0 0 0-21.4 13.3L136 32H16A16 16 0 0 0 0 48v32a16 16 0 0 0 16 16h416a16 16 0 0 0 16-16V48a16 16 0 0 0-16-16zM53.2 467a48 48 0 0 0 47.9 45h245.8a48 48 0 0 0 47.9-45L416 128H32z"/></svg>
+								</a>
+							} else {
+								@r.Name
+							}
+						</th>
+					}
+				</tr>
+			</thead>
+			<tbody>
+				@foreach (var q in Model.RolePermissions)
+				{
+					<tr>
+						<th>@q.Name</th>
+						@foreach (var r in Model.UserRoles)
+						{
+							<td>
+								<div class="field">
+									<input class="is-checkradio role-permissions is-info"
+										   id="@r.Id-@q.RolePermissionsId"
+									  	   roleId="@r.Id"
+									  	   permissionId="@q.RolePermissionsId"
+									  	   type="checkbox"
+									  	   name="exampleCheckboxDefault"
+									  	   @if (r.Name == "Administrator" || r.Permissions.Any(x => x.Id == q.RolePermissionsId)) {<text>checked="checked"</text>}
+									  	   @if (r.Name == "Administrator" ) { <text>disabled="disabled"</text> }
+									/>
+								  	<label for="@r.Id-@q.RolePermissionsId"></label>
+								</div>
+							</td>
+						}
+					</tr>
+				}
+			</tbody>
+		</table>
+	</div>
+</div>

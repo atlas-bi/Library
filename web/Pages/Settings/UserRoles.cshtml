@@ -1,0 +1,91 @@
+@page
+@{
+	Layout = null;
+}
+@model Atlas_Web.Pages.Settings.UserRolesModel
+
+<div>
+	<h2 class="title is-2">User Roles</h2>
+        <h3 class="title is-1">Add Privileged User</h3>
+
+	    <form method="post" asp-page-handler="AddUserPermission">
+	    	<div class="field">
+		        <label class="label">User</label>
+		        <div class="field is-grouped">
+		            <div class="control is-relative is-expanded">
+		                <input class="input input-mini" placeholder="type to search.." search-area="UserSearch" />
+		                <input type="hidden" asp-for="NewUserRole.UserId"/>
+		                <div class="mini">
+		                    <div class="mini-waiting">
+		                        <span class="icon">
+		                            <i class="fas fa-circle-notch fa-spin"></i>
+		                        </span>
+		                    </div>
+		                </div>
+		            </div>
+		            <div class="control">
+		                <a class="button mini-clear">
+		                    <span class="icon">
+		                        <i class="fas fa-times"></i>
+		                    </span>
+		                </a>
+		            </div>
+		        </div>
+		    </div>
+		    <div class="field">
+		        <label class="label">Role</label>
+		        <div class="field is-grouped">
+		            <div class="control is-relative is-expanded">
+		                <input class="input input-mini" placeholder="type to search.." search-area="user-roles" />
+		                <input type="hidden"  asp-for="NewUserRole.UserRolesId"/>
+		                <div class="mini">
+		                    <div class="mini-waiting">
+		                        <span class="icon">
+		                            <i class="fas fa-circle-notch fa-spin"></i>
+		                        </span>
+		                    </div>
+		                </div>
+		            </div>
+		            <div class="control">
+		                <a class="button mini-clear">
+		                    <span class="icon">
+		                        <i class="fas fa-times"></i>
+		                    </span>
+		                </a>
+		            </div>
+		        </div>
+		    </div>
+
+	        <button class="button" type="submit">Save</button>
+	    </form>
+
+	    <h3>Privileged Users</h3>
+	    <div class="table-container">
+			<table class="table is-narrow is-fullwidth is-align-middel">
+	            <thead>
+	                <tr>
+	                    <th>User</th>
+	                    <th>Role</th>
+	                    <th>Remove Role</th>
+	                </tr>
+	            </thead>
+	            <tbody>
+	                @foreach (var u in Model.PrivilegedUsers)
+	                {
+	                    @foreach (var r in u.Roles)
+	                    {
+	                        <tr>
+	                            <td>@u.Name</td>
+	                            <td>@r.Name</td>
+	                            <td>
+	                                <a href="/Settings/UserRoles/?handler=RemoveUserPermission&UserId=@u.Id&Id=@r.Id">
+	                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M432 32H312l-9.4-18.7A24 24 0 0 0 281.1 0H166.8a23.72 23.72 0 0 0-21.4 13.3L136 32H16A16 16 0 0 0 0 48v32a16 16 0 0 0 16 16h416a16 16 0 0 0 16-16V48a16 16 0 0 0-16-16zM53.2 467a48 48 0 0 0 47.9 45h245.8a48 48 0 0 0 47.9-45L416 128H32z"/></svg>
+	                                </a>
+	                            </td>
+	                        </tr>
+	                    }
+	                }
+	            </tbody>
+	        </table>
+	    </div>
+</div>
