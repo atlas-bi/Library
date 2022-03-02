@@ -262,9 +262,10 @@ gulp.task('dotnet:build', function (cb) {
   if (iis) iis.kill();
   var env = Object.create(process.env);
   env.ASPNETCORE_ENVIRONMENT = 'Development';
+  // https://docs.microsoft.com/en-us/dotnet/core/tools/dotnet-build
   dotnet = spawn(
     'dotnet',
-    ['build', 'web/web.csproj', '-c', 'Debug', '-v', 'n'],
+    ['build', 'web/web.csproj', '-c', 'Debug', '-v', 'm'],
     { stdio: 'inherit', env: env },
   );
   dotnet.on('close', function (code) {

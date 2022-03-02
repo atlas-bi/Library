@@ -47,7 +47,10 @@
         (document.documentElement.clientHeight ||
           d.documentElement.clientHeight) &&
       bounding.right - padding - elem.clientWidth <=
-        (document.documentElement.clientWidth || d.documentElement.clientWidth)
+        (document.documentElement.clientWidth ||
+          d.documentElement.clientWidth) &&
+      // is visible
+      elem.offsetParent !== null
     );
   };
 
@@ -56,6 +59,9 @@
     setTimeout(function () {
       load();
     }, 0);
+  });
+  d.addEventListener('modal-open', function () {
+    load();
   });
   d.addEventListener(
     'scroll',

@@ -34,9 +34,6 @@
     'click',
     function (e) {
       var el,
-        q,
-        data,
-        url,
         d = document; // open modal
       if (
         e.target.closest('[data-toggle]') &&
@@ -76,6 +73,7 @@
   // Functions to open and close a modal
   function openModal($el) {
     $el.classList.add('is-active');
+    document.dispatchEvent(new CustomEvent('modal-open'));
   }
 
   function closeModal($el) {

@@ -223,6 +223,10 @@
   d.addEventListener('reload-favs', function () {
     reloadFavs();
   });
+
+  d.addEventListener('modal-open', function () {
+    loadAjaxContent();
+  });
   d.addEventListener(
     'scroll',
     function () {
