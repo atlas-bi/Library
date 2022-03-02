@@ -128,6 +128,39 @@ $fa-font-path: '/font/fontawesome/webfonts';
   }
 }
 
+.fa-layers {
+  display: inline-block;
+  position: relative;
+  text-align: center;
+  vertical-align: -0.125em;
+  width: 1em;
+}
+
+.fa-fw {
+  text-align: center;
+  width: 1.25em;
+}
+
+/* custom for data transform icons */
+.fa-transform {
+  position: absolute;
+}
+.down-5 {
+  top: 30px;
+}
+.right-6 {
+  right: 4px;
+}
+.shrink-7 {
+  transform: scale(0.7);
+}
+.shrink-5 {
+  transform: scale(0.5);
+}
+.shrink-4 {
+  transform: scale(0.42);
+}
+
 /* build icon list */
 $icons: (
   envelope: $fa-var-envelope,
@@ -183,6 +216,15 @@ $icons: (
   paperclip: $fa-var-paperclip,
   user-lock: $fa-var-user-lock,
   lock: $fa-var-lock,
+  chevron-down: $fa-var-chevron-down,
+  chevron-up: $fa-var-chevron-up,
+  image: $fa-var-image,
+  arrows-alt: $fa-var-arrows-alt,
+  plus-circle: $fa-var-plus-circle,
+  minus-circle: $fa-var-minus-circle,
+  circle: $fa-var-circle,
+  exclamation-triangle: $fa-var-exclamation-triangle,
+  book-open: $fa-var-book-open,
 );
 
 @each $key, $value in $icons {

@@ -1,13 +1,9 @@
-﻿using System;
+using System;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
 using Atlas_Web.Models;
-using Microsoft.AspNetCore.Http;
 using System.IO;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Caching.Memory;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
@@ -18,7 +14,7 @@ using SixLabors.ImageSharp.Formats.Webp;
 
 namespace Atlas_Web.Pages.Data
 {
-    [ResponseCache(Duration = 20*60)]
+    [ResponseCache(Duration = 20 * 60)]
     public class ImgModel : PageModel
     {
         private readonly Atlas_WebContext _context;
@@ -70,21 +66,24 @@ namespace Atlas_Web.Pages.Data
             }
 
             using var ms = new MemoryStream();
-            if (extension == "webp") {
+            if (extension == "webp")
+            {
                 var webpEncoder = new WebpEncoder() { Quality = 75 };
                 image.Save(ms, webpEncoder);
-            } else
+            }
+            else
             {
                 var jpegEncoder = new JpegEncoder() { Quality = 75 };
                 image.Save(ms, jpegEncoder);
             }
-           
+
             return ms.ToArray();
         }
 
         public ActionResult OnGetThumb(int id, string size, int? imgId, string type)
         {
-            return _cache.GetOrCreate<FileContentResult>($"thumb-{id}-{size}-{imgId ?? 0}-{type}",
+            return _cache.GetOrCreate<FileContentResult>(
+                $"thumb-{id}-{size}-{imgId ?? 0}-{type}",
                 cacheEntry =>
                 {
                     cacheEntry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20);
@@ -114,18 +113,25 @@ namespace Atlas_Web.Pages.Data
                     }
                     else
                     {
-                        image_data = System.IO.File.ReadAllBytes("wwwroot/img/report_placeholder.png");
+                        image_data = System.IO.File.ReadAllBytes(
+                            "wwwroot/img/report_placeholder.png"
+                        );
                         name = "placeholder";
                     }
 
-                    return File(BuildImage(image_data, size, Extension), "application/octet-stream",  $"{id}.{Extension}");
+                    return File(
+                        BuildImage(image_data, size, Extension),
+                        "application/octet-stream",
+                        $"{id}.{Extension}"
+                    );
                 }
             );
         }
 
         public ActionResult OnGetPlaceholder(string size)
         {
-            return _cache.GetOrCreate<FileContentResult>("placeholder",
+            return _cache.GetOrCreate<FileContentResult>(
+                "placeholder",
                 cacheEntry =>
                 {
                     cacheEntry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20);
@@ -135,7 +141,11 @@ namespace Atlas_Web.Pages.Data
                     image_data = System.IO.File.ReadAllBytes("wwwroot/img/report_placeholder.png");
                     name = "placeholder";
 
-                    return File(BuildImage(image_data, size, "jpeg"), "application/octet-stream", $"{name}.jpeg");
+                    return File(
+                        BuildImage(image_data, size, "jpeg"),
+                        "application/octet-stream",
+                        $"{name}.jpeg"
+                    );
                 }
             );
         }

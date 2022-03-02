@@ -1,0 +1,138 @@
+
+.fav-star {
+  cursor: default;
+}
+
+.fav-links .fav-star .favorite {
+  color: #ffd700;
+  font-weight: 900;
+  transition: color 0.2s;
+  visibility: visible;
+}
+
+.favorite .icon {
+  color: #ffd700 !important;
+}
+.fav-body {
+  -webkit-box-flex: 1;
+  border-bottom: 1px solid #e6e6e6;
+  flex: 1 1 auto;
+  min-width: 0;
+  position: relative;
+  width: calc(100% - 2px);
+}
+
+.fav-body .text-success {
+  fill: rgba(41, 206, 66);
+  color: rgba(41, 206, 66);
+}
+.fav-bodyProj {
+  border: 2px solid #ffc107;
+  padding: 5px;
+  border-radius: 3px;
+}
+
+.fav-body .clps {
+  min-height: 30px !important;
+}
+
+.fav-type {
+  float: right !important;
+  margin-bottom: 0 !important;
+  text-align: end;
+}
+
+.fav-type span {
+  background-color: #ffc107;
+  border-radius: 0.25rem;
+  color: #212529;
+  display: inline-block;
+  font-size: 75%;
+  line-height: 1;
+  margin-left: 10px;
+  padding: 0.25em 0.4em;
+  text-align: center;
+  vertical-align: baseline;
+  white-space: nowrap;
+}
+
+.fav-dtls {
+  margin: 5px 0;
+}
+
+.fav-title {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-bottom: 0;
+  padding: 0;
+}
+
+.fav-nav {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  margin-bottom: 0;
+  padding-bottom: 0;
+  padding-top: 0.5rem;
+}
+
+.fav-nav > * + * {
+  padding-left: 15px;
+}
+
+.fav-folder > i {
+  margin-right: 1rem !important;
+}
+
+.fav-folder > * {
+  pointer-events: none;
+}
+
+.fav-folder > .folder-grip {
+  float: right;
+  pointer-events: auto;
+  transition: visibility 0.2s;
+  visibility: hidden;
+}
+
+.folder-grip > * {
+  pointer-events: none;
+}
+
+#favs-none {
+  margin: 20px;
+  text-align: center;
+}
+
+.fav-folder:hover {
+  background-color: #ced3db;
+}
+
+.fav:hover .fav-links {
+  visibility: visible;
+}
+
+.fav-links .fav-star:hover i {
+  color: #e6c300;
+}
+
+.fav-links .fav-star.disabled:hover i {
+  color: #ffd700;
+}
+
+.fav-folder:hover > .folder-grip,
+.fav-folder > .folder-grip:hover,
+.fav-folder > .folder-grip:focus,
+.fav-folder > .folder-grip:active {
+  visibility: visible;
+}
+
+.fav-folder.draggable {
+  z-index: 9999;
+}
+
+.fav-folder.hover,
+.show-all.hover {
+  border: 2px red dashed;
+}

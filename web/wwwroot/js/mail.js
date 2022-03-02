@@ -1,6 +1,6 @@
 (function () {
   document.execCommand('defaultParagraphSeparator', false, 'div');
-  var mail_check_rate = 10 * 1000,
+  var mail_check_rate = 30 * 1000,
     getMessageAjax = null,
     getNewMail = null,
     d = document,
@@ -595,30 +595,46 @@
 
         //to
         var to = [];
-        var recp = form.querySelectorAll('.mlbx-newMsgRecip select option');
+        var recp = form.querySelectorAll(
+          '.mlbx-newMsgRecip select option, .mail-to input[type="hidden"]',
+        );
 
-        for (var x = 0; x < recp.length; x++) {
-          var g = recp[x].classList.contains('group') ? 'g' : '';
-          to.push({
-            UserId: recp[x].value,
-            Type: g,
-          });
+        if (recp != null) {
+          console.log(recp);
+          for (var x = 0; x < recp.length; x++) {
+            var g = recp[x].classList.contains('group') ? 'g' : '';
+            to.push({
+              UserId: recp[x].value,
+              Type: g,
+            });
+          }
         }
 
         //subject
-        var subject = form.querySelector('.mlbx-newMsgSubjIpt').innerText;
+        var subject;
+        if (form.querySelector('.mlbx-newMsgSubjIpt')) {
+          subject = form.querySelector('.mlbx-newMsgSubjIpt').innerText;
+        } else {
+          subject = form.querySelector('input.mail-subject').value;
+        }
         //message
-        var message = form.querySelector('.mlbx-newMsgMsg').innerHTML;
-        var text = form
-          .querySelector('.mlbx-newMsgMsg')
-          .innerText.replace(/\n/g, ' ');
+        var message, text;
+        if (form.querySelector('.mlbx-newMsgMsg')) {
+          message = form.querySelector('.mlbx-newMsgMsg').innerHTML;
+          text = form
+            .querySelector('.mlbx-newMsgMsg')
+            .innerText.replace(/\n/g, ' ');
+        } else {
+          message = form.querySelector('textarea[name="mail-message"]').value;
+          text = message;
+        }
         var share = form.querySelector('.mlbx-share') ? '1' : '0';
         var shareName = form.querySelector('.mlbx-shareName')
           ? form.querySelector('.mlbx-shareName').value
           : '';
         var shareUrl = form.querySelector('.mlbx-shareUrl')
           ? form.querySelector('.mlbx-shareUrl').value
-          : '';
+          : window.location.href;
 
         var data = {
           To: JSON.stringify(to),

@@ -15,9 +15,15 @@ jobs:
         with:
           project: https://github.com/atlas-bi/atlas-bi-library/projects/1
           column_name: 'Needs triage'
-      - name: Assign issues and with `enhancement` label to enhancement project
+      - name: Assign issues and with `feature` label to feature project
         uses: srggrs/assign-one-project-github-action@1.2.1
-        if: contains(github.event.issue.labels.*.name, 'enhancement')
+        if: contains(github.event.issue.labels.*.name, 'feature')
+        with:
+          project: https://github.com/atlas-bi/atlas-bi-library/projects/2
+          column_name: 'Needs triage'
+      - name: Assign issues and with `feature` label to feature project
+        uses: srggrs/assign-one-project-github-action@1.2.1
+        if: contains(github.event.issue.labels.*.name, 'feature')
         with:
           project: https://github.com/atlas-bi/atlas-bi-library/projects/2
           column_name: 'Needs triage'

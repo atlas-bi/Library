@@ -1,9 +1,5 @@
-﻿using SolrNet.Attributes;
-using System;
+using SolrNet.Attributes;
 using System.Collections.Generic;
-using System.Linq;
-using System.Collections;
-using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Atlas_Web.Models
@@ -67,20 +63,5 @@ namespace Atlas_Web.Models
 
         [SolrField("group_type")]
         public ICollection<string> GroupType { get; set; }
-
-
-
-
-
-
-
-        //[SolrField("description")]
-        //public ICollection<string> Categories { get; set; }
-
-        //[SolrField("price")]
-        //public decimal Price { get; set; }
-
-        //[SolrField("inStock")]
-        //public bool InStock { get; set; }
     }
 }

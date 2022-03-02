@@ -120,10 +120,7 @@ namespace Atlas_Web.Pages.Initiatives
             _cache.Remove("initiative-" + Initiative.DataInitiativeId);
             _cache.Remove("initatives");
 
-            return RedirectToPage(
-                "/Initiatives/Index",
-                new { id, success = "Changes saved." }
-            );
+            return RedirectToPage("/Initiatives/Index", new { id, success = "Changes saved." });
         }
     }
 }

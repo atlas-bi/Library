@@ -1,4 +1,3 @@
-
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -13,7 +12,7 @@ namespace Atlas_Web.Pages.Settings
 {
     public class UserRolesModel : PageModel
     {
-        private IMemoryCache _cache;
+        private readonly IMemoryCache _cache;
         private readonly Atlas_WebContext _context;
 
         public UserRolesModel(Atlas_WebContext context, IMemoryCache cache)
@@ -31,7 +30,6 @@ namespace Atlas_Web.Pages.Settings
 
         [BindProperty]
         public UserRoleLink NewUserRole { get; set; }
-
 
         public class UserRolesData
         {
@@ -102,7 +100,7 @@ namespace Atlas_Web.Pages.Settings
 
             // clear cache
             var oldPerm = _cache.Get<List<string>>("MasterUserPermissions");
-            for (var x = 0; x < oldPerm.Count(); x++)
+            for (var x = 0; x < oldPerm.Count; x++)
             {
                 _cache.Remove(oldPerm[x]);
             }
@@ -137,7 +135,7 @@ namespace Atlas_Web.Pages.Settings
             }
             // clear cache
             var oldPerm = _cache.Get<List<string>>("MasterUserPermissions");
-            for (var x = 0; x < oldPerm.Count(); x++)
+            for (var x = 0; x < oldPerm.Count; x++)
             {
                 _cache.Remove(oldPerm[x]);
             }

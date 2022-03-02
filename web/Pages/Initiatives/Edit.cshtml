@@ -1,4 +1,4 @@
-﻿@page
+@page
 @model Atlas_Web.Pages.Initiatives.EditModel
 
 @{
@@ -9,7 +9,7 @@
 @section js {
     <script src="/js/flowchart.min.js" defer></script>
  @*   @if(!Request.Headers["User-Agent"].ToString().Contains("Trident")){<script>hljs.highlightAll();</script>}*@
-    <script src="/js/editor.min.js" defer></script>
+
 }
 
 <form class="mb-5" action="/Initiatives/Edit/?id=@Model.Initiative.DataInitiativeId" method="post" >
@@ -40,7 +40,7 @@
 
     <div class="field">
         <label class="label">Description</label>
-        <div class="editor" data-inputName="Initiative.Description" data-inputId="Initiative_Description"><textarea>@Html.Raw(Model.Initiative.Description)</textarea></div>
+        <div class="editor" data-inputName="Initiative.Description" data-inputId="Initiative_Description"><textarea class="textarea">@Html.Raw(Model.Initiative.Description)</textarea></div>
     </div>
 
     <div class="field">
@@ -154,7 +154,7 @@
             </div>
         <div class="field">
             <div class="control is-relative is-expanded">
-                <input class="input input-mini mulitselect" placeholder="search for collections.." search-area="CollectionSearch" data-name="Collections[].DataProjectId" />
+                <input class="input input-mini multiselect" placeholder="search for collections.." search-area="CollectionSearch" data-name="Collections[].DataProjectId" />
                 <div class="mini">
                     <div class="mini-waiting">
                         <span class="icon">

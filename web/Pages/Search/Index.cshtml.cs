@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,6 +12,8 @@ using Microsoft.Extensions.Caching.Memory;
 using SolrNet;
 using SolrNet.Commands.Parameters;
 using System.Text.RegularExpressions;
+using System.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 
 namespace Atlas_Web.Pages.Search
 {
@@ -22,8 +24,8 @@ namespace Atlas_Web.Pages.Search
 
         public SmallData(string Id, string Value)
         {
-            this.ObjectId = Id;
-            this.Name = Value;
+            ObjectId = Id;
+            Name = Value;
         }
 
 
@@ -53,24 +55,16 @@ namespace Atlas_Web.Pages.Search
             _solrLookup = solrLookup;
         }
 
-        public class SearchCollectionData
+        public class BasicFavoriteReportData
         {
-            public SearchCollectionData() { }
-
-            public int CollectionId { get; set; }
-            public string Annotation { get; set; }
             public string Name { get; set; }
+            public int Id { get; set; }
+            public string Favorite { get; set; }
+            public string ReportUrl { get; set; }
         }
 
         public List<AdList> AdLists { get; set; }
-        public List<SearchCollectionData> Collections { get; set; }
 
-        [BindProperty]
-        public List<ReportObjectType> AvailableFilters
-        {
-            get { return _context.ReportObjectTypes.ToList(); }
-            set { }
-        }
         public SolrAtlasResults SearchResults { get; set; }
 
         [BindProperty]
@@ -78,30 +72,6 @@ namespace Atlas_Web.Pages.Search
 
         [BindProperty]
         public List<ObjectSearch> UserSearch { get; set; }
-
-        [BindProperty]
-        public int ShowHidden { get; set; }
-
-        [BindProperty]
-        public int ShowAllTypes { get; set; }
-
-        [BindProperty]
-        public int ShowOrphans { get; set; }
-
-        [BindProperty]
-        public string SearchFilter { get; set; }
-
-        [BindProperty]
-        public string SearchField { get; set; }
-
-        [BindProperty]
-        public string Category { get; set; }
-
-        [BindProperty]
-        public int SearchPage { get; set; }
-
-        [BindProperty]
-        public int PageSize { get; set; }
 
         [BindProperty]
         public string SearchString { get; set; }
@@ -420,52 +390,168 @@ namespace Atlas_Web.Pages.Search
                     advanced = "Y";
                 }
 
-                SolrAtlasParameters parameters = new()
-                {
-                    Query = Query,
-                    PageIndex = PageIndex,
-                    Filters = BuildFilterDict(Request.Query)
-                };
+                SolrAtlasParameters parameters =
+                    new()
+                    {
+                        Query = Query,
+                        PageIndex = PageIndex,
+                        Filters = BuildFilterDict(Request.Query)
+                    };
 
                 SearchResults = new SolrAtlasResults(
                     results
                         .OrderBy(x => x.Type.First() == "collections" ? 0 : 1)
                         .Select(
                             x =>
-                                new SearchResult(
-                                    x.ReportTypeId != null
-                                        && (
-                                            x.ReportTypeId.First() == 3
-                                            || x.ReportTypeId.First() == 17
-                                        )
-                                        && Helpers.UserHelpers.CheckHrxPermissions(
-                                            _context,
-                                            x.AtlasId.First(),
-                                            User.Identity.Name
-                                        )
-                                      ? _context.ReportObjectAttachments
-                                        .Where(
-                                            y =>
-                                                y.ReportObjectId == x.AtlasId.First()
-                                                && x.Type.First() == "reports"
-                                        )
-                                        .OrderByDescending(y => y.CreationDate)
-                                        .ToList()
-                                      : new List<ReportObjectAttachment>(),
-                                    x,
-                                    x.Type.First() == "reports"
-                                      ? HtmlHelpers.ReportUrlFromParams(
-                                            _config["AppSettings:org_domain"],
-                                            HttpContext,
-                                            _context.ReportObjects
-                                                .Where(y => y.ReportObjectId == x.AtlasId.First())
-                                                .FirstOrDefault(),
-                                            _context,
-                                            User.Identity.Name
-                                        )
-                                      : null
-                                )
+                                new ResultModel
+                                {
+                                    report =
+                                        x.Type.First() == "reports"
+                                            ? _cache.GetOrCreate<ReportObject>(
+                                                  "search-report-" + x.AtlasId.First(),
+                                                  cacheEntry =>
+                                                  {
+                                                      cacheEntry.AbsoluteExpirationRelativeToNow =
+                                                          TimeSpan.FromMinutes(20);
+                                                      return _context.ReportObjects
+                                                          .Include(x => x.ReportObjectDoc)
+                                                          .Include(x => x.ReportObjectAttachments)
+                                                          .Include(x => x.StarredReports)
+                                                          .Include(x => x.ReportObjectType)
+                                                          .AsSingleQuery()
+                                                          .SingleOrDefault(
+                                                              y =>
+                                                                  y.ReportObjectId
+                                                                  == x.AtlasId.First()
+                                                          );
+                                                  }
+                                              )
+                                            : null,
+                                    collection =
+                                        x.Type.First() == "collections"
+                                            ? _cache.GetOrCreate<DpDataProject>(
+                                                  "search-collection-" + x.AtlasId.First(),
+                                                  cacheEntry =>
+                                                  {
+                                                      cacheEntry.AbsoluteExpirationRelativeToNow =
+                                                          TimeSpan.FromMinutes(20);
+                                                      return _context.DpDataProjects
+                                                          .Include(x => x.StarredCollections)
+                                                          .AsSingleQuery()
+                                                          .SingleOrDefault(
+                                                              y =>
+                                                                  y.DataProjectId
+                                                                  == x.AtlasId.First()
+                                                          );
+                                                  }
+                                              )
+                                            : null,
+                                    term =
+                                        x.Type.First() == "terms"
+                                            ? _cache.GetOrCreate<Term>(
+                                                  "search-term-" + x.AtlasId.First(),
+                                                  cacheEntry =>
+                                                  {
+                                                      cacheEntry.AbsoluteExpirationRelativeToNow =
+                                                          TimeSpan.FromMinutes(20);
+                                                      return _context.Terms
+                                                          .Include(x => x.StarredTerms)
+                                                          .AsSingleQuery()
+                                                          .SingleOrDefault(
+                                                              y => y.TermId == x.AtlasId.First()
+                                                          );
+                                                  }
+                                              )
+                                            : null,
+                                    initiative =
+                                        x.Type.First() == "initiatives"
+                                            ? _cache.GetOrCreate<DpDataInitiative>(
+                                                  "search-initaitive-" + x.AtlasId.First(),
+                                                  cacheEntry =>
+                                                  {
+                                                      cacheEntry.AbsoluteExpirationRelativeToNow =
+                                                          TimeSpan.FromMinutes(20);
+                                                      return _context.DpDataInitiatives
+                                                          .Include(x => x.StarredInitiatives)
+                                                          .AsSingleQuery()
+                                                          .SingleOrDefault(
+                                                              y =>
+                                                                  y.DataInitiativeId
+                                                                  == x.AtlasId.First()
+                                                          );
+                                                  }
+                                              )
+                                            : null,
+                                    user =
+                                        x.Type.First() == "users"
+                                            ? _cache.GetOrCreate<User>(
+                                                  "search-user-" + x.AtlasId.First(),
+                                                  cacheEntry =>
+                                                  {
+                                                      cacheEntry.AbsoluteExpirationRelativeToNow =
+                                                          TimeSpan.FromMinutes(20);
+                                                      return _context.Users
+                                                          .AsSingleQuery()
+                                                          .SingleOrDefault(
+                                                              y => y.UserId == x.AtlasId.First()
+                                                          );
+                                                  }
+                                              )
+                                            : null,
+                                    group =
+                                        x.Type.First() == "groups"
+                                            ? _cache.GetOrCreate<UserGroup>(
+                                                  "search-group-" + x.AtlasId.First(),
+                                                  cacheEntry =>
+                                                  {
+                                                      cacheEntry.AbsoluteExpirationRelativeToNow =
+                                                          TimeSpan.FromMinutes(20);
+                                                      return _context.UserGroups
+                                                          .AsSingleQuery()
+                                                          .SingleOrDefault(
+                                                              y => y.GroupId == x.AtlasId.First()
+                                                          );
+                                                  }
+                                              )
+                                            : null
+                                }
                         )
+                        //})
+
+                        //x =>
+                        //    new SearchResult(
+                        //        x.ReportTypeId != null
+                        //            && (
+                        //                x.ReportTypeId.First() == 3
+                        //                || x.ReportTypeId.First() == 17
+                        //            )
+                        //            && Helpers.UserHelpers.CheckHrxPermissions(
+                        //                _context,
+                        //                x.AtlasId.First(),
+                        //                User.Identity.Name
+                        //            )
+                        //          ? _context.ReportObjectAttachments
+                        //            .Where(
+                        //                y =>
+                        //                    y.ReportObjectId == x.AtlasId.First()
+                        //                    && x.Type.First() == "reports"
+                        //            )
+                        //            .OrderByDescending(y => y.CreationDate)
+                        //            .ToList()
+                        //          : new List<ReportObjectAttachment>(),
+                        //        x,
+                        //        x.Type.First() == "reports"
+                        //          ? HtmlHelpers.ReportUrlFromParams(
+                        //                HttpContext,
+                        //                _context.ReportObjects
+                        //                    .Where(y => y.ReportObjectId == x.AtlasId.First())
+                        //                    .FirstOrDefault(),
+                        //                _context,
+                        //                User.Identity.Name
+                        //            )
+                        //          : null
+                        //    )
+
                         .ToList(),
                     BuildFacetModels(results.FacetFields),
                     BuildHighlightModels(results.Highlights),
@@ -476,7 +562,6 @@ namespace Atlas_Web.Pages.Search
                     advanced
                 );
             }
-
 
             SearchString = Query;
 
@@ -711,10 +796,6 @@ namespace Atlas_Web.Pages.Search
                     index_type = "maintenance_log_status";
                     break;
 
-                case "ext-cont":
-                    index_type = "initiative_contacts";
-                    break;
-
                 case "user-roles":
                     index_type = "user_roles";
                     break;
@@ -747,6 +828,67 @@ namespace Atlas_Web.Pages.Search
             var json = JsonConvert.SerializeObject(myObject);
 
             return Content(json);
+        }
+
+        public ActionResult OnGetRelatedReports(string id)
+        {
+            ViewData["RelatedReports"] = _cache.GetOrCreate<List<BasicFavoriteReportData>>(
+                "RelatedReports-" + id,
+                cacheEntry =>
+                {
+                    cacheEntry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20);
+                    // id is a number e.g. 1, or a list of numbers e.g. "1,2,3"
+                    var user = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
+
+                    var x = new List<BasicFavoriteReportData>();
+
+                    using (
+                        var connection = new SqlConnection(
+                            _config.GetConnectionString("AtlasDatabase")
+                        )
+                    )
+                    {
+                        using var command = connection.CreateCommand();
+                        command.CommandType = System.Data.CommandType.StoredProcedure;
+                        command.CommandText = "RelatedReports";
+                        command.Parameters.Add(new SqlParameter("@Id", id));
+                        command.Parameters.Add(new SqlParameter("@UserId", user.UserId));
+
+                        connection.Open();
+                        var datareader = command.ExecuteReader();
+
+                        while (datareader.Read())
+                        {
+                            x.Add(
+                                new BasicFavoriteReportData
+                                {
+                                    Id = (int)datareader["Id"],
+                                    Name = datareader["Name"].ToString(),
+                                    Favorite = datareader["Favorite"].ToString(),
+                                    ReportUrl = HtmlHelpers.ReportUrlFromParams(
+                                        HttpContext,
+                                        _context.ReportObjects
+                                            .Where(x => x.ReportObjectId == (int)datareader["Id"])
+                                            .First(),
+                                        _context,
+                                        User.Identity.Name
+                                    ),
+                                }
+                            );
+                        }
+                    }
+                    return x;
+                }
+            );
+
+            HttpContext.Response.Headers.Remove("Cache-Control");
+            HttpContext.Response.Headers.Add("Cache-Control", "max-age=7200");
+            //return Partial((".+?"));
+            return new PartialViewResult()
+            {
+                ViewName = "Partials/_RelatedReports",
+                ViewData = ViewData
+            };
         }
     }
 }

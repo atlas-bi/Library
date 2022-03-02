@@ -1,49 +1,83 @@
-﻿
-@model Atlas_Web.Pages.Reports.IndexModel
-@{
-    var i = 0;
-}
-@if (ViewBag.ReportImages.Count > 0)
-{
-    <h3 class="pageSection-title">Images</h3>
 
-    @if (ViewBag.ReportImages.Count == 1)
-    {
-        <div class="pop text-center" style="max-height:400px;">
-            <img class="img-responsive" src="/data/img?handler=Thumb&id=-1&imgId=@ViewBag.ReportImages[0].Id&size=1200x400" alt="Main report image" style="max-width: 98%;max-height: 390px;min-height: 1px;">
-        </div>
-    }
-    else if (ViewBag.ReportImages.Count > 1)
-    {
-        <div class="crsl">
-            @foreach (var img in ViewBag.ReportImages)
-            {
-                <div class="crsl-itm pop">
-                    @if(i > 0)
-                    {
-                        <img data-src="/data/img?handler=Thumb&id=-1&imgId=@img.Id&size=1200x400" src="/img/loader.gif" />
-                    } else {
-                        <img src="/data/img?handler=Thumb&id=-1&imgId=@img.Id&size=1200x400"/>
-                    }
-                </div>
-                i++;
-            }
-            <div class="crsl-ind">
-                @{
-                    i = 0;
-                }
-                @foreach( var img in ViewBag.ReportImages)
-                {
-                    <span  class="crsl-dot" slide="@i"></span>
-                    i++;
-                }
-            </div>
-            <a class="crsl-prev">
-                <i class="fas fa-chevron-left fa-lg"></i>
-            </a>
-            <a class="crsl-next">
-                <i class="fas fa-chevron-right fa-lg"></i>
-            </a>
-        </div>
-    }
+@model Atlas_Web.Pages.Reports.IndexModel
+
+<h2 id="images" class="title is-2">Images</h2>
+
+@if (Model.Report.ReportObjectImagesDocs.Count == 1)
+{
+    var url= "/data/img?handler=Thumb&id=-1&imgId=" + @Model.Report.ReportObjectImagesDocs.FirstOrDefault().ImageId;
+    <div class="js-modal-trigger text-center box mb-5 p-0 report-image" data-target="report-image-@Model.Report.ReportObjectImagesDocs.FirstOrDefault().ImageId">
+        <figure class="image">
+            <picture>
+                <source srcset="@url&size=1200x400&type=webp 800w,
+                                @url&size=2000x400&type=webp 1200w"
+                        type="image/webp"
+
+                        sizes="100vw">
+                <img src="@url&size=1200x400" alt="report image" >
+            </picture>
+        </figure>
+    </div>
+    <div class="modal" id="report-image-@Model.Report.ReportObjectImagesDocs.FirstOrDefault().ImageId">
+      <div class="modal-background"></div>
+      <div class="modal-content modal-image">
+        <p class="image">
+          <picture>
+                <source srcset="@url&size=1200x1200&type=webp 800w,
+                                @url&size=2000x2000&type=webp 1200w"
+                        type="image/webp"
+
+                        sizes="100vw">
+                <img src="@url&size=1200x2000" alt="report image" >
+            </picture>
+        </p>
+      </div>
+      <button class="modal-close is-large" aria-label="close"></button>
+    </div>
 }
+else
+{
+    <div class="carousel box is-relative mb-5 p-0">
+        @foreach (var img in Model.Report.ReportObjectImagesDocs.OrderBy(x => x.ImageOrdinal))
+        {
+            var url="/data/img?handler=Thumb&id=-1&imgId=" + @img.ImageId;
+            <div class="carousel-itm js-modal-trigger" data-target="report-image-@img.ImageId">
+                <figure class="image">
+                    <picture>
+                        <source srcset="@url&size=1200x400&type=webp 800w, @url&size=2000x400&type=webp 1200w" type="image/webp" sizes="100vw">
+                        <img src="@url&size=1200x400" alt="report image">
+                    </picture>
+                </figure>
+            </div>
+            <div class="modal" id="report-image-@img.ImageId">
+              <div class="modal-background"></div>
+              <div class="modal-content modal-image">
+                <p class="image">
+                  <picture>
+                        <source srcset="@url&size=1200x1200&type=webp 800w,
+                                        @url&size=2000x2000&type=webp 1200w"
+                                type="image/webp"
+
+                                sizes="100vw">
+                        <img src="@url&size=1200x2000" alt="report image" >
+                    </picture>
+                </p>
+              </div>
+              <button class="modal-close is-large" aria-label="close"></button>
+            </div>
+        }
+        <div class="carousel-ind">
+            @for(var i=0; i< Model.Report.ReportObjectImagesDocs.Count;i++)
+            {
+                <span  class="carousel-dot" slide="@i"></span>
+            }
+        </div>
+        <a class="carousel-prev">
+            <i class="fas fa-chevron-left fa-lg"></i>
+        </a>
+        <a class="carousel-next">
+            <i class="fas fa-chevron-right fa-lg"></i>
+        </a>
+    </div>
+}
+

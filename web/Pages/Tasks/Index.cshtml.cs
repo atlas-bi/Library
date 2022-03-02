@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -7,7 +7,6 @@ using Microsoft.EntityFrameworkCore;
 using Atlas_Web.Models;
 using System.Collections.Generic;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Caching.Memory;
 
 namespace Atlas_Web.Pages.Tasks
 {
@@ -463,7 +462,6 @@ namespace Atlas_Web.Pages.Tasks
                     ReportType = r.ReportObjectType.Name,
                     Epic = r.EpicMasterFile + " " + r.EpicRecordId.ToString(),
                     RunReportUrl = Helpers.HtmlHelpers.ReportUrlFromParams(
-                        _config["AppSettings:org_domain"],
                         HttpContext,
                         r,
                         _context,
@@ -479,7 +477,6 @@ namespace Atlas_Web.Pages.Tasks
                         r.EpicRecordId.ToString()
                     ),
                     RecordViewerUrl = Helpers.HtmlHelpers.RecordViewerLink(
-                        _config["AppSettings:org_domain"],
                         HttpContext,
                         r.EpicMasterFile,
                         r.EpicRecordId.ToString()

@@ -1,36 +1,36 @@
 (function () {
   /*
-      div.crsl
-        div.crsl-itm
-        div.crsl-itm
-        div.crsl-ind
-          span.crsl-dot
-          span.crsl-dot
-        a.crsl-prev
-        a.crsl-next
+      div.carousel
+        div.carousel-itm
+        div.carousel-itm
+        div.carousel-ind
+          span.carousel-dot
+          span.carousel-dot
+        a.carousel-prev
+        a.carousel-next
     */
   var d = document;
 
   function l() {
-    var crsl = document.getElementsByClassName('crsl'),
+    var carousel = document.getElementsByClassName('carousel'),
       x;
 
-    for (x = 0; x < crsl.length; x++) {
-      if (crsl[x].classList.contains('crsl-p')) {
+    for (x = 0; x < carousel.length; x++) {
+      if (carousel[x].classList.contains('carousel-p')) {
         continue;
       }
 
-      new c(crsl[x]);
+      new c(carousel[x]);
     }
   }
 
   function c(b) {
     this.target = b;
-    this.next = b.getElementsByClassName('crsl-next')[0];
-    this.prev = b.getElementsByClassName('crsl-prev')[0];
-    this.dots = b.getElementsByClassName('crsl-dot');
-    this.slides = b.getElementsByClassName('crsl-itm');
-    this.target.classList.add('crsl-p');
+    this.next = b.getElementsByClassName('carousel-next')[0];
+    this.prev = b.getElementsByClassName('carousel-prev')[0];
+    this.dots = b.getElementsByClassName('carousel-dot');
+    this.slides = b.getElementsByClassName('carousel-itm');
+    this.target.classList.add('carousel-p');
     this.next.addEventListener('click', this.showSlides.bind(this, 1), false);
     this.prev.addEventListener('click', this.showSlides.bind(this, -1), false);
 
@@ -54,7 +54,7 @@
         aslide,
         dots = this.dots;
       k(function () {
-        if (b.target.matches('.crsl-dot')) {
+        if (b.target.matches('.carousel-dot')) {
           n = b.target.getAttribute('slide');
         } else {
           for (i = 0; i < slides.length; i++) {

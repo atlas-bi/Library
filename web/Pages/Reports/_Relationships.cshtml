@@ -1,164 +1,76 @@
-﻿@model Atlas_Web.Pages.Reports.IndexModel
-@{
-    var i = 0;
-}
-<h3 class="pageSection-title">Relationships</h3>
-    @if (Model.Groups.Count() > 0)
+@model Atlas_Web.Pages.Reports.IndexModel
+
+<h2 id="relationships" class="title is-2">Relationships</h2>
+    @if (Model.Report.ReportGroupsMemberships.Any())
     {
-        <h4 class="drop" data-toggle="clps" data-target="related-groups">Related Groups
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M31.3 192h257.3c17.8 0 26.7 21.5 14.1 34.1L174.1 354.8c-7.8 7.8-20.5 7.8-28.3 0L17.2 226.1C4.6 213.5 13.5 192 31.3 192z"/></svg>
-        </h4>
-
-        <div id="related-groups" class="clps">
-
-            <div class="table-responsive">
-                <table class="table sort">
-                    <thead>
-                        <tr>
-                            <th>Group Name</th>
-                            <th>Type</th>
-                            <th>Source</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach(var s in Model.Groups){
-                        <tr>
-                            
-                            <td><a href="\Groups?id=@s.Id">@s.Name</a></td>
-                            <td>@s.Type</td>
-                            <td>@s.Source</td>
-                        </tr>
-                        }
-                    </tbody>
-                </table>
+        <nav id="groups" class="panel">
+            <p class="panel-heading is-flex is-justify-content-space-between" data-action="collapse" data-target="related-groups">
+                <span>Report Groups</span>
+                <span class="icon">
+                  <i class="fas fa-chevron-down"></i>
+                </span>
+            </p>
+            <div class="panel-block is-collapsible is-block" id="related-groups">
+                <div class="table-responsive">
+                    <table class="table sort">
+                        <thead>
+                            <tr>
+                                <th>Group Name</th>
+                                <th>Type</th>
+                                <th>Source</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach(var s in Model.Report.ReportGroupsMemberships){
+                            <tr>
+                                <td><a href="\Groups?id=@s.GroupId">@s.Group.GroupName</a></td>
+                                <td>@s.Group.GroupType</td>
+                                <td>@s.Group.GroupSource</td>
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
             </div>
+        </nav>
+    }
+
+    @if (Model.Children.Any())
+    {
+        <h3 class="title is-3">Reports included in this report.</h3>
+        <div class="columns is-multiline">
+            @foreach (var child in Model.Children)
+            {
+                <div class="column is-half ">
+                    <partial name="Reports/_Snippet" model="child" />
+                </div>
+            }
         </div>
-    
     }
 
-    @if (Model.ReportChildren.Count() > 0) //show nested children model if they exist
+
+    @if (Model.Parents.Count() > 0)
     {
-        <h4>Reports included in this report.</h4>
-        @foreach (var child in Model.ReportChildren)
+        <h3 class="title is-3">Reports that include this report.</h3>
+        <div class="columns is-multiline">
+        @foreach (var parent in Model.Parents)
         {
-            <h5>
-                <a href="Reports?id=@child.Id">@child.Name @if (child.EpicMasterFile is not null){<text>[@child.EpicMasterFile]</text>}</a>
-            </h5>
-
-            if (child.Img.Count() == 1)
-                {
-                <div class="pop ml-5" style="max-height:400px">
-                    <img class=" img-responsive" data-src="/data/img?handler=Thumb&id=-1&imgId=@child.Img.FirstOrDefault().Id&size=1200x400" alt="Image loading.." style="max-width: 78%;max-height: 290px;" src="/img/loader.gif">
-                </div>
-            } else if (child.Img.Count() > 1)
-            {
-                <div class="crsl">
-                    @foreach (var img in child.Img)
-                    {
-                        <div class="crsl-itm pop">
-                            <img data-src="/data/img?handler=Thumb&id=-1&imgId=@img.Id&size=1200x400" alt="Image loading.." src="/img/loader.gif"  />
-                        </div>
-                        i++;
-                    }
-                    <div class="crsl-ind">
-                        @{
-                            i = 0;
-                        }
-                        @foreach(var q in child.Img)
-                        {
-                            <span  class="crsl-dot @if(i==0){<text> active</text>}" slide="@i"></span>
-                            i++;
-                        }
-                    </div>
-                    <a class="crsl-prev">
-                        <i class="fas fa-chevron-left fa-lg"></i>
-                    </a>
-                    <a class="crsl-next">
-                        <i class="fas fa-chevron-right fa-lg"></i>
-                    </a>
-                </div>
-
-            }
-
-            @foreach (var subchild in child.Child)
-            {
-                <h6>
-                    <a href="Reports?id=@subchild.Id">@subchild.Name @if (subchild.EpicMasterFile is not null){<text>[@subchild.EpicMasterFile]</text>}</a>
-                </h6>
-
-                @foreach (var supersubchild in subchild.GrandChild)
-                {
-                    <h6 style="margin-left:40px"><a href="Reports?id=@supersubchild.Id">@supersubchild.Name @if (supersubchild.EpicMasterFile is not null){<text>[@supersubchild.EpicMasterFile]</text>}</a></h6>
-                }
-            }
-        }
-    }
-
-    @if (Model.ReportParents.Count() > 0)
-    {
-        <h4>Reports that include this report.</h4>
-        @foreach (var parent in Model.ReportParents)
-        {
-            <h5>
-                <a href="Reports?id=@parent.Id">@parent.Name</a>
-            </h5>
-            if (parent.Img.Count() == 1)
-            {
-                <div class="pop text-center" style="max-height:400px">
-                    <img class=" img-responsive" data-src="/data/img?handler=Thumb&id=-1&imgId=@parent.Img.FirstOrDefault().Id&size=1200x400" alt="Image loading.." style="max-width: 78%;max-height: 290px" src="/img/loader.gif" >
-                </div>
-            } else if (parent.Img.Count() > 1)
-            {
-                <div class="crsl">
-                    @foreach (var img in parent.Img.ToList())
-                    {
-                        <div class="crsl-itm pop">
-                            <img data-src="/data/img?handler=Thumb&id=-1&imgId=@img.Id&size=1200x400" alt="Image loading.." src="/img/loader.gif"  />
-                        </div>
-                        i++;
-                    }
-                    <div class="crsl-ind">
-                        @{
-                            i = 0;
-                        }
-                        @foreach(var q in parent.Img.ToList())
-                        {
-                            <span  class="crsl-dot @if(i==0){<text> active</text>}" slide="@i"></span>
-                            i++;
-                        }
-                    </div>
-                    <a class="crsl-prev">
-                        <i class="fas fa-chevron-left fa-lg"></i>
-                    </a>
-                    <a class="crsl-next">
-                        <i class="fas fa-chevron-right fa-lg"></i>
-                    </a>
-                </div>
-            }
-        }
-    }
-
-    @if (Model.RelatedCollections.Count() > 0)
-    {
-        <h4>Collections that include this report.</h4>
-
-        @foreach(var t in Model.RelatedCollections){
-
-        <h4 class="drop" data-toggle="clps" data-target="collapse-collection-@(t.Id)">@t.Name
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M31.3 192h257.3c17.8 0 26.7 21.5 14.1 34.1L174.1 354.8c-7.8 7.8-20.5 7.8-28.3 0L17.2 226.1C4.6 213.5 13.5 192 31.3 192z"/></svg>
-        </h4>
-
-        <div id="collapse-collection-@(t.Id)" class="clps">
-            <div class="drop-box">
-                <h5><a class="drop-link" href="/collections?id=@t.Id">Open This Collection</a></h5>
-                @if(t.Description != null)
-                {
-                    <h5>Annotation</h5>
-                    <div class="markdown">
-                        @Html.Raw(@Helpers.HtmlHelpers.MarkdownToHtml(t.Description))
-                    </div>
-                }
+            <div class="column is-half ">
+                <partial name="Reports/_Snippet" model="parent" />
             </div>
-        </div>
         }
+        </div>
+    }
+
+    @if (Model.Report.DpReportAnnotations.Any())
+    {
+        <h3 id="collections" class="title is-3">Linked Collections</h3>
+        <div class="columns is-multiline">
+            @foreach (var d in @Model.Report.DpReportAnnotations)
+            {
+                <div class="column is-half ">
+                    <partial name="Collections/_Snippet" model="d.DataProject" />
+                </div>
+            }
+        </div>
     }

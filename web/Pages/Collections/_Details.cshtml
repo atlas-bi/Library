@@ -4,7 +4,7 @@
 <h1 class="title is-1">@Model.Collection.Name</h1>
 <partial name="_Links" />
 
-@if (Model.Collection.DpReportAnnotations.Count > 0)
+@if (Model.Collection.DpReportAnnotations.Any())
 {
     <h2 class="title is-2" id="reports">Reports</h2>
     <div class="columns is-multiline">
@@ -19,7 +19,7 @@
 
 @if (@Configuration["features:enable_terms"] == null || @Configuration["features:enable_terms"].ToString().ToLower() == "true")
 {
-    @if (Model.Collection.DpTermAnnotations.Count > 0)
+    @if (Model.Collection.DpTermAnnotations.Any())
     {
         <h2 class="title is-2" id="terms">Terms</h2>
         <div class="columns is-multiline">

@@ -420,3 +420,41 @@
     q.send(JSON.stringify(item));
   }
 })();
+
+(function () {
+  document.addEventListener('click', function ($e) {
+    if ($e.target.closest('a.star')) {
+      $e.preventDefault();
+      var $target = $e.target.closest('a.star');
+      var $props = $target.dataset;
+
+      var $ajax = new XMLHttpRequest();
+      $ajax.open('get', $props.href, true);
+      $ajax.send();
+      $ajax.onload = function () {
+        // swap classes and update count.
+        if ($target.querySelector('.fa-star').classList.contains('fas')) {
+          $target.querySelector('.fa-star').classList.remove('fas');
+          $target.querySelector('.fa-star').classList.add('far');
+
+          $target.querySelector('.icon').classList.remove('has-text-gold');
+          $target.querySelector('.icon').classList.add('has-text-grey');
+        } else {
+          $target.querySelector('.fa-star').classList.remove('far');
+          $target.querySelector('.fa-star').classList.add('fas');
+
+          $target.querySelector('.icon').classList.remove('has-text-grey');
+          $target.querySelector('.icon').classList.add('has-text-gold');
+        }
+
+        if (
+          $target.querySelector('.star-count') &&
+          $ajax.responseText !== 'error'
+        ) {
+          $target.querySelector('.star-count').innerText = $ajax.responseText;
+        }
+        // if we are on the fav's page, should we refresh the page, or delete the element?
+      };
+    }
+  });
+})();

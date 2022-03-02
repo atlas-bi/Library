@@ -198,9 +198,9 @@
   );
 
   function o(el) {
-    var l = [].slice.call(el.parentElement.children).filter(function (el) {
-        return el.classList.contains('step-tab');
-      }),
+    var l = [].slice.call(
+        el.closest('.steps').querySelectorAll('.steps-segment'),
+      ),
       c = d.getElementById(el.getAttribute('href').replace('#', '')),
       t = [].slice.call(c.parentElement.children).filter(function (el) {
         return el.classList.contains('step-tab-data');
@@ -215,7 +215,7 @@
 
     c.classList.add('is-active'); // add style to tab
 
-    el.classList.add('is-active');
+    el.closest('.steps-segment').classList.add('is-active');
     d.dispatchEvent(new CustomEvent('step-tab-opened'));
 
     // change url hash. use pushstate not window.location.hash to prevent scrolling.

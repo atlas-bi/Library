@@ -1,0 +1,49 @@
+.query-box {
+  background: #474949;
+  border-radius: 6px;
+  margin-right: 1px;
+  max-height: 500px;
+  overflow: hidden;
+
+  .query-box-inner {
+    height: 100%;
+  }
+
+  pre {
+    display: inline-block;
+    margin-bottom: -6px;
+    min-height: 100%;
+    min-width: 100%;
+    white-space: pre;
+  }
+
+  .hljs {
+    padding-bottom: 1rem;
+    padding-right: 130px;
+  }
+
+}
+
+.query-copy {
+  background-color: transparent;
+  border: 1px solid transparent;
+  border-radius: .25rem;
+  display: inline-block;
+  font-size: 1rem;
+  height: 30px;
+  line-height: 1.5;
+  text-align: center;
+  user-select: none;
+  vertical-align: middle;
+  white-space: nowrap;
+  width: 30px;
+
+  &:focus {
+    outline: none;
+  }
+}
+
+
+.query-box + .query-box {
+  margin-top: 15px;
+}

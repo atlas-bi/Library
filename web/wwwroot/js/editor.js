@@ -237,7 +237,7 @@
       html: true,
       linkify: true,
       typographer: true,
-      breaks: true,
+      breaks: false, // false here, true in markdig
     });
 
     this.editorPrevTitleButton.addEventListener(

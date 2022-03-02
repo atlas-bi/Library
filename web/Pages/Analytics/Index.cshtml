@@ -1,15 +1,12 @@
-﻿@page
+@page
 @model Atlas_Web.Pages.Analytics.IndexModel
-@{ Layout = HttpContext.Request.Headers["x-requested-with"] == "XMLHttpRequest" ? "../Shared/_AjaxLayout.cshtml" : "../Shared/_Layout.cshtml"; }
 @{ ViewData["Title"] = "Analytics"; }
 
 @section js {
     <script async src="/js/realtime.min.js" defer></script>
 }
 
-<div class="pageTitle">
-    <h2 class="pageTitle-head">Analytics</h2>
-</div>
+<h1 class="title is-1">Analytics</h1>
 
 <div id="active-users"></div>
 

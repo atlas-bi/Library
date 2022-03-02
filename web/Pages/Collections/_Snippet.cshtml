@@ -2,11 +2,14 @@
 
 <div class="card">
     <div class="card-header">
-        <p class="card-header-title">
-            @Model.Name
-        </p>
+        <div class="card-header-title py-2 is-justify-content-space-between">
+            <a class="has-text-dark" href="/Collections?id=@Model.DataProjectId">@Model.Name</a>
+            <span class="tags">
+                <span class="tag">collection</span>
+            </span>
+        </div>
     </div>
-    <div class="card-content">
+    <div class="card-content pt-3 pb-2">
         <div class="media">
             <div class="media-left">
                 <figure class="image is-128x128">
@@ -19,7 +22,7 @@
             <div class="media-content is-min-h-96 is-flex is-justify-content-space-between is-flex-direction-column">
                 @if (!string.IsNullOrEmpty(Model.Description))
                 {
-                    @Html.Raw(@Helpers.HtmlHelpers.MarkdownToHtml(Model.Description.Substring(0,Math.Min(160,Model.Description.Length)) + " ..."))
+                    @(Model.Description.Substring(0,Math.Min(160,Model.Description.Length)) + " ...")
                 } else {
                     <text>Open to view details.</text>
                 }
@@ -34,6 +37,24 @@
         </div>
     </div>
     <footer class="card-footer">
+        <a class="card-footer-item star" data-href="/users/favorites/?handler=Edit&type=collection&id=@Model.DataProjectId">
+            <span class="icon-text">
+                @if (Model.StarredCollections.Any(x => x.Ownerid == ViewBag.PublicUser.UserId))
+                {
+                    <span class="icon has-text-gold">
+                        <i class="fas fa-star"></i>
+                    </span>
+                    <span>Starred <span class="tag is-rounded">@Model.StarredCollections.Count</span></span>
+                }
+                else
+                {
+                    <span class="icon ">
+                        <i class="far fa-star"></i>
+                    </span>
+                    <span>Star <span class="tag is-rounded star-count">@Model.StarredCollections.Count</span></span>
+                }
+            </span>
+        </a>
         <a href="/Collections?id=@Model.DataProjectId" class="card-footer-item">Open</a>
     </footer>
 </div>

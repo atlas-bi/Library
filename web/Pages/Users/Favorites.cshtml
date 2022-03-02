@@ -1,0 +1,351 @@
+@page
+@model Atlas_Web.Pages.Users.FavoritesModel
+
+@{
+    Layout = null;
+
+}
+
+<div class="columns">
+    @if (Model.Reports.Any() || Model.Collections.Any() || Model.Initiatives.Any() || Model.Terms.Any() || Model.Users.Any() || Model.Searches.Any() || Model.Groups.Any())
+    {
+        <div class="column is-one-quarter sticky is-align-self-flex-start">
+            <div class="box fav-folder active fav-show-all">
+                <div class="icon-text">
+                    <span class="icon mr-5">
+                        <i class="fas fa-folder-open fa-2x"></i>
+                    </span>
+                    <span>All<span class="fav-count">0</span></span>
+                </div>
+            </div>
+
+            @foreach (var f in Model.Folders)
+            {
+                <div class="box fav-folder drg" folder-id="@f.UserFavoriteFolderId" folder-rank="@if(f.FolderRank>0){@f.FolderRank} else {<text>999</text>}">
+                    <div class="icon-text">
+                        <span class="icon mr-5">
+                            <i class="fas fa-folder fa-2x"></i>
+                        </span>
+                        <span>@f.FolderName<span class="fav-count">0</span></span>
+                    </div>
+
+                    @if (ViewBag.UserId == ViewBag.MyId || ViewBag.Permissions.Contains(41))
+                    {
+                        <div class="folder-grip drg-hdl"><i class="fas fa-grip-lines"></i></div>
+                    }
+                </div>
+            }
+
+            @if(Model.Reports.Any()){
+                <div class="box fav-folder active fav-show-reports">
+                    <div class="icon-text">
+                        <span class="icon mr-5">
+                            <i class="fas fa-folder fa-2x"></i>
+                        </span>
+                        <span class="is-flex is-justify-content-between is-flex-grow-1"><span class="is-flex-grow-1">Reports</span><span class="tag is-primary is-rounded"class="fav-count">@Model.Reports.Count</span></span>
+                    </div>
+                </div>
+            }
+            @if(Model.Collections.Any()){
+                <div class="box fav-folder fav-show-collections">
+                    <div class="icon-text">
+                        <span class="icon mr-5">
+                            <i class="fas fa-folder fa-2x"></i>
+                        </span>
+                        <span class="is-flex is-justify-content-between is-flex-grow-1"><span class="is-flex-grow-1">Collections</span><span class="tag is-primary is-rounded"class="fav-count">@Model.Collections.Count</span></span>
+                    </div>
+                </div>
+            }
+            @if(Model.Initiatives.Any()){
+                <div class="box fav-folder fav-show-initiatives">
+                    <div class="icon-text">
+                        <span class="icon mr-5">
+                            <i class="fas fa-folder fa-2x"></i>
+                        </span>
+                        <span class="is-flex is-justify-content-between is-flex-grow-1"><span class="is-flex-grow-1">Initiatives</span><span class="tag is-primary is-rounded"class="fav-count">@Model.Initiatives.Count</span></span>
+                    </div>
+                </div>
+            }
+            @if(Model.Terms.Any()){
+                <div class="box fav-folder fav-show-terms">
+                    <div class="icon-text">
+                        <span class="icon mr-5">
+                            <i class="fas fa-folder fa-2x"></i>
+                        </span>
+                        <span class="is-flex is-justify-content-between is-flex-grow-1"><span class="is-flex-grow-1">Terms</span><span class="tag is-primary is-rounded"class="fav-count">@Model.Terms.Count</span></span>
+                    </div>
+                </div>
+            }
+            @if(Model.Users.Any()){
+                <div class="box fav-folder fav-show-users">
+                    <div class="icon-text">
+                        <span class="icon mr-5">
+                            <i class="fas fa-folder fa-2x"></i>
+                        </span>
+                        <span class="is-flex is-justify-content-between is-flex-grow-1"><span class="is-flex-grow-1">Users</span><span class="tag is-primary is-rounded"class="fav-count">@Model.Users.Count</span></span>
+                    </div>
+                </div>
+            }
+            @if(Model.Groups.Any()){
+                <div class="box fav-folder fav-show-groups">
+                    <div class="icon-text">
+                        <span class="icon mr-5">
+                            <i class="fas fa-folder fa-2x"></i>
+                        </span>
+                        <span class="is-flex is-justify-content-between is-flex-grow-1"><span class="is-flex-grow-1">Groups</span><span class="tag is-primary is-rounded"class="fav-count">@Model.Groups.Count</span></span>
+                    </div>
+                </div>
+            }
+            @if(Model.Searches.Any()){
+                <div class="box fav-folder fav-show-searches">
+                    <div class="icon-text">
+                        <span class="icon mr-5">
+                            <i class="fas fa-folder fa-2x"></i>
+                        </span>
+                        <span class="is-flex is-justify-content-between is-flex-grow-1"><span class="is-flex-grow-1">Searches</span><span class="tag is-primary is-rounded"class="fav-count">@Model.Searches.Count</span></span>
+                    </div>
+                </div>
+            }
+
+            @if (ViewBag.UserId == ViewBag.MyId || ViewBag.Permissions.Contains(41))
+            {
+                <div class="box fav-folder fav-folder-new" data-toggle="clps" data-target="#fav-folder-new"><i class="fas fa-folder-plus"></i>Add a Folder</div>
+                <div class="clps" id="fav-folder-new">
+                    <form asp-page-handler="CreateFolder" method="post" id="CreateFolderForm">
+                        <input class="slim submit" type="nice-input" id="Folder_FolderName" name="Folder.FolderName" class="submit" data-initial-content="Folder Name" required />
+                        <input type="hidden" id="Folder_UserId" name="Folder.UserId" value="@ViewBag.UserId" />
+                    </form>
+                </div>
+            }
+        </div>
+
+        <div class="column">
+            <div class="columns is-multiline">
+                @foreach (var t in Model.Reports)
+                {
+                    <div class="column is-full report">
+                        <partial name="Reports/_Snippet" model="t.Report" />
+                    </div>
+                }
+                @foreach (var t in Model.Collections)
+                {
+                    <div class="column is-full collection">
+                        <partial name="Collections/_Snippet" model="t.Collection" />
+                    </div>
+                }
+                @foreach (var t in Model.Initiatives)
+                {
+                    <div class="column is-full initiative">
+                        <partial name="Initiatives/_Snippet" model="t.Initiative" />
+                    </div>
+                }
+                @foreach (var t in Model.Terms)
+                {
+                    <div class="column is-full term">
+                        <partial name="Terms/_Snippet" model="t.Term" />
+                    </div>
+                }
+                @foreach (var t in Model.Users)
+                {
+                    <div class="column is-full user">
+                        <partial name="Groups/_Snippet" model="t.User" />
+                    </div>
+                }
+                @foreach (var t in Model.Groups)
+                {
+                    <div class="column is-full group">
+                        <partial name="Users/_Snippet" model="t.Group" />
+                    </div>
+                }
+                @foreach (var t in Model.Searches)
+                {
+                    <div class="column is-full search">
+                        <partial name="Search/_Snippet" model="t" />
+                    </div>
+                }
+            </div>
+        </div>
+    }
+</div>
+
+
+               @* <div class="favs @if(!(ViewBag.UserId == ViewBag.MyId || ViewBag.Permissions.Contains(41))){<text>disabled</text>}" ss-container>
+                    <div id="favs-none" @if (ViewBag.FavoriteReports.Count != 0) { <text> style="display:none;" </text> }>
+                        <h5>No favorites here! ¯\_(ツ)_/¯</h5><br>
+                        @if (ViewBag.UserId == ViewBag.MyId || ViewBag.Permissions.Contains(41))
+                        {
+                            <form asp-page-handler="DeleteFolder" method="post" id="DeleteFolderForm" style="display:none">
+                                <h6>Want to<button type="submit" class="btn btn-link shake"><svg class="icon-sm" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M432 32H312l-9.4-18.7A24 24 0 0 0 281.1 0H166.8a23.72 23.72 0 0 0-21.4 13.3L136 32H16A16 16 0 0 0 0 48v32a16 16 0 0 0 16 16h416a16 16 0 0 0 16-16V48a16 16 0 0 0-16-16zM53.2 467a48 48 0 0 0 47.9 45h245.8a48 48 0 0 0 47.9-45L416 128H32z" /></svg></button>this folder?</h6>
+                                <input type="hidden" id="Folder_UserFavoriteFolderId" name="Folder.UserFavoriteFolderId" value="" />
+                            </form>
+                        }
+                    </div>
+
+                    @foreach (var q in ViewBag.FavoriteReports)
+                    {
+                        <div class="fav drg" folder-id="@if(q.FolderId>0){@q.FolderId} else {<text>0</text>}" item-rank="@if(q.ItemRank>0){@q.ItemRank} else {<text>999</text>}" fav-id="@q.FavoriteId">
+                            <div class="fav-links">
+                                <div class="fav-star @if (ViewBag.UserId != ViewBag.MyId) {<text>disabled</text>} ">
+                                    <i fav-type="@q.ItemType.ToLower()" object-id="@q.ItemId" class="far fa-star favorite"></i>
+                                </div>
+                                @if (@Configuration["features:enable_sharing"] == null || @Configuration["features:enable_sharing"].ToString().ToLower() == "true")
+                                {
+                                    <div class="fav-share darken" data-toggle="mdl" data-target="shareModal" data-name='@q.Name' data-url="/@q.AtlasUrl">
+                                        <i class="fas fa-share"></i>
+                                    </div>
+                                }
+
+                                <div class="fav-drg drg-hdl darken">
+                                    <i class="fas fa-grip-lines"></i>
+                                </div>
+                            </div>
+                            <div class="fav-body">
+                                <div class="snippet-col">
+                                    <div class="snippet-left">
+                                        <figure class="image is-96x96 pop">
+                                            <img data-src="/data/img?handler=Thumb&id=@q.ItemId&size=96x96" src="/img/loader.gif" />
+                                        </figure>
+                                    </div>
+                                    <div class="snippet-right">
+                                        <h5 class="fav-title" data-toggle="clps" data-target="clps-@q.FavoriteId">
+                                            @if (q.ItemType == "Search")
+                                            {
+                                                <span class="darken">@q.Name.Split("&")[0].Replace("%20", " ").Replace("+", " ").Replace("?s=", "").Replace("s=", "")</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="darken">
+                                                    @q.Name @if (q.EpicRecordId != null && q.EpicRecordId != "")
+                                                    {<text>&nbsp(@q.EpicMasterFile @q.EpicRecordId)</text>}
+                                                </span>
+                                            }
+
+                                            <div class="fav-type">
+
+
+                                            @if (q.EpicReleased == "Analytics Certified")
+                                            {<span class="srch-fieldHunterGreen">@q.EpicReleased</span>}
+                                            @if (q.EpicReleased == "Analytics Reviewed")
+                                            {<span class="srch-fieldGreen">@q.EpicReleased</span>}
+                                            @if (q.EpicReleased == "Epic Released")
+                                            {<span class="srch-fieldOrange">@q.EpicReleased</span>}
+                                            @if (q.EpicReleased == "Legacy")
+                                            {<span class="srch-fieldOrange">@q.EpicReleased</span>}
+                                            @if (q.EpicReleased == "High Risk")
+                                            {<span class="srch-fieldRed">@q.EpicReleased</span>}
+                                            @if (q.EpicReleased == "Self-Service")
+                                            {<span class="srch-fieldBlue">@q.EpicReleased</span>}
+
+
+                                @if (q.ItemType == "Search")
+                                {
+                                    var FilterString = q.Name.Contains("f=") ? q.Name.Split("f=")[1] : "";
+
+                @if (FilterString == "28" || FilterString == "20" || FilterString == "21" || FilterString == "3" || FilterString == "17")
+                {
+        <span>@(FilterString == "28" ? "SSRS" : FilterString == "20" ? "Dashboard" : FilterString == "21" ? "Dash Component" : FilterString == "3" ? "Crystal" : FilterString == "17" ? "Workbench" : "")</span>}}
+                                <span>@q.ItemType</span>
+                            </div>
+                        </h5>
+                        <h5 class="fav-nav">
+                            <a href="@q.AtlasUrl">Details</a>
+                            @if (q.ItemType == "Report")
+                            {
+            @if (q.ReportUrl != null && q.ReportUrl != "")
+            {
+        <a class="ml-3" target="_blank" rel="noopener" href="@q.ReportUrl">Run</a> }
+        else
+        {
+        if (q.EpicMasterFile == "IDB")
+        {
+        <div style="position: relative;">
+            <span class="tt-top ml-3" style="color:grey;position: relative;cursor:default" data-tooltip="Open a related dashboard that uses this.">Run</span>
+        </div> }
+        else if (q.EditReportUrl != null && ViewBag.Permissions.Contains(38))
+        {
+        <div style="position: relative;">
+            <span class="tt-top ml-3" style="color:grey;position: relative;white-space: nowrap;cursor:default" data-tooltip="Open in report library.">Run</span>
+        </div> }
+        else
+        {
+        <div style="position: relative;">
+            <span class="tt-top ml-3" style="color:grey;position: relative;white-space: nowrap;cursor:default" data-tooltip="Run from the Hyperspace report library.">Run</span>
+        </div>}
+        }
+                                @if (q.EditReportUrl != null && ViewBag.Permissions.Contains(38))
+                                {
+            <a class="ml-3" target="_blank" rel="noopener" href="@q.EditReportUrl">Edit</a>}
+                                                    @if (q.ManageReportUrl != null && ViewBag.Permissions.Contains(38))
+                                                    {
+                                <a class="ml-3" target="_blank" rel="noopener" href="@q.ManageReportUrl">Manage</a>}}
+                        </h5>
+                        <div class="clps fav-dtls" id="clps-@q.FavoriteId">
+                            <div class="markdown noleft">
+                                @if (q.Description != null && q.Description != "")
+                                {
+                @Html.Raw(@Helpers.HtmlHelpers.MarkdownToHtml(q.Description)) }
+            else
+            {
+        @:Open in Atlas to see details.
+        }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>}
+                </div>
+            </div> }
+            else if (ViewBag.TopRunReports.Count > 0)
+            {
+            <div class="favs-none">
+                <div class="favs-noFavs" ss-container>
+                    <h3 class="favs-noFavsTitle">Your last run reports</h3>
+                    @foreach (var q in ViewBag.TopRunReports)
+                    {
+        <div class="fav">
+            <div class="fav-body">
+                <h5 class="fav-title" data-toggle="clps" data-target="clps-@q.ItemId">
+                    <span>
+                        @q.Name @if (q.EpicRecordId != null && q.EpicRecordId != "")
+                        {<span> (@q.EpicMasterFile @q.EpicRecordId)</span>}
+                    </span>
+                </h5>
+                <h5 class="fav-nav">
+                    <a href="Reports?id=@q.ItemId">Open Documentation</a>
+                    @if (q.ReportUrl != null && q.ReportUrl != "")
+                    {
+        <a class="ml-5" target="_blank" href="@q.ReportUrl">Run Report</a>}
+                    @if (q.EditReportUrl != null && ViewBag.Permissions.Contains(38))
+                    {
+        <a class="ml-5" target="_blank" href="@q.EditReportUrl">Edit Report</a>}
+                </h5>
+                <div class="clps fav-dtls" id="clps-@q.ItemId">
+                    @if (q.Description != null && q.Description != "")
+                    {
+        <div class="markdown noleft">
+            @Html.Raw(@Helpers.HtmlHelpers.MarkdownToHtml(q.Description))
+        </div>}
+                </div>
+            </div>
+        </div>      }
+                </div>
+            </div> }
+            else
+            {
+            <h4>Search to get started!</h4>}
+
+            <script>
+                (function(){
+                   document.dispatchEvent(new CustomEvent('related-reports'));
+                })();
+
+                (function(){
+                    var d = document;
+                    @if(ViewBag.AdLists != null){
+                        @:d.getElementById("AdColTwo").innerHTML +='@foreach(var ad in ViewBag.AdLists){@if(ad.Column == 2){<div class="col" data-ajax="yes" data-url="@ad.Url"></div>}}';
+                        @:d.dispatchEvent(new CustomEvent('load-ajax-content'));
+                    }
+                })()
+            </script>
+        *@

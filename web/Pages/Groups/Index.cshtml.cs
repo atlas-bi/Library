@@ -1,21 +1,3 @@
-﻿/*
-    Atlas of Information Management business intelligence library and documentation database.
-    Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*/
-
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -24,27 +6,19 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Atlas_Web.Models;
 using Atlas_Web.Helpers;
-using Microsoft.AspNetCore.Http;
-using System.Text.RegularExpressions;
-using System.IO;
 using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Caching.Memory;
-using Newtonsoft.Json.Linq;
 
 namespace Atlas_Web.Pages.Groups
 {
     public class IndexModel : PageModel
     {
         private readonly Atlas_WebContext _context;
-        private readonly IConfiguration _config;
-        private IMemoryCache _cache;
+        private readonly IMemoryCache _cache;
 
-        public IndexModel(Atlas_WebContext context, IConfiguration config, IMemoryCache cache)
+        public IndexModel(Atlas_WebContext context, IMemoryCache cache)
         {
             _context = context;
-            _config = config;
             _cache = cache;
         }
 
@@ -131,11 +105,12 @@ namespace Atlas_Web.Pages.Groups
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            UserDetails = UserHelpers.GetUser(_cache, _context, User.Identity.Name); ;
+            UserDetails = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
+            ;
             // for the viewing user, not the viewed user
 
             MyId = UserDetails.UserId;
-           // can user view others?
+            // can user view others?
             var checkpoint = UserHelpers.CheckUserPermissions(
                 _cache,
                 _context,
@@ -204,8 +179,8 @@ namespace Atlas_Web.Pages.Groups
                             Id = a.ReportId,
                             Name = a.Report.DisplayName,
                             LastUpdated = a.Report.LastUpdatedDateDisplayString,
-                            Runs = a.Report.ReportObjectRunData.Count(),
-                            Subscriptions = a.Report.ReportObjectSubscriptions.Count(),
+                            Runs = a.Report.ReportObjectRunData.Count,
+                            Subscriptions = a.Report.ReportObjectSubscriptions.Count,
                             Favs = (
                                 from f in _context.UserFavorites
                                 where f.ItemType.ToLower() == "report" && f.ItemId == a.ReportId

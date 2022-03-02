@@ -95,7 +95,7 @@ namespace Atlas_Web.Pages.Terms
             _context.SaveChanges();
 
             _cache.Remove("terms");
-            
+
             return RedirectToPage(
                 "/Terms/Index",
                 new { id = Term.TermId, success = "Changes saved." }

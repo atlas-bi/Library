@@ -1,113 +1,24 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Atlas_Web.Models;
-using Microsoft.AspNetCore.Http;
-using System.IO;
 using System.Collections.Generic;
-using System.Data.SqlClient;
-using Microsoft.Extensions.Configuration;
-using Atlas_Web.Helpers;
 using Microsoft.Extensions.Caching.Memory;
-using Newtonsoft.Json.Linq;
-using Newtonsoft.Json;
 
 namespace Atlas_Web.Pages.Reports
 {
     public class IndexModel : PageModel
     {
         private readonly Atlas_WebContext _context;
-        private readonly IConfiguration _config;
-        private IMemoryCache _cache;
+        private readonly IMemoryCache _cache;
 
-        public IndexModel(Atlas_WebContext context, IConfiguration config, IMemoryCache cache)
+        public IndexModel(Atlas_WebContext context, IMemoryCache cache)
         {
             _context = context;
-            _config = config;
             _cache = cache;
-        }
-
-        public class ReportData
-        {
-            public int Id { get; set; }
-            public string Name { get; set; }
-            public string OldName { get; set; }
-            public string Author { get; set; }
-            public int? AuthorId { get; set; }
-            public string LastUpdatedBy { get; set; }
-            public int? LastUpdatedById { get; set; }
-            public string OpsOwner { get; set; }
-            public string Requester { get; set; }
-            public string MaintSched { get; set; }
-            public int? MaintSchedId { get; set; }
-            public string RunFreq { get; set; }
-            public int? RunFreqId { get; set; }
-            public string Fragility { get; set; }
-            public string Value { get; set; }
-            public string DeveloperDescription { get; set; }
-            public string KeyAssumptions { get; set; }
-            public string Description { get; set; }
-            public string SystemDescription { get; set; }
-            public string RepositoryDescription { get; set; }
-            public string LastModifiedDate { get; set; }
-            public string EpicMasterFile { get; set; }
-            public string Orphaned { get; set; }
-            public string GitUrl { get; set; }
-            public string ExecVisibitliy { get; set; }
-            public string Hyperspace { get; set; }
-            public string DoNotPurge { get; set; }
-            public string Type { get; set; }
-            public string Hidden { get; set; }
-            public decimal? EpicId { get; set; }
-            public decimal? EpicTemplateId { get; set; }
-            public int? OpsOwnerId { get; set; }
-            public int? RequesterId { get; set; }
-            public int? FragilityId { get; set; }
-            public int? ValueId { get; set; }
-            public string RunReportUrl { get; set; }
-            public string EditReportUrl { get; set; }
-            public string RecordViewerUrl { get; set; }
-            public string DocLastUpdated { get; set; }
-            public string Favorite { get; set; }
-            public int? DocLastUpdatedById { get; set; }
-            public string DocLastUpdatedBy { get; set; }
-            public string ManageReportUrl { get; set; }
-            public string LastLoadDate { get; set; }
-            public string EpicReleased { get; set; }
-            public IEnumerable<ManageEngineTicketsData> ManageEngineTickets { get; set; }
-            public IEnumerable<ReportObjectAttachment> CyrstalRunAttachments { get; set; }
-        }
-
-        public class ManageEngineTicketsData
-        {
-            public int Id { get; set; }
-            public int? Number { get; set; }
-            public string Url { get; set; }
-            public string Description { get; set; }
-            public int? ReportId { get; set; }
-        }
-
-        public class BasicFavoriteReportData
-        {
-            public string Name { get; set; }
-            public int Id { get; set; }
-            public string Favorite { get; set; }
-            public string ReportUrl { get; set; }
-        }
-
-        public class ReportFragilityTagData
-        {
-            public string Name { get; set; }
-            public int Id { get; set; }
-        }
-
-        public class ReportTagData
-        {
-            public string Name { get; set; }
-            public int Id { get; set; }
         }
 
         public class MaintStatus
@@ -115,582 +26,261 @@ namespace Atlas_Web.Pages.Reports
             public string Required { get; set; }
         }
 
-        public class Group
-        {
-            public int Id { get; set; }
-            public string Source { get; set; }
-            public string Type { get; set; }
-            public string Name { get; set; }
-        }
-
-        public class ReportTermsData
-        {
-            public string Name { get; set; }
-            public int Id { get; set; }
-            public string Summary { get; set; }
-            public int LinkId { get; set; }
-            public string Definition { get; set; }
-            public int? ReportId { get; set; }
-        }
-
-        public class ReportQueryData
-        {
-            public string Query { get; set; }
-            public int Id { get; set; }
-            public string Type { get; set; }
-        }
-
-        public class ReportMaintLogsData
-        {
-            public string Date { get; set; }
-            public string Comment { get; set; }
-            public string Maintainer { get; set; }
-            public string Status { get; set; }
-        }
-
-        public class ReportImagesData
-        {
-            public string Src { get; set; }
-            public int Id { get; set; }
-        }
-
-        public class ReportChildrenData
-        {
-            public string Name { get; set; }
-            public int Id { get; set; }
-            public string EpicMasterFile { get; set; }
-            public string Favorite { get; set; }
-            public string RunReportUrl { get; set; }
-            public string Description { get; set; }
-            public IEnumerable<ChildImgData> Img { get; set; }
-            public IEnumerable<ChildData> Child { get; set; }
-        }
-
-        public class ReportCollectionData
-        {
-            public string Name { get; set; }
-            public int? Id { get; set; }
-            public string Description { get; set; }
-            public int AnnotationId { get; set; }
-            public int? ReportId { get; set; }
-        }
-
-        public class ChildImgData
-        {
-            public string Src { get; set; }
-            public int Id { get; set; }
-        }
-
-        public class ComponentQueryData
-        {
-            public int? Id { get; set; }
-            public string Query { get; set; }
-            public string Name { get; set; }
-            public string Description { get; set; }
-            public string EpicName { get; set; }
-            public string Visible { get; set; }
-            public string Url { get; set; }
-        }
-
-        public class ChildData
-        {
-            public string Name { get; set; }
-            public int Id { get; set; }
-            public string EpicMasterFile { get; set; }
-            public string Favorite { get; set; }
-            public string RunReportUrl { get; set; }
-            public IEnumerable<GrandChildData> GrandChild { get; set; }
-        }
-
-        public class CurrentTermsData
-        {
-            public string summary { get; set; }
-            public string technicalDefinition { get; set; }
-        }
-
-        public class GrandChildData
-        {
-            public string Name { get; set; }
-            public int Id { get; set; }
-            public string EpicMasterFile { get; set; }
-            public string Favorite { get; set; }
-            public string RunReportUrl { get; set; }
-        }
-
         public List<AdList> AdLists { get; set; }
-        public List<ComponentQueryData> ComponentQuery { get; set; }
+        public ReportObject Report { get; set; }
+        public List<ReportObject> Children { get; set; }
+        public List<ReportObject> Parents { get; set; }
+        public List<Term> Terms { get; set; }
+        public List<ReportObjectQuery> ComponentQueries { get; set; }
 
-        [BindProperty]
-        public ReportObject ReportObject { get; set; }
-
-        [BindProperty]
-        public ReportObjectDoc ReportObjectDoc { get; set; }
-
-        [BindProperty]
-        public FileUpload FileUpload { get; set; }
-
-        [BindProperty]
-        public MaintenanceLog NewMaintenanceLog { get; set; }
-
-        [BindProperty]
-        public ReportObjectDocMaintenanceLog NewMaintenanceLogLink { get; set; }
-
-        [BindProperty]
-        public int[] SelectedFragilityTagIds { get; set; }
-
-        [BindProperty]
-        public ReportObjectDocTerm NewTermLink { get; set; }
-
-        [BindProperty]
-        public Term NewTerm { get; set; }
-
-        [BindProperty]
-        public DpReportAnnotation DpReportAnnotation { get; set; }
-
-        [BindProperty]
-        public ReportManageEngineTicket ManageEngineTicket { get; set; }
-        public ReportData Report { get; set; }
-        public List<ReportFragilityTagData> ReportFragilityTags { get; set; }
-        public List<ReportTagData> ReportTags { get; set; }
-        public ReportObjectImagesDoc RemovedImage { get; set; }
-        public IEnumerable<ReportTermsData> ReportTerms { get; set; }
-        public IEnumerable<ReportTermsData> ViewerReportTerms { get; set; }
-        public IEnumerable<ReportQueryData> ReportQuery { get; set; }
-        public IEnumerable<ReportMaintLogsData> ReportMaintLogs { get; set; }
-        public IEnumerable<ReportChildrenData> ReportChildren { get; set; }
-        public IEnumerable<ReportChildrenData> ReportParents { get; set; }
-        public IEnumerable<ManageEngineTicketsData> ManageEngineTickets { get; set; }
-        public IEnumerable<Group> Groups { get; set; }
-        public IEnumerable<ReportCollectionData> RelatedCollections { get; set; }
-
-        public async Task<IActionResult> OnGetAsync(int? id)
+        public async Task<IActionResult> OnGetAsync(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-            ViewData["MyRole"] = UserHelpers.GetMyRole(_cache, _context, User.Identity.Name);
-            var MyUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
-
-            Report = await (
-                from r in _context.ReportObjects
-                where r.ReportObjectId == id
-                join q in (
-                    from f in _context.UserFavorites
-                    where f.ItemType.ToLower() == "report" && f.UserId == MyUser.UserId
-                    select new { f.ItemId }
-                )
-                    on r.ReportObjectId equals q.ItemId
-                    into tmp
-                from rfi in tmp.DefaultIfEmpty()
-                select new ReportData
+            Report = await _cache.GetOrCreateAsync<ReportObject>(
+                "report-" + id,
+                cacheEntry =>
                 {
-                    Id = r.ReportObjectId,
-                    Name = r.DisplayName,
-                    OldName = r.Name,
-                    Author = r.AuthorUser.Fullname_Cust,
-                    AuthorId = r.AuthorUserId,
-                    LastUpdatedBy = r.LastModifiedByUser.Fullname_Cust,
-                    LastUpdatedById = r.LastModifiedByUserId,
-                    DocLastUpdated = r.ReportObjectDoc.LastUpdatedDateTimeDisplayString,
-                    DocLastUpdatedBy = r.ReportObjectDoc.UpdatedByNavigation.Fullname_Cust,
-                    DocLastUpdatedById = r.ReportObjectDoc.UpdatedBy,
-                    OpsOwner = r.ReportObjectDoc.OperationalOwnerUser.Fullname_Cust,
-                    OpsOwnerId = r.ReportObjectDoc.OperationalOwnerUserId,
-                    Requester = r.ReportObjectDoc.RequesterNavigation.Fullname_Cust,
-                    RequesterId = r.ReportObjectDoc.Requester,
-                    MaintSched = r.ReportObjectDoc.MaintenanceSchedule.MaintenanceScheduleName,
-                    MaintSchedId = r.ReportObjectDoc.MaintenanceScheduleId,
-                    RunFreq = r.ReportObjectDoc.EstimatedRunFrequency.EstimatedRunFrequencyName,
-                    RunFreqId = r.ReportObjectDoc.EstimatedRunFrequencyId,
-                    Fragility = r.ReportObjectDoc.Fragility.FragilityName,
-                    FragilityId = r.ReportObjectDoc.FragilityId,
-                    Value = r.ReportObjectDoc.OrganizationalValue.OrganizationalValueName,
-                    ValueId = r.ReportObjectDoc.OrganizationalValueId,
-                    DeveloperDescription = r.ReportObjectDoc.DeveloperDescription,
-                    KeyAssumptions = r.ReportObjectDoc.KeyAssumptions,
-                    Description = r.Description,
-                    SystemDescription = r.DetailedDescription,
-                    RepositoryDescription = r.RepositoryDescription,
-                    LastModifiedDate = r.LastUpdatedDateDisplayString,
-                    EpicMasterFile = r.EpicMasterFile,
-                    EpicId = r.EpicRecordId,
-                    EpicReleased = r.CertificationTag,
-                    Orphaned = r.OrphanedReportObjectYn,
-                    GitUrl = r.ReportObjectDoc.GitLabProjectUrl,
-                    ExecVisibitliy = r.ReportObjectDoc.ExecutiveVisibilityYn,
-                    Hyperspace = r.ReportObjectDoc.EnabledForHyperspace,
-                    DoNotPurge = r.ReportObjectDoc.DoNotPurge,
-                    Hidden = r.ReportObjectDoc.Hidden,
-                    Type = r.ReportObjectType.Name,
-                    EpicTemplateId = r.EpicReportTemplateId,
-                    LastLoadDate = r.LastLoadDateDisplayString,
-                    Favorite = rfi.ItemId == null ? "no" : "yes",
-                    CyrstalRunAttachments = r.ReportObjectAttachments
-                        .Where(x => x.Type == "crystal-run")
-                        .OrderByDescending(x => x.CreationDate)
-                        .Select(x => x)
-                        .ToList(),
-                    RunReportUrl = HtmlHelpers.ReportUrlFromParams(
-                        _config["AppSettings:org_domain"],
-                        HttpContext,
-                        r,
-                        _context,
-                        User.Identity.Name
-                    ),
-                    EditReportUrl = HtmlHelpers.EditReportFromParams(
-                        _config["AppSettings:org_domain"],
-                        HttpContext,
-                        r.ReportServerPath,
-                        r.SourceServer,
-                        r.EpicMasterFile,
-                        r.EpicReportTemplateId.ToString(),
-                        r.EpicRecordId.ToString()
-                    ),
-                    RecordViewerUrl = HtmlHelpers.RecordViewerLink(
-                        _config["AppSettings:org_domain"],
-                        HttpContext,
-                        r.EpicMasterFile,
-                        r.EpicRecordId.ToString()
-                    ),
-                    ManageReportUrl = HtmlHelpers.ReportManageUrlFromParams(
-                        _config["AppSettings:org_domain"],
-                        HttpContext,
-                        r.ReportObjectType.Name,
-                        r.ReportServerPath,
-                        r.SourceServer
-                    )
-                }
-            ).FirstOrDefaultAsync();
+                    cacheEntry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20);
 
-            Groups = await (
-                from g in _context.ReportGroupsMemberships
-                where g.ReportId == id
-                select new Group
+                    return _context.ReportObjects
+                        .Include(x => x.ReportObjectImagesDocs)
+                        /* maintenance logs */
+                        .Include(x => x.ReportObjectDoc)
+                        .ThenInclude(x => x.ReportObjectDocMaintenanceLogs)
+                        .ThenInclude(x => x.MaintenanceLog)
+                        .ThenInclude(x => x.Maintainer)
+                        .Include(x => x.ReportObjectDoc)
+                        .ThenInclude(x => x.ReportObjectDocMaintenanceLogs)
+                        .ThenInclude(x => x.MaintenanceLog)
+                        .ThenInclude(x => x.MaintenanceLogStatus)
+                        .Include(x => x.ReportObjectDoc)
+                        .ThenInclude(x => x.EstimatedRunFrequency)
+                        .Include(x => x.ReportObjectDoc)
+                        .ThenInclude(x => x.Fragility)
+                        .Include(x => x.ReportObjectDoc)
+                        .ThenInclude(x => x.ReportObjectDocFragilityTags)
+                        .ThenInclude(x => x.FragilityTag)
+                        .Include(x => x.ReportObjectTagMemberships)
+                        .ThenInclude(x => x.Tag)
+                        .Include(x => x.ReportObjectDoc)
+                        .ThenInclude(x => x.MaintenanceSchedule)
+                        .Include(x => x.ReportObjectDoc)
+                        .ThenInclude(x => x.OrganizationalValue)
+                        /* type */
+                        .Include(x => x.ReportObjectType)
+                        /* users */
+                        .Include(x => x.LastModifiedByUser)
+                        .Include(x => x.AuthorUser)
+                        .Include(x => x.ReportObjectDoc)
+                        .ThenInclude(x => x.UpdatedByNavigation)
+                        .Include(x => x.ReportObjectDoc)
+                        .ThenInclude(x => x.RequesterNavigation)
+                        .Include(x => x.ReportObjectDoc)
+                        .ThenInclude(x => x.OperationalOwnerUser)
+                        .Include(x => x.ReportManageEngineTickets)
+                        .Include(x => x.ReportObjectAttachments)
+                        .Include(x => x.ReportGroupsMemberships)
+                        .ThenInclude(x => x.Group)
+                        .Include(x => x.ReportObjectQueries)
+                        .Include(x => x.DpReportAnnotations)
+                        .ThenInclude(x => x.DataProject)
+                        .Include(x => x.StarredReports)
+                        .SingleOrDefaultAsync(x => x.ReportObjectId == id);
+                }
+            );
+
+            Terms = await _cache.GetOrCreateAsync<List<Term>>(
+                "report-terms-" + id,
+                cacheEntry =>
                 {
-                    Id = g.Group.GroupId,
-                    Source = g.Group.GroupSource,
-                    Type = g.Group.GroupType,
-                    Name = g.Group.GroupName,
+                    cacheEntry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20);
+                    return _context.Terms
+                        .Where(x => x.ReportObjectDocTerms.Any(x => x.ReportObjectId == id))
+                        // from first children
+                        .Union(
+                            _context.Terms.Where(
+                                x =>
+                                    x.ReportObjectDocTerms.Any(
+                                        x =>
+                                            x.ReportObject.ReportObject.ReportObjectHierarchyChildReportObjects.Any(
+                                                x => x.ParentReportObjectId == id
+                                            )
+                                    )
+                            )
+                        // second level children
+                        )
+                        .Union(
+                            _context.Terms.Where(
+                                x =>
+                                    x.ReportObjectDocTerms.Any(
+                                        x =>
+                                            x.ReportObject.ReportObject.ReportObjectHierarchyChildReportObjects.Any(
+                                                x =>
+                                                    x.ParentReportObject.ReportObjectHierarchyChildReportObjects.Any(
+                                                        x => x.ParentReportObjectId == id
+                                                    )
+                                            )
+                                    )
+                            )
+                        // third level children
+                        )
+                        .Union(
+                            _context.Terms.Where(
+                                x =>
+                                    x.ReportObjectDocTerms.Any(
+                                        x =>
+                                            x.ReportObject.ReportObject.ReportObjectHierarchyChildReportObjects.Any(
+                                                x =>
+                                                    x.ParentReportObject.ReportObjectHierarchyChildReportObjects.Any(
+                                                        x =>
+                                                            x.ParentReportObject.ReportObjectHierarchyChildReportObjects.Any(
+                                                                x => x.ParentReportObjectId == id
+                                                            )
+                                                    )
+                                            )
+                                    )
+                            )
+                        // fourth level children
+                        )
+                        .Union(
+                            _context.Terms.Where(
+                                x =>
+                                    x.ReportObjectDocTerms.Any(
+                                        x =>
+                                            x.ReportObject.ReportObject.ReportObjectHierarchyChildReportObjects.Any(
+                                                x =>
+                                                    x.ParentReportObject.ReportObjectHierarchyChildReportObjects.Any(
+                                                        x =>
+                                                            x.ParentReportObject.ReportObjectHierarchyChildReportObjects.Any(
+                                                                x =>
+                                                                    x.ParentReportObject.ReportObjectHierarchyChildReportObjects.Any(
+                                                                        x =>
+                                                                            x.ParentReportObjectId
+                                                                            == id
+                                                                    )
+                                                            )
+                                                    )
+                                            )
+                                    )
+                            )
+                        )
+                        .Distinct()
+                        .ToListAsync();
                 }
-            ).ToListAsync();
+            );
 
-            ViewData["ManageEngineTickets"] = await (
-                from t in _context.ReportManageEngineTickets
-                where t.ReportObjectId == id
-                select new ManageEngineTicketsData
+            ComponentQueries = await _cache.GetOrCreateAsync<List<ReportObjectQuery>>(
+                "report-comp-queries-" + id,
+                cacheEntry =>
                 {
-                    Id = t.ManageEngineTicketsId,
-                    Number = t.TicketNumber,
-                    Url = t.TicketUrl,
-                    Description = t.Description,
-                    ReportId = t.ReportObjectId
+                    cacheEntry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20);
+                    return _context.ReportObjectQueries
+                        .Where(
+                            x =>
+                                x.ReportObject.ReportObjectHierarchyChildReportObjects.Any(
+                                    x =>
+                                        x.ParentReportObject.ReportObjectHierarchyChildReportObjects.Any(
+                                            x =>
+                                                x.ParentReportObjectId == id
+                                                && x.ParentReportObject.EpicMasterFile == "IDB"
+                                        )
+                                )
+                        )
+                        .Include(x => x.ReportObject)
+                        .ToListAsync();
                 }
-            ).ToListAsync();
+            );
 
-            ReportFragilityTags = await (
-                from r in _context.ReportObjectDocFragilityTags
-                where r.ReportObjectId == id
-                select new ReportFragilityTagData
+            // a child is anything in hierarchy that is not an IDK (resource)
+            // if there is an IDK, its children should be bumped up on level.
+            // IDN > IDK (ignored) > IDB
+            Children = await _cache.GetOrCreateAsync<List<ReportObject>>(
+                "report-children-" + id,
+                cacheEntry =>
                 {
-                    Name = r.FragilityTag.FragilityTagName,
-                    Id = r.FragilityTagId
+                    cacheEntry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20);
+                    return _context.ReportObjects
+                        .Where(
+                            x =>
+                                x.ReportObjectHierarchyChildReportObjects.Any(
+                                    y => y.ParentReportObjectId == id
+                                )
+                        )
+                        .Where(x => x.EpicMasterFile != "IDK")
+                        .Where(x => (x.ReportObjectDoc.Hidden ?? "N") == "N")
+                        .Where(x => x.DefaultVisibilityYn == "Y")
+                        .Include(x => x.ReportObjectDoc)
+                        .Include(x => x.ReportObjectType)
+                        .Include(x => x.ReportObjectAttachments)
+                        .Union(
+                            _context.ReportObjects
+                                .Where(
+                                    x =>
+                                        x.ReportObjectHierarchyChildReportObjects.Any(
+                                            y =>
+                                                y.ParentReportObject.ReportObjectHierarchyChildReportObjects.Any(
+                                                    g =>
+                                                        g.ParentReportObjectId == id
+                                                        && g.ParentReportObject.DefaultVisibilityYn
+                                                            == "Y"
+                                                )
+                                                && y.ParentReportObject.EpicMasterFile == "IDK"
+                                        )
+                                )
+                                .Where(x => x.EpicMasterFile == "IDN")
+                                .Where(x => (x.ReportObjectDoc.Hidden ?? "N") == "N")
+                                .Include(x => x.ReportObjectDoc)
+                                .Include(x => x.ReportObjectType)
+                                .Include(x => x.ReportObjectAttachments)
+                        )
+                        .ToListAsync();
                 }
-            ).ToListAsync();
+            );
 
-            ReportTags = await (
-                from r in _context.ReportObjectTagMemberships
-                where r.ReportObjectId == id
-                select new ReportTagData { Name = r.Tag.TagName, Id = r.TagId }
-            ).ToListAsync();
-
-            var report_terms = await (
-                from r in _context.ReportObjectDocTerms
-                where r.ReportObjectId == id
-                select new
+            // a parent is anything in hierarchy that is not an IDK (resource)
+            // if there is an IDK, its parent should be bumped up one level.
+            // also exclude personal dashboards
+            // IDN > IDK (ignored) > IDB
+            Parents = await _cache.GetOrCreateAsync<List<ReportObject>>(
+                "report-parents-" + id,
+                cacheEntry =>
                 {
-                    Name = r.Term.Name,
-                    Id = r.TermId,
-                    LinkId = r.LinkId,
-                    Summary = r.Term.Summary,
-                    Definition = r.Term.TechnicalDefinition,
+                    cacheEntry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20);
+                    return _context.ReportObjects
+                        .Where(
+                            x =>
+                                x.ReportObjectHierarchyParentReportObjects.Any(
+                                    y => y.ChildReportObjectId == id
+                                )
+                        )
+                        .Where(x => x.ReportObjectTypeId != 12) //Personal dashboard
+                        .Where(x => x.EpicMasterFile != "IDK")
+                        .Where(x => x.DefaultVisibilityYn == "Y")
+                        .Where(x => (x.ReportObjectDoc.Hidden ?? "N") == "N")
+                        .Include(x => x.ReportObjectDoc)
+                        .Include(x => x.ReportObjectType)
+                        .Include(x => x.ReportObjectAttachments)
+                        .Union(
+                            _context.ReportObjects
+                                .Where(
+                                    x =>
+                                        x.ReportObjectHierarchyParentReportObjects.Any(
+                                            y =>
+                                                y.ChildReportObject.ReportObjectHierarchyParentReportObjects.Any(
+                                                    g => g.ChildReportObjectId == id
+                                                )
+                                                && y.ChildReportObject.EpicMasterFile == "IDK"
+                                        )
+                                )
+                                .Where(x => x.EpicMasterFile == "IDB")
+                                .Where(x => x.DefaultVisibilityYn == "Y")
+                                .Where(x => (x.ReportObjectDoc.Hidden ?? "N") == "N")
+                                .Include(x => x.ReportObjectDoc)
+                                .Include(x => x.ReportObjectType)
+                                .Include(x => x.ReportObjectAttachments)
+                        )
+                        .ToListAsync();
                 }
-            ).ToListAsync();
-
-            var child_report_terms = await ( // child terms
-                from c in _context.ReportObjectHierarchies
-                where c.ParentReportObjectId == id
-                join r in _context.ReportObjectDocTerms
-                    on c.ChildReportObjectId equals r.ReportObjectId
-                select new
-                {
-                    Name = r.Term.Name,
-                    Id = r.TermId,
-                    LinkId = r.LinkId,
-                    Summary = r.Term.Summary,
-                    Definition = r.Term.TechnicalDefinition,
-                }
-            ).ToListAsync();
-
-            var grandchild_report_terms = await (
-                from c in _context.ReportObjectHierarchies
-                where c.ParentReportObjectId == id
-                join gc in _context.ReportObjectHierarchies
-                    on c.ChildReportObjectId equals gc.ParentReportObjectId
-                join r in _context.ReportObjectDocTerms
-                    on gc.ChildReportObjectId equals r.ReportObjectId
-                select new
-                {
-                    Name = r.Term.Name,
-                    Id = r.TermId,
-                    LinkId = r.LinkId,
-                    Summary = r.Term.Summary,
-                    Definition = r.Term.TechnicalDefinition,
-                }
-            ).ToListAsync();
-
-            var great_grandchild_report_terms = await (
-                from c in _context.ReportObjectHierarchies
-                where c.ParentReportObjectId == id
-                join gc in _context.ReportObjectHierarchies
-                    on c.ChildReportObjectId equals gc.ParentReportObjectId
-                join ggc in _context.ReportObjectHierarchies
-                    on gc.ChildReportObjectId equals ggc.ParentReportObjectId
-                join r in _context.ReportObjectDocTerms
-                    on ggc.ChildReportObjectId equals r.ReportObjectId
-                select new
-                {
-                    Name = r.Term.Name,
-                    Id = r.TermId,
-                    LinkId = r.LinkId,
-                    Summary = r.Term.Summary,
-                    Definition = r.Term.TechnicalDefinition,
-                }
-            ).ToListAsync();
-
-            ViewerReportTerms = report_terms
-                .Union(child_report_terms)
-                .Union(grandchild_report_terms)
-                .Union(great_grandchild_report_terms)
-                .GroupBy(x => x.Id, x => x)
-                .Select(x => x.First())
-                .Select(
-                    x =>
-                        new ReportTermsData
-                        {
-                            Name = x.Name,
-                            Id = x.Id,
-                            Summary = x.Summary,
-                            Definition = x.Definition
-                        }
-                )
-                .ToList();
-            ReportTerms = report_terms
-                .Select(
-                    x =>
-                        new ReportTermsData
-                        {
-                            Name = x.Name,
-                            Id = x.Id,
-                            Summary = x.Summary,
-                            Definition = x.Definition,
-                            ReportId = id,
-                            LinkId = x.LinkId
-                        }
-                )
-                .ToList();
-
-            ReportQuery = await (
-                from r in _context.ReportObjectQueries
-                where r.ReportObjectId == id
-                select new ReportQueryData
-                {
-                    Query = r.Query,
-                    Id = r.ReportObjectQueryId,
-                    Type = r.ReportObject.EpicMasterFile == "LPP" ? "col" : "sql"
-                }
-            ).ToListAsync();
-
-            ComponentQuery = await (
-                from q in _context.ReportObjectQueries
-                from h in _context.ReportObjectHierarchies
-                where q.ReportObjectId == h.ChildReportObjectId
-                from h2 in _context.ReportObjectHierarchies
-                where h.ParentReportObjectId == h2.ChildReportObjectId
-                from r in _context.ReportObjects
-                where
-                    h2.ParentReportObjectId == r.ReportObjectId
-                    && r.EpicMasterFile == "IDB"
-                    && r.ReportObjectId == id
-                select new ComponentQueryData
-                {
-                    Id = q.ReportObjectId,
-                    Name = q.ReportObject.DisplayName,
-                    Description = q.ReportObject.Description,
-                    EpicName =
-                        q.ReportObject.EpicMasterFile
-                        + " "
-                        + q.ReportObject.EpicRecordId.ToString(),
-                    Visible = q.ReportObject.DefaultVisibilityYn,
-                    Query = q.Query.Replace("&#x0A;", ""),
-                    Url = Helpers.HtmlHelpers.ReportUrlFromParams(
-                        _config["AppSettings:org_domain"],
-                        HttpContext,
-                        q.ReportObject,
-                        _context,
-                        User.Identity.Name
-                    ),
-                }
-            ).ToListAsync();
-
-            ReportMaintLogs = await (
-                from l in _context.ReportObjectDocMaintenanceLogs
-                where l.ReportObjectId == id
-                orderby l.MaintenanceLog.MaintenanceDate descending
-                select new ReportMaintLogsData
-                {
-                    Date = l.MaintenanceLog.MaintenanceDateDisplayString,
-                    Comment = l.MaintenanceLog.Comment,
-                    Maintainer = l.MaintenanceLog.Maintainer.FullName,
-                    Status = l.MaintenanceLog.MaintenanceLogStatus.MaintenanceLogStatusName
-                }
-            ).ToListAsync();
-
-            ViewData["ReportImages"] = await (
-                from i in _context.ReportObjectImagesDocs
-                where i.ReportObjectId == id
-                orderby i.ImageOrdinal
-                select new ReportImagesData { Src = "data/img?id=" + i.ImageId, Id = i.ImageId }
-            ).ToListAsync();
-
-            ViewData["Id"] = id;
-
-            ReportChildren = await (
-                from c in _context.ReportObjectHierarchies
-                where
-                    c.ParentReportObjectId == id
-                    && c.ChildReportObject.EpicMasterFile != "IDK"
-                    && (c.ChildReportObject.ReportObjectDoc.Hidden ?? "N") == "N"
-                    && c.ChildReportObject.DefaultVisibilityYn == "Y"
-                orderby c.Line ,c.ChildReportObject.EpicMasterFile ,c.ChildReportObject.Name
-                select new ReportChildrenData
-                {
-                    Name = c.ChildReportObject.DisplayName,
-                    Id = c.ChildReportObjectId,
-                    EpicMasterFile = c.ChildReportObject.EpicMasterFile,
-                    Img =
-                        from img in c.ChildReportObject.ReportObjectImagesDocs
-                        orderby img.ImageOrdinal
-                        select new ChildImgData
-                        {
-                            Src = "data/img?id=" + img.ImageId,
-                            Id = img.ImageId
-                        },
-                    Child =
-                        from nc in c.ChildReportObject.ReportObjectHierarchyParentReportObjects
-                        where
-                            nc.ChildReportObject.EpicMasterFile != "IDK"
-                            && nc.ChildReportObject.EpicMasterFile != "LPP"
-                            && nc.ParentReportObject.EpicMasterFile != "HRX"
-                            && (nc.ChildReportObject.ReportObjectDoc.Hidden ?? "N") == "N"
-                            && nc.ChildReportObject.DefaultVisibilityYn == "Y"
-                        orderby nc.Line ,nc.ChildReportObject.EpicMasterFile ,nc.ChildReportObject.Name
-                        select new ChildData
-                        {
-                            Name = nc.ChildReportObject.DisplayName,
-                            Id = nc.ChildReportObjectId,
-                            EpicMasterFile = nc.ChildReportObject.EpicMasterFile,
-                            GrandChild =
-                                from gc in nc.ChildReportObject.ReportObjectHierarchyParentReportObjects
-                                where
-                                    gc.ChildReportObject.EpicMasterFile != "IDK"
-                                    && (gc.ChildReportObject.ReportObjectDoc.Hidden ?? "N") == "N"
-                                    && gc.ChildReportObject.DefaultVisibilityYn == "Y"
-                                orderby gc.Line ,gc.ChildReportObject.EpicMasterFile ,gc.ChildReportObject.Name
-                                select new GrandChildData
-                                {
-                                    Name = gc.ChildReportObject.DisplayName,
-                                    Id = gc.ChildReportObject.ReportObjectId,
-                                    EpicMasterFile = gc.ChildReportObject.EpicMasterFile,
-                                }
-                        }
-                }
-            ).ToListAsync();
-
-            var ReportParentsPartOne = await (
-                from p in _context.ReportObjectHierarchies
-                where
-                    p.ChildReportObjectId == id
-                    && p.ParentReportObject.ReportObjectTypeId != 12 //Personal dashboard
-                    && (p.ParentReportObject.ReportObjectDoc.Hidden ?? "N") == "N"
-                    && p.ChildReportObject.DefaultVisibilityYn == "Y"
-                orderby p.Line ,p.ParentReportObject.EpicMasterFile ,p.ParentReportObject.Name
-                select new ReportChildrenData
-                {
-                    Name = p.ParentReportObject.DisplayName,
-                    Id = p.ParentReportObjectId,
-                    Img =
-                        from img in p.ParentReportObject.ReportObjectImagesDocs
-                        orderby img.ImageOrdinal
-                        select new ChildImgData
-                        {
-                            Src = "data/img?id=" + img.ImageId,
-                            Id = img.ImageId
-                        },
-                }
-            ).ToListAsync();
-
-            var ReportParentsPartTwo = await (
-                from gc in _context.ReportObjectHierarchies
-                join ggc in _context.ReportObjectHierarchies
-                    on gc.ChildReportObjectId equals ggc.ParentReportObjectId
-                where
-                    ggc.ChildReportObjectId == id
-                    && ggc.ChildReportObject.EpicMasterFile == "IDN"
-                    && gc.ParentReportObject.EpicMasterFile == "IDB"
-                    && (gc.ParentReportObject.ReportObjectDoc.Hidden ?? "N") == "N"
-                select new ReportChildrenData
-                {
-                    Name = gc.ParentReportObject.DisplayName,
-                    Id = gc.ParentReportObjectId,
-                    Img =
-                        from img in gc.ParentReportObject.ReportObjectImagesDocs
-                        orderby img.ImageOrdinal
-                        select new ChildImgData
-                        {
-                            Src = "data/img?id=" + img.ImageId,
-                            Id = img.ImageId
-                        }
-                }
-            ).ToListAsync();
-
-            ReportParents = ReportParentsPartOne
-                .Union(ReportParentsPartTwo)
-                .Select(
-                    x =>
-                        new ReportChildrenData
-                        {
-                            Name = x.Name,
-                            Id = x.Id,
-                            Img = x.Img
-                        }
-                )
-                .ToList();
-
-            RelatedCollections = await (
-                from p in _context.DpReportAnnotations
-                where p.ReportId == id
-                orderby p.Report.Name
-                select new ReportCollectionData
-                {
-                    Name = p.DataProject.Name,
-                    Id = (int)p.DataProjectId,
-                    AnnotationId = p.ReportAnnotationId,
-                    ReportId = p.ReportId
-                }
-            ).ToListAsync();
-
-            ViewData["RelatedCollections"] = RelatedCollections;
+            );
 
             AdLists = new List<AdList>
             {
@@ -702,794 +292,6 @@ namespace Atlas_Web.Pages.Reports
             };
             ViewData["AdLists"] = AdLists;
             return Page();
-        }
-
-        public async Task<ActionResult> OnPostNewDescription()
-        {
-            var body = await new System.IO.StreamReader(Request.Body).ReadToEndAsync();
-            var package = JObject.Parse(body);
-
-            var IdStr = package.Value<string>("id");
-            var Description = package.Value<string>("description");
-
-            if (IdStr.Length > 0)
-            {
-                var Id = Int32.Parse(IdStr);
-
-                DateTime Updated = DateTime.Now;
-                var MyUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
-
-                if (_context.ReportObjectDocs.Any(x => x.ReportObjectId == Id))
-                {
-                    ReportObjectDoc myDoc = await _context.ReportObjectDocs
-                        .Where(x => x.ReportObjectId == Id)
-                        .FirstOrDefaultAsync();
-                    myDoc.DeveloperDescription = Description;
-                    myDoc.LastUpdateDateTime = Updated;
-                    myDoc.UpdatedBy = MyUser.UserId;
-                    await _context.SaveChangesAsync();
-                }
-                else
-                {
-                    ReportObjectDoc myDoc = new ReportObjectDoc
-                    {
-                        ReportObjectId = Id,
-                        DeveloperDescription = Description,
-                        CreatedBy = MyUser.UserId,
-                        CreatedDateTime = Updated,
-                        LastUpdateDateTime = Updated,
-                        UpdatedBy = MyUser.UserId
-                    };
-
-                    _context.Add(myDoc);
-                    await _context.SaveChangesAsync();
-                }
-
-                var d = await (
-                    from q in _context.ReportObjects
-                    where q.ReportObjectId == Id
-                    select new
-                    {
-                        q.ReportObjectDoc.DeveloperDescription,
-                        q.ReportObjectDoc.KeyAssumptions,
-                        q.Description,
-                        SystemDescription = q.DetailedDescription,
-                        q.RepositoryDescription
-                    }
-                ).FirstOrDefaultAsync();
-
-                ViewData["DeveloperDescription"] = d.DeveloperDescription;
-                ViewData["KeyAssumptions"] = d.KeyAssumptions;
-                ViewData["Description"] = d.Description;
-                ViewData["SystemDescription"] = d.SystemDescription;
-                ViewData["RepositoryDescription"] = d.RepositoryDescription;
-
-                //return Partial((".+?"));
-                return new PartialViewResult() { ViewName = "_Description", ViewData = ViewData };
-            }
-            return Content("error");
-        }
-
-        public async Task<ActionResult> OnPostNewKeyAssumptions()
-        {
-            var body = await new System.IO.StreamReader(Request.Body).ReadToEndAsync();
-            var package = JObject.Parse(body);
-
-            var IdStr = package.Value<string>("id");
-            var Description = package.Value<string>("description");
-
-            if (IdStr.Length > 0)
-            {
-                var Id = Int32.Parse(IdStr);
-                DateTime Updated = DateTime.Now;
-                var MyUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
-
-                if (_context.ReportObjectDocs.Any(x => x.ReportObjectId == Id))
-                {
-                    ReportObjectDoc myDoc = await _context.ReportObjectDocs
-                        .Where(x => x.ReportObjectId == Id)
-                        .FirstOrDefaultAsync();
-                    myDoc.KeyAssumptions = Description;
-                    myDoc.LastUpdateDateTime = Updated;
-                    myDoc.UpdatedBy = MyUser.UserId;
-                    await _context.SaveChangesAsync();
-                }
-                else
-                {
-                    ReportObjectDoc myDoc = new ReportObjectDoc
-                    {
-                        ReportObjectId = Id,
-                        KeyAssumptions = Description,
-                        CreatedBy = MyUser.UserId,
-                        CreatedDateTime = Updated,
-                        LastUpdateDateTime = Updated,
-                        UpdatedBy = MyUser.UserId
-                    };
-
-                    _context.Add(myDoc);
-                    await _context.SaveChangesAsync();
-                }
-
-                var d = await (
-                    from q in _context.ReportObjects
-                    where q.ReportObjectId == Id
-                    select new
-                    {
-                        q.ReportObjectDoc.DeveloperDescription,
-                        q.ReportObjectDoc.KeyAssumptions,
-                        q.Description,
-                        SystemDescription = q.DetailedDescription,
-                        q.RepositoryDescription
-                    }
-                ).FirstOrDefaultAsync();
-
-                ViewData["DeveloperDescription"] = d.DeveloperDescription;
-                ViewData["KeyAssumptions"] = d.KeyAssumptions;
-                ViewData["Description"] = d.Description;
-                ViewData["SystemDescription"] = d.SystemDescription;
-                ViewData["RepositoryDescription"] = d.RepositoryDescription;
-
-                //return Partial((".+?"));
-                return new PartialViewResult() { ViewName = "_Description", ViewData = ViewData };
-            }
-            return Content("error");
-        }
-
-        public async Task<IActionResult> OnPostNewDocumentation()
-        {
-            var MyUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
-            //Retrieve Report Object without tracking so we can attach the reportobjectdoc directly from the form. Otherwise you have to update each field in the existing reportobjectdoc.
-            ReportObject oldReportObject = _context.ReportObjects
-                .AsNoTracking()
-                .Include(r => r.ReportObjectDoc)
-                .Where(o => o.ReportObjectId.Equals(ReportObject.ReportObjectId))
-                .FirstOrDefault();
-
-            // add Last update date
-            DateTime Updated = DateTime.Now;
-
-            if (oldReportObject == null)
-            {
-                return NotFound();
-            }
-            else if (oldReportObject.ReportObjectDoc == null)
-            {
-                ReportObjectDoc.ReportObjectId = ReportObject.ReportObjectId;
-                ReportObjectDoc.CreatedBy = MyUser.UserId;
-                ReportObjectDoc.CreatedDateTime = Updated;
-                _context.Add(ReportObjectDoc);
-                await _context.SaveChangesAsync();
-            }
-            else
-            {
-                // for edited reports
-
-                // fields are not set by the form:
-                //   Creation Date, Created By, description, key assumptions
-
-
-                // get reference to old record
-                ReportObjectDoc oldReportObjectDoc = _context.ReportObjectDocs
-                    .AsNoTracking()
-                    .Where(o => o.ReportObjectId.Equals(ReportObject.ReportObjectId))
-                    .FirstOrDefault();
-
-                // these fields must be copied over form the record as everythign is overwritten on each save.
-                ReportObjectDoc.ReportObjectId = ReportObject.ReportObjectId;
-                ReportObjectDoc.DeveloperDescription = oldReportObjectDoc.DeveloperDescription;
-                ReportObjectDoc.KeyAssumptions = oldReportObjectDoc.KeyAssumptions;
-                ReportObjectDoc.CreatedDateTime = oldReportObjectDoc.CreatedDateTime;
-                ReportObjectDoc.CreatedBy = oldReportObjectDoc.CreatedBy;
-                ReportObjectDoc.LastUpdateDateTime = Updated; //Set the current datetime as the last update date
-                ReportObjectDoc.UpdatedBy = MyUser.UserId;
-                _context.Attach(ReportObjectDoc).State = EntityState.Modified;
-
-                try
-                {
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ReportObjectDocExists(ReportObjectDoc.ReportObjectId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-            }
-
-            // remove old links, add new.
-            _context.RemoveRange(
-                _context.ReportObjectDocFragilityTags.Where(
-                    t => t.ReportObjectId.Equals(ReportObject.ReportObjectId)
-                )
-            );
-            _context.AddRange(
-                SelectedFragilityTagIds.Select(
-                    tagid =>
-                        new ReportObjectDocFragilityTag
-                        {
-                            ReportObjectId = ReportObjectDoc.ReportObjectId,
-                            FragilityTagId = tagid
-                        }
-                )
-            );
-
-            _context.SaveChanges();
-
-            return Content("success");
-        }
-
-        public async Task<ActionResult> OnGetDeleteLinkedCollection(int id)
-        {
-            var checkpoint = UserHelpers.CheckUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name,
-                28
-            );
-            var ta =
-                _context.DpReportAnnotations
-                    .Where(x => x.ReportAnnotationId == id)
-                    .FirstOrDefault().ReportId;
-            if (checkpoint)
-            {
-                _context.DpReportAnnotations.Remove(
-                    _context.DpReportAnnotations
-                        .Where(x => x.ReportAnnotationId == id)
-                        .FirstOrDefault()
-                );
-                await _context.SaveChangesAsync();
-            }
-
-            var MyUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
-
-            ViewData["RelatedCollections"] = await (
-                from r in _context.DpReportAnnotations
-                where r.ReportId == ta
-                join q in (
-                    from f in _context.UserFavorites
-                    where f.ItemType.ToLower() == "collection" && f.UserId == MyUser.UserId
-                    select new { f.ItemId }
-                )
-                    on r.ReportId equals q.ItemId
-                    into tmp
-                from rfi in tmp.DefaultIfEmpty()
-                orderby r.Rank ,r.Report.Name
-                select new ReportCollectionData
-                {
-                    AnnotationId = r.ReportAnnotationId,
-                    Id = r.DataProjectId,
-                    Name = r.DataProject.Name,
-                    ReportId = r.ReportId,
-                }
-            ).ToListAsync();
-            //return Partial((".+?"));
-            return new PartialViewResult()
-            {
-                ViewName = "Editor/_CurrentCollections",
-                ViewData = ViewData
-            };
-        }
-
-        public async Task<ActionResult> OnPostAddLinkedCollection()
-        {
-            var checkpoint = UserHelpers.CheckUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name,
-                28
-            );
-            if (
-                ModelState.IsValid
-                && DpReportAnnotation.DataProjectId > 0
-                && DpReportAnnotation.ReportId > 0
-                && checkpoint
-            )
-            {
-                if (
-                    !_context.DpReportAnnotations.Any(
-                        x =>
-                            x.ReportId == DpReportAnnotation.ReportId
-                            && x.DataProjectId == DpReportAnnotation.DataProjectId
-                    )
-                )
-                {
-                    _context.Add(DpReportAnnotation);
-
-                    // update last update date on report.
-                    _context.DpDataProjects
-                        .Where(d => d.DataProjectId == DpReportAnnotation.DataProjectId)
-                        .FirstOrDefault().LastUpdateDate = DateTime.Now;
-                    _context.DpDataProjects
-                        .Where(d => d.DataProjectId == DpReportAnnotation.DataProjectId)
-                        .FirstOrDefault().LastUpdateUser =
-                        UserHelpers.GetUser(_cache, _context, User.Identity.Name).UserId;
-                    await _context.SaveChangesAsync();
-                }
-            }
-
-            var MyUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
-
-            ViewData["RelatedCollections"] = await (
-                from r in _context.DpReportAnnotations
-                where r.ReportId == DpReportAnnotation.ReportId
-                join q in (
-                    from f in _context.UserFavorites
-                    where f.ItemType.ToLower() == "collection" && f.UserId == MyUser.UserId
-                    select new { f.ItemId }
-                )
-                    on r.ReportId equals q.ItemId
-                    into tmp
-                from rfi in tmp.DefaultIfEmpty()
-                orderby r.Rank ,r.Report.Name
-                select new ReportCollectionData
-                {
-                    AnnotationId = r.ReportAnnotationId,
-                    Id = r.DataProjectId,
-                    Name = r.DataProject.Name,
-                    ReportId = r.ReportId,
-                }
-            ).ToListAsync();
-
-            return new PartialViewResult()
-            {
-                ViewName = "Editor/_CurrentCollections",
-                ViewData = ViewData
-            };
-        }
-
-        public async Task<ActionResult> OnPostEditLinkedCollection()
-        {
-            var checkpoint = UserHelpers.CheckUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name,
-                28
-            );
-            if (ModelState.IsValid && DpReportAnnotation.ReportAnnotationId > 0 && checkpoint)
-            {
-                var q = _context.DpReportAnnotations
-                    .Where(x => x.ReportAnnotationId == DpReportAnnotation.ReportAnnotationId)
-                    .FirstOrDefault();
-                q.Annotation = DpReportAnnotation.Annotation;
-                q.Rank = DpReportAnnotation.Rank;
-                await _context.SaveChangesAsync();
-            }
-
-            var MyUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
-
-            ViewData["RelatedCollections"] = await (
-                from r in _context.DpReportAnnotations
-                where r.ReportId == DpReportAnnotation.ReportId
-                join q in (
-                    from f in _context.UserFavorites
-                    where f.ItemType.ToLower() == "collection" && f.UserId == MyUser.UserId
-                    select new { f.ItemId }
-                )
-                    on r.ReportId equals q.ItemId
-                    into tmp
-                from rfi in tmp.DefaultIfEmpty()
-                orderby r.Rank ,r.Report.Name
-                select new ReportCollectionData
-                {
-                    AnnotationId = r.ReportAnnotationId,
-                    Id = r.DataProjectId,
-                    Name = r.DataProject.Name,
-                    Description = r.Annotation,
-                    ReportId = r.ReportId,
-                }
-            ).ToListAsync();
-
-            return new PartialViewResult()
-            {
-                ViewName = "Editor/_CurrentCollections",
-                ViewData = ViewData
-            };
-        }
-
-        public async Task<ActionResult> OnPostAddTermLink()
-        {
-            if (!ModelState.IsValid)
-            {
-                return RedirectToPage("/Reports/Index", new { id = NewTermLink.ReportObjectId });
-            }
-
-            // only add link if not existing.
-            if (
-                !_context.ReportObjectDocTerms.Any(
-                    x =>
-                        x.ReportObjectId == NewTermLink.ReportObjectId
-                        && x.TermId == NewTermLink.TermId
-                )
-            )
-            {
-                _context.Add(NewTermLink);
-
-                // update last update date on report.
-                // If report doc does not exist we will create.
-                if (
-                    !_context.ReportObjectDocs.Any(
-                        d => d.ReportObjectId == NewTermLink.ReportObjectId
-                    )
-                )
-                {
-                    _context.Add(
-                        new ReportObjectDoc { ReportObjectId = NewTermLink.ReportObjectId }
-                    );
-                    await _context.SaveChangesAsync();
-                }
-
-                _context.ReportObjectDocs
-                    .Where(d => d.ReportObjectId == NewTermLink.ReportObjectId)
-                    .FirstOrDefault().LastUpdateDateTime = DateTime.Now;
-                _context.ReportObjectDocs
-                    .Where(d => d.ReportObjectId == NewTermLink.ReportObjectId)
-                    .FirstOrDefault().UpdatedBy =
-                    UserHelpers.GetUser(_cache, _context, User.Identity.Name).UserId;
-                await _context.SaveChangesAsync();
-            }
-
-            ViewData["ReportTerms"] = await (
-                from r in _context.ReportObjectDocTerms
-                where r.ReportObjectId == NewTermLink.ReportObjectId
-                select new ReportTermsData
-                {
-                    Name = r.Term.Name,
-                    Id = r.TermId,
-                    LinkId = r.LinkId,
-                    Summary = r.Term.Summary,
-                    Definition = r.Term.TechnicalDefinition,
-                    ReportId = r.ReportObjectId
-                }
-            ).ToListAsync();
-
-            //return Partial((".+?"));
-            return new PartialViewResult()
-            {
-                ViewName = "Editor/_CurrentTerms",
-                ViewData = ViewData
-            };
-        }
-
-        public async Task<ActionResult> OnPostRemoveTermLink()
-        {
-            if (!ModelState.IsValid)
-            {
-                return RedirectToPage("/Reports/Index", new { id = NewTermLink.ReportObjectId });
-            }
-
-            // remove term link & update last updated on report
-            _context.Remove(NewTermLink);
-            await _context.SaveChangesAsync();
-            _context.ReportObjectDocs
-                .Where(x => x.ReportObjectId == NewTermLink.ReportObjectId)
-                .FirstOrDefault().LastUpdateDateTime = DateTime.Now;
-            _context.ReportObjectDocs
-                .Where(x => x.ReportObjectId == NewTermLink.ReportObjectId)
-                .FirstOrDefault().UpdatedBy =
-                UserHelpers.GetUser(_cache, _context, User.Identity.Name).UserId;
-            await _context.SaveChangesAsync();
-
-            ViewData["ReportTerms"] = await (
-                from r in _context.ReportObjectDocTerms
-                where r.ReportObjectId == NewTermLink.ReportObjectId
-                select new ReportTermsData
-                {
-                    Name = r.Term.Name,
-                    Id = r.TermId,
-                    LinkId = r.LinkId,
-                    Summary = r.Term.Summary,
-                    Definition = r.Term.TechnicalDefinition,
-                    ReportId = r.ReportObjectId
-                }
-            ).ToListAsync();
-
-            //return Partial((".+?"));
-            return new PartialViewResult()
-            {
-                ViewName = "Editor/_CurrentTerms",
-                ViewData = ViewData
-            };
-        }
-
-        public async Task<ActionResult> OnGetTermLinks(int Id)
-        {
-            ViewData["ReportTerms"] = await (
-                from r in _context.ReportObjectDocTerms
-                where r.ReportObjectId == Id
-                select new ReportTermsData
-                {
-                    Name = r.Term.Name,
-                    Id = r.TermId,
-                    LinkId = r.LinkId,
-                    Summary = r.Term.Summary,
-                    Definition = r.Term.TechnicalDefinition,
-                    ReportId = r.ReportObjectId
-                }
-            ).ToListAsync();
-
-            //return Partial((".+?"));
-            return new PartialViewResult()
-            {
-                ViewName = "Editor/_CurrentTerms",
-                ViewData = ViewData
-            };
-        }
-
-        public async Task<ActionResult> OnPostCurrentTermDetails(int TermId)
-        {
-            var Term = await (
-                from r in _context.Terms
-                where r.TermId == TermId
-                select new CurrentTermsData
-                {
-                    summary = r.Summary,
-                    technicalDefinition = r.TechnicalDefinition,
-                }
-            ).FirstOrDefaultAsync();
-
-            var json = JsonConvert.SerializeObject(Term);
-            HttpContext.Response.Headers.Remove("Cache-Control");
-            HttpContext.Response.Headers.Add("Cache-Control", "max-age=0");
-            return Content(json);
-        }
-
-        public async Task<ActionResult> OnPostNewMaintenanceLog()
-        {
-            // 1 check if report exists, else create it
-            if (
-                !_context.ReportObjectDocs.Any(
-                    r => r.ReportObjectId == NewMaintenanceLogLink.ReportObjectId
-                )
-            )
-            {
-                _context.Add(
-                    new ReportObjectDoc { ReportObjectId = NewMaintenanceLogLink.ReportObjectId }
-                );
-            }
-
-            NewMaintenanceLog.MaintainerId =
-                UserHelpers.GetUser(_cache, _context, User.Identity.Name).UserId;
-            NewMaintenanceLog.MaintenanceDate = System.DateTime.Now;
-
-            _context.Add(NewMaintenanceLog);
-            _context.SaveChanges();
-
-            NewMaintenanceLogLink.MaintenanceLogId = NewMaintenanceLog.MaintenanceLogId;
-            _context.Add(NewMaintenanceLogLink);
-
-            await _context.SaveChangesAsync();
-
-            return Content("success");
-        }
-
-        public async Task<ActionResult> OnGetRemoveMeTicket(int Id)
-        {
-            var reportObjectId =
-                _context.ReportManageEngineTickets
-                    .Where(x => x.ManageEngineTicketsId == Id)
-                    .FirstOrDefault().ReportObjectId;
-            _context.Remove(
-                _context.ReportManageEngineTickets
-                    .Where(x => x.ManageEngineTicketsId == Id)
-                    .FirstOrDefault()
-            );
-            _context.SaveChanges();
-
-            ViewData["ManageEngineTickets"] = await (
-                from t in _context.ReportManageEngineTickets
-                where t.ReportObjectId == reportObjectId
-                select new ManageEngineTicketsData
-                {
-                    Id = t.ManageEngineTicketsId,
-                    Number = t.TicketNumber,
-                    Url = t.TicketUrl,
-                    Description = t.Description,
-                    ReportId = t.ReportObjectId
-                }
-            ).ToListAsync();
-
-            return RedirectToPage("/Reports/Index", new { id = reportObjectId });
-        }
-
-        public async Task<ActionResult> OnPostAddMeTicket()
-        {
-            if (ModelState.IsValid && ManageEngineTicket.TicketNumber != null)
-            {
-                var x = ManageEngineTicket;
-                _context.Add(ManageEngineTicket);
-                _context.SaveChanges();
-            }
-            ViewData["Id"] = ManageEngineTicket.ReportObjectId;
-            ViewData["ManageEngineTickets"] = await (
-                from t in _context.ReportManageEngineTickets
-                where t.ReportObjectId == ManageEngineTicket.ReportObjectId
-                select new ManageEngineTicketsData
-                {
-                    Id = t.ManageEngineTicketsId,
-                    Number = t.TicketNumber,
-                    Url = t.TicketUrl,
-                    Description = t.Description,
-                    ReportId = t.ReportObjectId
-                }
-            ).ToListAsync();
-
-            //return Partial((".+?"));
-            return new PartialViewResult() { ViewName = "Editor/_MeTickets", ViewData = ViewData };
-        }
-
-        public ActionResult OnPostAddImage(int Id, IFormFile File)
-        {
-            if (ValidateFileUpload(File))
-            {
-                //ReportObjectImagesDoc img;
-                var img = new ReportObjectImagesDoc { ReportObjectId = Id };
-                using (var stream = new MemoryStream())
-                {
-                    File.CopyTo(stream);
-                    img.ImageData = stream.ToArray();
-                }
-                _context.Add(img);
-                _context.SaveChanges();
-
-                ViewData["Src"] = String.Format(
-                    "data:image/jpg;base64,{0}",
-                    Convert.ToBase64String(img.ImageData.ToArray())
-                );
-                ViewData["ImgId"] = img.ImageId;
-                ViewData["Id"] = Id;
-
-                //return Partial((".+?"));
-                return new PartialViewResult()
-                {
-                    ViewName = "Editor/_EachImage",
-                    ViewData = ViewData
-                };
-            }
-            return Content("error");
-        }
-
-        public async Task<ActionResult> OnPostRemoveImage(int Id, int ImgId)
-        {
-            _context.Remove(
-                _context.ReportObjectImagesDocs
-                    .Where(t => t.ImageId == ImgId && t.ReportObjectId == Id)
-                    .FirstOrDefault()
-            );
-            _context.SaveChanges();
-            return await OnGetLoadImagesAsync(Id);
-        }
-
-        public async Task<ActionResult> OnGetLoadImagesAsync(int id)
-        {
-            ViewData["ReportImages"] = await (
-                from i in _context.ReportObjectImagesDocs
-                where i.ReportObjectId == id
-                orderby i.ImageOrdinal
-                select new ReportImagesData { Src = "data/img?id=" + i.ImageId, Id = i.ImageId }
-            ).ToListAsync();
-            ViewData["Id"] = id;
-            //return Partial((".+?"));
-            return new PartialViewResult() { ViewName = "_Images", ViewData = ViewData };
-        }
-
-        // https://docs.microsoft.com/en-us/aspnet/core/razor-pages/upload-files?view=aspnetcore-2.2
-        public bool ValidateFileUpload(IFormFile file)
-        {
-            try
-            {
-                // get the filename in case we need to return info to the user
-                if (
-                    file.ContentType.ToLower() != "image/jpeg"
-                    && file.ContentType.ToLower() != "image/png"
-                )
-                {
-                    ModelState.AddModelError(file.Name, "You may only upload jpeg and png files.");
-                    return false;
-                }
-
-                if (file == null)
-                {
-                    ModelState.AddModelError(
-                        file.Name,
-                        "The file was not received by the server. If this issue persists please contact Analytics."
-                    );
-                    return false;
-                }
-                else if (file.Length > 1024 * 1024)
-                {
-                    ModelState.AddModelError(
-                        file.Name,
-                        "The file is larger than 1MB. Please use a smaller image."
-                    );
-                    return false;
-                }
-            }
-            catch (Exception ex)
-            {
-                ModelState.AddModelError(
-                    file.Name,
-                    $"The file upload failed. Please contact Analytics if this issue persists. Error: {ex.Message}"
-                );
-                return false;
-            }
-            // if there are no errors, return true
-            return true;
-        }
-
-        private bool ReportObjectDocExists(int id)
-        {
-            return _context.ReportObjectDocs.Any(e => e.ReportObjectId == id);
-        }
-
-        public ActionResult OnGetRelatedReports(string id)
-        {
-            ViewData["RelatedReports"] = _cache.GetOrCreate<List<BasicFavoriteReportData>>(
-                "RelatedReports-" + id,
-                cacheEntry =>
-                {
-                    cacheEntry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20);
-                    // id is a number e.g. 1, or a list of numbers e.g. "1,2,3"
-                    var user = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
-
-                    var x = new List<BasicFavoriteReportData>();
-
-                    using (
-                        var connection = new SqlConnection(
-                            _config.GetConnectionString("AtlasDatabase")
-                        )
-                    )
-                    {
-                        using (var command = connection.CreateCommand())
-                        {
-                            command.CommandType = System.Data.CommandType.StoredProcedure;
-                            command.CommandText = "RelatedReports";
-                            command.Parameters.Add(new SqlParameter("@Id", id));
-                            command.Parameters.Add(new SqlParameter("@UserId", user.UserId));
-
-                            connection.Open();
-                            var datareader = command.ExecuteReader();
-
-                            while (datareader.Read())
-                            {
-                                x.Add(
-                                    new BasicFavoriteReportData
-                                    {
-                                        Id = (int)datareader["Id"],
-                                        Name = datareader["Name"].ToString(),
-                                        Favorite = datareader["Favorite"].ToString(),
-                                        ReportUrl = HtmlHelpers.ReportUrlFromParams(
-                                            _config["AppSettings:org_domain"],
-                                            HttpContext,
-                                            _context.ReportObjects
-                                                .Where(
-                                                    x => x.ReportObjectId == (int)datareader["Id"]
-                                                )
-                                                .First(),
-                                            _context,
-                                            User.Identity.Name
-                                        ),
-                                    }
-                                );
-                            }
-                        }
-                    }
-                    return x;
-                }
-            );
-
-            HttpContext.Response.Headers.Remove("Cache-Control");
-            HttpContext.Response.Headers.Add("Cache-Control", "max-age=7200");
-            //return Partial((".+?"));
-            return new PartialViewResult()
-            {
-                ViewName = "Partials/_RelatedReports",
-                ViewData = ViewData
-            };
         }
 
         public async Task<ActionResult> OnGetMaintStatusAsync(int id)

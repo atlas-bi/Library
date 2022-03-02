@@ -2,17 +2,18 @@
 
 <div class="card">
     <div class="card-header">
-        <p class="card-header-title is-justify-content-space-between">
-            <span>@Model.Name</span>
-            @if(Model.ApprovedYn == "Y")
-            {
-                <span class="tags">
+        <div class="card-header-title is-justify-content-space-between py-2">
+            <a class="has-text-dark" href="/Terms?id=@Model.TermId">@Model.Name</a>
+            <span class="tags">
+                <span class="tag">term</span>
+                @if(Model.ApprovedYn == "Y")
+                {
                     <span class="tag is-success">Approved</span>
-                </span>
-            }
-        </p>
+                }
+            </span>
+        </div>
     </div>
-    <div class="card-content">
+    <div class="card-content pt-3 pb-2">
         <div class="media">
             <div class="media-left">
                 <figure class="image is-128x128">
@@ -25,10 +26,10 @@
             <div class="media-content is-min-h-96 is-flex is-justify-content-space-between is-flex-direction-column">
                 @if (!string.IsNullOrEmpty(Model.Summary))
                 {
-                    @Html.Raw(@Helpers.HtmlHelpers.MarkdownToHtml(Model.Summary.Substring(0,Math.Min(160,Model.Summary.Length)) + " ..."))
+                    @(Model.Summary.Substring(0,Math.Min(160,Model.Summary.Length)) + " ...")
                 } else if (!string.IsNullOrEmpty(Model.TechnicalDefinition))
                 {
-                    @Html.Raw(@Helpers.HtmlHelpers.MarkdownToHtml(Model.TechnicalDefinition.Substring(0,Math.Min(160,Model.TechnicalDefinition.Length)) + " ..."))
+                    @(Model.TechnicalDefinition.Substring(0,Math.Min(160,Model.TechnicalDefinition.Length)) + " ...")
                 } else {
                     <text>Open to view details.</text>
                 }
@@ -43,6 +44,24 @@
         </div>
     </div>
     <footer class="card-footer">
+        <a class="card-footer-item star" data-href="/users/favorites/?handler=Edit&type=term&id=@Model.TermId">
+            <span class="icon-text">
+                @if (Model.StarredTerms.Any(x => x.Ownerid == ViewBag.PublicUser.UserId))
+                {
+                    <span class="icon has-text-gold">
+                        <i class="fas fa-star"></i>
+                    </span>
+                    <span>Starred <span class="tag is-rounded star-count">@Model.StarredTerms.Count</span></span>
+                }
+                else
+                {
+                    <span class="icon ">
+                        <i class="far fa-star"></i>
+                    </span>
+                    <span>Star <span class="tag is-rounded">@Model.StarredTerms.Count</span></span>
+                }
+            </span>
+        </a>
         <a href="/Terms?id=@Model.TermId" class="card-footer-item">Open</a>
     </footer>
 </div>

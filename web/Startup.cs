@@ -14,7 +14,6 @@ using System.IO.Compression;
 using WebMarkupMin.AspNet.Common.Compressors;
 using WebMarkupMin.AspNetCore5;
 using SolrNet;
-using SolrNet.Microsoft.DependencyInjection;
 using Microsoft.Extensions.Caching.Memory;
 using System.Linq;
 using Atlas_Web.Middleware;
@@ -61,7 +60,13 @@ namespace Atlas_Web
             var connection = Configuration.GetConnectionString("AtlasDatabase");
 
             // for linq querys
-            services.AddDbContext<Atlas_WebContext>(options => options.UseSqlServer(connection));
+            services.AddDbContext<Atlas_WebContext>(
+                options =>
+                    options.UseSqlServer(
+                        connection,
+                        o => o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)
+                    )
+            );
 
             // for raw sql connection
             services.AddSingleton<IConfiguration>(Configuration);
@@ -119,7 +124,6 @@ namespace Atlas_Web
                     pipeline.AddJavaScriptBundle(
                         "/js/search.min.js",
                         "js/search.js",
-                        "js/utility/progressbar.js",
                         "/js/error.js"
                     );
 
@@ -206,15 +210,14 @@ namespace Atlas_Web
         {
             app.UseResponseCompression();
 
-            if (env.IsDevelopment())
-            {
-                app.UseMiddleware<StackifyMiddleware.RequestTracerMiddleware>();
-                app.UseDeveloperExceptionPage();
-            }
-            else
+            if (!env.IsDevelopment())
             {
                 app.UseStatusCodePagesWithRedirects("/Error?id={0}");
                 app.UseHsts();
+            }
+            else
+            {
+                app.UseDeveloperExceptionPage();
             }
 
             app.UseWebMarkupMin();
@@ -248,16 +251,18 @@ namespace Atlas_Web
             );
 
             app.UseResponseCaching();
-            app.Use(async (context, next) =>
-            {
-                context.Response.GetTypedHeaders().CacheControl =
-                    new Microsoft.Net.Http.Headers.CacheControlHeaderValue()
-                    {
-                        Public = true,
-                        MaxAge = TimeSpan.FromMinutes(20)
-                    };
-                await next();
-            });
+            app.Use(
+                async (context, next) =>
+                {
+                    context.Response.GetTypedHeaders().CacheControl =
+                        new Microsoft.Net.Http.Headers.CacheControlHeaderValue()
+                        {
+                            Public = true,
+                            MaxAge = TimeSpan.FromMinutes(20)
+                        };
+                    await next();
+                }
+            );
 
             // load override css
             var css = context.GlobalSiteSettings

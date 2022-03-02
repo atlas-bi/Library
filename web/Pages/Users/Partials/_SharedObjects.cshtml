@@ -1,29 +1,14 @@
-﻿@*
-    Atlas of Information Management business intelligence library and documentation database.
-    Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*@
-
 <div class="shared-container">
     @if (ViewBag.SharedToMe.Count > 0)
     {
-        <h4>Shared With Me</h4>
+        <strong class="is-block">Shared With Me</strong>
         @foreach (var o in ViewBag.SharedToMe)
         {
-            <div data-tooltip="Shared by @o.SharedFrom on @o.ShareDate" style="overflow:hidden;">
-                <form class="remove-shared-object" asp-page-handler="RemoveSharedObject" method="post" ><input type="hidden" name="id" value="@o.Id" /><button style="float:left"><i class="fas fa-times"></i></button></form>
+            <div class="has-tooltip-arrow has-tooltip-left is-flex is-align-items-center"data-tooltip="Shared by @o.SharedFrom on @o.ShareDate">
+                <form class="remove-shared-object" asp-page-handler="RemoveSharedObject" method="post">
+                    <input type="hidden" name="id" value="@o.Id" />
+                    <button class="button is-ghost"><i class="fas fa-times"></i></button>
+                </form>
                 <a href="@o.Url">@o.Name</a>
             </div>
         }

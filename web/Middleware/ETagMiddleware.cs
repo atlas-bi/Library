@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Net.Http.Headers;
@@ -8,8 +8,6 @@ using System.Threading.Tasks;
 
 namespace Atlas_Web.Middleware
 {
-
-    //
     //https://gist.github.com/madskristensen/36357b1df9ddbfd123162cd4201124c4
     public class ETagMiddleware
     {
@@ -36,7 +34,10 @@ namespace Atlas_Web.Middleware
 
                 response.Headers[HeaderNames.ETag] = checksum;
 
-                if (context.Request.Headers.TryGetValue(HeaderNames.IfNoneMatch, out var etag) && checksum == etag)
+                if (
+                    context.Request.Headers.TryGetValue(HeaderNames.IfNoneMatch, out var etag)
+                    && checksum == etag
+                )
                 {
                     response.StatusCode = StatusCodes.Status304NotModified;
                     response.Headers[HeaderNames.ContentLength] = "0";

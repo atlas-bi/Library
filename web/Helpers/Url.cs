@@ -1,13 +1,11 @@
-﻿using Atlas_Web.Models;
+using Atlas_Web.Models;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
 using System.Diagnostics.Contracts;
 using Microsoft.Extensions.Caching.Memory;
 using System.IO;
 using System.Security.Cryptography;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 
 namespace Atlas_Web.Helpers
@@ -16,16 +14,14 @@ namespace Atlas_Web.Helpers
     {
         private static string GenerateHash(string content)
         {
-            using (var algo = SHA1.Create())
-            {
-                byte[] buffer = System.Text.Encoding.UTF8.GetBytes(content);
-                byte[] hash = algo.ComputeHash(buffer);
-                return WebEncoders.Base64UrlEncode(hash);
-            }
+            using var algo = SHA1.Create();
+            byte[] buffer = System.Text.Encoding.UTF8.GetBytes(content);
+            byte[] hash = algo.ComputeHash(buffer);
+            return WebEncoders.Base64UrlEncode(hash);
         }
 
         [Pure]
-        public static string FontHash(PathString font, IMemoryCache cache, IConfiguration config)
+        public static string FontHash(PathString font, IMemoryCache cache)
         {
             // this function exists because ligershark.assets as a v=? hash to font files in
             // the css build, but doesn't add them to the preload tags.
@@ -102,11 +98,7 @@ namespace Atlas_Web.Helpers
         }
 
         [Pure]
-        public static string SetSearchPageUrl(
-            HttpContext helper,
-            SolrAtlasParameters parameter,
-            int pageIndex
-        )
+        public static string SetSearchPageUrl(HttpContext helper, int pageIndex)
         {
             return SetParameters(
                 helper,
@@ -118,29 +110,20 @@ namespace Atlas_Web.Helpers
         }
 
         [Pure]
-        public static string SetSearchFacetUrl(
-            HttpContext helper,
-            SolrAtlasParameters parameter,
-            string facet,
-            string value
-        )
+        public static string SetSearchFacetUrl(HttpContext helper, string facet, string value)
         {
             return SetParameters(helper, new Dictionary<string, string> { { facet, value } });
         }
 
         [Pure]
         public static bool SetSearchFacetChecked(
-            HttpContext helper,
             SolrAtlasParameters parameter,
             string facet,
             string value
         ) => parameter.Filters.ContainsKey(facet) && parameter.Filters[facet].Contains(value);
 
         [Pure]
-        public static bool HasFacet(
-            HttpContext helper,
-            SolrAtlasParameters parameter,
-            string facet
-        ) => parameter.Filters.ContainsKey(facet);
+        public static bool HasFacet(SolrAtlasParameters parameter, string facet) =>
+            parameter.Filters.ContainsKey(facet);
     }
 }

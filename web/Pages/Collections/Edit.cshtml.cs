@@ -137,7 +137,6 @@ namespace Atlas_Web.Pages.Collections
                 if (oldReport != null)
                 {
                     oldReport.Rank = i;
-                    oldReport.Annotation = report.Annotation;
                 }
                 else
                 {
@@ -155,12 +154,10 @@ namespace Atlas_Web.Pages.Collections
             _context.SaveChanges();
 
             _cache.Remove("collection-" + NewCollection.DataProjectId);
+            _cache.Remove("search-collection-" + NewCollection.DataProjectId);
             _cache.Remove("collections");
 
-            return RedirectToPage(
-                "/Collections/Index",
-                new { id, success = "Changes saved." }
-            );
+            return RedirectToPage("/Collections/Index", new { id, success = "Changes saved." });
         }
     }
 }

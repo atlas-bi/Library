@@ -27,7 +27,7 @@ namespace Atlas_Web.Pages.Terms
             _cache = cache;
         }
 
-        public IEnumerable<Term> Terms {get; set;}
+        public IEnumerable<Term> Terms { get; set; }
         public Term Term { get; set; }
 
         [BindProperty]
@@ -48,9 +48,10 @@ namespace Atlas_Web.Pages.Terms
             };
             ViewData["AdLists"] = AdLists;
 
-            if(id == null)
+            if (id == null)
             {
-                Terms = await _cache.GetOrCreateAsync<List<Term>>("terms",
+                Terms = await _cache.GetOrCreateAsync<List<Term>>(
+                    "terms",
                     cacheEntry =>
                     {
                         cacheEntry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20);
@@ -61,53 +62,93 @@ namespace Atlas_Web.Pages.Terms
                 return Page();
             }
 
-            Term = await _cache.GetOrCreateAsync<Term>("term-" + id,
+            Term = await _cache.GetOrCreateAsync<Term>(
+                "term-" + id,
                 cacheEntry =>
                 {
                     cacheEntry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20);
                     return _context.Terms
-                            .Include(x => x.ApprovedByUser)
-                            .Include(x => x.UpdatedByUser)
-                            .SingleAsync(x => x.TermId == id);
+                        .Include(x => x.ApprovedByUser)
+                        .Include(x => x.UpdatedByUser)
+                        .Include(x => x.StarredTerms)
+                        .SingleAsync(x => x.TermId == id);
                 }
             );
 
-            RelatedReports = await _cache.GetOrCreateAsync<List<ReportObject>>("term_reports-" + id,
+            RelatedReports = _cache.GetOrCreate<List<ReportObject>>(
+                "term-reports-" + id,
                 cacheEntry =>
                 {
                     cacheEntry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20);
-                    return _context.ReportObjects
-                            .Where(x => x.ReportObjectDoc.ReportObjectDocTerms.Any(y => y.TermId == id))
-                            .Where(x => (x.ReportObjectDoc.Hidden ?? "N") == "N")
-                            .Where(x => x.DefaultVisibilityYn == "Y")
-                            .Union(_context.ReportObjects
-                                    .Where(x => x.ReportObjectHierarchyParentReportObjects
-                                                .Any(y => y.ChildReportObject.ReportObjectDoc.ReportObjectDocTerms
-                                                            .Any(z => z.TermId == id)))
-                                    .Where(x => (x.ReportObjectDoc.Hidden ?? "N") == "N")
-                                    .Where(x => x.DefaultVisibilityYn == "Y")
-                            )
-                            .Union(_context.ReportObjects
-                                    .Where(x => x.ReportObjectHierarchyParentReportObjects
-                                            .Any(g => g.ChildReportObject.ReportObjectHierarchyParentReportObjects
-                                                .Any(y => y.ChildReportObject.ReportObjectDoc.ReportObjectDocTerms
-                                                            .Any(z => z.TermId == id))))
-                                    .Where(x => (x.ReportObjectDoc.Hidden ?? "N") == "N")
-                                    .Where(x => x.DefaultVisibilityYn == "Y")
-                            )
-                            .Union(_context.ReportObjects
-                                    .Where(x => x.ReportObjectHierarchyParentReportObjects
-                                                .Any(gg => gg.ChildReportObject.ReportObjectHierarchyParentReportObjects
-                                                    .Any(g => g.ChildReportObject.ReportObjectHierarchyParentReportObjects
-                                                        .Any(y => y.ChildReportObject.ReportObjectDoc.ReportObjectDocTerms
-                                                            .Any(z => z.TermId == id)))))
-                                    .Where(x => (x.ReportObjectDoc.Hidden ?? "N") == "N")
-                                    .Where(x => x.DefaultVisibilityYn == "Y")
+
+                    var level_one = _context.ReportObjects
+                        .Where(x => x.ReportObjectDoc.ReportObjectDocTerms.Any(y => y.TermId == id))
+                        .Where(x => (x.ReportObjectDoc.Hidden ?? "N") == "N")
+                        .Where(x => x.DefaultVisibilityYn == "Y")
+                        .Include(x => x.ReportObjectType)
+                        .Include(x => x.ReportObjectDoc)
+                        .Include(x => x.ReportObjectAttachments)
+                        .ToList();
+
+                    var level_two = _context.ReportObjects
+                        .Where(
+                            x =>
+                                x.ReportObjectHierarchyParentReportObjects.Any(
+                                    y =>
+                                        y.ChildReportObject.ReportObjectDoc.ReportObjectDocTerms.Any(
+                                            z => z.TermId == id
+                                        )
                                 )
-                            .Include(x => x.ReportObjectType)
-                            .Include(x => x.ReportObjectDoc)
-                            .Distinct()
-                            .ToListAsync();
+                        )
+                        .Where(x => (x.ReportObjectDoc.Hidden ?? "N") == "N")
+                        .Where(x => x.DefaultVisibilityYn == "Y")
+                        .Include(x => x.ReportObjectType)
+                        .Include(x => x.ReportObjectDoc)
+                        .Include(x => x.ReportObjectAttachments)
+                        .ToList();
+                    var level_three = _context.ReportObjects
+                        .Where(
+                            x =>
+                                x.ReportObjectHierarchyParentReportObjects.Any(
+                                    g =>
+                                        g.ChildReportObject.ReportObjectHierarchyParentReportObjects.Any(
+                                            y =>
+                                                y.ChildReportObject.ReportObjectDoc.ReportObjectDocTerms.Any(
+                                                    z => z.TermId == id
+                                                )
+                                        )
+                                )
+                        )
+                        .Where(x => (x.ReportObjectDoc.Hidden ?? "N") == "N")
+                        .Where(x => x.DefaultVisibilityYn == "Y")
+                        .Include(x => x.ReportObjectType)
+                        .Include(x => x.ReportObjectDoc)
+                        .Include(x => x.ReportObjectAttachments)
+                        .ToList();
+                    var level_four = _context.ReportObjects
+                        .Where(
+                            x =>
+                                x.ReportObjectHierarchyParentReportObjects.Any(
+                                    gg =>
+                                        gg.ChildReportObject.ReportObjectHierarchyParentReportObjects.Any(
+                                            g =>
+                                                g.ChildReportObject.ReportObjectHierarchyParentReportObjects.Any(
+                                                    y =>
+                                                        y.ChildReportObject.ReportObjectDoc.ReportObjectDocTerms.Any(
+                                                            z => z.TermId == id
+                                                        )
+                                                )
+                                        )
+                                )
+                        )
+                        .Where(x => (x.ReportObjectDoc.Hidden ?? "N") == "N")
+                        .Where(x => x.DefaultVisibilityYn == "Y")
+                        .Include(x => x.ReportObjectType)
+                        .Include(x => x.ReportObjectDoc)
+                        .Include(x => x.ReportObjectAttachments)
+                        .ToList();
+
+                    return level_one.Union(level_two).Union(level_three).Union(level_four).ToList();
                 }
             );
 
@@ -118,7 +159,10 @@ namespace Atlas_Web.Pages.Terms
         {
             if (!_context.Terms.Any(x => x.TermId == Id))
             {
-                return RedirectToPage("/Terms/Index", new { id = Id, error= "That term does not exist." });
+                return RedirectToPage(
+                    "/Terms/Index",
+                    new { id = Id, error = "That term does not exist." }
+                );
             }
 
             var checkpoint_approved = UserHelpers.CheckUserPermissions(
@@ -137,11 +181,16 @@ namespace Atlas_Web.Pages.Terms
 
             Term OldTerm = _context.Terms.Where(x => x.TermId == Id).FirstOrDefault();
 
-            if((OldTerm.ApprovedYn == "Y" && !checkpoint_approved) || (OldTerm.ApprovedYn != "Y" && !checkpoint_uapproved))
+            if (
+                (OldTerm.ApprovedYn == "Y" && !checkpoint_approved)
+                || (OldTerm.ApprovedYn != "Y" && !checkpoint_uapproved)
+            )
             {
-                return RedirectToPage("/Terms/Index", new { id = Id, error = "You do not have permission to access that page." });
+                return RedirectToPage(
+                    "/Terms/Index",
+                    new { id = Id, error = "You do not have permission to access that page." }
+                );
             }
-
 
             // delete:
             //  comments
@@ -167,7 +216,7 @@ namespace Atlas_Web.Pages.Terms
 
             _cache.Remove("terms");
             _cache.Remove("term-" + Id);
-            _cache.Remove("term_reports-" + Id);
+            _cache.Remove("term-reports-" + Id);
 
             return RedirectToPage("/Terms/Index");
         }

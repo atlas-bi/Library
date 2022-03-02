@@ -109,3 +109,30 @@
     false,
   );
 })();
+
+(function () {
+  /*
+    [data-action="collapse"][data-target="#el"]
+    #el
+    */
+  var d = document;
+  d.addEventListener('click', function (e) {
+    var el, src;
+
+    if (e.target.closest('[data-action="collapse"]')) {
+      src = e.target.closest('[data-action="collapse"]');
+      el = d.getElementById(src.getAttribute('data-target').replace('#', ''));
+      if (el == null) {
+        return;
+      }
+
+      if (el.style.maxHeight || el.classList.contains('is-active')) {
+        el.classList.remove('is-active');
+        src.classList.remove('is-active');
+      } else {
+        el.classList.add('is-active');
+        src.classList.add('is-active');
+      }
+    }
+  });
+})();

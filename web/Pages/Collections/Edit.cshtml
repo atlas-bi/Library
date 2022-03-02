@@ -8,51 +8,13 @@
 @section SideBar {}
 @section js {
     <script src="/js/flowchart.min.js"></script>
-    <script src="/js/editor.min.js"></script>
 }
 
 <form action="/Collections/Edit/?id=@Model.Collection.DataProjectId" method="post">
 	<h1 class="title is-1">@ViewData["Title"]</h1>
 
-    @*<ul class="steps has-gaps has-content-centered">
-      <li class="steps-segment is-active">
-        <a class="step-tab has-text-grey-dark" href="#meta">
-            <span class="steps-marker is-hollow">
-                <span class="icon">
-                  <i class="fa fa-info"></i>
-                </span>
-            </span>
-            <div class="steps-content">
-              <p class="is-size-6">Meta</p>
-            </div>
-        </a>
-      </li>
-      <li class="steps-segment">
-        <a class="step-tab has-text-grey-dark" href="#reports">
-            <span class="steps-marker is-hollow">
-                <span class="icon">
-                  <i class="fa fa-paperclip"></i>
-                </span>
-            </span>
-            <div class="steps-content">
-              <p class="is-size-6">Reports</p>
-            </div>
-        </a>
-      </li>
-      <li class="steps-segment">
-        <span class="steps-marker is-hollow">
-          <span class="icon">
-            <i class="fa fa-check"></i>
-          </span>
-        </span>
-        <div class="steps-content">
-          <p class="is-size-6">Complete</p>
-        </div>
-      </li>
-    </ul>*@
-
 	<p class="buttons is-flex is-justify-content-space-between">
-        <a class="button p-5" href="/Collections/">
+        <a class="button p-5" href="/Collections/?id=@Model.Collection.DataProjectId">
             <span class="icon">
               <i class="fas fa-lg fa-long-arrow-alt-left"></i>
             </span>
@@ -77,12 +39,12 @@
 
     <div class="field">
         <label class="label">Purpose</label>
-        <div class="editor" data-inputName="Collection.Purpose" data-inputId="Collection_Purpose"><textarea>@Html.Raw(Model.Collection.Purpose)</textarea></div>
+        <div class="editor" data-inputName="Collection.Purpose" data-inputId="Collection_Purpose"><textarea class="textarea">@Html.Raw(Model.Collection.Purpose)</textarea></div>
     </div>
 
     <div class="field">
         <label class="label">Description</label>
-        <div class="editor" data-inputName="Collection.Description" data-inputId="Collection_Description"><textarea>@Html.Raw(Model.Collection.Description)</textarea></div>
+        <div class="editor" data-inputName="Collection.Description" data-inputId="Collection_Description"><textarea class="textarea">@Html.Raw(Model.Collection.Description)</textarea></div>
     </div>
 
     <div class="field">

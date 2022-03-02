@@ -1,0 +1,488 @@
+@page
+@model Atlas_Web.Pages.Reports.EditModel
+
+@{
+    ViewData["Title"] = "Editing " + @Model.Report.ReportObject.Name;
+}
+
+@section SideBar {}
+@section js {
+    <script src="/js/flowchart.min.js"></script>
+
+}
+
+<form action="/Reports/Edit/?id=@Model.Report.ReportObjectId" method="post">
+    <h1 class="title is-1">@ViewData["Title"]</h1>
+
+    <ul class="steps has-gaps has-content-centered">
+        <li class="steps-segment">
+            <a class="has-text-grey-dark" href="/Reports/?id=@Model.Report.ReportObjectId">
+                <span class="steps-marker is-hollow">
+                  <span class="icon">
+                    <i class="fa fa-long-arrow-alt-left"></i>
+                  </span>
+                </span>
+                <div class="steps-content">
+                  <p class="is-size-6">Cancel</p>
+                </div>
+            </a>
+        </li>
+        <li class="steps-segment is-active">
+            <a class="step-tab has-text-grey-dark" href="#description">
+                <span class="steps-marker is-hollow">
+                    <span class="icon">
+                      <i class="fa fa-quote-left"></i>
+                    </span>
+                </span>
+                <div class="steps-content">
+                  <p class="is-size-6">Description</p>
+                </div>
+            </a>
+        </li>
+        <li class="steps-segment">
+            <a class="step-tab has-text-grey-dark" href="#meta">
+                <span class="steps-marker is-hollow">
+                    <span class="icon">
+                      <i class="fa fa-info"></i>
+                    </span>
+                </span>
+                <div class="steps-content">
+                  <p class="is-size-6">Meta</p>
+                </div>
+            </a>
+        </li>
+        <li class="steps-segment">
+            <a class="step-tab has-text-grey-dark" href="#images">
+                <span class="steps-marker is-hollow">
+                    <span class="icon">
+                      <i class="fa fa-image"></i>
+                    </span>
+                </span>
+                <div class="steps-content">
+                  <p class="is-size-6">Images</p>
+                </div>
+            </a>
+        </li>
+        <li class="steps-segment">
+            <a class="step-tab has-text-grey-dark" href="#maintenance">
+                <span class="steps-marker is-hollow">
+                    <span class="icon">
+                      <i class="fa fa-wrench"></i>
+                    </span>
+                </span>
+                <div class="steps-content">
+                  <p class="is-size-6">Maintenance</p>
+                </div>
+            </a>
+        </li>
+        <li class="steps-segment is-submit">
+            <button class="has-text-grey-dark is-ghost" type="submit">
+                <span class="steps-marker is-hollow">
+                  <span class="icon">
+                    <i class="fa fa-check"></i>
+                  </span>
+                </span>
+                <div class="steps-content">
+                  <p class="is-size-6">Complete</p>
+                </div>
+            </button>
+        </li>
+    </ul>
+
+    <div class="step-tab-data is-active" id="description">
+        <div class="field">
+            <label class="label">Description</label>
+            <div class="editor" data-inputName="Report.DeveloperDescription" data-inputId="Report_DeveloperDescription"><textarea class="textarea">@Html.Raw(Model.Report.DeveloperDescription)</textarea></div>
+        </div>
+
+        <div class="field">
+            <label class="label">Key Assumptions</label>
+            <div class="editor" data-inputName="Report.KeyAssumptions" data-inputId="Report_KeyAssumptions"><textarea class="textarea">@Html.Raw(Model.Report.KeyAssumptions)</textarea></div>
+        </div>
+    </div>
+    <div class="step-tab-data" id="meta">
+
+        <div class="field">
+            <label class="label">Operations Owner</label>
+            <div class="field is-grouped">
+                <div class="control is-relative is-expanded">
+                    <input class="input input-mini" placeholder="type to search.."  value="@if(@Model.Report.OperationalOwnerUser!= null){@Model.Report.OperationalOwnerUser.Fullname_Cust}" search-area="UserSearch" />
+                    <input type="hidden" asp-for="Report.OperationalOwnerUserId" value='@Model.Report.OperationalOwnerUserId'/>
+                    <div class="mini">
+                        <div class="mini-waiting">
+                            <span class="icon">
+                                <i class="fas fa-circle-notch fa-spin"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="control">
+                    <a class="button mini-clear">
+                        <span class="icon">
+                            <i class="fas fa-times"></i>
+                        </span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="field">
+            <label class="label">Requester</label>
+            <div class="field is-grouped">
+                <div class="control is-relative is-expanded">
+                    <input class="input input-mini" placeholder="type to search.."  value="@if(@Model.Report.RequesterNavigation!= null){@Model.Report.RequesterNavigation.Fullname_Cust}" search-area="UserSearch" />
+                    <input type="hidden" asp-for="Report.Requester" value='@Model.Report.Requester'/>
+                    <div class="mini">
+                        <div class="mini-waiting">
+                            <span class="icon">
+                                <i class="fas fa-circle-notch fa-spin"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="control">
+                    <a class="button mini-clear">
+                        <span class="icon">
+                            <i class="fas fa-times"></i>
+                        </span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="field">
+            <label class="label">GitLab Project Link</label>
+            <div class="control">
+                <input class="input" placeholder="e.g https://gitlab.com/my/repo" asp-for="Report.GitLabProjectUrl" value="@Model.Report.GitLabProjectUrl" />
+            </div>
+        </div>
+
+        <div class='field'>
+            <label class="label">Organizationl Value</label>
+            <div class="field is-grouped">
+                <div class="control is-relative is-expanded">
+                    <input readonly class="input input-mini" placeholder="click to select.."  value="@if(@Model.Report.OrganizationalValue!=null){@Model.Report.OrganizationalValue.OrganizationalValueName}" lookup-area="org-value" />
+                    <input type="hidden" asp-for="Report.OrganizationalValueId" value='@Model.Report.OrganizationalValueId'/>
+                    <div class="mini">
+                        <div class="mini-waiting">
+                            <span class="icon">
+                                <i class="fas fa-circle-notch fa-spin"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="control">
+                    <a class="button mini-clear">
+                        <span class="icon">
+                            <i class="fas fa-times"></i>
+                        </span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="field">
+            <label class="label">Estimated Run Frequency</label>
+            <div class="field is-grouped">
+                <div class="control is-relative is-expanded">
+                    <input readonly class="input input-mini" placeholder="click to select.."  value="@if(@Model.Report.EstimatedRunFrequency!=null){@Model.Report.EstimatedRunFrequency.EstimatedRunFrequencyName}" lookup-area="run-freq" />
+                    <input type="hidden" asp-for="Report.EstimatedRunFrequencyId" value='@Model.Report.EstimatedRunFrequencyId'/>
+                    <div class="mini">
+                        <div class="mini-waiting">
+                            <span class="icon">
+                                <i class="fas fa-circle-notch fa-spin"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="control">
+                    <a class="button mini-clear">
+                        <span class="icon">
+                            <i class="fas fa-times"></i>
+                        </span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="field">
+            <label class="label">Fragility</label>
+            <div class="field is-grouped">
+                <div class="control is-relative is-expanded">
+                    <input readonly class="input input-mini" placeholder="click to select.."  value="@if(@Model.Report.Fragility!=null){@Model.Report.Fragility.FragilityName}" lookup-area="fragility" />
+                    <input type="hidden" asp-for="Report.FragilityId" value='@Model.Report.FragilityId'/>
+                    <div class="mini">
+                        <div class="mini-waiting">
+                            <span class="icon">
+                                <i class="fas fa-circle-notch fa-spin"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="control">
+                    <a class="button mini-clear">
+                        <span class="icon">
+                            <i class="fas fa-times"></i>
+                        </span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="field">
+            <label class="label">Maintenance Schedule</label>
+            <div class="field is-grouped">
+                <div class="control is-relative is-expanded">
+                    <input readonly class="input input-mini" placeholder="click to select.."  value="@if(@Model.Report.MaintenanceSchedule!=null){@Model.Report.MaintenanceSchedule.MaintenanceScheduleName}" lookup-area="maint-sched" />
+                    <input type="hidden" asp-for="Report.MaintenanceScheduleId" value='@Model.Report.MaintenanceScheduleId'/>
+                    <div class="mini">
+                        <div class="mini-waiting">
+                            <span class="icon">
+                                <i class="fas fa-circle-notch fa-spin"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="control">
+                    <a class="button mini-clear">
+                        <span class="icon">
+                            <i class="fas fa-times"></i>
+                        </span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="field">
+            <label class="label">Fragility Tags</label>
+            <div class="mini-tags field is-grouped is-grouped-multiline">
+                @for (var x = 0; x < @Model.Report.ReportObjectDocFragilityTags.Count; x++)
+                {
+                        <div class="control">
+                            <div class="tags has-addons">
+                                <span class="tag is-link">@Model.Report.ReportObjectDocFragilityTags.ToList()[x].FragilityTag.FragilityTagName</span>
+                                <input type="hidden" name="FragilityTags[@x].FragilityTagId" value="@Model.Report.ReportObjectDocFragilityTags.ToList()[x].FragilityTagId" />
+                                <a class="tag is-delete"></a>
+                            </div>
+                        </div>
+                    }
+                </div>
+            <div class="field">
+                <div class="control is-relative is-expanded">
+                    <input class="input input-mini multiselect" placeholder="search for tags.." lookup-area="ro-fragility" data-name="FragilityTags[].FragilityTagId" />
+                    <div class="mini">
+                        <div class="mini-waiting">
+                            <span class="icon">
+                                <i class="fas fa-circle-notch fa-spin"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="field">
+            <label class="label">Linked Collections</label>
+            <div class="mini-tags field is-grouped is-grouped-multiline reorder">
+                @for(var x = 0; x < @Model.Report.ReportObject.DpReportAnnotations.Count; x++ )
+                {
+                    var Collections = @Model.Report.ReportObject.DpReportAnnotations.OrderBy(x => x.Rank).ThenBy(x => x.DataProject.Name).ToList();
+                    <div class="control drg">
+                        <div class="tags has-addons">
+                            <span class="tag is-link drg-hdl">@Collections[x].DataProject.Name</span>
+                            <input type="hidden" name="Reports[@x].ReportId" value="@Collections[x].DataProjectId" />
+                            <a class="tag is-delete" value="@Collections[x].DataProjectId"></a>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="field">
+                <div class="control is-relative is-expanded">
+                    <input class="input input-mini multiselect" placeholder="search for collections.." search-area="CollectionSearch" data-name="Collections[].DataProjectId"  />
+                    <div class="mini">
+                        <div class="mini-waiting">
+                            <span class="icon">
+                                <i class="fas fa-circle-notch fa-spin"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="field">
+            <label class="label">Linked Terms</label>
+            <div class="mini-tags field is-grouped is-grouped-multiline reorder">
+                @for(var x = 0; x < @Model.Report.ReportObjectDocTerms.Count; x++ )
+                {
+                    var Terms = @Model.Report.ReportObjectDocTerms.OrderBy(x => x.Term.Name).ToList();
+                    <div class="control drg">
+                        <div class="tags has-addons">
+                            <span class="tag is-link drg-hdl">@Terms[x].Term.Name</span>
+                            <input type="hidden" name="Reports[@x].ReportId" value="@Terms[x].TermId" />
+                            <a class="tag is-delete" value="@Terms[x].TermId"></a>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="field">
+                <div class="control is-relative is-expanded">
+                    <input class="input input-mini multiselect" placeholder="search for terms.." search-area="TermSearch" data-name="Terms[].TermId"  />
+                    <div class="mini">
+                        <div class="mini-waiting">
+                            <span class="icon">
+                                <i class="fas fa-circle-notch fa-spin"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="field toggle">
+            <input type="hidden" asp-for="Report.ExecutiveVisibilityYn" value="@Model.Report.ExecutiveVisibilityYn">
+            <input id="switch-exec-vis" type="checkbox" name="switch-exec-vis" class="switch is-rounded is-info"
+            @if(Model.Report.ExecutiveVisibilityYn == "Y"){
+                <text>checked="checked"</text>
+            } >
+            <label for="switch-exec-vis">Executive Visibility?</label>
+        </div>
+
+        <div class="field toggle">
+            <input type="hidden" asp-for="Report.DoNotPurge" value="@Model.Report.DoNotPurge">
+            <input id="switch-purge" type="checkbox" name="switch-purge" class="switch is-rounded is-info"
+            @if(Model.Report.DoNotPurge == "Y"){
+                <text>checked="checked"</text>
+            } >
+            <label for="switch-purge">Do not purge report?</label>
+        </div>
+
+        <div class="field toggle">
+            <input type="hidden" asp-for="Report.Hidden" value="@Model.Report.Hidden">
+            <input id="switch-hidden" type="checkbox" name="switch-hidden" class="switch is-rounded is-info"
+            @if(Model.Report.Hidden == "Y"){
+                <text>checked="checked"</text>
+            } >
+            <label for="switch-hidden">Hide Report?</label>
+        </div>
+
+    </div>
+    <div class="step-tab-data" id="images">
+        <div class="is-flex images reorder is-flex-wrap-wrap">
+            @{
+                var Images = Model.Report.ReportObject.ReportObjectImagesDocs.OrderBy(x => x.ImageOrdinal);
+            }
+            @for (var x=0; x< Images.Count(); x++)
+            {
+                var image = Images.ToList()[x];
+                <div class="box p-0 m-3 drg">
+                    <input type="hidden" name="Images[@x].Imageid" value="@image.ImageId" />
+                    <div class="has-background-white-ter is-flex is-justify-content-space-between">
+                        <button class="button is-light drg-hdl" type="button">
+                            <span class="icon">
+                                <i class="fas fa-arrows-alt"></i>
+                            </span>
+                        </button>
+                        <button class="button is-light action-delete" type="button">
+                            <span class="icon">
+                                <i class="fas fa-trash"></i>
+                            </span>
+                        </button>
+                    </div>
+                    <figure class="image is-256x256">
+                        <picture>
+                            <source data-srcset="/data/img?handler=Thumb&id=-1&imgId=@image.ImageId&size=256x256&type=webp" srcset="/img/report_placeholder_256x256.webp" type="image/webp" loading="lazy">
+                            <source srcset="/data/img?handler=Thumb&id==-1&imgId=@image.ImageId&size=256x256" type="image/jpeg" loading="lazy">
+                            <img data-src="/data/img?handler=Thumb&id==-1&imgId=@image.ImageId&size=256x256" src="/img/report_placeholder_256x256.png" alt="report image" loading="lazy">
+                        </picture>
+                    </figure>
+                </div>
+            }
+            <div class="box p-0 m-3 ">
+                <div class="new-image file is-white">
+                    <label class="file-label">
+                        <input class="file-input" type="file" name="image" accept="image/gif, image/jpeg, image/png">
+                        <span class="file-cta">
+                            <div class="fa-layers fa-3x fa-fw">
+                                <span class="icon"><i class="far fa-image shrink-7"></i></span>
+                                <span class="icon has-text-white fa-transform down-5 right-6"><i class="fas fa-circle shrink-5"></i></span>
+                                <span class="icon fa-transform down-5 right-6"><i class="fas fa-plus-circle shrink-4"></i></span>
+                            </div>
+                        </span>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="step-tab-data" id="maintenance">
+        <h3 class="title is-3">Service Requests</h3>
+        <div class="mini-tags field is-grouped is-grouped-multiline">
+            @for (var x = 0; x < Model.Report.ReportObject.ReportManageEngineTickets.Count; x++)
+            {
+                var ticket = Model.Report.ReportObject.ReportManageEngineTickets.ToList()[x];
+                <div class="control">
+                    <div class="tags has-addons">
+                        <span class="tag is-link">@ticket.TicketNumber</span>
+                        <input type="hidden" name="ServiceRequests[@x].ManageEngineTicketsId" value="@ticket.ManageEngineTicketsId" />
+                        <a class="tag is-delete"></a>
+                    </div>
+                </div>
+            }
+        </div>
+        <h3 class="title is-3">New Service Request</h3>
+        <div class="box">
+            <div class="field">
+                <label class="label">Ticket Number</label>
+                <div class="control">
+                    <input class="input" type="number" placeholder="e.g 042791"  asp-for="ServiceRequest.TicketNumber"/>
+                </div>
+            </div>
+            <div class="field">
+                <label class="label">Link</label>
+                <div class="control">
+                    <input class="input" type="text" placeholder="e.g https://me.com/my/ticket"  asp-for="ServiceRequest.TicketUrl"/>
+                </div>
+            </div>
+            <div class="field">
+                <label class="label">Description</label>
+                <div class="control">
+                    <input class="input" type="text" placeholder="e.g updated column names"  asp-for="ServiceRequest.Description"/>
+                </div>
+            </div>
+        </div>
+
+
+        <h3 class="title is-3">New Maintenance Log</h3>
+
+        <div class="box">
+            <div class="field">
+                <label class="label">Log Status</label>
+                <div class="field is-grouped">
+                    <div class="control is-relative is-expanded">
+                        <input readonly class="input input-mini" placeholder="click to select.." lookup-area="maint-log-stat" />
+                        <input type="hidden" asp-for="MaintenanceLog.MaintenanceLogStatusId" />
+                        <div class="mini">
+                            <div class="mini-waiting">
+                                <span class="icon">
+                                    <i class="fas fa-circle-notch fa-spin"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="control">
+                        <a class="button mini-clear">
+                            <span class="icon">
+                                <i class="fas fa-times"></i>
+                            </span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="field">
+                <label class="label">Notes</label>
+                <div class="control">
+                    <input class="input" placeholder="e.g Absolutely stunning." asp-for="MaintenanceLog.Comment" />
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

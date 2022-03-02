@@ -103,7 +103,9 @@ namespace Atlas_Web.Models
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-
+                optionsBuilder.UseSqlServer(
+                    "Server=rhbidb01;Database=atlas;Trusted_Connection=True;"
+                );
             }
         }
 
@@ -1065,6 +1067,8 @@ namespace Atlas_Web.Models
                 {
                     entity.Property(e => e.CreationDate).HasColumnType("datetime");
 
+                    entity.Property(e => e.LastLoadDate).HasColumnType("datetime");
+
                     entity.Property(e => e.Name).IsRequired();
 
                     entity.Property(e => e.Path).IsRequired();
@@ -1738,6 +1742,8 @@ namespace Atlas_Web.Models
 
                     entity.Property(e => e.Collectionid).HasColumnName("collectionid");
 
+                    entity.Property(e => e.Folderid).HasColumnName("folderid");
+
                     entity.Property(e => e.Ownerid).HasColumnName("ownerid");
 
                     entity.Property(e => e.Rank).HasColumnName("rank");
@@ -1747,6 +1753,12 @@ namespace Atlas_Web.Models
                         .WithMany(p => p.StarredCollections)
                         .HasForeignKey(d => d.Collectionid)
                         .HasConstraintName("FK_StarredCollections_DP_DataProject");
+
+                    entity
+                        .HasOne(d => d.Folder)
+                        .WithMany(p => p.StarredCollections)
+                        .HasForeignKey(d => d.Folderid)
+                        .HasConstraintName("FK_StarredCollections_UserFavoriteFolders");
 
                     entity
                         .HasOne(d => d.Owner)
@@ -1765,11 +1777,19 @@ namespace Atlas_Web.Models
 
                     entity.Property(e => e.StarId).HasColumnName("star_id");
 
+                    entity.Property(e => e.Folderid).HasColumnName("folderid");
+
                     entity.Property(e => e.Groupid).HasColumnName("groupid");
 
                     entity.Property(e => e.Ownerid).HasColumnName("ownerid");
 
                     entity.Property(e => e.Rank).HasColumnName("rank");
+
+                    entity
+                        .HasOne(d => d.Folder)
+                        .WithMany(p => p.StarredGroups)
+                        .HasForeignKey(d => d.Folderid)
+                        .HasConstraintName("FK_StarredGroups_UserFavoriteFolders");
 
                     entity
                         .HasOne(d => d.Group)
@@ -1794,11 +1814,19 @@ namespace Atlas_Web.Models
 
                     entity.Property(e => e.StarId).HasColumnName("star_id");
 
+                    entity.Property(e => e.Folderid).HasColumnName("folderid");
+
                     entity.Property(e => e.Initiativeid).HasColumnName("initiativeid");
 
                     entity.Property(e => e.Ownerid).HasColumnName("ownerid");
 
                     entity.Property(e => e.Rank).HasColumnName("rank");
+
+                    entity
+                        .HasOne(d => d.Folder)
+                        .WithMany(p => p.StarredInitiatives)
+                        .HasForeignKey(d => d.Folderid)
+                        .HasConstraintName("FK_StarredInitiatives_UserFavoriteFolders");
 
                     entity
                         .HasOne(d => d.Initiative)
@@ -1860,11 +1888,19 @@ namespace Atlas_Web.Models
 
                     entity.Property(e => e.StarId).HasColumnName("star_id");
 
+                    entity.Property(e => e.Folderid).HasColumnName("folderid");
+
                     entity.Property(e => e.Ownerid).HasColumnName("ownerid");
 
                     entity.Property(e => e.Rank).HasColumnName("rank");
 
                     entity.Property(e => e.Search).HasColumnName("search");
+
+                    entity
+                        .HasOne(d => d.Folder)
+                        .WithMany(p => p.StarredSearches)
+                        .HasForeignKey(d => d.Folderid)
+                        .HasConstraintName("FK_StarredSearches_UserFavoriteFolders");
 
                     entity
                         .HasOne(d => d.Owner)
@@ -1883,11 +1919,19 @@ namespace Atlas_Web.Models
 
                     entity.Property(e => e.StarId).HasColumnName("star_id");
 
+                    entity.Property(e => e.Folderid).HasColumnName("folderid");
+
                     entity.Property(e => e.Ownerid).HasColumnName("ownerid");
 
                     entity.Property(e => e.Rank).HasColumnName("rank");
 
                     entity.Property(e => e.Termid).HasColumnName("termid");
+
+                    entity
+                        .HasOne(d => d.Folder)
+                        .WithMany(p => p.StarredTerms)
+                        .HasForeignKey(d => d.Folderid)
+                        .HasConstraintName("FK_StarredTerms_UserFavoriteFolders");
 
                     entity
                         .HasOne(d => d.Owner)
@@ -1912,11 +1956,19 @@ namespace Atlas_Web.Models
 
                     entity.Property(e => e.StarId).HasColumnName("star_id");
 
+                    entity.Property(e => e.Folderid).HasColumnName("folderid");
+
                     entity.Property(e => e.Ownerid).HasColumnName("ownerid");
 
                     entity.Property(e => e.Rank).HasColumnName("rank");
 
                     entity.Property(e => e.Userid).HasColumnName("userid");
+
+                    entity
+                        .HasOne(d => d.Folder)
+                        .WithMany(p => p.StarredUsers)
+                        .HasForeignKey(d => d.Folderid)
+                        .HasConstraintName("FK_StarredUsers_UserFavoriteFolders");
 
                     entity
                         .HasOne(d => d.Owner)

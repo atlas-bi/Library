@@ -14,12 +14,14 @@
     "@babel/preset-env": "^7.16.11",
     "@creativebulma/bulma-badge": "github:christopherpickering/bulma-badge",
     "@creativebulma/bulma-tooltip": "^1.2.0",
-    "@fontsource/inter": "^4.5.1",
-    "@fontsource/rasa": "^4.5.3",
+    "@fontsource/inter": "^4.5.4",
+    "@fontsource/rasa": "^4.5.6",
     "@fortawesome/fontawesome-free": "^5.15.4",
     "bulma": "^0.9.3",
     "bulma-checkradio": "^2.1.3",
     "bulma-switch": "^2.0.4",
+    "eslint": "^8.9.0",
+    "fancy-log": "^2.0.0",
     "focus-within": "^3.0.2",
     "fontawesome-subset": "^3.0.0",
     "gulp": "^4.0.2",
@@ -34,10 +36,10 @@
     "gulp-sass": "^5.1.0",
     "gulp-uglify": "^3.0.2",
     "husky": "^7.0.0",
-    "lint-staged": "^12.3.3",
+    "lint-staged": "^12.3.4",
     "postcss": "^8.4.5",
     "prettier": "^2.5.1",
-    "sass": "^1.49.7"
+    "sass": "^1.49.8"
   },
   "homepage": "https://demo.atlas.bi",
   "license": "AGPL-3.0-or-later",
@@ -48,13 +50,14 @@
     "url": "github:atlas-bi/atlas-bi-library"
   },
   "scripts": {
+    "start": "npm run watch",
     "build": "gulp build",
     "install": "gulp build",
     "watch": "gulp watch",
     "prepare": "husky install",
     "pre-commit": "lint-staged",
     "format": "prettier --config .prettierrc \"**/*.{ts,css,less,scss,js,json,md,yaml,html}\" --write",
-    "foramt-cs": "dotnet csharpier ."
+    "format-cs": "dotnet csharpier ."
   },
   "lint-staged": {
     "*.cs": "dotnet csharpier .",

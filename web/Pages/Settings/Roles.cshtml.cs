@@ -1,4 +1,3 @@
-
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -46,7 +45,6 @@ namespace Atlas_Web.Pages.Settings
 
         public async Task<IActionResult> OnGetAsync()
         {
-
             UserRoles = await (
                 from u in _context.UserRoles
                 select new UserRolesData
@@ -66,7 +64,6 @@ namespace Atlas_Web.Pages.Settings
             RolePermissions = await _context.RolePermissions.OrderBy(x => x.Name).ToListAsync();
             return Page();
         }
-
 
         public ActionResult OnGetDeleteRole(int Id)
         {
@@ -120,6 +117,7 @@ namespace Atlas_Web.Pages.Settings
 
             return RedirectToPage("/AccessControl/Index");
         }
+
         public ActionResult OnPostUpdatePermissions(int RoleId, int PermissionId, int Type)
         {
             var checkpoint = UserHelpers.CheckUserPermissions(

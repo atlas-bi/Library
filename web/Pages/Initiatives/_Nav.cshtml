@@ -1,16 +1,29 @@
 @model Atlas_Web.Pages.Initiatives.IndexModel
 
 <li>
-    <a class=" @Html.Raw((@Model.Favorite=="yes") ? "favorite" : "")" data-tooltip="@Html.Raw((@Model.Favorite=="yes") ? "Remove from Favorites" : "Add to Favorites")" fav-type="initiative" object-id="@Model.Initiative.DataInitiativeId">
-        <span class="icon has-text-grey is-large ">
-                <i class="fas fa-lg fa-star"></i>
+    <a class="is-block has-tooltip-arrow has-tooltip-right star" data-tooltip="Star this initiative" data-href="/users/favorites/?handler=Edit&type=initiative&id=@Model.Initiative.DataInitiativeId">
+        @if (Model.Initiative.StarredInitiatives.Any(x => x.Ownerid == ViewBag.PublicUser.UserId))
+        {
+            <span class="icon is-large has-text-gold ">
+                <i class="fas fa-lg fa-star is-relative">
+                    <span class="badge star-count">@Model.Initiative.StarredInitiatives.Count</span>
+                </i>
             </span>
+        }
+        else
+        {
+            <span class="icon has-text-grey is-large">
+                <i class="far fa-lg fa-star is-relative">
+                    <span class="badge star-count">@Model.Initiative.StarredInitiatives.Count</span>
+                </i>
+            </span>
+        }
     </a>
 </li>
  @if (@Configuration["features:enable_sharing"] == null || @Configuration["features:enable_sharing"].ToString().ToLower() == "true")
  {
     <li>
-        <a class="" data-tooltip="Share" data-toggle="mdl" data-target="shareModal" data-name="@Model.Initiative.Name" data-type="initiative">
+        <a class="is-block has-tooltip-arrow has-tooltip-right js-modal-trigger" data-tooltip="Share" data-target="initiative-share-@Model.Initiative.DataInitiativeId" data-name="@Model.Initiative.Name" data-type="initiative">
             <span class="icon has-text-grey is-large ">
                 <i class="fas fa-lg fa-share"></i>
             </span>
@@ -21,7 +34,7 @@
 @if (@Configuration["features:enable_feedback"] == null || @Configuration["features:enable_feedback"].ToString().ToLower() == "true")
 {
     <li>
-        <a class="" data-tooltip="Share Feedback" data-toggle="mdl" data-target="shareFeedback" data-name="@Model.Initiative.Name">
+        <a class="is-block has-tooltip-arrow has-tooltip-right js-modal-trigger" data-tooltip="Share Feedback" data-target="initiative-share-feedback-@Model.Initiative.DataInitiativeId" data-name="@Model.Initiative.Name">
             <span class="icon has-text-grey is-large ">
                 <i class="far fa-lg fa-thumbs-up"></i>
             </span>
@@ -31,7 +44,7 @@
 @if (ViewBag.Permissions.Contains(20))
 {
     <li>
-        <a class="" href="/Initiatives/New/" data-tooltip="Create New Initiative">
+        <a class="is-block has-tooltip-arrow has-tooltip-right" href="/Initiatives/New/" data-tooltip="Create New Initiative">
              <span class="icon has-text-grey is-large ">
                 <i class="fas fa-lg fa-plus"></i>
             </span>
@@ -42,7 +55,7 @@
 @if (ViewBag.Permissions.Contains(22))
 {
     <li>
-        <a class="" href="/Initiatives/Edit/?id=@Model.Initiative.DataInitiativeId" data-tooltip="Open Atlas Editor">
+        <a class="is-block has-tooltip-arrow has-tooltip-right" href="/Initiatives/Edit/?id=@Model.Initiative.DataInitiativeId" data-tooltip="Open Atlas Editor">
             <span class="icon has-text-grey is-large ">
                 <i class="fas fa-lg fa-edit"></i>
             </span>
@@ -52,7 +65,7 @@
 @if (ViewBag.Permissions.Contains(21))
 {
     <li>
-        <a class="" data-tooltip="Delete this Initaitive" href="/Initiatives?handler=DeleteInitiative&Id=@Model.Initiative.DataInitiativeId"  onclick="return confirm('Are you sure you want to remove this?');">
+        <a class="is-block has-tooltip-arrow has-tooltip-right" data-tooltip="Delete this Initaitive" href="/Initiatives?handler=DeleteInitiative&Id=@Model.Initiative.DataInitiativeId"  onclick="return confirm('Are you sure you want to remove this?');">
             <span class="icon has-text-grey is-large ">
                 <i class="fas fa-lg fa-trash"></i>
             </span>

@@ -1,4 +1,4 @@
-﻿@page
+@page
 @model Atlas_Web.Pages.Collections.IndexModel
 @{
     ViewData["Title"] = "Collections";
@@ -19,5 +19,5 @@
         }
 
     <partial name="_Details" />
-    <partial name="modals\_reportProfile" />
+    <partial name="_Modals" model="Model.Collection" />
 }

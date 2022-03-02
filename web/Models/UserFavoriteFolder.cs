@@ -9,7 +9,13 @@ namespace Atlas_Web.Models
     {
         public UserFavoriteFolder()
         {
+            StarredCollections = new HashSet<StarredCollection>();
+            StarredGroups = new HashSet<StarredGroup>();
+            StarredInitiatives = new HashSet<StarredInitiative>();
             StarredReports = new HashSet<StarredReport>();
+            StarredSearches = new HashSet<StarredSearch>();
+            StarredTerms = new HashSet<StarredTerm>();
+            StarredUsers = new HashSet<StarredUser>();
             UserFavorites = new HashSet<UserFavorite>();
         }
 
@@ -18,7 +24,13 @@ namespace Atlas_Web.Models
         public int? UserId { get; set; }
         public int? FolderRank { get; set; }
 
+        public virtual ICollection<StarredCollection> StarredCollections { get; set; }
+        public virtual ICollection<StarredGroup> StarredGroups { get; set; }
+        public virtual ICollection<StarredInitiative> StarredInitiatives { get; set; }
         public virtual ICollection<StarredReport> StarredReports { get; set; }
+        public virtual ICollection<StarredSearch> StarredSearches { get; set; }
+        public virtual ICollection<StarredTerm> StarredTerms { get; set; }
+        public virtual ICollection<StarredUser> StarredUsers { get; set; }
         public virtual ICollection<UserFavorite> UserFavorites { get; set; }
     }
 }

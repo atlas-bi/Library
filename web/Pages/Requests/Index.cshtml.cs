@@ -1,38 +1,14 @@
-﻿/*
-    Atlas of Information Management business intelligence library and documentation database.
-    Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*/
-
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Atlas_Web.Models;
-using System.Diagnostics;
 using System.IO;
 using System.Net.Http;
 using System.Text;
 using System.Xml;
-using System.Xml.Serialization;
 using System.Xml.Linq;
-using System.Data;
-using System.Data.Odbc;
-using Newtonsoft.Json;
 using Atlas_Web.Helpers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Caching.Memory;
@@ -43,7 +19,7 @@ namespace Atlas_Web.Pages.Requests
     {
         private readonly Atlas_WebContext _context;
         private readonly IConfiguration _config;
-        private IMemoryCache _cache;
+        private readonly IMemoryCache _cache;
 
         public IndexModel(Atlas_WebContext context, IConfiguration config, IMemoryCache cache)
         {
@@ -65,11 +41,11 @@ namespace Atlas_Web.Pages.Requests
                 {
                     if (r.Name.LocalName.Equals("status"))
                     {
-                        this.status = r.Value;
+                        this.Status = r.Value;
                     }
                     else if (r.Name.LocalName.Equals("message"))
                     {
-                        this.message = r.Value;
+                        this.Message = r.Value;
                     }
                 }
                 var dictList = new List<Dictionary<string, string>>();
@@ -84,7 +60,7 @@ namespace Atlas_Web.Pages.Requests
                                 d => (string)d.Element("value").Value
                             )
                     );
-                    this.details = dictList;
+                    this.Details = dictList;
                 }
                 else
                 {
@@ -99,14 +75,14 @@ namespace Atlas_Web.Pages.Requests
                             );
                         dict.Add("URL", record.Attribute("URI").Value);
                         dictList.Add(dict);
-                        this.details = dictList;
+                        this.Details = dictList;
                     }
                 }
             }
 
-            public string status { get; set; }
-            public string message { get; set; }
-            public List<Dictionary<string, string>> details { get; set; }
+            public string Status { get; set; }
+            public string Message { get; set; }
+            public List<Dictionary<string, string>> Details { get; set; }
         }
 
         public class Utf8StringWriter : StringWriter
@@ -132,82 +108,80 @@ namespace Atlas_Web.Pages.Requests
 
             using (var stringWriter = new Utf8StringWriter())
             {
-                using (var xmlWriter = new XmlTextWriter(stringWriter))
-                {
-                    xmlWriter.Formatting = System.Xml.Formatting.Indented;
-                    xmlWriter.WriteStartDocument();
-                    xmlWriter.WriteStartElement("Operation");
-                    xmlWriter.WriteStartElement("Details");
-                    xmlWriter.WriteStartElement("parameter");
-                    xmlWriter.WriteElementString("name", "requesttemplate");
-                    xmlWriter.WriteElementString("value", "WebAPI");
-                    xmlWriter.WriteEndElement();
-                    xmlWriter.WriteStartElement("parameter");
-                    xmlWriter.WriteElementString("name", "subject");
-                    xmlWriter.WriteElementString("value", "Atlas Access Request");
-                    xmlWriter.WriteEndElement();
-                    xmlWriter.WriteStartElement("parameter");
-                    xmlWriter.WriteElementString("name", "description");
-                    xmlWriter.WriteElementString(
-                        "value",
-                        "I would like access to the report '" + reportName + "' from " + reportUrl
-                    );
-                    xmlWriter.WriteEndElement();
-                    xmlWriter.WriteStartElement("parameter");
-                    xmlWriter.WriteElementString("name", "purpose");
-                    xmlWriter.WriteElementString(
-                        "value",
-                        "Atlas Access Request for '" + reportName + "'"
-                    );
-                    xmlWriter.WriteEndElement();
-                    xmlWriter.WriteStartElement("parameter");
-                    xmlWriter.WriteElementString("name", "Atlas Link");
-                    xmlWriter.WriteElementString("value", reportUrl);
-                    xmlWriter.WriteEndElement();
-                    xmlWriter.WriteStartElement("parameter");
-                    xmlWriter.WriteElementString("name", "category");
-                    xmlWriter.WriteElementString("value", "Epic Request");
-                    xmlWriter.WriteEndElement();
-                    xmlWriter.WriteStartElement("parameter");
-                    xmlWriter.WriteElementString("name", "requester");
-                    xmlWriter.WriteElementString(
-                        "value",
-                        UserHelpers.GetUser(_cache, _context, User.Identity.Name).Fullname_Cust
-                    );
-                    xmlWriter.WriteEndElement();
-                    xmlWriter.WriteStartElement("parameter");
-                    xmlWriter.WriteElementString("name", "item");
-                    xmlWriter.WriteElementString("value", "Request Access");
-                    xmlWriter.WriteEndElement();
-                    xmlWriter.WriteStartElement("parameter");
-                    xmlWriter.WriteElementString("name", "subcategory");
-                    xmlWriter.WriteElementString("value", "Atlas");
-                    xmlWriter.WriteEndElement();
-                    xmlWriter.WriteStartElement("parameter");
-                    xmlWriter.WriteElementString("name", "report_name");
-                    xmlWriter.WriteElementString("value", reportName);
-                    xmlWriter.WriteEndElement();
-                    xmlWriter.WriteStartElement("parameter");
-                    xmlWriter.WriteElementString("name", "responsibility");
-                    xmlWriter.WriteElementString("value", "YES");
-                    xmlWriter.WriteEndElement();
-                    xmlWriter.WriteStartElement("parameter");
-                    xmlWriter.WriteElementString("name", "requesteremail");
-                    xmlWriter.WriteElementString(
-                        "value",
-                        UserHelpers.GetUser(_cache, _context, User.Identity.Name).Email
-                    );
-                    xmlWriter.WriteEndElement();
-                    xmlWriter.WriteStartElement("parameter");
-                    xmlWriter.WriteElementString("name", "director");
-                    xmlWriter.WriteElementString("value", directorName);
-                    xmlWriter.WriteEndElement();
-                    xmlWriter.WriteEndElement();
-                    xmlWriter.WriteEndElement();
-                    xmlWriter.WriteEndDocument();
-                    // Spit out the XML document
-                    xmlString = stringWriter.ToString();
-                }
+                using var xmlWriter = new XmlTextWriter(stringWriter);
+                xmlWriter.Formatting = System.Xml.Formatting.Indented;
+                xmlWriter.WriteStartDocument();
+                xmlWriter.WriteStartElement("Operation");
+                xmlWriter.WriteStartElement("Details");
+                xmlWriter.WriteStartElement("parameter");
+                xmlWriter.WriteElementString("name", "requesttemplate");
+                xmlWriter.WriteElementString("value", "WebAPI");
+                xmlWriter.WriteEndElement();
+                xmlWriter.WriteStartElement("parameter");
+                xmlWriter.WriteElementString("name", "subject");
+                xmlWriter.WriteElementString("value", "Atlas Access Request");
+                xmlWriter.WriteEndElement();
+                xmlWriter.WriteStartElement("parameter");
+                xmlWriter.WriteElementString("name", "description");
+                xmlWriter.WriteElementString(
+                    "value",
+                    "I would like access to the report '" + reportName + "' from " + reportUrl
+                );
+                xmlWriter.WriteEndElement();
+                xmlWriter.WriteStartElement("parameter");
+                xmlWriter.WriteElementString("name", "purpose");
+                xmlWriter.WriteElementString(
+                    "value",
+                    "Atlas Access Request for '" + reportName + "'"
+                );
+                xmlWriter.WriteEndElement();
+                xmlWriter.WriteStartElement("parameter");
+                xmlWriter.WriteElementString("name", "Atlas Link");
+                xmlWriter.WriteElementString("value", reportUrl);
+                xmlWriter.WriteEndElement();
+                xmlWriter.WriteStartElement("parameter");
+                xmlWriter.WriteElementString("name", "category");
+                xmlWriter.WriteElementString("value", "Epic Request");
+                xmlWriter.WriteEndElement();
+                xmlWriter.WriteStartElement("parameter");
+                xmlWriter.WriteElementString("name", "requester");
+                xmlWriter.WriteElementString(
+                    "value",
+                    UserHelpers.GetUser(_cache, _context, User.Identity.Name).Fullname_Cust
+                );
+                xmlWriter.WriteEndElement();
+                xmlWriter.WriteStartElement("parameter");
+                xmlWriter.WriteElementString("name", "item");
+                xmlWriter.WriteElementString("value", "Request Access");
+                xmlWriter.WriteEndElement();
+                xmlWriter.WriteStartElement("parameter");
+                xmlWriter.WriteElementString("name", "subcategory");
+                xmlWriter.WriteElementString("value", "Atlas");
+                xmlWriter.WriteEndElement();
+                xmlWriter.WriteStartElement("parameter");
+                xmlWriter.WriteElementString("name", "report_name");
+                xmlWriter.WriteElementString("value", reportName);
+                xmlWriter.WriteEndElement();
+                xmlWriter.WriteStartElement("parameter");
+                xmlWriter.WriteElementString("name", "responsibility");
+                xmlWriter.WriteElementString("value", "YES");
+                xmlWriter.WriteEndElement();
+                xmlWriter.WriteStartElement("parameter");
+                xmlWriter.WriteElementString("name", "requesteremail");
+                xmlWriter.WriteElementString(
+                    "value",
+                    UserHelpers.GetUser(_cache, _context, User.Identity.Name).Email
+                );
+                xmlWriter.WriteEndElement();
+                xmlWriter.WriteStartElement("parameter");
+                xmlWriter.WriteElementString("name", "director");
+                xmlWriter.WriteElementString("value", directorName);
+                xmlWriter.WriteEndElement();
+                xmlWriter.WriteEndElement();
+                xmlWriter.WriteEndElement();
+                xmlWriter.WriteEndDocument();
+                // Spit out the XML document
+                xmlString = stringWriter.ToString();
             }
 
             using (var client = new HttpClient())
@@ -228,10 +202,8 @@ namespace Atlas_Web.Pages.Requests
                     httpRequest
                 );
                 // notify the user of the response from the server http://stackoverflow.com/a/13550295/3900824
-                ApiResponse response = new ApiResponse(
-                    await httpResponse.Content.ReadAsStringAsync()
-                );
-                Result = response.status + " - " + response.message;
+                ApiResponse response = new(await httpResponse.Content.ReadAsStringAsync());
+                Result = response.Status + " - " + response.Message;
             }
             return Content(Result);
         }
@@ -247,83 +219,81 @@ namespace Atlas_Web.Pages.Requests
 
             using (var stringWriter = new Utf8StringWriter())
             {
-                using (var xmlWriter = new XmlTextWriter(stringWriter))
-                {
-                    xmlWriter.Formatting = System.Xml.Formatting.Indented;
-                    xmlWriter.WriteStartDocument();
-                    xmlWriter.WriteStartElement("Operation");
-                    xmlWriter.WriteStartElement("Details");
-                    xmlWriter.WriteStartElement("parameter");
-                    xmlWriter.WriteElementString("name", "requesttemplate");
-                    xmlWriter.WriteElementString("value", "WebAPI");
-                    xmlWriter.WriteEndElement();
-                    xmlWriter.WriteStartElement("parameter");
-                    xmlWriter.WriteElementString("name", "subject");
-                    xmlWriter.WriteElementString("value", "Atlas Feedback");
-                    xmlWriter.WriteEndElement();
-                    xmlWriter.WriteStartElement("parameter");
-                    xmlWriter.WriteElementString("name", "purpose");
-                    xmlWriter.WriteElementString(
-                        "value",
-                        "Atlas feedback reported on '" + reportName + "' from " + reportUrl
-                    );
-                    xmlWriter.WriteEndElement();
-                    xmlWriter.WriteStartElement("parameter");
-                    xmlWriter.WriteElementString("name", "Atlas Link");
-                    xmlWriter.WriteElementString("value", reportUrl);
-                    xmlWriter.WriteEndElement();
-                    xmlWriter.WriteStartElement("parameter");
-                    xmlWriter.WriteElementString("name", "category");
-                    xmlWriter.WriteElementString("value", "Epic Request");
-                    xmlWriter.WriteEndElement();
-                    xmlWriter.WriteStartElement("parameter");
-                    xmlWriter.WriteElementString("name", "description");
-                    xmlWriter.WriteElementString("value", description);
-                    xmlWriter.WriteEndElement();
-                    xmlWriter.WriteStartElement("parameter");
-                    xmlWriter.WriteElementString("name", "requester");
-                    xmlWriter.WriteElementString(
-                        "value",
-                        UserHelpers.GetUser(_cache, _context, User.Identity.Name).Fullname_Cust
-                    );
-                    xmlWriter.WriteEndElement();
-                    xmlWriter.WriteStartElement("parameter");
-                    xmlWriter.WriteElementString("name", "item");
-                    xmlWriter.WriteElementString("value", "Problem/Issue");
-                    xmlWriter.WriteEndElement();
-                    xmlWriter.WriteStartElement("parameter");
-                    xmlWriter.WriteElementString("name", "subcategory");
-                    xmlWriter.WriteElementString("value", "Atlas");
-                    xmlWriter.WriteEndElement();
-                    xmlWriter.WriteStartElement("parameter");
-                    xmlWriter.WriteElementString("name", "report_name");
-                    xmlWriter.WriteElementString("value", reportName);
-                    xmlWriter.WriteEndElement();
-                    xmlWriter.WriteStartElement("parameter");
-                    xmlWriter.WriteElementString("name", "responsibility");
-                    xmlWriter.WriteElementString("value", "YES");
-                    xmlWriter.WriteEndElement();
-                    xmlWriter.WriteStartElement("parameter");
-                    xmlWriter.WriteElementString("name", "requesteremail");
-                    xmlWriter.WriteElementString(
-                        "value",
-                        UserHelpers.GetUser(_cache, _context, User.Identity.Name).Email
-                    );
-                    xmlWriter.WriteEndElement();
-                    xmlWriter.WriteStartElement("parameter");
-                    xmlWriter.WriteElementString("name", "director");
-                    xmlWriter.WriteElementString("value", "dryan@rhc.net");
-                    xmlWriter.WriteEndElement();
-                    xmlWriter.WriteStartElement("parameter");
-                    xmlWriter.WriteElementString("name", "responsible_person");
-                    xmlWriter.WriteElementString("value", "dryan@rhc.net");
-                    xmlWriter.WriteEndElement();
-                    xmlWriter.WriteEndElement();
-                    xmlWriter.WriteEndElement();
-                    xmlWriter.WriteEndDocument();
-                    // Spit out the XML document
-                    xmlString = stringWriter.ToString();
-                }
+                using var xmlWriter = new XmlTextWriter(stringWriter);
+                xmlWriter.Formatting = System.Xml.Formatting.Indented;
+                xmlWriter.WriteStartDocument();
+                xmlWriter.WriteStartElement("Operation");
+                xmlWriter.WriteStartElement("Details");
+                xmlWriter.WriteStartElement("parameter");
+                xmlWriter.WriteElementString("name", "requesttemplate");
+                xmlWriter.WriteElementString("value", "WebAPI");
+                xmlWriter.WriteEndElement();
+                xmlWriter.WriteStartElement("parameter");
+                xmlWriter.WriteElementString("name", "subject");
+                xmlWriter.WriteElementString("value", "Atlas Feedback");
+                xmlWriter.WriteEndElement();
+                xmlWriter.WriteStartElement("parameter");
+                xmlWriter.WriteElementString("name", "purpose");
+                xmlWriter.WriteElementString(
+                    "value",
+                    "Atlas feedback reported on '" + reportName + "' from " + reportUrl
+                );
+                xmlWriter.WriteEndElement();
+                xmlWriter.WriteStartElement("parameter");
+                xmlWriter.WriteElementString("name", "Atlas Link");
+                xmlWriter.WriteElementString("value", reportUrl);
+                xmlWriter.WriteEndElement();
+                xmlWriter.WriteStartElement("parameter");
+                xmlWriter.WriteElementString("name", "category");
+                xmlWriter.WriteElementString("value", "Epic Request");
+                xmlWriter.WriteEndElement();
+                xmlWriter.WriteStartElement("parameter");
+                xmlWriter.WriteElementString("name", "description");
+                xmlWriter.WriteElementString("value", description);
+                xmlWriter.WriteEndElement();
+                xmlWriter.WriteStartElement("parameter");
+                xmlWriter.WriteElementString("name", "requester");
+                xmlWriter.WriteElementString(
+                    "value",
+                    UserHelpers.GetUser(_cache, _context, User.Identity.Name).Fullname_Cust
+                );
+                xmlWriter.WriteEndElement();
+                xmlWriter.WriteStartElement("parameter");
+                xmlWriter.WriteElementString("name", "item");
+                xmlWriter.WriteElementString("value", "Problem/Issue");
+                xmlWriter.WriteEndElement();
+                xmlWriter.WriteStartElement("parameter");
+                xmlWriter.WriteElementString("name", "subcategory");
+                xmlWriter.WriteElementString("value", "Atlas");
+                xmlWriter.WriteEndElement();
+                xmlWriter.WriteStartElement("parameter");
+                xmlWriter.WriteElementString("name", "report_name");
+                xmlWriter.WriteElementString("value", reportName);
+                xmlWriter.WriteEndElement();
+                xmlWriter.WriteStartElement("parameter");
+                xmlWriter.WriteElementString("name", "responsibility");
+                xmlWriter.WriteElementString("value", "YES");
+                xmlWriter.WriteEndElement();
+                xmlWriter.WriteStartElement("parameter");
+                xmlWriter.WriteElementString("name", "requesteremail");
+                xmlWriter.WriteElementString(
+                    "value",
+                    UserHelpers.GetUser(_cache, _context, User.Identity.Name).Email
+                );
+                xmlWriter.WriteEndElement();
+                xmlWriter.WriteStartElement("parameter");
+                xmlWriter.WriteElementString("name", "director");
+                xmlWriter.WriteElementString("value", "dryan@rhc.net");
+                xmlWriter.WriteEndElement();
+                xmlWriter.WriteStartElement("parameter");
+                xmlWriter.WriteElementString("name", "responsible_person");
+                xmlWriter.WriteElementString("value", "dryan@rhc.net");
+                xmlWriter.WriteEndElement();
+                xmlWriter.WriteEndElement();
+                xmlWriter.WriteEndElement();
+                xmlWriter.WriteEndDocument();
+                // Spit out the XML document
+                xmlString = stringWriter.ToString();
             }
 
             using (var client = new HttpClient())
@@ -344,10 +314,8 @@ namespace Atlas_Web.Pages.Requests
                     httpRequest
                 );
                 // notify the user of the response from the server http://stackoverflow.com/a/13550295/3900824
-                ApiResponse response = new ApiResponse(
-                    await httpResponse.Content.ReadAsStringAsync()
-                );
-                Result = response.status + " - " + response.message;
+                ApiResponse response = new(await httpResponse.Content.ReadAsStringAsync());
+                Result = response.Status + " - " + response.Message;
             }
             return Content(Result);
         }

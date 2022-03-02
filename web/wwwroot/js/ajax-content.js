@@ -25,12 +25,14 @@
     );
   };
 
-  var loadAjaxContent = debounce(function () {
+  var loadAjaxContent = function () {
     [].forEach.call(d.querySelectorAll('[data-ajax="yes"]'), function (e) {
       if (
         !e.matches('#AdColOne') &&
         !e.matches('#AdColTwo [data-ajax="yes"]') &&
-        isInViewport(e)
+        isInViewport(e) &&
+        // is visible
+        e.offsetParent !== null
       ) {
         var u = e.getAttribute('data-url'),
           p = e.getAttribute('data-param'),
@@ -83,7 +85,7 @@
         }
       }
     });
-  }, 250);
+  };
 
   var a = function (e, l, p, t, u, id) {
     if (e == undefined) {
@@ -135,7 +137,7 @@
     }
   };
 
-  var loadAdAjaxContent = debounce(function () {
+  var loadAdAjaxContent = function () {
     [].forEach.call(
       d.querySelectorAll('#AdColOne, #AdColTwo [data-ajax="yes"]'),
       function (e) {
@@ -192,8 +194,8 @@
         }
       },
     );
-  }, 250);
-  var reloadFavs = debounce(function () {
+  };
+  var reloadFavs = function () {
     var c = d.getElementsByClassName('favs-cntr'),
       q;
     [].forEach.call(c, function (e) {
@@ -210,7 +212,7 @@
         a(e, null, null, q.responseText, e.getAttribute('data-url'));
       };
     });
-  }, 250);
+  };
 
   loadAjaxContent();
   loadAdAjaxContent();
@@ -224,8 +226,8 @@
   d.addEventListener(
     'scroll',
     function () {
-      loadAjaxContent();
-      loadAdAjaxContent();
+      debounce(loadAjaxContent(), 100);
+      debounce(loadAdAjaxContent(), 100);
     },
     {
       passive: true,

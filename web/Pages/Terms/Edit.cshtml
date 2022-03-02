@@ -8,7 +8,6 @@
 @section SideBar {}
 @section js {
     <script src="/js/flowchart.min.js" defer></script>
-    <script src="/js/editor.min.js" defer></script>
 }
 
 <form class="mb-5" action="/Terms/Edit/?id=@Model.Term.TermId" method="post" >
@@ -38,12 +37,12 @@
 
     <div class="field">
         <label class="label">Summary</label>
-        <div class="editor" data-inputName="Term.Summary" data-inputId="Term_Summary"><textarea>@Html.Raw(Model.Term.Summary)</textarea></div>
+        <div class="editor" data-inputName="Term.Summary" data-inputId="Term_Summary"><textarea class="textarea">@Html.Raw(Model.Term.Summary)</textarea></div>
     </div>
 
     <div class="field">
         <label class="label">Technical Definition</label>
-        <div class="editor" data-inputName="Term.TechnicalDefinition" data-inputId="Term_TechnicalDefinition"><textarea>@Html.Raw(Model.Term.TechnicalDefinition)</textarea></div>
+        <div class="editor" data-inputName="Term.TechnicalDefinition" data-inputId="Term_TechnicalDefinition"><textarea class="textarea">@Html.Raw(Model.Term.TechnicalDefinition)</textarea></div>
     </div>
 
     @if (ViewBag.Permissions.Contains(6))

@@ -1,276 +1,130 @@
-﻿@page
+@page
 @model Atlas_Web.Pages.Reports.IndexModel
-@inject IConfiguration Configuration
-@{ Layout = HttpContext.Request.Headers["x-requested-with"] == "XMLHttpRequest" ? "../Shared/_AjaxLayout.cshtml" : "../Shared/_Layout.cshtml";
 
-                ViewData["Title"] = Model.Report.Name.Replace("_", " ");
-                ViewData["Heading"] = "Report";
+@section js {
+    <script src="/js/flowchart.min.js" defer></script>
+}
 
-                var imgs = ViewBag.ReportImages.Count > 0;
-                var parents = Model.ReportParents.Count() > 0;
-                var children = Model.ReportChildren.Count() > 0;
-                var groups = Model.Groups.Count() > 0;
-                var query = (Model.ReportQuery.Count() + Model.ComponentQuery.Count()) > 0;
-                var terms = Model.ViewerReportTerms.Count() > 0;
-                var collections = Model.RelatedCollections.Count() > 0;
-                var maintlog = Model.ReportMaintLogs.Count() > 0; }
+@{
+    ViewData["Title"] = Model.Report.Name;
 
+    ViewBag.RunReportUrl = HtmlHelpers.ReportUrlFromParams(
+                    ViewContext.HttpContext,
+                    Model.Report,
+                    DbContext,
+                    User.Identity.Name
+                );
+    ViewBag.EditReportUrl = HtmlHelpers.EditReportFromParams(
+                        Configuration["AppSettings:org_domain"],
+                        ViewContext.HttpContext,
+                        Model.Report.ReportServerPath,
+                        Model.Report.SourceServer,
+                        Model.Report.EpicMasterFile,
+                        Model.Report.EpicReportTemplateId.ToString(),
+                        Model.Report.EpicRecordId.ToString()
+                    );
+    ViewBag.ManageReportUrl = HtmlHelpers.ReportManageUrlFromParams(
+                        Configuration["AppSettings:org_domain"],
+                        ViewContext.HttpContext,
+                        Model.Report.ReportObjectType.Name,
+                        Model.Report.ReportServerPath,
+                        Model.Report.SourceServer
+                    );
+
+    ViewBag.HasDescription = Model.Report.ReportObjectDoc != null && !string.IsNullOrEmpty(Model.Report.ReportObjectDoc.DeveloperDescription) ||
+         Model.Report.ReportObjectDoc != null && !string.IsNullOrEmpty(Model.Report.ReportObjectDoc.KeyAssumptions) ||
+        !string.IsNullOrEmpty(Model.Report.Description) ||
+        !string.IsNullOrEmpty(Model.Report.DetailedDescription);
+}
+
+@section AdBar {}
 
 @section Side_Links {
-    @if (Model.Report.CyrstalRunAttachments.Count() > 0)
-    {
-    <li>
-        <a class="" data-toggle="mdl" data-target="runModal" data-tooltip="Run Report" data-runurl="@Model.Report.RunReportUrl">
-            <span class="icon is-large has-text-success">
-                <i class="far fa-2_3x fa-play-circle"></i>
-            </span>
-        </a>
-    </li>
-    }
-    else if (@Model.Report.RunReportUrl != null)
-    {
-    <li>
-        <a class="" target="_blank" data-tooltip="Run Report" href="@Model.Report.RunReportUrl">
-            <span class="icon is-large has-text-success">
-                <i class="far fa-2_3x fa-play-circle"></i>
-            </span>
-        </a>
-    </li>
-    }
-    else
-    {
-        if (@Model.Report.EpicMasterFile != null && @Model.Report.EpicMasterFile.Equals("IDB"))
-        {
-    <li>
-        <a class="is-disabled" data-tooltip="Open a related dashboard that uses this.">
-            <span class="icon is-large has-text-grey-light">
-                <i class="far fa-2_3x fa-play-circle"></i>
-            </span>
-        </a>
-    </li>
-        }
-        else if (@Model.Report.EditReportUrl != null)
-        {
-    <li>
-        <a class="is-disabled" data-tooltip="Open in report library.">
-            <span class="icon is-large has-text-grey-light">
-                <i class="far fa-2_3x fa-play-circle"></i>
-            </span>
-        </a>
-    </li>
-        }
-        else if (@Model.Report.EpicMasterFile != null)
-        {
-    <li>
-        <a class="is-disabled" data-tooltip="Run from the Hyperspace report library.">
-            <span class="icon is-large has-text-grey-light">
-                <i class="far fa-2_3x fa-play-circle"></i>
-            </span>
-        </a>
-    </li>
-        }
-    }
-
-    <li>
-        <a class="" data-toggle="mdl" data-target="profile-modal" data-tooltip="Open Report Profile">
-            <span class="icon has-text-grey is-large ">
-                <i class="fas fa-lg fa-chart-bar"></i>
-            </span>
-        </a>
-    </li>
-
-    <li>
-        <a class="@Html.Raw((@Model.Report.Favorite=="yes") ? "favorite" : "")" data-tooltip="@Html.Raw((@Model.Report.Favorite=="yes") ? "Remove from Favorites" : "Add to Favorites")" fav-type="report" object-id="@Model.Report.Id">
-            <span class="icon has-text-grey is-large ">
-                <i class="fas fa-lg fa-star"></i>
-            </span>
-        </a>
-    </li>
-
-    @if (ViewBag.Permissions.Contains(12))
-    {<!-- edit -->
-    <li>
-        <a class="" id="open-editor" data-toggle="mdl" data-target="editModal" data-tooltip="Open Atlas Editor">
-            <span class="icon has-text-grey is-large ">
-                <i class="fas fa-lg fa-edit"></i>
-            </span>
-        </a>
-    </li>
-    }
-
-    @if (@Configuration["features:enable_sharing"] == null || @Configuration["features:enable_sharing"].ToString().ToLower() == "true"){
-    <li>
-        <a class="" data-tooltip="Share" data-toggle="mdl" data-target="shareModal" data-type="report" data-name='@Model.Report.Name.Replace("_"," ")' data-url="/Reports?id=@Model.Report.Id">
-            <span class="icon has-text-grey is-large ">
-                <i class="fas fa-lg fa-share"></i>
-            </span>
-        </a>
-    </li>
-    }
-
-    @if (@Configuration["features:enable_request_access"] == null || @Configuration["features:enable_request_access"].ToString().ToLower() == "true"){
-    <li>
-        <a class="" data-tooltip="Request Access" data-toggle="mdl" data-target="requestAccessModal" data-name="@Model.Report.Name" data-name-clean='@Model.Report.Name.Replace("_"," ")'>
-            <span class="icon has-text-grey is-large ">
-                <i class="fas fa-lg fa-universal-access"></i>
-            </span>
-        </a>
-    </li>
-    }
-     @if (@Configuration["features:enable_feedback"] == null || @Configuration["features:enable_feedback"].ToString().ToLower() == "true"){
-    <li>
-        <a class="" data-tooltip="Share Feedback" data-toggle="mdl" data-target="shareFeedback" data-name="@Model.Report.Name">
-            <span class="icon has-text-grey is-large ">
-                <i class="far fa-lg fa-thumbs-up"></i>
-            </span>
-        </a>
-    </li>
-    }
-    @if (ViewBag.Permissions.Contains(38) && Model.Report.EditReportUrl != null)
-    {
-    <li>
-        <a class="" data-tooltip="Open Report Editor" target="_blank" href="@Model.Report.EditReportUrl">
-            <span class="icon has-text-grey is-large ">
-                <i class="fas fa-lg fa-external-link-square-alt"></i>
-            </span>
-        </a>
-    </li>
-    }
-
-    @if (ViewBag.Permissions.Contains(38) && Model.Report.ManageReportUrl != null)
-    {
-    <li>
-        <a class="" data-tooltip="Manage Report" rel="noopener" target="_blank" href="@Model.Report.ManageReportUrl">
-            <span class="icon has-text-grey is-large ">
-                <i class="fas fa-lg facogs"></i>
-            </span>
-        </a>
-    </li>
-    }
+    <partial name="_Nav" />
 }
 
-<div class="pageTitle">
-    <h2 class="pageTitle-head">
-        <span>
-            @if (Model.Report.EpicReleased == "Analytics Certified")
-            {<span data-tooltip="This report has received the highest level of scrutiny from the Analytics Team and the owning end user. Certified reports are the most reliable and accurate in the system." class="pageNav-badgeHunterGreen tt-bottom">@Model.Report.EpicReleased</span>}
-        else if (Model.Report.EpicReleased == "Analytics Reviewed")
-        {<span data-tooltip="This report has gone through the standard Analytics code review and validation process. Reviewed reports can be trusted for monitoring most operational processes." class="pageNav-badgeGreen tt-bottom">@Model.Report.EpicReleased</span>}
-    else if (Model.Report.EpicReleased == "Epic Released")
-    {<span data-tooltip="Epic Released Reports are limited to the standard Epic configuration. They cannot be customized to match Riverside’s unique system build and may not always be accurate. Use with caution." class="pageNav-badgeOrange tt-bottom">@Model.Report.EpicReleased</span>}
-else if (Model.Report.EpicReleased == "Legacy")
-{<span data-tooltip="This report has not been validated by the Analytics team for accuracy and reliability. Use with caution." class="pageNav-badgeOrange tt-bottom">@Model.Report.EpicReleased</span>}
-else if (Model.Report.EpicReleased == "Self-Service")
-{<span data-tooltip="Data has been validated but content produced via self-service is the responsibility of the end user." class="pageNav-badgeBlue tt-bottom">@Model.Report.EpicReleased</span>}
-else
-{<span data-tooltip="This report has not been validated by the Analytics Team and does not have a usage track record. It may display inaccurate or misleading information. Use at your own risk." class="pageNav-badgeRed tt-bottom">@Model.Report.EpicReleased</span>}
-
-            @Model.Report.Name.Replace("_", " ")
-        </span>
-    </h2>
-    @if (ViewBag.Permissions.Contains(12))
-{
-    <div data-ajax="yes" class="no-loader" data-url="/reports?Handler=MaintStatus&id=@Model.Report.Id"></div>}
-    <div class="pageNav">
-        @if (imgs)
-    {
-        <a href="#images" class="pageNav-link">Images</a>}
-
-        @if (Model.Report.Description != null || Model.Report.DeveloperDescription != null || Model.Report.KeyAssumptions != null || Model.Report.SystemDescription != null)
-    {
-        <a href="#description" class="pageNav-link">Description</a>}
-
-        @if (terms)
-    { @if (@Configuration["features:enable_terms"] == null || @Configuration["features:enable_terms"].ToString().ToLower() == "true")
-{
-        <a href="#terms" class="pageNav-link">Terms</a>}}
-
-        <a href="#details" class="pageNav-link">Details</a>
-
-        @if (query)
-    {
-        <a href="#query" class="pageNav-link">Query</a>}
-
-        @if (parents || children || groups || collections)
-    {
-        <a href="#relationships" class="pageNav-link">Relationships</a>}
-
-        @if (maintlog)
-    {
-        <a href="#maintenance" class="pageNav-link">Maintenance</a>}
-        @if (@Configuration["features:enable_comments"] == null || @Configuration["features:enable_comments"].ToString().ToLower() == "true"){
-        <a href="#comments" class="pageNav-link">Comments</a>
+<h1 class="title is-1 is-flex is-justify-content-space-between">
+    @if (!string.IsNullOrEmpty(@Model.Report.DisplayTitle)) {
+        @Model.Report.DisplayTitle}
+    else {
+        @Model.Report.Name
     }
-    </div>
-</div>
 
-<section class="pageSection">
-    <span class="location" id="images"></span>
-    <div id="report-image-container">
-        @if (imgs)
+    @{
+        string cert_tooltip = "This report has not been validated by the Analytics Team and does not have a usage track record. It may display inaccurate or misleading information. Use at your own risk.";
+        string cert_class = "pageNav-badgeRed";
+
+        @if (Model.Report.CertificationTag == "Analytics Certified")
         {
-        <partial name="_Images" />}
-    </div>
-</section>
-
-<section class="pageSection">
-    <span class="location" id="description"></span>
-    <div id="report-description-container">
-        @if (Model.Report.Description != null || Model.Report.DeveloperDescription != null || Model.Report.KeyAssumptions != null || Model.Report.SystemDescription != null)
+            cert_tooltip = "This report has received the highest level of scrutiny from the Analytics Team and the owning end user. Certified reports are the most reliable and accurate in the system.";
+            cert_class = "pageNav-badgeHunterGreen";
+        }
+        else if (Model.Report.CertificationTag == "Analytics Reviewed")
         {
-        <partial name="_Description" />}
-    </div>
-</section>
-
-<section class="pageSection">
-    <span class="location" id="terms"></span>
-    <div id="report-terms-container">
-        @if (terms)
+            cert_tooltip = "This report has gone through the standard Analytics code review and validation process. Reviewed reports can be trusted for monitoring most operational processes.";
+            cert_class = "pageNav-badgeGreen";
+        }
+        else if (Model.Report.CertificationTag == "Epic Released")
         {
-        <partial name="_Terms" />}
-    </div>
-</section>
+            cert_tooltip = "Epic Released Reports are limited to the standard Epic configuration. They cannot be customized to match Riverside’s unique system build and may not always be accurate. Use with caution.";
+            cert_class = "pageNav-badgeOrange";
 
-<section class="pageSection">
-    <span class="location" id="details"></span>
-    <div id="report-details-container">
-        <partial name="_Details" />
-    </div>
-</section>
-
-@if (query)
-{
-<section class="pageSection">
-    <span class="location" id="query"></span>
-    <partial name="_Query">
-</section>}
-
-@if (parents || children || groups || collections)
-{
-<section class="pageSection">
-    <span class="location" id="relationships"></span>
-    <partial name="_Relationships">
-</section>}
-
-
-<section class="pageSection">
-    <span class="location" id="maintenance"></span>
-    <div id="report-maintenance-container">
-        @if (maintlog)
+        }
+        else if (Model.Report.CertificationTag == "Legacy")
         {
-        <partial name="_Maintenance" />}
-    </div>
-</section>
-@if (@Configuration["features:enable_comments"] == null || @Configuration["features:enable_comments"].ToString().ToLower() == "true"){
-<section class="pageSection">
-    <span class="location" id="comments"></span>
-    <div class="comments" data-ajax="yes" data-url="/reports?Handler=Comments&id=@Model.Report.Id"></div>
-</section>
-}
+            cert_tooltip = "This report has not been validated by the Analytics team for accuracy and reliability. Use with caution.";
+            cert_class = "pageNav-badgeOrange";
+        }
+        else if (Model.Report.CertificationTag == "Self-Service")
+        {
+            cert_tooltip = "Data has been validated but content produced via self-service is the responsibility of the end user.";
+            cert_class = "pageNav-badgeBlue";
+        }
+    }
+
+    <span class="has-tooltip-arrow has-tooltip-multiline has-tooltip-bottom" data-tooltip="@cert_tooltip">
+        <span class="@cert_class is-nobreak">@Model.Report.CertificationTag</span>
+    </span>
+</h1>
 
 @if (ViewBag.Permissions.Contains(12))
 {
-<partial name="_Edit" />
+    <div data-ajax="yes" class="no-loader" data-url="/reports?Handler=MaintStatus&id=@Model.Report.ReportObjectId"></div>
+}
+
+<partial name="_Links" />
+
+@if (Model.Report.ReportObjectImagesDocs.Any())
+{
+    <partial name="_Images" />
+}
+
+@if (ViewBag.HasDescription || !string.IsNullOrEmpty(Model.Report.RepositoryDescription))
+{
+    <partial name="_Description" />
+}
+
+@if (Model.Terms.Any() && (@Configuration["features:enable_terms"] == null || @Configuration["features:enable_terms"].ToString().ToLower() == "true"))
+{
+    <partial name="_Terms" />
+}
+
+<partial name="_Details" />
+
+@if (Model.Report.ReportObjectQueries.Any() || Model.ComponentQueries.Any())
+{
+    <partial name="_Query" />
+}
+
+@if (Model.Parents.Any() || Model.Children.Any() || Model.Report.ReportGroupsMemberships.Any() || Model.Report.DpReportAnnotations.Any())
+{
+    <partial name="_Relationships" />
+}
+
+
+@if (Model.Report.ReportObjectDoc != null && Model.Report.ReportObjectDoc.ReportObjectDocMaintenanceLogs.Any())
+{
+    <partial name="_Maintenance" />
 }
 
 
@@ -285,17 +139,20 @@ else
                 <p>
                     This is a Crystal Report. Here are the recent run outputs.
 
-                    @if (@Model.Report.RunReportUrl != null && @Model.Report.RunReportUrl != ""){
-                    <div><a href="@Model.Report.RunReportUrl" target="_blank" rel="noopener">Run Directly</a></div>
+                    @if (ViewBag.RunReportUrl != null && ViewBag.RunReportUrl != "")
+                    {
+                        <div><a href="@ViewBag.RunReportUrl" target="_blank" rel="noopener">Run Directly</a></div>
                     }
 
 
                     <ul>
-                        @foreach (var r in Model.Report.CyrstalRunAttachments)
+                        @foreach (var r in Model.Report.ReportObjectAttachments)
                         {
                             var url = Helpers.HtmlHelpers.IsEpic(HttpContext) ? "EpicAct:AC_RW_WEB_BROWSER,LaunchOptions:2,runparams:" + HttpContext.Request.Scheme + "://" + HttpContext.Request.Host.Value + "/Data/File?handler=CrystalRun&id=" + r.ReportObjectAttachmentId + "|FormCaption=" + r.Name + "|ActivityName=" + Model.Report.Name : "/Data/File?handler=CrystalRun&id=" + r.ReportObjectAttachmentId;
-                        <li><a href="@url" target="_blank">@r.Name</a><span> ·  @r.CreationDate</span></li>
-}
+                            <li>
+                                <a href="@url" target="_blank">@r.Name</a><span> ·  @r.CreationDate</span>
+                            </li>
+                        }
                     </ul>
                 </p>
                 <p>
@@ -319,12 +176,4 @@ else
     </div>
 </div>
 
-<partial name="modals\_reportProfile" />
-
-@section js {
-    <script src="/js/flowchart.min.js" defer></script>
-    @*@if(!Request.Headers["User-Agent"].ToString().Contains("Trident")){<script>hljs.highlightAll();</script>}*@
-    @if (ViewBag.Permissions.Contains(12)){
-        <script src="/js/editor.min.js" defer></script>
-    }
-}
+<partial name="_Modals" model="Model.Report" />

@@ -9,6 +9,8 @@ See the `project documentation <https://www.atlas.bi/docs/bi-library/>`_
 
 Chat on Discord `https://discord.gg/hdz2cpygQD <https://discord.gg/hdz2cpygQD>`_
 
+Play with the `demo <https://demo.atlas.bi>`_
+
 Included Content
 ----------------
 
@@ -66,18 +68,7 @@ Coming Soon
 Credits
 -------
 
-Atlas was created by the Riverside Healthcare Analytics team -
-
-* Paula Courville
-* `Darrel Drake <https://www.linkedin.com/in/darrel-drake-57562529>`_
-* `Dee Anna Hillebrand <https://github.com/DHillebrand2016>`_
-* `Scott Manley <https://github.com/Scott-Manley>`_
-* `Madeline Matz <mailto:mmatz@RHC.net>`_
-* `Christopher Pickering <https://github.com/christopherpickering>`_
-* `Sean Pickering <https://github.com/Sean-Pickering>`_
-* `Dan Ryan <https://github.com/danryan1011>`_
-* `Richard Schissler <https://github.com/schiss152>`_
-* `Eric Shultz <https://github.com/eshultz>`_
+Atlas was created by the Riverside Healthcare Analytics team. See the `credits <https://www.atlas.bi/about/>`_ for more details.
 
 .. |docs| image:: https://img.shields.io/badge/Atlas-Documentation-orange
    :target: https://www.atlas.bi/docs/bi_library/

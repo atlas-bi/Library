@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -32,28 +32,35 @@ namespace Atlas_Web.Pages.Collections
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-
             // if the id null then list all
             if (id != null)
             {
-                Collection = await _cache.GetOrCreateAsync<DpDataProject>("collection-" + id,
+                Collection = await _cache.GetOrCreateAsync<DpDataProject>(
+                    "collection-" + id,
                     cacheEntry =>
                     {
                         cacheEntry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20);
                         return _context.DpDataProjects
-                                .Include(x => x.LastUpdateUserNavigation)
-                                .Include(x => x.DpTermAnnotations)
-                                .ThenInclude(x => x.Term)
-                                .Include(x => x.DpReportAnnotations)
-                                .ThenInclude(x => x.Report)
-                                .ThenInclude(x => x.ReportObjectDoc)
-                                .Include(x => x.DpReportAnnotations)
-                                .ThenInclude(x => x.Report)
-                                .ThenInclude(x => x.ReportObjectType)
-                                .Include(x => x.DpReportAnnotations)
-                                .ThenInclude(x => x.Report)
-                                .ThenInclude(x => x.ReportObjectAttachments)
-                                .SingleAsync(x => x.DataProjectId == id);
+                            .Include(x => x.LastUpdateUserNavigation)
+                            .Include(x => x.DpTermAnnotations)
+                            .ThenInclude(x => x.Term)
+                            .Include(x => x.DpTermAnnotations)
+                            .ThenInclude(x => x.Term)
+                            .ThenInclude(x => x.StarredTerms)
+                            .Include(x => x.DpReportAnnotations)
+                            .ThenInclude(x => x.Report)
+                            .ThenInclude(x => x.ReportObjectDoc)
+                            .Include(x => x.DpReportAnnotations)
+                            .ThenInclude(x => x.Report)
+                            .ThenInclude(x => x.ReportObjectType)
+                            .Include(x => x.DpReportAnnotations)
+                            .ThenInclude(x => x.Report)
+                            .ThenInclude(x => x.ReportObjectAttachments)
+                            .Include(x => x.DpReportAnnotations)
+                            .ThenInclude(x => x.Report)
+                            .ThenInclude(x => x.StarredReports)
+                            .Include(x => x.StarredCollections)
+                            .SingleAsync(x => x.DataProjectId == id);
                     }
                 );
 
@@ -63,7 +70,8 @@ namespace Atlas_Web.Pages.Collections
                 }
             }
 
-            Collections = await _cache.GetOrCreateAsync<List<DpDataProject>>("collections",
+            Collections = await _cache.GetOrCreateAsync<List<DpDataProject>>(
+                "collections",
                 cacheEntry =>
                 {
                     cacheEntry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20);
@@ -84,7 +92,14 @@ namespace Atlas_Web.Pages.Collections
             );
             if (!checkpoint)
             {
-                return RedirectToPage("/Collections/Index", new { id = Collection.DataProjectId, error = "You do not have permission to access that page." });
+                return RedirectToPage(
+                    "/Collections/Index",
+                    new
+                    {
+                        id = Collection.DataProjectId,
+                        error = "You do not have permission to access that page."
+                    }
+                );
             }
 
             // delete report annotations and term annotations

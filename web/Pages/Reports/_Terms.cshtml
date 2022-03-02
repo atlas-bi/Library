@@ -1,38 +1,13 @@
 ﻿@inject IConfiguration Configuration
 @model Atlas_Web.Pages.Reports.IndexModel
-@{
-    var m = Model ?? ViewBag;
-}
-@if (@Configuration["features:enable_terms"] == null || @Configuration["features:enable_terms"].ToString().ToLower() == "true")
-{
-@if(m.ViewerReportTerms.Count > 0){
-<h3 class="pageSection-title">Terms</h3>
 
-@foreach (var t in m.ViewerReportTerms)
-{
-    <h4 class="drop" data-toggle="clps" data-target="collapseTerm@(t.Id)">@t.Name
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M31.3 192h257.3c17.8 0 26.7 21.5 14.1 34.1L174.1 354.8c-7.8 7.8-20.5 7.8-28.3 0L17.2 226.1C4.6 213.5 13.5 192 31.3 192z"/></svg>
-    </h4>
 
-    <div id="collapseTerm@(t.Id)" class="clps">
-        <div class="drop-box">
-            <h5><a class="drop-link" asp-page="../Terms/Index" asp-route-id="@(t.Id)">Open This Term</a></h5>
-            @if(t.Summary != null)
-            {
-                <h5>Summary</h5>
-                <div class="markdown">
-                    @Html.Raw(@Helpers.HtmlHelpers.MarkdownToHtml(t.Summary))
-                </div>
-            }
-            @if(t.Definition != null)
-            {
-                <h5>Technical Definition</h5>
-                <div class="markdown">
-                    @Html.Raw(@Helpers.HtmlHelpers.MarkdownToHtml(t.Definition))
-                </div>
-            }
+<h2 id="terms" class="title is-2">Terms</h2>
+<div class="columns is-multiline">
+    @foreach (var t in Model.Terms)
+    {
+        <div class="column is-half ">
+            <partial name="Terms/_Snippet" model="t" />
         </div>
-    </div>
-}
-}
-}
+    }
+</div>

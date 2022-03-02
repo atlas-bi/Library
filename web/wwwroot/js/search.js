@@ -18,7 +18,7 @@
     w = window,
     grp = d.getElementById('search-form'),
     m = d.getElementsByClassName('body-mainCtn')[0];
-    //hst = d.getElementsByClassName('sr-hst')[0];
+  //hst = d.getElementsByClassName('sr-hst')[0];
 
   if (grp == undefined) {
     // no search on the current page
@@ -27,7 +27,6 @@
 
   var i = grp.getElementsByTagName('input')[0],
     sAjx = null,
-    hAjx = null,
     atmr,
     a = document.createElement('a');
 
@@ -92,23 +91,9 @@
   }
 
   function AjaxSearch(value, url) {
-    // remove nav links
-    if (document.querySelectorAll('.sideNav .nav-link:not(#nav-search)')) {
-      var navLinks = Array.prototype.slice.call(
-        document.querySelectorAll('.sideNav .nav-link:not(#nav-search)'),
-      );
-      for (var x = 0; x < navLinks.length; x++) {
-        navLinks[x].parentElement.removeChild(navLinks[x]);
-      }
-    }
-
-    if (document.querySelectorAll('.sideNav .nav-linkRun:not(#nav-search)')) {
-      var navLinks = Array.prototype.slice.call(
-        document.querySelectorAll('.sideNav .nav-linkRun:not(#nav-search)'),
-      );
-      for (var x = 0; x < navLinks.length; x++) {
-        navLinks[x].parentElement.removeChild(navLinks[x]);
-      }
+    // show loader here
+    if (document.getElementById('results')) {
+      document.getElementById('results').style.opacity = 0.5;
     }
 
     // attempt to get existing search params from url
@@ -139,14 +124,8 @@
         // add default filters for type depending on url
         if (window.location.pathname.toLowerCase() == '/users') {
           s += '&type=users';
-        } else if (window.location.pathname.toLowerCase() == '/terms') {
-          s += '&type=terms';
         } else if (window.location.pathname.toLowerCase() == '/groups') {
           s += '&type=groups';
-        } else if (window.location.pathname.toLowerCase() == '/collections') {
-          s += '&type=collections';
-        } else if (window.location.pathname.toLowerCase() == '/initiatives') {
-          s += '&type=initiatives';
         }
       }
     }
@@ -165,14 +144,6 @@
 
       a.href = url || oldHref;
 
-      document.dispatchEvent(
-        new CustomEvent('progress-start', {
-          cancelable: true,
-          detail: {
-            value: 90,
-          },
-        }),
-      );
       w.oldPopState = document.location.pathname;
       history.pushState(
         {
@@ -184,7 +155,7 @@
       );
 
       if (cache.exists(s)) {
-        l(cache.get(s),  a, m, d, atmr, s, u, value);
+        l(cache.get(s), a, m, d, atmr, s, u, value);
       } else {
         if (sAjx !== null) {
           sAjx.abort();
@@ -200,7 +171,7 @@
         sAjx.send();
 
         sAjx.onload = function () {
-          l(sAjx.responseText,  a, m, d, atmr, s, u, value);
+          l(sAjx.responseText, a, m, d, atmr, s, u, value);
           var ccHeader =
             sAjx.getResponseHeader('Cache-Control') != null
               ? (sAjx.getResponseHeader('Cache-Control').match(/\d+/) || [
@@ -222,9 +193,11 @@
     }
   }
 
-  var l = function l(t,  a, m, d, atmr, s, u, value) {
+  var l = function l(t, a, m, d, atmr, s, u, value) {
     //hst.style.display = 'none';
-    document.dispatchEvent(new CustomEvent('progress-finish'));
+    // remove nav links
+    document.querySelector('.side-links').innerHTML = '';
+
     m.style.visibility = 'visible';
     m.style.removeProperty('overflow');
     m.innerHTML = t;
@@ -241,7 +214,7 @@
       sc[x].parentElement.removeChild(sc[x]);
     }
 
-    d.title = 'Search: ' + value + ' - Atlas of Information Management';
+    d.title = 'Search: ' + value + ' | Atlas BI Library';
 
     history.replaceState(
       {
@@ -270,12 +243,19 @@
     document.dispatchEvent(new CustomEvent('ajax'));
     document.dispatchEvent(new CustomEvent('ss-load'));
     document.dispatchEvent(new CustomEvent('code-highlight'));
+
+    /* remove loader here */
+    if (document.getElementById('results')) {
+      document.getElementById('results').style.opacity = null;
+    }
   };
 
   grp.addEventListener('click', function (e) {
     e.stopPropagation();
   });
-
+  grp.addEventListener('submit', function (e) {
+    e.preventDefault();
+  });
   // combination of mousedown and mouseup allow event to fire before blur
   // hst.addEventListener('mousedown', function (e) {
   //   e.preventDefault();

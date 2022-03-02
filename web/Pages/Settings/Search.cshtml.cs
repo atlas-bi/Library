@@ -22,7 +22,6 @@ namespace Atlas_Web.Pages.Settings
             _cache = cache;
         }
 
-
         public GlobalSiteSetting UserVisibility { get; set; }
         public GlobalSiteSetting InitiativeVisibility { get; set; }
         public GlobalSiteSetting CollectionVisibility { get; set; }
@@ -33,14 +32,23 @@ namespace Atlas_Web.Pages.Settings
 
         public async Task<IActionResult> OnGetAsync()
         {
-
             ReportTypes = await _context.ReportObjectTypes.ToListAsync();
 
-            UserVisibility = await _context.GlobalSiteSettings.SingleOrDefaultAsync(x => x.Name == "users_search_visibility");
-            GroupVisibility = await _context.GlobalSiteSettings.SingleOrDefaultAsync(x => x.Name == "groups_search_visibility");
-            TermVisibility = await _context.GlobalSiteSettings.SingleOrDefaultAsync(x => x.Name == "terms_search_visibility");
-            InitiativeVisibility = await _context.GlobalSiteSettings.SingleOrDefaultAsync(x => x.Name == "initiatives_search_visibility");
-            CollectionVisibility = await _context.GlobalSiteSettings.SingleOrDefaultAsync(x => x.Name == "collections_search_visibility");
+            UserVisibility = await _context.GlobalSiteSettings.SingleOrDefaultAsync(
+                x => x.Name == "users_search_visibility"
+            );
+            GroupVisibility = await _context.GlobalSiteSettings.SingleOrDefaultAsync(
+                x => x.Name == "groups_search_visibility"
+            );
+            TermVisibility = await _context.GlobalSiteSettings.SingleOrDefaultAsync(
+                x => x.Name == "terms_search_visibility"
+            );
+            InitiativeVisibility = await _context.GlobalSiteSettings.SingleOrDefaultAsync(
+                x => x.Name == "initiatives_search_visibility"
+            );
+            CollectionVisibility = await _context.GlobalSiteSettings.SingleOrDefaultAsync(
+                x => x.Name == "collections_search_visibility"
+            );
 
             return Page();
         }

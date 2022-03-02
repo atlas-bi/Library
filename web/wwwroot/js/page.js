@@ -1,104 +1,4 @@
 (function () {
-  window.addEventListener(
-    'scroll',
-    function () {
-      debounce(
-        (function () {
-          scrollHead();
-        })(),
-        100,
-      );
-    },
-    {
-      passive: true,
-    },
-  );
-
-  window.addEventListener('resize', function () {
-    debounce(
-      (function () {
-        scrollHead();
-      })(),
-      100,
-    );
-  });
-
-  var title = document.querySelector('.pageTitle:not(.loose)'),
-    controls = document.querySelector('.sideNav'),
-    sibling,
-    sticky,
-    siblingPadding;
-
-  document.addEventListener('click', function (e) {
-    if (e.target.closest('.site-messageClose')) {
-      document
-        .querySelector('.site-message')
-        .parentElement.removeChild(document.querySelector('.site-message'));
-      if (title) {
-        sticky = getOffset(title).top;
-      }
-    }
-  });
-
-  if (title) {
-    var l = document.getElementsByClassName('location');
-    for (var x = 0; x < l.length; x++) {
-      l[x].style.top = '-' + title.clientHeight + 'px';
-    }
-
-    sticky = getOffset(title).top;
-    sibling = title.nextElementSibling;
-    siblingPadding = parseInt(
-      window.getComputedStyle(sibling, null).getPropertyValue('padding-top'),
-      10,
-    );
-  }
-
-  var scrollHead = function () {
-    // cant add the extra margin if the page height - window height < new padding or page will jump.
-    var body = document.body,
-      html = document.documentElement;
-
-    var pageHeight = Math.max(
-      body.scrollHeight,
-      body.offsetHeight,
-      html.clientHeight,
-      html.scrollHeight,
-      html.offsetHeight,
-    );
-
-    if (
-      title &&
-      (pageHeight - window.innerHeight > sticky * 2 ||
-        pageHeight - window.innerHeight <= sticky)
-    ) {
-      var w = title.clientWidth;
-      if (window.pageYOffset >= sticky) {
-        // only add padding if first time adding class
-        if (!title.classList.contains('sticky')) {
-          sibling.style.paddingTop = siblingPadding + title.clientHeight + 'px';
-        }
-        title.classList.add('sticky');
-        title.style.width = w + 'px';
-      } else {
-        title.classList.remove('sticky');
-        title.style.removeProperty('width');
-        sibling.style.removeProperty('padding-top');
-      }
-    }
-    if (controls) {
-      if (window.pageYOffset >= sticky) {
-        var l = controls.getBoundingClientRect().left;
-        controls.classList.add('sticky');
-        controls.style.left = l + 'px';
-      } else {
-        controls.classList.remove('sticky');
-        controls.style.removeProperty('left');
-      }
-    }
-  };
-  scrollHead();
-
   // related reports
   function relatedReports() {
     var links = document.querySelectorAll('.body-main a[href]'),
@@ -117,7 +17,7 @@
       ids.push(m[1]);
     }
 
-    if (ids.length > 0) {
+    if (ids.length > 0 && document.getElementById('AdColTwo')) {
       var div = document.getElementById('related-reports');
       if (!div) {
         div = document.createElement('div');
@@ -126,7 +26,7 @@
       }
       div.setAttribute(
         'data-url',
-        '/Reports/?handler=RelatedReports&id=' + ids.slice(0, 5).join(','),
+        '/Search/?handler=RelatedReports&id=' + ids.slice(0, 5).join(','),
       );
       div.setAttribute('data-ajax', 'yes');
 

@@ -1,20 +1,3 @@
-﻿/*
-    Atlas of Information Management business intelligence library and documentation database.
-    Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*/
 using System;
 using Atlas_Web.Models;
 using System.Collections.Generic;
@@ -22,13 +5,38 @@ using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Markdig;
 using Microsoft.Extensions.Caching.Memory;
-using System.Data.SqlClient;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.DependencyInjection;
 using WebOptimizer;
 
 namespace Atlas_Web.Helpers
 {
+    public class ModelHelpers
+    {
+        public static string RelativeDate(DateTime? fixedDate)
+        {
+            if (fixedDate == null)
+            {
+                return "";
+            }
+            var timeAgo = System.DateTime.Now.Subtract(fixedDate ?? DateTime.Today);
+            if (timeAgo.TotalMinutes < 1)
+            {
+                return String.Concat(timeAgo.Seconds.ToString(), " seconds ago");
+            }
+            if (timeAgo.TotalHours < 1)
+            {
+                return String.Concat(timeAgo.Minutes.ToString(), " minutes ago");
+            }
+            else if (timeAgo.TotalHours < 24)
+            {
+                return String.Concat(timeAgo.Hours.ToString(), " hours ago");
+            }
+            else
+                return (fixedDate ?? DateTime.Today).ToShortDateString();
+        }
+    }
+
     public static class PageExtensions
     {
         //https://github.com/ligershark/WebOptimizer/issues/87
@@ -39,7 +47,11 @@ namespace Atlas_Web.Helpers
 
             if (assetPipeline.TryGetAssetFromRoute(path, out IAsset asset))
             {
-                return string.Concat(path, "?v=", asset.GenerateCacheKey(context));
+                return string.Concat(
+                    path,
+                    "?v=",
+                    asset.GenerateCacheKey(context, new WebOptimizerOptions())
+                );
             }
             else
             {
@@ -50,13 +62,9 @@ namespace Atlas_Web.Helpers
 
     public class UserHelpers
     {
-        public static Boolean IsAdmin(
-            IMemoryCache cache,
-            Atlas_WebContext _context,
-            string username
-        )
+        public static Boolean IsAdmin(Atlas_WebContext _context, string username)
         {
-            username = username ?? "default";
+            username ??= "default";
             var is_Admin = (
                 from r in _context.UserRoles
                 where r.UserRoleLinks.Any(x => x.User.Username == username && x.UserRolesId == 1)
@@ -78,7 +86,7 @@ namespace Atlas_Web.Helpers
             string username
         )
         {
-            username = username ?? "default";
+            username ??= "default";
             return cache.GetOrCreate<List<UserPreference>>(
                 "Preferences-" + username,
                 cacheEntry =>
@@ -91,13 +99,9 @@ namespace Atlas_Web.Helpers
             );
         }
 
-        public static MyRole GetMyRole(
-            IMemoryCache cache,
-            Atlas_WebContext _context,
-            string username
-        )
+        public static MyRole GetMyRole(Atlas_WebContext _context, string username)
         {
-            username = username ?? "default";
+            username ??= "default";
             return (
                 from p in _context.UserPreferences
                 where p.User.Username == username && p.ItemType == "ActiveRole"
@@ -108,7 +112,7 @@ namespace Atlas_Web.Helpers
 
         public static User GetUser(IMemoryCache cache, Atlas_WebContext _context, string username)
         {
-            username = username ?? "default";
+            username ??= "default";
             return cache.GetOrCreate<User>(
                 "User-" + username,
                 cacheEntry =>
@@ -126,7 +130,7 @@ namespace Atlas_Web.Helpers
             string username
         )
         {
-            username = username ?? "default";
+            username ??= "default";
             return cache.GetOrCreate<List<UserFavorite>>(
                 "Favorites-" + username,
                 cacheEntry =>
@@ -149,7 +153,7 @@ namespace Atlas_Web.Helpers
             string username
         )
         {
-            username = username ?? "default";
+            username ??= "default";
             // master permision cache - so we can clear all when a perm changes.
             var master = cache.GetOrCreate<List<string>>(
                 "MasterUserPermissions",
@@ -160,7 +164,7 @@ namespace Atlas_Web.Helpers
                 }
             );
 
-            if (master.Count() > 1)
+            if (master.Count > 1)
             {
                 // add in new item
                 master.Add("UserPermissions-" + username);
@@ -189,7 +193,7 @@ namespace Atlas_Web.Helpers
 
                     if (is_Admin > 0)
                     {
-                        var MyRole = GetMyRole(cache, _context, username);
+                        var MyRole = GetMyRole(_context, username);
                         if (MyRole != null)
                         {
                             if (
@@ -217,7 +221,7 @@ namespace Atlas_Web.Helpers
                         select r.UserRolesId
                     ).ToList();
 
-                    if (RoleList.Count() == 0)
+                    if (RoleList.Count == 0)
                     {
                         RoleList = new List<int> { 5 };
                     }
@@ -238,7 +242,7 @@ namespace Atlas_Web.Helpers
             string username
         )
         {
-            username = username ?? "default";
+            username ??= "default";
 
             var report = _context.ReportObjects
                 .Where(x => x.ReportObjectId == ReportObjectId)
@@ -254,40 +258,38 @@ namespace Atlas_Web.Helpers
 
             // check hrx
 
-            var hrx = (
-                from g in _context.ReportGroupsMemberships
-                where
-                    g.ReportId == ReportObjectId
-                    && (
-                        from ug in _context.UserGroupsMemberships
-                        where ug.User.Username == username
-                        select ug.GroupId
-                    ).Contains(g.GroupId)
-                select g.GroupId
-            )
-                .ToList()
-                .Count();
+            var hrx =
+                (
+                    from g in _context.ReportGroupsMemberships
+                    where
+                        g.ReportId == ReportObjectId
+                        && (
+                            from ug in _context.UserGroupsMemberships
+                            where ug.User.Username == username
+                            select ug.GroupId
+                        ).Contains(g.GroupId)
+                    select g.GroupId
+                ).ToList().Count;
             if (hrx >= 1)
             {
                 return true;
             }
 
-            var hrg = (
-                from g in _context.ReportGroupsMemberships
-                join h in _context.ReportObjectHierarchies.Where(
-                    x => x.ChildReportObjectId == ReportObjectId
-                )
-                    on g.ReportId equals h.ParentReportObjectId
-                where
-                    (
-                        from ug in _context.UserGroupsMemberships
-                        where ug.User.Username == username
-                        select ug.GroupId
-                    ).Contains(g.GroupId)
-                select g.GroupId
-            )
-                .ToList()
-                .Count();
+            var hrg =
+                (
+                    from g in _context.ReportGroupsMemberships
+                    join h in _context.ReportObjectHierarchies.Where(
+                        x => x.ChildReportObjectId == ReportObjectId
+                    )
+                        on g.ReportId equals h.ParentReportObjectId
+                    where
+                        (
+                            from ug in _context.UserGroupsMemberships
+                            where ug.User.Username == username
+                            select ug.GroupId
+                        ).Contains(g.GroupId)
+                    select g.GroupId
+                ).ToList().Count;
             if (hrg >= 1)
             {
                 return true;
@@ -303,7 +305,7 @@ namespace Atlas_Web.Helpers
             int Access
         )
         {
-            username = username ?? "default";
+            username ??= "default";
             return GetUserPermissions(cache, _context, username).Any(x => x.Value == Access);
             /*var myPermissions = (from r in _context.UserRoles
                                 where (r.RolePermissionLinks.Any(x => x.RolePermissionsId == Access)
@@ -384,7 +386,6 @@ namespace Atlas_Web.Helpers
         }
 
         public static string RecordViewerLink(
-            string Domain,
             HttpContext Context,
             string EpicMasterFile,
             string EpicRecordId
@@ -488,7 +489,6 @@ namespace Atlas_Web.Helpers
         }
 
         public static string ReportUrlFromParams(
-            string Domain,
             HttpContext Context,
             ReportObject reportObject,
             Atlas_WebContext _context,

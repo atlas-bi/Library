@@ -1,26 +1,7 @@
-﻿/*
-    Atlas of Information Management business intelligence library and documentation database.
-    Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*/
-
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using WebOptimizer;
-using Microsoft.Extensions.Caching.Memory;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Net.Http.Headers;
 using Microsoft.Extensions.Options;
@@ -30,12 +11,11 @@ namespace Atlas_Web.Pages.Data
 {
     public class CodeModel : PageModel
     {
-        private IAssetPipeline _pipeline;
-        private IAssetBuilder _assetBuilder;
-        private IOptionsSnapshot<WebOptimizerOptions> _options;
+        private readonly IAssetPipeline _pipeline;
+        private readonly IAssetBuilder _assetBuilder;
+        private readonly IOptionsSnapshot<WebOptimizerOptions> _options;
 
         public CodeModel(
-            IMemoryCache cache,
             IAssetPipeline pipeline,
             IAssetBuilder assetBuilder,
             IOptionsSnapshot<WebOptimizerOptions> options
@@ -48,7 +28,7 @@ namespace Atlas_Web.Pages.Data
 
         protected string GenerateHash(IAsset asset)
         {
-            string hash = asset.GenerateCacheKey(HttpContext);
+            string hash = asset.GenerateCacheKey(HttpContext, new WebOptimizerOptions());
             return $"{asset.Route}?v={hash}";
         }
 
@@ -64,7 +44,6 @@ namespace Atlas_Web.Pages.Data
                 _options.Value
             );
             IAssetResponse cachedResponse = response;
-            string cacheKey = response.CacheKey;
             HttpContext.Response.ContentType = asset.ContentType;
 
             foreach (string name in cachedResponse.Headers.Keys)

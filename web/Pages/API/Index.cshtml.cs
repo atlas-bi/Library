@@ -19,13 +19,11 @@ namespace Atlas_Web.Pages.API
     public class IndexModel : PageModel
     {
         private readonly Atlas_WebContext _context;
-        private readonly IConfiguration _config;
-        private IMemoryCache _cache;
+        private readonly IMemoryCache _cache;
 
-        public IndexModel(Atlas_WebContext context, IConfiguration config, IMemoryCache cache)
+        public IndexModel(Atlas_WebContext context, IMemoryCache cache)
         {
             _context = context;
-            _config = config;
             _cache = cache;
         }
 
@@ -45,7 +43,6 @@ namespace Atlas_Web.Pages.API
 
         public void OnGet()
         {
-
             ViewData["stuff"] = (
                 from u in (
                     from u in _context.Users
@@ -90,7 +87,7 @@ namespace Atlas_Web.Pages.API
                 select new { ulm.UserId, ulm.GroupId }
             );
 
-            if (Users.Count() < 1 && GroupUsers.Count() < 1)
+            if (!Users.Any() && !GroupUsers.Any())
                 return Content("no users specefied");
 
             await _context.AddRangeAsync(

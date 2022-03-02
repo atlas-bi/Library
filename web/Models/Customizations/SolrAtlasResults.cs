@@ -1,11 +1,19 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Atlas_Web.Models
 {
+    public class ResultModel
+    {
+        public ReportObject report { get; set; }
+        public DpDataProject collection { get; set; }
+        public DpDataInitiative initiative { get; set; }
+        public Term term { get; set; }
+        public User user { get; set; }
+        public UserGroup group { get; set; }
+    };
+
     public record SearchResult(
         List<ReportObjectAttachment> AttachedFiles,
         SolrAtlas Result,
@@ -55,7 +63,7 @@ namespace Atlas_Web.Models
     };
 
     public record SolrAtlasResults(
-        IReadOnlyList<SearchResult> Results,
+        IReadOnlyList<ResultModel> Results,
         IReadOnlyList<FacetModel> FacetFields,
         IReadOnlyList<HighlightModel> Highlights,
         IReadOnlyList<FilterFields> FilterFields,

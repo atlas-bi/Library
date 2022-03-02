@@ -1,20 +1,3 @@
-/*
-    Atlas of Information Management business intelligence library and documentation database.
-    Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*/
 .ss-wrapper {
   float: left;
   height: 100%;
@@ -32,6 +15,19 @@
   padding: 0;
   position: relative;
   width: calc(100% + 18px);
+
+  &::-webkit-scrollbar {
+    background-color: #fff;
+    width: 16px;
+  }
+}
+
+.ss-liner {
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 4px;
+  height: 100%;
+  transition: background 0.25s linear;
+  width: 100%;
 }
 
 .ss-scroll {
@@ -45,6 +41,27 @@
   top: 0;
   transition: opacity 0.25s linear 500ms;
   z-index: 2;
+
+  .ss-liner {
+    transition: width 0.15s linear;
+    width: 8px;
+  }
+
+  &:hover {
+    .ss-liner {
+      background: rgba(0, 0, 0, 0.5);
+      border-radius: 6px;
+      width: 12px;
+    }
+  }
+
+  &.ss-grabbed {
+    user-select: none;
+
+    .ss-liner {
+      width: 12px;
+    }
+  }
 }
 
 .ss-hscroll {
@@ -58,41 +75,34 @@
   position: absolute;
   transition: opacity 0.25s linear 500ms;
   z-index: 2;
+
+  .ss-liner {
+    height: 8px;
+    transition: height 0.15s linear;
+  }
+
+  &:hover {
+    .ss-liner {
+      background: rgba(0, 0, 0, 0.5);
+      border-radius: 6px;
+      height: 12px;
+    }
+  }
+
+  &.ss-grabbed {
+    user-select: none;
+
+    .ss-liner {
+      height: 12px;
+    }
+  }
 }
 
-.ss-liner {
-  background: rgba(0, 0, 0, 0.4);
-  border-radius: 4px;
-  height: 100%;
-  transition: background 0.25s linear;
-  width: 100%;
-}
-
-.ss-scroll .ss-liner {
-  transition: width 0.15s linear;
-  width: 8px;
-}
-
-.ss-hscroll .ss-liner {
-  height: 8px;
-  transition: height 0.15s linear;
-}
-
-.ss-hscroll:hover .ss-liner,
-.ss-scroll:hover .ss-liner,
-.ss-grabbed .ss-liner {
-  background: rgba(0, 0, 0, 0.5);
-  border-radius: 6px;
-}
-
-.ss-scroll:hover .ss-liner,
-.ss-scroll.ss-grabbed .ss-liner {
-  width: 12px;
-}
-
-.ss-hscroll:hover .ss-liner,
-.ss-hscroll.ss-grabbed .ss-liner {
-  height: 12px;
+.ss-grabbed {
+  .ss-liner {
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 6px;
+  }
 }
 
 .ss-container.light .ss-liner {
@@ -119,19 +129,7 @@
   transition: opacity 0.25s linear 0s;
 }
 
-.ss-grabbed {
-  -moz-user-select: none;
-  -ms-user-select: none;
-  -o-user-select: none;
-  -webkit-user-select: none;
-  user-select: none;
-}
-
 .sp-wrapper {
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  -webkit-user-select: none;
   height: 100%;
   opacity: 0;
   position: absolute;
@@ -174,9 +172,4 @@
 .sp-wrapper .sp-scroll.sp-grabbed {
   opacity: 1;
   transition: opacity 0.25s linear 0s;
-}
-
-.ss-content::-webkit-scrollbar {
-  background-color: #fff;
-  width: 16px;
 }

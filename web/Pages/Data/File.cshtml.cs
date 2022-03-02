@@ -1,17 +1,14 @@
-﻿using System.Linq;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Atlas_Web.Models;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Caching.Memory;
 using System.Text;
 
 namespace Atlas_Web.Pages.Data
 {
-    [ResponseCache(Duration = 20*60)]
+    [ResponseCache(Duration = 20 * 60)]
     public class FileModel : PageModel
     {
         private readonly Atlas_WebContext _context;
@@ -22,7 +19,6 @@ namespace Atlas_Web.Pages.Data
         }
 
         public object ReportServer { get; private set; }
-
 
         public async Task<ActionResult> OnGet(int id)
         {
@@ -77,11 +73,8 @@ namespace Atlas_Web.Pages.Data
 
             // headers to attempt to open pdf vs download
 
-            System.Net.Mime.ContentDisposition cd = new()
-            {
-                FileName = attachment.Name,
-                Inline = true
-            };
+            System.Net.Mime.ContentDisposition cd =
+                new() { FileName = attachment.Name, Inline = true };
             Response.Headers.Add("Content-Disposition", cd.ToString());
             Response.Headers.Add("X-Content-Type-Options", "nosniff");
 

@@ -33,20 +33,22 @@ namespace Atlas_Web.Pages.Initiatives
             // if the id null then list all
             if (id != null)
             {
-                Initiative = await _cache.GetOrCreateAsync<DpDataInitiative>("initiative-" + id,
-                    cacheEntry => {
+                Initiative = await _cache.GetOrCreateAsync<DpDataInitiative>(
+                    "initiative-" + id,
+                    cacheEntry =>
+                    {
                         cacheEntry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20);
 
                         return _context.DpDataInitiatives
-                                .Include(x => x.DpDataProjects)
-                                .ThenInclude(x => x.DpReportAnnotations)
-                                .Include(x => x.OperationOwner)
-                                .Include(x => x.ExecutiveOwner)
-                                .Include(x => x.FinancialImpactNavigation)
-                                .Include(x => x.StrategicImportanceNavigation)
-                                .Include(x => x.LastUpdateUserNavigation)
-                                .Include(x => x.StarredInitiatives)
-                                .SingleAsync(x => x.DataInitiativeId == id);
+                            .Include(x => x.DpDataProjects)
+                            .ThenInclude(x => x.DpReportAnnotations)
+                            .Include(x => x.OperationOwner)
+                            .Include(x => x.ExecutiveOwner)
+                            .Include(x => x.FinancialImpactNavigation)
+                            .Include(x => x.StrategicImportanceNavigation)
+                            .Include(x => x.LastUpdateUserNavigation)
+                            .Include(x => x.StarredInitiatives)
+                            .SingleAsync(x => x.DataInitiativeId == id);
                     }
                 );
 
@@ -56,17 +58,18 @@ namespace Atlas_Web.Pages.Initiatives
                 }
             }
 
-            Initiatives = await _cache.GetOrCreateAsync<List<DpDataInitiative>>("initiatives",
+            Initiatives = await _cache.GetOrCreateAsync<List<DpDataInitiative>>(
+                "initiatives",
                 cacheEntry =>
                 {
                     cacheEntry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20);
 
                     return _context.DpDataInitiatives
-                            .Include(x => x.DpDataProjects)
-                            .Include(x => x.StarredInitiatives)
-                            .ToListAsync();
+                        .Include(x => x.DpDataProjects)
+                        .Include(x => x.StarredInitiatives)
+                        .ToListAsync();
                 }
-           );
+            );
 
             return Page();
         }

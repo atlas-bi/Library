@@ -1,21 +1,3 @@
-﻿/*
-    Atlas of Information Management business intelligence library and documentation database.
-    Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*/
-
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -25,10 +7,8 @@ using Microsoft.EntityFrameworkCore;
 using Atlas_Web.Models;
 using Atlas_Web.Helpers;
 using Microsoft.AspNetCore.Http;
-using System.IO;
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Caching.Memory;
 using Newtonsoft.Json.Linq;
@@ -39,7 +19,7 @@ namespace Atlas_Web.Pages.Users
     {
         private readonly Atlas_WebContext _context;
         private readonly IConfiguration _config;
-        private IMemoryCache _cache;
+        private readonly IMemoryCache _cache;
 
         public IndexModel(Atlas_WebContext context, IConfiguration config, IMemoryCache cache)
         {
@@ -181,7 +161,6 @@ namespace Atlas_Web.Pages.Users
         public IEnumerable<Group> Groups { get; set; }
         public List<SubscribedReportsData> SubscribedReports { get; set; }
 
-
         [BindProperty]
         public MyRole MyRole { get; set; }
 
@@ -191,10 +170,10 @@ namespace Atlas_Web.Pages.Users
         [BindProperty]
         public MyRole AsAdmin { get; set; }
 
-
         public ActionResult OnGet(int? id)
         {
-            UserDetails = UserHelpers.GetUser(_cache, _context, User.Identity.Name); ;
+            UserDetails = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
+            ;
             // for the viewing user, not the viewed user
             MyId = UserDetails.UserId;
 
@@ -477,16 +456,7 @@ namespace Atlas_Web.Pages.Users
 
         public async Task<ActionResult> OnGetFavorites(int? id)
         {
-            HttpContext.Response.Headers.Remove("Cache-Control");
-            HttpContext.Response.Headers.Remove("Pragma");
-            HttpContext.Response.Headers.Remove("Expires");
-            HttpContext.Response.Headers.Add(
-                "Cache-Control",
-                "no-cache, no-store, must-revalidate"
-            );
-            HttpContext.Response.Headers.Add("Pragma", "no-cache"); // HTTP 1.0.
-            HttpContext.Response.Headers.Add("Expires", "0"); // Proxies.
-            MyId = UserHelpers.GetUser(_cache, _context, User.Identity.Name).UserId;
+            UserId = UserHelpers.GetUser(_cache, _context, User.Identity.Name).UserId;
 
             // can user view others?
             var checkpoint = UserHelpers.CheckUserPermissions(
@@ -495,14 +465,12 @@ namespace Atlas_Web.Pages.Users
                 User.Identity.Name,
                 37
             );
+
             if (checkpoint)
             {
                 UserId = id ?? MyId;
             }
-            else
-            {
-                UserId = MyId;
-            }
+
             ViewData["Permissions"] = UserHelpers.GetUserPermissions(
                 _cache,
                 _context,
@@ -591,7 +559,6 @@ namespace Atlas_Web.Pages.Users
                             ReportServerPath = ro.ReportServerPath,
                             SourceServer = ro.SourceServer,
                             ReportUrl = HtmlHelpers.ReportUrlFromParams(
-                                _config["AppSettings:org_domain"],
                                 HttpContext,
                                 ro,
                                 _context,
@@ -618,8 +585,6 @@ namespace Atlas_Web.Pages.Users
                 }
             );
 
-            //ViewData["FavoriteOther"] =
-
             ViewData["FavoriteReports"] = FavoriteReports;
 
             ViewData["FavoriteFolders"] = await _cache.GetOrCreateAsync<List<FolderList>>(
@@ -643,7 +608,7 @@ namespace Atlas_Web.Pages.Users
                 }
             );
 
-            if (FavoriteReports.Count() < 1)
+            if (!FavoriteReports.Any())
             {
                 ViewData["TopRunReports"] = await _cache.GetOrCreateAsync<List<FavData>>(
                     "FavTopRunReports-" + UserId,
@@ -676,7 +641,6 @@ namespace Atlas_Web.Pages.Users
                                 ReportServerPath = d.ReportObject.ReportServerPath,
                                 SourceServer = d.ReportObject.SourceServer,
                                 ReportUrl = Helpers.HtmlHelpers.ReportUrlFromParams(
-                                    _config["AppSettings:org_domain"],
                                     HttpContext,
                                     d.ReportObject,
                                     _context,
@@ -718,14 +682,14 @@ namespace Atlas_Web.Pages.Users
         public ActionResult OnGetChangeRole(int Id, string Url)
         {
             var MyUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
-            if (!UserHelpers.IsAdmin(_cache, _context, User.Identity.Name))
+            if (!UserHelpers.IsAdmin(_context, User.Identity.Name))
             {
                 return Redirect("/");
             }
 
             // clear cache
             var oldPerm = _cache.Get<List<string>>("MasterUserPermissions");
-            for (var x = 0; x < oldPerm.Count(); x++)
+            for (var x = 0; x < oldPerm.Count; x++)
             {
                 _cache.Remove(oldPerm[x]);
             }

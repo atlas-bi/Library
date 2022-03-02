@@ -1,24 +1,37 @@
 @model Atlas_Web.Pages.Terms.IndexModel
 <li>
-    <a class="" data-toggle="mdl" data-target="profile-modal" data-tooltip="Open Report Profile">
+    <a class="is-block has-tooltip-arrow has-tooltip-right js-modal-trigger" data-target="term-profile-@Model.Term.TermId" data-tooltip="Open Profile">
         <span class="icon has-text-grey is-large ">
             <i class="fas fa-lg fa-chart-bar"></i>
         </span>
     </a>
 </li>
 
-@*<li>
-    <a class=" @Html.Raw((@Model.MyTerm.Favorite=="yes") ? "favorite" : "")" data-tooltip="@Html.Raw((@Model.MyTerm.Favorite=="yes") ? "Remove from Favorites" : "Add to Favorites")" fav-type="term" object-id="@Model.MyTerm.Id">
-        <span class="icon has-text-grey is-large ">
-            <i class="fas fa-lg fa-star"></i>
-        </span>
+<li>
+    <a class="is-block has-tooltip-arrow has-tooltip-right star" data-tooltip="Star this term" data-href="/users/favorites/?handler=Edit&type=term&id=@Model.Term.TermId">
+        @if (Model.Term.StarredTerms.Any(x => x.Ownerid == ViewBag.PublicUser.UserId))
+        {
+            <span class="icon is-large has-text-gold ">
+                <i class="fas fa-lg fa-star is-relative">
+                    <span class="badge star-count">@Model.Term.StarredTerms.Count</span>
+                </i>
+            </span>
+        }
+        else
+        {
+            <span class="icon has-text-grey is-large">
+                <i class="far fa-lg fa-star is-relative">
+                    <span class="badge star-count">@Model.Term.StarredTerms.Count</span>
+                </i>
+            </span>
+        }
     </a>
-</li>*@
+</li>
 
 @if (@Configuration["features:enable_sharing"] == null || @Configuration["features:enable_sharing"].ToString().ToLower() == "true")
 {
     <li>
-        <a class="" data-tooltip="Share" data-toggle="mdl" data-target="shareModal" data-name="@Model.Term.Name" data-type="term">
+        <a class="is-block has-tooltip-arrow has-tooltip-right js-modal-trigger" data-tooltip="Share" data-target="term-share-@Model.Term.TermId" data-name="@Model.Term.Name" data-type="term">
             <span class="icon has-text-grey is-large ">
                 <i class="fas fa-lg fa-share"></i>
             </span>
@@ -29,7 +42,7 @@
 @if (@Configuration["features:enable_feedback"] == null || @Configuration["features:enable_feedback"].ToString().ToLower() == "true")
 {
     <li>
-        <a class="" data-tooltip="Share Feedback" data-toggle="mdl" data-target="shareFeedback" data-name="@Model.Term.Name">
+        <a class="is-block has-tooltip-arrow has-tooltip-right js-modal-trigger" data-tooltip="Share Feedback" data-target="term-share-feedback-@Model.Term.TermId" data-name="@Model.Term.Name">
             <span class="icon has-text-grey is-large ">
                 <i class="far fa-lg fa-thumbs-up"></i>
             </span>
@@ -40,7 +53,7 @@
 @if (ViewBag.Permissions.Contains(7))
 {
     <li>
-        <a class="" href="/Terms/New/" data-tooltip="Create New Term">
+        <a class="is-block has-tooltip-arrow has-tooltip-right" href="/Terms/New/" data-tooltip="Create New Term">
             <span class="icon has-text-grey is-large ">
                 <i class="fas fa-lg fa-plus"></i>
             </span>
@@ -51,7 +64,7 @@
 @if ((ViewBag.Permissions.Contains(13) && Model.Term.ApprovedYn == "N") || (ViewBag.Permissions.Contains(11) && Model.Term.ApprovedYn == "Y"))
 {
     <li>
-        <a class="" href="/Terms/Edit/?id=@Model.Term.TermId" data-tooltip="Open Atlas Editor">
+        <a class="is-block has-tooltip-arrow has-tooltip-right" href="/Terms/Edit/?id=@Model.Term.TermId" data-tooltip="Open Atlas Editor">
             <span class="icon has-text-grey is-large ">
                 <i class="fas fa-lg fa-edit"></i>
             </span>
@@ -62,7 +75,7 @@
 @if ((ViewBag.Permissions.Contains(9) && Model.Term.ApprovedYn == "N") || (ViewBag.Permissions.Contains(8) && Model.Term.ApprovedYn == "Y"))
 {
     <li>
-        <a class="" data-tooltip="Delete this Term" href="/terms?Handler=DeleteTerm&id=@Model.Term.TermId" onclick="return confirm('Are you sure you want to remove this?');">
+        <a class="is-block has-tooltip-arrow has-tooltip-right" data-tooltip="Delete this Term" href="/terms?Handler=DeleteTerm&id=@Model.Term.TermId" onclick="return confirm('Are you sure you want to remove this?');">
             <span class="icon has-text-grey is-large ">
                 <i class="fas fa-lg fa-trash"></i>
             </span>

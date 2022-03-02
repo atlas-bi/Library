@@ -1,11 +1,11 @@
-﻿@using Helpers
+@using Helpers
 @using Microsoft.Extensions.Caching.Memory
 @inject IMemoryCache Cache
-@inject IConfiguration Configuration
 
 <!DOCTYPE html>
 <html lang="en-us">
 <head>
+
     <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1" />
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -20,24 +20,18 @@
 
     @if (ViewData["Title"] != null && ViewData["Title"].ToString().Length > 0)
     {
-<title>@ViewData["Title"] | Atlas BI Library</title>
- }
-else
-{
-<title>Home | Atlas BI Library</title>
-}
+        <title>@ViewData["Title"] | Atlas BI Library</title>
+    }
+    else
+    {
+        <title>Home | Atlas BI Library</title>
+    }
 
-    <link rel="preload" href="@Helpers.UrlHelpers.FontHash("/font/fontawesome/webfonts/fa-regular-400.woff2", Cache, Configuration)" as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href="@Helpers.UrlHelpers.FontHash("/font/fontawesome/webfonts/fa-solid-900.woff2", Cache, Configuration)" as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href="@Helpers.UrlHelpers.FontHash("/font/inter/files/inter-latin-500-normal.woff2", Cache, Configuration)" as="font" type="font/woff2" crossorigin />
-
-    <!-- temp preload until fonts are removed -->
-    <link rel="preload" href="@Helpers.UrlHelpers.FontHash("/lib/fonts/impmin/subset-NYTImperial-Regular.woff2", Cache, Configuration)" as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href="@Helpers.UrlHelpers.FontHash("/lib/fonts/impmin/subset-NYTImperial-Bold.woff2", Cache, Configuration)" as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href="@Helpers.UrlHelpers.FontHash("/lib/fonts/cheltmin/subset-NYTCheltenham-Medium.woff2", Cache, Configuration)" as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href="@Helpers.UrlHelpers.FontHash("/lib/fonts/cheltmin/subset-NYTCheltenham-Bold.woff2", Cache, Configuration)" as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href="@Helpers.UrlHelpers.FontHash("/lib/fonts/cheltmin/subset-NYTCheltenhamWide-Regular.woff2", Cache, Configuration)" as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href="@Helpers.UrlHelpers.FontHash("/lib/fonts/sfmin/subset-SFProDisplay-Medium.woff2", Cache, Configuration)" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="@Helpers.UrlHelpers.FontHash("/font/fontawesome/webfonts/fa-regular-400.woff2", Cache)" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="@Helpers.UrlHelpers.FontHash("/font/fontawesome/webfonts/fa-solid-900.woff2", Cache)" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="@Helpers.UrlHelpers.FontHash("/font/rasa/files/rasa-latin-600-normal.woff2", Cache)" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="@Helpers.UrlHelpers.FontHash("/font/inter/files/inter-latin-500-normal.woff2", Cache)" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="@Helpers.UrlHelpers.FontHash("/font/inter/files/inter-latin-700-normal.woff2", Cache)" as="font" type="font/woff2" crossorigin />
 </head>
 <body>
     <!-- site message -->
@@ -56,7 +50,7 @@ else
         </div>
     }
 
-    <nav class="navbar is-transparent atlas-navbar has-shadow">
+    <nav class="navbar is-transparent atlas-navbar has-shadow sticky">
         <div class="container">
             <div class="navbar-brand">
                 <a href="/">
@@ -139,7 +133,7 @@ else
                     </div>
                     @if (@Configuration["features:enable_user_profile"] == null || @Configuration["features:enable_user_profile"].ToString().ToLower() == "true")
                     {
-        <a class="navbar-item" href="/users" data-tooltip="Open Profile">
+        <a class="navbar-item has-tooltip-arrow has-tooltip-bottom" href="/users" data-tooltip="Open Profile">
             <span class="icon is-medium">
                 <i class="fas fa-lg fa-user"></i>
             </span>
@@ -208,12 +202,8 @@ else
 
     <section class="is-flex-grow-1">
         <div class="container is-relative mb-5">
-
-
-                            
-
             <div class="columns">
-                <div class="column is-narrow">
+                <div class="column is-narrow side-links" style="z-index: 1;">
                     @if (IsSectionDefined("SideBar"))
                     {
         @RenderSection("SideBar") }
@@ -248,12 +238,8 @@ else
     </section>
     <partial name="_Footer" />
 
-
-    <div class="prg"><div class="prg-b" style="width: 0%"></div></div>
     <div class="mail-notification-container"></div>
     <partial name="_Messagebox" />
-    <partial name="modals\_Modals" />
-    <partial name="modals\_image" />
 
     <!-- IE11 polyfill must come first -->
     <script src="/js/polyfill.min.js"></script>
@@ -262,6 +248,7 @@ else
     <script src="/js/utility.min.js" defer></script>
     <script src="/js/main.min.js" defer></script>
     <script src="/js/profile.min.js" defer></script>
+    <script src="/js/editor.min.js" defer></script>
 
     @RenderSection("js", required: false)
 

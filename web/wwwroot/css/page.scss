@@ -1,0 +1,136 @@
+
+section {
+  position: relative;
+}
+
+.pageNav-badgeOrange {
+  border: 2px solid #ffc107;
+  border-radius: 3px;
+  color: #ffc107;
+  padding: 0 5px;
+}
+
+.pageNav-badgeRed {
+  border: 2px solid #ff6961;
+  border-radius: 3px;
+  color: #ff6961;
+  padding: 0 5px;
+}
+
+.pageNav-badgeGreen {
+  border: 2px solid rgb(41, 206, 66);
+  border-radius: 3px;
+  color: rgb(41, 206, 66);
+  padding: 0 5px;
+}
+
+.pageNav-badgeBlue {
+  border: 2px solid rgb(35, 96, 252);
+  border-radius: 3px;
+  color: rgb(35, 96, 252);
+  padding: 0 5px;
+}
+
+.pageNav-badgeHunterGreen {
+  border: 2px solid #22aa36;
+  border-radius: 3px;
+  color: #22aa36;
+  padding: 0 5px;
+}
+
+
+.back-to-top {
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6 !important;
+  border-radius: 20px;
+  bottom: 45px;
+  color: #6c757d !important;
+  cursor: pointer;
+  font-size: 1.25rem;
+  line-height: 1.5;
+  outline: none;
+  padding: 0.5rem 1rem;
+  position: fixed;
+  right: 25px;
+  text-align: center;
+  text-decoration: none;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
+    border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out,
+    visibility 0.15s;
+  user-select: none;
+  vertical-align: middle;
+  visibility: hidden;
+  white-space: nowrap;
+  width: 39px;
+  height: 39px;
+}
+
+.back-to-top:hover,
+.back-to-top:active,
+.back-to-top:focus {
+  outline: none;
+  text-decoration: none;
+}
+
+.ajaxLoader {
+  margin-bottom: 20px;
+  margin-top: 20px;
+  text-align: center;
+  width: 100%;
+}
+
+.ajaxLoader-img {
+  width: 25px;
+}
+
+.form-check {
+  margin-top: 4px;
+}
+
+.icon-sm {
+  margin: 0 2px;
+  margin-bottom: -2px;
+  max-height: 16px;
+  max-width: 25px;
+  padding: 0 5px;
+}
+
+button .icon-sm {
+  height: 14px;
+  margin: 0;
+  margin-bottom: -2px;
+  padding: 0;
+}
+
+.icon-lg {
+  margin: 0 2px;
+  margin-bottom: -2px;
+  max-height: 54px;
+  padding: 0 5px;
+}
+
+.snippet-col {
+  display: flex;
+  flex-direction: row;
+  margin-top: 10px;
+}
+.snippet-left {
+  width: auto;
+}
+
+.snippet-right {
+  flex: 1;
+  padding-left: 10px;
+  min-width: 1px;
+}
+
+/**
+ * codemirror-spell-checker v1.2.1
+ * Copyright Next Step Webs, Inc.
+ * @link https://github.com/NextStepWebs/codemirror-spell-checker
+ * @license MIT
+ */
+.CodeMirror
+  .cm-spell-error:not(.cm-url):not(.cm-comment):not(.cm-tag):not(.cm-word) {
+  background: rgba(255, 0, 0, 0.15);
+}

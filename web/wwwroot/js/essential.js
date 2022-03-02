@@ -7,31 +7,6 @@
     }
   });
 
-  function loadScripts(els) {
-    els = els ? Array.prototype.slice.call(els) : [];
-
-    for (var x = 0; x < els.length; x++) {
-      var el = els[x];
-
-      var l = document.createElement('div');
-
-      l.innerHTML = el.value;
-
-      el.parentElement.removeChild(el);
-
-      var scripts = l.querySelectorAll('script');
-
-      for (var y = 0; y < scripts.length; y++) {
-        var i = scripts[y],
-          q = document.createElement('script');
-        q.src = i.src;
-        q.innerHTML = i.innerHTML;
-        q.type = 'text/javascript';
-        document.body.appendChild(q);
-      }
-    }
-  }
-
   function showScrollToTop() {
     if (window.pageYOffset > 50) {
       document.getElementById('back-to-top').style.visibility = 'visible';
@@ -48,34 +23,9 @@
     }
   });
 
-  function downloadJSAtOnload() {
-    loadScripts(
-      Array.prototype.slice.call(
-        document.getElementsByClassName('postLoadScripts'),
-      ),
-    );
-  }
-
-  window.addEventListener(
-    'load',
-    function () {
-      downloadJSAtOnload();
-    },
-    false,
-  );
-
-  document.addEventListener('ajax', function () {
-    downloadJSAtOnload();
-  });
-
-  document.addEventListener('tab-opened', function () {
-    debounce(downloadJSAtOnload(), 250);
-  });
-
   document.addEventListener(
     'scroll',
     function () {
-      debounce(downloadJSAtOnload(), 250);
       debounce(showScrollToTop(), 250);
     },
     {

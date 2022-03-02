@@ -1,4 +1,4 @@
-﻿@page
+@page
 @model Atlas_Web.Pages.Initiatives.IndexModel
 @{
     ViewData["Title"] = "Initiatives";
@@ -19,4 +19,5 @@
     }
 
     <partial name="_Details" />
+    <partial name="_Modals" model="Model.Initiative" />
 }

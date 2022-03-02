@@ -80,6 +80,11 @@
               updateId(taglist);
             });
 
+            if (taglist.classList.contains('reorder')) {
+              control.classList.add('drg');
+              tag.classList.add('drg-hdl');
+            }
+
             control.appendChild(group);
             group.appendChild(tag);
             group.appendChild(input);
@@ -92,6 +97,15 @@
             }
 
             $input.value = '';
+
+            // if it is a static list then clear the filter
+            if ($input.hasAttribute('lookup-area')) {
+              inputFilter($input, $mini);
+            }
+
+            if ($input.classList.contains('mini-close-fast')) {
+              closeAllMinis();
+            }
           }
         });
 
@@ -153,6 +167,23 @@
     };
   }
 
+  function inputFilter($input, $mini) {
+    var $options = $mini.querySelectorAll('.mini-item');
+    $options.forEach(($option) => {
+      console.log($option.innerText);
+      console.log($input.value);
+      if (
+        $input.value === '' ||
+        $option.innerText.toLowerCase().indexOf($input.value.toLowerCase()) !=
+          -1
+      ) {
+        $option.style.display = null;
+      } else {
+        $option.style.display = 'none';
+      }
+    });
+  }
+
   var searchTimeout = 250,
     searchTimerId = null;
 
@@ -194,6 +225,13 @@
       });
     } else if ($input.hasAttribute('lookup-area')) {
       preloadMini($input, $mini, $input.getAttribute('lookup-area'), $hidden);
+
+      // if it is a multiselect, we can use typing to filter the static list
+      if ($input.classList.contains('multiselect')) {
+        $input.addEventListener('input', () => {
+          inputFilter($input, $mini);
+        });
+      }
     }
 
     if ($clear != undefined) {

@@ -1,218 +1,311 @@
-﻿@inject IConfiguration Configuration
-
 @model Atlas_Web.Pages.Reports.IndexModel
-@{
-    var m = Model ?? ViewBag;
-}
 
-<h3 class="pageSection-title">Details</h3>
-<div class="listDetails">
-    @if (@m.Report.OldName != null)
-    {
-        <span class="listDetails-title">Report Name</span>
-        <span>@m.Report.OldName</span>
-    }
+<h2 id="details" class="title is-2">Details</h2>
 
-    <span class="listDetails-title">Report Type</span>
-    <span>@m.Report.Type</span>
+<div class="table-container mt-5">
+    <table class="table is-narrow">
+        <tbody>
 
-    @if (@m.Report.LastLoadDate != null)
-    {
-        <span class="listDetails-title">Last ETL Load Date</span>
-        <span>@m.Report.LastLoadDate</span>
-    }
-    <span class="listDetails-title">Report Last Modified</span>
-    <span>
-        @m.Report.LastModifiedDate
-        @if (m.Report.LastUpdatedBy != null)
-        {
-            <span class="text-light">&nbsp;&middot;&nbsp;@if (@Configuration["features:enable_user_profile"] == null || @Configuration["features:enable_user_profile"].ToString().ToLower() == "true")
-                    {<a href="/users?id=@m.Report.LastUpdatedById">@m.Report.LastUpdatedBy</a>} else {@m.Report.LastUpdatedBy}</span>
-        }
-    </span>
-
-    @if (@m.Report.DocLastUpdated != null)
-    {
-        <span class="listDetails-title">Documentation Last Modified</span>
-        <span>
-            @m.Report.DocLastUpdated
-            @if (m.Report.DocLastUpdatedBy != null)
+            @if (@Model.Report.Name != @Model.Report.DisplayTitle)
             {
-                <span class="text-light">&nbsp;&middot;&nbsp;@if (@Configuration["features:enable_user_profile"] == null || @Configuration["features:enable_user_profile"].ToString().ToLower() == "true")
-                    {<a href="/users?id=@m.Report.DocLastUpdatedById">@m.Report.DocLastUpdatedBy</a>} else {@m.Report.DocLastUpdatedBy}</span>
+                <tr>
+                    <td>System Name</td>
+                    <td>@Model.Report.Name</td>
+                </tr>
             }
-        </span>
-    }
 
-    @if (m.Report.Author != null)
-    {
-        <span class="listDetails-title">Report Author</span>
-        @if (@Configuration["features:enable_user_profile"] == null || @Configuration["features:enable_user_profile"].ToString().ToLower() == "true")
-                    {<a href="users?id=@m.Report.AuthorId">@m.Report.Author</a>} else { @m.Report.Author }
-    }
+            <tr>
+                <td>Report Type</td>
+                <td>@Model.Report.ReportObjectType.Name</td>
+            </tr>
 
-    @if (m.Report.Requester != null)
-    {
-        <span class="listDetails-title">Report Requester</span>
-        @if (@Configuration["features:enable_user_profile"] == null || @Configuration["features:enable_user_profile"].ToString().ToLower() == "true")
-                    {<a href="users?id=@m.Report.RequesterId">@m.Report.Requester</a>} else {@m.Report.Requester}
-    }
-
-    @if (m.Report.OpsOwner != null)
-    {
-        <span class="listDetails-title">Operational Owner</span>
-        @if (@Configuration["features:enable_user_profile"] == null || @Configuration["features:enable_user_profile"].ToString().ToLower() == "true")
-                    {<a href="users?id=@m.Report.OpsOwnerId">@m.Report.OpsOwner</a>} else { @m.Report.OpsOwner}
-    }
-
-    @if (m.Report.GitUrl != null)
-    {
-        <span class="listDetails-title">@Configuration["text:reports:external_link"]</span>
-        <a target="_blank" rel="noopener" href="@m.Report.GitUrl">View Source</a>
-    }
-
-    @if (m.Report.EpicMasterFile != null)
-    {
-        <span class="listDetails-title">Epic Identifier</span>
-        @if (m.Report.RecordViewerUrl != null)
-        {
-            @:<a href="@m.Report.RecordViewerUrl">
-            }
-        <span>
-            <span id="epic-ini">@m.Report.EpicMasterFile&nbsp;</span>
-            @if (m.Report.EpicId != null)
+            @if (@Model.Report.LastLoadDate != null)
             {
-                <span id="epic-id" data-epic-hgr="@m.Report.EpicTemplateId">
-                    @m.Report.EpicId
-                @if (@m.Report.EpicTemplateId != null)
-                {
-                    @:(Template @m.Report.EpicTemplateId)
-                }
-            </span>
-        }
-        </span>
-
-        @if (m.Report.RecordViewerUrl != null)
-        {
-        @:</a>
-    }
-    }
-
-    <span class="listDetails-title">Atlas Id</span>
-    <span>@m.Report.Id</span>
-
-    @if (m.Report.Orphaned == "Y")
-    {
-        <span class="listDetails-title">Orphaned?</span>
-        <span>@m.Report.Orphaned</span>
-    }
-
-    @if (m.Report.ExecVisibitliy == "Y")
-    {
-        <span class="listDetails-title">Executive Visiblity</span>
-        <span>Yes</span>
-    }
-
-    @if (m.Report.Type == "SSRS Report" && m.Report.Hyperspace != null)
-    {
-        <span class="listDetails-title">Enabled for Hyperspace</span>
-        <span>
-            @if (m.Report.Hyperspace == "Y")
-            {
-                @:Yes
+                <tr>
+                    <td>ETL Load Date</td>
+                    <td>@Model.Report.LastLoadDateDisplayString</td>
+                </tr>
             }
-            else
-            {
-                @:No
-            }
-        </span>
-    }
 
-    @if (ViewBag.Permissions.Contains(35) && m.Report.DoNotPurge == "Y")
-    {
-        <span class="listDetails-title">Do Not Purge</span>
-        <span>Yes</span>
-    }
-
-    @if (ViewBag.Permissions.Contains(43) && m.Report.Hidden == "Y")
-    {
-        <span class="listDetails-title">Hidden?</span>
-        <span>Yes</span>
-    }
-
-    @if (m.Report.RunFreq != null)
-    {
-        <span class="listDetails-title">Estimated Run Frequency</span>
-        <span>@m.Report.RunFreq</span>
-    }
-
-    @if (m.Report.Fragility != null)
-    {
-        <span class="listDetails-title">Fragility Rating</span>
-        <span>@m.Report.Fragility</span>
-    }
-
-    @if (m.Report.MaintSched != null)
-    {
-        <span class="listDetails-title">Maintenance Schedule</span>
-        <span>@m.Report.MaintSched</span>
-    }
-
-    @if (m.Report.Value != null)
-    {
-        <span class="listDetails-title">Organizational Value Rating</span>
-        <span>@m.Report.Value</span>
-    }
-
-    @if (m.ReportFragilityTags.Count > 0)
-    {
-        var length = m.ReportFragilityTags.Count;
-        var counter = 0;
-        <span class="listDetails-title">Fragility Tags</span>
-        <span>
-            @foreach (var tag in m.ReportFragilityTags)
-            {
-                @if (counter == (length - 1))
-                {
-                    <span>@tag.Name</span>
-                }
-                else
-                {
-                    <span>@tag.Name, </span>
-                }
-                counter++;
-            }
-        </span>
-    }
-
-    @if (m.ReportTags.Count > 0)
-    {
-        var length = m.ReportTags.Count;
-        var counter = 0;
-        <span class="listDetails-title">Report Tags</span>
-         <span>
-            @foreach (var tag in m.ReportTags)
-                {
-                    @if (counter == (length - 1))
+            <tr>
+                <td>Last Modified</td>
+                <td>
+                    @Model.Report.LastModifiedDate
+                    @if (@Model.Report.LastModifiedByUser != null)
                     {
-                        <span>@tag.Name</span> 
+                        <text>&nbsp;&middot;&nbsp;</text>
+                        @if (@Configuration["features:enable_user_profile"] == null || @Configuration["features:enable_user_profile"].ToString().ToLower() == "true")
+                        {
+                            <a href="/users?id=@Model.Report.LastModifiedByUserId">@Model.Report.LastModifiedByUser.Fullname_Cust</a>
                         }
-                    else
-                    {
-                        <span>@tag.Name, </span>}counter++;
+                        else
+                        {
+                            @Model.Report.LastModifiedByUser.Fullname_Cust
+                        }
                     }
-         </span>}
+                </td>
+            </tr>
+
+            @if (@Model.Report.ReportObjectDoc != null && @Model.Report.ReportObjectDoc.LastUpdateDateTime != null)
+            {
+                <tr>
+                    <td>Documentation Last Modified</td>
+                    <td>
+                        @Model.Report.ReportObjectDoc.LastUpdateDateTime
+                        @if (@Model.Report.ReportObjectDoc.UpdatedByNavigation != null)
+                        {
+                            <text>&nbsp;&middot;&nbsp;</text>
+                            @if (@Configuration["features:enable_user_profile"] == null || @Configuration["features:enable_user_profile"].ToString().ToLower() == "true")
+                            {
+                                <a href="/users?id=@Model.Report.ReportObjectDoc.UpdatedBy">@Model.Report.ReportObjectDoc.UpdatedByNavigation.Fullname_Cust</a>
+                            }
+                            else
+                            {
+                                @Model.Report.ReportObjectDoc.UpdatedByNavigation.Fullname_Cust
+                            }
+                        }
+                    </td>
+                </tr>
+            }
+
+            @if (@Model.Report.AuthorUser != null)
+            {
+                <tr>
+                    <td>Report Author</td>
+                    <td>
+                        @if (@Configuration["features:enable_user_profile"] == null || @Configuration["features:enable_user_profile"].ToString().ToLower() == "true")
+                        {
+                            <a href="users?id=@Model.Report.AuthorUserId">@Model.Report.AuthorUser.Fullname_Cust</a>
+                        }
+                        else
+                        {
+                            @Model.Report.AuthorUser.Fullname_Cust
+                        }
+                    </td>
+                </tr>
+            }
+
+            @if (@Model.Report.ReportObjectDoc != null && @Model.Report.ReportObjectDoc.RequesterNavigation != null)
+            {
+                <tr>
+                    <td>Report Requester</td>
+                    <td>
+                        @if (@Configuration["features:enable_user_profile"] == null || @Configuration["features:enable_user_profile"].ToString().ToLower() == "true")
+                        {
+                            <a href="users?id=@Model.Report.ReportObjectDoc.Requester">@Model.Report.ReportObjectDoc.RequesterNavigation.Fullname_Cust</a>
+                        }
+                        else
+                        {
+                            @Model.Report.ReportObjectDoc.RequesterNavigation.Fullname_Cust
+                        }
+                    </td>
+                </tr>
+            }
+
+            @if (@Model.Report.ReportObjectDoc != null && @Model.Report.ReportObjectDoc.OperationalOwnerUser != null)
+            {
+                <tr>
+                    <td>Operational Owner</td>
+                    <td>
+                        @if(@Configuration["features:enable_user_profile"] == null || @Configuration["features:enable_user_profile"].ToString().ToLower() == "true")
+                        {
+                            <a href="users?id=@Model.Report.ReportObjectDoc.OperationalOwnerUserId">@Model.Report.ReportObjectDoc.OperationalOwnerUser.Fullname_Cust</a>
+                        }
+                        else
+                        {
+                            @Model.Report.ReportObjectDoc.OperationalOwnerUser.Fullname_Cust
+                        }
+                    </td>
+                </tr>
+            }
+            @if (!string.IsNullOrEmpty(@Model.Report.Availability))
+            {
+                <tr>
+                    <td>Availability</td>
+                    <td>@Model.Report.Availability</td>
+                </tr>
+            }
+            @if (@Model.Report.ReportObjectDoc != null && !string.IsNullOrEmpty(@Model.Report.ReportObjectDoc.GitLabProjectUrl))
+            {
+                <tr>
+                    <td>@Configuration["text:reports:external_link"]</td>
+                    <td><a target="_blank" rel="noopener" href="@Model.Report.ReportObjectDoc.GitLabProjectUrl">View Source</a></td>
+                </tr>
+            }
+
+            @if (!string.IsNullOrEmpty(@Model.Report.EpicMasterFile))
+            {
+                var RecordViewerUrl = HtmlHelpers.RecordViewerLink(
+                               ViewContext.HttpContext,
+                               Model.Report.EpicMasterFile,
+                               Model.Report.EpicRecordId.ToString()
+                           );
+                <tr>
+                    <td>Epic Identifier</td>
+                    <td>@if (RecordViewerUrl != null)
+                    {
+                    @:<a href="RecordViewerUrl">
+                    }
+
+                    <span id="epic-ini">@Model.Report.EpicMasterFile&nbsp;</span>
+                    @if (@Model.Report.EpicRecordId != null)
+                    {
+                        <span id="epic-id" data-epic-hgr="@Model.Report.EpicReportTemplateId">
+                            @Model.Report.EpicRecordId
+                        @if (@Model.Report.EpicReportTemplateId != null)
+                        {
+                            @:(Template @Model.Report.EpicReportTemplateId)
+                        }
+                    </span>
+                }
+
+                @if (!string.IsNullOrEmpty(RecordViewerUrl))
+                {
+                @:</a>
+                } </td>
+                </tr>
+            }
+
+            <tr>
+                <td>Atlas Id</td>
+                <td>@Model.Report.ReportObjectId</td>
+            </tr>
+
+            @if (@Model.Report.OrphanedReportObjectYn == "Y")
+            {
+                <tr>
+                    <td>Orphaned?</td>
+                    <td>@Model.Report.OrphanedReportObjectYn</td>
+                </tr>
+            }
+
+            @if (@Model.Report.ReportObjectDoc != null && @Model.Report.ReportObjectDoc.ExecutiveVisibilityYn == "Y")
+            {
+                <tr>
+                    <td>Executive Visiblity</td>
+                    <td>Yes</td>
+                </tr>
+            }
+
+            @if (@Model.Report.ReportObjectType.Name == "SSRS Report" && @Model.Report.ReportObjectDoc != null && !string.IsNullOrEmpty(@Model.Report.ReportObjectDoc.EnabledForHyperspace))
+            {
+                <tr>
+                    <td>Enabled for Hyperspace</td>
+                    <td>
+                        @if (@Model.Report.ReportObjectDoc.EnabledForHyperspace == "Y")
+                        {
+                            @:Yes
+                        }
+                        else
+                        {
+                            @:No
+                        }
+                    </td>
+                </tr>
+            }
+
+            @if (ViewBag.Permissions.Contains(35) && @Model.Report.ReportObjectDoc != null && @Model.Report.ReportObjectDoc.DoNotPurge == "Y")
+            {
+                <tr>
+                    <td>Do Not Purge</td>
+                    <td>Yes</td>
+                </tr>
+            }
+
+            @if (ViewBag.Permissions.Contains(43) && @Model.Report.ReportObjectDoc != null && @Model.Report.ReportObjectDoc.Hidden == "Y")
+            {
+                <tr>
+                    <td>Hidden?</td>
+                    <td>Yes</td>
+                </tr>
+            }
+
+            @if (@Model.Report.ReportObjectDoc != null && @Model.Report.ReportObjectDoc.EstimatedRunFrequency != null)
+            {
+                <tr>
+                    <td>Estimated Run Frequency</td>
+                    <td>@Model.Report.ReportObjectDoc.EstimatedRunFrequency.EstimatedRunFrequencyName</td>
+                </tr>
+            }
+
+            @if (@Model.Report.ReportObjectDoc != null && @Model.Report.ReportObjectDoc.Fragility != null)
+            {
+                <tr>
+                    <td>Fragility Rating</td>
+                    <td>@Model.Report.ReportObjectDoc.Fragility.FragilityName</td>
+                </tr>
+            }
+
+            @if (@Model.Report.ReportObjectDoc != null && @Model.Report.ReportObjectDoc.MaintenanceSchedule != null)
+            {
+                <tr>
+                    <td>Maintenance Schedule</td>
+                    <td>@Model.Report.ReportObjectDoc.MaintenanceSchedule.MaintenanceScheduleName</td>
+                </tr>
+            }
+
+            @if (@Model.Report.ReportObjectDoc != null && @Model.Report.ReportObjectDoc.OrganizationalValue != null)
+            {
+                <tr>
+                    <td>Organizational Value Rating</td>
+                    <td>@Model.Report.ReportObjectDoc.OrganizationalValue.OrganizationalValueName</td>
+                </tr>
+            }
+
+            @if (@Model.Report.ReportObjectDoc != null && @Model.Report.ReportObjectDoc.ReportObjectDocFragilityTags.Any())
+            {
+                <tr>
+                    <td>Fragility Tags</td>
+                    <td>
+                        <div class="tags">
+                            @foreach (var tag in @Model.Report.ReportObjectDoc.ReportObjectDocFragilityTags)
+                            {
+                                <span class="tag">@tag.FragilityTag.FragilityTagName</span>
+                            }
+                        </div>
+                    </td>
+                </tr>
+            }
+
+            @if (@Model.Report.ReportObjectTagMemberships.Any())
+            {
+                <tr>
+                    <td>Report Tags</td>
+                    <td>
+                        <div class="tags">
+                            @foreach (var tag in @Model.Report.ReportObjectTagMemberships)
+                            {
+                                 <span class="tag">@tag.Tag.TagName</span>
+                            }
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
 </div>
 
-<section id="report-meticket-container">
-    @if (ViewBag.ManageEngineTickets.Count > 0)
-    {
-        <h4>Service Request Tickets</h4>
-        <div class="reportDetails">
-            @foreach (var t in ViewBag.ManageEngineTickets)
-            {
-                <a target="_blank" class="reportDetails-title" href="@t.Url">#@t.Number <code>@t.Description</code></a>
-            }
+@if (Model.Report.ReportManageEngineTickets.Any())
+{
+    <nav id="maintenance" class="panel">
+        <div class="panel-heading">
+            Service Requests
         </div>
-    }
-</section>
+        @foreach (var ticket in Model.Report.ReportManageEngineTickets)
+        {
+            <div class="panel-block">
+                @if (!string.IsNullOrEmpty(ticket.TicketUrl))
+                {
+                    <a target="_blank" rel="noopener" href="@ticket.TicketUrl">@ticket.TicketNumber</a>
+                } else
+                {
+                    @ticket.TicketNumber
+                }
+                @if (!string.IsNullOrEmpty(@ticket.Description))
+                {
+                    <span class="text-muted">&nbsp;·&nbsp;@ticket.Description</span>
+                }
+            </div>
+        }
+    </nav>
+}

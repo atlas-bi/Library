@@ -6,7 +6,7 @@
 @{
     var ManageReportUrl = HtmlHelpers.ReportManageUrlFromParams(@Configuration["AppSettings:org_domain"], ViewContext.HttpContext, Model.ReportObjectType.Name, Model.ReportServerPath, Model.SourceServer);
     var EditReportUrl = HtmlHelpers.EditReportFromParams(@Configuration["AppSettings:org_domain"], ViewContext.HttpContext, Model.ReportServerPath, Model.SourceServer, Model.EpicMasterFile, Model.EpicReportTemplateId.ToString(), Model.EpicRecordId.ToString());
-    var RunReportUrl = HtmlHelpers.ReportUrlFromParams(@Configuration["AppSettings:org_domain"], ViewContext.HttpContext, Model, Context, User.Identity.Name);
+    var RunReportUrl = HtmlHelpers.ReportUrlFromParams(ViewContext.HttpContext, Model, Context, User.Identity.Name);
 }
 
 <div class="card">
@@ -14,12 +14,12 @@
         <div class="columns is-flex-grow-1">
             <div class="column is-narrow is-flex is-align-items-center ml-3"><!-- run button here --></div>
             <div class="column">
-                <p class="card-header-title pl-0 is-justify-content-space-between">
+                <div class="card-header-title pl-0 py-2 is-justify-content-space-between">
                     <span class="is-flex is-align-items-center">
 
                         @if (Model.ReportObjectAttachments.Count() > 0)
                         {
-                            <a class="is-flex mr-2" data-toggle="mdl" data-target="runModal" data-tooltip="Run Report" data-runurl="@RunReportUrl">
+                            <a class="is-flex mr-2 has-tooltip-arrow has-tooltip-right js-modal-trigger" data-target="report-run-@Model.ReportObjectId" data-tooltip="Run Report" data-runurl="@RunReportUrl">
                                 <span class="icon is-large has-text-success">
                                     <i class="far fa-2_3x fa-play-circle"></i>
                                 </span>
@@ -27,7 +27,7 @@
                         }
                         else if (RunReportUrl != null)
                         {
-                            <a class="is-flex mr-2" target="_blank" data-tooltip="Run Report" href="@RunReportUrl">
+                            <a class="is-flex mr-2 has-tooltip-arrow has-tooltip-right" target="_blank" data-tooltip="Run Report" href="@RunReportUrl">
                                 <span class="icon is-large has-text-success">
                                     <i class="far fa-2_3x fa-play-circle"></i>
                                 </span>
@@ -37,7 +37,7 @@
                         {
                             if (@Model.EpicMasterFile != null && @Model.EpicMasterFile.Equals("IDB"))
                             {
-                                <a class="is-flex mr-2 is-disabled" data-tooltip="Open a related dashboard that uses this.">
+                                <a class="is-flex mr-2 is-disabled has-tooltip-arrow has-tooltip-right" data-tooltip="Open a related dashboard that uses this.">
                                     <span class="icon is-large has-text-grey-light">
                                         <i class="far fa-2_3x fa-play-circle"></i>
                                     </span>
@@ -45,7 +45,7 @@
                             }
                             else if (@EditReportUrl != null)
                             {
-                                <a class="is-flex mr-2 is-disabled" data-tooltip="Open in report library.">
+                                <a class="is-flex mr-2 is-disabled has-tooltip-arrow has-tooltip-right" data-tooltip="Open in report library.">
                                     <span class="icon is-large has-text-grey-light">
                                         <i class="far fa-2_3x fa-play-circle"></i>
                                     </span>
@@ -53,7 +53,7 @@
                             }
                             else if (@Model.EpicMasterFile != null)
                             {
-                                <a class="is-flex mr-2 is-disabled" data-tooltip="Run from the Hyperspace report library.">
+                                <a class="is-flex mr-2 is-disabled has-tooltip-arrow has-tooltip-right" data-tooltip="Run from the Hyperspace report library.">
                                     <span class="icon is-large has-text-grey-light">
                                         <i class="far fa-2_3x fa-play-circle"></i>
                                     </span>
@@ -62,10 +62,11 @@
 
                         }
 
-                        @Model.Name
+                        <a class="has-text-dark" href="/Reports?id=@Model.ReportObjectId">@Model.Name</a>
 
                         </span>
                     <span class="tags">
+                        <span class="tag">report</span>
                         @if (@Model.CertificationTag == "Analytics Certified")
                         {<span class="tag srch-fieldHunterGreen">@Model.CertificationTag</span>}
                         @if (@Model.CertificationTag == "Analytics Reviewed")
@@ -79,13 +80,13 @@
                         @if (@Model.CertificationTag == "Self-Service")
                         {<span class="tag srch-fieldBlue">@Model.CertificationTag</span>}
                     </span>
-                </p>
+                </div>
             </div>
         </div>
     </div>
-    <div class="card-content">
+    <div class="card-content pt-3 pb-2">
         <div class="media">
-            <div class="media-left">
+            <div class="media-left js-modal-trigger"  data-target="report-image-@Model.ReportObjectId">
                 <figure class="image is-128x128">
                     <picture>
                         <source data-srcset="/data/img?handler=Thumb&id=@Model.ReportObjectId&size=128x128&type=webp" srcset="/img/report_placeholder_128x128.webp" type="image/webp" loading="lazy">
@@ -94,14 +95,30 @@
                     </picture>
                 </figure>
             </div>
+            <div class="modal" id="report-image-@Model.ReportObjectId">
+                <div class="modal-background"></div>
+                <div class="modal-content modal-image">
+                    <p class="image">
+                        <picture>
+                            <source srcset="/data/img?handler=Thumb&id=@Model.ReportObjectId&size=1200x1200&type=webp 800w,
+                                            /data/img?handler=Thumb&id=@Model.ReportObjectId&size=2000x2000&type=webp 1200w"
+                                    type="image/webp"
+
+                                    sizes="100vw">
+                            <img src="/data/img?handler=Thumb&id=@Model.ReportObjectId&size=1200x2000" alt="report image" >
+                        </picture>
+                    </p>
+                </div>
+                <button class="modal-close is-large" aria-label="close"></button>
+            </div>
             <div class="media-content is-min-h-96 is-flex is-justify-content-space-between is-flex-direction-column">
                 @if (Model.ReportObjectDoc != null && !string.IsNullOrEmpty(Model.ReportObjectDoc.DeveloperDescription))
                 {
-                    @Html.Raw(@Helpers.HtmlHelpers.MarkdownToHtml(Model.ReportObjectDoc.DeveloperDescription.Substring(0, Math.Min(160, Model.ReportObjectDoc.DeveloperDescription.Length)) + " ..."))
+                    @(Model.ReportObjectDoc.DeveloperDescription.Substring(0, Math.Min(160, Model.ReportObjectDoc.DeveloperDescription.Length)) +" ...")
                 }
                 else if (!string.IsNullOrEmpty(Model.Description))
                 {
-                    @Html.Raw(@Helpers.HtmlHelpers.MarkdownToHtml(Model.Description.Substring(0, Math.Min(160, Model.Description.Length)) + " ..."))
+                    @(Model.Description.Substring(0, Math.Min(160, Model.Description.Length)) +" ...")
                 }
                 else
                 {
@@ -114,16 +131,55 @@
         </div>
     </div>
     <footer class="card-footer">
-        <a href="/Reports?id=@Model.ReportObjectId" class="card-footer-item">Open</a>
+        <a class="card-footer-item star" data-href="/users/favorites/?handler=Edit&type=report&id=@Model.ReportObjectId">
+            <span class="icon-text">
+                @if (Model.StarredReports.Any(x => x.Ownerid == ViewBag.PublicUser.UserId))
+                {
+                    <span class="icon has-text-gold">
+                        <i class="fas fa-star"></i>
+                    </span>
+                    <span>Starred <span class="tag is-rounded">@Model.StarredReports.Count</span></span>
+                }
+                else
+                {
+                    <span class="icon ">
+                        <i class="far fa-star"></i>
+                    </span>
+                    <span>Star <span class="tag is-rounded star-count">@Model.StarredReports.Count</span></span>
+                }
+            </span>
+        </a>
+        <a href="/Reports?id=@Model.ReportObjectId" class="card-footer-item">
+            <span class="icon-text">
+                <span class="icon">
+                    <i class="fas fa-book-open"></i>
+                </span>
+                <span>Read More</span>
+            </span>
+        </a>
 
         @if (EditReportUrl != null && EditReportUrl != "" && ViewBag.Permissions.Contains(38))
         {
-            <a class="card-footer-item" target="_blank" href="@EditReportUrl">Edit</a>}
+            <a class="card-footer-item" target="_blank" href="@EditReportUrl">
+                <span class="icon-text">
+                    <span class="icon">
+                        <i class="fas fa-edit"></i>
+                    </span>
+                    <span>System Editor</span>
+                </span>
+            </a>
+        }
         @if (ManageReportUrl != null && ManageReportUrl != "" && ViewBag.Permissions.Contains(38))
         {
-            <a class="card-footer-item" target="_blank" href="@ManageReportUrl">Manage</a>
+            <a class="card-footer-item" target="_blank" href="@ManageReportUrl">
+                <span class="icon-text">
+                    <span class="icon">
+                        <i class="fas fa-cogs"></i>
+                    </span>
+                    <span>System Manage</span>
+                </span>
+            </a>
         }
-
-
     </footer>
 </div>
+<partial name="Reports/_Modals" />

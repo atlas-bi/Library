@@ -17,8 +17,13 @@
       dragSEl.classList.add('drag-source');
       dragEl.classList.add('drag');
       dragEl.style.width = dragSEl.offsetWidth + 1 + 'px';
-      d1 = e.clientY - getOffset(dragSEl).top;
-      d2 = e.clientX - getOffset(dragSEl).left;
+
+      // margin is not included in x and y.
+      var style = getComputedStyle(dragSEl);
+      console.log(parseInt(style.marginTop));
+      console.log(parseInt(style.marginLeft));
+      d1 = e.clientY - getOffset(dragSEl).top + parseInt(style.marginTop);
+      d2 = e.clientX - getOffset(dragSEl).left + parseInt(style.marginLeft);
       dragSEl.parentElement.style.position = 'relative';
       dragSEl.parentElement.appendChild(dragEl);
       dragEl.style.top = e.clientY - d1 + 'px';

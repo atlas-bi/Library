@@ -1,42 +1,13 @@
-﻿@*
-    Atlas of Information Management business intelligence library and documentation database.
-    Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*@
-
 @page
 @model Atlas_Web.Pages.Tasks.IndexModel
 @{
     ViewData["Title"] = "Tasks";
-    Layout = HttpContext.Request.Headers["x-requested-with"] == "XMLHttpRequest" ? "../Shared/_AjaxLayout.cshtml" : "../Shared/_Layout.cshtml";
 }
 
-<div class="pageTitle">
-    <h2 class="pageTitle-head">Maintenance Tasks</h2>
-    <div class="tab">
-        <a class="tab-lnk active" href="#recommendretire">To Retire</a>
-        <a class="tab-lnk" href="#dead">Unused</a>
-        <a class="tab-lnk" href="#maintenancerequired">To Maintain</a>
-        <a class="tab-lnk" href="#auditonly">Audit Only</a>
-        <a class="tab-lnk" href="#missingschedule">No Maint Schedule</a>
-        <a class="tab-lnk" href="#notanalytics">Edited by Others</a>
-        <a class="tab-lnk" href="#topundocumented">To Document</a>
-        <a class="tab-lnk" href="#newundocumented">New Undocumented</a>
-        <a class="tab-lnk" href="#canmakereports">Users with Create</a>
-    </div>
-</div>
+<h1 class="title is-1">Maintenance Tasks</h1>
+
+<partial name="_Links" />
+
 <div class="tab-cnt">
     <div class="tab-dta active" id="recommendretire">
         <div data-ajax="yes" data-url="/Tasks?handler=RecommendRetire"></div>

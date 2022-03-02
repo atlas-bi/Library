@@ -104,7 +104,7 @@ namespace Atlas_Web.Pages.Settings
                 _context,
                 User.Identity.Name
             );
-            
+
             return new PartialViewResult() { ViewName = "Partials/_Theme", ViewData = ViewData };
         }
 

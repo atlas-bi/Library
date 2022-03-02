@@ -1,0 +1,29 @@
+@model  Atlas_Web.Models.UserGroup
+
+<div class="card">
+    <div class="card-header">
+        <div class="card-header-title is-justify-content-space-between py-2">
+            <a class="has-text-dark" href="/Groups?id=@Model.GroupId">@Model.GroupName</a>
+            <span class="tags">
+                <span class="tag">group</span>
+            </span>
+        </div>
+    </div>
+    <div class="card-content pt-3 pb-2">
+        <div class="media">
+            <div class="media-left">
+                <figure class="image is-128x128">
+                    <picture>
+                        <source srcset="/img/group_placeholder_128x128.webp" type="image/webp" loading="lazy">
+                        <img src="/img/group_placeholder_128x128.png" alt="placeholder image" loading="lazy">
+                    </picture>
+                </figure>
+            </div>
+            <div class="media-content is-min-h-96 is-flex is-justify-content-space-between is-flex-direction-column">
+            </div>
+        </div>
+    </div>
+    <footer class="card-footer">
+        <a href="/Groups?id=@Model.GroupId" class="card-footer-item">Open</a>
+    </footer>
+</div>

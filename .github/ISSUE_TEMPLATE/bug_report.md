@@ -2,7 +2,7 @@
 name: "\U0001F9A0 Bug Report"
 about: You've found a bug?
 title: '[BUG] '
-labels: bug
+labels: ':microbe: bug'
 ---
 
 <!--
@@ -24,7 +24,7 @@ labels: bug
 
 <!-- A clear and concise description of what the bug is. -->
 
-## How To Reproduce
+## How To Reproduce/ Screenshots
 
 <!-- Steps to reproduce the behavior -->
 

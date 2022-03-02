@@ -51,9 +51,9 @@ document.addEventListener('dragEnd', function (e) {
     return !1;
   }
 
-  if ($event.detail.el.closest('.mini-tags.reorder')) {
+  if ($event.detail.el.closest('.reorder')) {
     $event.detail.el
-      .closest('.mini-tags.reorder')
+      .closest('.reorder')
       .dispatchEvent(new CustomEvent('reorder'));
   }
 });
