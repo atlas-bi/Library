@@ -3,8 +3,18 @@
 
 @{
     Layout = null;
-
 }
+
+<section class="section my-5 py-0">
+    <div class="container">
+        <div class="icon-text">
+            <span class="icon mr-5">
+                <i class="fas fa-filter"></i>
+            </span>
+            <span>Quick Filter</span>
+        </div>
+    </div>
+</section>
 
 <div class="columns">
     @if (Model.Reports.Any() || Model.Collections.Any() || Model.Initiatives.Any() || Model.Terms.Any() || Model.Users.Any() || Model.Searches.Any() || Model.Groups.Any())

@@ -113,6 +113,7 @@ gulp.task('font:fontawesome', function (done) {
         'book-open',
         'check-circle',
         'certificate',
+        'filter',
       ],
     },
     'web/wwwroot/font/fontawesome/webfonts',

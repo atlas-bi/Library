@@ -235,6 +235,7 @@ $icons: (
   book-open: $fa-var-book-open,
   check-circle: $fa-var-check-circle,
   certificate: $fa-var-certificate,
+  filter: $fa-var-filter,
 );
 
 @each $key, $value in $icons {
