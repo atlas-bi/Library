@@ -17,6 +17,7 @@ using SolrNet;
 using Microsoft.Extensions.Caching.Memory;
 using System.Linq;
 using Atlas_Web.Middleware;
+using Atlas_Web.Helpers;
 
 namespace Atlas_Web
 {

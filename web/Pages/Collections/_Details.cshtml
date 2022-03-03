@@ -58,10 +58,10 @@
                 <td>
                     @if (@Configuration["features:enable_user_profile"] == null || @Configuration["features:enable_user_profile"].ToString().ToLower() == "true")
                     {
-                        <a href="/users?id=@Model.Collection.LastUpdateUser">@Model.Collection.LastUpdateUserNavigation.Fullname_Cust</a>
+                        <a href="/users?id=@Model.Collection.LastUpdateUser">@Model.Collection.LastUpdateUserNavigation.FullnameCalc</a>
                     } else
                     {
-                        @Model.Collection.LastUpdateUserNavigation.Fullname_Cust
+                        @Model.Collection.LastUpdateUserNavigation.FullnameCalc
                     }
                 </td>
             </tr>

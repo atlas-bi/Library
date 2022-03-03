@@ -20,10 +20,10 @@
                     <td>
                         @if (@Configuration["features:enable_user_profile"] == null || @Configuration["features:enable_user_profile"].ToString().ToLower() == "true")
                         {
-                            <a href="/users?id=@Model.Initiative.OperationOwnerId">@Model.Initiative.OperationOwner.Fullname_Cust</a>
+                            <a href="/users?id=@Model.Initiative.OperationOwnerId">@Model.Initiative.OperationOwner.FullnameCalc</a>
                         } else
                         {
-                            @Model.Initiative.OperationOwner.Fullname_Cust
+                            @Model.Initiative.OperationOwner.FullnameCalc
                         }
                     </td>
                 </tr>
@@ -35,10 +35,10 @@
                     <td>
                         @if (@Configuration["features:enable_user_profile"] == null || @Configuration["features:enable_user_profile"].ToString().ToLower() == "true")
                         {
-                            <a href="/users?id=@Model.Initiative.ExecutiveOwnerId">@Model.Initiative.ExecutiveOwner.Fullname_Cust</a>
+                            <a href="/users?id=@Model.Initiative.ExecutiveOwnerId">@Model.Initiative.ExecutiveOwner.FullnameCalc</a>
                         } else
                         {
-                            @Model.Initiative.ExecutiveOwner.Fullname_Cust
+                            @Model.Initiative.ExecutiveOwner.FullnameCalc
                         }
                     </td>
                 </tr>
@@ -68,10 +68,10 @@
                     <td>
                         @if (@Configuration["features:enable_user_profile"] == null || @Configuration["features:enable_user_profile"].ToString().ToLower() == "true")
                             {
-                                <a href="/users?id=@Model.Initiative.LastUpdateUser">@Model.Initiative.LastUpdateUserNavigation.Fullname_Cust</a>
+                                <a href="/users?id=@Model.Initiative.LastUpdateUser">@Model.Initiative.LastUpdateUserNavigation.FullnameCalc</a>
                             } else
                             {
-                                @Model.Initiative.LastUpdateUserNavigation.Fullname_Cust
+                                @Model.Initiative.LastUpdateUserNavigation.FullnameCalc
                             }
                     </td>
                 </tr>

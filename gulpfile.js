@@ -16,10 +16,7 @@ const log = require('fancy-log');
 const path = require('path');
 var dotnet, iis;
 const { spawn } = require('child_process');
-var fs = require('fs'),
-  bite_size = 256,
-  readbytes = 0,
-  file;
+var fs = require('fs');
 
 gulp.task('package:markdown-it', function () {
   return gulp
@@ -371,7 +368,7 @@ gulp.task(
         'web/Pages/**/*.cshtml.cs',
         'web/Helpers**/*.cs',
         'web/Middleware**/*.cs',
-        'web/Models**/*.cs',
+        'web/Models/**/*.cs',
         'web/Properties/**/*.json',
         'web/appsettings*.json',
         'web/Program.cs',
@@ -380,6 +377,34 @@ gulp.task(
         'web/**/*.json',
       ],
       gulp.series('iis:run'),
+    );
+    cb();
+  }),
+);
+
+gulp.task(
+  'watch:static',
+  gulp.series('build', function (cb) {
+    gulp.watch('web/wwwroot/**/*.scss', gulp.series('sass'));
+    gulp.watch('web/wwwroot/**/*.sass', gulp.series('sass'));
+    gulp.watch(
+      ['web/wwwroot/**/*.js', '!web/wwwroot/**/*.min.js'],
+      gulp.parallel(
+        'js:settings',
+        'js:shared',
+        'js:editor',
+        'js:utility',
+        'sass',
+      ),
+    );
+    gulp.watch(
+      'web/wwwroot/js/polyfill/**/*.js',
+      gulp.parallel('js:polyfill', 'sass'),
+    );
+    gulp.watch('web/Pages/**/*.cshtml', gulp.series('sass'));
+    gulp.watch(
+      'web/font/fontawesome/**/*.scss',
+      gulp.series('font:fontawesome', 'sass'),
     );
     cb();
   }),

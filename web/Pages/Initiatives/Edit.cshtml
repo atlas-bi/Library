@@ -47,7 +47,7 @@
         <label class="label">Operations Owner</label>
         <div class="field is-grouped">
             <div class="control is-relative is-expanded">
-                <input class="input input-mini" placeholder="type to search.."  value="@if(@Model.Initiative.OperationOwner!= null){@Model.Initiative.OperationOwner.Fullname_Cust}" search-area="UserSearch" />
+                <input class="input input-mini" placeholder="type to search.."  value="@if(@Model.Initiative.OperationOwner!= null){@Model.Initiative.OperationOwner.FullnameCalc}" search-area="UserSearch" />
                 <input type="hidden" asp-for="Initiative.OperationOwnerId" value='@Model.Initiative.OperationOwnerId'/>
                 <div class="mini">
                     <div class="mini-waiting">
@@ -71,7 +71,7 @@
         <label class="label">Executive Owner</label>
         <div class="field is-grouped">
             <div class="control is-relative is-expanded">
-                <input class="input input-mini" placeholder="type to search.."  value="@if(@Model.Initiative.ExecutiveOwner!=null){@Model.Initiative.ExecutiveOwner.Fullname_Cust}" search-area="UserSearch" />
+                <input class="input input-mini" placeholder="type to search.."  value="@if(@Model.Initiative.ExecutiveOwner!=null){@Model.Initiative.ExecutiveOwner.FullnameCalc}" search-area="UserSearch" />
                 <input type="hidden" asp-for="Initiative.ExecutiveOwnerId" value='@Model.Initiative.ExecutiveOwnerId'/>
                 <div class="mini">
                     <div class="mini-waiting">

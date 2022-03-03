@@ -106,7 +106,7 @@
             <label class="label">Operations Owner</label>
             <div class="field is-grouped">
                 <div class="control is-relative is-expanded">
-                    <input class="input input-mini" placeholder="type to search.."  value="@if(@Model.Report.OperationalOwnerUser!= null){@Model.Report.OperationalOwnerUser.Fullname_Cust}" search-area="UserSearch" />
+                    <input class="input input-mini" placeholder="type to search.."  value="@if(@Model.Report.OperationalOwnerUser!= null){@Model.Report.OperationalOwnerUser.FullnameCalc}" search-area="UserSearch" />
                     <input type="hidden" asp-for="Report.OperationalOwnerUserId" value='@Model.Report.OperationalOwnerUserId'/>
                     <div class="mini">
                         <div class="mini-waiting">
@@ -130,7 +130,7 @@
             <label class="label">Requester</label>
             <div class="field is-grouped">
                 <div class="control is-relative is-expanded">
-                    <input class="input input-mini" placeholder="type to search.."  value="@if(@Model.Report.RequesterNavigation!= null){@Model.Report.RequesterNavigation.Fullname_Cust}" search-area="UserSearch" />
+                    <input class="input input-mini" placeholder="type to search.."  value="@if(@Model.Report.RequesterNavigation!= null){@Model.Report.RequesterNavigation.FullnameCalc}" search-area="UserSearch" />
                     <input type="hidden" asp-for="Report.Requester" value='@Model.Report.Requester'/>
                     <div class="mini">
                         <div class="mini-waiting">

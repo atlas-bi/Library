@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
 using Atlas_Web.Helpers;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Configuration;
 
 namespace Atlas_Web.Pages.Profile
 {
@@ -16,11 +17,13 @@ namespace Atlas_Web.Pages.Profile
     {
         private readonly Atlas_WebContext _context;
         private readonly IMemoryCache _cache;
+        private readonly IConfiguration _config;
 
-        public IndexModel(Atlas_WebContext context, IMemoryCache cache)
+        public IndexModel(Atlas_WebContext context, IMemoryCache cache, IConfiguration config)
         {
             _context = context;
             _cache = cache;
+            _config = config;
         }
 
         public class TopUsersData
@@ -93,7 +96,7 @@ namespace Atlas_Web.Pages.Profile
                         orderby tmp.count descending
                         select new TopUsersData
                         {
-                            Username = u.Fullname_Cust,
+                            Username = u.FullnameCalc,
                             UserUrl = "\\users?id=" + u.UserId,
                             Hits = tmp.count,
                             RunTime = Math.Round(tmp.avg, 2),
@@ -134,7 +137,7 @@ namespace Atlas_Web.Pages.Profile
                         select new FailedRunsData
                         {
                             Date = d.RunStartTimeDisplayString,
-                            RunUser = d.RunUser.Fullname_Cust,
+                            RunUser = d.RunUser.FullnameCalc,
                             UserUrl = "\\users?id=" + d.RunUserId,
                             RunStatus = d.RunStatus
                         }
@@ -154,7 +157,7 @@ namespace Atlas_Web.Pages.Profile
                         select new SubscriptionData
                         {
                             UserUrl = "\\users?id=" + s.UserId,
-                            User = s.User.Fullname_Cust,
+                            User = s.User.FullnameCalc,
                             Subscription = s.SubscriptionTo.Replace(";", "; "),
                             InactiveFlags = s.InactiveFlags.ToString(),
                             EmailList = s.EmailList.Replace(";", "; "),
@@ -172,12 +175,12 @@ namespace Atlas_Web.Pages.Profile
                 {
                     cacheEntry.SlidingExpiration = TimeSpan.FromMinutes(10);
                     return (
-                        from f in _context.UserFavorites
-                        where f.ItemId == id && f.ItemType.ToLower() == "report"
+                        from f in _context.StarredReports
+                        where f.Reportid == id
                         select new FavoritesData
                         {
-                            UserUrl = "\\users?id=" + f.UserId,
-                            User = f.User.Fullname_Cust,
+                            UserUrl = "\\users?id=" + f.Ownerid,
+                            User = f.Owner.FullnameCalc,
                         }
                     ).ToListAsync();
                 }
@@ -215,7 +218,7 @@ namespace Atlas_Web.Pages.Profile
                         orderby tmp.count descending
                         select new TopUsersData
                         {
-                            Username = u.Fullname_Cust,
+                            Username = u.FullnameCalc,
                             UserUrl = "\\users?id=" + u.UserId,
                             Hits = tmp.count,
                             RunTime = Math.Round(tmp.avg, 2),
@@ -278,7 +281,7 @@ namespace Atlas_Web.Pages.Profile
                         orderby tmp.count descending
                         select new TopUsersData
                         {
-                            Username = u.Fullname_Cust,
+                            Username = u.FullnameCalc,
                             UserUrl = "\\users?id=" + u.UserId,
                             Hits = tmp.count,
                             RunTime = Math.Round(tmp.avg, 2),

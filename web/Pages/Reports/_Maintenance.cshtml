@@ -9,10 +9,10 @@
         <div class="panel-block">
             @if (Configuration["features:enable_user_profile"] == null || Configuration["features:enable_user_profile"].ToString().ToLower() == "true")
             {
-                <a href="/users?id=@log.MaintenanceLog.MaintainerId">@log.MaintenanceLog.Maintainer.Fullname_Cust</a>
+                <a href="/users?id=@log.MaintenanceLog.MaintainerId">@log.MaintenanceLog.Maintainer.FullnameCalc</a>
             } else
             {
-                @log.MaintenanceLog.Maintainer.Fullname_Cust
+                @log.MaintenanceLog.Maintainer.FullnameCalc
             }
             <span class="text-muted">&nbsp;·&nbsp;@log.MaintenanceLog.MaintenanceDateDisplayString&nbsp;</span>
             @if (log.MaintenanceLog.MaintenanceLogStatus != null)

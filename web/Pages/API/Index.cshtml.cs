@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -20,11 +20,13 @@ namespace Atlas_Web.Pages.API
     {
         private readonly Atlas_WebContext _context;
         private readonly IMemoryCache _cache;
+        private readonly IConfiguration _config;
 
-        public IndexModel(Atlas_WebContext context, IMemoryCache cache)
+        public IndexModel(Atlas_WebContext context, IMemoryCache cache, IConfiguration config)
         {
             _context = context;
             _cache = cache;
+            _config = config;
         }
 
         public class Stuffdata
@@ -46,7 +48,7 @@ namespace Atlas_Web.Pages.API
             ViewData["stuff"] = (
                 from u in (
                     from u in _context.Users
-                    group u by u.Fullname_Cust into grp
+                    group u by u.FullnameCalc into grp
                     select new { grp.Key, cnt = grp.Count() }
                 )
                 where u.cnt > 1
@@ -56,7 +58,7 @@ namespace Atlas_Web.Pages.API
             ViewData["summary"] = (
                 from u in (
                     from u in _context.Users
-                    group u by u.Fullname_Cust into grp
+                    group u by u.FullnameCalc into grp
                     select new { grp.Key, cnt = grp.Count() }
                 )
                 where u.cnt > 1
@@ -67,7 +69,7 @@ namespace Atlas_Web.Pages.API
 
             ViewData["alluserrs"] = (
                 from u in _context.Users
-                select new Stuffdata { Key = u.Fullname_Cust, Cnt = 0 }
+                select new Stuffdata { Key = u.FullnameCalc, Cnt = 0 }
             ).ToList();
         }
 
@@ -121,10 +123,10 @@ namespace Atlas_Web.Pages.API
             await _context.SaveChangesAsync();
 
             /*var toUser = _context.User.Where(x => x.UserId == id).FirstOrDefault();
-            
-            var ToUserFirstname = toUser.Firstname_Cust;
+
+            var ToUserFirstname = toUser.FirstnameCalc;
             var myMessage = message ?? "I would like to share the following report with you.";
-            var FromUserName = user.Fullname_Cust;
+            var FromUserName = user.FullnameCalc;
             var FromUserEmail = user.Email;
 
             string body = $@"<!DOCTYPE html>
@@ -161,7 +163,7 @@ namespace Atlas_Web.Pages.API
                         </html>";
 
             var fromEmail = user.Email ?? _config["AppSettings:default_from_email_address"];
-                       
+
 
             using (var smtp = new SmtpClient())
             {
@@ -184,7 +186,7 @@ namespace Atlas_Web.Pages.API
                 await smtp.SendMailAsync(thismessage);
 
                 // using mail drop to file
-               
+
                 smtp.DeliveryMethod = SmtpDeliveryMethod.SpecifiedPickupDirectory;
                 smtp.PickupDirectoryLocation = @"r:\mailpickup";
                 thismessage = new MailMessage();
@@ -194,7 +196,7 @@ namespace Atlas_Web.Pages.API
                 thismessage.IsBodyHtml = true;
                 thismessage.From = new MailAddress(fromEmail);
                 await smtp.SendMailAsync(thismessage);
-                
+
             }*/
             return Content("shared");
         }

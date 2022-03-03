@@ -750,7 +750,7 @@ namespace Atlas_Web.Pages.Users
                         o.ShareDate == null
                             ? null
                             : (o.ShareDate ?? DateTime.Now).ToString("M/d/yyyy"),
-                    SharedFrom = o.SharedFromUser.Fullname_Cust,
+                    SharedFrom = o.SharedFromUser.FullnameCalc,
                     Url = o.Url
                 }
             ).ToList();
@@ -765,7 +765,7 @@ namespace Atlas_Web.Pages.Users
                         o.ShareDate == null
                             ? null
                             : (o.ShareDate ?? DateTime.Now).ToString("M/d/yyyy"),
-                    SharedFrom = o.SharedToUser.Fullname_Cust,
+                    SharedFrom = o.SharedToUser.FullnameCalc,
                     Url = o.Url
                 }
             ).ToList();

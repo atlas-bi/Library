@@ -147,7 +147,7 @@ namespace Atlas_Web.Pages.Requests
                 xmlWriter.WriteElementString("name", "requester");
                 xmlWriter.WriteElementString(
                     "value",
-                    UserHelpers.GetUser(_cache, _context, User.Identity.Name).Fullname_Cust
+                    UserHelpers.GetUser(_cache, _context, User.Identity.Name).FullnameCalc
                 );
                 xmlWriter.WriteEndElement();
                 xmlWriter.WriteStartElement("parameter");
@@ -255,7 +255,7 @@ namespace Atlas_Web.Pages.Requests
                 xmlWriter.WriteElementString("name", "requester");
                 xmlWriter.WriteElementString(
                     "value",
-                    UserHelpers.GetUser(_cache, _context, User.Identity.Name).Fullname_Cust
+                    UserHelpers.GetUser(_cache, _context, User.Identity.Name).FullnameCalc
                 );
                 xmlWriter.WriteEndElement();
                 xmlWriter.WriteStartElement("parameter");

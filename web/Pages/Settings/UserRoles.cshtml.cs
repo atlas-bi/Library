@@ -7,6 +7,7 @@ using Atlas_Web.Models;
 using System.Collections.Generic;
 using Atlas_Web.Helpers;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Configuration;
 
 namespace Atlas_Web.Pages.Settings
 {
@@ -14,11 +15,13 @@ namespace Atlas_Web.Pages.Settings
     {
         private readonly IMemoryCache _cache;
         private readonly Atlas_WebContext _context;
+        private readonly IConfiguration _config;
 
-        public UserRolesModel(Atlas_WebContext context, IMemoryCache cache)
+        public UserRolesModel(Atlas_WebContext context, IMemoryCache cache, IConfiguration config)
         {
             _context = context;
             _cache = cache;
+            _config = config;
         }
 
         public List<UserRolesData> UserRoles { get; set; }
@@ -66,7 +69,7 @@ namespace Atlas_Web.Pages.Settings
                 select new PrivilegedUsersData
                 {
                     Id = u.UserId,
-                    Name = u.Fullname_Cust,
+                    Name = u.FullnameCalc,
                     Roles =
                         from l in u.UserRoleLinks
                         select new PrivilegedUserRolesData

@@ -4,7 +4,7 @@
     ViewBag.PublicUser = UserHelpers.GetUser(Cache, DbContext, User.Identity.Name);
     ViewBag.Preferences = UserHelpers.GetPreferences(Cache, DbContext, User.Identity.Name);
     ViewBag.MyRole = UserHelpers.GetMyRole(DbContext, User.Identity.Name);
-    ViewBag.Fullname = ViewBag.PublicUser.Fullname_Cust;
+    ViewBag.Fullname = ViewBag.PublicUser.FullnameCalc;
     ViewBag.SiteMessage = HtmlHelpers.SiteMessage(ViewContext.HttpContext, DbContext);
 }
 

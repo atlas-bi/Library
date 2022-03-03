@@ -1,8 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
-
-#nullable disable
 
 namespace Atlas_Web.Models
 {
@@ -111,8 +110,6 @@ namespace Atlas_Web.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.HasAnnotation("Relational:Collation", "SQL_Latin1_General_CP1_CI_AS");
-
             modelBuilder.Entity<Analytic>(
                 entity =>
                 {
@@ -378,7 +375,7 @@ namespace Atlas_Web.Models
                         .Property(e => e.ExternalDocumentationUrl)
                         .HasColumnName("ExternalDocumentationURL");
 
-                    entity.Property(e => e.Hidden).HasMaxLength(1).IsFixedLength(true);
+                    entity.Property(e => e.Hidden).HasMaxLength(1).IsFixedLength();
 
                     entity.Property(e => e.LastUpdateDate).HasColumnType("datetime");
 
@@ -1020,7 +1017,7 @@ namespace Atlas_Web.Models
                         .HasMaxLength(1)
                         .HasColumnName("OrphanedReportObjectYN")
                         .HasDefaultValueSql("('N')")
-                        .IsFixedLength(true);
+                        .IsFixedLength();
 
                     entity.Property(e => e.ReportObjectTypeId).HasColumnName("ReportObjectTypeID");
 
@@ -1149,12 +1146,9 @@ namespace Atlas_Web.Models
 
                     entity.Property(e => e.CreatedDateTime).HasColumnType("datetime");
 
-                    entity.Property(e => e.DoNotPurge).HasMaxLength(1).IsFixedLength(true);
+                    entity.Property(e => e.DoNotPurge).HasMaxLength(1).IsFixedLength();
 
-                    entity
-                        .Property(e => e.EnabledForHyperspace)
-                        .HasMaxLength(1)
-                        .IsFixedLength(true);
+                    entity.Property(e => e.EnabledForHyperspace).HasMaxLength(1).IsFixedLength();
 
                     entity
                         .Property(e => e.EstimatedRunFrequencyId)
@@ -1164,7 +1158,7 @@ namespace Atlas_Web.Models
                         .Property(e => e.ExecutiveVisibilityYn)
                         .HasMaxLength(1)
                         .HasColumnName("ExecutiveVisibilityYN")
-                        .IsFixedLength(true);
+                        .IsFixedLength();
 
                     entity.Property(e => e.FragilityId).HasColumnName("FragilityID");
 
@@ -1174,7 +1168,7 @@ namespace Atlas_Web.Models
 
                     entity.Property(e => e.GitLabTreeUrl).HasColumnName("GitLabTreeURL");
 
-                    entity.Property(e => e.Hidden).HasMaxLength(1).IsFixedLength(true);
+                    entity.Property(e => e.Hidden).HasMaxLength(1).IsFixedLength();
 
                     entity.Property(e => e.LastUpdateDateTime).HasColumnType("datetime");
 
@@ -1659,13 +1653,13 @@ namespace Atlas_Web.Models
 
                     entity.Property(e => e.DocCreated).HasColumnType("datetime");
 
-                    entity.Property(e => e.DocDoNotPurge).HasMaxLength(1).IsFixedLength(true);
+                    entity.Property(e => e.DocDoNotPurge).HasMaxLength(1).IsFixedLength();
 
-                    entity.Property(e => e.DocExecVis).HasMaxLength(1).IsFixedLength(true);
+                    entity.Property(e => e.DocExecVis).HasMaxLength(1).IsFixedLength();
 
-                    entity.Property(e => e.DocHidden).HasMaxLength(1).IsFixedLength(true);
+                    entity.Property(e => e.DocHidden).HasMaxLength(1).IsFixedLength();
 
-                    entity.Property(e => e.DocHypeEnabled).HasMaxLength(1).IsFixedLength(true);
+                    entity.Property(e => e.DocHypeEnabled).HasMaxLength(1).IsFixedLength();
 
                     entity.Property(e => e.DocLastUpdated).HasColumnType("datetime");
 
@@ -1683,7 +1677,7 @@ namespace Atlas_Web.Models
                         .Property(e => e.OrphanedReportObjectYn)
                         .HasMaxLength(1)
                         .HasColumnName("OrphanedReportObjectYN")
-                        .IsFixedLength(true);
+                        .IsFixedLength();
 
                     entity.Property(e => e.ReportObjectTypeId).HasColumnName("ReportObjectTypeID");
 
@@ -2007,7 +2001,7 @@ namespace Atlas_Web.Models
                         .HasMaxLength(1)
                         .IsUnicode(false)
                         .HasColumnName("ApprovedYN")
-                        .IsFixedLength(true);
+                        .IsFixedLength();
 
                     entity.Property(e => e.ExternalStandardUrl).HasMaxLength(4000);
 
@@ -2016,7 +2010,7 @@ namespace Atlas_Web.Models
                         .HasMaxLength(1)
                         .IsUnicode(false)
                         .HasColumnName("HasExternalStandardYN")
-                        .IsFixedLength(true);
+                        .IsFixedLength();
 
                     entity.Property(e => e.LastUpdatedDateTime).HasColumnType("datetime");
 
@@ -2095,6 +2089,10 @@ namespace Atlas_Web.Models
                     entity.Property(e => e.UserId).HasColumnName("UserID");
 
                     entity.Property(e => e.EmployeeId).HasColumnName("EmployeeID");
+
+                    entity.Property(e => e.FirstnameCalc).HasColumnName("Firstname_calc");
+
+                    entity.Property(e => e.FullnameCalc).HasColumnName("Fullname_calc");
 
                     entity.Property(e => e.LastLoadDate).HasColumnType("datetime");
 

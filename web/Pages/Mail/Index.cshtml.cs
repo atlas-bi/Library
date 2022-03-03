@@ -17,12 +17,14 @@ namespace Atlas_Web.Pages.Mail
     public class IndexModel : PageModel
     {
         private readonly Atlas_WebContext _context;
+        private readonly IConfiguration _config;
         private readonly IMemoryCache _cache;
 
-        public IndexModel(Atlas_WebContext context, IMemoryCache cache)
+        public IndexModel(Atlas_WebContext context, IMemoryCache cache, IConfiguration config)
         {
             _context = context;
             _cache = cache;
+            _config = config;
         }
 
         public class MessageCountData
@@ -106,7 +108,7 @@ namespace Atlas_Web.Pages.Mail
         {
             var MyUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
             ;
-            FirstName = MyUser.Firstname_Cust;
+            FirstName = MyUser.FirstnameCalc;
 
             // get all mail
 
@@ -251,7 +253,7 @@ namespace Atlas_Web.Pages.Mail
                 return Content("You are unauthorized bro.");
             }
 
-            FirstName = MyUser.Firstname_Cust;
+            FirstName = MyUser.FirstnameCalc;
 
             var AllMail = await (
                 from r in _context.MailRecipients

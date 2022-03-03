@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Linq;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Configuration;
 
 namespace Atlas_Web.Pages.Analytics
 {
@@ -16,11 +17,13 @@ namespace Atlas_Web.Pages.Analytics
     {
         private readonly Atlas_WebContext _context;
         private readonly IMemoryCache _cache;
+        private readonly IConfiguration _config;
 
-        public IndexModel(Atlas_WebContext context, IMemoryCache cache)
+        public IndexModel(Atlas_WebContext context, IMemoryCache cache, IConfiguration config)
         {
             _context = context;
             _cache = cache;
+            _config = config;
         }
 
         public class SmallData
@@ -78,7 +81,7 @@ namespace Atlas_Web.Pages.Analytics
                 orderby grp.Count() descending
                 select new MediumData
                 {
-                    Name = grp.Key.Firstname_Cust,
+                    Name = grp.Key.FirstnameCalc,
                     Time = Math.Round(
                         grp.Average(i => Convert.ToDouble(i.LoadTime ?? "0")) / 1000,
                         2

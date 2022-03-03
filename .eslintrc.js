@@ -8,4 +8,12 @@ module.exports = {
     ecmaVersion: 'latest',
   },
   rules: {},
+  globals: {
+    require: 'readonly',
+    module: 'readonly',
+    process: 'readonly',
+    cache: 'readonly',
+    __dirname: 'readonly',
+    debounce: 'readonly',
+  },
 };

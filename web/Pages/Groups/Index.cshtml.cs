@@ -8,6 +8,7 @@ using Atlas_Web.Models;
 using Atlas_Web.Helpers;
 using System.Collections.Generic;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Configuration;
 
 namespace Atlas_Web.Pages.Groups
 {
@@ -15,11 +16,13 @@ namespace Atlas_Web.Pages.Groups
     {
         private readonly Atlas_WebContext _context;
         private readonly IMemoryCache _cache;
+        private readonly IConfiguration _config;
 
-        public IndexModel(Atlas_WebContext context, IMemoryCache cache)
+        public IndexModel(Atlas_WebContext context, IMemoryCache cache, IConfiguration config)
         {
             _context = context;
             _cache = cache;
+            _config = config;
         }
 
         public class UserList
@@ -156,7 +159,7 @@ namespace Atlas_Web.Pages.Groups
                         select new UserList
                         {
                             Id = a.UserId,
-                            Name = a.User.Fullname_Cust,
+                            Name = a.User.FullnameCalc,
                             Email = a.User.Email,
                             EpicId = a.User.EpicId,
                             EmployeeId = a.User.EmployeeId,

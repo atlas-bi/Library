@@ -36,11 +36,11 @@
                         <text>&nbsp;&middot;&nbsp;</text>
                         @if (@Configuration["features:enable_user_profile"] == null || @Configuration["features:enable_user_profile"].ToString().ToLower() == "true")
                         {
-                            <a href="/users?id=@Model.Report.LastModifiedByUserId">@Model.Report.LastModifiedByUser.Fullname_Cust</a>
+                            <a href="/users?id=@Model.Report.LastModifiedByUserId">@Model.Report.LastModifiedByUser.FullnameCalc</a>
                         }
                         else
                         {
-                            @Model.Report.LastModifiedByUser.Fullname_Cust
+                            @Model.Report.LastModifiedByUser.FullnameCalc
                         }
                     }
                 </td>
@@ -57,11 +57,11 @@
                             <text>&nbsp;&middot;&nbsp;</text>
                             @if (@Configuration["features:enable_user_profile"] == null || @Configuration["features:enable_user_profile"].ToString().ToLower() == "true")
                             {
-                                <a href="/users?id=@Model.Report.ReportObjectDoc.UpdatedBy">@Model.Report.ReportObjectDoc.UpdatedByNavigation.Fullname_Cust</a>
+                                <a href="/users?id=@Model.Report.ReportObjectDoc.UpdatedBy">@Model.Report.ReportObjectDoc.UpdatedByNavigation.FullnameCalc</a>
                             }
                             else
                             {
-                                @Model.Report.ReportObjectDoc.UpdatedByNavigation.Fullname_Cust
+                                @Model.Report.ReportObjectDoc.UpdatedByNavigation.FullnameCalc
                             }
                         }
                     </td>
@@ -75,11 +75,11 @@
                     <td>
                         @if (@Configuration["features:enable_user_profile"] == null || @Configuration["features:enable_user_profile"].ToString().ToLower() == "true")
                         {
-                            <a href="users?id=@Model.Report.AuthorUserId">@Model.Report.AuthorUser.Fullname_Cust</a>
+                            <a href="users?id=@Model.Report.AuthorUserId">@Model.Report.AuthorUser.FullnameCalc</a>
                         }
                         else
                         {
-                            @Model.Report.AuthorUser.Fullname_Cust
+                            @Model.Report.AuthorUser.FullnameCalc
                         }
                     </td>
                 </tr>
@@ -92,11 +92,11 @@
                     <td>
                         @if (@Configuration["features:enable_user_profile"] == null || @Configuration["features:enable_user_profile"].ToString().ToLower() == "true")
                         {
-                            <a href="users?id=@Model.Report.ReportObjectDoc.Requester">@Model.Report.ReportObjectDoc.RequesterNavigation.Fullname_Cust</a>
+                            <a href="users?id=@Model.Report.ReportObjectDoc.Requester">@Model.Report.ReportObjectDoc.RequesterNavigation.FullnameCalc</a>
                         }
                         else
                         {
-                            @Model.Report.ReportObjectDoc.RequesterNavigation.Fullname_Cust
+                            @Model.Report.ReportObjectDoc.RequesterNavigation.FullnameCalc
                         }
                     </td>
                 </tr>
@@ -109,11 +109,11 @@
                     <td>
                         @if(@Configuration["features:enable_user_profile"] == null || @Configuration["features:enable_user_profile"].ToString().ToLower() == "true")
                         {
-                            <a href="users?id=@Model.Report.ReportObjectDoc.OperationalOwnerUserId">@Model.Report.ReportObjectDoc.OperationalOwnerUser.Fullname_Cust</a>
+                            <a href="users?id=@Model.Report.ReportObjectDoc.OperationalOwnerUserId">@Model.Report.ReportObjectDoc.OperationalOwnerUser.FullnameCalc</a>
                         }
                         else
                         {
-                            @Model.Report.ReportObjectDoc.OperationalOwnerUser.Fullname_Cust
+                            @Model.Report.ReportObjectDoc.OperationalOwnerUser.FullnameCalc
                         }
                     </td>
                 </tr>

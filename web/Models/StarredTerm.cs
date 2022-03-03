@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 
-#nullable disable
-
 namespace Atlas_Web.Models
 {
     public partial class StarredTerm

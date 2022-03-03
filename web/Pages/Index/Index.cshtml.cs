@@ -8,6 +8,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Atlas_Web.Helpers;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Configuration;
 
 namespace Atlas_Web.Pages
 {
@@ -15,10 +16,12 @@ namespace Atlas_Web.Pages
     {
         private readonly Atlas_WebContext _context;
         private readonly IMemoryCache _cache;
+        private readonly IConfiguration _config;
 
-        public IndexModel(Atlas_WebContext context, IMemoryCache cache)
+        public IndexModel(Atlas_WebContext context, IMemoryCache cache, IConfiguration config)
         {
             _context = context;
+            _config = config;
             _cache = cache;
         }
 
@@ -51,7 +54,7 @@ namespace Atlas_Web.Pages
             PublicUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
             var MyUser = PublicUser;
             UserId = MyUser.UserId;
-            FirstName = MyUser.Firstname_Cust;
+            FirstName = MyUser.FirstnameCalc;
 
             return Page();
         }

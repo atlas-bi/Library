@@ -38,7 +38,7 @@ namespace Atlas_Web.Pages
             PublicUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
             var MyUser = PublicUser;
             UserId = MyUser.UserId;
-            FirstName = MyUser.Firstname_Cust;
+            FirstName = MyUser.FirstnameCalc;
             Permissions = UserHelpers.GetUserPermissions(_cache, _context, User.Identity.Name);
             ViewData["Permissions"] = Permissions;
             Preferences = UserHelpers.GetPreferences(_cache, _context, User.Identity.Name);

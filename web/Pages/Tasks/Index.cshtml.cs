@@ -126,7 +126,7 @@ namespace Atlas_Web.Pages.Tasks
                 where Id.Contains(u.Group.EpicId)
                 select new CanMakeReports
                 {
-                    Name = u.User.Fullname_Cust,
+                    Name = u.User.FullnameCalc,
                     UserId = u.UserId,
                     Role = u.Group.GroupName,
                     RoleId = u.GroupId
@@ -150,7 +150,7 @@ namespace Atlas_Web.Pages.Tasks
                     && l.ReportObject.ExecutiveVisibilityYn == "Y"
                 select new RecommendRetireReports
                 {
-                    FullName = m.Maintainer.Fullname_Cust,
+                    FullName = m.Maintainer.FullnameCalc,
                     Name = l.ReportObject.ReportObject.DisplayName,
                     MaintenanceDate = m.MaintenanceDate,
                     MaintenanceDateString = m.MaintenanceDateDisplayString,
@@ -198,7 +198,7 @@ namespace Atlas_Web.Pages.Tasks
                     ReportUrl = "\\Reports?id=" + r.ReportObjectId,
                     Name = r.DisplayName,
                     Type = r.ReportObjectType.Name,
-                    ModifiedBy = r.LastModifiedByUser.Fullname_Cust,
+                    ModifiedBy = r.LastModifiedByUser.FullnameCalc,
                     LastMod = r.LastUpdatedDateDisplayString,
                     Server = r.SourceServer,
                     MasterFile = r.EpicMasterFile,
@@ -268,9 +268,9 @@ namespace Atlas_Web.Pages.Tasks
                                           ),
                         Name = d.ReportObject.DisplayName,
                         LastUser = (
-                            ttwo.Maintainer.Fullname_Cust != "user not found"
-                                ? ttwo.Maintainer.Fullname_Cust
-                                : d.UpdatedByNavigation.Fullname_Cust
+                            ttwo.Maintainer.FullnameCalc != "user not found"
+                                ? ttwo.Maintainer.FullnameCalc
+                                : d.UpdatedByNavigation.FullnameCalc
                         )
                     }
                 )
@@ -350,9 +350,9 @@ namespace Atlas_Web.Pages.Tasks
                                           ),
                         Name = d.ReportObject.DisplayName,
                         LastUser = (
-                            ttwo.Maintainer.Fullname_Cust != "user not found"
-                                ? ttwo.Maintainer.Fullname_Cust
-                                : d.UpdatedByNavigation.Fullname_Cust
+                            ttwo.Maintainer.FullnameCalc != "user not found"
+                                ? ttwo.Maintainer.FullnameCalc
+                                : d.UpdatedByNavigation.FullnameCalc
                         )
                     }
                 )
@@ -405,9 +405,9 @@ namespace Atlas_Web.Pages.Tasks
                         NextDate = (ttwo.MaintenanceDate ?? d.LastUpdateDateTime ?? Today),
                         Name = d.ReportObject.DisplayName,
                         LastUser = (
-                            ttwo.Maintainer.Fullname_Cust != "user not found"
-                                ? ttwo.Maintainer.Fullname_Cust
-                                : d.UpdatedByNavigation.Fullname_Cust
+                            ttwo.Maintainer.FullnameCalc != "user not found"
+                                ? ttwo.Maintainer.FullnameCalc
+                                : d.UpdatedByNavigation.FullnameCalc
                         )
                     }
                 )
@@ -456,8 +456,8 @@ namespace Atlas_Web.Pages.Tasks
                 {
                     ReportUrl = "\\Reports?id=" + r.ReportObjectId.ToString(),
                     LastMod = r.LastUpdatedDateDisplayString,
-                    Author = r.AuthorUser.Fullname_Cust,
-                    ModifiedBy = r.LastModifiedByUser.Fullname_Cust,
+                    Author = r.AuthorUser.FullnameCalc,
+                    ModifiedBy = r.LastModifiedByUser.FullnameCalc,
                     Name = r.DisplayName,
                     ReportType = r.ReportObjectType.Name,
                     Epic = r.EpicMasterFile + " " + r.EpicRecordId.ToString(),
@@ -505,9 +505,9 @@ namespace Atlas_Web.Pages.Tasks
                 {
                     r.ReportObjectId,
                     ModifiedBy = (
-                        r.LastModifiedByUser.Fullname_Cust != "user not found"
-                            ? r.LastModifiedByUser.Fullname_Cust
-                            : r.AuthorUser.Fullname_Cust
+                        r.LastModifiedByUser.FullnameCalc != "user not found"
+                            ? r.LastModifiedByUser.FullnameCalc
+                            : r.AuthorUser.FullnameCalc
                     ),
                     Name = r.DisplayName,
                     ReportType = (
@@ -570,9 +570,9 @@ namespace Atlas_Web.Pages.Tasks
                 {
                     r.ReportObjectId,
                     ModifiedBy = (
-                        r.LastModifiedByUser.Fullname_Cust != "user not found"
-                            ? r.LastModifiedByUser.Fullname_Cust
-                            : r.AuthorUser.Fullname_Cust
+                        r.LastModifiedByUser.FullnameCalc != "user not found"
+                            ? r.LastModifiedByUser.FullnameCalc
+                            : r.AuthorUser.FullnameCalc
                     ),
                     Name = r.DisplayName,
                     ReportType = (

@@ -60,10 +60,10 @@
                     <td>
                         @if (@Configuration["features:enable_user_profile"] == null || @Configuration["features:enable_user_profile"].ToString().ToLower() == "true")
                         {
-                            <a href="/users?id=@Model.Term.ApprovedByUserId">@Model.Term.ApprovedByUser.Fullname_Cust</a>
+                            <a href="/users?id=@Model.Term.ApprovedByUserId">@Model.Term.ApprovedByUser.FullnameCalc</a>
                         } else
                         {
-                            @Model.Term.ApprovedByUser.Fullname_Cust
+                            @Model.Term.ApprovedByUser.FullnameCalc
                         }
                     </td>
                 </tr>
@@ -80,10 +80,10 @@
                 <td>
                     @if (@Configuration["features:enable_user_profile"] == null || @Configuration["features:enable_user_profile"].ToString().ToLower() == "true")
                     {
-                        <a href="/users?id=@Model.Term.UpdatedByUserId">@Model.Term.UpdatedByUser.Fullname_Cust</a>
+                        <a href="/users?id=@Model.Term.UpdatedByUserId">@Model.Term.UpdatedByUser.FullnameCalc</a>
                     } else
                     {
-                        @Model.Term.UpdatedByUser.Fullname_Cust
+                        @Model.Term.UpdatedByUser.FullnameCalc
                     }
                 </td>
             </tr>
