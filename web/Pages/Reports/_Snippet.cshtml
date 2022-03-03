@@ -103,9 +103,9 @@
                             <source srcset="/data/img?handler=Thumb&id=@Model.ReportObjectId&size=1200x1200&type=webp 800w,
                                             /data/img?handler=Thumb&id=@Model.ReportObjectId&size=2000x2000&type=webp 1200w"
                                     type="image/webp"
-
+                                    loading="lazy"
                                     sizes="100vw">
-                            <img src="/data/img?handler=Thumb&id=@Model.ReportObjectId&size=1200x2000" alt="report image" >
+                            <img src="/data/img?handler=Thumb&id=@Model.ReportObjectId&size=1200x2000" alt="report image" loading="lazy">
                         </picture>
                     </p>
                 </div>
@@ -138,7 +138,7 @@
                     <span class="icon has-text-gold">
                         <i class="fas fa-star"></i>
                     </span>
-                    <span>Starred <span class="tag is-rounded">@Model.StarredReports.Count</span></span>
+                    <span>Starred <span class="tag is-rounded star-count">@Model.StarredReports.Count</span></span>
                 }
                 else
                 {
@@ -180,6 +180,37 @@
                 </span>
             </a>
         }
+        <div class="card-footer-item">
+            <a class="is-block has-tooltip-arrow has-tooltip-top js-modal-trigger ml-2" data-target="report-profile-@Model.ReportObjectId" data-tooltip="Open Report Profile">
+                <span class="icon has-text-grey ">
+                    <i class="fas fa-chart-bar"></i>
+                </span>
+            </a>
+            @if (@Configuration["features:enable_sharing"] == null || @Configuration["features:enable_sharing"].ToString().ToLower() == "true")
+            {
+                <a class="is-block has-tooltip-arrow has-tooltip-top js-modal-trigger ml-2" data-tooltip="Share"  data-target="report-share-@Model.ReportObjectId">
+                    <span class="icon has-text-grey">
+                        <i class="fas fa-share"></i>
+                    </span>
+                </a>
+            }
+            @if (@Configuration["features:enable_request_access"] == null || @Configuration["features:enable_request_access"].ToString().ToLower() == "true")
+            {
+                <a class="is-block has-tooltip-arrow has-tooltip-top js-modal-trigger ml-2" data-tooltip="Request Access" data-target="request-access-@Model.ReportObjectId">
+                    <span class="icon has-text-grey">
+                        <i class="fas fa-universal-access"></i>
+                    </span>
+                </a>
+            }
+            @if (@Configuration["features:enable_feedback"] == null || @Configuration["features:enable_feedback"].ToString().ToLower() == "true")
+            {
+                <a class="is-block has-tooltip-arrow has-tooltip-top js-modal-trigger" data-tooltip="Share Feedback" data-target="report-share-feedback-@Model.ReportObjectId">
+                    <span class="icon has-text-grey">
+                        <i class="far fa-thumbs-up"></i>
+                    </span>
+                </a>
+            }
+        </div>
     </footer>
 </div>
 <partial name="Reports/_Modals" />

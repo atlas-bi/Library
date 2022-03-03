@@ -62,6 +62,43 @@
                 }
             </span>
         </a>
-        <a href="/Terms?id=@Model.TermId" class="card-footer-item">Open</a>
+        <a href="/Terms?id=@Model.TermId" class="card-footer-item">
+            <span class="icon-text">
+                <span class="icon">
+                    <i class="fas fa-book-open"></i>
+                </span>
+                <span>Read More</span>
+            </span>
+        </a>
+        <div class="card-footer-item">
+            <a class="is-block has-tooltip-arrow has-tooltip-right js-modal-trigger" data-target="term-profile-@Model.TermId" data-tooltip="Open Profile">
+                <span class="icon has-text-grey">
+                    <i class="fas fa-chart-bar"></i>
+                </span>
+            </a>
+
+            @if (@Configuration["features:enable_sharing"] == null || @Configuration["features:enable_sharing"].ToString().ToLower() == "true")
+            {
+                <li>
+                    <a class="is-block has-tooltip-arrow has-tooltip-right js-modal-trigger" data-tooltip="Share" data-target="term-share-@Model.TermId" data-name="@Model.Name" data-type="term">
+                        <span class="icon has-text-grey">
+                            <i class="fas fa-share"></i>
+                        </span>
+                    </a>
+                </li>
+            }
+
+            @if (@Configuration["features:enable_feedback"] == null || @Configuration["features:enable_feedback"].ToString().ToLower() == "true")
+            {
+                <li>
+                    <a class="is-block has-tooltip-arrow has-tooltip-right js-modal-trigger" data-tooltip="Share Feedback" data-target="term-share-feedback-@Model.TermId" data-name="@Model.Name">
+                        <span class="icon has-text-grey">
+                            <i class="far fa-thumbs-up"></i>
+                        </span>
+                    </a>
+                </li>
+            }
+        </div>
     </footer>
 </div>
+<partial name="Terms/_Modals" />

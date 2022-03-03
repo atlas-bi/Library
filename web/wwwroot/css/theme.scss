@@ -73,6 +73,7 @@ $card-footer-padding: 0.5rem 0.75rem;
 @import '../../../node_modules/bulma/bulma';
 
 
+
 // reset pre
 .content pre, pre {
   -webkit-overflow-scrolling: touch;
@@ -456,4 +457,8 @@ button.is-ghost:not(.button){
 }
 .panel-block.is-collapsible {
   padding: 0;
+}
+.has-shadow-gold {
+  box-shadow: 0 0.5em 1em -0.125em rgba(255,215,0, 0.1), 0 0px 0 1px rgba(255,215,0, 0.02);
+  border: 1px solid rgb(255,215,0);
 }
