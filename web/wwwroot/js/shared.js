@@ -16,9 +16,9 @@ var debounce = function debounce(func, wait, immediate) {
   };
 };
 
-var getUrlVars = function getUrlVars() {
+var getUrlVars = function () {
   var vars = {};
-  var parts = window.location.href
+  window.location.href
     .split('#')[0]
     .replace(/[?&]+([^=&]+)=([^&]*)/gi, function (m, key, value) {
       vars[key] = value;
@@ -26,7 +26,7 @@ var getUrlVars = function getUrlVars() {
   return vars;
 };
 
-var getOffset = function getOffset(element) {
+var getOffset = function (element) {
   if (!element.getClientRects().length) {
     return {
       top: 0,
@@ -82,7 +82,7 @@ var serialize = function serialize(form) {
   return serialized.join('&');
 };
 
-var setCookie = function setCookie(name, value, days) {
+var setCookie = function (name, value, days) {
   var expires = '',
     date = new Date();
 
@@ -93,7 +93,7 @@ var setCookie = function setCookie(name, value, days) {
   document.cookie = name + '=' + (value || '') + expires + '; path=/';
 };
 
-var getCookie = function getCookie(name) {
+var getCookie = function (name) {
   var nameEQ = name + '=';
   var ca = document.cookie.split(';');
 

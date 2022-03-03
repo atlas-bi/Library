@@ -262,7 +262,7 @@
 
   e.prototype = {
     // mirror even
-    updateMirror: function updateMirror(b) {
+    updateMirror: function updateMirror() {
       var a = this,
         md = this.md,
         button = this.editorPrevTitleButton;
@@ -293,7 +293,7 @@
       });
     },
     // button events
-    insertBold: function insertBold(b) {
+    insertBold: function insertBold() {
       var a = this;
 
       k(function () {
@@ -315,7 +315,7 @@
         a.mirror.focus();
       });
     },
-    insertItalics: function insertItalics(b) {
+    insertItalics: function insertItalics() {
       var a = this;
       k(function () {
         var word = a.mirror.findWordAt(a.mirror.getCursor());
@@ -333,7 +333,7 @@
         a.mirror.focus();
       });
     },
-    insertHeading: function insertHeading(b) {
+    insertHeading: function insertHeading() {
       var a = this;
       k(function () {
         var line = a.mirror.getCursor().line,
@@ -374,7 +374,7 @@
         a.mirror.focus();
       });
     },
-    insertQuote: function insertQuote(b) {
+    insertQuote: function insertQuote() {
       var a = this;
       k(function () {
         var word = a.mirror.findWordAt(a.mirror.getCursor());
@@ -423,7 +423,7 @@
         a.mirror.focus();
       });
     },
-    insertCode: function insertCode(b) {
+    insertCode: function insertCode() {
       var a = this;
       k(function () {
         var word = a.mirror.findWordAt(a.mirror.getCursor());
@@ -446,7 +446,7 @@
         a.mirror.focus();
       });
     },
-    insertUl: function insertUl(b) {
+    insertUl: function insertUl() {
       var a = this;
       k(function () {
         var word = a.mirror.findWordAt(a.mirror.getCursor());
@@ -496,7 +496,7 @@
         a.mirror.focus();
       });
     },
-    insertOl: function insertOl(b) {
+    insertOl: function insertOl() {
       var a = this;
       k(function () {
         var word = a.mirror.findWordAt(a.mirror.getCursor());
@@ -550,7 +550,7 @@
         a.mirror.focus();
       });
     },
-    insertLink: function insertLink(b) {
+    insertLink: function insertLink() {
       var a = this;
       k(function () {
         if (a.mirror.getSelection().length > 0) {
@@ -563,7 +563,7 @@
         a.mirror.focus();
       });
     },
-    save: function save(b) {
+    save: function save() {
       var a = this;
       k(function () {
         var data = {};
@@ -575,7 +575,7 @@
         q.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
         q.send(JSON.stringify(data));
 
-        q.onload = function (e) {
+        q.onload = function () {
           document.getElementById('editorMdl-titleSave').style.visibility =
             'visible';
           setTimeout(function () {

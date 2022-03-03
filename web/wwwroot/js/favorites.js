@@ -48,6 +48,8 @@
             el.style.opacity = 0;
             el.style.removeProperty('display');
             el.style.transition = 'opacity 0.3s ease-in-out';
+
+            // eslint-disable-next-line no-unused-vars
             var a = el.offsetHeight; // clear css cache
 
             el.style.opacity = 1;
@@ -108,9 +110,7 @@
       i,
       x,
       el,
-      sel,
       si,
-      y,
       a,
       folderId = t.getAttribute('folder-id'),
       nr = d.getElementById('favs-none');
@@ -172,6 +172,8 @@
       nr.style.opacity = 0;
       nr.style.removeProperty('display');
       nr.style.transition = 'opacity 0.1s ease-in-out';
+
+      // eslint-disable-next-line no-unused-vars
       a = nr.offsetHeight; // clear css cache
 
       nr.style.opacity = 1;
@@ -191,7 +193,6 @@
           v = i.value,
           f = d.getElementById('fav-folders');
 
-        var name = i.value;
         url = serialize(e.target);
         q = new XMLHttpRequest();
         q.open('post', e.target.getAttribute('action') + '&' + url, true);
@@ -260,7 +261,7 @@
   );
 
   function Reorder(el, x, y) {
-    var e, r, i, l, f;
+    var e, r, i, l;
 
     if (el.classList.contains('fav-folder')) {
       e = el.parentElement.querySelectorAll(
@@ -280,7 +281,6 @@
       e = getHoveredFolder(el, x, y);
 
       if (e && e !== null) {
-        f = !e.hasAttribute('folder-id') ? 0 : e.getAttribute('folder-id');
         UpdateFavFolder(el.getAttribute('fav-id'), e.getAttribute('folder-id'));
         el.setAttribute('folder-id', e.getAttribute('folder-id'));
         showall(d.querySelector('.fav-folder.active'));
@@ -344,8 +344,7 @@
         top,
         bottom,
         left,
-        right,
-        q = window.event;
+        right;
 
       for (l = 0; l < i.length; l++) {
         g = i[l];

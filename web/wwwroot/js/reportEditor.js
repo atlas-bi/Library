@@ -1,6 +1,4 @@
 (function () {
-  var d = document;
-
   function updateId($imagelist) {
     var $hiddenInputs = $imagelist.querySelectorAll(
       'input[type="hidden"][name]:not(.drag)',
@@ -77,7 +75,7 @@
     figure.appendChild(picture);
     picture.appendChild(img);
 
-    $this = document
+    var $this = document
       .querySelector('.images.reorder .new-image')
       .closest('.box');
     $this.parentNode.insertBefore(box, $this);
@@ -96,7 +94,7 @@
     q.withCredentials = true;
     q.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
     q.send(data);
-    q.onload = function (e) {
+    q.onload = function () {
       console.log('added');
       console.log(q.responseText);
       if (q.responseText == 'error') {

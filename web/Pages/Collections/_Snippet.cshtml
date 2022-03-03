@@ -3,7 +3,13 @@
 <div class="card has-shadow-gold">
     <div class="card-header">
         <div class="card-header-title py-2 is-justify-content-space-between">
-            <a class="has-text-dark" href="/Collections?id=@Model.DataProjectId">@Model.Name</a>
+            <a class="has-text-dark" href="/Collections?id=@Model.DataProjectId">@Model.Name
+                <div class="fa-layers ml-2 fa-lg">
+                    <span class="icon has-text-info "><i class="fas fa-certificate"></i></span>
+                    <span class="icon has-text-white fa-transform"><i class="fas fa-check shrink-5"></i></span>
+                </div>
+            </a>
+
             <span class="tags">
                 <span class="tag">collection</span>
             </span>
@@ -19,20 +25,22 @@
                     </picture>
                 </figure>
             </div>
-            <div class="media-content is-min-h-96 is-flex is-justify-content-space-between is-flex-direction-column">
-                @if (!string.IsNullOrEmpty(Model.Description))
-                {
-                    @(Model.Description.Substring(0,Math.Min(160,Model.Description.Length)) + " ...")
-                } else {
-                    <text>Open to view details.</text>
-                }
-                @*<div class="tags">
-                    @foreach (var d in Model.DpDataProjects)
+            <div class="is-flex is-flex-direction-column is-flex-grow-1">
+                <a class="media-content is-flex is-justify-content-space-between is-flex-direction-column is-min-h-96  has-text-dark" href="/Collections?id=@Model.DataProjectId">
+                    @if (!string.IsNullOrEmpty(Model.Description))
                     {
-                        <span class="tag is-link">@d.Name</span>
+                        @(Model.Description.Substring(0,Math.Min(160,Model.Description.Length)) + " ...")
+                    } else {
+                        <text>Open to view details.</text>
                     }
-                </div>
-                *@
+                    @*<div class="tags">
+                        @foreach (var d in Model.DpDataProjects)
+                        {
+                            <span class="tag is-link">@d.Name</span>
+                        }
+                    </div>
+                    *@
+                </a>
             </div>
         </div>
     </div>

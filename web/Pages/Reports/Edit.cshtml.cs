@@ -179,7 +179,7 @@ namespace Atlas_Web.Pages.Reports
             _context.RemoveRange(
                 _context.ReportObjectDocTerms
                     .Where(d => d.ReportObjectId == id)
-                    .Where(d => !Terms.Select(x => x.TermId).Contains((int)d.TermId))
+                    .Where(d => !Terms.Select(x => x.TermId).Contains(d.TermId))
             );
             _context.SaveChanges();
 
@@ -243,10 +243,7 @@ namespace Atlas_Web.Pages.Reports
                 _context.ReportObjectDocFragilityTags
                     .Where(d => d.ReportObjectId == id)
                     .Where(
-                        d =>
-                            !FragilityTags
-                                .Select(x => x.FragilityTagId)
-                                .Contains((int)d.FragilityTagId)
+                        d => !FragilityTags.Select(x => x.FragilityTagId).Contains(d.FragilityTagId)
                     )
             );
             _context.SaveChanges();
@@ -255,7 +252,7 @@ namespace Atlas_Web.Pages.Reports
             _context.RemoveRange(
                 _context.ReportObjectImagesDocs
                     .Where(d => d.ReportObjectId == id)
-                    .Where(d => !Images.Select(x => x.ImageId).Contains((int)d.ImageId))
+                    .Where(d => !Images.Select(x => x.ImageId).Contains(d.ImageId))
             );
             _context.SaveChanges();
 
@@ -299,7 +296,7 @@ namespace Atlas_Web.Pages.Reports
                         d =>
                             !ServiceRequests
                                 .Select(x => x.ManageEngineTicketsId)
-                                .Contains((int)d.ManageEngineTicketsId)
+                                .Contains(d.ManageEngineTicketsId)
                     )
             );
             _context.SaveChanges();
@@ -376,7 +373,6 @@ namespace Atlas_Web.Pages.Reports
         {
             if (ValidateFileUpload(File))
             {
-                //ReportObjectImagesDoc img;
                 var img = new ReportObjectImagesDoc { ReportObjectId = Id };
                 using (var stream = new MemoryStream())
                 {

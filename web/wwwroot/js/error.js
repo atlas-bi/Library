@@ -1,5 +1,6 @@
 (function () {
-  var vars = getUrlVars();
+  var vars = getUrlVars(),
+    message;
 
   function updateUrl($key) {
     delete vars[$key];
@@ -31,7 +32,7 @@
     var button = document.createElement('button');
 
     button.classList.add('delete');
-    button.addEventListener('click', function (e) {
+    button.addEventListener('click', function () {
       div.parentNode.removeChild(div);
     });
 
@@ -45,18 +46,18 @@
   }
 
   if (vars['error']) {
-    var message = decodeURI(vars['error']).replaceAll('+', ' ');
+    message = decodeURI(vars['error']).replaceAll('+', ' ');
     addMessage('is-danger', message);
     updateUrl('error');
   }
 
   if (vars['success']) {
-    var message = decodeURI(vars['success']).replaceAll('+', ' ');
+    message = decodeURI(vars['success']).replaceAll('+', ' ');
     addMessage('is-success', message);
     updateUrl('success');
   }
   if (vars['warning']) {
-    var message = decodeURI(vars['warning']).replaceAll('+', ' ');
+    message = decodeURI(vars['warning']).replaceAll('+', ' ');
     addMessage('is-warning', message);
     updateUrl('warning');
   }

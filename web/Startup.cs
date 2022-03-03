@@ -240,10 +240,9 @@ namespace Atlas_Web
                 }
             );
 
-            //app.UseCookiePolicy();
             app.UseETagger();
             app.UseRouting();
-            // app.UseAuthorization();
+
             app.UseEndpoints(
                 endpoints =>
                 {

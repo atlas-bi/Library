@@ -1,8 +1,6 @@
 (function () {
   document.execCommand('defaultParagraphSeparator', false, 'div');
-  var mail_check_rate = 30 * 1000,
-    getMessageAjax = null,
-    getNewMail = null,
+  var getNewMail = null,
     d = document,
     newMesQ = null,
     loadMesQ = null,
@@ -42,7 +40,7 @@
           draftMsg > 0 ? draftMsg : '';
       }
 
-      for (var x; x < unreadMsg.length; x++) {
+      for (x = 0; x < unreadMsg.length; x++) {
         if (newUnreadMsg > 0) {
           unreadMsg[x].style.display = 'inline-block';
           unreadMsg[x].innerHTML = newUnreadMsg;
@@ -52,7 +50,7 @@
         }
       }
 
-      for (var x; x < allMsg.length; x++) {
+      for (x = 0; x < allMsg.length; x++) {
         allMsg[x].innerHTML = newAllMsg;
       }
 
@@ -64,10 +62,12 @@
         notBox.innerHTML = not.innerHTML;
         notBox.style.transition = 'margin-right .5s';
         notBox.style.marginRight = '500px';
-        var q = notBox.clientWidth;
+
+        // eslint-disable-next-line no-unused-vars
+        var q = notBox.clientWidth; // clear js cache
         setTimeout(function () {
           notBox.style.marginRight = '0px';
-        }, 5000);
+        }, 10000);
       }
 
       // add new message previews, if they do not already exist.
@@ -84,7 +84,7 @@
               d.querySelectorAll('.mlbx-msgsMsg[data-rep-id]'),
             ),
             el;
-          for (var x = 0; x < msg.length; x++) {
+          for (x = 0; x < msg.length; x++) {
             el = div.querySelector(
               '.mlbx-msgsMsg[data-rep-id="' +
                 msg[x].getAttribute('data-rep-id') +
@@ -260,20 +260,20 @@
         );
         d.querySelector('.mlbx-newMsg form.mlbx-newMsgForm').addEventListener(
           'input',
-          function (e) {
+          function () {
             SaveDraft(this);
           },
         );
         d.querySelector('.mlbx-newMsg form.mlbx-newMsgForm').addEventListener(
           'change',
-          function (e) {
+          function () {
             SaveDraft(this);
           },
         );
       };
     },
     MarkMessageRead = function (id) {
-      q = new XMLHttpRequest();
+      var q = new XMLHttpRequest();
       q.open('post', 'mail?handler=MarkMessageRead&id=' + id, true);
       q.setRequestHeader(
         'Content-Type',
@@ -286,9 +286,7 @@
       saveDraftQ = null;
       // mark current message as read.
       var act = d.querySelectorAll('.mlbx-msgsMsg.active.unread'),
-        x = 0,
-        el,
-        q;
+        x = 0;
       for (x; x < act.length; x++) {
         act[x].classList.remove('unread');
         MarkMessageRead(act[x].getAttribute('data-rep-id'));
@@ -304,12 +302,12 @@
 
       messagebox
         .querySelector('form.mlbx-newMsgForm')
-        .addEventListener('input', function (e) {
+        .addEventListener('input', function () {
           SaveDraft(this);
         });
       messagebox
         .querySelector('form.mlbx-newMsgForm')
-        .addEventListener('change', function (e) {
+        .addEventListener('change', function () {
           SaveDraft(this);
         });
 
@@ -459,7 +457,6 @@
   });
 
   d.addEventListener('click', function (e) {
-    var q = null;
     if (e.target.closest('.mlbx-msgsMsg')) {
       ChangeActiveMessage(e.target.closest('.mlbx-msgsMsg'));
     } else if (e.target.closest('.mail-new-message')) {
@@ -470,7 +467,7 @@
         .closest('.mail-new-message')
         .getAttribute('data-fromid');
       if (from && fromId) {
-        StartNewMessage([[fromid, from]]);
+        StartNewMessage([[fromId, from]]);
       } else {
         StartNewMessage();
       }
@@ -482,7 +479,7 @@
       e.target
         .closest('.mlbx-usrDrp')
         .querySelector('.mlbx-usrDrpCtr')
-        .addEventListener('mouseleave', function mouseleave(e) {
+        .addEventListener('mouseleave', function mouseleave() {
           this.style.removeProperty('display');
           this.removeEventListener('mouseleave', mouseleave, false);
         });
@@ -570,7 +567,8 @@
         'margin-left 150ms, margin-right 150ms, margin-top 150ms';
       msg.style.zIndex = '-1';
 
-      var clear = msg.clientHeight;
+      // eslint-disable-next-line no-unused-vars
+      var clear = msg.clientHeight; // clear js cache
 
       msg.style.marginLeft = -w + 'px';
       msg.style.marginRight = w + 'px';
@@ -733,7 +731,7 @@
       convid = m.getAttribute('data-conv-id');
       subject = 'Re: ' + m.querySelector('.mailbox-subject').innerText;
       f = m.querySelectorAll('div.mailbox-sender-user');
-      t = m.querySelectorAll('div.mailbox-to-user');
+      var t = m.querySelectorAll('div.mailbox-to-user');
       from = [];
       for (x = 0; x < f.length; x++) {
         from.push([

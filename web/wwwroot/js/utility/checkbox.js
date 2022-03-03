@@ -7,7 +7,7 @@
 
       if (check && input) {
         check.checked = input.value == 'Y' ? true : false;
-        check.addEventListener('change', function (e) {
+        check.addEventListener('change', function () {
           input.value = check.checked ? 'Y' : 'N';
         });
       }
@@ -34,7 +34,7 @@
 
       if (check && input) {
         check.checked = input.value == 'Y' ? true : false;
-        check.addEventListener('change', function (e) {
+        check.addEventListener('change', function () {
           input.value = check.checked ? 'Y' : 'N';
         });
       }

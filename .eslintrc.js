@@ -15,5 +15,11 @@ module.exports = {
     cache: 'readonly',
     __dirname: 'readonly',
     debounce: 'readonly',
+    ShowMessageBox: 'readonly',
+    CodeMirror: 'readonly',
+    getUrlVars: 'readonly',
+    serialize: 'readonly',
+    getOffset: 'readonly',
+    getCookie: 'readonly',
   },
 };

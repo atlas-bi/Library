@@ -28,7 +28,10 @@ namespace Atlas_Web.Pages.Requests
             _cache = cache;
         }
 
-        public void OnGet() { }
+        public void OnGet()
+        {
+            // api is never directlt accessed
+        }
 
         public class ApiResponse
         {
@@ -56,8 +59,8 @@ namespace Atlas_Web.Pages.Requests
                     dictList.Add(
                         xdoc.Descendants("parameter")
                             .ToDictionary(
-                                d => (string)d.Element("name").Value,
-                                d => (string)d.Element("value").Value
+                                d => d.Element("name").Value,
+                                d => d.Element("value").Value
                             )
                     );
                     this.Details = dictList;
@@ -70,8 +73,8 @@ namespace Atlas_Web.Pages.Requests
                         dict = record
                             .Descendants("parameter")
                             .ToDictionary(
-                                d => (string)d.Element("name").Value,
-                                d => (string)d.Element("value").Value
+                                d => d.Element("name").Value,
+                                d => d.Element("value").Value
                             );
                         dict.Add("URL", record.Attribute("URI").Value);
                         dictList.Add(dict);

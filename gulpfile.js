@@ -111,6 +111,8 @@ gulp.task('font:fontawesome', function (done) {
         'circle',
         'exlamation-triangle',
         'book-open',
+        'check-circle',
+        'certificate',
       ],
     },
     'web/wwwroot/font/fontawesome/webfonts',
@@ -172,8 +174,6 @@ gulp.task('js:utility', function () {
       'web/wwwroot/js/utility/drag.js',
       'web/wwwroot/js/utility/reorder.js',
       'web/wwwroot/js/utility/charts.js',
-      'web/wwwroot/js/input.js',
-      'web/wwwroot/js/dropdown.js',
       'web/wwwroot/js/utility/modal.js',
       'web/wwwroot/js/utility/lazyload.js',
       'web/wwwroot/js/utility/crumbs.js',
@@ -375,6 +375,7 @@ gulp.task(
         'web/Startup.cs',
         'web/web/csproj',
         'web/**/*.json',
+        'web/wwwroot/',
       ],
       gulp.series('iis:run'),
     );
@@ -410,13 +411,19 @@ gulp.task(
   }),
 );
 
-function exitHandle(cb) {
+function exitHandle() {
   if (dotnet) dotnet.kill();
   if (iis) iis.kill();
-  return cb();
 }
 
 // process.on('SIGHUP', exitHandle);
 // process.on('SIGINT', exitHandle);
 // process.on('SIGTERM', exitHandle);
 process.on('exit', exitHandle);
+
+process.on('SIGINT', function () {
+  process.exit();
+});
+process.on('SIGTERM', function () {
+  process.exit();
+});

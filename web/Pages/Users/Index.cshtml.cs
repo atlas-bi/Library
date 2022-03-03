@@ -173,7 +173,7 @@ namespace Atlas_Web.Pages.Users
         public ActionResult OnGet(int? id)
         {
             UserDetails = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
-            ;
+
             // for the viewing user, not the viewed user
             MyId = UserDetails.UserId;
 
@@ -293,8 +293,6 @@ namespace Atlas_Web.Pages.Users
         public ActionResult OnPostReorderFavorites([FromBody] dynamic package)
         {
             var MyUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
-            //try
-            //{
 
             foreach (var l in package)
             {
@@ -311,11 +309,6 @@ namespace Atlas_Web.Pages.Users
             _cache.Remove("FavoriteFolders-" + MyUser.UserId);
             _cache.Remove("FavoriteReports-" + MyUser.UserId);
             return Content("ok");
-            //}
-            //catch
-            //{
-            //  return Content("error");
-            //}
         }
 
         public async Task<ActionResult> OnPostUpdateFavoriteFolder()
@@ -446,7 +439,7 @@ namespace Atlas_Web.Pages.Users
             );
             HttpContext.Response.Headers.Add("Pragma", "no-cache"); // HTTP 1.0.
             HttpContext.Response.Headers.Add("Expires", "0"); // Proxies.
-            //return Partial((".+?"));
+
             return new PartialViewResult()
             {
                 ViewName = "Sections/_SearchHistory",
@@ -489,7 +482,7 @@ namespace Atlas_Web.Pages.Users
                         join ro in _context.ReportObjects
                             on new { Id = (int)q.ItemId, Type = q.ItemType } equals new
                             {
-                                Id = (int)ro.ReportObjectId,
+                                Id = ro.ReportObjectId,
                                 Type = "report"
                             }
                             into t
@@ -502,7 +495,7 @@ namespace Atlas_Web.Pages.Users
                         join tm in _context.Terms
                             on new { Id = (int)q.ItemId, Type = q.ItemType } equals new
                             {
-                                Id = (int)tm.TermId,
+                                Id = tm.TermId,
                                 Type = "term"
                             }
                             into tms
@@ -510,7 +503,7 @@ namespace Atlas_Web.Pages.Users
                         join pj in _context.DpDataProjects
                             on new { Id = (int)q.ItemId, Type = q.ItemType } equals new
                             {
-                                Id = (int)pj.DataProjectId,
+                                Id = pj.DataProjectId,
                                 Type = "collection"
                             }
                             into pjs
@@ -518,7 +511,7 @@ namespace Atlas_Web.Pages.Users
                         join di in _context.DpDataInitiatives
                             on new { Id = (int)q.ItemId, Type = q.ItemType } equals new
                             {
-                                Id = (int)di.DataInitiativeId,
+                                Id = di.DataInitiativeId,
                                 Type = "initiative"
                             }
                             into dis
@@ -663,7 +656,6 @@ namespace Atlas_Web.Pages.Users
             else
             {
                 // only show recomened reports if there are some favs
-                var ReportId = string.Join(",", FavoriteReports.Select(x => x.ItemId.ToString()));
                 AdLists = new List<AdList>
                 {
                     new AdList { Url = "/Users?handler=SharedObjects", Column = 2 },
@@ -671,7 +663,6 @@ namespace Atlas_Web.Pages.Users
                 ViewData["AdLists"] = AdLists;
             }
 
-            //return Partial((".+?"));
             return new PartialViewResult()
             {
                 ViewName = "Sections/_Favorites",
@@ -742,6 +733,7 @@ namespace Atlas_Web.Pages.Users
             ViewData["SharedToMe"] = (
                 from o in _context.SharedItems
                 where o.SharedToUserId == MyUser.UserId
+                orderby o.ShareDate descending
                 select new SharedObjectsData
                 {
                     Id = o.Id,
@@ -770,7 +762,6 @@ namespace Atlas_Web.Pages.Users
                 }
             ).ToList();
 
-            //return Partial((".+?"));
             return new PartialViewResult()
             {
                 ViewName = "Partials/_SharedObjects",
@@ -832,7 +823,7 @@ namespace Atlas_Web.Pages.Users
                     ).ToListAsync();
                 }
             );
-            //return Partial((".+?"));
+
             return new PartialViewResult() { ViewName = "Sections/_Groups", ViewData = ViewData };
         }
 
@@ -895,7 +886,6 @@ namespace Atlas_Web.Pages.Users
                 }
             );
 
-            //return Partial((".+?"));
             return new PartialViewResult()
             {
                 ViewName = "Sections/_Subscriptions",
@@ -1081,7 +1071,6 @@ namespace Atlas_Web.Pages.Users
                 }
             );
 
-            //return Partial((".+?"));
             return new PartialViewResult() { ViewName = "Sections/_Atlas", ViewData = ViewData };
         }
 
@@ -1128,7 +1117,6 @@ namespace Atlas_Web.Pages.Users
                             Avg = d.RunTime ?? 0
                         }
                     ).ToListAsync();
-                    ;
                 }
             );
 
@@ -1178,7 +1166,7 @@ namespace Atlas_Web.Pages.Users
                     ).ToListAsync();
                 }
             );
-            //return Partial((".+?"));
+
             return new PartialViewResult() { ViewName = "Sections/_Activity", ViewData = ViewData };
         }
     }

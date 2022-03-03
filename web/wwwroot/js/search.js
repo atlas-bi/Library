@@ -14,6 +14,7 @@
 
 // report search
 (function () {
+  var start;
   var d = document,
     w = window,
     grp = d.getElementById('search-form'),
@@ -92,8 +93,8 @@
 
   function AjaxSearch(value, url) {
     // show loader here
-    if (document.getElementById('results')) {
-      document.getElementById('results').style.opacity = 0.5;
+    if (document.querySelector('.body-mainCtn')) {
+      document.querySelector('.body-mainCtn').style.opacity = 0.5;
     }
 
     // attempt to get existing search params from url
@@ -196,12 +197,19 @@
   var l = function l(t, a, m, d, atmr, s, u, value) {
     //hst.style.display = 'none';
     // remove nav links
-    document.querySelector('.side-links').innerHTML = '';
+    if (document.querySelector('.side-links')) {
+      document.querySelector('.side-links').innerHTML = '';
+    }
+
+    // clear ads
+    if (document.getElementById('AdColTwo')) {
+      document.getElementById('AdColTwo').innerHTML = '';
+    }
 
     m.style.visibility = 'visible';
     m.style.removeProperty('overflow');
     m.innerHTML = t;
-    sc = Array.prototype.slice.call(
+    var sc = Array.prototype.slice.call(
       m.querySelectorAll('script:not([type="application/json"])'),
     );
 
@@ -245,8 +253,8 @@
     document.dispatchEvent(new CustomEvent('code-highlight'));
 
     /* remove loader here */
-    if (document.getElementById('results')) {
-      document.getElementById('results').style.opacity = null;
+    if (document.querySelector('.body-mainCtn')) {
+      document.querySelector('.body-mainCtn').style.opacity = null;
     }
   };
 
@@ -282,11 +290,11 @@
   //   },
   // );
 
-  i.addEventListener('focus', function (e) {
+  i.addEventListener('focus', function () {
     grp.classList.add('sr-grp-f-win');
   });
 
-  i.addEventListener('blur', function (e) {
+  i.addEventListener('blur', function () {
     grp.classList.remove('sr-grp-f-win');
   });
 
@@ -317,7 +325,7 @@
   // only search if the user has stopped typing for 1/5 second.
   var searchTimeout = 250,
     searchTimerId = null;
-  i.addEventListener('input', function (e) {
+  i.addEventListener('input', function () {
     window.clearTimeout(searchTimerId);
     searchTimerId = window.setTimeout(function () {
       if (i.value.trim() !== '') {
@@ -329,7 +337,7 @@
 
   d.addEventListener('click', function (e) {
     //hst.style.display = 'none';
-    var g, c, f, i;
+
     if (e.target.matches('.search-filter input')) {
       e.preventDefault();
       submit(e.target.closest('.search-filter input').value);
@@ -346,7 +354,7 @@
     AjaxSearch(null, l);
   }
 
-  w.onpopstate = function (e) {
+  w.onpopstate = function () {
     if (document.location.pathname == '/Search' || w.oldPopState == '/Search') {
       w.location.href = document.location.href;
     }

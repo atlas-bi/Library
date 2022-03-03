@@ -3,7 +3,12 @@
 <div class="card">
     <div class="card-header">
         <div class="card-header-title py-2 is-justify-content-space-between">
-            <a class="has-text-dark" href="/Initiatives?id=@Model.DataInitiativeId">@Model.Name</a>
+            <a class="has-text-dark" href="/Initiatives?id=@Model.DataInitiativeId">@Model.Name
+                <div class="fa-layers ml-2 fa-lg">
+                    <span class="icon has-text-info "><i class="fas fa-certificate"></i></span>
+                    <span class="icon has-text-white fa-transform"><i class="fas fa-check shrink-5"></i></span>
+                </div>
+            </a>
             <span class="tags">
                 <span class="tag">initiative</span>
             </span>
@@ -21,7 +26,7 @@
             </div>
             <!-- extra wrap if to fix IE11 bug https://github.com/philipwalton/flexbugs#flexbug-3 -->
             <div class="is-flex is-flex-direction-column is-flex-grow-1">
-                <div class="media-content is-flex is-justify-content-space-between is-flex-direction-column is-min-h-96">
+                <a class="media-content is-flex is-justify-content-space-between is-flex-direction-column is-min-h-96  has-text-dark" href="/Initiatives?id=@Model.DataInitiativeId">
                     @if (!string.IsNullOrEmpty(Model.Description))
                     {
                         @(Model.Description.Substring(0,Math.Min(160,Model.Description.Length)) + " ...")
@@ -34,7 +39,7 @@
                             <span class="tag is-link">@d.Name</span>
                         }
                     </div>
-                </div>
+                </a>
             </div>
         </div>
     </div>

@@ -1,7 +1,6 @@
 function ShowMessageBox(message) {
   var d = document,
-    w = d.getElementsByClassName('message-wrapper')[0],
-    c = w.getElementsByClassName('message-close');
+    w = d.getElementsByClassName('message-wrapper')[0];
   d.querySelector('.message-container .message-inner').innerHTML = message;
   w.classList.remove('hidden');
   setTimeout(function () {

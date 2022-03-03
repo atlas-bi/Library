@@ -109,7 +109,7 @@
 
       el.style.visibility = 'hidden';
       el.style.transition = 'visibility 0.3s ease-in-out';
-      var q = el.clientHeight;
+
       el.setAttribute('data-url', u);
       el.setAttribute('data-param', p);
 

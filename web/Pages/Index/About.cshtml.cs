@@ -51,7 +51,7 @@ namespace Atlas_Dotnet.Pages
         public ActionResult OnGetAsync()
         {
             var MyUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
-            ;
+
             UserId = MyUser.UserId;
             FirstName = MyUser.FirstnameCalc;
 

@@ -336,13 +336,12 @@
     };
 
   build.prototype = {
-    mouseover: function (b) {
-      var c = this,
-        t = event.target;
+    mouseover: function () {
+      var t = event.target;
 
       k(function () {
         // remove all hover class
-        hover = Array.prototype.slice.call(
+        var hover = Array.prototype.slice.call(
           t.closest('table').getElementsByClassName('hover'),
         );
         for (var x = 0; x < hover.length; x++)
@@ -356,7 +355,7 @@
           t.closest('.chart-head th').getElementsByTagName('span')[0].classList
             .value != undefined
         ) {
-          lines = Array.prototype.slice.call(
+          var lines = Array.prototype.slice.call(
             t
               .closest('table')
               .getElementsByClassName(
@@ -367,9 +366,8 @@
                     .classList.value.replace('chart-headClr', ''),
               ),
           );
-          for (var x = 0; x < lines.length; x++)
-            lines[x].classList.add('hover');
-          bars = Array.prototype.slice.call(
+          for (x = 0; x < lines.length; x++) lines[x].classList.add('hover');
+          var bars = Array.prototype.slice.call(
             t
               .closest('table')
               .getElementsByClassName(
@@ -380,16 +378,15 @@
                     .classList.value.replace('chart-headClr', ''),
               ),
           );
-          for (var x = 0; x < bars.length; x++) bars[x].classList.add('hover');
+          for (x = 0; x < bars.length; x++) bars[x].classList.add('hover');
         }
       });
     },
-    mouseout: function (b) {
-      var c = this,
-        t = event.target;
+    mouseout: function () {
+      var t = event.target;
 
       k(function () {
-        hover = Array.prototype.slice.call(
+        var hover = Array.prototype.slice.call(
           t.closest('table').getElementsByClassName('hover'),
         );
         for (var x = 0; x < hover.length; x++)

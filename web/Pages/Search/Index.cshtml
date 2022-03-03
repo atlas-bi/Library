@@ -27,56 +27,56 @@ else
     </div>
     <div class="column" id="results">
 
-            @if (Model.SearchResults != null && Model.SearchResults.NumFound > 0)
-            {
-                <div class="columns is-multiline">
+        @if (Model.SearchResults != null && Model.SearchResults.NumFound > 0)
+        {
+            <div class="columns is-multiline">
 
-                    @foreach (var record in Model.SearchResults.Results)
+                @foreach (var record in Model.SearchResults.Results)
+                {
+                    if (record.collection != null)
                     {
-                        if (record.collection != null)
-                        {
-                            <div class="column is-full collection">
-                                <partial name="Collections/_Snippet" model="record.collection" />
-                            </div>
-                        }
-                        if (record.initiative != null)
-                        {
-                            <div class="column is-full initiative">
-                                <partial name="Initiatives/_Snippet" model="record.initiative" />
-                            </div>
-                        }
-                        if (record.report != null)
-                        {
-                            <div class="column is-full report">
-                                <partial name="Reports/_Snippet" model="record.report" />
-                            </div>
-                        }
-                        if (record.term != null)
-                        {
-                            <div class="column is-full term">
-                                <partial name="Terms/_Snippet" model="record.term" />
-                            </div>
-                        }
-                        if (record.user != null)
-                        {
-                            <div class="column is-full user">
-                                <partial name="Users/_Snippet" model="record.user" />
-                            </div>
-                        }
-                        if (record.group != null)
-                        {
-                            <div class="column is-full group">
-                                <partial name="Groups/_Snippet" model="record.group" />
-                            </div>
-                        }
-
+                        <div class="column is-full collection">
+                            <partial name="Collections/_Snippet" model="record.collection" />
+                        </div>
                     }
-                </div>
+                    if (record.initiative != null)
+                    {
+                        <div class="column is-full initiative">
+                            <partial name="Initiatives/_Snippet" model="record.initiative" />
+                        </div>
+                    }
+                    if (record.report != null)
+                    {
+                        <div class="column is-full report">
+                            <partial name="Reports/_Snippet" model="record.report" />
+                        </div>
+                    }
+                    if (record.term != null)
+                    {
+                        <div class="column is-full term">
+                            <partial name="Terms/_Snippet" model="record.term" />
+                        </div>
+                    }
+                    if (record.user != null)
+                    {
+                        <div class="column is-full user">
+                            <partial name="Users/_Snippet" model="record.user" />
+                        </div>
+                    }
+                    if (record.group != null)
+                    {
+                        <div class="column is-full group">
+                            <partial name="Groups/_Snippet" model="record.group" />
+                        </div>
+                    }
 
-                <partial name="Partials/_Pagination" />
-            }
-            else
-            {
+                }
+            </div>
+
+            <partial name="Partials/_Pagination" />
+        }
+        else
+        {
             <div class="srch-none">
                 <h5>Not finding what you are looking for?<br><a href="http://reports.riversidehealthcare.net/" target="_blank">Request a New Report here.</a></h5>
                 <p>
@@ -86,9 +86,8 @@ else
                     Is it a new Hyperspace Report? Hyperspace reports typically are not imported until the following business day.<br>
                     Is it a new SSRS Report? SSRS reports typically take two hours to be loaded into the search results.
                 </p>
-            </div>}
-
-        </div>
+            </div>
+        }
     </div>
     <!-- run modals -->
     @*

@@ -35,7 +35,7 @@ namespace Atlas_Web.Pages.API
             public int Cnt { get; set; }
         }
 
-        private class MailRecipientJsonData
+        private sealed class MailRecipientJsonData
         {
             public int UserId { get; set; }
             public string Type { get; set; }
@@ -79,7 +79,7 @@ namespace Atlas_Web.Pages.API
             var AllTo = JsonConvert.DeserializeObject<IEnumerable<MailRecipientJsonData>>(to);
             var Users = AllTo
                 .Where(x => x.Type != "g" || x.Type is null || x.Type == "")
-                .Select(x => new { UserId = (int)Int32.Parse(x.UserId.ToString()) });
+                .Select(x => new { UserId = Int32.Parse(x.UserId.ToString()) });
             var Groups = AllTo
                 .Where(x => x.Type == "g")
                 .Select(x => new { GroupId = Int32.Parse(x.UserId.ToString()) });
@@ -216,7 +216,6 @@ namespace Atlas_Web.Pages.API
                 ViewData["html"] = md;
             }
 
-            //return Partial("Partials/_Html");
             return new PartialViewResult() { ViewName = "Partials/_Html", ViewData = ViewData };
         }
     }

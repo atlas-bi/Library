@@ -16,7 +16,7 @@ namespace Atlas_Web.Pages
     {
         private readonly Atlas_WebContext _context;
         private readonly IConfiguration _config;
-        private IMemoryCache _cache;
+        private readonly IMemoryCache _cache;
 
         public ErrorModel(Atlas_WebContext context, IConfiguration config, IMemoryCache cache)
         {

@@ -241,8 +241,8 @@ namespace Atlas_Web.Pages.Profile
                         select new RunTimeData
                         {
                             Date = grp.Key.RunWeekString,
-                            Avg = (double)Math.Round(grp.Average(x => x.Duration ?? 0), 2),
-                            Cnt = (int)grp.Sum(x => x.Runs ?? 1)
+                            Avg = Math.Round(grp.Average(x => x.Duration ?? 0), 2),
+                            Cnt = grp.Sum(x => x.Runs ?? 1)
                         }
                     ).ToListAsync();
                 }
@@ -304,8 +304,8 @@ namespace Atlas_Web.Pages.Profile
                         select new RunTimeData
                         {
                             Date = grp.Key.RunWeekString,
-                            Avg = (double)Math.Round(grp.Average(x => x.Duration ?? 0), 2),
-                            Cnt = (int)grp.Sum(x => x.Runs ?? 1)
+                            Avg = Math.Round(grp.Average(x => x.Duration ?? 0), 2),
+                            Cnt = grp.Sum(x => x.Runs ?? 1)
                         }
                     ).ToListAsync();
                 }

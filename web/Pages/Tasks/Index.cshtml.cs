@@ -132,7 +132,7 @@ namespace Atlas_Web.Pages.Tasks
                     RoleId = u.GroupId
                 }
             ).ToListAsync();
-            //return Partial((".+?"));
+
             return new PartialViewResult()
             {
                 ViewName = "Partials/_CanMakeReports",
@@ -159,7 +159,6 @@ namespace Atlas_Web.Pages.Tasks
                 }
             ).ToListAsync();
 
-            //return Partial((".+?"));
             return new PartialViewResult()
             {
                 ViewName = "Partials/_RecommendRetire",
@@ -206,7 +205,6 @@ namespace Atlas_Web.Pages.Tasks
                 }
             ).Take(30).ToListAsync();
 
-            //return Partial((".+?"));
             return new PartialViewResult() { ViewName = "Partials/_Unused", ViewData = ViewData };
         }
 
@@ -285,7 +283,6 @@ namespace Atlas_Web.Pages.Tasks
                 }
             ).ToListAsync();
 
-            //return Partial((".+?"));
             return new PartialViewResult()
             {
                 ViewName = "Partials/_MaintRequired",
@@ -367,7 +364,6 @@ namespace Atlas_Web.Pages.Tasks
                 }
             ).ToListAsync();
 
-            //return Partial((".+?"));
             return new PartialViewResult() { ViewName = "Partials/_Audit", ViewData = ViewData };
         }
 
@@ -422,7 +418,6 @@ namespace Atlas_Web.Pages.Tasks
                 }
             ).ToListAsync();
 
-            //return Partial((".+?"));
             return new PartialViewResult()
             {
                 ViewName = "Partials/_NoSchedule",
@@ -441,10 +436,10 @@ namespace Atlas_Web.Pages.Tasks
                     && (r.ReportObjectTypeId == 17 || r.ReportObjectTypeId == 3)
                 join l in _context.UserRoleLinks on r.LastModifiedByUserId equals l.UserId into tmp
                 from t in tmp.DefaultIfEmpty()
-                where ((int?)t.UserRolesId ?? 2) != 1
+                where (t.UserRolesId ?? 2) != 1
                 join l in _context.UserRoleLinks on r.AuthorUserId equals l.UserId into tmptwo
                 from ttwp in tmptwo.DefaultIfEmpty()
-                where ((int?)ttwp.UserRolesId ?? 2) != 1
+                where (ttwp.UserRolesId ?? 2) != 1
                 join f in (
                     from tr in _context.ReportObjectTopRuns
                     group tr by tr.ReportObjectId into g
@@ -485,7 +480,6 @@ namespace Atlas_Web.Pages.Tasks
                 }
             ).ToListAsync();
 
-            //return Partial((".+?"));
             return new PartialViewResult()
             {
                 ViewName = "Partials/_NotAnalytics",
@@ -547,7 +541,6 @@ namespace Atlas_Web.Pages.Tasks
                 }
             ).Take(60).ToList();
 
-            //return Partial((".+?"));
             return new PartialViewResult()
             {
                 ViewName = "Partials/_TopUndocumented",
@@ -612,7 +605,6 @@ namespace Atlas_Web.Pages.Tasks
                 }
             ).Take(60).ToList();
 
-            //return Partial((".+?"));
             return new PartialViewResult()
             {
                 ViewName = "Partials/_NewUndocumented",

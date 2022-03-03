@@ -144,6 +144,11 @@ $fa-font-path: '/font/fontawesome/webfonts';
 /* custom for data transform icons */
 .fa-transform {
   position: absolute;
+  top: 0;
+  right: 0;
+}
+.fa-transform:not(.fa-fw) {
+  left: 0;
 }
 .down-5 {
   top: 30px;
@@ -153,6 +158,9 @@ $fa-font-path: '/font/fontawesome/webfonts';
 }
 .shrink-7 {
   transform: scale(0.7);
+}
+.shrink-6 {
+  transform: scale(0.6);
 }
 .shrink-5 {
   transform: scale(0.5);
@@ -225,6 +233,8 @@ $icons: (
   circle: $fa-var-circle,
   exclamation-triangle: $fa-var-exclamation-triangle,
   book-open: $fa-var-book-open,
+  check-circle: $fa-var-check-circle,
+  certificate: $fa-var-certificate,
 );
 
 @each $key, $value in $icons {

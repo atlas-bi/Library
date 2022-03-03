@@ -34,7 +34,7 @@
       q.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
       q.send();
 
-      q.onreadystatechange = function (e) {
+      q.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
           ShowMessageBox('Changes saved.');
         }
@@ -55,7 +55,7 @@
       q.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
       q.send();
 
-      q.onreadystatechange = function (e) {
+      q.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
           ShowMessageBox('Changes saved.');
         }

@@ -3,7 +3,15 @@
 <div class="card">
     <div class="card-header">
         <div class="card-header-title is-justify-content-space-between py-2">
-            <a class="has-text-dark" href="/Terms?id=@Model.TermId">@Model.Name</a>
+            <a class="has-text-dark" href="/Terms?id=@Model.TermId">@Model.Name
+                @if(Model.ApprovedYn == "Y")
+                {
+                    <div class="fa-layers ml-2 fa-lg">
+                        <span class="icon has-text-info "><i class="fas fa-certificate"></i></span>
+                        <span class="icon has-text-white fa-transform"><i class="fas fa-check shrink-5"></i></span>
+                    </div>
+                }
+                </a>
             <span class="tags">
                 <span class="tag">term</span>
                 @if(Model.ApprovedYn == "Y")
@@ -23,23 +31,26 @@
                     </picture>
                 </figure>
             </div>
-            <div class="media-content is-min-h-96 is-flex is-justify-content-space-between is-flex-direction-column">
-                @if (!string.IsNullOrEmpty(Model.Summary))
-                {
-                    @(Model.Summary.Substring(0,Math.Min(160,Model.Summary.Length)) + " ...")
-                } else if (!string.IsNullOrEmpty(Model.TechnicalDefinition))
-                {
-                    @(Model.TechnicalDefinition.Substring(0,Math.Min(160,Model.TechnicalDefinition.Length)) + " ...")
-                } else {
-                    <text>Open to view details.</text>
-                }
-                @*<div class="tags">
-                    @foreach (var d in Model.DpDataProjects)
+            <!-- extra wrap if to fix IE11 bug https://github.com/philipwalton/flexbugs#flexbug-3 -->
+            <div class="is-flex is-flex-direction-column is-flex-grow-1">
+                <a class="media-content is-flex is-justify-content-space-between is-flex-direction-column is-min-h-96  has-text-dark" href="/Terms?id=@Model.TermId">
+                    @if (!string.IsNullOrEmpty(Model.Summary))
                     {
-                        <span class="tag is-link">@d.Name</span>
+                        @(Model.Summary.Substring(0,Math.Min(160,Model.Summary.Length)) + " ...")
+                    } else if (!string.IsNullOrEmpty(Model.TechnicalDefinition))
+                    {
+                        @(Model.TechnicalDefinition.Substring(0,Math.Min(160,Model.TechnicalDefinition.Length)) + " ...")
+                    } else {
+                        <text>Open to view details.</text>
                     }
-                </div>
-                *@
+                    @*<div class="tags">
+                        @foreach (var d in Model.DpDataProjects)
+                        {
+                            <span class="tag is-link">@d.Name</span>
+                        }
+                    </div>
+                    *@
+                </a>
             </div>
         </div>
     </div>

@@ -109,7 +109,7 @@ namespace Atlas_Web.Pages.Groups
         public async Task<IActionResult> OnGetAsync(int? id)
         {
             UserDetails = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
-            ;
+
             // for the viewing user, not the viewed user
 
             MyId = UserDetails.UserId;
@@ -229,7 +229,6 @@ namespace Atlas_Web.Pages.Groups
                             Avg = d.RunTime ?? 0
                         }
                     ).ToListAsync();
-                    ;
                 }
             );
 
@@ -279,7 +278,7 @@ namespace Atlas_Web.Pages.Groups
                     ).ToListAsync();
                 }
             );
-            //return Partial((".+?"));
+
             return new PartialViewResult() { ViewName = "Sections/_Activity", ViewData = ViewData };
         }
     }

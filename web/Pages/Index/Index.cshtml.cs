@@ -28,9 +28,6 @@ namespace Atlas_Web.Pages
         public int UserId { get; set; }
         public string FirstName { get; set; }
 
-        [BindProperty]
-        public UserFavoriteFolder Folder { get; set; }
-
         public class BasicFavoriteData
         {
             public string Name { get; set; }
@@ -56,38 +53,16 @@ namespace Atlas_Web.Pages
             UserId = MyUser.UserId;
             FirstName = MyUser.FirstnameCalc;
 
-            return Page();
-        }
-
-        public async Task<ActionResult> OnGetWelcomeVideo()
-        {
-            var Pref = await Task.Run(
-                () =>
-                    UserHelpers
-                        .GetPreferences(_cache, _context, User.Identity.Name)
-                        .Where(x => x.ItemType == "WelcomeToAtlasVideo")
-                        .FirstOrDefault()
-            );
-            if (Pref != null)
+            AdLists = new List<AdList>
             {
-                ViewData["Open"] = Pref.ItemValue;
-            }
-            else
-            {
-                ViewData["Open"] = 1;
-            }
-
-            //return Partial("Partials/_WelcomeVideo");
-            return new PartialViewResult()
-            {
-                ViewName = "Partials/_WelcomeVideo",
-                ViewData = ViewData
+                new AdList { Url = "/Users?handler=SharedObjects", Column = 2 },
             };
+            ViewData["AdLists"] = AdLists;
+            return Page();
         }
 
         public async Task<ActionResult> OnGetRecentTerms()
         {
-            var user = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
             var NewestApprovedTerms = await (
                 from dp in _context.Terms
                 where dp.ApprovedYn == "Y" && dp.ValidFromDateTime > DateTime.Now.AddDays(-30)
@@ -117,7 +92,6 @@ namespace Atlas_Web.Pages
             }
             HttpContext.Response.Headers.Remove("Cache-Control");
             HttpContext.Response.Headers.Add("Cache-Control", "max-age=7200");
-            //return Partial("Partials/_RecentTerms");
             return new PartialViewResult()
             {
                 ViewName = "Partials/_RecentTerms",
@@ -157,7 +131,6 @@ namespace Atlas_Web.Pages
             ).Take(10).ToListAsync();
             HttpContext.Response.Headers.Remove("Cache-Control");
             HttpContext.Response.Headers.Add("Cache-Control", "max-age=7200");
-            //return Partial("Partials/_RecentReports");
             return new PartialViewResult()
             {
                 ViewName = "Partials/_RecentReports",

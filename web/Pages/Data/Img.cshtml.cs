@@ -104,19 +104,16 @@ namespace Atlas_Web.Pages.Data
                             .FirstOrDefault();
                     }
 
-                    string name;
                     byte[] image_data;
                     if (img != null)
                     {
                         image_data = img.ImageData;
-                        name = id.ToString();
                     }
                     else
                     {
                         image_data = System.IO.File.ReadAllBytes(
                             "wwwroot/img/report_placeholder.png"
                         );
-                        name = "placeholder";
                     }
 
                     return File(

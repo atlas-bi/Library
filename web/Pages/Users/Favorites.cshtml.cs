@@ -376,8 +376,6 @@ namespace Atlas_Web.Pages.Users
         public ActionResult OnPostReorderFavorites([FromBody] dynamic package)
         {
             var MyUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
-            //try
-            //{
 
             foreach (var l in package)
             {
@@ -394,11 +392,6 @@ namespace Atlas_Web.Pages.Users
             _cache.Remove("FavoriteFolders-" + MyUser.UserId);
             _cache.Remove("FavoriteReports-" + MyUser.UserId);
             return Content("ok");
-            //}
-            //catch
-            //{
-            //  return Content("error");
-            //}
         }
 
         public async Task<ActionResult> OnPostUpdateFavoriteFolder()

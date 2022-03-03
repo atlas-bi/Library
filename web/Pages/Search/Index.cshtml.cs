@@ -564,18 +564,6 @@ namespace Atlas_Web.Pages.Search
             }
 
             SearchString = Query;
-
-            //ReportId = string.Join(",", SearchResults.Results.Where(x => x.Type.First() == "reports").Select(x => x.AtlasId.First()).ToList());
-            AdLists = new List<AdList>
-            {
-                new AdList { Url = "/Users?handler=SharedObjects", Column = 2 },
-                new AdList { Url = "/?handler=RecentReports", Column = 2 },
-                new AdList { Url = "/?handler=RecentTerms", Column = 2 },
-                new AdList { Url = "/?handler=RecentInitiatives", Column = 2 },
-                new AdList { Url = "/?handler=RecentCollections", Column = 2 }
-            };
-            ViewData["AdLists"] = AdLists;
-
             return Page();
         }
 
@@ -613,7 +601,7 @@ namespace Atlas_Web.Pages.Search
         public ActionResult OnPostTermSearch(string s)
         {
             if (s != null)
-                SearchString = s; //.Replace("'","''").Replace(";","_");
+                SearchString = s;
             {
                 ObjectSearch = _solr
                     .Query(
@@ -645,7 +633,7 @@ namespace Atlas_Web.Pages.Search
         public ActionResult OnPostCollectionSearch(string s)
         {
             if (s != null)
-                SearchString = s; //.Replace("'","''").Replace(";","_");
+                SearchString = s;
             {
                 ObjectSearch = _solr
                     .Query(
@@ -678,7 +666,7 @@ namespace Atlas_Web.Pages.Search
         public ActionResult OnPostUserSearch(string s)
         {
             if (s != null)
-                SearchString = s; //.Replace("'","''").Replace(";","_");
+                SearchString = s;
             {
                 UserSearch = _solr
                     .Query(
@@ -710,7 +698,7 @@ namespace Atlas_Web.Pages.Search
         public ActionResult OnPostUserSearchMail(string s)
         {
             if (s != null)
-                SearchString = s; //.Replace("'","''").Replace(";","_");
+                SearchString = s;
             {
                 UserSearch = _solr
                     .Query(
@@ -742,7 +730,7 @@ namespace Atlas_Web.Pages.Search
         public ActionResult OnPostDirector(string s)
         {
             if (s != null)
-                SearchString = s; //.Replace("'","''").Replace(";","_");
+                SearchString = s;
             {
                 UserSearch = _solr
                     .Query(
@@ -883,7 +871,6 @@ namespace Atlas_Web.Pages.Search
 
             HttpContext.Response.Headers.Remove("Cache-Control");
             HttpContext.Response.Headers.Add("Cache-Control", "max-age=7200");
-            //return Partial((".+?"));
             return new PartialViewResult()
             {
                 ViewName = "Partials/_RelatedReports",

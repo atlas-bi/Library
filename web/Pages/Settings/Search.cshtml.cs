@@ -14,7 +14,7 @@ namespace Atlas_Web.Pages.Settings
     public class SearchModel : PageModel
     {
         private readonly Atlas_WebContext _context;
-        private IMemoryCache _cache;
+        private readonly IMemoryCache _cache;
 
         public SearchModel(Atlas_WebContext context, IMemoryCache cache)
         {

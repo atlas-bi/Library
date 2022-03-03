@@ -11,7 +11,7 @@ using WebOptimizer;
 
 namespace Atlas_Web.Helpers
 {
-    public class ModelHelpers
+    public static class ModelHelpers
     {
         public static string RelativeDate(DateTime? fixedDate)
         {
@@ -60,7 +60,7 @@ namespace Atlas_Web.Helpers
         }
     }
 
-    public class UserHelpers
+    public static class UserHelpers
     {
         public static Boolean IsAdmin(Atlas_WebContext _context, string username)
         {
@@ -194,20 +194,18 @@ namespace Atlas_Web.Helpers
                     if (is_Admin > 0)
                     {
                         var MyRole = GetMyRole(_context, username);
-                        if (MyRole != null)
+                        if (
+                            MyRole != null
+                            && _context.UserRoles.Any(x => x.UserRolesId == MyRole.Id)
+                            && MyRole.Id != 1
+                        )
                         {
-                            if (
-                                _context.UserRoles.Any(x => x.UserRolesId == MyRole.Id)
-                                && MyRole.Id != 1
-                            )
-                            {
-                                List<int?> roles = _context.RolePermissionLinks
-                                    .Where(k => k.RoleId == MyRole.Id)
-                                    .Select(x => x.RolePermissionsId)
-                                    .ToList();
-                                roles.Add(44);
-                                return roles;
-                            }
+                            List<int?> roles = _context.RolePermissionLinks
+                                .Where(k => k.RoleId == MyRole.Id)
+                                .Select(x => x.RolePermissionsId)
+                                .ToList();
+                            roles.Add(44);
+                            return roles;
                         }
                         return _context.RolePermissions
                             .Select(x => (int?)x.RolePermissionsId)
@@ -307,20 +305,10 @@ namespace Atlas_Web.Helpers
         {
             username ??= "default";
             return GetUserPermissions(cache, _context, username).Any(x => x.Value == Access);
-            /*var myPermissions = (from r in _context.UserRoles
-                                where (r.RolePermissionLinks.Any(x => x.RolePermissionsId == Access)
-                                   && r.UserRoleLinks.Any(x => x.User.Username == username)
-                                   ||  r.UserRoleLinks.Any(x => x.User.Username == username && x.UserRolesId == 1))
-                                select new {
-                                    r.Name
-                                }).Count();
-
-            return myPermissions > 0 ? true : false;
-            */
         }
     }
 
-    public class HtmlHelpers
+    public static class HtmlHelpers
     {
         public static string SiteMessage(HttpContext _httpContext, Atlas_WebContext _context)
         {

@@ -28,15 +28,15 @@
     }
   }
 
-  function load($mini, $data, $hidden, $input, $preload) {
+  function load($mini, $data, $hidden, $input) {
     var data = JSON.parse($data);
     if (data.length === 0) {
       $mini.innerHTML = '<div class="mini-waiting">No matches found.</div>';
     } else {
       $mini.innerText = '';
-      var result = document.createElement('div');
+
       for (var el of data) {
-        var hiddenClass = '';
+        //var hiddenClass = '';
         // if (active.indexOf(el.ObjectId) !== -1) {
         //   hiddenClass = 'hidden';
         // }
@@ -74,8 +74,7 @@
             var del = document.createElement('a');
             del.classList.add('tag', 'is-delete');
 
-            del.addEventListener('click', function (event) {
-              var $this = event.target;
+            del.addEventListener('click', function () {
               control.parentElement.removeChild(control);
               updateId(taglist);
             });
@@ -190,7 +189,7 @@
   // delete event for existing tags
   (document.querySelectorAll('.mini-tags .tag.is-delete') || []).forEach(
     ($tag) => {
-      $tag.addEventListener('click', function (e) {
+      $tag.addEventListener('click', function () {
         var $control = $tag.closest('.control');
         var $taglist = $tag.closest('.mini-tags');
         $control.parentElement.removeChild($control);
@@ -274,7 +273,7 @@
   // add event to remove mini tags that were preloaded.
   (document.querySelectorAll('.mini-tags a.is-delete[value]') || []).forEach(
     ($delete) => {
-      $delete.addEventListener('click', function (e) {
+      $delete.addEventListener('click', function () {
         var $hidden = $delete
           .closest('.field:not(.mini-tags)')
           .querySelector('select.is-hidden');
@@ -292,7 +291,7 @@
 
   // on reorder events, update id
   (document.querySelectorAll('.mini-tags.reorder') || []).forEach(($tag) => {
-    $tag.addEventListener('reorder', function (e) {
+    $tag.addEventListener('reorder', function () {
       updateId($tag);
     });
   });

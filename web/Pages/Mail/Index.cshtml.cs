@@ -46,7 +46,7 @@ namespace Atlas_Web.Pages.Mail
             public string Type { get; set; }
         }
 
-        private class MailRecipientJsonData
+        private sealed class MailRecipientJsonData
         {
             public int UserId { get; set; }
             public string Type { get; set; }
@@ -100,14 +100,17 @@ namespace Atlas_Web.Pages.Mail
 
         public string FirstName { get; set; }
 
-        public void OnGet() { }
+        public void OnGet()
+        {
+            // mail is never directory accessed
+        }
 
         public List<UserPreference> Preferences { get; set; }
 
         public async Task<ActionResult> OnPostCheckForMail()
         {
             var MyUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
-            ;
+
             FirstName = MyUser.FirstnameCalc;
 
             // get all mail
@@ -228,7 +231,6 @@ namespace Atlas_Web.Pages.Mail
             if (newMessagePreviews != null && newMessagePreviews.Count > 0)
                 ViewData["AllMail"] = newMessagePreviews;
 
-            //return Partial((".+?"));
             return new PartialViewResult()
             {
                 ViewName = "Partials/_CheckForMail",
@@ -285,12 +287,12 @@ namespace Atlas_Web.Pages.Mail
             else
             {
                 ViewData["AllMail"] = AllMail;
-                ViewData["UnreadMail"] = AllMail.Where(x => x.Read == 0).Count();
+                ViewData["UnreadMail"] = AllMail.Count(x => x.Read == 0);
             }
             ViewData["Drafts"] = _context.MailDrafts
                 .Where(x => x.FromUserId == MyUser.UserId)
                 .Count();
-            //return Partial((".+?"));
+
             return new PartialViewResult() { ViewName = "Partials/_Mailbox", ViewData = ViewData };
         }
 
@@ -355,7 +357,7 @@ namespace Atlas_Web.Pages.Mail
             {
                 ViewData["Message"] = Message;
             }
-            //return Partial((".+?"));
+
             return new PartialViewResult()
             {
                 ViewName = "Partials/_MessageBody",
@@ -390,7 +392,7 @@ namespace Atlas_Web.Pages.Mail
             {
                 ViewData["Message"] = Message;
             }
-            //return Partial((".+?"));
+
             return new PartialViewResult()
             {
                 ViewName = "Partials/_DraftBody",
@@ -411,13 +413,11 @@ namespace Atlas_Web.Pages.Mail
             string Share = package.Value<string>("Share") ?? "";
             string ShareName = package.Value<string>("ShareName") ?? "";
             string ShareUrl = package.Value<string>("ShareUrl") ?? "";
-            int? MsgId = (int?)package["MsgId"];
-            int? ConvId = (int?)package["ConvId"];
 
             var AllTo = JsonConvert.DeserializeObject<IEnumerable<MailRecipientJsonData>>(To);
             var Users = AllTo
                 .Where(x => x.Type != "g" || x.Type is null || x.Type == "")
-                .Select(x => new { UserId = (int)Int32.Parse(x.UserId.ToString()) });
+                .Select(x => new { UserId = Int32.Parse(x.UserId.ToString()) });
             var Groups = AllTo
                 .Where(x => x.Type == "g")
                 .Select(x => new { GroupId = Int32.Parse(x.UserId.ToString()) });
@@ -612,7 +612,7 @@ namespace Atlas_Web.Pages.Mail
                 {
                     ViewData["AllDrafts"] = AllDrafts;
                 }
-                //return Partial((".+?"));
+
                 return new PartialViewResult()
                 {
                     ViewName = "Partials/Mailbox/_DraftPreview",
@@ -652,7 +652,6 @@ namespace Atlas_Web.Pages.Mail
                     ViewData["AllMail"] = AllMail;
                 }
 
-                //return Partial((".+?"));
                 return new PartialViewResult()
                 {
                     ViewName = "Partials/Mailbox/_MessagePreview",
