@@ -124,7 +124,11 @@
           var s = d.createElement('script');
           s.innerHTML = sc[x].innerHTML;
           s.type = 'text/javascript';
-          s.setAttribute('async', 'true');
+          if (sc[x].hasAttribute('src')) {
+            s.setAttribute('src', sc[x].hasAttribute('src'));
+            s.setAttribute('async', 'true');
+          }
+
           el.appendChild(s);
           sc[x].parentNode.removeChild(sc[x]);
         }

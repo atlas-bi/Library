@@ -12,9 +12,11 @@ using System.Collections.Generic;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Caching.Memory;
 using Newtonsoft.Json.Linq;
+using System.Text.Json;
 
 namespace Atlas_Web.Pages.Users
 {
+    [ResponseCache(NoStore = true)]
     public class FavoritesModel : PageModel
     {
         private readonly Atlas_WebContext _context;
@@ -26,6 +28,19 @@ namespace Atlas_Web.Pages.Users
             _context = context;
             _config = config;
             _cache = cache;
+        }
+
+        public class FavoiteFolderRank
+        {
+            public string FolderId { get; set; }
+            public int FolderRank { get; set; }
+        }
+
+        public class FavoiteRank
+        {
+            public string FavoriteId { get; set; }
+            public string FavoriteType { get; set; }
+            public int FavoriteRank { get; set; }
         }
 
         public List<AdList> AdLists { get; set; }
@@ -328,69 +343,130 @@ namespace Atlas_Web.Pages.Users
             }
 
             _context.SaveChanges();
-            // remove cache
-            _cache.Remove("FavoriteReports-" + MyUser.UserId);
-            _cache.Remove("FavoriteFolders-" + MyUser.UserId);
-            _cache.Remove("Favorites-" + User.Identity.Name);
+
             return Content("ok");
         }
 
-        public ActionResult OnPostCreateFolder()
+        public ActionResult OnPostNewFolder(string name)
         {
             var MyUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
-            if (ModelState.IsValid)
-            {
-                _context.Add(Folder);
-                _context.SaveChanges();
-                _cache.Remove("FavoriteFolders-" + MyUser.UserId);
-                _cache.Remove("FavoriteReports-" + MyUser.UserId);
-                return Content(Folder.UserFavoriteFolderId.ToString());
-            }
-            return Content("error");
+            _context.Add(new UserFavoriteFolder { UserId = MyUser.UserId, FolderName = name });
+            _context.SaveChanges();
+
+            return Content("ok");
         }
 
-        public ActionResult OnPostDeleteFolder()
+        public ActionResult OnPostEditFolder(int id, string name)
         {
             var MyUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
-            if (ModelState.IsValid)
+
+            var folder = _context.UserFavoriteFolders.SingleOrDefault(
+                x => x.UserFavoriteFolderId == id && x.UserId == MyUser.UserId
+            );
+
+            if (folder != null)
             {
-                // remove any report links to this folder
-                List<UserFavorite> Favs = _context.UserFavorites
-                    .Where(
-                        x => x.FolderId == Folder.UserFavoriteFolderId && x.UserId == MyUser.UserId
-                    )
-                    .ToList();
-                foreach (UserFavorite Fav in Favs)
-                {
-                    Fav.FolderId = null;
-                }
-                _context.Remove(Folder);
-                _context.SaveChanges();
-                _cache.Remove("FavoriteFolders-" + MyUser.UserId);
-                _cache.Remove("FavoriteReports-" + MyUser.UserId);
-                return Content(Folder.UserFavoriteFolderId.ToString());
+                folder.FolderName = name;
             }
-            return Content("error");
+            _context.SaveChanges();
+
+            return Content("ok");
+        }
+
+        public ActionResult OnPostDeleteFolder(int id)
+        {
+            var MyUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
+
+            _context.StarredCollections
+                .Where(x => x.Folderid == id)
+                .ToList()
+                .ForEach(x => x.Folderid = null);
+            _context.StarredReports
+                .Where(x => x.Folderid == id)
+                .ToList()
+                .ForEach(x => x.Folderid = null);
+            _context.StarredInitiatives
+                .Where(x => x.Folderid == id)
+                .ToList()
+                .ForEach(x => x.Folderid = null);
+            _context.StarredTerms
+                .Where(x => x.Folderid == id)
+                .ToList()
+                .ForEach(x => x.Folderid = null);
+            _context.StarredUsers
+                .Where(x => x.Folderid == id)
+                .ToList()
+                .ForEach(x => x.Folderid = null);
+            _context.StarredGroups
+                .Where(x => x.Folderid == id)
+                .ToList()
+                .ForEach(x => x.Folderid = null);
+            _context.StarredSearches
+                .Where(x => x.Folderid == id)
+                .ToList()
+                .ForEach(x => x.Folderid = null);
+            _context.SaveChanges();
+
+            _context.Remove(
+                _context.UserFavoriteFolders.SingleOrDefault(x => x.UserFavoriteFolderId == id)
+            );
+            _context.SaveChanges();
+
+            return Content("ok");
         }
 
         public ActionResult OnPostReorderFavorites([FromBody] dynamic package)
         {
             var MyUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
 
-            foreach (var l in package)
+            foreach (var l in JsonSerializer.Deserialize<List<FavoiteRank>>(package))
             {
-                var id = (int)l.FavoriteId;
-                var fav = (
-                    from u in _context.UserFavorites
-                    where u.UserFavoritesId == id && u.UserId == MyUser.UserId
-                    select u
-                ).FirstOrDefault();
-                var r = (int)l.FavoriteRank;
-                fav.ItemRank = r;
+                int id = Int32.Parse(l.FavoriteId);
+                if (l.FavoriteType == "report")
+                {
+                    _context.StarredReports.SingleOrDefault(
+                        x => x.StarId == id && x.Ownerid == MyUser.UserId
+                    ).Rank = l.FavoriteRank;
+                }
+                else if (l.FavoriteType == "collection")
+                {
+                    _context.StarredCollections.SingleOrDefault(
+                        x => x.StarId == id && x.Ownerid == MyUser.UserId
+                    ).Rank = l.FavoriteRank;
+                }
+                else if (l.FavoriteType == "initiative")
+                {
+                    _context.StarredInitiatives.SingleOrDefault(
+                        x => x.StarId == id && x.Ownerid == MyUser.UserId
+                    ).Rank = l.FavoriteRank;
+                }
+                else if (l.FavoriteType == "term")
+                {
+                    _context.StarredTerms.SingleOrDefault(
+                        x => x.StarId == id && x.Ownerid == MyUser.UserId
+                    ).Rank = l.FavoriteRank;
+                }
+                else if (l.FavoriteType == "user")
+                {
+                    _context.StarredUsers.SingleOrDefault(
+                        x => x.StarId == id && x.Ownerid == MyUser.UserId
+                    ).Rank = l.FavoriteRank;
+                }
+                else if (l.FavoriteType == "group")
+                {
+                    _context.StarredGroups.SingleOrDefault(
+                        x => x.StarId == id && x.Ownerid == MyUser.UserId
+                    ).Rank = l.FavoriteRank;
+                }
+                else if (l.FavoriteType == "search")
+                {
+                    _context.StarredSearches.SingleOrDefault(
+                        x => x.StarId == id && x.Ownerid == MyUser.UserId
+                    ).Rank = l.FavoriteRank;
+                }
             }
             _context.SaveChanges();
-            _cache.Remove("FavoriteFolders-" + MyUser.UserId);
-            _cache.Remove("FavoriteReports-" + MyUser.UserId);
+
             return Content("ok");
         }
 
@@ -400,46 +476,75 @@ namespace Atlas_Web.Pages.Users
             var package = JObject.Parse(body);
 
             var MyUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
-            var FavoriteId = (int)package["FavoriteId"];
-            var FolderId = (int)package["FolderId"];
+            int FavoriteId = (int)package["FavoriteId"];
+            int? FolderId = (int)package["FolderId"];
             if (FolderId == 0)
             {
-                _context.UserFavorites
-                    .Where(x => x.UserFavoritesId == FavoriteId && x.UserId == MyUser.UserId)
-                    .FirstOrDefault().FolderId = null;
+                FolderId = null;
             }
-            else
+            string FavoriteType = (string)package["FavoriteType"];
+
+            if (FavoriteType == "report")
             {
-                _context.UserFavorites
-                    .Where(x => x.UserFavoritesId == FavoriteId && x.UserId == MyUser.UserId)
-                    .FirstOrDefault().FolderId = FolderId;
+                _context.StarredReports.SingleOrDefault(
+                    x => x.StarId == FavoriteId && x.Ownerid == MyUser.UserId
+                ).Folderid = FolderId;
             }
-            _cache.Remove("FavoriteFolders-" + MyUser.UserId);
-            _cache.Remove("FavoriteReports-" + MyUser.UserId);
+            else if (FavoriteType == "collection")
+            {
+                _context.StarredCollections.SingleOrDefault(
+                    x => x.StarId == FavoriteId && x.Ownerid == MyUser.UserId
+                ).Folderid = FolderId;
+            }
+            else if (FavoriteType == "initiative")
+            {
+                _context.StarredInitiatives.SingleOrDefault(
+                    x => x.StarId == FavoriteId && x.Ownerid == MyUser.UserId
+                ).Folderid = FolderId;
+            }
+            else if (FavoriteType == "term")
+            {
+                _context.StarredTerms.SingleOrDefault(
+                    x => x.StarId == FavoriteId && x.Ownerid == MyUser.UserId
+                ).Folderid = FolderId;
+            }
+            else if (FavoriteType == "user")
+            {
+                _context.StarredUsers.SingleOrDefault(
+                    x => x.StarId == FavoriteId && x.Ownerid == MyUser.UserId
+                ).Folderid = FolderId;
+            }
+            else if (FavoriteType == "group")
+            {
+                _context.StarredGroups.SingleOrDefault(
+                    x => x.StarId == FavoriteId && x.Ownerid == MyUser.UserId
+                ).Folderid = FolderId;
+            }
+            else if (FavoriteType == "search")
+            {
+                _context.StarredSearches.SingleOrDefault(
+                    x => x.StarId == FavoriteId && x.Ownerid == MyUser.UserId
+                ).Folderid = FolderId;
+            }
+
             _context.SaveChanges();
+
             return Content("ok");
         }
 
         public ActionResult OnPostReorderFolders([FromBody] dynamic package)
         {
-            try
+            var MyUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
+            foreach (var l in JsonSerializer.Deserialize<List<FavoiteFolderRank>>(package))
             {
-                var MyUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
-                foreach (var l in package)
-                {
-                    var id = (int)l.FolderId;
-                    _context.UserFavoriteFolders
-                        .Where(x => x.UserFavoriteFolderId == id && x.UserId == MyUser.UserId)
-                        .FirstOrDefault().FolderRank = l.FolderRank;
-                }
-                _context.SaveChanges();
-                _cache.Remove("FavoriteFolders-" + MyUser.UserId);
-                return Content("ok");
+                int id = Int32.Parse(l.FolderId);
+                _context.UserFavoriteFolders
+                    .Where(x => x.UserFavoriteFolderId == id && x.UserId == MyUser.UserId)
+                    .FirstOrDefault().FolderRank = l.FolderRank;
             }
-            catch
-            {
-                return Content("error");
-            }
+            _context.SaveChanges();
+
+            return Content("ok");
         }
     }
 }

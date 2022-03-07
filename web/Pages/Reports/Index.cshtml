@@ -6,7 +6,15 @@
 }
 
 @{
-    ViewData["Title"] = Model.Report.Name;
+    if (!string.IsNullOrEmpty(@Model.Report.DisplayTitle))
+    {
+        ViewData["Title"] = Model.Report.DisplayTitle;
+    }
+    else
+    {
+        ViewData["Title"] = Model.Report.Name;
+    }
+
 
     ViewBag.RunReportUrl = HtmlHelpers.ReportUrlFromParams(
                     ViewContext.HttpContext,

@@ -460,3 +460,47 @@ button.is-ghost:not(.button){
   box-shadow: 0 0.5em 1em -0.125em rgba(255,215,0, 0.1), 0 0px 0 1px rgba(255,215,0, 0.02);
   border: 1px solid rgb(255,215,0);
 }
+
+.is-hover {
+  border: 1px solid $warning;
+}
+.is-warning.is-outlined.is-active {
+  background-color:$warning;
+  border-color: transparent;
+}
+
+
+.fav-count {
+  position: absolute;
+  top:-14px;
+  right:-14px;
+}
+.tag:not(body) {
+  line-height: 2;
+}
+
+.favorites-folder.is-active {
+  font-weight: bold;
+}
+
+.button.favorite-reorder, .favorite-folder-controls {
+  position: absolute;
+  z-index: 1;
+  top: 50%;
+  transform: translateY(-50%);
+  display:none;
+}
+.favorite-folder-controls{
+  right:-14px;
+}
+.button.favorite-reorder {
+  left: 0px;
+}
+.favorite:hover .favorite-reorder {
+  display:block;
+}
+
+.favorites-folder:hover .favorite-folder-controls,
+.favorites-show-all:hover .favorite-folder-controls {
+  display:block;
+}

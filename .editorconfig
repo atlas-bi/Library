@@ -1,1 +1,78 @@
 
+# https://editorconfig.org/
+
+root = true
+
+[*]
+indent_style = space
+indent_size = 4
+insert_final_newline = true
+trim_trailing_whitespace = true
+end_of_line = lf
+charset = utf-8
+
+csharp_space_between_method_declaration_name_and_open_parenthesis=true
+
+csharp_space_between_method_call_parameter_list_parentheses=false
+
+# Docstrings and comments use max_line_length = 79
+[*.py]
+max_line_length = 88
+
+# Use 2 spaces for the HTML files
+[*.html]
+indent_size = 2
+
+# The JSON files contain newlines inconsistently
+[*.json]
+indent_size = 2
+insert_final_newline = ignore
+
+
+[**/web/solr/**]
+indent_style = ignore
+indent_size = ignore
+
+[**/web/wwwroot/lib/**]
+indent_style = ignore
+indent_size = ignore
+
+[**/web/static/font/**]
+indent_style = ignore
+indent_size = ignore
+
+[**/web/static/css/**]
+indent_style = ignore
+indent_size = ignore
+
+# Minified JavaScript files shouldn't be changed
+[**.min.js]
+indent_style = ignore
+insert_final_newline = ignore
+
+# Makefiles always use tabs for indentation
+[Makefile]
+indent_style = tab
+
+# Batch files use tabs for indentation
+[*.bat]
+indent_style = tab
+
+[*.yml]
+indent_size = 2
+
+[*.scss]
+indent_size = 2
+
+[*.cs]
+# Extract this nested ternary operation into an independent statement
+dotnet_diagnostic.S3358.severity = None
+
+# Extract this nested code block into a separate method.
+dotnet_diagnostic.S1199.severity = None
+
+# Rename class 'DpDataInitiative__Metadata' to match pascal case naming rules
+dotnet_diagnostic.S101.severity = None
+
+# Supply an implementation for this partial method.
+dotnet_diagnostic.S3251.severity = None

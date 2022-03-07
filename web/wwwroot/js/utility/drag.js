@@ -20,8 +20,6 @@
 
       // margin is not included in x and y.
       var style = getComputedStyle(dragSEl);
-      console.log(parseInt(style.marginTop));
-      console.log(parseInt(style.marginLeft));
       d1 = e.clientY - getOffset(dragSEl).top + parseInt(style.marginTop);
       d2 = e.clientX - getOffset(dragSEl).left + parseInt(style.marginLeft);
       dragSEl.parentElement.style.position = 'relative';
@@ -44,9 +42,10 @@
       e.preventDefault();
       dragEl.style.top = e.clientY - d1 + 'px';
       dragEl.style.left = e.clientX - d2 + 'px';
-      d.dispatchEvent(
+      dragEl.dispatchEvent(
         new CustomEvent('dragMove', {
           cancelable: true,
+          bubbles: true,
           detail: {
             el: dragEl,
             x: e.clientX,
@@ -58,9 +57,10 @@
     dragMouseUp = function dragMouseUp(e) {
       dragSEl.parentElement.replaceChild(dragEl, dragSEl);
       dragEl.classList.remove('drag');
-      d.dispatchEvent(
+      dragEl.dispatchEvent(
         new CustomEvent('dragEnd', {
           cancelable: true,
+          bubbles: true,
           detail: {
             el: dragEl,
             x: e.clientX,

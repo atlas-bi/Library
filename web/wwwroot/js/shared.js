@@ -37,8 +37,8 @@ var getOffset = function (element) {
   var rect = element.getBoundingClientRect();
   var win = element.ownerDocument.defaultView;
   return {
-    top: rect.top + win.pageYOffset,
-    left: rect.left + win.pageXOffset,
+    top: rect.top + win.pageYOffset - window.scrollY,
+    left: rect.left + win.pageXOffset - window.scrollX,
   };
 };
 
