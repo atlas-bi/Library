@@ -94,7 +94,7 @@
       'click',
       function ($event) {
         $event.preventDefault();
-        console.log('clicked');
+
         o($el);
       },
       false,
@@ -178,7 +178,7 @@
       'click',
       function ($event) {
         $event.preventDefault();
-        console.log('clicked');
+
         o($el);
       },
       false,

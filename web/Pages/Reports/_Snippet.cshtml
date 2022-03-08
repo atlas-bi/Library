@@ -143,7 +143,7 @@
         </div>
     </div>
     <footer class="card-footer">
-        <a class="card-footer-item star py-0" data-href="/users/favorites/?handler=Edit&type=report&id=@Model.ReportObjectId">
+        <a class="card-footer-item star px-0" data-href="/users/favorites/?handler=Edit&type=report&id=@Model.ReportObjectId">
             <span class="icon-text">
                 @if (Model.StarredReports.Any(x => x.Ownerid == ViewBag.PublicUser.UserId))
                 {
@@ -161,7 +161,7 @@
                 }
             </span>
         </a>
-        <a href="/Reports?id=@Model.ReportObjectId" class="card-footer-item py-0">
+        <a href="/Reports?id=@Model.ReportObjectId" class="card-footer-item px-0">
             <span class="icon-text">
                 <span class="icon">
                     <i class="fas fa-book-open"></i>
@@ -172,7 +172,7 @@
 
         @if (EditReportUrl != null && EditReportUrl != "" && ViewBag.Permissions.Contains(38))
         {
-            <a class="card-footer-item py-0" target="_blank" href="@EditReportUrl">
+            <a class="card-footer-item px-0" target="_blank" href="@EditReportUrl">
                 <span class="icon-text">
                     <span class="icon">
                         <i class="fas fa-edit"></i>
@@ -183,7 +183,7 @@
         }
         @if (ManageReportUrl != null && ManageReportUrl != "" && ViewBag.Permissions.Contains(38))
         {
-            <a class="card-footer-item py-0" target="_blank" href="@ManageReportUrl">
+            <a class="card-footer-item px-0" target="_blank" href="@ManageReportUrl">
                 <span class="icon-text">
                     <span class="icon">
                         <i class="fas fa-cogs"></i>
@@ -192,7 +192,7 @@
                 </span>
             </a>
         }
-        <div class="card-footer-item py-0">
+        <div class="card-footer-item px-0">
             <a class="is-block has-tooltip-arrow has-tooltip-top js-modal-trigger ml-2" data-target="report-profile-@Model.ReportObjectId" data-tooltip="Open Report Profile">
                 <span class="icon has-text-grey ">
                     <i class="fas fa-chart-bar"></i>

@@ -14,7 +14,7 @@
 
 // report search
 (function () {
-  var start;
+  var start, lastTitle;
   var d = document,
     w = window,
     grp = d.getElementById('search-form'),
@@ -233,8 +233,6 @@
       w.location.origin + '/Search?Query=' + encodeURI(decodeURI(u)),
     );
 
-    currentPathname = document.location.pathname;
-
     atmr = setTimeout(function () {
       document.dispatchEvent(
         new CustomEvent('analytics-post', {
@@ -254,7 +252,7 @@
 
     /* remove loader here */
     if (document.querySelector('.body-mainCtn')) {
-      document.querySelector('.body-mainCtn').style.opacity = null;
+      document.querySelector('.body-mainCtn').style.opacity = '';
     }
   };
 
@@ -264,63 +262,6 @@
   grp.addEventListener('submit', function (e) {
     e.preventDefault();
   });
-  // combination of mousedown and mouseup allow event to fire before blur
-  // hst.addEventListener('mousedown', function (e) {
-  //   e.preventDefault();
-  // });
-  // hst.addEventListener('mouseup', function (e) {
-  //   if (e.target.matches('.sr-hst ul li a')) {
-  //     e.preventDefault();
-  //     e.stopPropagation();
-  //     var q = e.target,
-  //       str = q.getElementsByClassName('searchString')[0].textContent.trim();
-  //     i.value = str;
-  //     AjaxSearch(str, q.getAttribute('search'));
-  //   }
-  // });
-
-  // d.addEventListener(
-  //   'scroll',
-  //   function () {
-  //     i.blur();
-  //     hst.style.display = 'none';
-  //   },
-  //   {
-  //     passive: true,
-  //   },
-  // );
-
-  i.addEventListener('focus', function () {
-    grp.classList.add('sr-grp-f-win');
-  });
-
-  i.addEventListener('blur', function () {
-    grp.classList.remove('sr-grp-f-win');
-  });
-
-  // i.addEventListener("click", function (e) {
-  //   hst.style.display = "none";
-
-  //   if (hAjx !== null) {
-  //     hAjx.abort();
-  //   }
-
-  //   hAjx = new XMLHttpRequest();
-  //   hAjx.open("get", "/Users?Handler=SearchHistory", true);
-  //   hAjx.setRequestHeader(
-  //     "Content-Type",
-  //     "application/x-www-form-urlencoded; charset=UTF-8"
-  //   );
-  //   hAjx.setRequestHeader("X-Requested-With", "XMLHttpRequest");
-  //   hAjx.send();
-
-  //   hAjx.onreadystatechange = function (e) {
-  //     if (this.readyState == 4 && this.status == 200) {
-  //       hst.innerHTML = this.responseText;
-  //       hst.style.removeProperty("display");
-  //     }
-  //   };
-  // });
 
   // only search if the user has stopped typing for 1/5 second.
   var searchTimeout = 250,

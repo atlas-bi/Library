@@ -122,11 +122,7 @@ namespace Atlas_Web
                         "lib/scrollbars/simple-scrollbar.js"
                     );
                     // required for search
-                    pipeline.AddJavaScriptBundle(
-                        "/js/search.min.js",
-                        "js/search.js",
-                        "/js/error.js"
-                    );
+                    pipeline.AddJavaScriptBundle("/js/search.min.js", "js/search.min.js");
 
                     // used on all pages, but not for load
                     pipeline.AddJavaScriptBundle("/js/utility.min.js", "js/utility.min.js");

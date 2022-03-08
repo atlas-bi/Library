@@ -114,12 +114,10 @@ span[data-tooltip]{
 @import '../lib/codemirror/mycss';
 /* purgecss end ignore */
 
-@import './favorite';
 @import './page';
 
 @import './search';
 @import './utility/collapse';
-@import './utility/modal';
 @import './utility/tabs';
 
 @import './utility/drag';
@@ -162,13 +160,6 @@ body {
 div.column.is-narrow:empty {
   padding: 0 !important;
 }
-
-/* remove tooltip underline*/
-// span {
-//   &[data-tooltip]{
-//     border-bottom: unset;
-//     border-bottom-color: unset;
-// }}
 
 /* card colors */
 

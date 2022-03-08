@@ -38,7 +38,7 @@
       // filter favs
       document.querySelectorAll('.favorites .favorite').forEach(($el) => {
         if ($target.dataset.folderid == $el.dataset.folderid) {
-          $el.style.display = null;
+          $el.style.display = '';
         } else {
           $el.style.display = 'None';
         }
@@ -49,7 +49,7 @@
   function showall() {
     // show everything
     (document.querySelectorAll('.favorites .favorite') || []).forEach(($el) => {
-      $el.style.display = null;
+      $el.style.display = '';
     });
 
     // clear filters
@@ -368,7 +368,7 @@
       $target.classList.remove('is-active');
       // unhide everything
       document.querySelectorAll('.favorites .favorite').forEach(($el) => {
-        $el.style.display = null;
+        $el.style.display = '';
       });
     } else if ($e.target.closest('a.favorites-filter')) {
       $target = $e.target.closest('a.favorites-filter');
@@ -387,7 +387,7 @@
 
       document.querySelectorAll('.favorites .favorite').forEach(($el) => {
         if ($el.classList.contains($props.type)) {
-          $el.style.display = null;
+          $el.style.display = '';
         } else {
           $el.style.display = 'None';
         }
@@ -423,10 +423,10 @@
 
       document.querySelectorAll('.favorites .favorite').forEach(($el) => {
         if ($target.value.trim() === '') {
-          $el.style.display = null;
+          $el.style.display = '';
         } else {
           if (fuzzysearch($target.value, $el.textContent)) {
-            $el.style.display = null;
+            $el.style.display = '';
           } else {
             $el.style.display = 'None';
           }

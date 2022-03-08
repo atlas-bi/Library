@@ -15,7 +15,7 @@ namespace Atlas_Web.Models
 
         public Dictionary<string, string> Filters { get; set; } = new();
 
-        public int PageSize = 10;
+        public int PageSize = 20;
 
         public int EffectivePageIndex => PageIndex ?? 1;
         public int Start => (EffectivePageIndex - 1) * PageSize;

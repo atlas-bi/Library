@@ -20,12 +20,14 @@
 
       // margin is not included in x and y.
       var style = getComputedStyle(dragSEl);
+
       d1 = e.clientY - getOffset(dragSEl).top + parseInt(style.marginTop);
       d2 = e.clientX - getOffset(dragSEl).left + parseInt(style.marginLeft);
       dragSEl.parentElement.style.position = 'relative';
       dragSEl.parentElement.appendChild(dragEl);
       dragEl.style.top = e.clientY - d1 + 'px';
       dragEl.style.left = e.clientX - d2 + 'px';
+
       dragMouseDown(e);
     },
     false,
@@ -69,9 +71,9 @@
         }),
       );
 
-      dragEl.style.width = null;
-      dragEl.style.top = null;
-      dragEl.style.left = null;
+      dragEl.style.width = '';
+      dragEl.style.top = '';
+      dragEl.style.left = '';
       d.removeEventListener('mouseup', dragMouseUp);
       d.removeEventListener('mousemove', dragMouseMove);
     };

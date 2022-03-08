@@ -516,42 +516,6 @@ namespace Atlas_Web.Pages.Search
                                             : null
                                 }
                         )
-                        //})
-
-                        //x =>
-                        //    new SearchResult(
-                        //        x.ReportTypeId != null
-                        //            && (
-                        //                x.ReportTypeId.First() == 3
-                        //                || x.ReportTypeId.First() == 17
-                        //            )
-                        //            && Helpers.UserHelpers.CheckHrxPermissions(
-                        //                _context,
-                        //                x.AtlasId.First(),
-                        //                User.Identity.Name
-                        //            )
-                        //          ? _context.ReportObjectAttachments
-                        //            .Where(
-                        //                y =>
-                        //                    y.ReportObjectId == x.AtlasId.First()
-                        //                    && x.Type.First() == "reports"
-                        //            )
-                        //            .OrderByDescending(y => y.CreationDate)
-                        //            .ToList()
-                        //          : new List<ReportObjectAttachment>(),
-                        //        x,
-                        //        x.Type.First() == "reports"
-                        //          ? HtmlHelpers.ReportUrlFromParams(
-                        //                HttpContext,
-                        //                _context.ReportObjects
-                        //                    .Where(y => y.ReportObjectId == x.AtlasId.First())
-                        //                    .FirstOrDefault(),
-                        //                _context,
-                        //                User.Identity.Name
-                        //            )
-                        //          : null
-                        //    )
-
                         .ToList(),
                     BuildFacetModels(results.FacetFields),
                     BuildHighlightModels(results.Highlights),

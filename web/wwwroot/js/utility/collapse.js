@@ -34,7 +34,7 @@
   }
 
   function c(el) {
-    el.style.maxHeight = null;
+    el.style.maxHeight = '';
     el.style.overflow = 'hidden';
     el.classList.remove('clps-o');
   }

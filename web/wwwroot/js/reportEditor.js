@@ -27,7 +27,7 @@
     document.querySelector('.new-image input') || { addEventListener: () => {} }
   ).addEventListener('change', function (e) {
     e.preventDefault();
-    console.log('image added');
+
     // create a new reorder element
     var box = document.createElement('div');
     box.classList.add('box', 'p-0', 'm-3', 'drg');
@@ -95,8 +95,6 @@
     q.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
     q.send(data);
     q.onload = function () {
-      console.log('added');
-      console.log(q.responseText);
       if (q.responseText == 'error') {
         trash.innerHTML =
           '<span class="icon has-text-danger"><i class="fas fa-exclamation-triangle"></i></span>';

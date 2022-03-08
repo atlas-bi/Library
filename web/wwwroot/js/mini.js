@@ -169,14 +169,12 @@
   function inputFilter($input, $mini) {
     var $options = $mini.querySelectorAll('.mini-item');
     $options.forEach(($option) => {
-      console.log($option.innerText);
-      console.log($input.value);
       if (
         $input.value === '' ||
         $option.innerText.toLowerCase().indexOf($input.value.toLowerCase()) !=
           -1
       ) {
-        $option.style.display = null;
+        $option.style.display = '';
       } else {
         $option.style.display = 'none';
       }
