@@ -59,6 +59,7 @@ namespace Atlas_Web.Models
         public virtual DbSet<ReportObjectDocTerm> ReportObjectDocTerms { get; set; }
         public virtual DbSet<ReportObjectHierarchy> ReportObjectHierarchies { get; set; }
         public virtual DbSet<ReportObjectImagesDoc> ReportObjectImagesDocs { get; set; }
+        public virtual DbSet<ReportObjectParameter> ReportObjectParameters { get; set; }
         public virtual DbSet<ReportObjectQuery> ReportObjectQueries { get; set; }
         public virtual DbSet<ReportObjectReportRunTime> ReportObjectReportRunTimes { get; set; }
         public virtual DbSet<ReportObjectRunDatum> ReportObjectRunData { get; set; }
@@ -1364,6 +1365,19 @@ namespace Atlas_Web.Models
                         .HasForeignKey(d => d.ReportObjectId)
                         .OnDelete(DeleteBehavior.ClientSetNull)
                         .HasConstraintName("FK__ReportObj__Repor__3A2CDF36");
+                }
+            );
+
+            modelBuilder.Entity<ReportObjectParameter>(
+                entity =>
+                {
+                    entity.Property(e => e.ReportObjectId).HasColumnName("ReportObjectID");
+
+                    entity
+                        .HasOne(d => d.ReportObject)
+                        .WithMany(p => p.ReportObjectParameters)
+                        .HasForeignKey(d => d.ReportObjectId)
+                        .HasConstraintName("FK_ReportObjectParameters1_ReportObject");
                 }
             );
 

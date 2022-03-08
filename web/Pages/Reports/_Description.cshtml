@@ -1,4 +1,4 @@
-﻿
+
 @model Atlas_Web.Pages.Reports.IndexModel
 
 
@@ -56,3 +56,34 @@
         </nav>
     }
 </div>
+
+@if(Model.Report.ReportObjectParameters.Any()){
+    <h2 class="title is-2">Parameters</h2>
+
+    <div class="table-container mt-5">
+        <table class="table is-narrow">
+            <thead>
+                 <tr>
+                    <th>Name</th>
+                    @if(Model.Report.ReportObjectParameters.Any(x => x.ParameterValue != null))
+                    {
+                        <th>Value</th>
+                    }
+                    
+                </tr>
+            </thead>
+            <tbody>
+                @foreach(var param in Model.Report.ReportObjectParameters)
+                {
+                    <tr>
+                        <td>@param.ParameterName</td>
+                        @if (Model.Report.ReportObjectParameters.Any(x => x.ParameterValue != null))
+                        {
+                            <td>@param.ParameterValue</td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

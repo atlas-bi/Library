@@ -231,6 +231,17 @@
   d.addEventListener('modal-open', function () {
     loadAjaxContent();
   });
+  d.addEventListener('panel-tab-opened', function () {
+    loadAjaxContent();
+  });
+  d.addEventListener('step-tab-opened', function () {
+    loadAjaxContent();
+  });
+
+  d.addEventListener('tab-opened', function () {
+    loadAjaxContent();
+  });
+
   d.addEventListener(
     'scroll',
     function () {

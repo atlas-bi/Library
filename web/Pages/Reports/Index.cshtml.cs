@@ -84,6 +84,7 @@ namespace Atlas_Web.Pages.Reports
                         .Include(x => x.DpReportAnnotations)
                         .ThenInclude(x => x.DataProject)
                         .Include(x => x.StarredReports)
+                        .Include(x => x.ReportObjectParameters)
                         .SingleOrDefaultAsync(x => x.ReportObjectId == id);
                 }
             );

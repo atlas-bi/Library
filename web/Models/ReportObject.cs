@@ -15,6 +15,7 @@ namespace Atlas_Web.Models
             ReportObjectHierarchyChildReportObjects = new HashSet<ReportObjectHierarchy>();
             ReportObjectHierarchyParentReportObjects = new HashSet<ReportObjectHierarchy>();
             ReportObjectImagesDocs = new HashSet<ReportObjectImagesDoc>();
+            ReportObjectParameters = new HashSet<ReportObjectParameter>();
             ReportObjectQueries = new HashSet<ReportObjectQuery>();
             ReportObjectReportRunTimes = new HashSet<ReportObjectReportRunTime>();
             ReportObjectRunData = new HashSet<ReportObjectRunDatum>();
@@ -65,6 +66,7 @@ namespace Atlas_Web.Models
         public virtual ICollection<ReportObjectHierarchy> ReportObjectHierarchyChildReportObjects { get; set; }
         public virtual ICollection<ReportObjectHierarchy> ReportObjectHierarchyParentReportObjects { get; set; }
         public virtual ICollection<ReportObjectImagesDoc> ReportObjectImagesDocs { get; set; }
+        public virtual ICollection<ReportObjectParameter> ReportObjectParameters { get; set; }
         public virtual ICollection<ReportObjectQuery> ReportObjectQueries { get; set; }
         public virtual ICollection<ReportObjectReportRunTime> ReportObjectReportRunTimes { get; set; }
         public virtual ICollection<ReportObjectRunDatum> ReportObjectRunData { get; set; }

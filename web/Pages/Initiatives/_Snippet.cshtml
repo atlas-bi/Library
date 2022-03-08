@@ -79,7 +79,7 @@
                     </span>
                 </a>
             }
-
+            @*
             @if (@Configuration["features:enable_feedback"] == null || @Configuration["features:enable_feedback"].ToString().ToLower() == "true")
             {
                 <a class="is-block has-tooltip-arrow has-tooltip-right js-modal-trigger" data-tooltip="Share Feedback" data-target="initiative-share-feedback-@Model.DataInitiativeId" data-name="@Model.Name">
@@ -87,7 +87,7 @@
                         <i class="far fa-thumbs-up"></i>
                     </span>
                 </a>
-            }
+            }*@
         </div>
     </footer>
 </div>
