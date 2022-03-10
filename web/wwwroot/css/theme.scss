@@ -293,13 +293,13 @@ source[data-srcset="/img/loader.webp"] {
 }
 @media screen and (min-width: $widescreen) {
   .atlas-navbar {
-    padding: 15px 0;
+    padding: 10px 0;
   }
 
-  .atlas-navbar .navbar-brand img {
-    width: 182px !important;
-    height: 56px !important;
-  }
+  // .atlas-navbar .navbar-brand img {
+  //   width: 182px !important;
+  //   height: 56px !important;
+  // }
 
   .is-flex-widescreen {
     display: flex !important;
@@ -349,7 +349,7 @@ a.navbar-link:hover,
 /* sticky */
 .sticky {
   position: sticky;
-  top:calc(96px + 14px);
+  top:calc(56px + 14px);
 }
 
 nav.sticky {
@@ -387,6 +387,17 @@ nav.sticky {
 .steps .is-submit .steps-marker.is-hollow:hover {
     border-color: $success-dark;
 }
+
+.steps .is-cancel.steps-segment:after {
+  background-color: $grey-lighter;
+}
+.steps .is-cancel .steps-marker {
+  border-color: $grey-lighter;
+}
+.steps .is-cancel .steps-marker.is-hollow:hover {
+  border-color: $warning-dark;
+}
+
 
 .is-nobreak {
     white-space:nowrap

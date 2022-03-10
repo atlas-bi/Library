@@ -15,7 +15,7 @@
     <h1 class="title is-1">@ViewData["Title"]</h1>
 
     <ul class="steps has-gaps has-content-centered">
-        <li class="steps-segment">
+        <li class="steps-segment is-cancel">
             <a class="has-text-grey-dark" href="/Reports/?id=@Model.Report.ReportObjectId">
                 <span class="steps-marker is-hollow">
                   <span class="icon">
@@ -158,7 +158,7 @@
         </div>
 
         <div class='field'>
-            <label class="label">Organizationl Value</label>
+            <label class="label">Organizational Value</label>
             <div class="field is-grouped">
                 <div class="control is-relative is-expanded">
                     <input readonly class="input input-mini" placeholder="click to select.."  value="@if(@Model.Report.OrganizationalValue!=null){@Model.Report.OrganizationalValue.OrganizationalValueName}" lookup-area="org-value" />

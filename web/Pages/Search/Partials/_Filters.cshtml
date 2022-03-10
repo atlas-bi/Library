@@ -45,7 +45,7 @@
     <div class='form-check search-filter'>
         <input type="checkbox" value="@UrlHelpers.SetSearchFacetUrl(ViewContext.HttpContext, @field.Key, @value.Value)" checked="@UrlHelpers.SetSearchFacetChecked(Model.SearchResults.Parameters, @field.Key, @value.Value)" />
         <input type="hidden" />
-        <label>@value.FriendlyName<span class="search-badge">@value.Count</span></label>
+        <label>@value.FriendlyName<span class="search-badge tag ml-3 is-info is-rounded is-light">@value.Count</span></label>
     </div>}}
 
     </div>}}

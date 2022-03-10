@@ -78,7 +78,10 @@
 
             </span>
             <span class="tags">
-                <span class="tag">report</span>
+                @{
+                    var type = string.IsNullOrEmpty(@Model.ReportObjectType.ShortName) ? @Model.ReportObjectType.Name : @Model.ReportObjectType.ShortName;
+                }
+                <span class="tag">@type</span>
                 @if (@Model.CertificationTag == "Analytics Certified")
                 {<span class="tag srch-fieldHunterGreen">@Model.CertificationTag</span>}
                 @if (@Model.CertificationTag == "Analytics Reviewed")
@@ -135,9 +138,6 @@
                     {
                         <text>Open to view details.</text>
                     }
-                    <div class="tags">
-                        <span class="tag is-link">@Model.ReportObjectType.Name</span>
-                    </div>
                 </a>
             </div>
         </div>

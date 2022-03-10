@@ -29,7 +29,11 @@
         })
         .join('&');
       q = new XMLHttpRequest();
-      q.open('post', '/Settings?handler=SearchUpdateVisibility&' + url, true);
+      q.open(
+        'post',
+        '/Settings/Search/?handler=SearchUpdateVisibility&' + url,
+        true,
+      );
       q.setRequestHeader('Content-Type', 'text/html;charset=UTF-8`');
       q.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
       q.send();
@@ -45,7 +49,7 @@
       q = new XMLHttpRequest();
       q.open(
         'post',
-        '/Settings?handler=SearchUpdateText&id=' +
+        '/Settings/Search/?handler=SearchUpdateText&id=' +
           input.getAttribute('groupId') +
           '&text=' +
           input.value,

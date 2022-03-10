@@ -269,6 +269,25 @@ namespace Atlas_Web
             {
                 cache.Set("global_css", css);
             }
+
+            // set logo
+            if (System.IO.File.Exists(Configuration["logo"]))
+            {
+                try
+                {
+                    byte[] imageArray = System.IO.File.ReadAllBytes(Configuration["logo"]);
+                    string base64ImageRepresentation = Convert.ToBase64String(imageArray);
+                    cache.Set("logo", "data:image/png;base64," + base64ImageRepresentation);
+                }
+                catch
+                {
+                    cache.Set("logo", "/img/atlas-logo.png");
+                }
+            }
+            else
+            {
+                cache.Set("logo", "/img/atlas-logo.png");
+            }
         }
     }
 }

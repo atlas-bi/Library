@@ -44,10 +44,14 @@ namespace Atlas_Web.Pages.Data
 
                 max_ratio = (Math.Max(width / (float)image.Width, height / (float)image.Height));
 
-                wsize = (int)(image.Width * max_ratio);
-                hsize = (int)(image.Height * max_ratio);
+                // resize only if we can shrink it
+                if (max_ratio < 1)
+                {
+                    wsize = (int)(image.Width * max_ratio);
+                    hsize = (int)(image.Height * max_ratio);
 
-                image.Mutate(x => x.Resize(wsize, hsize));
+                    image.Mutate(x => x.Resize(wsize, hsize));
+                }
             }
             // if only a width
             else if (Regex.Match(size, @"^\d+x_$", RegexOptions.Multiline).Success)
@@ -56,13 +60,14 @@ namespace Atlas_Web.Pages.Data
                 width = Int32.Parse(parts[0]);
                 max_ratio = (width / (float)image.Width);
 
-                wsize = (int)(image.Width * max_ratio);
-                hsize = (int)(image.Height * max_ratio);
+                // resize only if we can shrink it
+                if (max_ratio < 1)
+                {
+                    wsize = (int)(image.Width * max_ratio);
+                    hsize = (int)(image.Height * max_ratio);
 
-                image.Mutate(x => x.Resize(wsize, hsize));
-
-
-
+                    image.Mutate(x => x.Resize(wsize, hsize));
+                }
             }
 
             using var ms = new MemoryStream();
