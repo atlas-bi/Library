@@ -32,5 +32,5 @@ ARG HOST
 
 # create config
 RUN echo "{\"solr\": {\"atlas_address\": \"https://atlas-dotnet-search.herokuapp.com/solr/atlas\"},\"ConnectionStrings\": {\"AtlasDatabase\": \"Server=$HOST;Database=atlas;User Id=$USER; Password=$PASSWORD; MultipleActiveResultSets=true\"}}" > appsettings.cust.json
-# in release 2022.02.2 we need to change the name from atlas_dotnet to atlas_web
-CMD ASPNETCORE_URLS=http://*:$PORT dotnet "Atlas_Dotnet.dll"
+
+CMD ASPNETCORE_URLS=http://*:$PORT dotnet "Atlas_Web.dll"
