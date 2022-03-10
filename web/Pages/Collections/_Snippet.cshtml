@@ -30,6 +30,9 @@
                     @if (!string.IsNullOrEmpty(Model.Description))
                     {
                         @(Model.Description.Substring(0,Math.Min(160,Model.Description.Length)) + " ...")
+                    }else if (!string.IsNullOrEmpty(Model.Purpose))
+                    {
+                        @(Model.Description.Substring(0,Math.Min(160,Model.Purpose.Length)) + " ...")
                     } else {
                         <text>Open to view details.</text>
                     }
