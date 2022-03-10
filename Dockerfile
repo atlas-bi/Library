@@ -8,9 +8,9 @@
 # docker run --entrypoint sh -i -t -u 0 atlas_demo:latest
 
 # to access webapp
-# http://localhost:1234 
+# http://localhost:1234
 
-FROM mcr.microsoft.com/dotnet/sdk:5.0-alpine AS build
+FROM mcr.microsoft.com/dotnet/sdk:6.0-alpine AS build
 WORKDIR /app
 COPY web.sln .
 COPY ["./web/web.csproj", "./web/"]
@@ -22,7 +22,7 @@ WORKDIR "/app/web/"
 RUN  sed -i -e 's/<\/body>/<script async defer data-website-id="833156f8-3343-4da3-b7d5-45b5fa4f224d" src="https:\/\/analytics.atlas.bi\/umami.js"><\/script><\/body>/g' Pages/Shared/_Layout.cshtml
 RUN dotnet publish -c Release -o out
 
-FROM mcr.microsoft.com/dotnet/sdk:5.0-alpine
+FROM mcr.microsoft.com/dotnet/sdk:6.0-alpine
 WORKDIR /app
 COPY --from=build ["/app/web/out", "./"]
 
