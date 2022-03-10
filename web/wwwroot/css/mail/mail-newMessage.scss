@@ -1,0 +1,269 @@
+// .new_message_template {
+//   display: none;
+//   height: 0;
+// }
+
+// .mlbx-newMsg {
+//   height: 100%;
+//   padding: 25px;
+// }
+
+// .mlbx-newMsgForm {
+//   -ms-grid-columns: 100%;
+//   -ms-grid-rows: -webkit-max-content 1fr;
+//   -ms-grid-rows: max-content 1fr;
+//   display: -ms-grid;
+//   display: grid;
+//   grid-template-rows: -webkit-max-content 1fr;
+//   grid-template-rows: max-content 1fr;
+//   height: 100%;
+// }
+
+// .mlbx-newMsgForm > div:nth-of-type(2) {
+//   -ms-grid-row: 2;
+// }
+
+// .mlbx-newMsgSend {
+//   background-color: transparent;
+//   border: 0;
+//   color: #0058dd;
+//   cursor: default;
+//   outline: none;
+//   position: absolute;
+//   right: 0;
+//   top: 0;
+// }
+
+// .mlbx-newMsgSubjIpt {
+//   border: none;
+//   box-shadow: none;
+//   color: inherit;
+//   font-weight: inherit;
+//   letter-spacing: inherit;
+//   margin: 0;
+//   outline: none;
+//   padding: 0;
+//   resize: none;
+// }
+
+// .mlbx-newMsgSender,
+// .mlbx-newMsgRecip,
+// .mlbx-newMsgSubj {
+//   -ms-grid-columns: -webkit-max-content minmax(0, 1fr);
+//   -ms-grid-columns: max-content minmax(0, 1fr);
+//   display: -ms-grid;
+//   display: grid;
+//   grid-template-columns: -webkit-max-content minmax(0, 1fr);
+//   grid-template-columns: max-content minmax(0, 1fr);
+// }
+
+// .mlbx-newMsgSender > span,
+// .mlbx-newMsgRecip > *,
+// .mlbx-newMsgSubj > * {
+//   margin-bottom: 2px;
+//   padding-bottom: 2px;
+//   padding-top: 2px;
+// }
+
+// .mlbx-newMsgSender > :nth-child(2),
+// .mlbx-newMsgRecip > :nth-child(2),
+// .mlbx-newMsgSubj > :nth-child(2) {
+//   -ms-grid-column: 2;
+// }
+
+// .mlbx-newMsgSender > span:first-of-type,
+// .mlbx-newMsgRecip > span:first-of-type,
+// .mlbx-newMsgSubj > span:first-of-type {
+//   color: gray;
+//   margin-left: 1px;
+//   margin-right: 5px;
+// }
+
+// .mlbx-newMsgSubjIpt:hover,
+// .mlbx-newMsgSubjIpt:focus,
+// .mlbx-newMsgSubjIpt:active {
+//   outline: none;
+// }
+
+// .mlbx-newMsgSubjIpt::-ms-clear {
+//   display: none;
+//   height: 0;
+//   width: 0;
+// }
+
+// .mlbx-newMsgMsg {
+//   border: none;
+//   box-shadow: none;
+//   margin: 0;
+//   min-height: 100%;
+//   outline: none;
+//   padding: 0;
+// }
+
+// .mlbx-newMsgMsg:active,
+// .mlbx-newMsgMsg:hover,
+// .mlbx-newMsgMsg:focus {
+//   -moz-box-shadow: none;
+//   -webkit-box-shadow: none;
+//   border: none;
+//   box-shadow: none;
+//   outline: none;
+//   resize: none;
+// }
+
+// .mlbx-rdrHead .mailbox-new-message-recipient td:first-of-type {
+//   padding-bottom: 2px;
+//   padding-top: 2px;
+//   width: 28px;
+// }
+
+// .mlbx-rdrHead .mailbox-new-message-subject td:first-of-type {
+//   padding-bottom: 2px;
+//   padding-top: 2px;
+//   width: 58px;
+// }
+
+// .mailbox-new-message-subject input,
+// .mailbox-new-message-subject input:focus,
+// .mailbox-new-message-subject input:active {
+//   border: none;
+//   font-style: inherit;
+//   font-weight: inherit;
+//   letter-spacing: inherit;
+//   margin-bottom: 1px;
+//   outline: none;
+//   width: 100%;
+// }
+
+// .mlbx-newMsgSend:active,
+// .mlbx-newMsgSend:focus,
+// .mlbx-newMsgSend:hover {
+//   outline: none;
+// }
+
+// .mlbx-newMsgSend:active {
+//   color: #80abee;
+// }
+
+// .mailbox-sender-user,
+// .mailbox-to-user {
+//   border-radius: 0.25rem;
+//   cursor: default;
+//   display: inline;
+//   margin-left: -5px;
+//   margin-right: 5px;
+//   padding: 3px 2px 3px 5px;
+// }
+
+// .mailbox-sender-user:hover,
+// .mailbox-to-user:hover {
+//   background-color: #b2d3ff;
+//   color: #272727 !important;
+// }
+
+// .message-reply .mailbox-sender-user:hover,
+// .message-reply .mailbox-to-user:hover {
+//   background-color: inherit;
+//   color: inherit;
+// }
+
+// .mailbox-sender-user:hover .mailbox-user-dropdown,
+// .mailbox-to-user:hover .mailbox-user-dropdown {
+//   color: inherit;
+// }
+
+// .mailbox-to-user .comma {
+//   display: inline-block;
+//   width: 0;
+// }
+
+// .mailbox-to-user:hover .comma {
+//   opacity: 0;
+// }
+
+// .mailbox-reader-body .message-reply {
+//   pointer-events: none !important;
+// }
+
+// .mail-new-email {
+//   font-size: 14px;
+// }
+
+// .new-mail-email .form-control {
+//   font-size: inherit !important;
+// }
+
+// .mlbx-shareMsg {
+//   height: 400px;
+//   font-size: 14px;
+//   letter-spacing: 0.4px;
+// }
+
+// .mlbx-shareMsg .mlbx-newMsgMsg {
+//   margin-top: 10px;
+// }
+
+// .mlbx-usrDrp {
+//   margin-left: 5px;
+//   margin-right: 1px;
+//   color: transparent;
+//   display: inline;
+//   position: relative;
+//   transition: color 0.1s;
+// }
+
+// *:hover > .mlbx-usrDrp {
+//   color: inherit;
+// }
+
+// .mlbx-usrDrpCtr {
+//   display: none;
+//   top: 5px;
+//   left: 2px;
+//   border: 1px solid rgb(198, 198, 198);
+//   position: absolute;
+//   width: 150px;
+//   height: auto;
+//   border-radius: 6px;
+//   background-color: rgb(240, 239, 240);
+//   z-index: 1;
+//   box-shadow: 0 5px 20px 2px rgb(225, 225, 225);
+//   padding: 3px 0;
+// }
+
+// .mlbx-usrDrpCtr .separator {
+//   height: 2px;
+//   margin: 3px 0;
+//   background-color: rgb(223, 224, 223);
+// }
+
+// .mlbx-usrDrpItm {
+//   height: 22px;
+//   width: 100%;
+//   padding-left: 15px;
+//   padding-right: 15px;
+// }
+
+// .mlbx-usrDrpItm a {
+//   text-decoration: none;
+//   color: inherit;
+//   cursor: default;
+// }
+
+// .mlbx-usrDrpItm:hover {
+//   background-color: rgb(63, 139, 246);
+//   color: rgb(255, 255, 255);
+// }
+
+// .mlbx-dvdr {
+//   background-color: #e6e6e6;
+//   height: 1px;
+// }
+
+// .mlbx-dvdr.medium {
+//   background-color: #c9c9c9;
+// }
+
+// .mlbx-dvdr.dark {
+//   background-color: #a6a6a6;
+// }

@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 
-#nullable disable
-
 namespace Atlas_Web.Models
 {
     public partial class StarredCollection
@@ -11,8 +9,10 @@ namespace Atlas_Web.Models
         public int? Rank { get; set; }
         public int? Collectionid { get; set; }
         public int? Ownerid { get; set; }
+        public int? Folderid { get; set; }
 
         public virtual DpDataProject Collection { get; set; }
+        public virtual UserFavoriteFolder Folder { get; set; }
         public virtual User Owner { get; set; }
     }
 }

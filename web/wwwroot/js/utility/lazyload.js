@@ -1,58 +1,75 @@
-/*
-    Atlas of Information Management business intelligence library and documentation database.
-    Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*/
 (function () {
   var d = document,
-    load = debounce(function () {
-      [].forEach.call(d.querySelectorAll("img[data-src]"), function (img) {
+    srcset = function ($el) {
+      [].forEach.call(
+        $el.querySelectorAll('source[data-srcset]'),
+        function (img) {
+          if (isInViewport(img)) {
+            // set image to nothing to clear, then load new
+            var attrib = img.getAttribute('data-srcset');
+            img.setAttribute('srcset', '');
+            img.removeAttribute('data-srcset');
+            img.setAttribute('srcset', attrib);
+          }
+        },
+      );
+    },
+    src = function ($el) {
+      [].forEach.call($el.querySelectorAll('img[data-src]'), function (img) {
         if (isInViewport(img)) {
-          img.setAttribute("src", img.getAttribute("data-src"));
-          img.removeAttribute("data-src");
+          // set image to nothing to clear, then load new
+          var attrib = img.getAttribute('data-src');
+          img.setAttribute('src', '');
+          img.removeAttribute('data-src');
+          img.setAttribute('src', attrib);
         }
       });
-    }, 250);
+    },
+    load = function () {
+      // start with "picture" so all elements are updated together.
+      [].forEach.call(d.querySelectorAll('picture'), function (picture) {
+        src(picture);
+        srcset(picture);
+      });
+
+      // then global any leftovers
+      src(d);
+      srcset(d);
+    };
 
   var isInViewport = function isInViewport(elem) {
     var bounding = elem.getBoundingClientRect(),
-      padding = 400;
+      padding = 600;
     return (
-      bounding.top >= 0 &&
+      bounding.top >= 0 - padding &&
       bounding.left >= 0 &&
       bounding.bottom - elem.clientHeight - padding <=
         (document.documentElement.clientHeight ||
           d.documentElement.clientHeight) &&
       bounding.right - padding - elem.clientWidth <=
-        (document.documentElement.clientWidth || d.documentElement.clientWidth)
+        (document.documentElement.clientWidth ||
+          d.documentElement.clientWidth) &&
+      // is visible
+      elem.offsetParent !== null
     );
   };
 
   load();
-  d.addEventListener("ajax", function () {
+  d.addEventListener('ajax', function () {
     setTimeout(function () {
       load();
     }, 0);
   });
+  d.addEventListener('modal-open', function () {
+    load();
+  });
   d.addEventListener(
-    "scroll",
+    'scroll',
     function () {
       debounce(load(), 100);
     },
     {
       passive: true,
-    }
+    },
   );
 })();

@@ -8,28 +8,26 @@
 */
 
 function processAdd(cmd) {
+  doc = cmd.solrDoc; // org.apache.solr.common.SolrInputDocument
+  id = doc.getFieldValue('id');
+  logger.info('update-script#processAdd: id=' + id);
 
-  doc = cmd.solrDoc;  // org.apache.solr.common.SolrInputDocument
-  id = doc.getFieldValue("id");
-  logger.info("update-script#processAdd: id=" + id);
+  // Set a field value:
+  //  doc.setField("foo_s", "whatever");
 
-// Set a field value:
-//  doc.setField("foo_s", "whatever");
+  // Get a configuration parameter:
+  //  config_param = params.get('config_param');  // "params" only exists if processor configured with <lst name="params">
 
-// Get a configuration parameter:
-//  config_param = params.get('config_param');  // "params" only exists if processor configured with <lst name="params">
+  // Get a request parameter:
+  // some_param = req.getParams().get("some_param")
 
-// Get a request parameter:
-// some_param = req.getParams().get("some_param")
-
-// Add a field of field names that match a pattern:
-//   - Potentially useful to determine the fields/attributes represented in a result set, via faceting on field_name_ss
-//  field_names = doc.getFieldNames().toArray();
-//  for(i=0; i < field_names.length; i++) {
-//    field_name = field_names[i];
-//    if (/attr_.*/.test(field_name)) { doc.addField("attribute_ss", field_names[i]); }
-//  }
-
+  // Add a field of field names that match a pattern:
+  //   - Potentially useful to determine the fields/attributes represented in a result set, via faceting on field_name_ss
+  //  field_names = doc.getFieldNames().toArray();
+  //  for(i=0; i < field_names.length; i++) {
+  //    field_name = field_names[i];
+  //    if (/attr_.*/.test(field_name)) { doc.addField("attribute_ss", field_names[i]); }
+  //  }
 }
 
 function processDelete(cmd) {

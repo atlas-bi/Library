@@ -1,0 +1,508 @@
+$fontDir: '/font/inter/';
+@import '../../../node_modules/@fontsource/inter/scss/mixins';
+
+@include fontFace(
+  $fontName: Inter,
+  $weight: 400,
+  $display: swap,
+  $unicodeMap: latin,
+  $fontDir: '/font/inter/files/'
+);
+
+@include fontFace(
+  $fontName: Inter,
+  $weight: 500,
+  $display: swap,
+  $unicodeMap: latin,
+  $fontDir: '/font/inter/files/'
+);
+
+
+@include fontFace(
+  $fontName: Inter,
+  $weight: 600,
+  $display: swap,
+  $unicodeMap: latin,
+  $fontDir: '/font/inter/files/'
+);
+
+@include fontFace(
+  $fontName: Inter,
+  $weight: 700,
+  $display: swap,
+  $unicodeMap: latin,
+  $fontDir: '/font/inter/files/'
+);
+
+$fontDir: '/font/rasa/';
+@import '../../../node_modules/@fontsource/rasa/scss/mixins';
+
+@include fontFace(
+  $fontName: Rasa,
+  $weight: 600,
+  $display: swap,
+  $unicodeMap: latin,
+  $fontDir: '/font/rasa/files/'
+);
+
+@import '../font/fontawesome/stylesheet';
+
+$family-sans-serif: 'Inter', BlinkMacSystemFont, -apple-system, 'Segoe UI',
+  'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans',
+  'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+
+$title-family: 'Rasa', 'Georgia', 'Times New Roman', serif;
+
+$weight-normal: 500;
+$weight-light: 400;
+$weight-semibold: 600;
+$weight-bold: 700;
+
+
+$dimensions: 16 24 32 48 64 96 128 256;
+$body-size: 14px;
+
+// reset
+h1,h2,h3,h4,h5,h6 {
+  font-weight: $weight-bold;
+}
+@import '../../../node_modules/bulma/sass/utilities/initial-variables';
+$fullhd: 1400px + (2 * $gap);
+$card-footer-padding: 0.5rem 0.75rem;
+@import '../../../node_modules/bulma-checkradio/src/sass/index';
+@import '../../../node_modules/bulma/bulma';
+
+
+
+// reset pre
+.content pre, pre {
+  -webkit-overflow-scrolling: touch;
+  background-color: transparent;
+  font-size: 1em;
+  overflow-x: hidden;
+  padding: 0;
+  white-space: pre;
+  word-wrap: normal;
+}
+
+$badge-height:13px;
+@import '../../../node_modules/@creativebulma/bulma-badge/src/sass/index';
+@import '../../../node_modules/bulma-switch/src/sass/index';
+
+
+$steps-active-color: $link;
+$steps-completed-color: $link;
+@import '../../../node_modules/bulma-steps-component/bulma-steps';
+@import "../../../node_modules/@creativebulma/bulma-tooltip/src/sass/index";
+
+// override tooltip bottom border
+span[data-tooltip]{
+    border-bottom:None;
+}
+
+@import './mail/mail';
+@import './mail/mail-folders';
+@import './mail/mail-menu';
+@import './mail/mail-msgPreview';
+@import './mail/mail-notification';
+@import './mail/mail-reader';
+
+@import './utility/carousel';
+@import './error';
+
+/* purgecss start ignore */
+@import '../lib/codemirror/mycss';
+/* purgecss end ignore */
+
+@import './page';
+
+@import './search';
+@import './utility/collapse';
+@import './utility/tabs';
+
+@import './utility/drag';
+@import './utility/chart';
+@import './markdown';
+@import './messagebox';
+/* purgecss start ignore */
+@import '../lib/scrollbars/simple-scrollbar';
+@import '../lib/highlight/rainbow';
+/* purgecss end ignore */
+@import './mail/mail-newMessage';
+@import './query';
+
+@import './mini';
+
+html {
+  height: 100%;
+  scroll-behavior: smooth !important;
+}
+
+body {
+  background-color: $white;
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
+
+@media screen and (min-width: $desktop) {
+  .atlas-navbar .navbar-start {
+    padding-top: 0 !important;
+  }
+}
+
+@media screen and (min-width: $desktop) {
+  .hide-desktop {
+    display: none !important;
+  }
+}
+
+div.column.is-narrow:empty {
+  padding: 0 !important;
+}
+
+/* card colors */
+
+$card-colors: (
+  'warning': $warning,
+  'danger': $danger,
+  'success': $success,
+  'info': $info,
+);
+@each $code, $color in $card-colors {
+  .card.is-#{$code} {
+    box-shadow: 0 0.5em 1em -0.125em rgba($color, 0.7),
+      0 0px 0 1px rgba($scheme-invert, 0.02);
+  }
+  .card.is-#{$code}:hover {
+    box-shadow: 0 0 1.5em -0.125em rgba($color, 0.7),
+      0 0px 0 2px rgba($scheme-invert, 0.02);
+  }
+}
+
+/* load image */
+img[data-src="/img/loader.gif"],
+source[data-srcset="/img/loader.webp"] {
+  width: 25px !important;
+  height: 25px !important;
+  margin: auto;
+}
+
+.report-image {
+    height:400px;
+}
+.report-image .image img,
+.report-image .image source {
+    width:auto;
+    height:400px;
+}
+
+/* search */
+
+#search-results {
+  position: absolute;
+  top: 50px;
+  left: 0;
+  right: 0;
+  display: none;
+  border-radius: $radius;
+  max-height: 90vh;
+  overflow: scroll;
+}
+
+#search-results:empty {
+  display: none !important;
+}
+
+.search-wrap:active .search-results-wrap,
+#search-form:focus-within #search-results {
+  display: block;
+  box-shadow: $shadow;
+  border: 1px solid $border;
+}
+
+#search-results:active {
+  display: block;
+  box-shadow: $shadow;
+  border: 1px solid $border;
+}
+
+#search-results .panel-block:first-of-type {
+  border-top-left-radius: inherit;
+  border-top-right-radius: inherit;
+}
+
+#search-results em {
+  background-color: $info-light;
+  color: $info;
+}
+
+#search-form .button:hover {
+  color: $grey-darker !important;
+}
+
+/* badge in headings */
+
+.title.is-2 .badge {
+  height: 25px;
+  font-size: 50%;
+  padding: 6px;
+  width: 13px;
+  height:13px;
+}
+
+.ss-content pre,
+.CodeMirror pre {
+  padding: 0;
+  padding: unset;
+}
+
+.atlas-navbar {
+  padding-left: 15px;
+}
+
+.column {
+  min-width: 1px;
+}
+
+
+/* fix nav dropdown in IE 11. focus within breaks it all */
+@include desktop {
+  .navbar-item {
+    &.is-hoverable:hover {
+      .navbar-dropdown {
+        display: block;
+      }
+    }
+  }
+}
+
+.icon.is-large .fa-lg .fa-play-circle {
+  font-size: 1.8em !important;
+}
+
+.atlas-navbar .navbar-brand img {
+  width: 130px !important;
+  height: 40px !important;
+  margin-top: 6px;
+  margin-bottom: -2px;
+}
+
+.is-flex-widescreen {
+  display: none !important;
+}
+@media screen and (min-width: $widescreen) {
+  .atlas-navbar {
+    padding: 10px 0;
+  }
+
+  // .atlas-navbar .navbar-brand img {
+  //   width: 182px !important;
+  //   height: 56px !important;
+  // }
+
+  .is-flex-widescreen {
+    display: flex !important;
+  }
+}
+
+a.navbar-item:hover,
+a.navbar-link:hover,
+.navbar-item.has-dropdown:hover .navbar-link {
+  background: transparent;
+}
+
+.card .tag {
+  min-height: 2em;
+  height: auto;
+  height: unset;
+  white-space: normal;
+  white-space: unset;
+}
+
+.is-min-h-96 {
+  min-height: 96px;
+}
+
+.fa-2_3x {
+  font-size: 2.3em;
+}
+
+/* flex overflow fix */
+.is-flex {
+  min-width: 1px;
+}
+
+/* narrow table column */
+
+.table td.is-narrow,
+.table th.is-narrow {
+  width: 1px;
+  white-space: nowrap;
+}
+
+.table.is-align-middel th,
+.table.is-align-middel td {
+  vertical-align: middle;
+}
+
+/* sticky */
+.sticky {
+  position: sticky;
+  top:calc(56px + 14px);
+}
+
+nav.sticky {
+ top: 0;
+}
+
+
+.panel-tab.is-active {
+  color: $panel-list-item-hover-color;
+  background-color: $panel-block-hover-background-color;
+}
+
+.editor-liveEditorPrev p,
+.editor-liveEditorPrev pre {
+  white-space: pre-wrap;
+  margin-bottom: 1.5rem;
+}
+
+
+.new-image,
+.new-image > label {
+    height:100%;
+}
+.new-image .file-cta {
+    width:256px;
+    height:296px;
+    justify-content: center;
+}
+
+.image picture img {
+    max-height: 100%;
+    max-width:100%;
+    width:auto;
+}
+.steps .is-submit .steps-marker.is-hollow:hover {
+    border-color: $success-dark;
+}
+
+.steps .is-cancel.steps-segment:after {
+  background-color: $grey-lighter;
+}
+.steps .is-cancel .steps-marker {
+  border-color: $grey-lighter;
+}
+.steps .is-cancel .steps-marker.is-hollow:hover {
+  border-color: $warning-dark;
+}
+
+
+.is-nobreak {
+    white-space:nowrap
+}
+.img-modal-lg {
+  max-height: 80% !important;
+  max-width: 80% !important;
+}
+code {
+  background-color: #f6f6f6;
+  padding: 3px;
+  border-radius: 3px;
+}
+
+[data-tooltip]:not(.is-disabled):hover:after, [data-tooltip]:not(.is-disabled):hover:before, [data-tooltip]:not(.is-loading):hover:after, [data-tooltip]:not(.is-loading):hover:before, [data-tooltip]:not([disabled]):hover:after, [data-tooltip]:not([disabled]):hover:before {
+  font-weight: $weight-light;
+}
+
+
+// modal overrides
+.modal, .modal-content {
+  overflow: visible;
+}
+
+.modal-large {
+  width: 90vw;
+  height: 90vh;
+}
+
+.modal-image {
+  width: 90vw;
+  height:auto;
+  margin-top:auto;
+  margin-bottom:auto;
+  max-height:90vh
+}
+
+.modal-image img,
+.modal-image source {
+max-height:90vh !important
+}
+
+.js-modal-trigger {
+  cursor:pointer;
+}
+
+button.is-ghost:not(.button){
+    background-color: transparent;
+    border: none;
+    font-size: 1rem;
+    font-weight: $weight-normal;
+    outline: none;
+}
+
+.has-text-gold {
+  color: #ffd700;
+}
+.panel-block.is-collapsible {
+  padding: 0;
+}
+.has-shadow-gold {
+  box-shadow: 0 0.5em 1em -0.125em rgba(255,215,0, 0.1), 0 0px 0 1px rgba(255,215,0, 0.02);
+  border: 1px solid rgb(255,215,0);
+}
+
+.is-hover {
+  border: 1px solid $warning;
+}
+.is-warning.is-outlined.is-active {
+  background-color:$warning;
+  border-color: transparent;
+}
+
+
+.fav-count {
+  position: absolute;
+  top:-14px;
+  right:-14px;
+}
+.tag:not(body) {
+  line-height: 2;
+}
+
+.favorites-folder.is-active {
+  font-weight: bold;
+}
+
+.button.favorite-reorder, .favorite-folder-controls {
+  position: absolute;
+  z-index: 1;
+  top: 50%;
+  transform: translateY(-50%);
+  display:none;
+}
+.favorite-folder-controls{
+  right:-14px;
+}
+.button.favorite-reorder {
+  left: 0px;
+}
+.favorite:hover .favorite-reorder {
+  display:block;
+}
+
+.favorites-folder:hover .favorite-folder-controls,
+.favorites-show-all:hover .favorite-folder-controls {
+  display:block;
+}

@@ -1,0 +1,37 @@
+@model Atlas_Web.Pages.Settings.TagsModel
+<div>
+    @if (ViewBag.Permissions.Contains(33))
+    {
+        <form asp-page-handler="CreateStrategicImportance">
+            <div class="field">
+                <label class="label">Add More</label>
+                <div class="field has-addons">
+                    <div class="control">
+                        <input type="text" class="input" placeholder="criticle" asp-for="StrategicImportance.Name" required />
+                    </div>
+                    <div class="control">
+                        <button class="button is-info" type="submit">
+                            Save
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    }
+
+    <div class="field is-grouped is-grouped-multiline">
+        @foreach (var i in ViewBag.StrategicImportanceList)
+        {
+            <div class="control">
+                <div class="tags has-addons">
+                  <span class="tag is-link">@i.Name</span>
+                  <span class="tag is-dark">@i.Used uses</span>
+                  @if (ViewBag.Permissions.Contains(34))
+                    {
+                  <a class="tag is-delete" href="/Settings?handler=DeleteStrategicImportance&Id=@i.Id"></a>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+</div>

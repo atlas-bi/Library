@@ -1,10 +1,7 @@
 [
   {
     "author": "Rick Riordan",
-    "cat": [
-      "book",
-      "hardcover"
-    ],
+    "cat": ["book", "hardcover"],
     "genre_s": "fantasy",
     "id": "978-0641723445",
     "inStock": true,
@@ -16,10 +13,7 @@
   },
   {
     "author": "Rick Riordan",
-    "cat": [
-      "book",
-      "paperback"
-    ],
+    "cat": ["book", "paperback"],
     "genre_s": "fantasy",
     "id": "978-1423103349",
     "inStock": true,
@@ -31,10 +25,7 @@
   },
   {
     "author": "Jostein Gaarder",
-    "cat": [
-      "book",
-      "paperback"
-    ],
+    "cat": ["book", "paperback"],
     "genre_s": "fantasy",
     "id": "978-1857995879",
     "inStock": true,
@@ -45,10 +36,7 @@
   },
   {
     "author": "Michael McCandless",
-    "cat": [
-      "book",
-      "paperback"
-    ],
+    "cat": ["book", "paperback"],
     "genre_s": "IT",
     "id": "978-1933988177",
     "inStock": true,

@@ -1,0 +1,89 @@
+@model Atlas_Web.Models.Term
+
+@if (@Configuration["features:enable_feedback"] == null || @Configuration["features:enable_feedback"].ToString().ToLower() == "true")
+{
+    <!-- feedback modal -->
+    <div class="modal" id="term-share-feedback-@Model.TermId">
+        <div class="modal-background"></div>
+        <div class="modal-content">
+            <div class="box">
+                <strong class="mb-5">Share Feedback</strong>
+                <br>
+                <textarea class="textarea py-3" name="description"></textarea>
+                <button class="button share-feedback mt-5"  data-name="@Model.Name" data-url="@Context.Request.HttpContext.Request.Scheme://@Context.Request.HttpContext.Request.Host/terms?id=@Model.TermId">Send Feedback</button>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="modal" id="term-profile-@Model.TermId">
+    <div class="modal-background"></div>
+    <div class="box modal-card modal-large">
+
+        <section class="modal-card-body">
+            <strong class="mb-5">Profile</strong>
+            <div data-ajax="yes" data-url="/Profile?handler=Terms&id=@Model.TermId"></div>
+        </section>
+    </div>
+    <button class="modal-close is-large" aria-label="close"></button>
+</div>
+
+
+@if (@Configuration["features:enable_sharing"] == null || @Configuration["features:enable_sharing"].ToString().ToLower() == "true")
+{
+    <!-- share modal -->
+    <div class="modal" id="term-share-@Model.TermId">
+        <div class="modal-background"></div>
+        <div class="modal-content">
+            <div class="box">
+                <strong class="mb-5">Share @Model.Name</strong>
+
+                <form class="mlbx-newMsgForm" action="/mail?handler=SendMail" method="post">
+                    <input type="hidden" class="mlbx-share" value="1" />
+                    <input type="hidden" class="mlbx-shareName" value="@Model.Name" />
+                    <input type="hidden" class="mlbx-shareUrl" value="@Context.Request.HttpContext.Request.Scheme://@Context.Request.HttpContext.Request.Host/terms?id=@Model.TermId" />
+
+                    <input type="hidden" id="convid" />
+
+                    <div class="field mt-5">
+                        <label class="label">To:</label>
+                        <div class="mini-tags field is-grouped is-grouped-multiline mail-to"></div>
+                        <div class="field">
+                            <div class="control is-relative is-expanded">
+                                <input class="input input-mini multiselect mini-close-fast" placeholder="search for someone.." search-area="UserSearch" />
+                                <div class="mini">
+                                    <div class="mini-waiting">
+                                        <span class="icon">
+                                            <i class="fas fa-circle-notch fa-spin"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">Subject</label>
+                        <div class="control">
+                            <input class="input mail-subject" placeholder="e.g hey, check this out" value="[Share] @Model.Name" />
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">Message</label>
+                        <div class="editor" data-inputName="mail-message">
+                            <textarea class="textarea">
+Hi!
+
+I would like to share this term with you.
+
+[@Model.Name](@Context.Request.HttpContext.Request.Scheme://@Context.Request.HttpContext.Request.Host/terms?id=@Model.TermId)
+
+Check it out sometime!
+Regards!</textarea>
+                        </div>
+                    </div>
+                    <button class="button pt-3">Send</button>
+                </form>
+            </div>
+        </div>
+    </div>
+}

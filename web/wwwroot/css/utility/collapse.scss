@@ -1,0 +1,52 @@
+[data-toggle='clps'] {
+  cursor: pointer;
+}
+
+.clps {
+  max-height: 0;
+  overflow: hidden !important;
+  transition: max-height $speed $easing;
+
+  &.clps-o {
+    max-height: 300vh;
+  }
+}
+
+.is-collapsible {
+  height: 0;
+  margin-bottom: 0;
+  margin-top: 0;
+  overflow: hidden;
+  transition: max-height $speed $easing;
+
+  &.is-active {
+    height: auto;
+    transition: max-height $speed $easing;
+  }
+}
+
+
+[data-action='collapse'] {
+  cursor: pointer;
+}
+
+.panel {
+  .panel-heading {
+    &[data-action='collapse'] {
+      &:not(.is-active) {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  .panel-block {
+
+    .is-collapsible {
+
+      &:not(.is-active) {
+        padding-bottom: 0;
+        padding-top: 0;
+      }
+    }
+  }
+}

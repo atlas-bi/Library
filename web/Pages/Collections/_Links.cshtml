@@ -1,0 +1,23 @@
+@model Atlas_Web.Pages.Collections.IndexModel
+
+<nav class="breadcrumb">
+    <ul>
+        <li>
+            <a href="#details">Details</a>
+        </li>
+        @if (@Model.Collection.DpReportAnnotations.Count() > 0)
+        {
+            <li>
+                <a href="#reports">Linked Reports</a>
+            </li>
+        }
+        @if (@Model.Collection.DpTermAnnotations.Count() > 0)
+        {
+            <li>
+                <a href="#terms">Linked Terms</a>
+            </li>
+        }
+    </ul>
+</nav>
+
+

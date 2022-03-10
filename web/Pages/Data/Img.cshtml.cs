@@ -1,80 +1,155 @@
-﻿/*
-    Atlas of Information Management business intelligence library and documentation database.
-    Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*/
-
 using System;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
 using Atlas_Web.Models;
-using Microsoft.AspNetCore.Http;
 using System.IO;
-using System.Collections.Generic;
-using System.Data.SqlClient;
-using Microsoft.Extensions.Configuration;
-using Atlas_Web.Helpers;
 using Microsoft.Extensions.Caching.Memory;
-using System.Text;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Processing;
+using SixLabors.ImageSharp.PixelFormats;
+using System.Text.RegularExpressions;
+using SixLabors.ImageSharp.Formats.Jpeg;
+using SixLabors.ImageSharp.Formats.Webp;
 
 namespace Atlas_Web.Pages.Data
 {
+    [ResponseCache(Duration = 20 * 60)]
     public class ImgModel : PageModel
     {
         private readonly Atlas_WebContext _context;
-        private readonly IConfiguration _config;
-        private IMemoryCache _cache;
+        private readonly IMemoryCache _cache;
 
-        public ImgModel(Atlas_WebContext context, IConfiguration config, IMemoryCache cache)
+        public ImgModel(Atlas_WebContext context, IMemoryCache cache)
         {
             _context = context;
-            _config = config;
             _cache = cache;
         }
 
-        public async Task<ActionResult> OnGet(int id)
+        private static byte[] BuildImage(byte[] image_data, string size, string extension)
         {
+            int wsize;
+            int hsize;
+            int width;
+            int height;
+            float max_ratio;
 
-            var img = await _context.ReportObjectImagesDocs.Where(x => x.ImageId == id).ToListAsync();
-            if (img.Count > 0)
+            using Image image = Image.Load<Rgba32>(image_data);
+            // if height and width are specified
+            if (Regex.Match(size, @"^\d+x\d+$", RegexOptions.Multiline).Success)
             {
-                HttpContext.Response.Headers.Remove("Cache-Control");
-                HttpContext.Response.Headers.Add("Cache-Control", "max-age=315360000");
-                return File(img.First().ImageData, "application/octet-stream", id + ".png");
+                String[] parts = size.Split("x");
+                width = Int32.Parse(parts[0]);
+                height = Int32.Parse(parts[1]);
+
+                max_ratio = (Math.Max(width / (float)image.Width, height / (float)image.Height));
+
+                // resize only if we can shrink it
+                if (max_ratio < 1)
+                {
+                    wsize = (int)(image.Width * max_ratio);
+                    hsize = (int)(image.Height * max_ratio);
+
+                    image.Mutate(x => x.Resize(wsize, hsize));
+                }
             }
-            return Content("");
+            // if only a width
+            else if (Regex.Match(size, @"^\d+x_$", RegexOptions.Multiline).Success)
+            {
+                String[] parts = size.Split("x");
+                width = Int32.Parse(parts[0]);
+                max_ratio = (width / (float)image.Width);
+
+                // resize only if we can shrink it
+                if (max_ratio < 1)
+                {
+                    wsize = (int)(image.Width * max_ratio);
+                    hsize = (int)(image.Height * max_ratio);
+
+                    image.Mutate(x => x.Resize(wsize, hsize));
+                }
+            }
+
+            using var ms = new MemoryStream();
+            if (extension == "webp")
+            {
+                var webpEncoder = new WebpEncoder() { Quality = 75 };
+                image.Save(ms, webpEncoder);
+            }
+            else
+            {
+                var jpegEncoder = new JpegEncoder() { Quality = 75 };
+                image.Save(ms, jpegEncoder);
+            }
+
+            return ms.ToArray();
         }
-        public async Task<ActionResult> OnGetFirst(int id)
+
+        public ActionResult OnGetThumb(int id, string size, int? imgId, string type)
         {
+            return _cache.GetOrCreate<FileContentResult>(
+                $"thumb-{id}-{size}-{imgId ?? 0}-{type}",
+                cacheEntry =>
+                {
+                    cacheEntry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20);
 
-            var img = await _context.ReportObjectImagesDocs.Where(x => x.ReportObjectId == id).ToListAsync();
-            HttpContext.Response.Headers.Remove("Cache-Control");
-            HttpContext.Response.Headers.Add("Cache-Control", "max-age=315360000");
+                    string Extension = type ?? "jpeg";
+                    ReportObjectImagesDoc img;
 
-            if (img.Count > 0)
-            {
-                return File(img.First().ImageData, "application/octet-stream", id + ".png");
-            }
+                    if (imgId.HasValue)
+                    {
+                        img = _context.ReportObjectImagesDocs
+                            .Where(x => x.ImageId == imgId)
+                            .FirstOrDefault();
+                    }
+                    else
+                    {
+                        img = _context.ReportObjectImagesDocs
+                            .Where(x => x.ReportObjectId == id)
+                            .FirstOrDefault();
+                    }
 
+                    byte[] image_data;
+                    if (img != null)
+                    {
+                        image_data = img.ImageData;
+                    }
+                    else
+                    {
+                        image_data = System.IO.File.ReadAllBytes(
+                            "wwwroot/img/report_placeholder.png"
+                        );
+                    }
 
-            byte[] bytes = System.IO.File.ReadAllBytes("wwwroot/img/placeholder.png");
-            return File(bytes, "application/octet-stream", "placeholder.png");
+                    return File(
+                        BuildImage(image_data, size, Extension),
+                        "application/octet-stream",
+                        $"{id}.{Extension}"
+                    );
+                }
+            );
+        }
 
+        public ActionResult OnGetPlaceholder(string size)
+        {
+            return _cache.GetOrCreate<FileContentResult>(
+                "placeholder",
+                cacheEntry =>
+                {
+                    cacheEntry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20);
+                    string name;
+                    byte[] image_data;
+
+                    image_data = System.IO.File.ReadAllBytes("wwwroot/img/report_placeholder.png");
+                    name = "placeholder";
+
+                    return File(
+                        BuildImage(image_data, size, "jpeg"),
+                        "application/octet-stream",
+                        $"{name}.jpeg"
+                    );
+                }
+            );
         }
     }
 }

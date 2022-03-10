@@ -1,48 +1,30 @@
-﻿@*
-    Atlas of Information Management business intelligence library and documentation database.
-    Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*@
-
 @model Atlas_Web.Pages.Reports.IndexModel
-@{
-    var m = Model ?? ViewBag;
-}
-@if (m.ReportMaintLogs.Count > 0)
-{
-    <h3 class="pageSection-title">Maintenance Logs</h3>
-    @foreach (var log in m.ReportMaintLogs)
+
+<nav id="maintenance" class="panel">
+    <div class="panel-heading">
+        Maintenance Logs
+    </div>
+    @foreach (var log in Model.Report.ReportObjectDoc.ReportObjectDocMaintenanceLogs)
     {
-        <div class="maint-log">
-            <div class="maint-logHeader">
-                <h6><strong>@log.Maintainer</strong><span class="text-muted"> · @log.Date</span></h6>
-                @if (@log.Status != null)
-                {
-                    <h6>
-                        <strong>@log.Status</strong>
-                    </h6>
-                }
-            </div>
-            @if (log.Comment != null)
+        <div class="panel-block">
+            @if (Configuration["features:enable_user_profile"] == null || Configuration["features:enable_user_profile"].ToString().ToLower() == "true")
             {
-                <div class="maint-logBody">
-                    <div class="markdown">
-                        @Html.Raw(@Helpers.HtmlHelpers.MarkdownToHtml(log.Comment))
-                    </div>
+                <a href="/users?id=@log.MaintenanceLog.MaintainerId">@log.MaintenanceLog.Maintainer.FullnameCalc</a>
+            } else
+            {
+                @log.MaintenanceLog.Maintainer.FullnameCalc
+            }
+            <span class="text-muted">&nbsp;·&nbsp;@log.MaintenanceLog.MaintenanceDateDisplayString&nbsp;</span>
+            @if (log.MaintenanceLog.MaintenanceLogStatus != null)
+            {
+                    @log.MaintenanceLog.MaintenanceLogStatus.MaintenanceLogStatusName<text>&nbsp;</text>
+            }
+            @if (!string.IsNullOrEmpty(log.MaintenanceLog.Comment))
+            {
+                <div class="markdown">
+                    @Html.Raw(@Helpers.HtmlHelpers.MarkdownToHtml(log.MaintenanceLog.Comment))
                 </div>
             }
         </div>
     }
-}
+</nav>

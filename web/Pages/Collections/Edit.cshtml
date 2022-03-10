@@ -1,0 +1,106 @@
+@page
+@model Atlas_Web.Pages.Collections.EditModel
+
+@{
+    ViewData["Title"] = "Editing " + @Model.Collection.Name;
+}
+
+@section SideBar {}
+@section js {
+    <script src="/js/flowchart.min.js"></script>
+}
+
+<form action="/Collections/Edit/?id=@Model.Collection.DataProjectId" method="post">
+	<h1 class="title is-1">@ViewData["Title"]</h1>
+
+	<p class="buttons is-flex is-justify-content-space-between">
+        <a class="button p-5" href="/Collections/?id=@Model.Collection.DataProjectId">
+            <span class="icon">
+              <i class="fas fa-lg fa-long-arrow-alt-left"></i>
+            </span>
+            <span><strong>Cancel</strong><br>Go Back</span>
+        </a>
+        <button class="button p-5" type="submit">
+            <span><strong>Save</strong><br>and Continue</span>
+            <span class="icon ">
+              <i class="fas fa-lg fa-long-arrow-alt-right"></i>
+            </span>
+        </button>
+    </p>
+
+    <input asp-for="Collection.DataProjectId" type="hidden" value="@Model.Collection.DataProjectId" />
+
+    <div class="field">
+        <label class="label">Name</label>
+        <div class="control">
+            <input class="input" placeholder="e.g Data Sorting" asp-for="Collection.Name" required value="@Model.Collection.Name"/>
+        </div>
+    </div>
+
+    <div class="field">
+        <label class="label">Purpose</label>
+        <div class="editor" data-inputName="Collection.Purpose" data-inputId="Collection_Purpose"><textarea class="textarea">@Html.Raw(Model.Collection.Purpose)</textarea></div>
+    </div>
+
+    <div class="field">
+        <label class="label">Description</label>
+        <div class="editor" data-inputName="Collection.Description" data-inputId="Collection_Description"><textarea class="textarea">@Html.Raw(Model.Collection.Description)</textarea></div>
+    </div>
+
+    <div class="field">
+        <label class="label">Linked Terms</label>
+        <div class="mini-tags field is-grouped is-grouped-multiline">
+            @for(var x = 0; x < @Model.Collection.DpTermAnnotations.Count; x++ )
+            {
+                var Terms = @Model.Collection.DpTermAnnotations.OrderBy(x => x.Term.Name).ToList();
+                <div class="control">
+                    <div class="tags has-addons">
+                        <span class="tag is-link">@Terms[x].Term.Name</span>
+                        <input type="hidden" name="Terms[@x].TermId" value="@Terms[x].TermId" />
+                        <a class="tag is-delete"></a>
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="field">
+            <div class="control is-relative is-expanded">
+                <input class="input input-mini multiselect" placeholder="search for terms.." search-area="TermSearch" data-name="Terms[].TermId" />
+                <div class="mini">
+                    <div class="mini-waiting">
+                        <span class="icon">
+                            <i class="fas fa-circle-notch fa-spin"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="field">
+        <label class="label">Linked Reports</label>
+        <div class="mini-tags field is-grouped is-grouped-multiline reorder">
+            @for(var x = 0; x < @Model.Collection.DpReportAnnotations.Count; x++ )
+            {
+                var Reports = @Model.Collection.DpReportAnnotations.OrderBy(x => x.Rank).ThenBy(x => x.Report.Name).ToList();
+                <div class="control drg">
+                    <div class="tags has-addons">
+                        <span class="tag is-link drg-hdl">@Reports[x].Report.Name</span>
+                        <input type="hidden" name="Reports[@x].ReportId" value="@Reports[x].ReportId" />
+                        <a class="tag is-delete" value="@Reports[x].ReportId"></a>
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="field">
+            <div class="control is-relative is-expanded">
+                <input class="input input-mini multiselect" placeholder="search for reports.." search-area="ReportSearch" data-name="Reports[].ReportId"  />
+                <div class="mini">
+                    <div class="mini-waiting">
+                        <span class="icon">
+                            <i class="fas fa-circle-notch fa-spin"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

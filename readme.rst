@@ -1,13 +1,15 @@
 |docs| |codacy| |climate|
 
-Atlas of Information Management
-===============================
+Atlas BI Library
+================
 
-Atlas of Information Management is a business intelligence library and documentation database. ETL processes collect metadata from various reporting platforms and store it in a centraly located database. A modern web UI is used to add additional documentation to the report objects and also to provide an intuative way to search, favorite and share reporting content.
+Atlas BI Library is a business intelligence library and documentation database. ETL processes collect metadata from various reporting platforms and store it in a centrally located database. A modern web UI is used to add additional documentation to the report objects and also to provide an intuitive way to search, favorite and share reporting content.
 
 See the `project documentation <https://www.atlas.bi/docs/bi-library/>`_
 
 Chat on Discord `https://discord.gg/hdz2cpygQD <https://discord.gg/hdz2cpygQD>`_
+
+Play with the `demo <https://demo.atlas.bi>`_
 
 Included Content
 ----------------
@@ -22,6 +24,7 @@ Included Content
 - Slicer-Dicer
 - User Information
 - Report Usage
+- Cubes
 
 Key Features
 ------------
@@ -57,8 +60,6 @@ Coming Soon
 -----------
 
 - powerBI integration
-- SSAS Cube documentation and ETL
-- Slicer Dicer User Saved Sessions
 - Database metadata with linkages from report SQL back to the item number in Epic
 - Expanded documentation for terms and reports related to regulated quality measures, including data submission tracking
 - Tracking and documentation of data flows out of the organization including ETL for Bridges interfaces
@@ -67,18 +68,7 @@ Coming Soon
 Credits
 -------
 
-Atlas was created by the Riverside Healthcare Analytics team -
-
-* Paula Courville
-* `Darrel Drake <https://www.linkedin.com/in/darrel-drake-57562529>`_
-* `Dee Anna Hillebrand <https://github.com/DHillebrand2016>`_
-* `Scott Manley <https://github.com/Scott-Manley>`_
-* `Madeline Matz <mailto:mmatz@RHC.net>`_
-* `Christopher Pickering <https://github.com/christopherpickering>`_
-* `Sean Pickering <https://github.com/Sean-Pickering>`_
-* `Dan Ryan <https://github.com/danryan1011>`_
-* `Richard Schissler <https://github.com/schiss152>`_
-* `Eric Shultz <https://github.com/eshultz>`_
+Atlas was created by the Riverside Healthcare Analytics team. See the `credits <https://www.atlas.bi/about/>`_ for more details.
 
 .. |docs| image:: https://img.shields.io/badge/Atlas-Documentation-orange
    :target: https://www.atlas.bi/docs/bi_library/

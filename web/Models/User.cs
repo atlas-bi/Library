@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 
-#nullable disable
-
 namespace Atlas_Web.Models
 {
     public partial class User
@@ -78,6 +76,8 @@ namespace Atlas_Web.Models
         public string EpicId { get; set; }
         public DateTime? LastLoadDate { get; set; }
         public DateTime? LastLogin { get; set; }
+        public string FullnameCalc { get; set; }
+        public string FirstnameCalc { get; set; }
 
         public virtual UserNameDatum UserNameDatum { get; set; }
         public virtual ICollection<Analytic> Analytics { get; set; }

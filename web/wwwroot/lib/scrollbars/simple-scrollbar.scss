@@ -1,27 +1,10 @@
-/*
-    Atlas of Information Management business intelligence library and documentation database.
-    Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*/
 .ss-wrapper {
   float: left;
   height: 100%;
   overflow: hidden;
   position: relative;
   width: 100%;
-  z-index: 1
+  z-index: 1;
 }
 
 .ss-content {
@@ -31,7 +14,20 @@
   overflow-y: scroll;
   padding: 0;
   position: relative;
-  width: calc(100% + 18px)
+  width: calc(100% + 18px);
+
+  &::-webkit-scrollbar {
+    background-color: #fff;
+    width: 16px;
+  }
+}
+
+.ss-liner {
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 4px;
+  height: 100%;
+  transition: background 0.25s linear;
+  width: 100%;
 }
 
 .ss-scroll {
@@ -43,8 +39,29 @@
   position: absolute;
   right: 0;
   top: 0;
-  transition: opacity .25s linear 500ms;
-  z-index: 2
+  transition: opacity 0.25s linear 500ms;
+  z-index: 2;
+
+  .ss-liner {
+    transition: width 0.15s linear;
+    width: 8px;
+  }
+
+  &:hover {
+    .ss-liner {
+      background: rgba(0, 0, 0, 0.5);
+      border-radius: 6px;
+      width: 12px;
+    }
+  }
+
+  &.ss-grabbed {
+    user-select: none;
+
+    .ss-liner {
+      width: 12px;
+    }
+  }
 }
 
 .ss-hscroll {
@@ -56,106 +73,103 @@
   padding-left: 2px;
   padding-right: 2px;
   position: absolute;
-  transition: opacity .25s linear 500ms;
-  z-index: 2
-}
+  transition: opacity 0.25s linear 500ms;
+  z-index: 2;
 
-.ss-liner {
-  background: rgba(0, 0, 0, 0.4);
-  border-radius: 4px;
-  height: 100%;
-  transition: background .25s linear;
-  width: 100%
-}
+  .ss-liner {
+    height: 8px;
+    transition: height 0.15s linear;
+  }
 
-.ss-scroll .ss-liner {
-  transition: width .15s linear;
-  width: 8px
-}
+  &:hover {
+    .ss-liner {
+      background: rgba(0, 0, 0, 0.5);
+      border-radius: 6px;
+      height: 12px;
+    }
+  }
 
-.ss-hscroll .ss-liner {
-  height: 8px;
-  transition: height .15s linear
-}
+  &.ss-grabbed {
+    user-select: none;
 
-.ss-hscroll:hover .ss-liner, .ss-scroll:hover .ss-liner, .ss-grabbed .ss-liner {
-  background: rgba(0, 0, 0, 0.5);
-  border-radius: 6px
-}
-
-.ss-scroll:hover .ss-liner, .ss-scroll.ss-grabbed .ss-liner {
-  width: 12px
-}
-
-.ss-hscroll:hover .ss-liner, .ss-hscroll.ss-grabbed .ss-liner {
-  height: 12px
-}
-
-.ss-container.light .ss-liner {
-  background: rgba(255, 255, 255, 0.4)
-}
-
-.ss-container.light .ss-scroll:hover .ss-liner, .ss-container.light .ss-hscroll:hover .ss-liner, .ss-container.light .ss-grabbed .ss-liner {
-  background: rgba(255, 255, 255, 0.8)
-}
-
-.ss-hidden {
-  display: none
-}
-
-.ss-container:hover > .ss-wrapper > .ss-scroll, .ss-container:active > .ss-wrapper > .ss-scroll, .ss-container:hover > .ss-wrapper > .ss-hscroll, .ss-container:active > .ss-wrapper > .ss-hscroll, .ss-container.ss-grabbed > .ss-wrapper > .ss-scroll, .ss-container.ss-grabbed > .ss-wrapper > .ss-hscroll {
-  opacity: 1;
-  transition: opacity .25s linear 0s
+    .ss-liner {
+      height: 12px;
+    }
+  }
 }
 
 .ss-grabbed {
-  -moz-user-select: none;
-  -ms-user-select: none;
-  -o-user-select: none;
-  -webkit-user-select: none;
-  user-select: none
+  .ss-liner {
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 6px;
+  }
+}
+
+.ss-container.light .ss-liner {
+  background: rgba(255, 255, 255, 0.4);
+}
+
+.ss-container.light .ss-scroll:hover .ss-liner,
+.ss-container.light .ss-hscroll:hover .ss-liner,
+.ss-container.light .ss-grabbed .ss-liner {
+  background: rgba(255, 255, 255, 0.8);
+}
+
+.ss-hidden {
+  display: none;
+}
+
+.ss-container:hover > .ss-wrapper > .ss-scroll,
+.ss-container:active > .ss-wrapper > .ss-scroll,
+.ss-container:hover > .ss-wrapper > .ss-hscroll,
+.ss-container:active > .ss-wrapper > .ss-hscroll,
+.ss-container.ss-grabbed > .ss-wrapper > .ss-scroll,
+.ss-container.ss-grabbed > .ss-wrapper > .ss-hscroll {
+  opacity: 1;
+  transition: opacity 0.25s linear 0s;
 }
 
 .sp-wrapper {
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  -webkit-user-select: none;
   height: 100%;
   opacity: 0;
   position: absolute;
   right: 0;
   top: 0;
-  transition: opacity .25s linear 500ms;
+  transition: opacity 0.25s linear 500ms;
   user-select: none;
-  width: 0
+  width: 0;
 }
 
-.sp-container:hover .sp-wrapper, .sp-wrapper > .sp-grabbed, .ss-grabbed ~ .sp-wrapper {
+.sp-container:hover .sp-wrapper,
+.sp-wrapper > .sp-grabbed,
+.ss-grabbed ~ .sp-wrapper {
   opacity: 1;
-  transition: opacity .25s linear 0s
+  transition: opacity 0.25s linear 0s;
 }
 
 .sp-content {
-  transform-origin: 0 0
+  transform-origin: 0 0;
 }
 
 .sp-scroll {
-  background-image: linear-gradient(to left, rgba(255, 255, 255, 0), rgba(255, 255, 255, .2));
+  background-image: linear-gradient(
+    to left,
+    rgba(255, 255, 255, 0),
+    rgba(255, 255, 255, 0.2)
+  );
   border-left: 2px solid #e7db74;
   left: -2px;
   opacity: 0;
   position: absolute;
-  transition: opacity .25s linear 500ms;
-  width: 100%
+  transition: opacity 0.25s linear 500ms;
+  width: 100%;
 }
 
-.ss-scroll.ss-grabbed ~ .sp-wrapper .sp-scroll, .ss-scroll:hover ~ .sp-wrapper .sp-scroll, .sp-wrapper:hover .sp-scroll, .sp-wrapper.sp-hover .sp-scroll, .sp-wrapper .sp-scroll.sp-grabbed {
+.ss-scroll.ss-grabbed ~ .sp-wrapper .sp-scroll,
+.ss-scroll:hover ~ .sp-wrapper .sp-scroll,
+.sp-wrapper:hover .sp-scroll,
+.sp-wrapper.sp-hover .sp-scroll,
+.sp-wrapper .sp-scroll.sp-grabbed {
   opacity: 1;
-  transition: opacity .25s linear 0s
-}
-
-.ss-content::-webkit-scrollbar {
-  background-color: #fff;
-  width: 16px
+  transition: opacity 0.25s linear 0s;
 }

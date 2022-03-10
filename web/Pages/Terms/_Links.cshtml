@@ -1,0 +1,22 @@
+@model Atlas_Web.Pages.Terms.IndexModel
+<nav class="breadcrumb">
+    <ul>
+        @if (Model.Term.Summary != null && Model.Term.Summary != "" && Model.Term.TechnicalDefinition != null && Model.Term.TechnicalDefinition != "")
+        {
+            <li>
+                <a href="#details">Details</a>
+            </li>
+        }
+        @if (Model.RelatedReports.Count() > 0)
+        {
+            <li>
+                <a href="#reports">Linked Reports</a>
+            </li>
+        }
+        <li>
+            <a href="#meta">Metadata</a>
+        </li>
+    </ul>
+</nav>
+
+

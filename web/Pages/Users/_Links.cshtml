@@ -1,0 +1,28 @@
+@model Atlas_Web.Pages.Users.IndexModel
+<nav class="breadcrumb">
+    <ul>
+        <li>
+            <a class="tab-lnk  @if (@Model.UserId == @Model.MyId){ <text>active</text>}" href="#favorites">Favorites</a>
+        </li>
+       <!--  @if (@Model.UserId == @Model.MyId)
+        {
+            <li>
+                <a class="tab-lnk" href="#mail">Mail</a>
+            </li>
+        } -->
+        <li>
+            <a class="tab-lnk" href="#subscriptions">Subscriptions</a>
+        </li>
+        <li>
+            <a class="tab-lnk @if (@Model.UserId != @Model.MyId){ <text>active</text>} " href="#activity">Report Activity</a>
+        </li>
+        <li>
+            <a class="tab-lnk" href="#atlas-history">Atlas History</a>
+        </li>
+        <li>
+            <a class="tab-lnk" href="#groups">Groups</a>
+        </li>
+    </ul>
+</nav>
+
+

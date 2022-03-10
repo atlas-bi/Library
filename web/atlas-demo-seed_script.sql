@@ -1,21 +1,3 @@
-/*
-    Atlas of Information Management business intelligence library and documentation database.
-    Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*/
-
 USE [atlas]
 GO
 
@@ -240,7 +222,11 @@ insert into [atlas].dbo.UserGroups (AccountName, GroupName, GroupEmail, GroupTyp
 ('Ophthalmology Group','Ophthalmology Group (Group)','Ophthalmology@my_hospital.rocks','Email Distribution'),
 ('Orthopaedics Group','Orthopaedics Group (Group)','Orthopaedics@my_hospital.rocks','Email Distribution')
 GO
-insert into [atlas].dbo.UserGroupsMembership (UserId,GroupId) values 
+<<<<<<< HEAD
+insert into [atlas].dbo.UserGroupsMembership (UserId,GroupId) values
+=======
+insert into [Data_Governance_Pub].dbo.UserGroupsMembership (UserId,GroupId) values
+>>>>>>> dev
 (1,1),
 (2,1),
 (3,1),
@@ -400,11 +386,11 @@ GO
 insert into app.ReportObject_doc (ReportObjectId, OperationalOwnerUserID, Requester, DeveloperDescription, KeyAssumptions, OrganizationalValueID, EstimatedRunFrequencyID, FragilityID, ExecutiveVisibilityYN, MaintenanceScheduleID, LastUpdateDateTime, CreatedDateTime, CreatedBy, UpdatedBy) values
 (1,'11','60','This component displays a list of workqueues supervised by the user running the report. Data is populated by the report. See reports Atlas entry for a list of dashboards where it appears.','','1','5','1','Y','1','2020-05-02 17:02:10.805','2020-02-14 05:28:16.101','29','85'),
 (2,'26','69','This report displays a list of workqueues supervised by the user running the report. See components Atlas entry for a list of dashboards where it appears.','Select Workqueues between T-7 (2/7/2020) and T (2/14/2020)
-From 
-Workqueue tabs: 
-Active 
-Service area: 
-Dynamic workqueue selection: 
+From
+Workqueue tabs:
+Active
+Service area:
+Dynamic workqueue selection:
 Workqueues That I Supervise','4','3','4','Y','1','2020-07-14 09:56:46.710','2019-04-30 22:48:28.374','81','86'),
 (3,'59','60','This report is for  errors  for Today report. It will show any errors (rules) that were not resolved in 48 hours in specific workqueues for each user.   ','The report will ignore any of these rules:
 Valid Guarantor , Generic Insurance Check, RX Card Missing, BC Generic Check,   Coverage Update, Appt is missing referral or referral scheduled and unauthd, Reg Pt is Medicare Primary but should be secondary, Reg Pt is Medicare Secondary but should be Primary','1','2','4','Y','5','2019-06-05 17:26:41.159','2020-02-02 11:18:31.568','46','9'),
@@ -429,28 +415,28 @@ or  BH SR CARE UNIT
 or  OBSERVATION','2','1','2','Y','3','2020-07-31 22:07:50.252','2019-11-10 08:33:08.376','5','56'),
 (6,'54','27','This report is the basis for the  Discharge Efficiency component  on the Daily Census Dashboard. It displays information for patients discharged within the past month by Unit. It includes both patient-level detail about each discharge and a summary tab that displays the percentage of patients who had a discharge order written by 10am, had their AVS printed by 12pm, and were actually discharged from the bed by 1pm.','Search Summary
 Select Pending Events between MB (11/1/2019) 12:00 AM and T-1 (11/18/2019) 11:59 PM
-From 
-Current unit: 
- BH SR CARE UNIT OR 
- CARDIAC TELE OR 
- ICU MAIN OR 
- LABOR AND DELIVERY OR 
- MEDICAL OR 
- MENTAL HLTH ADULT OR 
- MENTAL HLTH FEM OR 
- MENTAL HLTH MALE OR 
- MENTAL HLTH PEDS OR 
- OBSERVATION OR 
- ORTHO NEURO MED OR 
- OB/GYN WOM/NB SVCS OR 
- REHAB 
-Allow a record only once: 
-Yes 
+From
+Current unit:
+ BH SR CARE UNIT OR
+ CARDIAC TELE OR
+ ICU MAIN OR
+ LABOR AND DELIVERY OR
+ MEDICAL OR
+ MENTAL HLTH ADULT OR
+ MENTAL HLTH FEM OR
+ MENTAL HLTH MALE OR
+ MENTAL HLTH PEDS OR
+ OBSERVATION OR
+ ORTHO NEURO MED OR
+ OB/GYN WOM/NB SVCS OR
+ REHAB
+Allow a record only once:
+Yes
 
-Where 
-Event type: 
-Discharge 
-AND Completed: 
+Where
+Event type:
+Discharge
+AND Completed:
 Yes','2','1','4','Y','1','2019-10-28 11:03:07.952','2020-01-05 10:51:46.393','95','29'),
 (7,'19','64','This report will show any errors (rules) that were not resolved in 48 hours in specific workqueues for each user.','The report will ignore any of these rules (Affected rules):
 Valid Guarantor, Generic Insurance Check,  RX Card Missing, BC Generic Check, Coverage Update, Appt is missing referral or referral scheduled and unauthd, Reg Pt is Medicare Primary but should be secondary, Reg Pt is Medicare Secondary but should be Primary','3','4','4','Y','1','2020-07-01 21:34:24.971','2020-04-08 14:24:49.759','90','3'),
@@ -462,11 +448,11 @@ The SQL query uses  table TRANSACTIONS posted for the last 14 months and interro
 The transactions for each category are reported as sums each of the previous 14 months.','Sevice area = 10 only.','2','4','1','Y','3','2019-11-13 05:20:31.256','2019-04-09 17:37:31.910','71','3'),
 (9,'27','52','This report lists observation patients currently admitted somewhere in the hospital. Patients can be in any unit, not just the observation unit.','Patients with confirmed admissions, not discharged, and currently in an observation patient class.
 
-ADT admission status: 
+ADT admission status:
 2 --Confirmed Admission
-AND Discharge date: 
-Does not exist 
-AND Patient class: 
+AND Discharge date:
+Does not exist
+AND Patient class:
 Observation','3','1','2','Y','4','2019-09-10 08:43:47.539','2020-02-17 07:45:07.314','55','12'),
 (10,'87','85','Displays the average amount of time patients have waited between various events in the emergency department over the last 6, 12  and 24 hours.  For example, the Room Time event window might display the average amount of time patients have waited between when they were arrived at the ED and when they were roomed. For each event window, this component displays the averages over several different time periods.','The wait times displayed here also include patients who are currently waiting, and have been waiting longer than the historical average for the given time period. This ensures that if the wait time has recently increased because more patients are in the waiting period, the reported time will increase accordingly.','3','4','1','Y','5','2020-04-23 12:30:05.017','2019-04-12 13:40:46.862','19','78'),
 (11,'24','40','This report will display Front End Payment Collections.','','1','5','1','Y','3','2019-10-13 13:26:10.893','2020-06-06 04:55:18.984','47','32'),
@@ -480,7 +466,7 @@ MENTAL HLTH PEDS
 or
 BH SR CARE UNIT
 or
-CARDIAC TELE 
+CARDIAC TELE
 or
 OBSERVATION
 or
@@ -512,11 +498,11 @@ Labor & Delivery
 or
 IP Rehab Facility)','2','1','3','Y','2','2019-08-16 16:04:58.935','2020-05-07 07:26:33.966','5','88'),
 (13,'54','92','In house patients with AIM hospitalists as attending','Select Patients
-From 
-Admitted Patients by Hospital: 
+From
+Admitted Patients by Hospital:
 
-Where 
-Tx Team: Attending Providers: 
+Where
+Tx Team: Attending Providers:
 ','2','5','2','Y','3','2020-04-03 01:36:39.992','2019-08-23 11:01:35.316','23','10'),
 (14,'63','88','This report searches for any imaging study scheduled for todays date.   The SUMMARY tab will display patient detail for each Status.','','1','1','1','Y','5','2019-04-09 05:41:30.652','2019-09-22 10:38:13.894','14','86'),
 (15,'22','2','This report helps  administrators and  coordinators review the current residents in their facilities. The report columns show the residents PDPM expected reimbursement, Case Mix Index and Case Mix Group for each PDPM classification, and the detail report shows the ADT events for each resident for the current month. ','','2','4','3','Y','2','2020-05-22 20:14:10.164','2019-04-24 14:20:56.334','56','22'),
@@ -531,22 +517,22 @@ Dashboard component  HB Monthly Financial Summary which displays the  report  Mo
 (20,'9','25','This report displays the daily Senior Living van schedule from the Carevan scheduling web application. The report does not sync in real time with the Carevan app, so changes in the app are not immediately reflected in the report. It is intended to be distributed at the beginning of the day.','','4','1','1','Y','3','2020-03-18 12:27:37.597','2019-10-25 10:47:16.801','9','41'),
 (21,'92','92','This component shows the current occupancy of the hospital. It is summarized based on the same unit groups used in the Bed Board. It automatically refreshes every sixty minutes
 
-The columns are as follows: 
+The columns are as follows:
 
-*Unit: This is based on the unit groups within Bed Planning. 
+*Unit: This is based on the unit groups within Bed Planning.
 
-*Occ: The number of occupied beds in that unit group. 
+*Occ: The number of occupied beds in that unit group.
 
-*Open: The number of open beds within the unit group. 
+*Open: The number of open beds within the unit group.
 
-*Unavail: The number of unavailable beds within the unit group. 
+*Unavail: The number of unavailable beds within the unit group.
 
 *Pend In: The number of pending admissions and transfers into a department.
 
 *Pend Out: The number of pending discharges and transfers for patients currently in a department bed.
 
 *# Beds: The number of census beds in the unit group.','Based on workbench report ""Occupancy Summary""
-Pend In  department values are based on pending ADT events (PND records) with a destination values  of that department. 
+Pend In  department values are based on pending ADT events (PND records) with a destination values  of that department.
 
 Pend Out values are based on pending ADT events (PND records) for patients in a bed in that department using the encounter (CSN) on the PND record.','2','1','1','Y','5','2020-05-18 04:05:47.517','2019-10-04 00:29:32.842','52','77'),
 (22,'2','81','Pulls in Radiology SMR for a specified date range
@@ -578,7 +564,7 @@ and
 (Status = Loaded
 or
 Processed)','1','3','3','N','1','2019-09-21 16:30:10.476','2020-04-13 08:01:28.297','26','52'),
-(27,'3','73','','Date Option = Check Date 
+(27,'3','73','','Date Option = Check Date
 and
 Billing System = Hospital Billing
 and
@@ -604,32 +590,32 @@ Residents with Restraint Usage in the Past Week
 Residents with Alarm Usage in the Past Week
 Both report models are based on report template.','','1','3','4','N','2','2019-11-27 21:09:56.249','2020-03-11 03:57:36.376','72','16'),
 (32,'58','25','This report returns all in house patients that have confirmed or ordered labs for COVID-19 with test status.  Includes both hospital and long term care patients, with ventilator hours (where applicable) and consults who have signed on to the treatment team.','Select Beds
-Where 
-Patient infection: 
-COVID-19 Confirmed OR 
-COVID-19 Rule Out 
+Where
+Patient infection:
+COVID-19 Confirmed OR
+COVID-19 Rule Out
 ','1','3','1','N','3','2019-04-20 23:44:26.455','2020-07-31 08:48:37.805','13','85'),
 (33,'34','96','This report pulls data from the Analytics ticketing system to display the new requests submitted to a single directors report request queue in the last seven days. The director is chosen by inputting their email in the “correct” format.
-	
+
 The list  contains all of the report requests submitted on behalf of the chosen director to the Analytics report request system in the last seven days. The team will work these requests in the order listed in the priority column. Directors can view their complete queue and change the priority of their requests . Drag the ""Rank"" column until the ticket is in the appropriate place and click ""Save Changes"". New reporting content from Epic will be placed in the director request queue for approval and prioritization. This content will be labeled as a ""note"" and will include a link to release note system for review. New reporting content will no longer be released directly. The ""Master Rank"" field indicates your requests position in the overall queue of all report requests that are being worked by the Analytics team. Analytics works requests with the smallest Master Rank number first.
 
 This report is part of a set of weekly subscriptions sent to directors with report request queues. The reports cover the status of the directors current queue and list the report requests that were both created and completed on their behalf in the last seven days.','','4','3','2','N','3','2020-01-31 19:38:47.331','2019-09-30 06:27:51.542','46','16'),
 (34,'8','89','This report pulls data from the Analytics ticketing system to display the new requests submitted to a single directors report request queue in the last seven days. The director is chosen by inputting their email in the “correct” format.
-	
+
 The list  contains all of the report requests submitted on behalf of the chosen director to the Analytics report request system in the last seven days. The team will work these requests in the order listed in the priority column. Directors can view their complete queue and change the priority of their requests . Drag the ""Rank"" column until the ticket is in the appropriate place and click ""Save Changes"". New reporting content from Epic will be placed in the director request queue for approval and prioritization. This content will be labeled as a ""note"" and will include a link to release note system for review. New reporting content will no longer be released directly. The ""Master Rank"" field indicates your requests position in the overall queue of all report requests that are being worked by the Analytics team. Analytics works requests with the smallest Master Rank number first.
 
 This report is part of a set of weekly subscriptions sent to directors with report request queues. The reports cover the status of the directors current queue and list the report requests that were both created and completed on their behalf in the last seven days.','','3','5','1','N','3','2020-04-05 08:24:13.407','2019-08-22 11:09:47.613','92','87'),
 (35,'100','34','ORAL CARE DOCUMENTATION
 This query will display Oral Care documentation completed for patients. ','This report pulls data based on Flowsheet rows: ORAL CARE.  It only pulls charting for the previous day.','4','1','1','N','2','2019-06-04 13:33:24.783','2019-08-02 11:00:51.699','77','93'),
 (36,'16','32','','Select Patients between M-1 and T
-From 
-Patient base: 
-All Patients 
+From
+Patient base:
+All Patients
 
-Where 
-Registry: 
+Where
+Registry:
 
-AND Patient living status: 
+AND Patient living status:
 Alive','3','5','1','N','5','2020-05-23 04:53:10.744','2020-07-21 07:16:28.352','9','88'),
 (37,'45','7','This report displays the daily Senior Living van schedule from the Carevan scheduling web application for a selected date range. The report does not sync in real time with the Carevan app, so changes in the app are not immediately reflected in the report. It is intended to be distributed at the beginning of the day.','','3','5','2','N','4','2020-07-29 03:41:51.434','2020-03-05 06:51:46.299','87','30'),
 (38,'89','6','This component displays the average number of hours current Observation patients have spent in the Observation patient class. The columns are as follows:
@@ -642,39 +628,39 @@ Alive','3','5','1','N','5','2020-05-23 04:53:10.744','2020-07-21 07:16:28.352','
 
 *% Pts >20Hrs: The percentage of observation patients who are in the unit who have been in an observation status for more than 20 hours.','Patients with confirmed admissions, not discharged, and currently in an observation patient class.
 
-ADT admission status: 
+ADT admission status:
 2 --Confirmed Admission
-AND Discharge date: 
-Does not exist 
-AND Patient class: 
+AND Discharge date:
+Does not exist
+AND Patient class:
 Observation','3','4','1','N','2','2020-01-24 15:14:23.716','2019-12-13 18:37:55.911','29','34'),
 (39,'90','14','This component displays a list of tagged reports and displays Covid testing outcomes from 1/1/2020 to present. It includes links to run and view the reports.','','4','3','2','N','2','2019-10-03 14:01:27.973','2020-04-07 20:21:42.663','6','33'),
 (40,'12','76','FOLLOW UP APPOINTMENTS MADE
-This query will display any OBSERVATION patients and their Attempts to Make Post Discharge Appt info. 
+This query will display any OBSERVATION patients and their Attempts to Make Post Discharge Appt info.
 follow up appointments made','Report checks Flowsheet row POST DISCHARGE APPOINTMENT NOT MADE FOR PATIENT and Flowsheet row WHICH OFFICE FOR APPOINTMENT.  You can select Start/End date and Departments.','3','4','3','N','5','2020-07-18 22:26:26.527','2019-06-18 04:17:10.324','6','17'),
 (41,'37','36','This report is used to find patients who have current RT orders placed on them. The summary tabs allow RT directors to view respiratory work units assigned to a patient sorted either by department or by respiratory therapist.','Select Patients
-From 
-Admitted Patients by Hospital: 
+From
+Admitted Patients by Hospital:
 
-Where 
-Order: Matches Filter: 
+Where
+Order: Matches Filter:
 Filter: RT_ORDERS and Yes/No: Yes','2','5','2','N','5','2020-02-13 06:09:55.275','2020-08-01 07:55:27.002','42','28'),
 (42,'48','42','This report pulls data from the Analytics ticketing system to display the new requests submitted to a single directors report request queue in the last seven days. The director is chosen by inputting their email in the “correct” format.
-	
+
 The list  contains all of the report requests submitted on behalf of the chosen director to the Analytics report request system in the last seven days. The team will work these requests in the order listed in the priority column. Directors can view their complete queue and change the priority of their requests . Drag the ""Rank"" column until the ticket is in the appropriate place and click ""Save Changes"". New reporting content from Epic will be placed in the director request queue for approval and prioritization. This content will be labeled as a ""note"" and will include a link to release note system for review. New reporting content will no longer be released directly. The ""Master Rank"" field indicates your requests position in the overall queue of all report requests that are being worked by the Analytics team. Analytics works requests with the smallest Master Rank number first.
 
 This report is part of a set of weekly subscriptions sent to directors with report request queues. The reports cover the status of the directors current queue and list the report requests that were both created and completed on their behalf in the last seven days.','','3','1','4','N','1','2020-04-06 04:57:58.830','2019-04-22 03:55:22.213','98','56'),
 (43,'35','88','The latest acuity scores  by patient by unit.  The users log in  drives what information is displayed.','Select Patients
-From 
-Admitted Patients (Context Specific): 
-User Login Department 
+From
+Admitted Patients (Context Specific):
+User Login Department
 
-Where 
-Adt patient class: 
-Inpatient OR 
-Observation OR 
+Where
+Adt patient class:
+Inpatient OR
+Observation OR
 Hospice','2','4','3','N','3','2020-07-30 23:04:16.303','2019-07-20 14:25:41.998','77','1'),
-(44,'94','63','This query will display any rehab patient that is on Leave of Absence.   
+(44,'94','63','This query will display any rehab patient that is on Leave of Absence.
 ','','4','3','4','N','2','2020-04-05 17:45:43.443','2019-05-03 14:38:08.889','71','14'),
 (45,'35','26','','Effective Date >= W-1
 and
@@ -693,20 +679,20 @@ not equal to SLC ASSISTED LIVING AND MEMORY CARE)','3','5','1','N','4','2019-10-
 (47,'94','42','','','4','2','1','N','3','2019-05-23 16:45:31.704','2019-05-13 17:21:29.958','54','84'),
 (48,'54','9','','','3','2','1','N','4','2019-10-31 03:48:12.537','2019-07-26 13:52:44.550','76','33'),
 (49,'33','38','This is a report that will show all patients with an active CVC (central venous catheter) or PICC (peripherally inserted central catheter) line. The report displays information about the active line in columns and includes a link to a detailed report of assessment documentation at the bottom.','Select Patients LDAs
-From 
-Admitted patients by department: 
-All 
-LDA status: 
-Active 
+From
+Admitted patients by department:
+All
+LDA status:
+Active
 
-Where 
-LDA type: 
-Central venous catheter OR 
-Peripherally inserted central catheter OR 
-Port-a-Cath 
-AND Authorized service areas: 
+Where
+LDA type:
+Central venous catheter OR
+Peripherally inserted central catheter OR
+Port-a-Cath
+AND Authorized service areas:
 Not equal to SENIOR LIFE COMMUNITIES','3','3','1','N','1','2019-09-30 06:40:59.058','2020-04-17 20:45:26.961','79','61'),
-(50,'50','32','Traditional Medicare readmission rates by year and month overall and for AMI, COPD, heart failure, pneumonia, stroke, hip/knee, CABG and sepsis. ','Readmission populations match the CMS criteria for 30 day readmissions as closely as possible, but not all the documentation for CMS requirements is available.It is also important to note that a patient may have been an inpatient at another facility at some time. 
+(50,'50','32','Traditional Medicare readmission rates by year and month overall and for AMI, COPD, heart failure, pneumonia, stroke, hip/knee, CABG and sepsis. ','Readmission populations match the CMS criteria for 30 day readmissions as closely as possible, but not all the documentation for CMS requirements is available.It is also important to note that a patient may have been an inpatient at another facility at some time.
 NOTE: This methodology differs from that used by  for readmission reporting.','3','3','3','N','3','2019-04-20 02:13:57.531','2019-09-01 23:22:05.291','64','29')
 GO
 -- maint log
@@ -961,7 +947,7 @@ insert into [app].[ReportObjectDocMaintenanceLogs] ([ReportObjectID],[Maintenanc
 (4,122)
 GO
 
-insert into app.reportobjectdocfragilitytags (ReportObjectID, FragilityTagID) values 
+insert into app.reportobjectdocfragilitytags (ReportObjectID, FragilityTagID) values
 (8,26),
 (49,2),
 (39,8),
@@ -1220,33 +1206,33 @@ TRANSACTIONS.TX_TYPE = 1
 ```','Y','2019-10-30 02:32:05.203','44','N','','2019-10-30 02:32:05.203','9999-12-31 00:00:00.000','11','2019-04-30 20:29:21.078'),
 ('Payment','Transaction  with a transaction type of ""payment"" posted to a hospital account from a payor or guarantor that decreases the amount owed on AR balances. Used for transaction summaries.','```sql
 TRANSACTIONS.TX_TYPE = 2 --Payment Transaction Type
- AND 
-TRANSACTIONS.BAD_DEBT_FLAG_YN <> Y 
- AND 
+ AND
+TRANSACTIONS.BAD_DEBT_FLAG_YN <> Y
+ AND
 TRANSACTIONS.EXTERN_AR_FLAG_YN <> Y
 ```','N','2020-07-03 22:49:49.491','69','N','','2019-08-29 14:40:42.953','9999-12-31 00:00:00.000','44','2020-02-09 19:21:58.777'),
 ('Adjustment','Transaction with a transaction type of ""adjustment"" posted to a hospital account by contractual agreement, agreement with the guarantor, or hospital policy which modifies the balance. Adjustments cannot be payments or charges.','```sql
 TRANSACTIONS.TX_TYPE in (3,4) -- debit and credit adjustments
- AND 
-TRANSACTIONS.IS_SYSTEM_ADJ_YN <> Y 
- AND 
- TRANSACTIONS.BAD_DEBT_FLAG_YN <> Y 
- AND 
+ AND
+TRANSACTIONS.IS_SYSTEM_ADJ_YN <> Y
+ AND
+ TRANSACTIONS.BAD_DEBT_FLAG_YN <> Y
+ AND
 TRANSACTIONS.EXTERN_AR_FLAG_YN,<> Y
 ```','Y','2020-02-03 12:43:26.759','42','N','','2020-02-03 12:43:26.759','9999-12-31 00:00:00.000','82','2019-08-07 18:39:33.704'),
 ('Transaction','Transactions posted to a hospital account that moves the balance owed to an external agency to work the account.','```sql
-TRANSACTIONS.BAD_DEBT_FLAG_YN = Y 
+TRANSACTIONS.BAD_DEBT_FLAG_YN = Y
 AND
 TRANSACTIONS.IS_SYSTEM_ADJ_YN = Y
 ```','N','2020-01-18 00:16:24.476','55','N','','2019-07-29 14:35:15.967','9999-12-31 00:00:00.000','85','2019-06-15 12:17:26.146'),
 ('External A/R','Transactions posted to a hospital account that moves the balance owed off of active AR to an internal payment plan agency.','```sql
-TRANSACTIONS.EXTERN_AR_FLAG_YN = Y 
+TRANSACTIONS.EXTERN_AR_FLAG_YN = Y
 AND
 TRANSACTIONS.IS_SYSTEM_ADJ_YN = Y
 ```','Y','2020-04-20 23:37:09.236','22','N','','2020-04-20 23:37:09.236','9999-12-31 00:00:00.000','12','2020-01-05 16:14:13.721'),
 ('Net A/R','Transactions posted to a hospital account that is not being serviced by a bad debt agency or internal payment plan.','```sql
-TRANSACTIONS.EXTERN_AR_FLAG_YN <> Y 
-AND 
+TRANSACTIONS.EXTERN_AR_FLAG_YN <> Y
+AND
 TRANSACTIONS.BAD_DEBT_FLAG_YN <> Y
 ```','Y','2019-05-25 15:44:42.782','96','Y','','2019-05-25 15:44:42.782','9999-12-31 00:00:00.000','4','2020-04-10 11:50:04.731'),
 ('Bad Debt Visit','A Hospital Visit that has been sent to be worked by an External Agency.','Transaction Post Date less than or equal to 10 days after discharge date.','Y','2020-04-09 21:22:43.548','33','N','','2020-04-09 21:22:43.548','9999-12-31 00:00:00.000','20','2020-01-18 07:10:07.644'),
@@ -1254,10 +1240,10 @@ TRANSACTIONS.BAD_DEBT_FLAG_YN <> Y
 ('Census Bed','A bed in the hospital defined in the facility/bed system build as being in the census. Patients in these beds are counted as part of the hospital census.','```A BED record where item # 100 = YES```','N','2020-03-21 02:05:05.169','68','N','','2019-07-22 14:09:14.520','9999-12-31 00:00:00.000','8','2019-07-08 03:57:46.620'),
 ('Observation Case','A hospital account that was ever placed into an Observation base class. Discharge base class is ignored meaning patients who were later converted to inpatient are included. This differs from an Observation Discharge which only includes patients discharged with an Observation base class.','','N','2020-01-05 19:06:29.022','89','N','','2019-07-22 16:25:28.267','9999-12-31 00:00:00.000','60','2019-06-26 08:02:28.339'),
 ('Unavailable Bed','Unavailable Beds are defined as the number of unavailable beds at a given point in time, adjusted based on Staffing or Licensing levels. Staffed Beds are checked first, followed by Licensed Beds. If neither of those are being used, the count falls back to the number of Physical Beds.','Set up and logic details available.','Y','2019-07-18 15:51:51.444','58','','','2019-07-18 15:51:51.444','9999-12-31 00:00:00.000','100','2019-05-30 11:16:31.601')
-GO	
+GO
 
 -- report term links
-insert into app.ReportObjectDocTerms (ReportObjectID, TermId) values 
+insert into app.ReportObjectDocTerms (ReportObjectID, TermId) values
 (43,11),
 (22,8),
 (1,8),
@@ -1344,7 +1330,7 @@ insert into dbo.ReportObjectHierarchy (ParentReportObjectID, ChildReportObjectID
 (42,43)
 GO
 
--- query 
+-- query
 insert into dbo.reportobjectquery (ReportObjectID,Query) values
 (10,'select lpad( ,level*3, )||ename name,SYS_CONNECT_BY_PATH(ename,/) bossfrom Employee_Mconnect by prior employee_id = manager_idstart with manager_id is null;'),
 (23,'select t.name table_name, t.object_id, c.name column_name,c.column_id, i.name index_name, i.type, i.type_desc from sys.tables t, sys.columns c, sys.indexes i, sys.index_columns ic where t.object_id=c.object_id and c.object_id=i.object_id and ic.index_id=i.index_id and ic.column_id=c.column_id and t.name=tutorials;'),
@@ -1414,7 +1400,7 @@ insert into dbo.reportobjectquery (ReportObjectID,Query) values
 (9,'-- return everyone under Program Manager (ParentID = 8)WITH OrgTree (DepartmentID, DepartmentName, ParentID, Tree)AS(   SELECT DepartmentID, DepartmentName, ParentID , 0 AS Tree    FROM MyDepartment   WHERE ParentID = 8   UNION ALL   SELECT MyDepartment.DepartmentID, MyDepartment.DepartmentName, MyDepartment.ParentID , OrgTree.Tree + 1   FROM MyDepartment   JOIN OrgTree ON MyDepartment.ParentID = OrgTree.DepartmentID)SELECT * FROM OrgTree;-- return Vice President (DepartmentID = 4) and direct reports (ParentID = 4)WITH OrgTree (DepartmentID, DepartmentName, ParentID, Tree)AS(   SELECT DepartmentID, DepartmentName, ParentID , 0 AS Tree    FROM MyDepartment   WHERE DepartmentID = 4   UNION ALL   SELECT MyDepartment.DepartmentID, MyDepartment.DepartmentName, MyDepartment.ParentID , OrgTree.Tree + 1   FROM MyDepartment   JOIN OrgTree ON MyDepartment.ParentID = OrgTree.DepartmentID   WHERE MyDepartment.ParentID = 4)SELECT * FROM OrgTree;  -- return everyone above Senior Manager (DepartmentID = 6)WITH OrgTree(DepartmentName,ParentID,ReportsTo)AS(   SELECT T1.DepartmentName,T2.DepartmentID,T2.DepartmentName    FROM MyDepartment T1   INNER JOIN MyDepartment T2 ON T1.ParentID=T2.DepartmentID    WHERE T1.DepartmentID=6   UNION ALL   SELECT OT.ReportsTo,T2.DepartmentID,T2.DepartmentName   FROM OrgTree OT   INNER JOIN MyDepartment T1 ON OT.ParentID=T1.DepartmentID   INNER JOIN MyDepartment T2 ON T1.ParentID=T2.DepartmentID)SELECT * FROM OrgTree;-- return list with of people with no direct reportsWITH OrgTree(ParentID, DepartmentID, DepartmentName, DepartmentLevel) AS (    SELECT ParentID, DepartmentID, DepartmentName, 0 AS DepartmentLevell    FROM MyDepartment     WHERE ParentID IS NULL    UNION ALL    SELECT e.ParentID, e.DepartmentID, e.DepartmentName,  DepartmentLevel + 1    FROM MyDepartment AS e    INNER JOIN OrgTree AS d ON e.ParentID = d.DepartmentID )SELECT * FROM OrgTree WHERE DepartmentLevel = 5;')
 GO
 -- report run data
-insert into dbo.reportobjectrundata (ReportObjectID, RunID, RunUserID, RunStartTime, RunDurationSeconds, RunStatus) values 
+insert into dbo.reportobjectrundata (ReportObjectID, RunID, RunUserID, RunStartTime, RunDurationSeconds, RunStatus) values
 (4,15975389,2,'2019-06-23 02:26:04.141',0.22,'Success'),
 (5,15975390,43,'2019-06-23 05:34:39.708',0.12,'Success'),
 (6,15975391,61,'2020-07-06 17:31:45.861',0.74,'Success'),
@@ -37348,7 +37334,11 @@ GO
 */
 -- run packages to load search data & run data
 DECLARE @RC int
-EXECUTE @RC = [atlas].[app].[Search_MasterDataUpdate] 
+<<<<<<< HEAD
+EXECUTE @RC = [atlas].[app].[Search_MasterDataUpdate]
+=======
+EXECUTE @RC = [Data_Governance_Pub].[app].[Search_MasterDataUpdate]
+>>>>>>> dev
 GO
 
 DECLARE @RC int

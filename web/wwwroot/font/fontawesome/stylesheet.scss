@@ -1,9 +1,8 @@
-@use "sass:math";
+@use 'sass:math';
 
-@import "_variables";
+@import '_variables';
 
-
-$fa-font-path: "/font/fontawesome/webfonts";
+$fa-font-path: '/font/fontawesome/webfonts';
 
 /* from font awesome */
 @font-face {
@@ -12,11 +11,12 @@ $fa-font-path: "/font/fontawesome/webfonts";
   font-weight: 400;
   font-display: $fa-font-display;
   src: url('#{$fa-font-path}/fa-regular-400.eot');
-  src: url('#{$fa-font-path}/fa-regular-400.eot?#iefix') format('embedded-opentype'),
-  url('#{$fa-font-path}/fa-regular-400.woff2') format('woff2'),
-  url('#{$fa-font-path}/fa-regular-400.woff') format('woff'),
-  url('#{$fa-font-path}/fa-regular-400.ttf') format('truetype'),
-  url('#{$fa-font-path}/fa-regular-400.svg#fontawesome') format('svg');
+  src: url('#{$fa-font-path}/fa-regular-400.eot?#iefix')
+      format('embedded-opentype'),
+    url('#{$fa-font-path}/fa-regular-400.woff2') format('woff2'),
+    url('#{$fa-font-path}/fa-regular-400.woff') format('woff'),
+    url('#{$fa-font-path}/fa-regular-400.ttf') format('truetype'),
+    url('#{$fa-font-path}/fa-regular-400.svg#fontawesome') format('svg');
 }
 
 .far {
@@ -30,11 +30,12 @@ $fa-font-path: "/font/fontawesome/webfonts";
   font-weight: 900;
   font-display: $fa-font-display;
   src: url('#{$fa-font-path}/fa-solid-900.eot');
-  src: url('#{$fa-font-path}/fa-solid-900.eot?#iefix') format('embedded-opentype'),
-  url('#{$fa-font-path}/fa-solid-900.woff2') format('woff2'),
-  url('#{$fa-font-path}/fa-solid-900.woff') format('woff'),
-  url('#{$fa-font-path}/fa-solid-900.ttf') format('truetype'),
-  url('#{$fa-font-path}/fa-solid-900.svg#fontawesome') format('svg');
+  src: url('#{$fa-font-path}/fa-solid-900.eot?#iefix')
+      format('embedded-opentype'),
+    url('#{$fa-font-path}/fa-solid-900.woff2') format('woff2'),
+    url('#{$fa-font-path}/fa-solid-900.woff') format('woff'),
+    url('#{$fa-font-path}/fa-solid-900.ttf') format('truetype'),
+    url('#{$fa-font-path}/fa-solid-900.svg#fontawesome') format('svg');
 }
 
 .fa,
@@ -48,10 +49,12 @@ $fa-font-path: "/font/fontawesome/webfonts";
 
 .#{$fa-css-prefix}-ul {
   list-style-type: none;
-  margin-left: $fa-li-width * math.div(5,4);
+  margin-left: $fa-li-width * math.div(5, 4);
   padding-left: 0;
 
-  > li { position: relative; }
+  > li {
+    position: relative;
+  }
 }
 
 .#{$fa-css-prefix}-li {
@@ -69,15 +72,15 @@ $fa-font-path: "/font/fontawesome/webfonts";
 .#{$fa-css-prefix}-lg {
   font-size: math.div(4em, 3);
   line-height: math.div(3em, 4);
-  vertical-align: -.0667em;
+  vertical-align: -0.0667em;
 }
 
 .#{$fa-css-prefix}-xs {
-  font-size: .75em;
+  font-size: 0.75em;
 }
 
 .#{$fa-css-prefix}-sm {
-  font-size: .875em;
+  font-size: 0.875em;
 }
 
 .#{$fa-css-prefix}-2_3x {
@@ -108,53 +111,139 @@ $fa-font-path: "/font/fontawesome/webfonts";
   line-height: 1;
 }
 
+.#{$fa-css-prefix}-spin {
+  animation: fa-spin 2s infinite linear;
+}
+
+.#{$fa-css-prefix}-pulse {
+  animation: fa-spin 1s infinite steps(8);
+}
+
+@keyframes fa-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.fa-layers {
+  display: inline-block;
+  position: relative;
+  text-align: center;
+  vertical-align: -0.125em;
+  width: 1em;
+}
+
+.fa-fw {
+  text-align: center;
+  width: 1.25em;
+}
+
+/* custom for data transform icons */
+.fa-transform {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+.fa-transform:not(.fa-fw) {
+  left: 0;
+}
+.down-5 {
+  top: 30px;
+}
+.right-6 {
+  right: 4px;
+}
+.shrink-7 {
+  transform: scale(0.7);
+}
+.shrink-6 {
+  transform: scale(0.6);
+}
+.shrink-5 {
+  transform: scale(0.5);
+}
+.shrink-4 {
+  transform: scale(0.42);
+}
 
 /* build icon list */
 $icons: (
-        envelope: $fa-var-envelope,
-        list-ul: $fa-var-list-ul,
-        wrench: $fa-var-wrench,
-        user: $fa-var-user,
-        chevron-left: $fa-var-chevron-left,
-        chevron-right: $fa-var-chevron-right,
-        search: $fa-var-search,
-        edit: $fa-var-edit,
-        trash: $fa-var-trash,
-        star: $fa-var-star,
-        share: $fa-var-share,
-        thumbs-up: $fa-var-thumbs-up,
-        plus: $fa-var-plus,
-        chart-bar: $fa-var-chart-bar,
-        play-circle: $fa-var-play-circle,
-        universal-access: $fa-var-universal-access,
-        sliders-h: $fa-var-sliders-h,
-        code: $fa-var-code,
-        quote-left: $fa-var-quote-left,
-        reply: $fa-var-reply,
-        reply-all: $fa-var-reply-all,
-        paper-plane: $fa-var-paper-plane,
-        heading: $fa-var-heading,
-        times: $fa-var-times,
-        folder: $fa-var-folder,
-        check: $fa-var-check,
-        play: $fa-var-play,
-        folder-plus: $fa-var-folder-plus,
-        file-upload: $fa-var-file-upload,
-        save: $fa-var-save,
-        angle-down: $fa-var-angle-down,
-        sort: $fa-var-sort,
-        folder-open: $fa-var-folder-open,
-        link: $fa-var-link,
-        grip-lines: $fa-var-grip-lines,
-        italic: $fa-var-italic,
-        list-ol: $fa-var-list-ol,
-        bold: $fa-var-bold,
-        trash-alt: $fa-var-trash-alt,
+  envelope: $fa-var-envelope,
+  list-ul: $fa-var-list-ul,
+  wrench: $fa-var-wrench,
+  user: $fa-var-user,
+  chevron-left: $fa-var-chevron-left,
+  chevron-right: $fa-var-chevron-right,
+  search: $fa-var-search,
+  edit: $fa-var-edit,
+  trash: $fa-var-trash,
+  star: $fa-var-star,
+  share: $fa-var-share,
+  thumbs-up: $fa-var-thumbs-up,
+  plus: $fa-var-plus,
+  chart-bar: $fa-var-chart-bar,
+  play-circle: $fa-var-play-circle,
+  universal-access: $fa-var-universal-access,
+  sliders-h: $fa-var-sliders-h,
+  code: $fa-var-code,
+  quote-left: $fa-var-quote-left,
+  reply: $fa-var-reply,
+  reply-all: $fa-var-reply-all,
+  paper-plane: $fa-var-paper-plane,
+  heading: $fa-var-heading,
+  times: $fa-var-times,
+  folder: $fa-var-folder,
+  check: $fa-var-check,
+  play: $fa-var-play,
+  folder-plus: $fa-var-folder-plus,
+  file-upload: $fa-var-file-upload,
+  save: $fa-var-save,
+  angle-down: $fa-var-angle-down,
+  sort: $fa-var-sort,
+  folder-open: $fa-var-folder-open,
+  link: $fa-var-link,
+  grip-lines: $fa-var-grip-lines,
+  italic: $fa-var-italic,
+  list-ol: $fa-var-list-ol,
+  bold: $fa-var-bold,
+  trash-alt: $fa-var-trash-alt,
+  external-link-square-alt: $fa-var-external-link-square-alt,
+  cogs: $fa-var-cogs,
+  circle-notch: $fa-var-circle-notch,
+  long-arrow-alt-left: $fa-var-long-arrow-alt-left,
+  long-arrow-alt-right: $fa-var-long-arrow-alt-right,
+  eye: $fa-var-eye,
+  eye-slash: $fa-var-eye-slash,
+  palette: $fa-var-palette,
+  database: $fa-var-database,
+  comment-alt: $fa-var-comment-alt,
+  info: $fa-var-info,
+  paperclip: $fa-var-paperclip,
+  user-lock: $fa-var-user-lock,
+  lock: $fa-var-lock,
+  chevron-down: $fa-var-chevron-down,
+  chevron-up: $fa-var-chevron-up,
+  image: $fa-var-image,
+  arrows-alt: $fa-var-arrows-alt,
+  plus-circle: $fa-var-plus-circle,
+  minus-circle: $fa-var-minus-circle,
+  circle: $fa-var-circle,
+  exclamation-triangle: $fa-var-exclamation-triangle,
+  book-open: $fa-var-book-open,
+  check-circle: $fa-var-check-circle,
+  certificate: $fa-var-certificate,
+  filter: $fa-var-filter,
+  book: $fa-var-book,
+  users: $fa-var-users,
+  lightbulb: $fa-var-lightbulb,
+  project-diagram: $fa-var-project-diagram,
 );
 
-
 @each $key, $value in $icons {
-    .#{$fa-css-prefix}-#{$key}:before {
-        content: fa-content($value);
-    }
+  .#{$fa-css-prefix}-#{$key}:before {
+    content: fa-content($value);
+  }
 }

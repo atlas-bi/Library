@@ -14,177 +14,208 @@ using System.IO.Compression;
 using WebMarkupMin.AspNet.Common.Compressors;
 using WebMarkupMin.AspNetCore5;
 using SolrNet;
-using SolrNet.Microsoft.DependencyInjection;
-
+using Microsoft.Extensions.Caching.Memory;
+using System.Linq;
+using Atlas_Web.Middleware;
+using Atlas_Web.Helpers;
 
 namespace Atlas_Web
 {
-
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IWebHostEnvironment hostingEnvironment)
         {
             Configuration = configuration;
+            HostingEnvironment = hostingEnvironment;
         }
 
         public IConfiguration Configuration { get; }
+        public IWebHostEnvironment HostingEnvironment { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
-            services.Configure<CookiePolicyOptions>(options =>
-            {
-                // This lambda determines whether user consent for non-essential cookies is needed for a given request.
-                options.CheckConsentNeeded = context => true;
-                options.MinimumSameSitePolicy = Microsoft.AspNetCore.Http.SameSiteMode.None;
-            });
-
-            services.AddRazorPages().AddRazorPagesOptions(options =>
-            {
-                options.Conventions.AddPageRoute("/Index/Index", "");
-                options.Conventions.AddPageRoute("/Index/About", "about_analytics");
-                options.Conventions.ConfigureFilter(new IgnoreAntiforgeryTokenAttribute());
-            });
+            services.Configure<CookiePolicyOptions>(
+                options =>
+                {
+                    // This lambda determines whether user consent for non-essential cookies is needed for a given request.
+                    options.CheckConsentNeeded = context => true;
+                    options.MinimumSameSitePolicy = Microsoft.AspNetCore.Http.SameSiteMode.None;
+                }
+            );
+            services.AddResponseCaching();
+            services
+                .AddRazorPages()
+                .AddRazorPagesOptions(
+                    options =>
+                    {
+                        options.Conventions.AddPageRoute("/Index/Index", "");
+                        options.Conventions.AddPageRoute("/Index/About", "about_analytics");
+                        options.Conventions.ConfigureFilter(new IgnoreAntiforgeryTokenAttribute());
+                    }
+                );
 
             services.AddSolrNet<SolrAtlas>(Configuration["solr:atlas_address"]);
+            services.AddSolrNet<SolrAtlasLookups>(Configuration["solr:atlas_lookups_address"]);
 
             var connection = Configuration.GetConnectionString("AtlasDatabase");
 
             // for linq querys
-            services.AddDbContext<Atlas_WebContext>(options => options.UseSqlServer(connection));
+            services.AddDbContext<Atlas_WebContext>(
+                options =>
+                    options.UseSqlServer(
+                        connection,
+                        o => o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)
+                    )
+            );
 
             // for raw sql connection
             services.AddSingleton<IConfiguration>(Configuration);
 
-            services.AddResponseCompression(options =>
-            {
-                options.EnableForHttps = true;
-                options.MimeTypes = new[] { "text/plain", "text/html", "application/xml", "text/xml", "application/json", "text/json", "font/woff2", "application/json; charset = UTF - 8", "text/css", "text/js", "application/css", "application/javascript" };
-            });
+            services.AddResponseCompression(
+                options =>
+                {
+                    options.EnableForHttps = true;
+                    options.MimeTypes = new[]
+                    {
+                        "text/plain",
+                        "text/html",
+                        "application/xml",
+                        "text/xml",
+                        "application/json",
+                        "text/json",
+                        "font/woff2",
+                        "application/json; charset = UTF - 8",
+                        "text/css",
+                        "text/js",
+                        "application/css",
+                        "application/javascript"
+                    };
+                }
+            );
 
             services.AddMemoryCache();
 
-            services.AddWebOptimizer(pipeline =>
-            {
-                pipeline.AddCssBundle("/css/theme.min.css", "css/theme.css");
+            var cssSettings = new CssBundlingSettings { Minify = true, FingerprintUrls = true, };
+            var codeSettings = new CodeBundlingSettings { Minify = true, };
 
-
-                /************   javascript   *************/
-
-                // for ie11
-                pipeline.AddJavaScriptBundle("/js/polyfill.min.js", "js/utility/polyfill.js");
-
-                pipeline.AddJavaScriptBundle("/js/realtime.min.js", "js/realtime.js");
-
-                // required for page load     
-                pipeline.AddJavaScriptBundle("/js/main.min.js", "js/essential.js",
-                                                                "lib/scrollbars/simple-scrollbar.js");
-                // required for search
-                pipeline.AddJavaScriptBundle("/js/search.min.js", "js/search.js", "js/utility/progressbar.js");
-
-                // used on all pages, but not for load
-                pipeline.AddJavaScriptBundle("/js/utility.min.js", "js/utility/modal.js",
-                                                                  "js/utility/lazyload.js",
-                                                                  "js/utility/crumbs.js",
-                                                                  "js/page.js",
-                                                                  "js/hyperspace.js",
-                                                                  "js/ajax-content.js",
-                                                                  "js/favorites.js",
-                                                                  "js/video.js",
-                                                                  "js/messagebox.js",
-                                                                  "js/mail.js",
-                                                                  "js/analytics.js");
-
-                pipeline.AddJavaScriptBundle("/js/tabs.min.js", "js/utility/tabs.js");
-                pipeline.AddJavaScriptBundle("/js/collapse.min.js", "js/utility/collapse.js");
-                pipeline.AddJavaScriptBundle("/js/carousel.min.js", "js/utility/carousel.js");
-                pipeline.AddJavaScriptBundle("/js/table.min.js", "js/utility/table.js");
-                pipeline.AddJavaScriptBundle("/js/drag.min.js", "js/utility/drag.js");
-                pipeline.AddJavaScriptBundle("/js/charts.min.js", "js/utility/charts.js");
-                pipeline.AddJavaScriptBundle("/js/input.min.js", "js/input.js");
-                pipeline.AddJavaScriptBundle("/js/comments.min.js", "js/comments.js");
-                pipeline.AddJavaScriptBundle("/js/dropdown.min.js", "js/dropdown.js");
-
-                pipeline.AddJavaScriptBundle("/js/milestone-checklist.min.js", "js/milestone-checklist.js");
-
-                pipeline.AddJavaScriptBundle("/js/access.min.js", "js/access.js");
-                pipeline.AddJavaScriptBundle("/js/parameters.min.js", "js/parameters.js");
-
-                pipeline.AddJavaScriptBundle("/js/profile.min.js", "js/profile.js");
-
-                pipeline.AddJavaScriptBundle("/js/code.min.js", "lib/highlight/highlight.js");
-
-                pipeline.AddJavaScriptBundle("/js/flowchart.min.js", "lib/flowchart/raphael.min.js", "lib/flowchart/flowchart.min.js", "lib/flowchart/custom.js");
-
-                pipeline.AddJavaScriptBundle("/js/editor.min.js", "lib/codemirror/codemirror.js",
-                                                                  "lib/codemirror/autorefresh.js",
-                                                                  "lib/codemirror/overlay.js",
-                                                                  "lib/codemirror/markdown.js",
-                                                                  "lib/codemirror/gfm.js",
-                                                                  "lib/codemirror/python.js",
-                                                                  "lib/codemirror/r.js",
-                                                                  "lib/codemirror/shell.js",
-                                                                  "lib/codemirror/sql.js",
-                                                                  "lib/codemirror/spellcheck.js",
-                                                                  "js/editor.js",
-                                                                  "js/utility/checkbox.js"
-                                                                  );
-                pipeline.AddJavaScriptBundle("/js/report-editor.min.js", "js/reportEditor.js");
-                pipeline.AddJavaScriptBundle("/js/collection-editor.min.js", "js/collectionEditor.js");
-            });
-
-            services.AddWebMarkupMin(
-                options =>
+            services.AddWebOptimizer(
+                HostingEnvironment,
+                cssSettings,
+                codeSettings,
+                pipeline =>
                 {
-                    options.AllowMinificationInDevelopmentEnvironment = true;
-                    options.AllowCompressionInDevelopmentEnvironment = true;
-                })
+                    pipeline.AddCssBundle("/css/site.min.css", "css/site.min.css");
+
+                    /************   javascript   *************/
+
+                    // for ie11
+                    pipeline.AddJavaScriptBundle("/js/polyfill.min.js", "/js/polyfill.min.js");
+
+                    pipeline.AddJavaScriptBundle("/js/shared.min.js", "/js/shared.min.js");
+                    pipeline.AddJavaScriptBundle("/js/realtime.min.js", "js/realtime.js");
+
+                    // required for page load
+                    pipeline.AddJavaScriptBundle(
+                        "/js/main.min.js",
+                        "js/essential.js",
+                        "lib/scrollbars/simple-scrollbar.js"
+                    );
+                    // required for search
+                    pipeline.AddJavaScriptBundle("/js/search.min.js", "js/search.min.js");
+
+                    // used on all pages, but not for load
+                    pipeline.AddJavaScriptBundle("/js/utility.min.js", "js/utility.min.js");
+
+                    pipeline.AddJavaScriptBundle("/js/settings.min.js", "js/settings.min.js");
+
+                    pipeline.AddJavaScriptBundle("/js/profile.min.js", "js/profile.js");
+
+                    pipeline.AddJavaScriptBundle("/js/code.min.js", "lib/highlight/highlight.js");
+
+                    pipeline.AddJavaScriptBundle(
+                        "/js/flowchart.min.js",
+                        "lib/flowchart/raphael.min.js",
+                        "lib/flowchart/flowchart.min.js",
+                        "lib/flowchart/custom.js"
+                    );
+
+                    pipeline.AddJavaScriptBundle(
+                        "/js/editor.min.js",
+                        "lib/markdown-it/markdown-it.min.js",
+                        "lib/codemirror/codemirror.js",
+                        "lib/codemirror/autorefresh.js",
+                        "lib/codemirror/overlay.js",
+                        "lib/codemirror/markdown.js",
+                        "lib/codemirror/gfm.js",
+                        "lib/codemirror/python.js",
+                        "lib/codemirror/r.js",
+                        "lib/codemirror/shell.js",
+                        "lib/codemirror/sql.js",
+                        "lib/codemirror/spellcheck.js",
+                        "/js/editor.min.js"
+                    );
+                }
+            );
+
+            services
+                .AddWebMarkupMin(
+                    options =>
+                    {
+                        options.AllowMinificationInDevelopmentEnvironment = true;
+                        options.AllowCompressionInDevelopmentEnvironment = true;
+                    }
+                )
                 .AddHtmlMinification(
                     options =>
                     {
                         options.MinificationSettings.RemoveRedundantAttributes = true;
                         options.MinificationSettings.RemoveHttpProtocolFromAttributes = true;
                         options.MinificationSettings.RemoveHttpsProtocolFromAttributes = true;
-                    })
-                .AddHttpCompression(options =>
+                    }
+                )
+                .AddHttpCompression(
+                    options =>
                     {
                         options.CompressorFactories = new List<ICompressorFactory>
                         {
-                            new DeflateCompressorFactory(new DeflateCompressionSettings
-                            {
-                                Level = CompressionLevel.Fastest
-                            }),
-                            new GZipCompressorFactory(new GZipCompressionSettings
-                            {
-                                Level = CompressionLevel.Fastest
-                            })
+                            new DeflateCompressorFactory(
+                                new DeflateCompressionSettings { Level = CompressionLevel.Fastest }
+                            ),
+                            new GZipCompressorFactory(
+                                new GZipCompressionSettings { Level = CompressionLevel.Fastest }
+                            )
                         };
-                    });
+                    }
+                );
 
-            services.Configure<IISServerOptions>(options =>
-            {
-                options.AllowSynchronousIO = true;
-            });
+            services.Configure<IISServerOptions>(
+                options =>
+                {
+                    options.AllowSynchronousIO = true;
+                }
+            );
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(
+            IApplicationBuilder app,
+            IWebHostEnvironment env,
+            Atlas_WebContext context,
+            IMemoryCache cache
+        )
         {
-
             app.UseResponseCompression();
 
-            if (env.IsDevelopment())
-            {
-                app.UseMiddleware<StackifyMiddleware.RequestTracerMiddleware>();
-                app.UseDeveloperExceptionPage();
-            }
-            else
+            if (!env.IsDevelopment())
             {
                 app.UseStatusCodePagesWithRedirects("/Error?id={0}");
                 app.UseHsts();
             }
-
+            else
+            {
+                app.UseDeveloperExceptionPage();
+            }
 
             app.UseWebMarkupMin();
             app.UseWebOptimizer();
@@ -202,16 +233,61 @@ namespace Atlas_Web
                             MaxAge = TimeSpan.FromDays(365)
                         };
                     }
-                });
+                }
+            );
 
-            //app.UseCookiePolicy();
-
+            app.UseETagger();
             app.UseRouting();
-            // app.UseAuthorization();
-            app.UseEndpoints(endpoints =>
+
+            app.UseEndpoints(
+                endpoints =>
+                {
+                    endpoints.MapRazorPages();
+                }
+            );
+
+            app.UseResponseCaching();
+            app.Use(
+                async (context, next) =>
+                {
+                    context.Response.GetTypedHeaders().CacheControl =
+                        new Microsoft.Net.Http.Headers.CacheControlHeaderValue()
+                        {
+                            Public = true,
+                            MaxAge = TimeSpan.FromMinutes(20)
+                        };
+                    await next();
+                }
+            );
+
+            // load override css
+            var css = context.GlobalSiteSettings
+                .Where(x => x.Name == "global_css")
+                .Select(x => x.Value)
+                .FirstOrDefault();
+            if (css != null)
             {
-                endpoints.MapRazorPages();
-            });
+                cache.Set("global_css", css);
+            }
+
+            // set logo
+            if (System.IO.File.Exists(Configuration["logo"]))
+            {
+                try
+                {
+                    byte[] imageArray = System.IO.File.ReadAllBytes(Configuration["logo"]);
+                    string base64ImageRepresentation = Convert.ToBase64String(imageArray);
+                    cache.Set("logo", "data:image/png;base64," + base64ImageRepresentation);
+                }
+                catch
+                {
+                    cache.Set("logo", "/img/atlas-logo.png");
+                }
+            }
+            else
+            {
+                cache.Set("logo", "/img/atlas-logo.png");
+            }
         }
     }
 }

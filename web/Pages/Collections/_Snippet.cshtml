@@ -1,0 +1,103 @@
+@model Atlas_Web.Models.DpDataProject
+
+<div class="card has-shadow-gold">
+    <div class="card-header">
+        <div class="card-header-title py-2 is-justify-content-space-between">
+            <a class="has-text-dark" href="/Collections?id=@Model.DataProjectId">@Model.Name
+                <div class="fa-layers ml-2 fa-lg">
+                    <span class="icon has-text-info "><i class="fas fa-certificate"></i></span>
+                    <span class="icon has-text-white fa-transform"><i class="fas fa-check shrink-5"></i></span>
+                </div>
+            </a>
+
+            <span class="tags">
+                <span class="tag">collection</span>
+            </span>
+        </div>
+    </div>
+    <div class="card-content pt-3 pb-2">
+        <div class="media">
+            <div class="media-left">
+                <figure class="image is-128x128">
+                    <picture>
+                        <source srcset="/img/report_placeholder_128x128.webp" type="image/webp" loading="lazy">
+                        <img src="/img/report_placeholder_128x128.png" alt="placeholder image" loading="lazy">
+                    </picture>
+                </figure>
+            </div>
+            <div class="is-flex is-flex-direction-column is-flex-grow-1">
+                <a class="media-content is-flex is-justify-content-space-between is-flex-direction-column is-min-h-96  has-text-dark" href="/Collections?id=@Model.DataProjectId">
+                    @if (!string.IsNullOrEmpty(Model.Description))
+                    {
+                        @(Model.Description.Substring(0,Math.Min(160,Model.Description.Length)) + " ...")
+                    }else if (!string.IsNullOrEmpty(Model.Purpose))
+                    {
+                        @(Model.Description.Substring(0,Math.Min(160,Model.Purpose.Length)) + " ...")
+                    } else {
+                        <text>Open to view details.</text>
+                    }
+                    @*<div class="tags">
+                        @foreach (var d in Model.DpDataProjects)
+                        {
+                            <span class="tag is-link">@d.Name</span>
+                        }
+                    </div>
+                    *@
+                </a>
+            </div>
+        </div>
+    </div>
+    <footer class="card-footer">
+        <a class="card-footer-item star" data-href="/users/favorites/?handler=Edit&type=collection&id=@Model.DataProjectId">
+            <span class="icon-text">
+                @if (Model.StarredCollections.Any(x => x.Ownerid == ViewBag.PublicUser.UserId))
+                {
+                    <span class="icon has-text-gold">
+                        <i class="fas fa-star"></i>
+                    </span>
+                    <span>Starred <span class="tag is-rounded">@Model.StarredCollections.Count</span></span>
+                }
+                else
+                {
+                    <span class="icon ">
+                        <i class="far fa-star"></i>
+                    </span>
+                    <span>Star <span class="tag is-rounded star-count">@Model.StarredCollections.Count</span></span>
+                }
+            </span>
+        </a>
+        <a href="/Collections?id=@Model.DataProjectId" class="card-footer-item">
+            <span class="icon-text">
+                <span class="icon">
+                    <i class="fas fa-book-open"></i>
+                </span>
+                <span>Read More</span>
+            </span>
+        </a>
+        <div class="card-footer-item">
+            <a class="is-block has-tooltip-arrow has-tooltip-right js-modal-trigger" data-target="collection-profile-@Model.DataProjectId" data-tooltip="Open Report Profile">
+                <span class="icon has-text-grey">
+                    <i class="fas fa-chart-bar"></i>
+                </span>
+            </a>
+            @if (@Configuration["features:enable_sharing"] == null || @Configuration["features:enable_sharing"].ToString().ToLower() == "true")
+            {
+                <a class="is-block has-tooltip-arrow has-tooltip-right js-modal-trigger ml-2" data-tooltip="Share" data-target="collection-share-@Model.DataProjectId" data-name="@Model.Name" data-type="collection">
+                    <span class="icon has-text-grey">
+                        <i class="fas fa-share"></i>
+                    </span>
+                </a>
+            }
+            @*
+            @if (@Configuration["features:enable_feedback"] == null || @Configuration["features:enable_feedback"].ToString().ToLower() == "true")
+            {
+                <a class="is-block has-tooltip-arrow has-tooltip-right js-modal-trigger ml-2" data-tooltip="Share Feedback" data-target="collection-share-feedback-@Model.DataProjectId" data-name="@Model.Name">
+                    <span class="icon has-text-grey">
+                        <i class="far fa-thumbs-up"></i>
+                    </span>
+                </a>
+            }*@
+        </div>
+    </footer>
+</div>
+<partial name="Collections/_Modals" />

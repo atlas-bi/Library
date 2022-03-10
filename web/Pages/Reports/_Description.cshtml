@@ -1,71 +1,89 @@
-﻿@*
-    Atlas of Information Management business intelligence library and documentation database.
-    Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*@
 
 @model Atlas_Web.Pages.Reports.IndexModel
-@using Helpers
 
-@if (Model != null || ViewBag.DeveloperDescription != null || ViewBag.KeyAssumptions != null || ViewBag.Description != null || ViewBag.SystemDescription != null || ViewBag.RepositoryDescription != null)
-{
-    <h3 class="pageSection-title">Description</h3>
-}
 
-@if ((Model != null && Model.Report != null && Model.Report.DeveloperDescription != null) || ViewBag.DeveloperDescription != null)
-{
-    <h4>Developer Description</h4>
-    <div class="markdown">
-        @Html.Raw(HtmlHelpers.MarkdownToHtml(Model != null && Model.Report != null ? Model.Report.DeveloperDescription : ViewBag.DeveloperDescription))
-    </div>
-}
-
-@if ((Model != null && Model.Report != null && Model.Report.KeyAssumptions != null) || ViewBag.KeyAssumptions != null)
-{
-    <h4>Key Assumptions</h4>
-    <div class="markdown">
-        @Html.Raw(HtmlHelpers.MarkdownToHtml(Model != null && Model.Report != null ? Model.Report.KeyAssumptions : ViewBag.KeyAssumptions))
-    </div>
-}
-
-@if ((Model != null && Model.Report != null && Model.Report.Description != null) || ViewBag.Description != null)
-{
-    <h4>System Description</h4>
-    <div class="markdown">
-        @Html.Raw(HtmlHelpers.MarkdownToHtml(Model != null && Model.Report != null ? Model.Report.Description : ViewBag.Description))
-    </div>
-}
-
-@if ((Model != null && Model.Report != null && Model.Report.SystemDescription != null) || ViewBag.SystemDescription != null)
-{
-    <h4>System Detailed Description</h4>
-    <div class="markdown">
-        @Html.Raw(HtmlHelpers.MarkdownToHtml(Model != null && Model.Report != null ? Model.Report.SystemDescription : ViewBag.SystemDescription))
-    </div>
-}
-
-@if ((Model != null && Model.Report != null && Model.Report.RepositoryDescription != null) || ViewBag.RepositoryDescription != null)
-{
-    <h4 class="drop" data-toggle="clps" data-target="collapseTerm27">Repository Description<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M31.3 192h257.3c17.8 0 26.7 21.5 14.1 34.1L174.1 354.8c-7.8 7.8-20.5 7.8-28.3 0L17.2 226.1C4.6 213.5 13.5 192 31.3 192z"></path></svg></h4>
-
-    <div id="collapseTerm27" class="clps @if(((Model != null  && Model.Report != null && Model.Report.DeveloperDescription != null) || ViewBag.DeveloperDescription != null) || ((Model != null && Model.Report != null && Model.Report.KeyAssumptions != null) || ViewBag.KeyAssumptions != null)){<text></text>} else {<text>clps-o</text>}" role="tabpanel">
-        <div class="drop-box">
+<h2 id="description" class="title is-2">Description</h2>
+<div class="content">
+    @if (Model.Report.ReportObjectDoc != null && !string.IsNullOrEmpty(Model.Report.ReportObjectDoc.DeveloperDescription))
+    {
+            <h3 class="title is-3">Developer Description</h3>
             <div class="markdown">
-                @Html.Raw(HtmlHelpers.MarkdownToHtml(Model != null && Model.Report != null ? Model.Report.RepositoryDescription : ViewBag.RepositoryDescription))
+                @Html.Raw(HtmlHelpers.MarkdownToHtml(Model.Report.ReportObjectDoc.DeveloperDescription))
             </div>
-        </div>
+    }
+
+    @if (Model.Report.ReportObjectDoc != null && !string.IsNullOrEmpty(Model.Report.ReportObjectDoc.KeyAssumptions))
+    {
+            <h3 class="title is-3">Key Assumptions</h3>
+            <div class="markdown">
+                @Html.Raw(HtmlHelpers.MarkdownToHtml(Model.Report.ReportObjectDoc.KeyAssumptions))
+            </div>
+    }
+
+    @if (!string.IsNullOrEmpty(Model.Report.Description))
+    {
+            <h3 class="title is-3">System Description</h3>
+            <div class="markdown">
+                @Html.Raw(HtmlHelpers.MarkdownToHtml(Model.Report.Description))
+            </div>
+    }
+
+    @if (!string.IsNullOrEmpty(Model.Report.DetailedDescription))
+    {
+
+            <h3 class="title is-3">System Detailed Description</h3>
+            <div class="markdown">
+                @Html.Raw(HtmlHelpers.MarkdownToHtml(Model.Report.DetailedDescription))
+            </div>
+
+    }
+
+    @if (!string.IsNullOrEmpty(Model.Report.RepositoryDescription))
+    {
+        <nav id="maintenance" class="panel">
+            <div class="panel-heading is-flex is-justify-content-space-between" data-action="collapse" data-target="collapseTerm27">
+                <span>Repository Description</span>
+                <span class="icon">
+                  <i class="fas fa-chevron-down"></i>
+                </span>
+            </div>
+
+            <div id="collapseTerm27" class="panel-block is-collapsible @if(ViewBag.HasDescription){<text></text>} else {<text>is-active</text>}" role="tabpanel">
+                <div class="markdown">
+                    @Html.Raw(HtmlHelpers.MarkdownToHtml(Model.Report.RepositoryDescription))
+                </div>
+            </div>
+        </nav>
+    }
+</div>
+
+@if(Model.Report.ReportObjectParameters.Any()){
+    <h2 class="title is-2">Parameters</h2>
+
+    <div class="table-container mt-5">
+        <table class="table is-narrow">
+            <thead>
+                 <tr>
+                    <th>Name</th>
+                    @if(Model.Report.ReportObjectParameters.Any(x => x.ParameterValue != null))
+                    {
+                        <th>Value</th>
+                    }
+                    
+                </tr>
+            </thead>
+            <tbody>
+                @foreach(var param in Model.Report.ReportObjectParameters)
+                {
+                    <tr>
+                        <td>@param.ParameterName</td>
+                        @if (Model.Report.ReportObjectParameters.Any(x => x.ParameterValue != null))
+                        {
+                            <td>@param.ParameterValue</td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
     </div>
-    
 }

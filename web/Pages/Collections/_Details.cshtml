@@ -1,67 +1,81 @@
 
 @model Atlas_Web.Pages.Collections.IndexModel
-@using Atlas_Web.Helpers
 
+<h1 class="title is-1">@Model.Collection.Name</h1>
+<partial name="_Links" />
 
-<div class="pageTitle">
-    <h2 class="pageTitle-head">
-        <span>@Model.Collection.Name</span>
-    </h2>
-
-    <div class="pageNav">
-
-        @if (Model.Collection.RelatedReports.Count() > 0 || ViewBag.RelatedTerms.Count > 0)
+@if (Model.Collection.DpReportAnnotations.Any())
+{
+    <h2 class="title is-2" id="reports">Reports</h2>
+    <div class="columns is-multiline">
+        @foreach (var t in Model.Collection.DpReportAnnotations)
         {
-    <a href="#links" class="pageNav-link">Linked Content</a>}
-        @if (ViewBag.Attachments.Count > 0)
-        {
-    <a href="#attachments" class="pageNav-link">Attachments</a>}
-        @if (Model.Collection.Agreements.Count() > 0)
-        {
-    <a href="#agreements" class="pageNav-link">Agreements</a>}
-        <a href="#details" class="pageNav-link">Details</a>
-        @if (Model.Collection.MilestoneTasks.Count() > 0)
-        {
-    <a href="#milestone" class="pageNav-link">Milestones</a>}
-        <a href="#comments" class="pageNav-link">Comments</a>
+            <div class="column is-half ">
+                <partial name="Reports/_Snippet" model="t.Report" />
+            </div>
+        }
     </div>
+}
+
+@if (@Configuration["features:enable_terms"] == null || @Configuration["features:enable_terms"].ToString().ToLower() == "true")
+{
+    @if (Model.Collection.DpTermAnnotations.Any())
+    {
+        <h2 class="title is-2" id="terms">Terms</h2>
+        <div class="columns is-multiline">
+            @foreach (var t in Model.Collection.DpTermAnnotations)
+            {
+                <div class="column is-half ">
+                    <partial name="Terms/_Snippet" model="t.Term" />
+                </div>
+            }
+        </div>
+    }
+}
+
+<h2 class="title is-2" id="details">Details</h2>
+@if(Model.Collection.Description != null)
+{
+    <h3 class="title is-3">Description</h3>
+    <div class="markdown">
+        @Html.Raw(@Helpers.HtmlHelpers.MarkdownToHtml(Model.Collection.Description))
+    </div>
+}
+
+@if(Model.Collection.Purpose != null)
+{
+    <h3 class="title is-3">Search Summary</h3>
+    <div class="markdown">
+        @Html.Raw(@Helpers.HtmlHelpers.MarkdownToHtml(Model.Collection.Purpose))
+    </div>
+}
+
+<div class="table-container mt-5">
+    <table class="table is-narrow">
+        <tbody>
+            <tr>
+                <td>Last Updated By</td>
+                <td>
+                    @if (@Configuration["features:enable_user_profile"] == null || @Configuration["features:enable_user_profile"].ToString().ToLower() == "true")
+                    {
+                        <a href="/users?id=@Model.Collection.LastUpdateUser">@Model.Collection.LastUpdateUserNavigation.FullnameCalc</a>
+                    } else
+                    {
+                        @Model.Collection.LastUpdateUserNavigation.FullnameCalc
+                    }
+                </td>
+            </tr>
+            <tr>
+                <td>Last Updated</td>
+                <td>@Model.Collection.LastUpdatedDateDisplayString</td>
+            </tr>
+            @if (Model.Collection.Hidden == "Y")
+            {
+                <tr>
+                    <td>Hidden from Search?</td>
+                    <td>Yes</td>
+                </tr>
+            }
+        </tbody>
+    </table>
 </div>
-
-
-<section class="pageSection">
-    <span class="location" id="links"></span>
-    @if (Model.Collection.RelatedReports.Count() > 0 || ViewBag.RelatedTerms.Count > 0)
-    {
-<partial name="Details/_Links.cshtml"></partial>}
-</section>
-
-<section class="pageSection">
-    <span class="location" id="attachments"></span>
-    @if (ViewBag.Attachments.Count > 0)
-    {
-<partial name="Details/_Attachments.cshtml"></partial>}
-</section>
-
-<section class="pageSection">
-    <span class="location" id="agreements"></span>
-    @if (Model.Collection.Agreements.Count() > 0)
-    {
-<partial name="Details/_Agreements.cshtml"></partial>}
-</section>
-
-<section class="pageSection">
-    <span class="location" id="details"></span>
-    <partial name="Details/_Details.cshtml"></partial>
-</section>
-
-<section class="pageSection">
-    <span class="location" id="milestone"></span>
-    @if (Model.Collection.MilestoneTasks.Count() > 0)
-    {
-<partial name="Details/_Milestones.cshtml"></partial>}
-</section>
-
-<section class="pageSection">
-    <span class="location" id="comments"></span>
-    <div class="comments" data-ajax="yes" data-url="/collections?Handler=Comments&id=@Model.Collection.Id"></div>
-</section>

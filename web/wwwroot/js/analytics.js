@@ -1,21 +1,3 @@
-/*
-    Atlas of Information Management business intelligence library and documentation database.
-    Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*/
-
 (function () {
   window.ajaxOn = true;
   var timeOnPage = new Date(),
@@ -25,8 +7,8 @@
       var a = {},
         n = navigator,
         w = window,
-        d = document;
-      l = w.location;
+        d = document,
+        l = w.location;
       a.appCodeName = n.appCodeName;
       a.appName = n.appName;
       a.appVersion = n.appVersion;
@@ -58,21 +40,21 @@
       return a;
     },
     getOrResetSessionId = function (reset) {
-      if (reset == "clear") {
-        sessionStorage.removeItem("_sid");
+      if (reset == 'clear') {
+        sessionStorage.removeItem('_sid');
         return false;
       }
 
-      if (reset == "reset" || typeof sessionStorage._sid === "undefined") {
+      if (reset == 'reset' || typeof sessionStorage._sid === 'undefined') {
         sessionStorage._sid = btoa(new Date().toString());
-        getOrResetPageId("reset");
+        getOrResetPageId('reset');
         timeOnPage = new Date();
       }
 
       return sessionStorage._sid;
     },
     getOrResetPageId = function (reset) {
-      if (reset == "reset" || typeof sessionStorage._pid === "undefined") {
+      if (reset == 'reset' || typeof sessionStorage._pid === 'undefined') {
         timeOnPage = new Date();
         sessionStorage._pid = btoa(new Date().toString());
       }
@@ -80,22 +62,22 @@
       return sessionStorage._pid;
     },
     postAnalytics = function (loadTime, type) {
-      if (type == "newpage") {
-        getOrResetPageId("reset");
+      if (type == 'newpage') {
+        getOrResetPageId('reset');
         window.ajaxOn = true;
       }
 
       if (window.ajaxOn === true) {
         if (navigator.sendBeacon) {
           navigator.sendBeacon(
-            "/analytics?handler=Beacon",
-            JSON.stringify(buildAnalyticsPackage(loadTime))
+            '/analytics?handler=Beacon',
+            JSON.stringify(buildAnalyticsPackage(loadTime)),
           );
         } else {
           var s = new XMLHttpRequest();
-          s.open("post", "/analytics?handler=Beacon", true);
-          s.setRequestHeader("Content-Type", "text/plain;charset=UTF-8`");
-          s.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+          s.open('post', '/analytics?handler=Beacon', true);
+          s.setRequestHeader('Content-Type', 'text/plain;charset=UTF-8`');
+          s.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
           s.send(JSON.stringify(buildAnalyticsPackage(loadTime)));
         }
       }
@@ -114,26 +96,26 @@
           startPageTimer();
           window.ajaxOn = true;
         })(),
-        500
+        500,
       );
     },
     doInactive = function () {
       window.ajaxOn = false;
-      getOrResetSessionId("clear");
+      getOrResetSessionId('clear');
       sessionStorage.clear();
     },
     setupPageTimer = function () {
-      document.addEventListener("mousemove", resetPageTimer, false);
-      document.addEventListener("mousedown", resetPageTimer, false);
-      document.addEventListener("keypress", resetPageTimer, false);
-      document.addEventListener("touchmove", resetPageTimer, false);
+      document.addEventListener('mousemove', resetPageTimer, false);
+      document.addEventListener('mousedown', resetPageTimer, false);
+      document.addEventListener('keypress', resetPageTimer, false);
+      document.addEventListener('touchmove', resetPageTimer, false);
       document.addEventListener(
-        "scroll",
+        'scroll',
         resetPageTimer,
         {
           passive: true,
         },
-        false
+        false,
       );
       startPageTimer();
     },
@@ -141,7 +123,7 @@
       var analitycsUpdateTimeout = 0.5 * 60000;
       analitycsUpdateTimeoutId = window.setTimeout(
         postAnalytics,
-        analitycsUpdateTimeout
+        analitycsUpdateTimeout,
       );
     },
     resetAnalyticsTimer = function () {
@@ -150,22 +132,22 @@
     };
 
   // if document is already loaded
-  if (document.readyState == "complete") {
+  if (document.readyState == 'complete') {
     setupPageTimer();
     postAnalytics();
   }
   // if document has not loaded yet
   window.addEventListener(
-    "load",
+    'load',
     function () {
       setupPageTimer();
       postAnalytics();
     },
-    false
+    false,
   );
 
-  document.addEventListener("analytics-post", function (e) {
-    if (typeof e.detail !== "undefined") {
+  document.addEventListener('analytics-post', function (e) {
+    if (typeof e.detail !== 'undefined') {
       postAnalytics(e.detail.value, e.detail.type);
     }
   });

@@ -1,49 +1,46 @@
-﻿@*
-    Atlas of Information Management business intelligence library and documentation database.
-    Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*@
-
 @page
+@inject IConfiguration Configuration
+
 @model Atlas_Web.Pages.Groups.IndexModel
-@{ Layout = HttpContext.Request.Headers["x-requested-with"] == "XMLHttpRequest" ? "../Shared/_AjaxLayout.cshtml" : "../Shared/_Layout.cshtml"; }
 @{ ViewData["Title"] = @Model.Group.Name; }
 
-<div class="pageTitle">
-    <h2 class="pageTitle-head"><span>@Model.Group.Name</span></h2>
 
-    <div class="tab">
-        <a href="#details" class="tab-lnk active">Details</a>
-        <a href="#users" class="tab-lnk">Users In Group</a>
-        <a href="#reports" class="tab-lnk">Reports In Group</a>
-        <a class="tab-lnk" href="#activity">Report Activity</a>
-    </div>
-</div>
+<h1 class="title is-1">@Model.Group.Name</h1>
+
+<partial name="_Links" />
 
 <section class="tab-cnt">
     <div class="tab-dta active" id="details">
         <h3>Details</h3>
-        <div class="listDetails">
-            @if (Model.Group.Email != "" && Model.Group.Email != null)
-            {
-<span class="listDetails-title">Email</span>
-                <span>@Model.Group.Email</span>}
-            <span class="listDetails-title">Type</span>
-            <span>@Model.Group.Type</span>
-            <span class="listDetails-title">Source</span>
-            <span>@Model.Group.Source</span>
+
+        <div class="table-container">
+            <table class="table is-narrow">
+                @if (Model.Group.Email != "" && Model.Group.Email != null)
+                {
+                    <tr>
+                        <td>
+                            Email
+                        </td>
+                        <td>
+                            @Model.Group.Email
+                        </td>
+                    </tr>
+                }
+                <tr>
+                    <td>
+                        Type
+                    </td>
+                    <td>
+                        @Model.Group.Type
+                    </td>
+                <tr>
+                    <td>
+                        Source
+                    </td>
+                    <td>
+                        @Model.Group.Source
+                    </td>
+            </table>
         </div>
     </div>
     <div class="tab-dta" id="users">
@@ -65,7 +62,8 @@
                             @foreach (var s in Model.GroupUsers)
                             {
             <tr>
-                <td><a href="\Users?id=@s.Id">@s.Name</a></td>
+                <td>@if (@Configuration["features:enable_user_profile"] == null || @Configuration["features:enable_user_profile"].ToString().ToLower() == "true")
+                    {<a href="\Users?id=@s.Id">@s.Name</a>} else {@s.Name}</td>
                 <td>
                     @if (s.Email != "")
                     {<a href="mailto:@s.Email">@s.Email</a>}

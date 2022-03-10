@@ -1,0 +1,60 @@
+@page
+@model Atlas_Web.Pages.Terms.EditModel
+
+@{
+    ViewData["Title"] = "Editing " + @Model.Term.Name;
+}
+
+@section SideBar {}
+@section js {
+    <script src="/js/flowchart.min.js" defer></script>
+}
+
+<form class="mb-5" action="/Terms/Edit/?id=@Model.Term.TermId" method="post" >
+    <h1 class="title is-1">@ViewData["Title"]</h1>
+    <p class="buttons is-flex is-justify-content-space-between">
+        <a class="button p-5" href="/Terms/?id=@Model.Term.TermId">
+            <span class="icon">
+              <i class="fas fa-lg fa-long-arrow-alt-left"></i>
+            </span>
+            <span><strong>Cancel</strong><br>Go Back</span>
+        </a>
+        <button class="button p-5" type="submit">
+            <span><strong>Save</strong><br>and Continue</span>
+            <span class="icon ">
+              <i class="fas fa-lg fa-long-arrow-alt-right"></i>
+            </span>
+        </button>
+    </p>
+
+    <input asp-for="Term.TermId" type="hidden" value="@Model.Term.TermId" />
+    <div class="field">
+        <label class="label">Name</label>
+        <div class="control">
+            <input class="input" placeholder="e.g LOSI" asp-for="Term.Name" required value="@Model.Term.Name" />
+        </div>
+    </div>
+
+    <div class="field">
+        <label class="label">Summary</label>
+        <div class="editor" data-inputName="Term.Summary" data-inputId="Term_Summary"><textarea class="textarea">@Html.Raw(Model.Term.Summary)</textarea></div>
+    </div>
+
+    <div class="field">
+        <label class="label">Technical Definition</label>
+        <div class="editor" data-inputName="Term.TechnicalDefinition" data-inputId="Term_TechnicalDefinition"><textarea class="textarea">@Html.Raw(Model.Term.TechnicalDefinition)</textarea></div>
+    </div>
+
+    @if (ViewBag.Permissions.Contains(6))
+    {
+        <label class="label">Other Options</label>
+        <div class="field toggle" typeId="groups">
+            <input type="hidden" asp-for="Term.ApprovedYn" value="@Model.Term.ApprovedYn">
+            <input id="switch-groups" type="checkbox" name="switch-groups" class="switch is-rounded is-info settings-search-visiblity"
+            @if(Model.Term.ApprovedYn == "Y"){
+                <text>checked="checked"</text>
+            } >
+            <label for="switch-groups">Approved?</label>
+        </div>
+    }
+</form>

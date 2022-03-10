@@ -1,0 +1,274 @@
+@page
+@model Atlas_Web.Pages.Users.FavoritesModel
+
+@{
+    Layout = null;
+}
+<div>
+    @if (Model.Reports.Any() || Model.Collections.Any() || Model.Initiatives.Any() || Model.Terms.Any() || Model.Users.Any() || Model.Searches.Any() || Model.Groups.Any())
+    {
+        <section class="section my-5 p-0 is-flex is-flex-direction-row is-align-items-center">
+
+            <div class="icon-text mr-5">
+                <span class="icon">
+                    <i class="fas fa-filter"></i>
+                </span>
+                <strong>Quick Filter</strong>
+            </div>
+            <div class="control has-icons-left mr-5">
+                <input class="input favorites-filter" type="email" placeholder="type to filter...">
+                <span class="icon is-small is-left">
+                    <i class="fas fa-search"></i>
+                </span>
+            </div>
+
+            @if(Model.Reports.Any()){
+                <a class="button is-warning is-outlined has-text-dark favorites-filter mr-5" data-type="report">
+                    <span class="icon">
+                        <i class="fas fa-chart-bar"></i>
+                    </span>
+                    <span>Reports</span>
+                </a>
+            }
+            @if(Model.Collections.Any()){
+                <a class="button is-warning is-outlined has-text-dark favorites-filter mr-5" data-type="collection">
+                    <span class="icon">
+                        <i class="fas fa-project-diagram"></i>
+                    </span>
+                    <span>Collections</span>
+                </a>
+             }
+             @if(Model.Initiatives.Any()){
+                <a class="button is-warning is-outlined has-text-dark favorites-filter mr-5" data-type="initiative">
+                    <span class="icon">
+                        <i class="fas fa-lightbulb"></i>
+                    </span>
+                    <span>Initiatives</span>
+                </a>
+            }
+            @if(Model.Terms.Any()){
+                <a class="button is-warning is-outlined has-text-dark favorites-filter mr-5" data-type="term">
+                    <span class="icon">
+                        <i class="fas fa-book"></i>
+                    </span>
+                    <span>Terms</span>
+                </a>
+           }
+           @if(Model.Users.Any()){
+                <a class="button is-warning is-outlined has-text-dark favorites-filter mr-5" data-type="user">
+                    <span class="icon">
+                        <i class="fas fa-user"></i>
+                    </span>
+                    <span>Users</span>
+                </a>
+            }
+            @if(Model.Groups.Any()){
+                <a class="button is-warning is-outlined has-text-dark favorites-filter mr-5" data-type="group">
+                    <span class="icon">
+                        <i class="fas fa-users"></i>
+                    </span>
+                    <span>Groups</span>
+                </a>
+            }
+            @if(Model.Searches.Any()){
+                <a class="button is-warning is-outlined has-text-dark favorites-filter mr-5" data-type="search">
+                    <span class="icon">
+                        <i class="fas fa-search"></i>
+                    </span>
+                    <span>Searches</span>
+                </a>
+            }
+
+        </section>
+    }
+
+    <div class="columns">
+        @if (Model.Reports.Any() || Model.Collections.Any() || Model.Initiatives.Any() || Model.Terms.Any() || Model.Users.Any() || Model.Searches.Any() || Model.Groups.Any())
+        {
+            var total = Model.Reports.Count() + Model.Collections.Count() + Model.Initiatives.Count() + Model.Terms.Count() + Model.Users.Count() + Model.Searches.Count() + Model.Groups.Count();
+            <div class="column is-one-quarter sticky is-align-self-flex-start">
+                <div class="is-relative favorite-folders reorder">
+                    <div class="box active favorites-show-all is-clickable is-relative" data-folderid="0">
+                        <div class="icon-text">
+                            <span class="icon mr-5 is-relative">
+                                <i class="fas fa-folder-open fa-lg"></i>
+                                <span class="tag fav-count is-primary is-rounded">@total</span>
+                            </span>
+                            <span>All</span>
+                        </div>
+                        @if (ViewBag.UserId == ViewBag.MyId || ViewBag.Permissions.Contains(41))
+                        {
+                            <div class="favorite-folder-controls button is-light is-rounded is-warning has-text-dark is-active">
+                                <span class="icon js-modal-trigger" data-target="favorite-folder-new"><i class="fas fa-plus"></i></span>
+                            </div>
+                            <script>
+                                (function(){
+                                    document.querySelector('body').insertAdjacentHTML('beforeend', '<div class="modal" id="favorite-folder-new"> \
+                                    <div class="modal-background"></div> \
+                                    <div class="modal-content"> \
+                                        <div class="box"> \
+                                            <strong class="mb-5">New Folder</strong> \
+                                            <form method="post" action="/Users/Favorites/?handler=NewFolder" class="favorite-folder-new">  \
+                                                <div class="field"> \
+                                                    <div class="control"> \
+                                                        <input class="input" name="favorite-folder-name"/> \
+                                                    </div> \
+                                                </div> \
+                                                    <button class="button pt-3">Save</button> \
+                                            </form> \
+                                        </div> \
+                                    </div> \
+                                    <button class="modal-close is-large" aria-label="close"></button> \
+                                </div>')
+                                })()
+                            </script>
+                        }
+                    </div>
+
+                    @foreach (var f in Model.Folders.OrderBy(x => x.FolderRank))
+                    {
+                        var folder_total = f.StarredCollections.Count() + f.StarredGroups.Count() + f.StarredInitiatives.Count() + f.StarredReports.Count() + f.StarredSearches.Count() + f.StarredTerms.Count() + f.StarredUsers.Count();
+                        <div class="box favorites-folder is-clickable drg is-relative" data-folderid="@f.UserFavoriteFolderId" folder-rank="@if(f.FolderRank>0){@f.FolderRank} else {<text>999</text>}">
+                            <div class="is-flex is-flex-direction-row is-justify-content-space-between">
+                                <div class="icon-text">
+                                    <span class="icon mr-5 is-relative">
+                                        <i class="fas fa-folder fa-lg"></i>
+                                        <span class="tag fav-count is-primary is-rounded">@folder_total</span>
+                                    </span>
+                                    <span class="favorite-folder-name">@f.FolderName</span>
+                                </div>
+
+
+                            </div>
+                            @if (ViewBag.UserId == ViewBag.MyId || ViewBag.Permissions.Contains(41))
+                            {
+                                <div class="favorite-folder-controls button is-light is-rounded is-warning has-text-dark is-active">
+                                    <span class="icon js-modal-trigger" data-target="favorite-folder-@f.UserFavoriteFolderId"><i class="fas fa-edit"></i></span>
+                                    <span class="icon favorite-folder-delete" data-folderid="@f.UserFavoriteFolderId"><i class="fas fa-trash"></i></span>
+                                    <span class="icon drg-hdl"><i class="fas fa-arrows-alt"></i></span>
+                                </div>
+                                <script>
+                                    (function(){
+                                        document.querySelector('body').insertAdjacentHTML('beforeend', '<div class="modal" id="favorite-folder-@f.UserFavoriteFolderId"> \
+                                        <div class="modal-background"></div> \
+                                        <div class="modal-content"> \
+                                            <div class="box"> \
+                                                <strong class="mb-5">Rename Folder</strong> \
+                                                <form method="post" action="/Users/Favorites/?handler=EditFolder&id=@f.UserFavoriteFolderId" class="favorite-folder-rename" data-folderid="@f.UserFavoriteFolderId"> \
+                                                    <div class="field"> \
+                                                        <div class="control"> \
+                                                            <input class="input" name="favorite-folder-name" value="@f.FolderName" /> \
+                                                        </div> \
+                                                    </div> \
+                                                     <button class="button pt-3">Save</button> \
+                                                </form> \
+                                            </div> \
+                                        </div> \
+                                        <button class="modal-close is-large" aria-label="close"></button> \
+                                    </div>')
+                                    })()
+                                </script>
+                            }
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <div class="column favorites">
+                <div class="columns is-multiline reorder">
+
+                    @foreach (var t in Model.Reports.OrderBy(x => x.Rank))
+                    {
+                        <div class="column is-full favorite report drg is-relative" data-rank="@t.Rank" data-folderid="@t.Folderid" data-favoriteid="@t.StarId" data-type="report">
+                            <button class="favorite-reorder button is-light is-rounded is-warning has-text-dark is-active drg-hdl" type="button">
+                            <span class="icon">
+                                <i class="fas fa-arrows-alt"></i>
+                            </span>
+                        </button>
+                            <partial name="Reports/_Snippet" model="t.Report" />
+                        </div>
+                    }
+                    @foreach (var t in Model.Collections.OrderBy(x => x.Rank))
+                    {
+                        <div class="column is-full favorite collection drg is-relative" data-rank="@t.Rank" data-folderid="@t.Folderid" data-favoriteid="@t.StarId" data-type="collection">
+                            <button class="favorite-reorder button is-light is-rounded is-warning has-text-dark is-active drg-hdl" type="button">
+                            <span class="icon">
+                                <i class="fas fa-arrows-alt"></i>
+                            </span>
+                        </button>
+                            <partial name="Collections/_Snippet" model="t.Collection" />
+                        </div>
+                    }
+                    @foreach (var t in Model.Initiatives.OrderBy(x => x.Rank))
+                    {
+                        <div class="column is-full favorite initiative drg is-relative" data-rank="@t.Rank" data-folderid="@t.Folderid" data-favoriteid="@t.StarId" data-type="initiative">
+                            <button class="favorite-reorder button is-light is-rounded is-warning has-text-dark is-active drg-hdl" type="button">
+                            <span class="icon">
+                                <i class="fas fa-arrows-alt"></i>
+                            </span>
+                        </button>
+                            <partial name="Initiatives/_Snippet" model="t.Initiative" />
+                        </div>
+                    }
+                    @foreach (var t in Model.Terms.OrderBy(x => x.Rank))
+                    {
+                        <div class="column is-full favorite term drg is-relative" data-rank="@t.Rank" data-folderid="@t.Folderid" data-favoriteid="@t.StarId" data-type="term">
+                            <button class="favorite-reorder button is-light is-rounded is-warning has-text-dark is-active drg-hdl" type="button">
+                            <span class="icon">
+                                <i class="fas fa-arrows-alt"></i>
+                            </span>
+                        </button>
+                            <partial name="Terms/_Snippet" model="t.Term" />
+                        </div>
+                    }
+                    @foreach (var t in Model.Users.OrderBy(x => x.Rank))
+                    {
+                        <div class="column is-full favorite user drg is-relative" data-rank="@t.Rank" data-folderid="@t.Folderid" data-favoriteid="@t.StarId" data-type="user">
+                            <button class="favorite-reorder button is-light is-rounded is-warning has-text-dark is-active drg-hdl" type="button">
+                            <span class="icon">
+                                <i class="fas fa-arrows-alt"></i>
+                            </span>
+                        </button>
+                            <partial name="Groups/_Snippet" model="t.User" />
+                        </div>
+                    }
+                    @foreach (var t in Model.Groups.OrderBy(x => x.Rank))
+                    {
+                        <div class="column is-full favorite group drg is-relative" data-rank="@t.Rank" data-folderid="@t.Folderid" data-favoriteid="@t.StarId" data-type="group">
+                            <button class="favorite-reorder button is-light is-rounded is-warning has-text-dark is-active drg-hdl" type="button">
+                            <span class="icon">
+                                <i class="fas fa-arrows-alt"></i>
+                            </span>
+                        </button>
+                            <partial name="Users/_Snippet" model="t.Group" />
+                        </div>
+                    }
+                    @foreach (var t in Model.Searches.OrderBy(x => x.Rank))
+                    {
+                        <div class="column is-full favorite search drg is-relative" data-rank="@t.Rank" data-folderid="@t.Folderid" data-favoriteid="@t.StarId" data-type="search">
+                            <button class="favorite-reorder button is-light is-rounded is-warning has-text-dark is-active drg-hdl" type="button">
+                                <span class="icon">
+                                    <i class="fas fa-arrows-alt"></i>
+                                </span>
+                            </button>
+                            <partial name="Search/_Snippet" model="t" />
+                        </div>
+                    }
+                </div>
+                <script>
+                    (function() {
+
+                        // set the order correctly
+                        var favs = Array.prototype.slice.call(document.querySelectorAll('.favorites .favorite')).sort(function comp($a, $b){
+                            return +$a.dataset.rank - +$b.dataset.rank;
+                        });
+
+                        for (var i = 0; i < favs.length; i++) {
+                            favs[i].parentElement.appendChild(favs[i]);
+                        }
+                    })()
+                </script>
+            </div>
+        }
+    </div>
+</div>

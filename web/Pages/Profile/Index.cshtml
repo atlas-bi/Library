@@ -1,28 +1,8 @@
-﻿@*
-    Atlas of Information Management business intelligence library and documentation database.
-    Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*@
-
 @page
 @model Atlas_Web.Pages.Profile.IndexModel
 @{
     ViewData["Title"] = "Profile";
-    //Layout = "../Shared/_AjaxLayout.cshtml";
-    Layout = HttpContext.Request.Headers["x-requested-with"] == "XMLHttpRequest" ? "../Shared/_AjaxLayout.cshtml" : "../Shared/_Layout.cshtml";
-
+    Layout = null;
     var TopUsers = Model.TopUsers.Count() > 0;
     var RunHistory = Model.RunTime.Count() > 0;
     var FailedRuns = Model.FailedRuns != null && Model.FailedRuns.Count() > 0;
@@ -31,8 +11,8 @@
 }
 
 
-
-@if (Model.Permissions.Contains(39) && (TopUsers || RunHistory || FailedRuns || Subscriptions || Favorites))
+<div>
+@if (ViewBag.Permissions.Contains(39) && (TopUsers || RunHistory || FailedRuns || Subscriptions || Favorites))
 {
     <div class="tab">
         @if(TopUsers)
@@ -110,7 +90,7 @@
                         </div>
                     </div>
                     <div class="tab-dta active" id="top-user-table">
-                        <span class="text-light">Data shown represents the last two years of usage.</span>
+                        <span class="has-text-grey">Data shown represents the last two years of usage.</span>
                         <div class="table-responsive">
                             <table class="table sort">
                                 <thead>
@@ -188,11 +168,11 @@
                                        }]
                                     }
                             </script>
-                            <span class="text-light">Data grouped into weekly buckets.</span>
+                            <span class="has-text-grey">Data grouped into weekly buckets.</span>
                         </div>
                     </div>
                     <div class="tab-dta active" id="run-time-table">
-                        <span class="text-light">Data shown represents the last two years of usage.</span>
+                        <span class="has-text-grey">Data shown represents the last two years of usage.</span>
                         <div class="table-responsive">
                             <table class="table sort">
                                 <thead>
@@ -305,3 +285,4 @@
     <h5>No activity to show</h5>
     <h5>¯\_(ツ)_/¯</h5>
 }
+</div>

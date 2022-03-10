@@ -1,133 +1,97 @@
-@*
-    Atlas of Information Management business intelligence library and documentation database.
-    Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*@
-
 @model Atlas_Web.Pages.Initiatives.IndexModel
-<div class="pageTitle">
-    <h2 class="pageTitle-head">
-        <span>@Model.DataInitiative.Name</span>
-    </h2>
-    @if (Model.DataInitiative.RelatedCollections.Count() > 0)
-    {
-        <div class="pageNav">
-            <a href="#details" class="pageNav-link">Details</a>
-            <a href="#projects" class="pageNav-link">Linked Collections and Reports</a>
-        </div>
-    }
+
+<h1 class="title is-1">@Model.Initiative.Name</h1>
+    <partial name="_Links" />
+
+@if (!string.IsNullOrEmpty(Model.Initiative.Description))
+{
+    <h2 id="details" class="title is-2">Description</h2>
+    <div class="content">@Html.Raw(@Helpers.HtmlHelpers.MarkdownToHtml(Model.Initiative.Description))</div>
+}
+
+<h2 class="title is-2">Details</h2>
+<div class="table-container">
+    <table class="table is-narrow">
+        <tbody>
+            @if (Model.Initiative.OperationOwnerId != null)
+            {
+                <tr>
+                    <td>Operational Owner</td>
+                    <td>
+                        @if (@Configuration["features:enable_user_profile"] == null || @Configuration["features:enable_user_profile"].ToString().ToLower() == "true")
+                        {
+                            <a href="/users?id=@Model.Initiative.OperationOwnerId">@Model.Initiative.OperationOwner.FullnameCalc</a>
+                        } else
+                        {
+                            @Model.Initiative.OperationOwner.FullnameCalc
+                        }
+                    </td>
+                </tr>
+            }
+            @if (Model.Initiative.ExecutiveOwnerId != null)
+            {
+                <tr>
+                    <td>Executive Owner</td>
+                    <td>
+                        @if (@Configuration["features:enable_user_profile"] == null || @Configuration["features:enable_user_profile"].ToString().ToLower() == "true")
+                        {
+                            <a href="/users?id=@Model.Initiative.ExecutiveOwnerId">@Model.Initiative.ExecutiveOwner.FullnameCalc</a>
+                        } else
+                        {
+                            @Model.Initiative.ExecutiveOwner.FullnameCalc
+                        }
+                    </td>
+                </tr>
+            }
+            @if (Model.Initiative.FinancialImpact != null)
+            {
+                <tr>
+                    <td>Financial Impact</td>
+                    <td>
+                        @Model.Initiative.FinancialImpactNavigation.Name
+                    </td>
+                </tr>
+            }
+            @if (Model.Initiative.StrategicImportance != null)
+            {
+                <tr>
+                    <td>Strategic Importance</td>
+                    <td>
+                        @Model.Initiative.StrategicImportanceNavigation.Name
+                    </td>
+                </tr>
+            }
+            @if (Model.Initiative.LastUpdateUser != null)
+            {
+                <tr>
+                    <td>Last Updated By</td>
+                    <td>
+                        @if (@Configuration["features:enable_user_profile"] == null || @Configuration["features:enable_user_profile"].ToString().ToLower() == "true")
+                            {
+                                <a href="/users?id=@Model.Initiative.LastUpdateUser">@Model.Initiative.LastUpdateUserNavigation.FullnameCalc</a>
+                            } else
+                            {
+                                @Model.Initiative.LastUpdateUserNavigation.FullnameCalc
+                            }
+                    </td>
+                </tr>
+            }
+            <tr>
+                <td>Last Updated</td>
+                <td>@Model.Initiative.LastUpdatedDateDisplayString</td>
+            </tr>
+        </tbody>
+    </table>
 </div>
 
-
-<section class="pageSection">
-    <span class="location" id="details"></span>
-
-
-    @if (Model.DataInitiative.OpOwnerId != null || Model.DataInitiative.ExOwnerId != null)
-    {
-        <h3>Owners</h3>
-    }
-    <p>
-        @if (Model.DataInitiative.OpOwnerId != null)
+@if(@Model.Initiative.DpDataProjects.Count > 0){
+    <h2 id="collections" class="title is-2">Linked Collections</h2>
+    <div class="columns is-multiline">
+        @foreach (var d in @Model.Initiative.DpDataProjects)
         {
-            @:Operational<span class="text-light">&nbsp;&middot;&nbsp;@Model.DataInitiative.OpOwner</span><br>
-        }
-
-        @if (Model.DataInitiative.ExOwnerId != null)
-        {
-            @:Executive<span class="text-light">&nbsp;&middot;&nbsp;@Model.DataInitiative.ExOwner</span>
-        }
-    </p>
-    @if (Model.DataInitiative.FinancialImpId != null || Model.DataInitiative.StrategicImpId != null)
-    {
-        <h3>Impact</h3>
-    }
-
-    @if (Model.DataInitiative.FinancialImpId != null)
-    {
-        @:Financial<span class="text-light">&nbsp;&middot;&nbsp;@Model.DataInitiative.FinancialImp</span><br>
-
-
-    }
-
-    @if (Model.DataInitiative.StrategicImpId != null)
-    {
-        @:Strategic<span class="text-light">&nbsp;&middot;&nbsp;@Model.DataInitiative.StrategicImp</span>
-    }
-
-    @if (Model.DataInitiative.Description != null && Model.DataInitiative.Description != "")
-    {
-        <h3>Description</h3>
-        <div class="markdown">
-            @Html.Raw(@Helpers.HtmlHelpers.MarkdownToHtml(Model.DataInitiative.Description))
-        </div>
-    }
-
-    @if (Model.DataInitiative.RelatedContacts.Count() > 0)
-    {
-        <h3>External Contacts</h3>
-        @foreach (var c in Model.DataInitiative.RelatedContacts)
-        {
-            <span>@c.Name @@ @c.Company </span><br>
-        }
-    }
-    <h3>Details</h3>
-    <div class="listDetails">
-        <span class="listDetails-title">Last Updated By</span>
-        <span>@Model.DataInitiative.UpdatedBy</span>
-
-        <span class="listDetails-title">Last Updated</span>
-        <span>@Model.DataInitiative.UpdateDate</span>
-    </div>
-</section>
-<section class="pageSection">
-    <span class="location" id="projects"></span>
-    @if (Model.DataInitiative.RelatedCollections.Count() > 0)
-    {
-        <h3>Linked Collections</h3>
-
-        @foreach (var d in @Model.DataInitiative.RelatedCollections)
-        {
-            <h4 class="drop" data-toggle="clps" data-target="collapse-@(d.Id)">@d.Name
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M31.3 192h257.3c17.8 0 26.7 21.5 14.1 34.1L174.1 354.8c-7.8 7.8-20.5 7.8-28.3 0L17.2 226.1C4.6 213.5 13.5 192 31.3 192z"/></svg>
-            </h4>
-
-            <div id="collapse-@(d.Id)" class="clps">
-                <div class="drop-box">
-                    <h5>
-                        <a class="drop-link" href="/collections?id=@d.Id" >Open This Collection</a>
-                    </h5>
-                    @if (d.RelatedReports.Count() > 0)
-                    {
-                        <h5>Linked Reports</h5>
-
-                        @foreach (var r in d.RelatedReports)
-                        {
-                            <h6>
-                                <a href="Reports?id=@r.Id">@r.Name</a>
-                            </h6>
-                            @if(r.Annotation != null && r.Annotation != "")
-                            {
-                                <div class="markdown">
-                                    @Html.Raw(@Helpers.HtmlHelpers.MarkdownToHtml(r.Annotation))
-                                </div>
-                            }
-                        }
-                    }
-                </div>
+            <div class="column is-half ">
+                <partial name="Collections/_Snippet" model="d" />
             </div>
         }
-    }
-</section>
+    </div>
+}

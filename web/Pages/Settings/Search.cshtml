@@ -1,0 +1,110 @@
+@page
+@{
+	Layout = null;
+}
+@model Atlas_Web.Pages.Settings.SearchModel
+
+<div>
+    <h2 class="title is-2">Search Settings</h2>
+
+    <h3 class="title is-3">Visible Objects</h3>
+    <div class="table-container">
+        <table class="table is-narrow is-fullwidth is-align-middel">
+            <thead>
+                <tr>
+                    <th class="is-narrow"></th>
+                    <th>Object</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="is-narrow">
+                        <div class="field" typeId="users">
+                            <input id="switch-users" type="checkbox" name="switch-users" class="switch is-rounded is-info settings-search-visiblity" @if(Model.UserVisibility != null && Model.UserVisibility.Value == "Y"){ <text>checked="checked"</text> }>
+                            <label for="switch-users"></label>
+                        </div>
+                    </td>
+                    <td>Users</td>
+                </tr>
+                <tr>
+                    <td class="is-narrow">
+                        <div class="field" typeId="groups">
+                            <input id="switch-groups" type="checkbox" name="switch-groups" class="switch is-rounded is-info settings-search-visiblity" @if(Model.GroupVisibility != null && Model.GroupVisibility.Value == "Y"){ <text>checked="checked"</text> }>
+                            <label for="switch-groups"></label>
+                        </div>
+                    </td>
+                    <td>Groups</td>
+                </tr>
+                <tr>
+                    <td class="is-narrow">
+                        <div class="field" typeId="terms">
+                            <input id="switch-terms" type="checkbox" name="switch-terms" class="switch is-rounded is-info settings-search-visiblity" @if(Model.TermVisibility != null && Model.TermVisibility.Value == "Y"){ <text>checked="checked"</text> }>
+                            <label for="switch-terms"></label>
+                        </div>
+                    </td>
+                    <td>Terms</td>
+                </tr>
+                <tr>
+                    <td class="is-narrow">
+                        <div class="field" typeId="initiatives">
+                            <input id="switch-initiatives" type="checkbox" name="switch-initiatives" class="switch is-rounded is-info settings-search-visiblity" @if(Model.InitiativeVisibility != null && Model.InitiativeVisibility.Value == "Y"){ <text>checked="checked"</text> }>
+                            <label for="switch-initiatives"></label>
+                        </div>
+                    </td>
+                    <td>Initiatives</td>
+                </tr>
+                <tr>
+                    <td class="is-narrow">
+                        <div class="field" typeId="collections">
+                            <input id="switch-collections" type="checkbox" name="switch-collections" class="switch is-rounded is-info settings-search-visiblity" @if(Model.CollectionVisibility != null && Model.CollectionVisibility.Value == "Y"){ <text>checked="checked"</text> }>
+                            <label for="switch-collections"></label>
+                        </div>
+                    </td>
+                    <td>Collections</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h3 class="title is-3">Visible Report Types</h3>
+    <div class="table-container">
+        <table class="table is-narrow is-fullwidth is-align-middel">
+            <thead>
+                <tr>
+                    <th class="is-narrow"></th>
+                    <th>Report Type</th>
+                    <th>Search Name Override</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var t in Model.ReportTypes)
+                {
+                    <tr>
+                        <td class="is-narrow">
+                            <div class="field" typeId="reports" groupId="@t.ReportObjectTypeId">
+                                <input id="switch-@t.ReportObjectTypeId" type="checkbox" name="switch-@t.ReportObjectTypeId" class="switch is-rounded is-info settings-search-visiblity"  @if (t.Visible == "Y") { <text> checked="checked" </text> }>
+                                <label for="switch-@t.ReportObjectTypeId"></label>
+                            </div>
+                        </td>
+                        <td>
+                            @t.Name @if (@t.DefaultEpicMasterFile != null)
+                            {<span>(@t.DefaultEpicMasterFile)</span>}
+                        </td>
+                        <td>
+                            <div class="field has-addons">
+                                <div class="control">
+                                    <input type="text" class="input" placeholder="@t.Name" value="@t.ShortName" groupId="@t.ReportObjectTypeId" />
+                                </div>
+                                <div class="control">
+                                    <a class="button is-info settings-search-name">
+                                        Save
+                                    </a>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

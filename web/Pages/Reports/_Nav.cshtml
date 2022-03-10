@@ -1,0 +1,148 @@
+@model Atlas_Web.Pages.Reports.IndexModel
+
+@if (Model.Report.ReportObjectAttachments.Any())
+{
+    <li>
+        <a class="is-block has-tooltip-arrow has-tooltip-right js-modal-trigger"  data-target="report-run-@Model.Report.ReportObjectId" data-tooltip="Run Report" data-runurl="@ViewBag.RunReportUrl">
+            <span class="icon is-large has-text-success">
+                <i class="far fa-2_3x fa-play-circle"></i>
+            </span>
+        </a>
+    </li>
+}
+else if (ViewBag.RunReportUrl != null)
+{
+    <li>
+        <a class="is-block has-tooltip-arrow has-tooltip-right" target="_blank" data-tooltip="Run Report" href="@ViewBag.RunReportUrl">
+            <span class="icon is-large has-text-success">
+                <i class="far fa-2_3x fa-play-circle"></i>
+            </span>
+        </a>
+    </li>
+}
+else
+{
+    if (@Model.Report.EpicMasterFile != null && @Model.Report.EpicMasterFile.Equals("IDB"))
+    {
+        <li>
+            <a class="is-disabled is-block has-tooltip-arrow has-tooltip-right" data-tooltip="Open a related dashboard that uses this.">
+                <span class="icon is-large has-text-grey-light">
+                    <i class="far fa-2_3x fa-play-circle"></i>
+                </span>
+            </a>
+        </li>
+    }
+    else if (!string.IsNullOrEmpty(ViewBag.EditReportUrl))
+    {
+        <li>
+            <a class="is-disabled is-block has-tooltip-arrow has-tooltip-right" data-tooltip="Open in report library.">
+                <span class="icon is-large has-text-grey-light">
+                    <i class="far fa-2_3x fa-play-circle"></i>
+                </span>
+            </a>
+        </li>
+    }
+    else if (!string.IsNullOrEmpty(@Model.Report.EpicMasterFile))
+    {
+        <li>
+            <a class="is-disabled is-block has-tooltip-arrow has-tooltip-right" data-tooltip="Run from the Hyperspace report library.">
+                <span class="icon is-large has-text-grey-light">
+                    <i class="far fa-2_3x fa-play-circle"></i>
+                </span>
+            </a>
+        </li>
+    }
+}
+
+<li>
+    <a class="is-block has-tooltip-arrow has-tooltip-right js-modal-trigger" data-target="report-profile-@Model.Report.ReportObjectId" data-tooltip="Open Report Profile">
+        <span class="icon has-text-grey is-large ">
+            <i class="fas fa-lg fa-chart-bar"></i>
+        </span>
+    </a>
+</li>
+
+<li>
+    <a class="is-block has-tooltip-arrow has-tooltip-right star" data-tooltip="Star this report" data-href="/users/favorites/?handler=Edit&type=report&id=@Model.Report.ReportObjectId">
+        @if (Model.Report.StarredReports.Any(x => x.Ownerid == ViewBag.PublicUser.UserId))
+        {
+            <span class="icon is-large has-text-gold ">
+                <i class="fas fa-lg fa-star is-relative">
+                    <span class="badge star-count">@Model.Report.StarredReports.Count</span>
+                </i>
+            </span>
+        }
+        else
+        {
+            <span class="icon has-text-grey is-large">
+                <i class="far fa-lg fa-star is-relative">
+                    <span class="badge star-count">@Model.Report.StarredReports.Count</span>
+                </i>
+            </span>
+        }
+    </a>
+</li>
+
+@if (ViewBag.Permissions.Contains(12))
+{
+    <li>
+        <a class="is-block has-tooltip-arrow has-tooltip-right" id="open-editor" href="/reports/edit/?id=@Model.Report.ReportObjectId" data-tooltip="Open Atlas Editor">
+            <span class="icon has-text-grey is-large ">
+                <i class="fas fa-lg fa-edit"></i>
+            </span>
+        </a>
+    </li>
+}
+
+@if (@Configuration["features:enable_sharing"] == null || @Configuration["features:enable_sharing"].ToString().ToLower() == "true")
+{
+    <li>
+        <a class="is-block has-tooltip-arrow has-tooltip-right js-modal-trigger" data-tooltip="Share"  data-target="report-share-@Model.Report.ReportObjectId">
+            <span class="icon has-text-grey is-large ">
+                <i class="fas fa-lg fa-share"></i>
+            </span>
+        </a>
+    </li>
+}
+
+@if (@Configuration["features:enable_request_access"] == null || @Configuration["features:enable_request_access"].ToString().ToLower() == "true")
+{
+    <li>
+        <a class="is-block has-tooltip-arrow has-tooltip-right js-modal-trigger" data-tooltip="Request Access" data-target="request-access-@Model.Report.ReportObjectId">
+            <span class="icon has-text-grey is-large ">
+                <i class="fas fa-lg fa-universal-access"></i>
+            </span>
+        </a>
+    </li>
+}
+@if (@Configuration["features:enable_feedback"] == null || @Configuration["features:enable_feedback"].ToString().ToLower() == "true")
+{
+    <li>
+        <a class="is-block has-tooltip-arrow has-tooltip-right js-modal-trigger" data-tooltip="Share Feedback" data-target="report-share-feedback-@Model.Report.ReportObjectId">
+            <span class="icon has-text-grey is-large ">
+                <i class="far fa-lg fa-thumbs-up"></i>
+            </span>
+        </a>
+    </li>
+}
+@if (ViewBag.Permissions.Contains(38) && ViewBag.EditReportUrl != null)
+{
+    <li>
+        <a class="is-block has-tooltip-arrow has-tooltip-right" data-tooltip="Open Report Editor" target="_blank" href="@ViewBag.EditReportUrl">
+            <span class="icon has-text-grey is-large ">
+                <i class="fas fa-lg fa-external-link-square-alt"></i>
+            </span>
+        </a>
+    </li>
+}
+
+@if (ViewBag.Permissions.Contains(38) && ViewBag.ManageReportUrl != null)
+{
+    <li>
+        <a class="is-block has-tooltip-arrow has-tooltip-right" data-tooltip="Manage Report" rel="noopener" target="_blank" href="@ViewBag.ManageReportUrl">
+            <span class="icon has-text-grey is-large ">
+                <i class="fas fa-lg fa-cogs"></i>
+            </span>
+        </a>
+    </li>
+}

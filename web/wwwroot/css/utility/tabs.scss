@@ -1,0 +1,35 @@
+.tab .tab-lnk + .tab-lnk::before {
+  color: #575353;
+  content: '/';
+  margin: 8px;
+}
+
+.tab-cnt {
+  display: block;
+  padding-top: 15px;
+}
+
+.tab-cnt > .tab-dta,
+.panel-tab-data,
+.step-tab-data {
+  animation: fadein 0.1s;
+  display: none;
+  width: 100%;
+}
+
+.tab-cnt > .tab-dta.active,
+.panel-tab-data.is-active,
+.step-tab-data.is-active {
+  display: block;
+}
+
+
+@keyframes fadein {
+  from {
+    opacity: 0.2;
+  }
+
+  to {
+    opacity: 1;
+  }
+}

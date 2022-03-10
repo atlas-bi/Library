@@ -1,0 +1,40 @@
+@model  Atlas_Web.Models.User
+
+<div class="card">
+    <div class="card-header">
+        <div class="card-header-title is-justify-content-space-between py-2">
+            <a class="has-text-dark" href="/Users?id=@Model.UserId">@Model.FullnameCalc</a>
+            <span class="tags">
+                <span class="tag">user</span>
+            </span>
+        </div>
+    </div>
+    <div class="card-content pt-3 pb-2">
+        <div class="media">
+            <div class="media-left">
+                <figure class="image is-128x128">
+                    <picture>
+                        <source srcset="/img/user_placeholder_128x128.webp" type="image/webp" loading="lazy">
+                        <img src="/img/user_placeholder_128x128.png" alt="placeholder image" loading="lazy">
+                    </picture>
+                </figure>
+            </div>
+            <div class="media-content is-min-h-96 is-flex is-justify-content-space-between is-flex-direction-column">
+                @if (!string.IsNullOrEmpty(Model.Email))
+                {
+                   @Model.Email
+                }
+            </div>
+        </div>
+    </div>
+    <footer class="card-footer">
+        <a href="/Users?id=@Model.UserId" class="card-footer-item">
+            <span class="icon-text">
+                <span class="icon">
+                    <i class="fas fa-book-open"></i>
+                </span>
+                <span>Open User</span>
+            </span>
+        </a>
+    </footer>
+</div>

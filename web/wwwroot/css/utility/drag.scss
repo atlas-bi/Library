@@ -1,0 +1,14 @@
+.drg-hdl {
+  cursor: move;
+}
+
+.drag {
+  background: inherit;
+  opacity: .9;
+  position: fixed !important;
+  z-index: 999999 !important;
+}
+
+.drag-source {
+  opacity: .4;
+}

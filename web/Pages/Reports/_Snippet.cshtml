@@ -1,0 +1,229 @@
+
+@model Atlas_Web.Models.ReportObject
+@inject IConfiguration Configuration
+@inject Atlas_Web.Models.Atlas_WebContext Context
+
+@{
+    var ManageReportUrl = HtmlHelpers.ReportManageUrlFromParams(@Configuration["AppSettings:org_domain"], ViewContext.HttpContext, Model.ReportObjectType.Name, Model.ReportServerPath, Model.SourceServer);
+    var EditReportUrl = HtmlHelpers.EditReportFromParams(@Configuration["AppSettings:org_domain"], ViewContext.HttpContext, Model.ReportServerPath, Model.SourceServer, Model.EpicMasterFile, Model.EpicReportTemplateId.ToString(), Model.EpicRecordId.ToString());
+    var RunReportUrl = HtmlHelpers.ReportUrlFromParams(ViewContext.HttpContext, Model, Context, User.Identity.Name);
+}
+
+<div class="card">
+    <div class="card-header">
+        <div class="card-header-title py-2 is-justify-content-space-between">
+            <span class="is-flex is-align-items-center">
+
+                @if (Model.ReportObjectAttachments.Count() > 0)
+                {
+                    <a class="is-flex mr-2 has-tooltip-arrow has-tooltip-right js-modal-trigger" data-target="report-run-@Model.ReportObjectId" data-tooltip="Run Report" data-runurl="@RunReportUrl">
+                        <span class="icon is-large has-text-success">
+                            <i class="far fa-2_3x fa-play-circle"></i>
+                        </span>
+                    </a>
+                }
+                else if (RunReportUrl != null)
+                {
+                    <a class="is-flex mr-2 has-tooltip-arrow has-tooltip-right" target="_blank" data-tooltip="Run Report" href="@RunReportUrl">
+                        <span class="icon is-large has-text-success">
+                            <i class="far fa-2_3x fa-play-circle"></i>
+                        </span>
+                    </a>
+                }
+                else
+                {
+                    if (@Model.EpicMasterFile != null && @Model.EpicMasterFile.Equals("IDB"))
+                    {
+                        <a class="is-flex mr-2 is-disabled has-tooltip-arrow has-tooltip-right" data-tooltip="Open a related dashboard that uses this.">
+                            <span class="icon is-large has-text-grey-light">
+                                <i class="far fa-2_3x fa-play-circle"></i>
+                            </span>
+                        </a>
+                    }
+                    else if (@EditReportUrl != null)
+                    {
+                        <a class="is-flex mr-2 is-disabled has-tooltip-arrow has-tooltip-right" data-tooltip="Open in report library.">
+                            <span class="icon is-large has-text-grey-light">
+                                <i class="far fa-2_3x fa-play-circle"></i>
+                            </span>
+                        </a>
+                    }
+                    else if (@Model.EpicMasterFile != null)
+                    {
+                        <a class="is-flex mr-2 is-disabled has-tooltip-arrow has-tooltip-right" data-tooltip="Run from the Hyperspace report library.">
+                            <span class="icon is-large has-text-grey-light">
+                                <i class="far fa-2_3x fa-play-circle"></i>
+                            </span>
+                        </a>
+                    }
+                }
+
+                <a class="has-text-dark" href="/Reports?id=@Model.ReportObjectId">
+                    @if (!string.IsNullOrEmpty(@Model.DisplayTitle))
+                    {
+                        @Model.DisplayTitle
+                    }
+                    else
+                    {
+                        @Model.Name
+                    }
+                </a>
+                @if (@Model.CertificationTag == "Analytics Certified" || @Model.CertificationTag == "Analytics Reviewed"){
+                    <div class="fa-layers ml-2 fa-lg">
+                        <span class="icon has-text-info "><i class="fas fa-certificate"></i></span>
+                        <span class="icon has-text-white fa-transform"><i class="fas fa-check shrink-5"></i></span>
+
+                    </div>
+                }
+
+            </span>
+            <span class="tags">
+                @{
+                    var type = string.IsNullOrEmpty(@Model.ReportObjectType.ShortName) ? @Model.ReportObjectType.Name : @Model.ReportObjectType.ShortName;
+                }
+                <span class="tag">@type</span>
+                @if (@Model.CertificationTag == "Analytics Certified")
+                {<span class="tag srch-fieldHunterGreen">@Model.CertificationTag</span>}
+                @if (@Model.CertificationTag == "Analytics Reviewed")
+                {<span class="tag srch-fieldGreen">@Model.CertificationTag</span>}
+                @if (@Model.CertificationTag == "Epic Released")
+                {<span class="tag srch-fieldOrange">@Model.CertificationTag</span>}
+                @if (@Model.CertificationTag == "Legacy")
+                {<span class="tag srch-fieldOrange">@Model.CertificationTag</span>}
+                @if (@Model.CertificationTag == "High Risk")
+                {<span class="tag srch-fieldRed">@Model.CertificationTag</span>}
+                @if (@Model.CertificationTag == "Self-Service")
+                {<span class="tag srch-fieldBlue">@Model.CertificationTag</span>}
+            </span>
+        </div>
+    </div>
+    <div class="card-content pt-3 pb-2">
+        <div class="media">
+            <div class="media-left js-modal-trigger"  data-target="report-image-@Model.ReportObjectId">
+                <figure class="image is-128x128">
+                    <picture>
+                        <source data-srcset="/data/img?handler=Thumb&id=@Model.ReportObjectId&size=128x128&type=webp" srcset="/img/report_placeholder_128x128.webp" type="image/webp" loading="lazy">
+                        <source srcset="/data/img?handler=Thumb&id=@Model.ReportObjectId&size=128x128" type="image/jpeg" loading="lazy">
+                        <img data-src="/data/img?handler=Thumb&id=@Model.ReportObjectId&size=128x128" src="/img/report_placeholder_128x128.png" alt="report image" loading="lazy">
+                    </picture>
+                </figure>
+            </div>
+            <div class="modal" id="report-image-@Model.ReportObjectId">
+                <div class="modal-background"></div>
+                <div class="modal-content modal-image">
+                    <p class="image">
+                        <picture>
+                            <source srcset="/data/img?handler=Thumb&id=@Model.ReportObjectId&size=1200x1200&type=webp 800w,
+                                            /data/img?handler=Thumb&id=@Model.ReportObjectId&size=2000x2000&type=webp 1200w"
+                                    type="image/webp"
+                                    loading="lazy"
+                                    sizes="100vw">
+                            <img src="/data/img?handler=Thumb&id=@Model.ReportObjectId&size=1200x2000" alt="report image" loading="lazy">
+                        </picture>
+                    </p>
+                </div>
+                <button class="modal-close is-large" aria-label="close"></button>
+            </div>
+            <div class="is-flex is-flex-direction-column is-flex-grow-1">
+                <a class="media-content is-flex is-justify-content-space-between is-flex-direction-column is-min-h-96  has-text-dark" href="/Reports?id=@Model.ReportObjectId" >
+                    @if (Model.ReportObjectDoc != null && !string.IsNullOrEmpty(Model.ReportObjectDoc.DeveloperDescription))
+                    {
+                        @(Model.ReportObjectDoc.DeveloperDescription.Substring(0, Math.Min(160, Model.ReportObjectDoc.DeveloperDescription.Length)) +" ...")
+                    }
+                    else if (!string.IsNullOrEmpty(Model.Description))
+                    {
+                        @(Model.Description.Substring(0, Math.Min(160, Model.Description.Length)) +" ...")
+                    }
+                    else
+                    {
+                        <text>Open to view details.</text>
+                    }
+                </a>
+            </div>
+        </div>
+    </div>
+    <footer class="card-footer">
+        <a class="card-footer-item star px-0" data-href="/users/favorites/?handler=Edit&type=report&id=@Model.ReportObjectId">
+            <span class="icon-text">
+                @if (Model.StarredReports.Any(x => x.Ownerid == ViewBag.PublicUser.UserId))
+                {
+                    <span class="icon has-text-gold">
+                        <i class="fas fa-star"></i>
+                    </span>
+                    <span>Starred <span class="tag is-rounded star-count">@Model.StarredReports.Count</span></span>
+                }
+                else
+                {
+                    <span class="icon ">
+                        <i class="far fa-star"></i>
+                    </span>
+                    <span>Star <span class="tag is-rounded star-count">@Model.StarredReports.Count</span></span>
+                }
+            </span>
+        </a>
+        <a href="/Reports?id=@Model.ReportObjectId" class="card-footer-item px-0">
+            <span class="icon-text">
+                <span class="icon">
+                    <i class="fas fa-book-open"></i>
+                </span>
+                <span>Read More</span>
+            </span>
+        </a>
+
+        @if (EditReportUrl != null && EditReportUrl != "" && ViewBag.Permissions.Contains(38))
+        {
+            <a class="card-footer-item px-0" target="_blank" href="@EditReportUrl">
+                <span class="icon-text">
+                    <span class="icon">
+                        <i class="fas fa-edit"></i>
+                    </span>
+                    <span>Edit</span>
+                </span>
+            </a>
+        }
+        @if (ManageReportUrl != null && ManageReportUrl != "" && ViewBag.Permissions.Contains(38))
+        {
+            <a class="card-footer-item px-0" target="_blank" href="@ManageReportUrl">
+                <span class="icon-text">
+                    <span class="icon">
+                        <i class="fas fa-cogs"></i>
+                    </span>
+                    <span>Manage</span>
+                </span>
+            </a>
+        }
+        <div class="card-footer-item px-0">
+            <a class="is-block has-tooltip-arrow has-tooltip-top js-modal-trigger ml-2" data-target="report-profile-@Model.ReportObjectId" data-tooltip="Open Report Profile">
+                <span class="icon has-text-grey ">
+                    <i class="fas fa-chart-bar"></i>
+                </span>
+            </a>
+            @if (@Configuration["features:enable_sharing"] == null || @Configuration["features:enable_sharing"].ToString().ToLower() == "true")
+            {
+                <a class="is-block has-tooltip-arrow has-tooltip-top js-modal-trigger ml-2" data-tooltip="Share"  data-target="report-share-@Model.ReportObjectId">
+                    <span class="icon has-text-grey">
+                        <i class="fas fa-share"></i>
+                    </span>
+                </a>
+            }
+            @if (@Configuration["features:enable_request_access"] == null || @Configuration["features:enable_request_access"].ToString().ToLower() == "true")
+            {
+                <a class="is-block has-tooltip-arrow has-tooltip-top js-modal-trigger ml-2" data-tooltip="Request Access" data-target="request-access-@Model.ReportObjectId">
+                    <span class="icon has-text-grey">
+                        <i class="fas fa-universal-access"></i>
+                    </span>
+                </a>
+            }
+            @*
+            @if (@Configuration["features:enable_feedback"] == null || @Configuration["features:enable_feedback"].ToString().ToLower() == "true")
+            {
+                <a class="is-block has-tooltip-arrow has-tooltip-top js-modal-trigger" data-tooltip="Share Feedback" data-target="report-share-feedback-@Model.ReportObjectId">
+                    <span class="icon has-text-grey">
+                        <i class="far fa-thumbs-up"></i>
+                    </span>
+                </a>
+            }*@
+        </div>
+    </footer>
+</div>
+<partial name="Reports/_Modals" />

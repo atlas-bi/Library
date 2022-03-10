@@ -1,0 +1,114 @@
+$color-active: $grey-dark;
+$carousel-height: 400px;
+$carousel-transition: .1s;
+$carousel-dot-size: 15px;
+
+.carousel {
+  height: $carousel-height;
+  text-align: center;
+  width: 100%;
+
+  .carousel-itm {
+    animation-duration: $carousel-transition;
+    animation-name: carousel-fade;
+    display: none;
+    height: 100%;
+
+    &:first-of-type {
+      display: block;
+    }
+
+    .image {
+      min-height: 100%;
+    }
+
+    img {
+      bottom: 0;
+      height: auto;
+      margin: auto;
+      max-height: 100%;
+      max-width: 100%;
+      position: absolute;
+      top: 0;
+      width: auto;
+    }
+
+    source,
+    img {
+      left: 0;
+      margin-left: auto;
+      margin-right: auto;
+      position: absolute;
+      right: 0;
+    }
+  }
+
+  .carousel-next,
+  .carousel-prev {
+    align-items: center;
+    background-color: $grey;
+    bottom: 0;
+    color: $white;
+    display: flex;
+    justify-content: center;
+    opacity: .9;
+    position: absolute;
+    top: 0;
+    transition: background-color $carousel-transition ease;
+    width: 50px;
+
+    &:focus,
+    &:hover {
+      background-color: $color-active;
+    }
+  }
+
+  .carousel-prev {
+    border-bottom-left-radius: inherit;
+    border-top-left-radius: inherit;
+    left: 0;
+  }
+
+  .carousel-next {
+    border-bottom-right-radius: inherit;
+    border-top-right-radius: inherit;
+    right: 0;
+  }
+
+  .carousel-ind {
+    bottom: 0;
+    position: absolute;
+    width: 100%;
+
+    .carousel-dot {
+      background-color: $grey;
+      border-radius: 50%;
+      cursor: pointer;
+      display: inline-block;
+      height: $carousel-dot-size;
+      margin: 0 2px;
+      transition: background-color $carousel-transition ease;
+      width: $carousel-dot-size;
+
+      &:hover,
+      &:active {
+        background-color: $color-active;
+      }
+    }
+  }
+
+  .active {
+    background-color: $color-active;
+  }
+}
+
+
+@keyframes carousel-fade {
+  from {
+    opacity: .4;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
