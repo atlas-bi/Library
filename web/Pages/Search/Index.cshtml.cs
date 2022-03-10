@@ -112,6 +112,13 @@ namespace Atlas_Web.Pages.Search
                 search_string.Split(illegal_chars, StringSplitOptions.RemoveEmptyEntries)
             );
 
+            // make all caps lower for OR AND NOT
+            search_string = Regex.Replace(
+                search_string,
+                @"\b(OR|AND|NOT)\b",
+                m => m.ToString().ToLower()
+            );
+
             // find exact match strings
             List<string> ExactMatches = new();
 

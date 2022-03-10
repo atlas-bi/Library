@@ -3,75 +3,70 @@ GO
 
 CREATE DATABASE [atlas]
  CONTAINMENT = NONE
- ON  PRIMARY 
+ ON  PRIMARY
 ( NAME = N'atlas', FILENAME = N'E:\Program Files\Microsoft SQL Server\MSSQL13.MSSQLSERVER\MSSQL\DATA\atlas.mdf' , SIZE = 8331264KB , MAXSIZE = 10485760KB , FILEGROWTH = 65536KB )
- LOG ON 
+ LOG ON
 ( NAME = N'atlas_log', FILENAME = N'E:\Program Files\Microsoft SQL Server\MSSQL13.MSSQLSERVER\MSSQL\DATA\atlas_log.ldf' , SIZE = 10485760KB , MAXSIZE = 10485760KB , FILEGROWTH = 65536KB )
 GO
 ALTER DATABASE [atlas] SET COMPATIBILITY_LEVEL = 130
 GO
-IF (1 = FULLTEXTSERVICEPROPERTY('IsFullTextInstalled'))
-begin
-EXEC [atlas].[dbo].[sp_fulltext_database] @action = 'enable'
-end
+ALTER DATABASE [atlas] SET ANSI_NULL_DEFAULT OFF
 GO
-ALTER DATABASE [atlas] SET ANSI_NULL_DEFAULT OFF 
+ALTER DATABASE [atlas] SET ANSI_NULLS OFF
 GO
-ALTER DATABASE [atlas] SET ANSI_NULLS OFF 
+ALTER DATABASE [atlas] SET ANSI_PADDING OFF
 GO
-ALTER DATABASE [atlas] SET ANSI_PADDING OFF 
+ALTER DATABASE [atlas] SET ANSI_WARNINGS OFF
 GO
-ALTER DATABASE [atlas] SET ANSI_WARNINGS OFF 
+ALTER DATABASE [atlas] SET ARITHABORT OFF
 GO
-ALTER DATABASE [atlas] SET ARITHABORT OFF 
+ALTER DATABASE [atlas] SET AUTO_CLOSE OFF
 GO
-ALTER DATABASE [atlas] SET AUTO_CLOSE OFF 
+ALTER DATABASE [atlas] SET AUTO_SHRINK OFF
 GO
-ALTER DATABASE [atlas] SET AUTO_SHRINK OFF 
+ALTER DATABASE [atlas] SET AUTO_UPDATE_STATISTICS ON
 GO
-ALTER DATABASE [atlas] SET AUTO_UPDATE_STATISTICS ON 
+ALTER DATABASE [atlas] SET CURSOR_CLOSE_ON_COMMIT OFF
 GO
-ALTER DATABASE [atlas] SET CURSOR_CLOSE_ON_COMMIT OFF 
+ALTER DATABASE [atlas] SET CURSOR_DEFAULT  GLOBAL
 GO
-ALTER DATABASE [atlas] SET CURSOR_DEFAULT  GLOBAL 
+ALTER DATABASE [atlas] SET CONCAT_NULL_YIELDS_NULL OFF
 GO
-ALTER DATABASE [atlas] SET CONCAT_NULL_YIELDS_NULL OFF 
+ALTER DATABASE [atlas] SET NUMERIC_ROUNDABORT OFF
 GO
-ALTER DATABASE [atlas] SET NUMERIC_ROUNDABORT OFF 
+ALTER DATABASE [atlas] SET QUOTED_IDENTIFIER OFF
 GO
-ALTER DATABASE [atlas] SET QUOTED_IDENTIFIER OFF 
+ALTER DATABASE [atlas] SET RECURSIVE_TRIGGERS OFF
 GO
-ALTER DATABASE [atlas] SET RECURSIVE_TRIGGERS OFF 
+ALTER DATABASE [atlas] SET  DISABLE_BROKER
 GO
-ALTER DATABASE [atlas] SET  DISABLE_BROKER 
+ALTER DATABASE [atlas] SET AUTO_UPDATE_STATISTICS_ASYNC OFF
 GO
-ALTER DATABASE [atlas] SET AUTO_UPDATE_STATISTICS_ASYNC OFF 
+ALTER DATABASE [atlas] SET DATE_CORRELATION_OPTIMIZATION OFF
 GO
-ALTER DATABASE [atlas] SET DATE_CORRELATION_OPTIMIZATION OFF 
+ALTER DATABASE [atlas] SET TRUSTWORTHY OFF
 GO
-ALTER DATABASE [atlas] SET TRUSTWORTHY OFF 
+ALTER DATABASE [atlas] SET ALLOW_SNAPSHOT_ISOLATION OFF
 GO
-ALTER DATABASE [atlas] SET ALLOW_SNAPSHOT_ISOLATION OFF 
+ALTER DATABASE [atlas] SET PARAMETERIZATION SIMPLE
 GO
-ALTER DATABASE [atlas] SET PARAMETERIZATION SIMPLE 
+ALTER DATABASE [atlas] SET READ_COMMITTED_SNAPSHOT OFF
 GO
-ALTER DATABASE [atlas] SET READ_COMMITTED_SNAPSHOT OFF 
+ALTER DATABASE [atlas] SET HONOR_BROKER_PRIORITY OFF
 GO
-ALTER DATABASE [atlas] SET HONOR_BROKER_PRIORITY OFF 
+ALTER DATABASE [atlas] SET RECOVERY SIMPLE
 GO
-ALTER DATABASE [atlas] SET RECOVERY SIMPLE 
+ALTER DATABASE [atlas] SET  MULTI_USER
 GO
-ALTER DATABASE [atlas] SET  MULTI_USER 
+ALTER DATABASE [atlas] SET PAGE_VERIFY CHECKSUM
 GO
-ALTER DATABASE [atlas] SET PAGE_VERIFY CHECKSUM  
+ALTER DATABASE [atlas] SET DB_CHAINING OFF
 GO
-ALTER DATABASE [atlas] SET DB_CHAINING OFF 
+ALTER DATABASE [atlas] SET FILESTREAM( NON_TRANSACTED_ACCESS = OFF )
 GO
-ALTER DATABASE [atlas] SET FILESTREAM( NON_TRANSACTED_ACCESS = OFF ) 
+ALTER DATABASE [atlas] SET TARGET_RECOVERY_TIME = 60 SECONDS
 GO
-ALTER DATABASE [atlas] SET TARGET_RECOVERY_TIME = 60 SECONDS 
-GO
-ALTER DATABASE [atlas] SET DELAYED_DURABILITY = DISABLED 
+ALTER DATABASE [atlas] SET DELAYED_DURABILITY = DISABLED
 GO
 ALTER DATABASE [atlas] SET QUERY_STORE = ON
 GO
@@ -90,30 +85,7 @@ GO
 USE [atlas]
 GO
 
-
 CREATE SCHEMA [app]
-GO
-
-CREATE FULLTEXT CATALOG [ReportObjectDocs] WITH ACCENT_SENSITIVITY = ON
-GO
-
-CREATE FULLTEXT CATALOG [ReportObjects] WITH ACCENT_SENSITIVITY = OFF
-AS DEFAULT
-GO
-
-CREATE FULLTEXT CATALOG [Search] WITH ACCENT_SENSITIVITY = OFF
-GO
-
-CREATE FULLTEXT CATALOG [Search_Small] WITH ACCENT_SENSITIVITY = OFF
-GO
-
-CREATE FULLTEXT CATALOG [Terms] WITH ACCENT_SENSITIVITY = ON
-GO
-
-CREATE FULLTEXT CATALOG [User_NameData] WITH ACCENT_SENSITIVITY = OFF
-GO
-
-CREATE FULLTEXT CATALOG [UserGroups] WITH ACCENT_SENSITIVITY = OFF
 GO
 
 CREATE PARTITION FUNCTION [ifts_comp_fragment_partition_function_7BCB2FBE](varbinary(128)) AS RANGE LEFT FOR VALUES (0x0066006F0072)
@@ -146,7 +118,7 @@ begin
   WHILE @i <= @l
   BEGIN
     SET @c = SUBSTRING(@string, @i, 1)
-    IF @f = 1 
+    IF @f = 1
     BEGIN
      SET @o = @o + @c
      SET @f = 0
@@ -203,7 +175,7 @@ CREATE TABLE [app].[Analytics](
     [pageTime] [int] NULL,
     [sessionTime] [int] NULL,
     [updateTime] [datetime] NULL,
-PRIMARY KEY CLUSTERED 
+PRIMARY KEY CLUSTERED
 (
     [Id] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
@@ -223,7 +195,7 @@ CREATE TABLE [app].[DP_Agreement](
     [LastUpdateUser] [int] NULL,
     [DataProjectId] [int] NULL,
     [Rank] [int] NULL,
-PRIMARY KEY CLUSTERED 
+PRIMARY KEY CLUSTERED
 (
     [AgreementID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
@@ -240,7 +212,7 @@ CREATE TABLE [app].[DP_AgreementUsers](
     [UserId] [int] NULL,
     [LastUpdateDate] [datetime] NULL,
     [LastUpdateUser] [int] NULL,
-PRIMARY KEY CLUSTERED 
+PRIMARY KEY CLUSTERED
 (
     [AgreementUsersID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
@@ -259,7 +231,7 @@ CREATE TABLE [app].[DP_Attachments](
     [AttachmentType] [varchar](max) NOT NULL,
     [AttachmentName] [varchar](max) NULL,
     [AttachmentSize] [int] NULL,
-PRIMARY KEY CLUSTERED 
+PRIMARY KEY CLUSTERED
 (
     [AttachmentId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
@@ -276,7 +248,7 @@ CREATE TABLE [app].[DP_Contact](
     [Email] [nvarchar](max) NULL,
     [Phone] [nvarchar](55) NULL,
     [Company] [nvarchar](max) NULL,
-PRIMARY KEY CLUSTERED 
+PRIMARY KEY CLUSTERED
 (
     [ContactID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
@@ -291,7 +263,7 @@ CREATE TABLE [app].[DP_Contact_Links](
     [LinkId] [int] IDENTITY(1,1) NOT NULL,
     [InitiativeId] [int] NULL,
     [ContactId] [int] NULL,
-PRIMARY KEY CLUSTERED 
+PRIMARY KEY CLUSTERED
 (
     [LinkId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
@@ -312,7 +284,7 @@ CREATE TABLE [app].[DP_DataInitiative](
     [StrategicImportance] [int] NULL,
     [LastUpdateDate] [datetime] NULL,
     [LastUpdateUser] [int] NULL,
-PRIMARY KEY CLUSTERED 
+PRIMARY KEY CLUSTERED
 (
     [DataInitiativeID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
@@ -339,7 +311,7 @@ CREATE TABLE [app].[DP_DataProject](
     [LastUpdateDate] [datetime] NULL,
     [LastUpdateUser] [int] NULL,
     [Hidden] [nchar](1) NULL,
-PRIMARY KEY CLUSTERED 
+PRIMARY KEY CLUSTERED
 (
     [DataProjectID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
@@ -353,7 +325,7 @@ GO
 CREATE TABLE [app].[Dp_DataProjectConversation](
     [DataProjectConversationId] [int] IDENTITY(1,1) NOT NULL,
     [DataProjectId] [int] NOT NULL,
-PRIMARY KEY CLUSTERED 
+PRIMARY KEY CLUSTERED
 (
     [DataProjectConversationId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
@@ -371,7 +343,7 @@ CREATE TABLE [app].[Dp_DataProjectConversationMessage](
     [MessageText] [nvarchar](4000) NULL,
     [PostDateTime] [datetime] NULL,
     [UserName] [nvarchar](max) NULL,
-PRIMARY KEY CLUSTERED 
+PRIMARY KEY CLUSTERED
 (
     [DataProjectConversationMessageId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
@@ -386,7 +358,7 @@ CREATE TABLE [app].[DP_MilestoneChecklist](
     [MilestoneChecklistId] [int] IDENTITY(1,1) NOT NULL,
     [MilestoneTaskId] [int] NULL,
     [Item] [nvarchar](max) NULL,
-PRIMARY KEY CLUSTERED 
+PRIMARY KEY CLUSTERED
 (
     [MilestoneChecklistId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
@@ -406,7 +378,7 @@ CREATE TABLE [app].[DP_MilestoneChecklistCompleted](
     [ChecklistStatus] [bit] NULL,
     [CompletionDate] [datetime] NULL,
     [CompletionUser] [int] NULL,
-PRIMARY KEY CLUSTERED 
+PRIMARY KEY CLUSTERED
 (
     [MilestoneChecklistCompletedId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
@@ -422,7 +394,7 @@ CREATE TABLE [app].[DP_MilestoneFrequency](
     [Name] [nvarchar](max) NULL,
     [LastUpdateUser] [int] NULL,
     [LastUpdateDate] [datetime] NULL,
-PRIMARY KEY CLUSTERED 
+PRIMARY KEY CLUSTERED
 (
     [MilestoneTypeId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
@@ -443,7 +415,7 @@ CREATE TABLE [app].[DP_MilestoneTasks](
     [LastUpdateUser] [int] NULL,
     [LastUpdateDate] [datetime] NULL,
     [DataProjectId] [int] NULL,
-PRIMARY KEY CLUSTERED 
+PRIMARY KEY CLUSTERED
 (
     [MilestoneTaskId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
@@ -462,7 +434,7 @@ CREATE TABLE [app].[DP_MilestoneTasksCompleted](
     [Comments] [nvarchar](max) NULL,
     [Owner] [nvarchar](max) NULL,
     [DueDate] [datetime] NULL,
-PRIMARY KEY CLUSTERED 
+PRIMARY KEY CLUSTERED
 (
     [MilestoneTaskCompletedId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
@@ -480,7 +452,7 @@ CREATE TABLE [app].[DP_MilestoneTemplates](
     [LastUpdateUser] [int] NULL,
     [LastUpdateDate] [datetime] NULL,
     [Interval] [int] NULL,
-PRIMARY KEY CLUSTERED 
+PRIMARY KEY CLUSTERED
 (
     [MilestoneTemplateId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
@@ -497,7 +469,7 @@ CREATE TABLE [app].[DP_ReportAnnotation](
     [ReportId] [int] NULL,
     [DataProjectId] [int] NULL,
     [Rank] [int] NULL,
-PRIMARY KEY CLUSTERED 
+PRIMARY KEY CLUSTERED
 (
     [ReportAnnotationID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
@@ -514,7 +486,7 @@ CREATE TABLE [app].[DP_TermAnnotation](
     [TermId] [int] NULL,
     [DataProjectId] [int] NULL,
     [Rank] [int] NULL,
-PRIMARY KEY CLUSTERED 
+PRIMARY KEY CLUSTERED
 (
     [TermAnnotationID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
@@ -528,7 +500,7 @@ GO
 CREATE TABLE [app].[EstimatedRunFrequency](
     [EstimatedRunFrequencyID] [int] IDENTITY(1,1) NOT NULL,
     [EstimatedRunFrequencyName] [nvarchar](max) NULL,
-PRIMARY KEY CLUSTERED 
+PRIMARY KEY CLUSTERED
 (
     [EstimatedRunFrequencyID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
@@ -542,7 +514,7 @@ GO
 CREATE TABLE [app].[FinancialImpact](
     [FinancialImpactId] [int] IDENTITY(1,1) NOT NULL,
     [Name] [nvarchar](max) NULL,
-PRIMARY KEY CLUSTERED 
+PRIMARY KEY CLUSTERED
 (
     [FinancialImpactId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
@@ -556,7 +528,7 @@ GO
 CREATE TABLE [app].[Fragility](
     [FragilityID] [int] IDENTITY(1,1) NOT NULL,
     [FragilityName] [nvarchar](max) NULL,
-PRIMARY KEY CLUSTERED 
+PRIMARY KEY CLUSTERED
 (
     [FragilityID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
@@ -570,7 +542,7 @@ GO
 CREATE TABLE [app].[FragilityTag](
     [FragilityTagID] [int] IDENTITY(1,1) NOT NULL,
     [FragilityTagName] [nvarchar](max) NULL,
-PRIMARY KEY CLUSTERED 
+PRIMARY KEY CLUSTERED
 (
     [FragilityTagID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
@@ -586,7 +558,7 @@ CREATE TABLE [app].[GlobalSiteSettings](
     [Name] [nvarchar](max) NULL,
     [Description] [nvarchar](max) NULL,
     [Value] [nvarchar](max) NULL,
-PRIMARY KEY CLUSTERED 
+PRIMARY KEY CLUSTERED
 (
     [Id] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
@@ -600,7 +572,7 @@ GO
 CREATE TABLE [app].[Mail_Conversations](
     [ConversationId] [int] IDENTITY(1,1) NOT NULL,
     [MessageId] [int] NOT NULL,
-PRIMARY KEY CLUSTERED 
+PRIMARY KEY CLUSTERED
 (
     [ConversationId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
@@ -622,7 +594,7 @@ CREATE TABLE [app].[Mail_Drafts](
     [Recipients] [nvarchar](max) NULL,
     [ReplyToMessageId] [int] NULL,
     [ReplyToConvId] [int] NULL,
- CONSTRAINT [PK_Mail_Drafts] PRIMARY KEY CLUSTERED 
+ CONSTRAINT [PK_Mail_Drafts] PRIMARY KEY CLUSTERED
 (
     [DraftId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
@@ -637,7 +609,7 @@ CREATE TABLE [app].[Mail_FolderMessages](
     [Id] [int] IDENTITY(1,1) NOT NULL,
     [FolderId] [int] NULL,
     [MessageId] [int] NULL,
-PRIMARY KEY CLUSTERED 
+PRIMARY KEY CLUSTERED
 (
     [Id] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
@@ -654,7 +626,7 @@ CREATE TABLE [app].[Mail_Folders](
     [UserId] [int] NULL,
     [Name] [nvarchar](max) NULL,
     [Rank] [int] NULL,
-PRIMARY KEY CLUSTERED 
+PRIMARY KEY CLUSTERED
 (
     [FolderId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
@@ -673,7 +645,7 @@ CREATE TABLE [app].[Mail_Messages](
     [MessageTypeId] [int] NULL,
     [FromUserId] [int] NULL,
     [MessagePlainText] [nvarchar](max) NULL,
-PRIMARY KEY CLUSTERED 
+PRIMARY KEY CLUSTERED
 (
     [MessageId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
@@ -687,7 +659,7 @@ GO
 CREATE TABLE [app].[Mail_MessageType](
     [MessageTypeId] [int] IDENTITY(1,1) NOT NULL,
     [Name] [nvarchar](max) NULL,
-PRIMARY KEY CLUSTERED 
+PRIMARY KEY CLUSTERED
 (
     [MessageTypeId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
@@ -705,7 +677,7 @@ CREATE TABLE [app].[Mail_Recipients](
     [ReadDate] [datetime] NULL,
     [AlertDisplayed] [int] NULL,
     [ToGroupId] [int] NULL,
-PRIMARY KEY CLUSTERED 
+PRIMARY KEY CLUSTERED
 (
     [Id] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
@@ -723,7 +695,7 @@ CREATE TABLE [app].[Mail_Recipients_Deleted](
     [ReadDate] [datetime] NULL,
     [AlertDisplayed] [int] NULL,
     [ToGroupId] [int] NULL,
-PRIMARY KEY CLUSTERED 
+PRIMARY KEY CLUSTERED
 (
     [Id] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
@@ -740,7 +712,7 @@ CREATE TABLE [app].[MaintenanceLog](
     [MaintenanceDate] [datetime] NULL,
     [Comment] [nvarchar](max) NULL,
     [MaintenanceLogStatusID] [int] NULL,
-PRIMARY KEY CLUSTERED 
+PRIMARY KEY CLUSTERED
 (
     [MaintenanceLogID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
@@ -754,7 +726,7 @@ GO
 CREATE TABLE [app].[MaintenanceLogStatus](
     [MaintenanceLogStatusID] [int] IDENTITY(1,1) NOT NULL,
     [MaintenanceLogStatusName] [nvarchar](max) NOT NULL,
-PRIMARY KEY CLUSTERED 
+PRIMARY KEY CLUSTERED
 (
     [MaintenanceLogStatusID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
@@ -768,7 +740,7 @@ GO
 CREATE TABLE [app].[MaintenanceSchedule](
     [MaintenanceScheduleID] [int] IDENTITY(1,1) NOT NULL,
     [MaintenanceScheduleName] [nvarchar](max) NOT NULL,
-PRIMARY KEY CLUSTERED 
+PRIMARY KEY CLUSTERED
 (
     [MaintenanceScheduleID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
@@ -782,7 +754,7 @@ GO
 CREATE TABLE [app].[OrganizationalValue](
     [OrganizationalValueID] [int] IDENTITY(1,1) NOT NULL,
     [OrganizationalValueName] [nvarchar](max) NULL,
-PRIMARY KEY CLUSTERED 
+PRIMARY KEY CLUSTERED
 (
     [OrganizationalValueID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
@@ -799,7 +771,7 @@ CREATE TABLE [app].[ReportManageEngineTickets](
     [Description] [nvarchar](max) NULL,
     [ReportObjectId] [int] NULL,
     [TicketUrl] [nvarchar](max) NULL,
-PRIMARY KEY CLUSTERED 
+PRIMARY KEY CLUSTERED
 (
     [ManageEngineTicketsId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
@@ -832,7 +804,7 @@ CREATE TABLE [app].[ReportObject_doc](
     [DoNotPurge] [nchar](1) NULL,
     [Hidden] [nchar](1) NULL,
     [DeveloperNotes] [nvarchar](max) NULL,
-PRIMARY KEY CLUSTERED 
+PRIMARY KEY CLUSTERED
 (
     [ReportObjectID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
@@ -846,7 +818,7 @@ GO
 CREATE TABLE [app].[ReportObjectConversation_doc](
     [ConversationID] [int] IDENTITY(1,1) NOT NULL,
     [ReportObjectID] [int] NOT NULL,
-PRIMARY KEY CLUSTERED 
+PRIMARY KEY CLUSTERED
 (
     [ConversationID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
@@ -864,7 +836,7 @@ CREATE TABLE [app].[ReportObjectConversationMessage_doc](
     [MessageText] [nvarchar](max) NOT NULL,
     [PostDateTime] [datetime] NOT NULL,
     [Username] [nvarchar](max) NULL,
-PRIMARY KEY CLUSTERED 
+PRIMARY KEY CLUSTERED
 (
     [MessageID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
@@ -880,7 +852,7 @@ CREATE TABLE [app].[ReportObjectDocFragilityTags](
     [LinkId] [int] IDENTITY(1,1) NOT NULL,
     [ReportObjectID] [int] NOT NULL,
     [FragilityTagID] [int] NOT NULL,
-PRIMARY KEY CLUSTERED 
+PRIMARY KEY CLUSTERED
 (
     [LinkId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
@@ -908,7 +880,7 @@ CREATE TABLE [app].[ReportObjectDocMaintenanceLogs](
     [LinkId] [int] IDENTITY(1,1) NOT NULL,
     [ReportObjectID] [int] NOT NULL,
     [MaintenanceLogID] [int] NOT NULL,
-PRIMARY KEY CLUSTERED 
+PRIMARY KEY CLUSTERED
 (
     [LinkId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
@@ -934,7 +906,7 @@ CREATE TABLE [app].[ReportObjectDocTerms](
     [LinkId] [int] IDENTITY(1,1) NOT NULL,
     [ReportObjectID] [int] NOT NULL,
     [TermId] [int] NOT NULL,
-PRIMARY KEY CLUSTERED 
+PRIMARY KEY CLUSTERED
 (
     [LinkId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
@@ -961,7 +933,7 @@ CREATE TABLE [app].[ReportObjectImages_doc](
     [ImageOrdinal] [int] NOT NULL,
     [ImageData] [varbinary](max) NOT NULL,
     [ImageSource] [nvarchar](max) NULL,
-PRIMARY KEY CLUSTERED 
+PRIMARY KEY CLUSTERED
 (
     [ImageID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
@@ -979,7 +951,7 @@ CREATE TABLE [app].[ReportObjectReportRunTime](
     [Runs] [int] NULL,
     [RunWeek] [datetime] NULL,
     [RunWeekString] [nvarchar](max) NULL,
-PRIMARY KEY CLUSTERED 
+PRIMARY KEY CLUSTERED
 (
     [Id] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
@@ -997,7 +969,7 @@ CREATE TABLE [app].[ReportObjectRunTime](
     [RunTime] [decimal](10, 2) NULL,
     [RunWeek] [datetime] NULL,
     [RunWeekString] [nvarchar](max) NULL,
-PRIMARY KEY CLUSTERED 
+PRIMARY KEY CLUSTERED
 (
     [Id] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
@@ -1017,7 +989,7 @@ CREATE TABLE [app].[ReportObjectTopRuns](
     [RunTime] [decimal](10, 2) NULL,
     [LastRun] [nvarchar](max) NULL,
     [ReportObjectTypeId] [int] NULL,
-PRIMARY KEY CLUSTERED 
+PRIMARY KEY CLUSTERED
 (
     [Id] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
@@ -1042,7 +1014,7 @@ CREATE TABLE [app].[RolePermissionLinks](
     [RolePermissionLinksId] [int] IDENTITY(1,1) NOT NULL,
     [RoleId] [int] NULL,
     [RolePermissionsId] [int] NULL,
-PRIMARY KEY CLUSTERED 
+PRIMARY KEY CLUSTERED
 (
     [RolePermissionLinksId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
@@ -1057,7 +1029,7 @@ CREATE TABLE [app].[RolePermissions](
     [RolePermissionsId] [int] IDENTITY(1,1) NOT NULL,
     [Name] [nvarchar](max) NULL,
     [Description] [nvarchar](max) NULL,
-PRIMARY KEY CLUSTERED 
+PRIMARY KEY CLUSTERED
 (
     [RolePermissionsId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
@@ -1079,7 +1051,7 @@ CREATE TABLE [app].[Search_BasicSearchData](
     [Hidden] [int] NULL,
     [VisibleType] [int] NULL,
     [Orphaned] [int] NULL,
-PRIMARY KEY CLUSTERED 
+PRIMARY KEY CLUSTERED
 (
     [Id] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
@@ -1101,7 +1073,7 @@ CREATE TABLE [app].[Search_BasicSearchData_Small](
     [Hidden] [int] NULL,
     [VisibleType] [int] NULL,
     [Orphaned] [int] NULL,
-PRIMARY KEY CLUSTERED 
+PRIMARY KEY CLUSTERED
 (
     [Id] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
@@ -1147,7 +1119,7 @@ CREATE TABLE [app].[Search_ReportObjectSearchData](
     [OneYearRuns] [int] NULL,
     [SixMonthsRuns] [int] NULL,
     [OneMonthRuns] [int] NULL,
- CONSTRAINT [Search_ReportObjectSearchData_PK] PRIMARY KEY CLUSTERED 
+ CONSTRAINT [Search_ReportObjectSearchData_PK] PRIMARY KEY CLUSTERED
 (
     [pk] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
@@ -1166,7 +1138,7 @@ CREATE TABLE [app].[SearchTable](
     [ItemRank] [int] NULL,
     [SearchFieldDescription] [nvarchar](100) NULL,
     [SearchField] [nvarchar](max) NULL,
-PRIMARY KEY CLUSTERED 
+PRIMARY KEY CLUSTERED
 (
     [Id] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
@@ -1184,7 +1156,7 @@ CREATE TABLE [app].[SharedItems](
     [Url] [nvarchar](max) NULL,
     [Name] [nvarchar](max) NULL,
     [ShareDate] [datetime] NULL,
-PRIMARY KEY CLUSTERED 
+PRIMARY KEY CLUSTERED
 (
     [Id] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
@@ -1198,7 +1170,7 @@ GO
 CREATE TABLE [app].[StrategicImportance](
     [StrategicImportanceId] [int] IDENTITY(1,1) NOT NULL,
     [Name] [nvarchar](max) NULL,
-PRIMARY KEY CLUSTERED 
+PRIMARY KEY CLUSTERED
 (
     [StrategicImportanceId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
@@ -1223,7 +1195,7 @@ CREATE TABLE [app].[Term](
     [ValidToDateTime] [datetime] NULL,
     [UpdatedByUserId] [int] NULL,
     [LastUpdatedDateTime] [datetime] NULL,
-PRIMARY KEY CLUSTERED 
+PRIMARY KEY CLUSTERED
 (
     [TermId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
@@ -1237,7 +1209,7 @@ GO
 CREATE TABLE [app].[TermConversation](
     [TermConversationId] [int] IDENTITY(1,1) NOT NULL,
     [TermId] [int] NOT NULL,
-PRIMARY KEY CLUSTERED 
+PRIMARY KEY CLUSTERED
 (
     [TermConversationId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
@@ -1252,7 +1224,7 @@ CREATE TABLE [dbo].[ReportObjectTags](
     [TagID] [int] IDENTITY(1,1) NOT NULL,
     [EpicTagID] [numeric](18, 0) NULL,
     [TagName] [varchar](200) NULL,
- CONSTRAINT [PK_ReportObjectTags] PRIMARY KEY CLUSTERED 
+ CONSTRAINT [PK_ReportObjectTags] PRIMARY KEY CLUSTERED
 (
     [TagID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
@@ -1268,7 +1240,7 @@ CREATE TABLE [dbo].[ReportObjectTagMemberships](
     [ReportObjectID] [int] NOT NULL,
     [TagID] [int] NOT NULL,
     [Line] [int] NULL,
- CONSTRAINT [PK_ReportObjectTagMemberships] PRIMARY KEY CLUSTERED 
+ CONSTRAINT [PK_ReportObjectTagMemberships] PRIMARY KEY CLUSTERED
 (
     [TagMembershipID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
@@ -1297,7 +1269,7 @@ CREATE TABLE [app].[TermConversationMessage](
     [MessageText] [nvarchar](4000) NOT NULL,
     [PostDateTime] [datetime] NOT NULL,
     [UserName] [nvarchar](max) NULL,
-PRIMARY KEY CLUSTERED 
+PRIMARY KEY CLUSTERED
 (
     [TermConversationMessageID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
@@ -1313,7 +1285,7 @@ CREATE TABLE [app].[User_NameData](
     [Fullname] [nvarchar](max) NULL,
     [Firstname] [nvarchar](max) NULL,
     [Lastname] [nvarchar](max) NULL,
-PRIMARY KEY CLUSTERED 
+PRIMARY KEY CLUSTERED
 (
     [UserId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
@@ -1329,7 +1301,7 @@ CREATE TABLE [app].[UserFavoriteFolders](
     [FolderName] [nvarchar](max) NULL,
     [UserId] [int] NULL,
     [FolderRank] [int] NULL,
-PRIMARY KEY CLUSTERED 
+PRIMARY KEY CLUSTERED
 (
     [UserFavoriteFolderId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
@@ -1348,7 +1320,7 @@ CREATE TABLE [app].[UserFavorites](
     [UserId] [int] NULL,
     [ItemName] [nvarchar](max) NULL,
     [FolderId] [int] NULL,
-PRIMARY KEY CLUSTERED 
+PRIMARY KEY CLUSTERED
 (
     [UserFavoritesId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
@@ -1365,7 +1337,7 @@ CREATE TABLE [app].[UserPreferences](
     [ItemValue] [int] NULL,
     [ItemId] [int] NULL,
     [UserId] [int] NULL,
-PRIMARY KEY CLUSTERED 
+PRIMARY KEY CLUSTERED
 (
     [UserPreferenceId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
@@ -1380,7 +1352,7 @@ CREATE TABLE [app].[UserRoleLinks](
     [UserRoleLinksId] [int] IDENTITY(1,1) NOT NULL,
     [UserId] [int] NULL,
     [UserRolesId] [int] NULL,
-PRIMARY KEY CLUSTERED 
+PRIMARY KEY CLUSTERED
 (
     [UserRoleLinksId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
@@ -1395,7 +1367,7 @@ CREATE TABLE [app].[UserRoles](
     [UserRolesId] [int] IDENTITY(1,1) NOT NULL,
     [Name] [nvarchar](max) NULL,
     [Description] [nvarchar](max) NULL,
-PRIMARY KEY CLUSTERED 
+PRIMARY KEY CLUSTERED
 (
     [UserRolesId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
@@ -1409,7 +1381,7 @@ GO
 CREATE TABLE [dbo].[__EFMigrationsHistory](
     [MigrationId] [nvarchar](150) NOT NULL,
     [ProductVersion] [nvarchar](32) NOT NULL,
- CONSTRAINT [PK___EFMigrationsHistory] PRIMARY KEY CLUSTERED 
+ CONSTRAINT [PK___EFMigrationsHistory] PRIMARY KEY CLUSTERED
 (
     [MigrationId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
@@ -1425,7 +1397,7 @@ CREATE TABLE [dbo].[ReportGroupsMemberships](
     [GroupId] [int] NOT NULL,
     [ReportId] [int] NOT NULL,
     [LastLoadDate] [datetime] NULL,
-PRIMARY KEY CLUSTERED 
+PRIMARY KEY CLUSTERED
 (
     [MembershipId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
@@ -1466,7 +1438,7 @@ CREATE TABLE [dbo].[ReportObject](
     [EpicReleased] [nvarchar](1) NULL,
     [CertificationTag] [nvarchar](max) NULL,
     [Availability] [nvarchar](max) NULL,
-PRIMARY KEY CLUSTERED 
+PRIMARY KEY CLUSTERED
 (
     [ReportObjectID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
@@ -1501,7 +1473,7 @@ CREATE TABLE [dbo].[ReportObjectHierarchy](
     [ChildReportObjectID] [int] NOT NULL,
     [Line] [int] NULL,
     [LastLoadDate] [datetime] NULL,
-PRIMARY KEY CLUSTERED 
+PRIMARY KEY CLUSTERED
 (
     [ParentReportObjectID] ASC,
     [ChildReportObjectID] ASC
@@ -1519,7 +1491,7 @@ CREATE TABLE [dbo].[ReportObjectQuery](
     [Query] [nvarchar](max) NULL,
     [LastLoadDate] [datetime] NULL,
     [SourceServer] [nvarchar](max) NULL,
-PRIMARY KEY CLUSTERED 
+PRIMARY KEY CLUSTERED
 (
     [ReportObjectQueryId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
@@ -1538,7 +1510,7 @@ CREATE TABLE [dbo].[ReportObjectRunData](
     [RunDurationSeconds] [int] NULL,
     [RunStatus] [nvarchar](100) NULL,
     [LastLoadDate] [datetime] NULL,
- CONSTRAINT [PK_ReportObjectRunData] PRIMARY KEY CLUSTERED 
+ CONSTRAINT [PK_ReportObjectRunData] PRIMARY KEY CLUSTERED
 (
     [ReportObjectID] ASC,
     [RunID] ASC
@@ -1562,7 +1534,7 @@ CREATE TABLE [dbo].[ReportObjectSubscriptions](
     [LastRunTime] [datetime] NULL,
     [SubscriptionTo] [nvarchar](max) NULL,
     [LastLoadDate] [datetime] NULL,
-PRIMARY KEY CLUSTERED 
+PRIMARY KEY CLUSTERED
 (
     [ReportObjectSubscriptionsId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
@@ -1580,7 +1552,7 @@ CREATE TABLE [dbo].[ReportObjectType](
     [LastLoadDate] [datetime] NULL,
     [ShortName] [nvarchar](max) NULL,
     [Visible] [nvarchar](1) NULL,
-PRIMARY KEY CLUSTERED 
+PRIMARY KEY CLUSTERED
 (
     [ReportObjectTypeID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
@@ -1608,7 +1580,7 @@ CREATE TABLE [dbo].[User](
     [EpicId] [nvarchar](max) NULL,
     [LastLoadDate] [datetime] NULL,
     [LastLogin] [datetime] NULL,
-PRIMARY KEY CLUSTERED 
+PRIMARY KEY CLUSTERED
 (
     [UserID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
@@ -1628,7 +1600,7 @@ CREATE TABLE [dbo].[UserGroups](
     [GroupSource] [nvarchar](max) NULL,
     [LastLoadDate] [datetime] NULL,
     [EpicId] [nvarchar](max) NULL,
- CONSTRAINT [PK_UserGroups] PRIMARY KEY CLUSTERED 
+ CONSTRAINT [PK_UserGroups] PRIMARY KEY CLUSTERED
 (
     [GroupId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
@@ -1644,7 +1616,7 @@ CREATE TABLE [dbo].[UserGroupsMembership](
     [UserId] [int] NULL,
     [GroupId] [int] NULL,
     [LastLoadDate] [datetime] NULL,
- CONSTRAINT [PK_UserGroupsMembership] PRIMARY KEY CLUSTERED 
+ CONSTRAINT [PK_UserGroupsMembership] PRIMARY KEY CLUSTERED
 (
     [MembershipId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
@@ -2162,7 +2134,7 @@ GO
 -- create report object id
 
   insert into [dbo].[ReportObjectType] ([Name], [DefaultEpicMasterFile]) values
-    
+
     ('Application Report','HRX'),
 ('Application Report Template','HGR'),
 ('Epic-Crystal Report','HRX'),
@@ -2203,7 +2175,7 @@ GO
 
 /****** Object:  FullTextIndex     Script Date: 11/19/2020 1:51:21 PM ******/
 /*CREATE FULLTEXT INDEX ON [app].[ReportObject_doc](
-[DeveloperDescription] LANGUAGE 'English', 
+[DeveloperDescription] LANGUAGE 'English',
 [KeyAssumptions] LANGUAGE 'English')
 KEY INDEX [PK__ReportOb__B7A74135D2A44EFC]ON ([ReportObjectDocs], FILEGROUP [PRIMARY])
 WITH (CHANGE_TRACKING = AUTO, STOPLIST = OFF)
@@ -2212,7 +2184,7 @@ declare @i nvarchar(max) = (select
                                 'CREATE FULLTEXT INDEX ON [app].[ReportObject_doc]([DeveloperDescription] LANGUAGE ''English'',[KeyAssumptions] LANGUAGE ''English'')KEY INDEX [' + i.name + ']ON ([ReportObjectDocs], FILEGROUP [PRIMARY]) WITH (CHANGE_TRACKING = AUTO, STOPLIST = OFF)'
                             from sys.tables t
                                 INNER JOIN sys.indexes i ON t.object_id = i.object_id
-                            where 
+                            where
                                 i.index_id = 1  -- clustered index
                                 and t.name = 'ReportObject_doc')
 
@@ -2230,7 +2202,7 @@ declare @i nvarchar(max) = (select
                                 'CREATE FULLTEXT INDEX ON [app].[Search_BasicSearchData]([SearchField] LANGUAGE ''English'')KEY INDEX [' + i.name + ']ON ([Search], FILEGROUP [PRIMARY]) WITH (CHANGE_TRACKING = AUTO, STOPLIST = OFF)'
                             from sys.tables t
                                 INNER JOIN sys.indexes i ON t.object_id = i.object_id
-                            where 
+                            where
                                 i.index_id = 1  -- clustered index
                                 and t.name = 'Search_BasicSearchData')
 exec sp_executesql @i
@@ -2247,15 +2219,15 @@ declare @i nvarchar(max) = (select
                                 'CREATE FULLTEXT INDEX ON [app].[Search_BasicSearchData_Small]([SearchField] LANGUAGE ''English'')KEY INDEX [' + i.name + ']ON ([Search_Small], FILEGROUP [PRIMARY]) WITH (CHANGE_TRACKING = AUTO, STOPLIST = SYSTEM)'
                             from sys.tables t
                                 INNER JOIN sys.indexes i ON t.object_id = i.object_id
-                            where 
+                            where
                                 i.index_id = 1  -- clustered index
                                 and t.name = 'Search_BasicSearchData_Small')
 exec sp_executesql @i
 GO
 /****** Object:  FullTextIndex     Script Date: 11/19/2020 1:51:21 PM ******/
 /*CREATE FULLTEXT INDEX ON [app].[Term](
-[Name] LANGUAGE 'English', 
-[Summary] LANGUAGE 'English', 
+[Name] LANGUAGE 'English',
+[Summary] LANGUAGE 'English',
 [TechnicalDefinition] LANGUAGE 'English')
 KEY INDEX [PK__Term__410A21A5A6BE1546]ON ([Terms], FILEGROUP [PRIMARY])
 WITH (CHANGE_TRACKING = AUTO, STOPLIST = OFF)
@@ -2264,7 +2236,7 @@ declare @i nvarchar(max) = (select
                                 'CREATE FULLTEXT INDEX ON [app].[Term]([Name] LANGUAGE ''English'',[Summary] LANGUAGE ''English'',[TechnicalDefinition] LANGUAGE ''English'')KEY INDEX [' + i.name + ']ON ([Terms], FILEGROUP [PRIMARY]) WITH (CHANGE_TRACKING = AUTO, STOPLIST = OFF)'
                             from sys.tables t
                                 INNER JOIN sys.indexes i ON t.object_id = i.object_id
-                            where 
+                            where
                                 i.index_id = 1  -- clustered index
                                 and t.name = 'Term')
 exec sp_executesql @i
@@ -2282,7 +2254,7 @@ declare @i nvarchar(max) = (select
                                 'CREATE FULLTEXT INDEX ON [app].[User_NameData]([Fullname] LANGUAGE ''English'')KEY INDEX [' + i.name + ']ON ([User_NameData], FILEGROUP [PRIMARY]) WITH (CHANGE_TRACKING = AUTO, STOPLIST = SYSTEM)'
                             from sys.tables t
                                 INNER JOIN sys.indexes i ON t.object_id = i.object_id
-                            where 
+                            where
                                 i.index_id = 1  -- clustered index
                                 and t.name = 'User_NameData')
 exec sp_executesql @i
@@ -2299,15 +2271,15 @@ declare @i nvarchar(max) = (select
                                 'CREATE FULLTEXT INDEX ON [dbo].[UserGroups]([GroupName] LANGUAGE ''English'')KEY INDEX [' + i.name + ']ON ([UserGroups], FILEGROUP [PRIMARY]) WITH (CHANGE_TRACKING = AUTO, STOPLIST = SYSTEM)'
                             from sys.tables t
                                 INNER JOIN sys.indexes i ON t.object_id = i.object_id
-                            where 
+                            where
                                 i.index_id = 1  -- clustered index
                                 and t.name = 'UserGroups')
 exec sp_executesql @i
 GO
 /****** Object:  FullTextIndex     Script Date: 11/19/2020 1:51:21 PM ******/
 /*CREATE FULLTEXT INDEX ON [dbo].[ReportObject](
-[Description] LANGUAGE 'English', 
-[DetailedDescription] LANGUAGE 'English', 
+[Description] LANGUAGE 'English',
+[DetailedDescription] LANGUAGE 'English',
 [Name] LANGUAGE 'English')
 KEY INDEX [PK__ReportOb__B7A741355058A44F]ON ([ReportObjects], FILEGROUP [PRIMARY])
 WITH (CHANGE_TRACKING = AUTO, STOPLIST = OFF)
@@ -2316,7 +2288,7 @@ declare @i nvarchar(max) = (select
                                 'CREATE FULLTEXT INDEX ON [dbo].[ReportObject]([Description] LANGUAGE ''English'',[DetailedDescription] LANGUAGE ''English'',[Name] LANGUAGE ''English'')KEY INDEX [' + i.name + ']ON ([ReportObjects], FILEGROUP [PRIMARY]) WITH (CHANGE_TRACKING = AUTO, STOPLIST = OFF)'
                             from sys.tables t
                                 INNER JOIN sys.indexes i ON t.object_id = i.object_id
-                            where 
+                            where
                                 i.index_id = 1  -- clustered index
                                 and t.name = 'ReportObject')
 exec sp_executesql @i
@@ -2333,10 +2305,10 @@ GO
 -- =============================================
 CREATE PROCEDURE [app].[CalculateReportRunData]
 AS
-BEGIN 
+BEGIN
     -- ================================================
     /*
-       package used to update the search fields used 
+       package used to update the search fields used
        by the index for Altas search.
     */
     -- ================================================
@@ -2344,7 +2316,7 @@ BEGIN
     -- interfering with SELECT statements.
     SET NOCOUNT ON;
 
-   
+
 
 -- create view of current data
     drop table if exists #myTemp;
@@ -2355,9 +2327,9 @@ BEGIN
     inner join ReportObject as r on r.ReportObjectId = d.ReportObjectId
     where RunStatus = 'Success'
     group by d.ReportObjectId, RunUserId,isnull(r.displayTitle,r.Name), r.ReportObjectTypeId
-        
+
     ;
-            
+
 
     --drop table if exists app.ReportObjectTopRuns;
     if not exists (select * from sysobjects where name='ReportObjectTopRuns' and xtype='U')
@@ -2386,7 +2358,7 @@ BEGIN
             cast(RunTime as decimal(10,2)),
             LastRun,
             ReportObjectTypeId
-        from 
+        from
             #myTemp
         except (select ReportObjectId,
             Name,
@@ -2417,7 +2389,7 @@ BEGIN
     truncate table app.ReportObjectWeightedRunRank;
 
     insert into  app.ReportObjectWeightedRunRank
-    select 
+    select
     reportobjectid
     , CAST(runs * 10.000/max(runs) over () AS NUMERIC(12,4)) weighted_run_rank
         from (
@@ -2445,10 +2417,10 @@ GO
 -- =============================================
 CREATE PROCEDURE [app].[CalculateReportRunTimeData]
 AS
-BEGIN 
+BEGIN
     -- ================================================
     /*
-       package used to update the search fields used 
+       package used to update the search fields used
        by the index for Altas search.
     */
     -- ================================================
@@ -2456,13 +2428,13 @@ BEGIN
     -- interfering with SELECT statements.
     SET NOCOUNT ON;
 
-   
+
 
 -- create view of current data
     drop table if exists #myTemp;
 
     select RunUserId, Count(*) as Runs, Cast(ROUND(Avg(cast(RunDurationSeconds as decimal)),2)as decimal(10,2))  as RunTime,
-    DATEADD(dd, DATEPART(DW,RunStartTime)*-1+1, DATEADD(dd, DATEDIFF(dd, 0, RunStartTime), 0)) as RunWeek, 
+    DATEADD(dd, DATEPART(DW,RunStartTime)*-1+1, DATEADD(dd, DATEDIFF(dd, 0, RunStartTime), 0)) as RunWeek,
 convert(nvarchar(MAX),  DATEADD(dd, DATEPART(DW,RunStartTime)*-1+1, DATEADD(dd, DATEDIFF(dd, 0, RunStartTime), 0)), 101) as RunWeekString
     into #myTemp
     from ReportObjectRunData as d
@@ -2470,9 +2442,9 @@ convert(nvarchar(MAX),  DATEADD(dd, DATEPART(DW,RunStartTime)*-1+1, DATEADD(dd, 
     where RunStatus = 'Success'
       and r.ReportObjectTypeId not in (20,21)
     group by DATEADD(dd, DATEPART(DW,RunStartTime)*-1+1, DATEADD(dd, DATEDIFF(dd, 0, RunStartTime), 0)), RunUserId
-        
+
     ;
-        
+
 
     --drop table if exists app.ReportObjectRunTime;
     if not exists (select * from sysobjects where name='ReportObjectRunTime' and xtype='U')
@@ -2497,9 +2469,9 @@ convert(nvarchar(MAX),  DATEADD(dd, DATEPART(DW,RunStartTime)*-1+1, DATEADD(dd, 
             cast(RunTime as Decimal(10,2)),
             RunWeek,
             RunWeekString
-        from 
+        from
             #myTemp
-        except (select 
+        except (select
             RunUserId,
             Runs,
             cast(RunTime as Decimal(10,2)),
@@ -2508,7 +2480,7 @@ convert(nvarchar(MAX),  DATEADD(dd, DATEPART(DW,RunStartTime)*-1+1, DATEADD(dd, 
     ;
 
     -- delete old records from table
-    delete app.ReportObjectRunTime 
+    delete app.ReportObjectRunTime
     from app.ReportObjectRunTime  l
     left outer join #myTemp as t on l.RunUserId = t.RunUserId
         and l.Runs = t.Runs
@@ -2598,11 +2570,11 @@ BEGIN
 
     DECLARE @return_value int
     EXEC    @return_value = [app].[Search_UpdateReportObjectData]
-    
+
     EXEC    @return_value = [app].[Search_UpdateBasicSearchData]
 
     EXEC    @return_value = [app].[User_UpdateUsernameData]
-    
+
 
 END
 GO
@@ -2641,9 +2613,9 @@ WHERE Visible = 'Y';
             'Name' as SearchFieldDescription,
                 -- rank is 1 if there are all descriptions, 2 if dev and 3 if none
                 case when r.[Documented] = 1 then 1 else 2 end as ItemRank,
-            case when DefaultVisibilityYN = 'Y' and isnull([DocHidden],'N') = 'N'  then 0 
-                 when DefaultVisibilityYN = 'Y' and isnull([DocHidden],'N') = 'Y'  then 1 
-                 when DefaultVisibilityYN = 'N' and isnull([DocHidden],'N') = 'N'  then 1 
+            case when DefaultVisibilityYN = 'Y' and isnull([DocHidden],'N') = 'N'  then 0
+                 when DefaultVisibilityYN = 'Y' and isnull([DocHidden],'N') = 'Y'  then 1
+                 when DefaultVisibilityYN = 'N' and isnull([DocHidden],'N') = 'N'  then 1
                  when DefaultVisibilityYN = 'N' and isnull([DocHidden],'N') = 'Y'  then 0 end as [Hidden],
             case when ReportObjectTypeID in (select * from #VisibleReportTypes) then 0 else 1 end VisibleType,
             case when OrphanedReportObjectYN = 'Y' then 1 else 0 end Orphaned,
@@ -2664,9 +2636,9 @@ WHERE Visible = 'Y';
             'DisplayTitle' as SearchFieldDescription,
                 -- rank is 1 if there are all descriptions, 2 if dev and 3 if none
                 case when r.[Documented] = 1 then 1 else 2 end as ItemRank,
-            case when DefaultVisibilityYN = 'Y' and isnull([DocHidden],'N') = 'N'  then 0 
-                 when DefaultVisibilityYN = 'Y' and isnull([DocHidden],'N') = 'Y'  then 1 
-                 when DefaultVisibilityYN = 'N' and isnull([DocHidden],'N') = 'N'  then 1 
+            case when DefaultVisibilityYN = 'Y' and isnull([DocHidden],'N') = 'N'  then 0
+                 when DefaultVisibilityYN = 'Y' and isnull([DocHidden],'N') = 'Y'  then 1
+                 when DefaultVisibilityYN = 'N' and isnull([DocHidden],'N') = 'N'  then 1
                  when DefaultVisibilityYN = 'N' and isnull([DocHidden],'N') = 'Y'  then 0 end as [Hidden],
             case when ReportObjectTypeID IN (select * from #VisibleReportTypes) then 0 else 1 end VisibleType,
             case when OrphanedReportObjectYN = 'Y' then 1 else 0 end Orphaned,
@@ -2685,9 +2657,9 @@ WHERE Visible = 'Y';
             [Value] as SearchField,
             'Description' as SearchFieldDescription,
             4 as ItemRank,
-            case when DefaultVisibilityYN = 'Y' and isnull([DocHidden],'N') = 'N'  then 0 
-                 when DefaultVisibilityYN = 'Y' and isnull([DocHidden],'N') = 'Y'  then 1 
-                 when DefaultVisibilityYN = 'N' and isnull([DocHidden],'N') = 'N'  then 1 
+            case when DefaultVisibilityYN = 'Y' and isnull([DocHidden],'N') = 'N'  then 0
+                 when DefaultVisibilityYN = 'Y' and isnull([DocHidden],'N') = 'Y'  then 1
+                 when DefaultVisibilityYN = 'N' and isnull([DocHidden],'N') = 'N'  then 1
                  when DefaultVisibilityYN = 'N' and isnull([DocHidden],'N') = 'Y'  then 0 end as [Hidden],
             case when ReportObjectTypeID IN (select * from #VisibleReportTypes) then 0 else 1 end VisibleType,
             case when OrphanedReportObjectYN = 'Y' then 1 else 0 end Orphaned,
@@ -2706,9 +2678,9 @@ WHERE Visible = 'Y';
             [Value] as SearchField,
             'Detailed Description' as SearchFieldDescription,
             4 as ItemRank,
-            case when DefaultVisibilityYN = 'Y' and isnull([DocHidden],'N') = 'N'  then 0 
-                 when DefaultVisibilityYN = 'Y' and isnull([DocHidden],'N') = 'Y'  then 1 
-                 when DefaultVisibilityYN = 'N' and isnull([DocHidden],'N') = 'N'  then 1 
+            case when DefaultVisibilityYN = 'Y' and isnull([DocHidden],'N') = 'N'  then 0
+                 when DefaultVisibilityYN = 'Y' and isnull([DocHidden],'N') = 'Y'  then 1
+                 when DefaultVisibilityYN = 'N' and isnull([DocHidden],'N') = 'N'  then 1
                  when DefaultVisibilityYN = 'N' and isnull([DocHidden],'N') = 'Y'  then 0 end as [Hidden],
             case when ReportObjectTypeID IN (select * from #VisibleReportTypes) then 0 else 1 end VisibleType,
             case when OrphanedReportObjectYN = 'Y' then 1 else 0 end Orphaned,
@@ -2717,7 +2689,7 @@ WHERE Visible = 'Y';
             app.Search_ReportObjectSearchData as r
         where 1=1
             and ColumnName = 'DetailedDescription'
-        
+
         union all
 
         select
@@ -2727,9 +2699,9 @@ WHERE Visible = 'Y';
             [Value] as SearchField,
             'Term Name' as SearchFieldDescription,
             4,
-            case when DefaultVisibilityYN = 'Y' and isnull([DocHidden],'N') = 'N'  then 0 
-                 when DefaultVisibilityYN = 'Y' and isnull([DocHidden],'N') = 'Y'  then 1 
-                 when DefaultVisibilityYN = 'N' and isnull([DocHidden],'N') = 'N'  then 1 
+            case when DefaultVisibilityYN = 'Y' and isnull([DocHidden],'N') = 'N'  then 0
+                 when DefaultVisibilityYN = 'Y' and isnull([DocHidden],'N') = 'Y'  then 1
+                 when DefaultVisibilityYN = 'N' and isnull([DocHidden],'N') = 'N'  then 1
                  when DefaultVisibilityYN = 'N' and isnull([DocHidden],'N') = 'Y'  then 0 end as [Hidden],
             case when t.ReportObjectTypeID is not null then 0 else 1 end VisibleType,
             case when OrphanedReportObjectYN = 'Y' then 1 else 0 end Orphaned,
@@ -2743,9 +2715,9 @@ WHERE Visible = 'Y';
             r.id,
             r.ReportObjectTypeID,
             [Value],
-            case when DefaultVisibilityYN = 'Y' and isnull([DocHidden],'N') = 'N'  then 0 
-                 when DefaultVisibilityYN = 'Y' and isnull([DocHidden],'N') = 'Y'  then 1 
-                 when DefaultVisibilityYN = 'N' and isnull([DocHidden],'N') = 'N'  then 1 
+            case when DefaultVisibilityYN = 'Y' and isnull([DocHidden],'N') = 'N'  then 0
+                 when DefaultVisibilityYN = 'Y' and isnull([DocHidden],'N') = 'Y'  then 1
+                 when DefaultVisibilityYN = 'N' and isnull([DocHidden],'N') = 'N'  then 1
                  when DefaultVisibilityYN = 'N' and isnull([DocHidden],'N') = 'Y'  then 0 end ,
             case when t.ReportObjectTypeID is not null then 0 else 1 end ,
             case when OrphanedReportObjectYN = 'Y' then 1 else 0 end ,
@@ -2760,9 +2732,9 @@ WHERE Visible = 'Y';
             [Value] as SearchField,
             'Term Summary' as SearchFieldDescription,
             5,
-            case when DefaultVisibilityYN = 'Y' and isnull([DocHidden],'N') = 'N'  then 0 
-                 when DefaultVisibilityYN = 'Y' and isnull([DocHidden],'N') = 'Y'  then 1 
-                 when DefaultVisibilityYN = 'N' and isnull([DocHidden],'N') = 'N'  then 1 
+            case when DefaultVisibilityYN = 'Y' and isnull([DocHidden],'N') = 'N'  then 0
+                 when DefaultVisibilityYN = 'Y' and isnull([DocHidden],'N') = 'Y'  then 1
+                 when DefaultVisibilityYN = 'N' and isnull([DocHidden],'N') = 'N'  then 1
                  when DefaultVisibilityYN = 'N' and isnull([DocHidden],'N') = 'Y'  then 0 end as [Hidden],
             case when t.ReportObjectTypeID is not null then 0 else 1 end VisibleType,
             case when OrphanedReportObjectYN = 'Y' then 1 else 0 end Orphaned,
@@ -2776,9 +2748,9 @@ WHERE Visible = 'Y';
             r.id,
             r.ReportObjectTypeID,
             [Value],
-            case when DefaultVisibilityYN = 'Y' and isnull([DocHidden],'N') = 'N'  then 0 
-                 when DefaultVisibilityYN = 'Y' and isnull([DocHidden],'N') = 'Y'  then 1 
-                 when DefaultVisibilityYN = 'N' and isnull([DocHidden],'N') = 'N'  then 1 
+            case when DefaultVisibilityYN = 'Y' and isnull([DocHidden],'N') = 'N'  then 0
+                 when DefaultVisibilityYN = 'Y' and isnull([DocHidden],'N') = 'Y'  then 1
+                 when DefaultVisibilityYN = 'N' and isnull([DocHidden],'N') = 'N'  then 1
                  when DefaultVisibilityYN = 'N' and isnull([DocHidden],'N') = 'Y'  then 0 end ,
             case when t.ReportObjectTypeID is not null then 0 else 1 end,
             case when OrphanedReportObjectYN = 'Y' then 1 else 0 end,
@@ -2793,9 +2765,9 @@ WHERE Visible = 'Y';
             [Value] as SearchField,
             'Term Technical Definition' as SearchFieldDescription,
             5,
-            case when DefaultVisibilityYN = 'Y' and isnull([DocHidden],'N') = 'N'  then 0 
-                 when DefaultVisibilityYN = 'Y' and isnull([DocHidden],'N') = 'Y'  then 1 
-                 when DefaultVisibilityYN = 'N' and isnull([DocHidden],'N') = 'N'  then 1 
+            case when DefaultVisibilityYN = 'Y' and isnull([DocHidden],'N') = 'N'  then 0
+                 when DefaultVisibilityYN = 'Y' and isnull([DocHidden],'N') = 'Y'  then 1
+                 when DefaultVisibilityYN = 'N' and isnull([DocHidden],'N') = 'N'  then 1
                  when DefaultVisibilityYN = 'N' and isnull([DocHidden],'N') = 'Y'  then 0 end as [Hidden],
             case when t.ReportObjectTypeID is not null then 0 else 1 end VisibleType,
             case when OrphanedReportObjectYN = 'Y' then 1 else 0 end Orphaned,
@@ -2809,9 +2781,9 @@ WHERE Visible = 'Y';
             r.id,
             r.ReportObjectTypeID,
             [Value],
-            case when DefaultVisibilityYN = 'Y' and isnull([DocHidden],'N') = 'N'  then 0 
-                 when DefaultVisibilityYN = 'Y' and isnull([DocHidden],'N') = 'Y'  then 1 
-                 when DefaultVisibilityYN = 'N' and isnull([DocHidden],'N') = 'N'  then 1 
+            case when DefaultVisibilityYN = 'Y' and isnull([DocHidden],'N') = 'N'  then 0
+                 when DefaultVisibilityYN = 'Y' and isnull([DocHidden],'N') = 'Y'  then 1
+                 when DefaultVisibilityYN = 'N' and isnull([DocHidden],'N') = 'N'  then 1
                  when DefaultVisibilityYN = 'N' and isnull([DocHidden],'N') = 'Y'  then 0 end,
             case when t.ReportObjectTypeID is not null then 0 else 1 end,
             case when OrphanedReportObjectYN = 'Y' then 1 else 0 end,
@@ -2825,9 +2797,9 @@ WHERE Visible = 'Y';
             [Value] as SearchField,
             'Project Annotation' as SearchFieldDescription,
             5,
-            case when DefaultVisibilityYN = 'Y' and isnull([DocHidden],'N') = 'N'  then 0 
-                 when DefaultVisibilityYN = 'Y' and isnull([DocHidden],'N') = 'Y'  then 1 
-                 when DefaultVisibilityYN = 'N' and isnull([DocHidden],'N') = 'N'  then 1 
+            case when DefaultVisibilityYN = 'Y' and isnull([DocHidden],'N') = 'N'  then 0
+                 when DefaultVisibilityYN = 'Y' and isnull([DocHidden],'N') = 'Y'  then 1
+                 when DefaultVisibilityYN = 'N' and isnull([DocHidden],'N') = 'N'  then 1
                  when DefaultVisibilityYN = 'N' and isnull([DocHidden],'N') = 'Y'  then 0 end as [Hidden],
             case when t.ReportObjectTypeID is not null then 0 else 1 end VisibleType,
             case when OrphanedReportObjectYN = 'Y' then 1 else 0 end Orphaned,
@@ -2841,9 +2813,9 @@ WHERE Visible = 'Y';
             r.id,
             r.ReportObjectTypeID,
             [Value],
-            case when DefaultVisibilityYN = 'Y' and isnull([DocHidden],'N') = 'N'  then 0 
-                 when DefaultVisibilityYN = 'Y' and isnull([DocHidden],'N') = 'Y'  then 1 
-                 when DefaultVisibilityYN = 'N' and isnull([DocHidden],'N') = 'N'  then 1 
+            case when DefaultVisibilityYN = 'Y' and isnull([DocHidden],'N') = 'N'  then 0
+                 when DefaultVisibilityYN = 'Y' and isnull([DocHidden],'N') = 'Y'  then 1
+                 when DefaultVisibilityYN = 'N' and isnull([DocHidden],'N') = 'N'  then 1
                  when DefaultVisibilityYN = 'N' and isnull([DocHidden],'N') = 'Y'  then 0 end,
             case when t.ReportObjectTypeID is not null then 0 else 1 end,
             case when OrphanedReportObjectYN = 'Y' then 1 else 0 end,
@@ -2857,9 +2829,9 @@ WHERE Visible = 'Y';
             [Value] as SearchField,
             'Developer Description' as SearchFieldDescription,
             4,
-            case when DefaultVisibilityYN = 'Y' and isnull([DocHidden],'N') = 'N'  then 0 
-                 when DefaultVisibilityYN = 'Y' and isnull([DocHidden],'N') = 'Y'  then 1 
-                 when DefaultVisibilityYN = 'N' and isnull([DocHidden],'N') = 'N'  then 1 
+            case when DefaultVisibilityYN = 'Y' and isnull([DocHidden],'N') = 'N'  then 0
+                 when DefaultVisibilityYN = 'Y' and isnull([DocHidden],'N') = 'Y'  then 1
+                 when DefaultVisibilityYN = 'N' and isnull([DocHidden],'N') = 'N'  then 1
                  when DefaultVisibilityYN = 'N' and isnull([DocHidden],'N') = 'Y'  then 0 end as [Hidden],
             case when ReportObjectTypeID IN (select * from #VisibleReportTypes) then 0 else 1 end VisibleType,
             case when OrphanedReportObjectYN = 'Y' then 1 else 0 end Orphaned,
@@ -2878,9 +2850,9 @@ WHERE Visible = 'Y';
             [Value] as SearchField,
             'Key Assumptions' as SearchFieldDescription,
             4,
-            case when DefaultVisibilityYN = 'Y' and isnull([DocHidden],'N') = 'N'  then 0 
-                 when DefaultVisibilityYN = 'Y' and isnull([DocHidden],'N') = 'Y'  then 1 
-                 when DefaultVisibilityYN = 'N' and isnull([DocHidden],'N') = 'N'  then 1 
+            case when DefaultVisibilityYN = 'Y' and isnull([DocHidden],'N') = 'N'  then 0
+                 when DefaultVisibilityYN = 'Y' and isnull([DocHidden],'N') = 'Y'  then 1
+                 when DefaultVisibilityYN = 'N' and isnull([DocHidden],'N') = 'N'  then 1
                  when DefaultVisibilityYN = 'N' and isnull([DocHidden],'N') = 'Y'  then 0 end as [Hidden],
             case when ReportObjectTypeID IN (select * from #VisibleReportTypes) then 0 else 1 end VisibleType,
             case when OrphanedReportObjectYN = 'Y' then 1 else 0 end Orphaned,
@@ -2892,16 +2864,16 @@ WHERE Visible = 'Y';
 
         union all
 
-        select 
+        select
             'report',
             r.id,
             ReportObjectTypeID as TypeId,
             r.EpicMasterFile + ' ' + [Value] as SearchField,
             'Epic Id' as SearchFieldDescription,
             4,
-            case when DefaultVisibilityYN = 'Y' and isnull([DocHidden],'N') = 'N'  then 0 
-                 when DefaultVisibilityYN = 'Y' and isnull([DocHidden],'N') = 'Y'  then 1 
-                 when DefaultVisibilityYN = 'N' and isnull([DocHidden],'N') = 'N'  then 1 
+            case when DefaultVisibilityYN = 'Y' and isnull([DocHidden],'N') = 'N'  then 0
+                 when DefaultVisibilityYN = 'Y' and isnull([DocHidden],'N') = 'Y'  then 1
+                 when DefaultVisibilityYN = 'N' and isnull([DocHidden],'N') = 'N'  then 1
                  when DefaultVisibilityYN = 'N' and isnull([DocHidden],'N') = 'Y'  then 0 end as [Hidden],
             case when ReportObjectTypeID IN (select * from #VisibleReportTypes) then 0 else 1 end VisibleType,
             case when OrphanedReportObjectYN = 'Y' then 1 else 0 end Orphaned,
@@ -2911,18 +2883,18 @@ WHERE Visible = 'Y';
             and r.EpicMasterFile is not null
             and ColumnName = 'EpicRecordId'
 
-        union all 
+        union all
 
-        select 
+        select
             'report',
             r.id,
             ReportObjectTypeID as TypeId,
             'HGR ' + cast(r.EpicReportTemplateId as nvarchar),
             'Epic Template Id' as SearchFieldDescription,
             4,
-            case when DefaultVisibilityYN = 'Y' and isnull([DocHidden],'N') = 'N'  then 0 
-                 when DefaultVisibilityYN = 'Y' and isnull([DocHidden],'N') = 'Y'  then 1 
-                 when DefaultVisibilityYN = 'N' and isnull([DocHidden],'N') = 'N'  then 1 
+            case when DefaultVisibilityYN = 'Y' and isnull([DocHidden],'N') = 'N'  then 0
+                 when DefaultVisibilityYN = 'Y' and isnull([DocHidden],'N') = 'Y'  then 1
+                 when DefaultVisibilityYN = 'N' and isnull([DocHidden],'N') = 'N'  then 1
                  when DefaultVisibilityYN = 'N' and isnull([DocHidden],'N') = 'Y'  then 0 end as [Hidden],
             case when ReportObjectTypeID IN (select * from #VisibleReportTypes) then 0 else 1 end VisibleType,
             case when OrphanedReportObjectYN = 'Y' then 1 else 0 end Orphaned,
@@ -2942,9 +2914,9 @@ WHERE Visible = 'Y';
             for xml path('')),1,1,'') as SearchField,
             'Query',
             5,
-            case when DefaultVisibilityYN = 'Y' and isnull([DocHidden],'N') = 'N'  then 0 
-                 when DefaultVisibilityYN = 'Y' and isnull([DocHidden],'N') = 'Y'  then 1 
-                 when DefaultVisibilityYN = 'N' and isnull([DocHidden],'N') = 'N'  then 1 
+            case when DefaultVisibilityYN = 'Y' and isnull([DocHidden],'N') = 'N'  then 0
+                 when DefaultVisibilityYN = 'Y' and isnull([DocHidden],'N') = 'Y'  then 1
+                 when DefaultVisibilityYN = 'N' and isnull([DocHidden],'N') = 'N'  then 1
                  when DefaultVisibilityYN = 'N' and isnull([DocHidden],'N') = 'Y'  then 0 end as [Hidden],
             case when ReportObjectTypeID IN (select * from #VisibleReportTypes) then 0 else 1 end VisibleType,
             case when OrphanedReportObjectYN = 'Y' then 1 else 0 end Orphaned,
@@ -2952,10 +2924,10 @@ WHERE Visible = 'Y';
         from app.Search_ReportObjectSearchData as r
         where 1=1
             and ColumnName = 'Query-Query'
-                
+
         ) as t
 
-        
+
     --drop table if exists app.Search_BasicSearchData;
     if not exists (select * from sysobjects where name='Search_BasicSearchData' and xtype='U')
         exec('create table app.Search_BasicSearchData
@@ -3009,7 +2981,7 @@ WHERE Visible = 'Y';
             VisibleType,
             Orphaned,
             CertificationTag
-        from 
+        from
             #myTemp
         except (select ItemId,
             TypeId,
@@ -3037,7 +3009,7 @@ WHERE Visible = 'Y';
             VisibleType,
             Orphaned,
             CertificationTag
-        from 
+        from
             #myTemp
             where [hidden] = 0
             and orphaned = 0
@@ -3062,7 +3034,7 @@ WHERE Visible = 'Y';
         and l.ItemType = t.ItemType
         and l.ItemRank = t.ItemRank
         and l.SearchFieldDescription = t.SearchFieldDescription
-        and l.SearchField = t.SearchField 
+        and l.SearchField = t.SearchField
         and l.[Hidden] = t.[Hidden]
         and l.VisibleType = t.VisibleType
         and l.Orphaned = t.Orphaned
@@ -3076,7 +3048,7 @@ WHERE Visible = 'Y';
         and l.ItemType = t.ItemType
         and l.ItemRank = t.ItemRank
         and l.SearchFieldDescription = t.SearchFieldDescription
-        and l.SearchField = t.SearchField 
+        and l.SearchField = t.SearchField
         and l.[Hidden] = t.[Hidden]
         and l.VisibleType = t.VisibleType
         and l.Orphaned = t.Orphaned
@@ -3095,7 +3067,7 @@ WHERE Visible = 'Y';
                                     'create fulltext index on app.Search_BasicSearchData(SearchField) key index ' + i.name + ' On Search With Stoplist = off;'
                                 from sys.tables t
                                     INNER JOIN sys.indexes i ON t.object_id = i.object_id
-                                where 
+                                where
                                     i.index_id = 1  -- clustered index
                                     and t.name = 'Search_BasicSearchData')
 
@@ -3114,7 +3086,7 @@ WHERE Visible = 'Y';
                                     'create fulltext index on app.Search_BasicSearchData_Small(SearchField) key index ' + i.name + ' On Search With Stoplist = off;'
                                 from sys.tables t
                                     INNER JOIN sys.indexes i ON t.object_id = i.object_id
-                                where 
+                                where
                                     i.index_id = 1  -- clustered index
                                     and t.name = 'Search_BasicSearchData_Small')
 
@@ -3153,7 +3125,7 @@ AS
 BEGIN
     SET NOCOUNT ON;
 
-    /******* 
+    /*******
 
     set vars
 
@@ -3174,13 +3146,13 @@ BEGIN
     drop table if exists #mytempids;
     select
         [value] as column_name,
-        ROW_NUMBER() OVER(ORDER BY [value] ASC) AS id 
-    into #mytempids 
+        ROW_NUMBER() OVER(ORDER BY [value] ASC) AS id
+    into #mytempids
     from string_split('Name,DisplayTitle,Description,DetailedDescription,ReportObjectURL,EpicRecordID,ReportServerCatalogID,EpicReportTemplateId,ReportServerPath',',');
 
     -- create temp table w/ needed columns
     drop table if exists app.Search_ReportObjectSearchData;
-    
+
     select
         pk = Identity(int,1,1),
         r.reportobjectid as Id,
@@ -3217,7 +3189,7 @@ BEGIN
         cast(null as int) as OneYearRuns,
         cast(null as int) as SixMonthsRuns,
         cast(null as int) as OneMonthRuns
-    into app.Search_ReportObjectSearchData 
+    into app.Search_ReportObjectSearchData
     from ReportObject r
     left outer join app.ReportObject_Doc d on r.ReportObjectID = d.ReportObjectID
     where 0=1;
@@ -3230,8 +3202,8 @@ BEGIN
         begin
             select @id = Min(id) from #mytempids where id > @id;
             select @col = column_name from #mytempids where id = @id;
-        
-            set @SQL = 'insert into app.Search_ReportObjectSearchData 
+
+            set @SQL = 'insert into app.Search_ReportObjectSearchData
                         (
                             Id,
                             ColumnName,
@@ -3268,7 +3240,7 @@ BEGIN
                             SixMonthsRuns,
                             OneMonthRuns
                         )
-                        select 
+                        select
                             r.reportobjectid,
                             '''+ @col + ''',
                             r.'+ @col + ',
@@ -3307,14 +3279,14 @@ BEGIN
 
             exec sp_executesql @SQL
         end
-    
+
     -- get fields from terms
     -- get column names w/ id
     truncate table #mytempids;
     insert into #mytempids (column_name, id)
     select
         [value] as column_name,
-        ROW_NUMBER() OVER(ORDER BY [value] ASC) AS id 
+        ROW_NUMBER() OVER(ORDER BY [value] ASC) AS id
 
     from string_split('Name,Summary,TechnicalDefinition',',');
 
@@ -3359,7 +3331,7 @@ inner join ReportObject r on t.ReportObjectID = r.ReportObjectID
         begin
             select @id = Min(id) from #mytempids where id > @id;
             select @col = column_name from #mytempids where id = @id;
-        
+
             set @SQL = 'insert into app.Search_ReportObjectSearchData
 (
 Id,
@@ -3427,8 +3399,8 @@ d.UpdatedBy,
 d.EnabledForHyperspace,
 d.DoNotPurge,
 d.[Hidden],r.certificationTag,d2.cnt1,d2.cnt2,d2.cnt3,d2.cnt4
-from 
-reportobject r 
+from
+reportobject r
 join #relatedreports  inheritance on r.ReportObjectID = inheritance.ReportObjectID
 left outer join #reportrunstemp as d2 on r.reportobjectid = d2.ReportObjectID
 left outer join app.ReportObject_doc d on r.ReportObjectID = d.reportobjectid
@@ -3446,7 +3418,7 @@ drop table if exists #relatedreports;
     insert into #mytempids (column_name, id)
     select
         [value] as column_name,
-        ROW_NUMBER() OVER(ORDER BY [value] ASC) AS id 
+        ROW_NUMBER() OVER(ORDER BY [value] ASC) AS id
 
     from string_split('GitLabProjectURL,DeveloperDescription,KeyAssumptions',',');
 
@@ -3455,8 +3427,8 @@ drop table if exists #relatedreports;
         begin
             select @id = Min(id) from #mytempids where id > @id;
             select @col = column_name from #mytempids where id = @id;
-        
-            set @SQL = 'insert into app.Search_ReportObjectSearchData 
+
+            set @SQL = 'insert into app.Search_ReportObjectSearchData
                         (
                             Id,
                             ColumnName,
@@ -3493,7 +3465,7 @@ drop table if exists #relatedreports;
                             SixMonthsRuns,
                             OneMonthRuns
                         )
-                        select 
+                        select
                             r.reportobjectid,
                             ''Doc-'+ @col + ''',
                             d.'+ @col + ',
@@ -3538,7 +3510,7 @@ drop table if exists #relatedreports;
     insert into #mytempids (column_name, id)
     select
         [value] as column_name,
-        ROW_NUMBER() OVER(ORDER BY [value] ASC) AS id 
+        ROW_NUMBER() OVER(ORDER BY [value] ASC) AS id
 
     from string_split('Annotation',',');
 
@@ -3547,8 +3519,8 @@ drop table if exists #relatedreports;
         begin
             select @id = Min(id) from #mytempids where id > @id;
             select @col = column_name from #mytempids where id = @id;
-        
-            set @SQL = 'insert into app.Search_ReportObjectSearchData 
+
+            set @SQL = 'insert into app.Search_ReportObjectSearchData
                         (
                             Id,
                             ColumnName,
@@ -3630,7 +3602,7 @@ drop table if exists #relatedreports;
     insert into #mytempids (column_name, id)
     select
         [value] as column_name,
-        ROW_NUMBER() OVER(ORDER BY [value] ASC) AS id 
+        ROW_NUMBER() OVER(ORDER BY [value] ASC) AS id
 
     from string_split('Query',',');
 
@@ -3639,8 +3611,8 @@ drop table if exists #relatedreports;
         begin
             select @id = Min(id) from #mytempids where id > @id;
             select @col = column_name from #mytempids where id = @id;
-        
-            set @SQL = 'insert into app.Search_ReportObjectSearchData 
+
+            set @SQL = 'insert into app.Search_ReportObjectSearchData
                         (
                             Id,
                             ColumnName,
@@ -3725,7 +3697,7 @@ drop table if exists #relatedreports;
     insert into #mytempids (column_name, id)
     select
         [value] as column_name,
-        ROW_NUMBER() OVER(ORDER BY [value] ASC) AS id 
+        ROW_NUMBER() OVER(ORDER BY [value] ASC) AS id
 
     from string_split('Query',',');
 
@@ -3734,8 +3706,8 @@ drop table if exists #relatedreports;
         begin
             select @id = Min(id) from #mytempids where id > @id;
             select @col = column_name from #mytempids where id = @id;
-        
-            set @SQL = 'insert into app.Search_ReportObjectSearchData 
+
+            set @SQL = 'insert into app.Search_ReportObjectSearchData
                         (
                             Id,
                             ColumnName,
@@ -3804,8 +3776,8 @@ drop table if exists #relatedreports;
                             d.DoNotPurge,
                             d.[Hidden],r.certificationTag,d2.cnt1,d2.cnt2,d2.cnt3,d2.cnt4
                         from ReportObject r
-                        
-                        
+
+
                         left outer join #reportrunstemp as d2 on r.ReportObjectID = d2.ReportObjectID
                         join ReportObjectHierarchy h on r.ReportObjectID = h.ParentReportObjectID
                         join ReportObject r2 on h.ChildReportObjectID = r2.ReportObjectID
@@ -3820,9 +3792,9 @@ drop table if exists #relatedreports;
                         and r.name not like ''%(P)%'''
             exec sp_executesql @SQL
         end
-    
+
         /*
-        clean up 
+        clean up
         */
 
         drop table if exists #mytempids;
@@ -3851,10 +3823,10 @@ GO
 -- =============================================
 CREATE PROCEDURE [app].[UpdateSearchTable]
 AS
-BEGIN 
+BEGIN
     -- ================================================
     /*
-       package used to update the search fields used 
+       package used to update the search fields used
        by the index for Altas search.
     */
     -- ================================================
@@ -3862,7 +3834,7 @@ BEGIN
     -- interfering with SELECT statements.
     SET NOCOUNT ON;
 
-   
+
 
 -- create view of current data
     drop table if exists #myTemp;
@@ -4047,10 +4019,10 @@ WHERE Visible = 'Y';
             and (d.Hidden is null or d.Hidden = 'N')
             and r.ReportObjectTypeID IN (select * from #VisibleReportTypes)
             and KeyAssumptions is not null
-    
+
         union all
 
-        select 
+        select
             'report',
             r.ReportObjectId,
             ReportObjectTypeID as TypeId,
@@ -4066,9 +4038,9 @@ WHERE Visible = 'Y';
             and r.ReportObjectTypeID IN (select * from #VisibleReportTypes)
             and (r.EpicMasterFile is not null or r.EpicRecordID is not null)
 
-        union all 
+        union all
 
-        select 
+        select
             'report',
             r.ReportObjectId,
             ReportObjectTypeID as TypeId,
@@ -4083,7 +4055,7 @@ WHERE Visible = 'Y';
             and (ro.Hidden is null or ro.Hidden = 'N')
             and r.ReportObjectTypeID IN (select * from #VisibleReportTypes)
             and r.EpicReportTemplateId is not null
-            
+
         ) as cool
 
         union all
@@ -4100,9 +4072,9 @@ WHERE Visible = 'Y';
         left outer join app.ReportObject_doc ro on r.ReportObjectID = ro.ReportObjectID
         where OrphanedReportObjectYN = 'N'
             and DefaultVisibilityYN = 'Y'
-            and (ro.Hidden is null or ro.Hidden = 'N')  
+            and (ro.Hidden is null or ro.Hidden = 'N')
         ;
-            
+
 
     --drop table if exists app.SearchTable;
     if not exists (select * from sysobjects where name='SearchTable' and xtype='U')
@@ -4129,7 +4101,7 @@ WHERE Visible = 'Y';
             ItemRank,
             SearchFieldDescription,
             SearchField
-        from 
+        from
             #myTemp
         except (select ItemId,
             TypeId,
@@ -4148,7 +4120,7 @@ WHERE Visible = 'Y';
         and l.ItemType = t.ItemType
         and l.ItemRank = t.ItemRank
         and l.SearchFieldDescription = t.SearchFieldDescription
-        and l.SearchField = t.SearchField 
+        and l.SearchField = t.SearchField
     where t.ItemId is null
 
     ;
@@ -4160,7 +4132,7 @@ WHERE Visible = 'Y';
                                     'create fulltext index on app.SearchTable(SearchField) key index ' + i.name + ' On Search With Stoplist = off;'
                                 from sys.tables t
                                     INNER JOIN sys.indexes i ON t.object_id = i.object_id
-                                where 
+                                where
                                     i.index_id = 1  -- clustered index
                                     and t.name = 'SearchTable')
 
@@ -4199,55 +4171,55 @@ BEGIN
     select userid,
         dbo.ToProperCase(fullname) as Fullname,
         dbo.ToProperCase(case when charindex(' ',fullname) > 0 then substring(fullname,0,charindex(' ',fullname)) else fullname end) as Firstname,
-        dbo.ToProperCase(case when charindex(' ',fullname) > 0 then substring(fullname,charindex(' ',fullname),len(fullname)) else null end) as Lastname 
+        dbo.ToProperCase(case when charindex(' ',fullname) > 0 then substring(fullname,charindex(' ',fullname),len(fullname)) else null end) as Lastname
     into #myUserTemp
-    from (select 
+    from (select
     userid,
-    lower(case when fullname is not null then fullname  
-               when username is not null then 
+    lower(case when fullname is not null then fullname
+               when username is not null then
                     case when username like '%,%' then
                         -- firsname
                         replace(substring(case when charindex(' ',replace(username,', ',',')) > 0 then substring(replace(username,', ',','),0,charindex(' ',replace(username,', ',','))) else replace(username,', ',',') end,
                         charindex(',',case when charindex(' ',replace(username,', ',',')) > 0 then substring(replace(username,', ',','),0,charindex(' ',replace(username,', ',','))) else replace(username,', ',',') end) + 1,
-                        len(username)),'s.','') + ' ' + 
-            
-        
+                        len(username)),'s.','') + ' ' +
+
+
                         -- last name
                         substring(case when charindex(' ',replace(username,', ',',')) > 0 then substring(replace(username,', ',','),0,charindex(' ',replace(username,', ',','))) else replace(username,', ',',') end,
                             0,charindex(',',case when charindex(' ',replace(username,', ',',')) > 0 then substring(replace(username,', ',','),0,charindex(' ',replace(username,', ',','))) else replace(username,', ',',') end))
-            
+
                         else replace(replace(substring(username,charindex('\',username)+1,len(username)),'-',' '),'s.','')
-                    end 
-                when accountname is not null then 
+                    end
+                when accountname is not null then
                     case when accountname like '%,%' then
                         -- firsname
                         replace(substring(case when charindex(' ',replace(accountname,', ',',')) > 0 then substring(replace(accountname,', ',','),0,charindex(' ',replace(accountname,', ',','))) else replace(accountname,', ',',') end,
                         charindex(',',case when charindex(' ',replace(accountname,', ',',')) > 0 then substring(replace(accountname,', ',','),0,charindex(' ',replace(accountname,', ',','))) else replace(accountname,', ',',') end) + 1,
-                        len(accountname)),'s.','') + ' ' + 
-            
-        
+                        len(accountname)),'s.','') + ' ' +
+
+
                         -- last name
                         substring(case when charindex(' ',replace(accountname,', ',',')) > 0 then substring(replace(accountname,', ',','),0,charindex(' ',replace(accountname,', ',','))) else replace(accountname,', ',',') end,
                             0,charindex(',',case when charindex(' ',replace(accountname,', ',',')) > 0 then substring(replace(accountname,', ',','),0,charindex(' ',replace(accountname,', ',','))) else replace(accountname,', ',',') end))
-            
+
                         else replace(replace(substring(accountname,charindex('\',accountname)+1,len(accountname)),'-',' '),'s.','')
-                    end 
-                else 
+                    end
+                else
 
 
     null end) as fullname
 
     from [User]
     ) as t
-    
+
 
     --drop table if exists app.User_NameData;
         if not exists (select * from sysobjects where name='User_NameData' and xtype='U')
             exec('create table app.User_NameData
             (
                 UserId int NOT NULL PRIMARY KEY,
-                Fullname nvarchar(max) null, 
-                Firstname nvarchar(max) null, 
+                Fullname nvarchar(max) null,
+                Firstname nvarchar(max) null,
                 Lastname nvarchar(max) null
             ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
             ')
@@ -4269,16 +4241,16 @@ BEGIN
     drop table if exists #myUserTemp;
 
     -- create full text index
-    if not exists (select * from sys.fulltext_index_columns as fi 
-                    inner JOIN sys.columns as c ON c.object_id = fi.object_id AND c.column_id = fi.column_id 
-                    INNER JOIN sys.objects o ON o.object_id = c.object_id 
+    if not exists (select * from sys.fulltext_index_columns as fi
+                    inner JOIN sys.columns as c ON c.object_id = fi.object_id AND c.column_id = fi.column_id
+                    INNER JOIN sys.objects o ON o.object_id = c.object_id
                     where o.name = 'User_NameData' and c.name = 'Fullname')
         begin
             declare @i varchar(max) = (select
                                     'create fulltext index on app.User_NameData(Fullname,Firstname,Lastname) key index ' + i.name + ' On User_NameData With Stoplist = off;'
                                 from sys.tables t
                                     INNER JOIN sys.indexes i ON t.object_id = i.object_id
-                                where 
+                                where
                                     i.index_id = 1  -- clustered index
                                     and t.name = 'User_NameData')
             exec(@i)
@@ -4286,7 +4258,7 @@ BEGIN
         alter fulltext catalog User_NameData rebuild with accent_sensitivity=off;
         ;
 end;
-    
+
 GO
 
 SET ANSI_NULLS ON
@@ -4298,14 +4270,14 @@ GO
 -- Create date: 11/13/19
 -- Description: Used to quickly search for users
 --              for moving a "user" to a webuser
---              need full username :/ 
+--              need full username :/
 -- =============================================
-CREATE PROCEDURE [dbo].[BasicDirectorSearch] 
+CREATE PROCEDURE [dbo].[BasicDirectorSearch]
     -- Add the parameters for the stored procedure here
     @searchTerm varchar(1000)
 ,   @results int = 10
 ,   @exclude varchar(1000) = ''
-    
+
 AS
 BEGIN
     -- SET NOCOUNT ON added to prevent extra result sets from
@@ -4314,7 +4286,7 @@ BEGIN
 
       SET @searchTerm = REPLACE(REPLACE(LTRIM(RTRIM(@searchTerm)),' ','%'),'*','%');
 
-SELECT TOP(@results) Email, FullName 
+SELECT TOP(@results) Email, FullName
 FROM dbo.[User] r
 inner join app.UserRoleLinks l on r.UserId = l.UserId
 inner join app.UserRoles u on u.UserRolesId = l.UserRolesId
@@ -4338,12 +4310,12 @@ GO
 -- Create date: 10/3/19
 -- Description: Used by Data Project to quickly search for report objects
 -- =============================================
-CREATE PROCEDURE [dbo].[BasicProjectSearch] 
+CREATE PROCEDURE [dbo].[BasicProjectSearch]
     -- Add the parameters for the stored procedure here
     @searchTerm varchar(1000)
 ,   @results int = 10
 ,   @exclude varchar(1000) = ''
-    
+
 AS
 BEGIN
     -- SET NOCOUNT ON added to prevent extra result sets from
@@ -4373,13 +4345,13 @@ GO
 -- Create date: 11/13/19
 -- Description: Used to quickly search for users
 --              for moving a "user" to a webuser
---              need full username :/ 
+--              need full username :/
 -- =============================================
-CREATE PROCEDURE [dbo].[BasicRealUserSearch] 
+CREATE PROCEDURE [dbo].[BasicRealUserSearch]
     -- Add the parameters for the stored procedure here
     @searchTerm varchar(1000)
 ,   @exclude varchar(1000) = ''
-    
+
 AS
 BEGIN
     -- SET NOCOUNT ON added to prevent extra result sets from
@@ -4410,10 +4382,10 @@ GO
 -- Create date: 10/3/19
 -- Description: Used by Data Project to quickly search for report objects
 -- =============================================
-CREATE PROCEDURE [dbo].[BasicReportObjectSearch] 
+CREATE PROCEDURE [dbo].[BasicReportObjectSearch]
     -- Add the parameters for the stored procedure here
     @searchTerm varchar(1000)
-    
+
 AS
 BEGIN
     -- SET NOCOUNT ON added to prevent extra result sets from
@@ -4429,7 +4401,7 @@ WHERE Visible = 'Y';
     SELECT TOP (10) r.ReportObjectID
     ,           r.Name  as ReportObjectName
     ,           r.Description
-    
+
     from        ReportObject r
     inner join  ReportObjectType rt on rt.ReportObjectTypeID = r.ReportObjectTypeID
     where OrphanedReportObjectYN = 'N'
@@ -4448,12 +4420,12 @@ GO
 -- Create date: 10/3/19
 -- Description: Used by Data Project to quickly search for report objects
 -- =============================================
-CREATE PROCEDURE [dbo].[BasicReportSearch] 
+CREATE PROCEDURE [dbo].[BasicReportSearch]
     -- Add the parameters for the stored procedure here
     @searchTerm varchar(1000)
 ,   @results int = 10
 ,   @exclude varchar(1000) = ''
-    
+
 AS
 BEGIN
     -- SET NOCOUNT ON added to prevent extra result sets from
@@ -4472,10 +4444,10 @@ WHERE Visible = 'Y';
     SELECT TOP (@results) r.ReportObjectID
     , case when EpicMasterFile is not null
     then concat(isnull(r.DisplayTitle,r.Name),' (',r.EpicMasterFile,' ', r.EpicRecordID,')')
-    else concat(isnull(r.DisplayTitle,r.Name),' (', rt.Name,')') 
+    else concat(isnull(r.DisplayTitle,r.Name),' (', rt.Name,')')
     end as ReportObjectName
     ,           r.Description
-    
+
     from        ReportObject r
     inner join  ReportObjectType rt on rt.ReportObjectTypeID = r.ReportObjectTypeID
     where OrphanedReportObjectYN = 'N'
@@ -4499,10 +4471,10 @@ GO
 -- Create date: 10/3/19
 -- Description: Used by Data Project to quickly search for report objects
 -- =============================================
-CREATE PROCEDURE [dbo].[BasicTermObjectSearch] 
+CREATE PROCEDURE [dbo].[BasicTermObjectSearch]
     -- Add the parameters for the stored procedure here
     @searchTerm varchar(1000)
-    
+
 AS
 BEGIN
     -- SET NOCOUNT ON added to prevent extra result sets from
@@ -4512,9 +4484,9 @@ BEGIN
    SET @searchTerm = REPLACE(REPLACE(LTRIM(RTRIM(@searchTerm)),' ','%'),'*','%');
 
     SELECT TOP (10) r.TermId
-    ,           r.Name  
+    ,           r.Name
     ,           r.Summary
-    
+
     FROM [app].[Term] AS r
     where 1=1
 
@@ -4531,7 +4503,7 @@ GO
 -- Create date: 10/3/19
 -- Description: Used by Data Project to quickly search for report objects
 -- =============================================
-CREATE PROCEDURE [dbo].[BasicTermSearch] 
+CREATE PROCEDURE [dbo].[BasicTermSearch]
     -- Add the parameters for the stored procedure here
     @searchTerm varchar(1000)
 ,   @results int = 10
@@ -4545,9 +4517,9 @@ BEGIN
    SET @searchTerm = REPLACE(REPLACE(LTRIM(RTRIM(@searchTerm)),' ','%'),'*','%');
 
     SELECT TOP (@results) r.TermId
-    ,           r.Name  
+    ,           r.Name
     ,           r.Summary
-    
+
     FROM [app].[Term] AS r
     where 1=1
 
@@ -4565,14 +4537,14 @@ GO
 -- Create date: 10/24/19
 -- Description: Used to quickly search for users
 -- =============================================
-CREATE PROCEDURE [dbo].[BasicUserSearch] 
+CREATE PROCEDURE [dbo].[BasicUserSearch]
     -- Add the parameters for the stored procedure here
     @searchTerm varchar(1000)
 ,   @exclude varchar(1000) = ''
 ,   @results int = 10
 ,   @type varchar(1) = 'u'
 
-    
+
 AS
 begin
     -- SET NOCOUNT ON added to prevent extra result sets from
@@ -4596,7 +4568,7 @@ begin
             set @i = patindex('%[^a-zA-Z0-9 ]%', @searchTerm)
         end
 
-    set @searchTerm = REPLACE(REPLACE(REPLACE(LTRIM(RTRIM(@searchTerm)),' ','CHAR(17)CHAR(18)'),'CHAR(18)CHAR(17)',''),'CHAR(17)CHAR(18)',' ') 
+    set @searchTerm = REPLACE(REPLACE(REPLACE(LTRIM(RTRIM(@searchTerm)),' ','CHAR(17)CHAR(18)'),'CHAR(18)CHAR(17)',''),'CHAR(17)CHAR(18)',' ')
 
     declare @q varchar(max);
 
@@ -4621,8 +4593,8 @@ begin
         begin
 
             set @q = 'select UserId, Fullname, ''u'' from '+@searchTable+' where 1=1 ' +
-            (SELECT DISTINCT 
-  
+            (SELECT DISTINCT
+
                     replace((
                         select 'and charindex('''+[value]+''', fullname) > 0 ' from String_split(@searchTerm,' ')
                         FOR XML PATH ('')
@@ -4634,15 +4606,15 @@ begin
             if(@type='a')
                 begin
                     set @q = 'select GroupId, Groupname, ''u'' from dbo.UserGroups where 1=1 ' +
-                    (SELECT DISTINCT 
-  
+                    (SELECT DISTINCT
+
                             replace((
                                 select 'and charindex('''+[value]+''', Groupname) > 0 ' from String_split(@searchTerm,' ')
                                 FOR XML PATH ('')
                                 ),'&gt;','>')
                     FROM String_split(@searchTerm,' ')) + '
                     order by Groupname';
-            
+
                     insert into #matches exec (@q)
                 end;
 
@@ -4667,7 +4639,7 @@ begin
 /**********************************************************************************************
 Name: Related Reports
 Description: Find Related Reports based in report ID and user ID.
-            
+
 
 Auth: Christopher Pickering
 **********************************************************************************************/
@@ -4692,12 +4664,12 @@ select top(@records) Id, cnt into #related from (
             INNER JOIN app.UserFavorites as f2 on f.UserId = f2.UserId
         group by f2.ItemId
 
-        union all 
+        union all
 
         -- other subscriptions
         select s2.ReportObjectId, count(*) as cnt
         from (select UserId, SubscriptionTo from ReportObjectSubscriptions where ReportObjectId in (select * from #lst)) s
-        , ReportObjectSubscriptions s2 
+        , ReportObjectSubscriptions s2
          where (
                 s.UserId = s2.UserId
             or s.SubscriptionTo = s2.SubscriptionTo
@@ -4722,7 +4694,7 @@ select top(@records) Id, cnt into #related from (
             and ReportObjectId in (select * from #lst)
             and DefaultVisibilityYN = 'Y' ) as t
         inner join ReportObject r on t.EpicReportTemplateId = r.EpicReportTemplateId
-        where r.DefaultVisibilityYN = 'Y' 
+        where r.DefaultVisibilityYN = 'Y'
 
     ) as sub
 group by Id) as sub
@@ -4730,7 +4702,7 @@ where exists (select top(1) tr.Id from app.ReportObjectTopRuns tr where tr.Repor
 order by cnt desc;
 ;
 
-select 
+select
     id as Id,
     isnull(r.DisplayTitle,r.Name) as Name,
     case when f.ItemId is null then 'no' else 'yes' end as Favorite,
@@ -4747,7 +4719,7 @@ from #related sub
     left outer join app.ReportObject_doc d on sub.Id = d.ReportObjectId
     left outer join (select ItemId from app.UserFavorites where lower(ItemType) = 'report' and UserId = @UserId) f on f.ItemId = sub.Id
 where sub.Id not in (select * from #lst)
-  and r.DefaultVisibilityYN = 'Y'     
+  and r.DefaultVisibilityYN = 'Y'
 group by Id, isnull(r.DisplayTitle,r.Name), f.ItemId,
     r.ReportObjectUrl,
     t.Name,
@@ -4799,8 +4771,8 @@ begin
 
 /**********************************************************************************************
 Name: Report Object search for Atlas
-Description: Returns report objects based on full text index searching. 
-            
+Description: Returns report objects based on full text index searching.
+
 Auth: Scott Manley & Christopher Pickering
 **********************************************************************************************/
 
@@ -4822,7 +4794,7 @@ while @i > 0
             set @originalSearch = STUFF(@originalSearch, @i, 1, ' ')
             set @i = patindex('%[^a-zA-Z0-9 _-]%', @originalSearch)
         end
-set @originalSearch = REPLACE(REPLACE(REPLACE(LTRIM(RTRIM(@originalSearch)),' ','CHAR(17)CHAR(18)'),'CHAR(18)CHAR(17)',''),'CHAR(17)CHAR(18)',' ') 
+set @originalSearch = REPLACE(REPLACE(REPLACE(LTRIM(RTRIM(@originalSearch)),' ','CHAR(17)CHAR(18)'),'CHAR(18)CHAR(17)',''),'CHAR(17)CHAR(18)',' ')
 
 -- create another string that has the quotes (stuff we must have in results)
 declare @match nvarchar(max) = '1=1';
@@ -4841,7 +4813,7 @@ if CHARINDEX('"',@searchTerm) > 0
               begin
                     set @index_two = charindex('"', @quotestringmaster, @index_one+1);
                     set @length = @index_two - @index_one
-                    set @quotestring = substring(@quotestringmaster,@index_one+1,@length-1) 
+                    set @quotestring = substring(@quotestringmaster,@index_one+1,@length-1)
                     -- remove all except letters, numbers, space, underscore.
                     set @i = patindex('%[^a-zA-Z0-9 _]%', @quotestring)
 
@@ -4850,13 +4822,13 @@ if CHARINDEX('"',@searchTerm) > 0
                                 set @quotestring = STUFF(@quotestring, @i, 1, ' ')
                                 set @i = patindex('%[^a-zA-Z0-9 _]%', @quotestring)
                           end
-                    set @quotestring = REPLACE(REPLACE(REPLACE(LTRIM(RTRIM(@quotestring)),' ','CHAR(17)CHAR(18)'),'CHAR(18)CHAR(17)',''),'CHAR(17)CHAR(18)',' ') 
+                    set @quotestring = REPLACE(REPLACE(REPLACE(LTRIM(RTRIM(@quotestring)),' ','CHAR(17)CHAR(18)'),'CHAR(18)CHAR(17)',''),'CHAR(17)CHAR(18)',' ')
                     insert into #tempstrings (mytext ) select  @quotestring where @quotestring != '' and @quotestring is not null
                     set @quotestringmaster = stuff(@quotestringmaster,@index_one,@length+1,'')
                     set @index_one = patindex('%"%"%', @quotestringmaster)
               end
-      
-        -- clean string  
+
+        -- clean string
         set @i = patindex('%[^a-zA-Z0-9 _]%', @searchTerm)
 
         while @i > 0
@@ -4866,7 +4838,7 @@ if CHARINDEX('"',@searchTerm) > 0
             end
         ;
 
-        set @searchTerm = REPLACE(REPLACE(REPLACE(LTRIM(RTRIM(@searchTerm)),' ','CHAR(17)CHAR(18)'),'CHAR(18)CHAR(17)',''),'CHAR(17)CHAR(18)',' ') 
+        set @searchTerm = REPLACE(REPLACE(REPLACE(LTRIM(RTRIM(@searchTerm)),' ','CHAR(17)CHAR(18)'),'CHAR(18)CHAR(17)',''),'CHAR(17)CHAR(18)',' ')
 
         SELECT  DISTINCT @match =
             concat(SUBSTRING(
@@ -4905,7 +4877,7 @@ if ((select charindex(' ',@searchTerm)) = 0 and (select len(@searchTerm)) > 0)
         Set @q = 'select g.*,0 as SearchRank from freetexttable ('+@searchTable+', SearchField, ''' + @searchTerm + ''' ) as g
             inner join '+@searchTable+' d on d.Id = g.[Key]
             where (d.SearchFieldDescription = ''Name'' or d.SearchFieldDescription = ''DisplayTitle'' or d.SearchFieldDescription = ''Term Name'')';
-            
+
             --print @q
             insert into #matches exec (@q) ;
 
@@ -4934,7 +4906,7 @@ if ((select count(1) from #matches) < @ResultSize and (select len(@searchTerm)) 
       begin
             Set @q = 'select g.*,3 as SearchRank from containstable ('+@searchTable+', SearchField, ' + '''("' + REPLACE(@searchTerm, ' ', '*" NEAR "') + '*")''' + ') as g
             where not exists (select * from #matches as t where t.[Key] = g.[Key]);';
-            
+
             insert into #matches exec (@q) ;
       end
 
@@ -4943,12 +4915,12 @@ if ((select count(1) from #matches as s) < @ResultSize and (select len(@searchTe
       begin
         Set @q = 'select g.*,4 as SearchRank from freetexttable ('+@searchTable+', SearchField, ''' + @searchTerm + ''' ) as g
             where not exists (select * from #matches as t where t.[Key] = g.[Key]);';
-            
+
             insert into #matches exec (@q) ;
             ;
       end
 
---insert into #results 
+--insert into #results
 select
     s.ItemId,
     s.ItemType,
@@ -5020,7 +4992,7 @@ insert into #results exec(@q)
 
 /*
 select r.* into #results from #dupresults  r
-, (select itemid, min(rank) rank from #dupresults group by itemid ) dup 
+, (select itemid, min(rank) rank from #dupresults group by itemid ) dup
 where r.ItemId = dup.ItemId and r.RANK = dup.rank;
 
 */
@@ -5029,8 +5001,8 @@ set @totalRecords = (select count(*)from #results);
 
 if (@currentPage = 1)
       begin
-            select top(@pageSize) 
-            
+            select top(@pageSize)
+
                   b.ItemId,
                   b.ItemType,
                   SearchFieldDescription as SearchField,
@@ -5042,8 +5014,8 @@ if (@currentPage = 1)
                   case when r.EpicReleased = 'Y' then 1 else 0 end EpicReleased,
                   r.SourceServer,
                   r.ReportServerPath,
-                  case when (SearchFieldDescription = 'Name'  and r.DisplayTitle is null) or  SearchFieldDescription = 'DisplayTitle'  then 
-                      case when d.DeveloperDescription is not null then d.DeveloperDescription 
+                  case when (SearchFieldDescription = 'Name'  and r.DisplayTitle is null) or  SearchFieldDescription = 'DisplayTitle'  then
+                      case when d.DeveloperDescription is not null then d.DeveloperDescription
                            when r.Description is not null then r.Description
                            when r.DetailedDescription is not null then r.DetailedDescription
                            when d.KeyAssumptions is not null then d.KeyAssumptions
@@ -5068,11 +5040,11 @@ if (@currentPage = 1)
                   RANK asc,
                   Documented,
                   Name asc
-                 
+
       end
 else
       begin
-            select 
+            select
                   b.ItemId,
                   b.ItemType,
                   SearchFieldDescription as SearchField,
@@ -5084,8 +5056,8 @@ else
                   case when r.EpicReleased = 'Y' then 1 else 0 end EpicReleased,
                   r.SourceServer,
                   r.ReportServerPath,
-                  case when (SearchFieldDescription = 'Name'  and r.DisplayTitle is null) or  SearchFieldDescription = 'DisplayTitle'  then 
-                      case when d.DeveloperDescription is not null then d.DeveloperDescription 
+                  case when (SearchFieldDescription = 'Name'  and r.DisplayTitle is null) or  SearchFieldDescription = 'DisplayTitle'  then
+                      case when d.DeveloperDescription is not null then d.DeveloperDescription
                            when r.Description is not null then r.Description
                            when r.DetailedDescription is not null then r.DetailedDescription
                            when d.KeyAssumptions is not null then d.KeyAssumptions
@@ -5109,11 +5081,11 @@ else
                   ItemRank asc,
                   RANK asc,
                   Documented,
-                  Name asc 
+                  Name asc
                   offset (@currentPage - 1) * @pageSize rows fetch next @pageSize rows only;
       end
 end;
-        
+
 GO
 
 
@@ -5131,13 +5103,13 @@ begin
 
 /**********************************************************************************************
 Name: Report Object search for Atlas
-Description: Returns report objects based on full text index searching. 
+Description: Returns report objects based on full text index searching.
             Search return order:
-                Direct reportobject name match              
+                Direct reportobject name match
                 Direct any text field match (ReportObject, ReportObject_doc, ReportObjectDocTerms)
-                Fuzzy any text field match 
+                Fuzzy any text field match
 
-            All fuzzy matches will have fulltext rank summed, and then reportobjects ranked by that sum 
+            All fuzzy matches will have fulltext rank summed, and then reportobjects ranked by that sum
 
 Auth: Scott Manley
 **********************************************************************************************/
@@ -5156,7 +5128,7 @@ SELECT ReportObjectTypeID into #VisibleReportTypes
 FROM [dbo].[ReportObjectType]
 WHERE Visible = 'Y';
 -- remove extra space from string
-SET @searchTerm = REPLACE(REPLACE(REPLACE(LTRIM(RTRIM(@searchTerm)),' ','CHAR(17)CHAR(18)'),'CHAR(18)CHAR(17)',''),'CHAR(17)CHAR(18)',' ') 
+SET @searchTerm = REPLACE(REPLACE(REPLACE(LTRIM(RTRIM(@searchTerm)),' ','CHAR(17)CHAR(18)'),'CHAR(18)CHAR(17)',''),'CHAR(17)CHAR(18)',' ')
 print @searchTerm
 
 declare @predicate varchar(8000) = @searchTerm;
@@ -5192,17 +5164,17 @@ select
     r.description,
     ct.RANK,
     1 as SearchRank,
-    1 as SearchNum 
+    1 as SearchNum
 into #results
 from
-    ReportObject r 
+    ReportObject r
     inner join #exactNameMatch as ct on r.ReportObjectID = ct.[KEY]
     inner join string_split(Replace(@reportObjectTypes,' ',''), ',') rot on rot.value = 0 or rot.value = r.ReportObjectTypeID
 where
     OrphanedReportObjectYN = 'N'
     and DefaultVisibilityYN = 'Y'
-    and r.ReportObjectTypeID IN (select * from #VisibleReportTypes) 
-;                                                               
+    and r.ReportObjectTypeID IN (select * from #VisibleReportTypes)
+;
 
 -- Direct match to Term (Search 2 Rank 2)
 insert into #results
@@ -5233,15 +5205,15 @@ group by
     r.ReportObjectID,
     r.Name,
     r.description
- 
- 
+
+
 --Direct match to ReportObject (Search 3 Rank 2)
 insert into
     #results
 select
     r.ReportObjectID,
     r.Name as ReportObjectName,
-    r.Description,   
+    r.Description,
     ct.RANK as MatchRank,
     2 as SearchRank,
     3 as SearchNum
@@ -5260,11 +5232,11 @@ where
     )
     and r.ReportObjectTypeID IN (select * from #VisibleReportTypes) --Crystal, RW, DB, component, SSRS
 
-;                       
+;
 
---Direct match to ReportObjectDoc (Search 4 Rank 2) 
+--Direct match to ReportObjectDoc (Search 4 Rank 2)
 insert into #results
-select     
+select
     r.ReportObjectID
 ,   r.Name as ReportObjectName
 ,   r.Description
@@ -5279,11 +5251,11 @@ where OrphanedReportObjectYN = 'N'
     and DefaultVisibilityYN = 'Y'
     and r.ReportObjectID not in (select distinct ReportObjectID from #results )
     and r.ReportObjectTypeID IN (select * from #VisibleReportTypes)--Crystal, RW, DB, component, SSRS
-;                       
+;
 
 --Fuzzy match to ReportObject (Search 5 rank 3)
 insert into #results
-select     
+select
     r.ReportObjectID
 ,   r.Name  as ReportObjectName
 ,   r.Description
@@ -5297,7 +5269,7 @@ where OrphanedReportObjectYN = 'N'
     and DefaultVisibilityYN = 'Y'
     and r.ReportObjectID not in (select distinct ReportObjectID from #results ) --only use fuzzy logic if no direct/near matching was found
     and r.ReportObjectTypeID IN (select * from #VisibleReportTypes) --Crystal, RW, DB, component, SSRS
-;                       
+;
 
 --Fuzzy match to ReportObjectTerm (Search 6 Rank 3)
 insert into #results
@@ -5319,11 +5291,11 @@ where OrphanedReportObjectYN = 'N'
     and r.ReportObjectTypeID IN (select * from #VisibleReportTypes)--Crystal, RW, DB, component, SSRS
 group by
     r.ReportObjectID
-,   r.Name  
+,   r.Name
 ,   r.Description
 ;
 
---Fuzzy match to ReportObjectDoc (Search 7 Rank 3) 
+--Fuzzy match to ReportObjectDoc (Search 7 Rank 3)
 insert into #results
 select
     r.ReportObjectID
@@ -5340,10 +5312,10 @@ where OrphanedReportObjectYN = 'N'
     and DefaultVisibilityYN = 'Y'
     and r.ReportObjectID not in (select distinct ReportObjectID from #results)
     and r.ReportObjectTypeID IN (select * from #VisibleReportTypes)--Crystal, RW, DB, component, SSRS
-;   
+;
 
 
---Group reports together and sum text rank within the search rank groups 
+--Group reports together and sum text rank within the search rank groups
 select      r.ReportObjectID
 ,           r.SearchRank
 , r.ReportName
@@ -5438,13 +5410,13 @@ end;
 GO
 USE [master]
 GO
-ALTER DATABASE [atlas] SET  READ_WRITE 
+ALTER DATABASE [atlas] SET  READ_WRITE
 GO
 
 
 USE [master]
 GO
-ALTER DATABASE [atlas] SET  READ_WRITE 
+ALTER DATABASE [atlas] SET  READ_WRITE
 GO
 
 USE [atlas]
@@ -5506,7 +5478,7 @@ insert into [atlas].app.RolePermissions ([Name], Description) values
 ('Can Change Roles', 'NULL'),
 ('Manage Global Site Settings', 'NULL')
 GO
-insert into [atlas].app.RolePermissionLinks (RoleId, RolePermissionsId) values 
+insert into [atlas].app.RolePermissionLinks (RoleId, RolePermissionsId) values
 (3,7),
 (3,10),
 (3,12),
@@ -5591,7 +5563,7 @@ insert into [atlas].app.FragilityTag (FragilityTagName) VALUES
 ('Order Sets'),
 ('Workflow Dependent')
 GO
-insert into [atlas].app.FinancialImpact ([Name]) values 
+insert into [atlas].app.FinancialImpact ([Name]) values
 ('Medium'),
 ('High'),
 ('Critical')
