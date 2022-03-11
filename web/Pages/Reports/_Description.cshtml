@@ -49,7 +49,7 @@
             </div>
 
             <div id="collapseTerm27" class="panel-block is-collapsible @if(ViewBag.HasDescription){<text></text>} else {<text>is-active</text>}" role="tabpanel">
-                <div class="markdown">
+                <div class="markdown p-5">
                     @Html.Raw(HtmlHelpers.MarkdownToHtml(Model.Report.RepositoryDescription))
                 </div>
             </div>
@@ -69,7 +69,7 @@
                     {
                         <th>Value</th>
                     }
-                    
+
                 </tr>
             </thead>
             <tbody>
