@@ -33,6 +33,18 @@ else
 
                 @foreach (var record in Model.SearchResults.Results)
                 {
+
+                    ViewBag.SearchMatch = null;
+
+
+                    @if (Model.SearchResults.Highlights != null &&
+                         Model.SearchResults.Highlights.Count() > 0 &&
+                         Model.SearchResults.Highlights.Where(x => x.Key == record.Id).First() != null &&
+                         Model.SearchResults.Highlights.Where(x => x.Key == record.Id).First().Values.Count() > 0)
+                    {
+                        ViewBag.SearchMatch = @Model.SearchResults.Highlights.Where(x => x.Key == record.Id).First().Values.First().FriendlyName;
+                    }
+
                     if (record.collection != null)
                     {
                         <div class="column is-full collection">

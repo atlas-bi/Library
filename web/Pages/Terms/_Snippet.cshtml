@@ -18,6 +18,13 @@
                 {
                     <span class="tag is-success">Approved</span>
                 }
+                @if(!string.IsNullOrEmpty(ViewBag.SearchMatch))
+                {
+                    <div class="tags has-addons mb-0">
+                        <span class="tag is-info is-light">Matched</span>
+                        <span class="tag is-info">@ViewBag.SearchMatch</span>
+                    </div>
+                }
             </span>
         </div>
     </div>

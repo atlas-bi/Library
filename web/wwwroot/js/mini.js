@@ -184,93 +184,110 @@
   var searchTimeout = 250,
     searchTimerId = null;
 
-  // delete event for existing tags
-  (document.querySelectorAll('.mini-tags .tag.is-delete') || []).forEach(
-    ($tag) => {
-      $tag.addEventListener('click', function () {
-        var $control = $tag.closest('.control');
-        var $taglist = $tag.closest('.mini-tags');
-        $control.parentElement.removeChild($control);
-        updateId($taglist);
-      });
-    },
-  );
-
-  // Add a click event on buttons to open a specific mini
-  (document.querySelectorAll('.input-mini') || []).forEach(($input) => {
-    // open it when clicking
-    const $mini = $input.parentElement.querySelector('.mini');
-    const $hidden = $input.parentElement.querySelector(
-      'input[type="hidden"], select.is-hidden',
-    );
-    const $clear =
-      $input.parentElement.parentElement.querySelector('.mini-clear');
-
-    $input.addEventListener('click', () => {
-      closeAllMinis();
-      openMini($mini);
-    });
-
-    // open when typing in the related input
-    if ($input.hasAttribute('search-area')) {
-      $input.addEventListener('input', () => {
-        window.clearTimeout(searchTimerId);
-        searchTimerId = window.setTimeout(function () {
-          loadMini($input, $mini, $input.getAttribute('search-area'), $hidden);
-          window.clearTimeout(searchTimerId);
-        }, searchTimeout);
-      });
-    } else if ($input.hasAttribute('lookup-area')) {
-      preloadMini($input, $mini, $input.getAttribute('lookup-area'), $hidden);
-
-      // if it is a multiselect, we can use typing to filter the static list
-      if ($input.classList.contains('multiselect')) {
-        $input.addEventListener('input', () => {
-          inputFilter($input, $mini);
+  function load_minis() {
+    // delete event for existing tags
+    (document.querySelectorAll('.mini-tags .tag.is-delete') || []).forEach(
+      ($tag) => {
+        $tag.addEventListener('click', function () {
+          var $control = $tag.closest('.control');
+          var $taglist = $tag.closest('.mini-tags');
+          $control.parentElement.removeChild($control);
+          updateId($taglist);
         });
-      }
-    }
+      },
+    );
 
-    if ($clear != undefined) {
-      $clear.addEventListener('click', function () {
-        $hidden.value = '';
-        $input.value = '';
+    // Add a click event on buttons to open a specific mini
+    (document.querySelectorAll('.input-mini:not(.loaded)') || []).forEach(
+      ($input) => {
+        // open it when clicking
+        $input.classList.add('loaded');
+        const $mini = $input.parentElement.querySelector('.mini');
+        const $hidden = $input.parentElement.querySelector(
+          'input[type="hidden"], select.is-hidden',
+        );
+        const $clear =
+          $input.parentElement.parentElement.querySelector('.mini-clear');
+
+        $input.addEventListener('click', () => {
+          closeAllMinis();
+          openMini($mini);
+        });
+
+        // open when typing in the related input
+        if ($input.hasAttribute('search-area')) {
+          $input.addEventListener('input', () => {
+            window.clearTimeout(searchTimerId);
+            searchTimerId = window.setTimeout(function () {
+              loadMini(
+                $input,
+                $mini,
+                $input.getAttribute('search-area'),
+                $hidden,
+              );
+              window.clearTimeout(searchTimerId);
+            }, searchTimeout);
+          });
+        } else if ($input.hasAttribute('lookup-area')) {
+          preloadMini(
+            $input,
+            $mini,
+            $input.getAttribute('lookup-area'),
+            $hidden,
+          );
+
+          // if it is a multiselect, we can use typing to filter the static list
+          if ($input.classList.contains('multiselect')) {
+            $input.addEventListener('input', () => {
+              inputFilter($input, $mini);
+            });
+          }
+        }
+
+        if ($clear != undefined) {
+          $clear.addEventListener('click', function () {
+            $hidden.value = '';
+            $input.value = '';
+          });
+        }
+      },
+    );
+
+    // Add a click event on various child elements to close the parent mini
+    (
+      document.querySelectorAll(
+        '.mini-background:not(.loaded), .mini-close:not(.loaded), .mini-card-head:not(.loaded) .delete:not(.loaded), .mini-card-foot:not(.loaded) .button:not(.loaded)',
+      ) || []
+    ).forEach(($close) => {
+      const $target = $close.closest('.mini');
+      $close.classList.add('loaded');
+      $close.addEventListener('click', () => {
+        closeMini($target);
       });
-    }
-  });
-
-  // Add a click event on various child elements to close the parent mini
-  (
-    document.querySelectorAll(
-      '.mini-background, .mini-close, .mini-card-head .delete, .mini-card-foot .button',
-    ) || []
-  ).forEach(($close) => {
-    const $target = $close.closest('.mini');
-
-    $close.addEventListener('click', () => {
-      closeMini($target);
     });
-  });
 
-  window.onclick = function (event) {
-    if (!event.target.closest('.mini,.input-mini')) {
-      closeAllMinis();
-    }
-  };
+    window.onclick = function (event) {
+      if (!event.target.closest('.mini,.input-mini')) {
+        closeAllMinis();
+      }
+    };
 
-  // Add a keyboard event to close all minis
-  document.addEventListener('keydown', (event) => {
-    const e = event || window.event;
+    // Add a keyboard event to close all minis
+    document.addEventListener('keydown', (event) => {
+      const e = event || window.event;
 
-    if (e.keyCode === 27) {
-      // Escape key
-      closeAllMinis();
-    }
-  });
+      if (e.keyCode === 27) {
+        // Escape key
+        closeAllMinis();
+      }
+    });
 
-  // add event to remove mini tags that were preloaded.
-  (document.querySelectorAll('.mini-tags a.is-delete[value]') || []).forEach(
-    ($delete) => {
+    // add event to remove mini tags that were preloaded.
+    (
+      document.querySelectorAll('.mini-tags a.is-delete[value]:not(.loaded)') ||
+      []
+    ).forEach(($delete) => {
+      $delete.classList.add('loaded');
       $delete.addEventListener('click', function () {
         var $hidden = $delete
           .closest('.field:not(.mini-tags)')
@@ -284,13 +301,21 @@
         );
         $control.parentNode.removeChild($control);
       });
-    },
-  );
-
-  // on reorder events, update id
-  (document.querySelectorAll('.mini-tags.reorder') || []).forEach(($tag) => {
-    $tag.addEventListener('reorder', function () {
-      updateId($tag);
     });
+
+    // on reorder events, update id
+    (
+      document.querySelectorAll('.mini-tags.reorder:not(.loaded)') || []
+    ).forEach(($tag) => {
+      $tag.classList.add('loaded');
+      $tag.addEventListener('reorder', function () {
+        updateId($tag);
+      });
+    });
+  }
+
+  load_minis();
+  document.addEventListener('ajax', () => {
+    load_minis();
   });
 })();

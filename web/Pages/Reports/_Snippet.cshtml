@@ -94,6 +94,13 @@
                 {<span class="tag srch-fieldRed">@Model.CertificationTag</span>}
                 @if (@Model.CertificationTag == "Self-Service")
                 {<span class="tag srch-fieldBlue">@Model.CertificationTag</span>}
+                @if(!string.IsNullOrEmpty(ViewBag.SearchMatch))
+                {
+                    <div class="tags has-addons mb-0">
+                        <span class="tag is-info is-light">Matched</span>
+                        <span class="tag is-info">@ViewBag.SearchMatch</span>
+                    </div>
+                }
             </span>
         </div>
     </div>
