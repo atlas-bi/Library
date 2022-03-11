@@ -412,6 +412,7 @@ namespace Atlas_Web.Pages.Search
                             x =>
                                 new ResultModel
                                 {
+                                    Id = x.Id,
                                     report =
                                         x.Type.First() == "reports"
                                             ? _cache.GetOrCreate<ReportObject>(
