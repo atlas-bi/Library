@@ -216,6 +216,19 @@ gulp.task('js:polyfill', function () {
     .pipe(gulp.dest('web/wwwroot/js/'));
 });
 
+gulp.task('js:integrations:ssrs', function () {
+  return gulp
+    .src(['web/wwwroot/js/integrations/ssrs.js'])
+    .pipe(concat('ssrs.min.js'))
+    .pipe(
+      babel({
+        presets: ['@babel/preset-env'],
+      }),
+    )
+    .pipe(uglify())
+    .pipe(gulp.dest('web/wwwroot/js/integrations/'));
+});
+
 gulp.task('js:shared', function () {
   return gulp
     .src('web/wwwroot/js/shared.js')
@@ -352,6 +365,7 @@ gulp.task(
     'js:settings',
     'js:search',
     'js:shared',
+    'js:integrations:ssrs',
     gulp.series('iis:clean_logs', 'iis:run'),
     gulp.series('font:fontawesome', 'sass'),
   ),
@@ -366,6 +380,7 @@ gulp.task(
       ['web/wwwroot/**/*.js', '!web/wwwroot/**/*.min.js'],
       gulp.parallel(
         'js:settings',
+        'js:integrations:ssrs',
         'js:shared',
         'js:editor',
         'js:utility',
@@ -417,6 +432,7 @@ gulp.task(
       ['web/wwwroot/**/*.js', '!web/wwwroot/**/*.min.js'],
       gulp.parallel(
         'js:settings',
+        'js:integrations:ssrs',
         'js:shared',
         'js:editor',
         'js:utility',
