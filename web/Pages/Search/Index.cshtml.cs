@@ -203,7 +203,7 @@ namespace Atlas_Web.Pages.Search
             }
 
             return BuildExact(
-                $"name:({search_string})^12 OR name:({Fuzzy})^7 OR name:({Wild})^6 OR ({search_string})^5 OR ({Fuzzy}) OR ({Wild})",
+                $"name:({search_string})^12 OR name:({Fuzzy})^7 OR name:({Wild})^6 OR description:({search_string})^5 OR description:({Fuzzy})^4 OR description:({Wild})^3 OR ({search_string})^2 OR ({Fuzzy}) OR ({Wild})",
                 ExactMatches
             );
         }
@@ -373,7 +373,7 @@ namespace Atlas_Web.Pages.Search
                             { "rq", "{!rerank reRankQuery=$rqq reRankDocs=1000 reRankWeight=5}" },
                             {
                                 "rqq",
-                                "(type:collections^3 OR type:reports^2 OR documented:Y^0.1 OR executive_visibility_text:Y^0.2  OR certification_text:\"Analytics Certified\"^0.4 OR certification_text:\"Analytics Reviewed\"^0.4)"
+                                "(type:collections^2.7 OR type:reports^2 OR documented:Y^0.1 OR executive_visibility_text:Y^0.2  OR certification_text:\"Analytics Certified\"^0.4 OR certification_text:\"Analytics Reviewed\"^0.4)"
                             },
                             { "hl.fl", hl },
                             { "hl.requireFieldMatch", hl_match }

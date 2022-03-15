@@ -58,32 +58,41 @@
 </div>
 
 @if(Model.Report.ReportObjectParameters.Any()){
-    <h2 class="title is-2">Parameters</h2>
+    <nav id="parameters" class="panel">
+        <p class="panel-heading is-flex is-justify-content-space-between" data-action="collapse" data-target="parameter-data">
+            <span>Parameters</span>
+            <span class="icon">
+            <i class="fas fa-chevron-down"></i>
+            </span>
+        </p>
+        <div class="panel-block is-collapsible is-block py-0" id="parameter-data">
 
-    <div class="table-container mt-5">
-        <table class="table is-narrow">
-            <thead>
-                 <tr>
-                    <th>Name</th>
-                    @if(Model.Report.ReportObjectParameters.Any(x => x.ParameterValue != null))
-                    {
-                        <th>Value</th>
-                    }
+            <div class="table-container m-5">
+                <table class="table is-narrow">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            @if(Model.Report.ReportObjectParameters.Any(x => x.ParameterValue != null))
+                            {
+                                <th>Value</th>
+                            }
 
-                </tr>
-            </thead>
-            <tbody>
-                @foreach(var param in Model.Report.ReportObjectParameters)
-                {
-                    <tr>
-                        <td>@param.ParameterName</td>
-                        @if (Model.Report.ReportObjectParameters.Any(x => x.ParameterValue != null))
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach(var param in Model.Report.ReportObjectParameters)
                         {
-                            <td>@param.ParameterValue</td>
+                            <tr>
+                                <td>@param.ParameterName</td>
+                                @if (Model.Report.ReportObjectParameters.Any(x => x.ParameterValue != null))
+                                {
+                                    <td>@param.ParameterValue</td>
+                                }
+                            </tr>
                         }
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </div>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </nav>
 }
