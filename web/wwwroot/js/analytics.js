@@ -166,3 +166,22 @@
       if update is sent because of page load, reset intereval (so we don't have dup data sends)
     */
 })();
+
+/* analytics page js for charts */
+(function(){
+    document.addEventListener('click', function($e){
+        if($e.target.closest('.dropdown.is-select .dropdown-item')){
+            ($e.target.closest('.dropdown').querySelectorAll('.dropdown-item.is-active') || []).forEach(($el) => {$el.classList.remove('is-active');})
+            $e.target.classList.add('is-active');
+            var $target = $e.target.closest('.dropdown.is-select .dropdown-item');
+
+            $target.closest('.dropdown').querySelector('.select-value').innerText = $target.innerText
+
+            /* build date parameters */
+
+            document.getElementById($target.closest('.dropdown').dataset.target).setAttribute('data-param', "type="+$target.innerText)
+
+            document.getElementById($target.closest('.dropdown').dataset.target).dispatchEvent(new CustomEvent('reload'));
+        }
+    })
+})();

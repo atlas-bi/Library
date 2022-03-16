@@ -71,24 +71,6 @@ namespace Atlas_Web.Pages.Analytics
 
         public async Task<ActionResult> OnGetAsync()
         {
-            TopUsers = (
-                from a in (
-                    from a in _context.Analytics
-                    where a.AccessDateTime >= DateTime.Today.AddDays(-7)
-                    select new { a.User, a.LoadTime }
-                ).ToList()
-                group a by a.User into grp
-                orderby grp.Count() descending
-                select new MediumData
-                {
-                    Name = grp.Key.FirstnameCalc,
-                    Time = Math.Round(
-                        grp.Average(i => Convert.ToDouble(i.LoadTime ?? "0")) / 1000,
-                        2
-                    ),
-                    Count = grp.Count()
-                }
-            ).Take(10).ToList();
 
             TopPages = await (
                 from a in _context.Analytics

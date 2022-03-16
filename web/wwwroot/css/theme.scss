@@ -347,12 +347,12 @@ a.navbar-link:hover,
 }
 
 /* sticky */
-.sticky {
+.sticky, .is-sticky {
   position: sticky;
   top:calc(56px + 14px);
 }
 
-nav.sticky {
+nav.sticky, nav.is-sticky {
  top: 0;
 }
 

@@ -25,21 +25,13 @@
     );
   };
 
-  var loadAjaxContent = function () {
-    [].forEach.call(d.querySelectorAll('[data-ajax="yes"]'), function (e) {
-      if (
-        !e.matches('#AdColOne') &&
-        !e.matches('#AdColTwo [data-ajax="yes"]') &&
-        isInViewport(e) &&
-        // is visible
-        e.offsetParent !== null
-      ) {
-        var u = e.getAttribute('data-url'),
+  var sendAjax = function(e){
+    var u = e.getAttribute('data-url'),
           p = e.getAttribute('data-param'),
           l = e.getAttribute('data-loadtag'),
           id = e.getAttribute('id'),
           q;
-        e.removeAttribute('data-ajax');
+
 
         if (!e.classList.contains('no-loader')) {
           e.innerHTML =
@@ -56,9 +48,9 @@
           u += p;
         }
 
-        if (cache.exists(u)) {
-          a(e, l, p, cache.get(u), u, id);
-        } else {
+        // if (cache.exists(u)) {
+        //   a(e, l, p, cache.get(u), u, id);
+        // } else {
           q = new XMLHttpRequest();
           q.open('get', u, true);
           q.setRequestHeader(
@@ -82,7 +74,20 @@
               cache.set(u, q.responseText, ccHeader);
             }
           };
-        }
+       // }
+  }
+  var loadAjaxContent = function () {
+    [].forEach.call(d.querySelectorAll('[data-ajax="yes"]'), function (e) {
+      if (
+        !e.matches('#AdColOne') &&
+        !e.matches('#AdColTwo [data-ajax="yes"]') &&
+        isInViewport(e) &&
+        // is visible
+        e.offsetParent !== null
+      ) {
+        sendAjax(e);
+        e.removeAttribute('data-ajax');
+
       }
     });
   };
@@ -135,6 +140,8 @@
       }
 
       el.style.visibility = 'visible';
+
+      el.addEventListener('reload', function(){ sendAjax(el)})
       d.dispatchEvent(new CustomEvent('ajax'));
     } catch (e) {
       console.log(e);
@@ -169,9 +176,9 @@
 
           e.style.visibility = 'hidden';
 
-          if (cache.exists(u)) {
-            a(e, l, p, cache.get(u), u, id);
-          } else {
+        //   if (cache.exists(u)) {
+        //     a(e, l, p, cache.get(u), u, id);
+        //   } else {
             q = new XMLHttpRequest();
             q.open('get', u, true);
             q.setRequestHeader(
@@ -194,7 +201,7 @@
                 cache.set(u, q.responseText, ccHeader);
               }
             };
-          }
+        //  }
         }
       },
     );

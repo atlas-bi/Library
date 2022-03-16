@@ -9,52 +9,62 @@
 <h1 class="title is-1">Analytics</h1>
 
 <div id="active-users"></div>
+<h2 class="title is-2">Last 7 Days - Top Ten</h2>
 
-<h3>Last 7 Days - Top Ten</h3>
-<h4>Most Active Users</h4>
-
-<div class="atlas-chart">
-    <div class="ajaxLoader"><img class="ajaxLoader-img" src="/img/loader.gif" /></div>
-    <script type="application/json">
-        @{
-            var TopTen = Model.TopUsers.Take(10);
-            var last = TopTen.Last();
-        }
-        {
-            "axis": {
-                "0": {"title":"seconds"},
-                "1": {"title":"visits"}
-            },
-            "type": "bar",
-            "height":"400",
-            "title": "Top Users",
-            "data": [{
-                "title" : "Load Time (s)",
-                "axis":"0",
-                "type": "line",
-                "units": "(s)",
-                "data": [
-                        @foreach (var g in TopTen)
-                        {
-                            <text>{ "title": "@g.Name", "data": "@g.Time"}</text> @if(g != last){<text>,</text>}
-                        }
-                    ]
-               },{
-                "title" : "Visits",
-                "type": "bar",
-                "axis": "1",
-                "data": [
-                        @foreach (var g in TopTen)
-                        {
-                            <text>{ "title": "@g.Name", "data": "@g.Count"}</text> @if(g != last){<text>,</text>}
-                        }
-                    ]
-               }]
-            }
-    </script>
+<div class="is-flex is-justify-content-space-between">
+    <h3 class="title is-3">Most Active Users</h3>
+    <div class="dropdown is-select"  data-target="top-users-chart" >
+        <div class="dropdown-trigger ">
+            <button class="button" aria-haspopup="true" aria-controls="top-users-chart-dropdown">
+            <span class="select-value">Last 24 hours</span>
+            <span class="icon is-small">
+                <i class="fas fa-angle-down" aria-hidden="true"></i>
+            </span>
+            </button>
+        </div>
+        <div class="dropdown-menu" id="top-users-chart-dropdown"role="menu">
+            <div class="dropdown-content">
+            <a href="#" class="dropdown-item">
+                Today
+            </a>
+            <a class="dropdown-item is-active">
+                Last 24 hours
+            </a>
+            <hr class="dropdown-divider">
+            <a href="#" class="dropdown-item">
+                This week
+            </a>
+            <a href="#" class="dropdown-item">
+                Last 7 days
+            </a>
+            <hr class="dropdown-divider">
+            <a href="#" class="dropdown-item">
+            This month
+            </a>
+            <a href="#" class="dropdown-item">
+            Last 30 days
+            </a>
+            <a href="#" class="dropdown-item">
+            Last 90 days
+            </a>
+            <a href="#" class="dropdown-item">
+            This year
+            </a>
+            <hr class="dropdown-divider">
+            <a href="#" class="dropdown-item">
+                All time
+            </a>
+            <hr class="dropdown-divider">
+            <a href="#" class="dropdown-item">
+                Custom range
+            </a>
+            </div>
+        </div>
+    </div>
 </div>
+<div id="top-users-chart" data-ajax="yes" data-url="/Analytics/TopUsers" data-param="type=Last 24 hours" style="min-height:400px;"></div>
 
-<h4>Most Popular Pages</h4>
+<h3 class="title is-3">Most Popular Pages</h3>
 
 <div class="atlas-chart">
     <div class="ajaxLoader"><img class="ajaxLoader-img" src="/img/loader.gif" /></div>
@@ -97,7 +107,7 @@
     </script>
 </div>
 
-<h3>Access History</h3>
+<h3 class="title is-3">Access History</h3>
 
 <div class="atlas-chart">
     <div class="ajaxLoader"><img class="ajaxLoader-img" src="/img/loader.gif" /></div>
@@ -124,7 +134,7 @@
     </script>
 </div>
 
-<h3>Search Access History</h3>
+<h3 class="title is-3">Search Access History</h3>
 
 <div class="atlas-chart">
     <div class="ajaxLoader"><img class="ajaxLoader-img" src="/img/loader.gif" /></div>
@@ -151,7 +161,7 @@
     </script>
 </div>
 
-<h3>Report Access History</h3>
+<h3 class="title is-3">Report Access History</h3>
 
 <div class="atlas-chart">
     <div class="ajaxLoader"><img class="ajaxLoader-img" src="/img/loader.gif" /></div>
@@ -179,7 +189,7 @@
 </div>
 
 
-<h3>Term Access History</h3>
+<h3 class="title is-3">Term Access History</h3>
 
 <div class="atlas-chart">
     <div class="ajaxLoader"><img class="ajaxLoader-img" src="/img/loader.gif" /></div>

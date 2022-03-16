@@ -281,12 +281,12 @@ namespace Atlas_Web
                 }
                 catch
                 {
-                    cache.Set("logo", "/img/atlas-logo.png");
+                    cache.Set("logo", "/img/atlas-logo-smooth.png");
                 }
             }
             else
             {
-                cache.Set("logo", "/img/atlas-logo.png");
+                cache.Set("logo", "/img/atlas-logo-smooth.png");
             }
         }
     }

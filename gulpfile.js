@@ -24,6 +24,12 @@ gulp.task('package:markdown-it', function () {
     .pipe(gulp.dest('web/wwwroot/lib/markdown-it'));
 });
 
+gulp.task('package:chart.js', function() {
+    console.log("hi")
+    return gulp
+    .src('node_modules/chart.js/dist/**/*')
+    .pipe(gulp.dest('web/wwwroot/lib/chartjs'))
+})
 gulp.task('font:inter', function () {
   return gulp
     .src('node_modules/@fontsource/inter/**/*')
@@ -152,6 +158,7 @@ gulp.task('js:polyfill', function () {
   return gulp
     .src([
       'web/wwwroot/js/polyfill/foreach.js',
+      'web/wwwroot/js/polyfill/replace-all.js',
       'web/wwwroot/js/polyfill/isinstance.js',
       'web/wwwroot/js/polyfill/matches_closest.js',
       'web/wwwroot/js/polyfill/sticky.js',
@@ -159,6 +166,8 @@ gulp.task('js:polyfill', function () {
       'web/wwwroot/js/polyfill/event.js',
       'web/wwwroot/js/polyfill/focus-within.js',
       'web/wwwroot/js/polyfill/classlist.js',
+
+
     ])
     .pipe(concat('polyfill.min.js'))
     .pipe(
@@ -192,6 +201,7 @@ gulp.task('js:utility', function () {
       'web/wwwroot/js/analytics.js',
       'web/wwwroot/js/utility/hamburger.js',
       'web/wwwroot/js/mini.js',
+      'web/wwwroot/js/dropdown.js',
     ])
     .pipe(concat('utility.min.js'))
     .pipe(
@@ -231,7 +241,7 @@ gulp.task('js:integrations:ssrs', function () {
 
 gulp.task('js:shared', function () {
   return gulp
-    .src('web/wwwroot/js/shared.js')
+    .src(['web/wwwroot/js/shared.js', 'web/wwwroot/lib/chartjs/chart.js'])
     .pipe(concat('shared.min.js'))
     .pipe(
       babel({
@@ -359,6 +369,7 @@ gulp.task(
     'font:inter',
     'font:rasa',
     'package:markdown-it',
+    'package:chart.js',
     'js:utility',
     'js:polyfill',
     'js:editor',
@@ -409,11 +420,12 @@ gulp.task(
         'web/Program.cs',
         'web/Startup.cs',
         'web/web/csproj',
-        'web/**/*.json',
+        'web/appsettings.*.json',
         'web/wwwroot/js/polyfill/**/*.js',
         'web/font/fontawesome/**/*.scss',
         'web/wwwroot/**/*.js',
         '!web/wwwroot/**/*.min.js',
+        '!web/wwwroot/lib/**/*',
         'web/wwwroot/**/*.scss',
         'web/wwwroot/**/*.sass',
       ],

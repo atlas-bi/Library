@@ -20,6 +20,7 @@
     "bulma": "^0.9.3",
     "bulma-checkradio": "^2.1.3",
     "bulma-switch": "^2.0.4",
+    "chart.js": "2.9.4",
     "eslint": "^8.9.0",
     "fancy-log": "^2.0.0",
     "focus-within": "^3.0.2",
@@ -52,7 +53,6 @@
   "scripts": {
     "start": "gulp watch",
     "build": "gulp build",
-    "install": "gulp build",
     "watch": "gulp watch:static",
     "prepare": "husky install",
     "pre-commit": "lint-staged",

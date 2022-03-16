@@ -32,6 +32,7 @@
     <link rel="preload" href="@Helpers.UrlHelpers.FontHash("/font/rasa/files/rasa-latin-600-normal.woff2", Cache)" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="@Helpers.UrlHelpers.FontHash("/font/inter/files/inter-latin-500-normal.woff2", Cache)" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="@Helpers.UrlHelpers.FontHash("/font/inter/files/inter-latin-700-normal.woff2", Cache)" as="font" type="font/woff2" crossorigin />
+
 </head>
 <body>
     <!-- site message -->
@@ -50,7 +51,7 @@
         </div>
     }
 
-    <nav class="navbar is-transparent atlas-navbar has-shadow sticky">
+    <nav class="navbar is-transparent atlas-navbar has-shadow is-sticky">
         <div class="container">
             <div class="navbar-brand">
                 <a href="/">
@@ -209,7 +210,7 @@
         @RenderSection("SideBar") }
                     else if (IsSectionDefined("Side_Links"))
                     {
-        <aside class="menu sticky">
+        <aside class="menu is-sticky">
             <ul>
                 @RenderSection("Side_Links", false)
             </ul>
