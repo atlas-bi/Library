@@ -1,5 +1,5 @@
+// Functions to open and close a mini
 (function () {
-  // Functions to open and close a mini
   function openMini($el) {
     $el.classList.add('is-active');
   }

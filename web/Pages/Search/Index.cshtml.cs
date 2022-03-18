@@ -373,7 +373,7 @@ namespace Atlas_Web.Pages.Search
                             { "rq", "{!rerank reRankQuery=$rqq reRankDocs=1000 reRankWeight=5}" },
                             {
                                 "rqq",
-                                "(type:collections^2.7 OR type:reports^2 OR documented:Y^0.1 OR executive_visibility_text:Y^0.2  OR certification_text:\"Analytics Certified\"^0.4 OR certification_text:\"Analytics Reviewed\"^0.4)"
+                                "(type:collections^2.8 OR type:reports^2 OR documented:Y^0.1 OR executive_visibility_text:Y^0.2  OR certification_text:\"Analytics Certified\"^0.4 OR certification_text:\"Analytics Reviewed\"^0.4)"
                             },
                             { "hl.fl", hl },
                             { "hl.requireFieldMatch", hl_match }

@@ -1,4 +1,4 @@
-var debounce = function debounce(func, wait, immediate) {
+function debounce(func, wait, immediate) {
   var timeout;
   return function () {
     var context = this,
@@ -14,9 +14,9 @@ var debounce = function debounce(func, wait, immediate) {
     timeout = setTimeout(later, wait);
     if (callNow) func.apply(context, args);
   };
-};
+}
 
-var getUrlVars = function () {
+function getUrlVars() {
   var vars = {};
   window.location.href
     .split('#')[0]
@@ -24,9 +24,9 @@ var getUrlVars = function () {
       vars[key] = value;
     });
   return vars;
-};
+}
 
-var getOffset = function (element) {
+function getOffset(element) {
   if (!element.getClientRects().length) {
     return {
       top: 0,
@@ -40,9 +40,9 @@ var getOffset = function (element) {
     top: rect.top,
     left: rect.left,
   };
-};
+}
 
-var serialize = function serialize(form) {
+function serialize(form) {
   // Setup our serialized data
   var serialized = []; // Loop through each field in the form
 
@@ -80,9 +80,9 @@ var serialize = function serialize(form) {
   }
 
   return serialized.join('&');
-};
+}
 
-var setCookie = function (name, value, days) {
+function setCookie(name, value, days) {
   var expires = '',
     date = new Date();
 
@@ -91,9 +91,9 @@ var setCookie = function (name, value, days) {
   expires = '; expires=' + date.toUTCString();
 
   document.cookie = name + '=' + (value || '') + expires + '; path=/';
-};
+}
 
-var getCookie = function (name) {
+function getCookie(name) {
   var nameEQ = name + '=';
   var ca = document.cookie.split(';');
 
@@ -108,40 +108,40 @@ var getCookie = function (name) {
   }
 
   return null;
-};
+}
 
-var cache = {
-  timeout: 30 * 60,
-  // mins
-  data: {},
-  remove: function remove(url) {
-    try {
-      sessionStorage.removeItem(btoa(url));
-    } catch (e) {}
-  },
-  exists: function exists(url) {
-    try {
-      return (
-        !!sessionStorage.getItem(btoa(url)) &&
-        JSON.parse(sessionStorage.getItem(btoa(url)))._ > new Date().getTime()
-      );
-    } catch (e) {
-      return false;
-    }
-  },
-  get: function get(url) {
-    return JSON.parse(sessionStorage.getItem(btoa(url))).data;
-  },
-  set: function set(url, data, t) {
-    try {
-      sessionStorage.removeItem(btoa(url));
-      sessionStorage.setItem(
-        btoa(url),
-        JSON.stringify({
-          data: data,
-          _: new Date().getTime() + (t || cache.timeout) * 1000,
-        }),
-      );
-    } catch (e) {}
-  },
-};
+//  function cache = {
+//   timeout: 30 * 60,
+//   // mins
+//   data: {},
+//   remove: function remove(url) {
+//     try {
+//       sessionStorage.removeItem(btoa(url));
+//     } catch (e) {}
+//   },
+//   exists: function exists(url) {
+//     try {
+//       return (
+//         !!sessionStorage.getItem(btoa(url)) &&
+//         JSON.parse(sessionStorage.getItem(btoa(url)))._ > new Date().getTime()
+//       );
+//     } catch (e) {
+//       return false;
+//     }
+//   },
+//   get: function get(url) {
+//     return JSON.parse(sessionStorage.getItem(btoa(url))).data;
+//   },
+//   set: function set(url, data, t) {
+//     try {
+//       sessionStorage.removeItem(btoa(url));
+//       sessionStorage.setItem(
+//         btoa(url),
+//         JSON.stringify({
+//           data: data,
+//           _: new Date().getTime() + (t || cache.timeout) * 1000,
+//         }),
+//       );
+//     } catch (e) {}
+//   },
+// };

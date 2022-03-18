@@ -1,0 +1,11 @@
+// require('./charts');
+// require('./checkbox');
+// require('./collapse');
+// require('./crumbs');
+// require('./drag');
+// require('./hamburger');
+// require('./lazyload');
+// require('./modal');
+// require('./reorder');
+// require('./table');
+// require('./tabs');

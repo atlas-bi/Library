@@ -71,7 +71,6 @@ namespace Atlas_Web.Pages.Analytics
 
         public async Task<ActionResult> OnGetAsync()
         {
-
             TopPages = await (
                 from a in _context.Analytics
                 where a.AccessDateTime >= DateTime.Today.AddDays(-7)
@@ -256,6 +255,11 @@ namespace Atlas_Web.Pages.Analytics
                 return Content("ok");
             }
 
+            /*
+                session: hostname, browser, os, device, screen, lang
+                view: session, time, url, referer
+                event: session, time, url, type, value
+            */
             NewAnalytic.Username = User.Identity.Name;
             NewAnalytic.UserId = MyUser.UserId;
             NewAnalytic.AppCodeName = package.Value<string>("appCodeName") ?? "";
@@ -267,7 +271,7 @@ namespace Atlas_Web.Pages.Analytics
             NewAnalytic.Platform = package.Value<string>("platform") ?? "";
             NewAnalytic.UserAgent = package.Value<string>("userAgent") ?? "";
             NewAnalytic.Host = package.Value<string>("host") ?? "";
-            NewAnalytic.Hostname = package.Value<string>("hostname") ?? "";
+            NewAnalytic.Hostname = package.Value<string>("hostname") ?? ""; // keep
             NewAnalytic.Href = package.Value<string>("href") ?? "";
             NewAnalytic.Protocol = package.Value<string>("protocol") ?? "";
             NewAnalytic.Search = package.Value<string>("search") ?? "";

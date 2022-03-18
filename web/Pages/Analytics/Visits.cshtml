@@ -1,0 +1,88 @@
+
+@page
+@model Atlas_Web.Pages.Analytics.VisitsModel
+@{
+    Layout = null;
+}
+
+<div>
+ <canvas id="visits-chart" width="400" height="400"></canvas>
+   <script>
+
+    var data = {
+        labels: [@foreach (var g in Model.AccessHistory){ <text>"@g.Month"</text> @if(g !=  @Model.AccessHistory.Last()){<text>,</text>} }],
+        datasets: [{
+                        "label": "Load Times (s)",
+                        type: 'line',
+                        yAxisID: '1',
+                        backgroundColor:'rgba(38,128,235,0.4)',
+                        border:'rgba(38,128,235,0.5)',
+                        "data": [
+                                    @foreach (var g in Model.AccessHistory)
+                                    {
+                                        <text>"@g.Month"</text> @if(g !=  @Model.AccessHistory.Last()){<text>,</text>}
+                                    }
+                                ]
+                    },
+                    {
+                        "label": "Page Views",
+                        yAxisID: '2',
+                        backgroundColor:'rgba(38,128,235,0.4)',
+                        border:'rgba(38,128,235,0.5)',
+                        "data": [
+                                    @foreach (var g in Model.AccessHistory)
+                                    {
+                                        <text>@g.Hits</text> @if(g !=  @Model.AccessHistory.Last()){<text>,</text>}
+                                    }
+                                ]
+                    },
+                    {
+                        "label": "Sessions",
+                        yAxisID: '2',
+                        backgroundColor:'rgba(38,128,235,0.6)',
+                        border:'rgba(38,128,235,0.7)',
+                        "data": [
+                                    @foreach (var g in Model.AccessHistory)
+                                    {
+                                        <text>@g.Hits</text> @if(g != @Model.AccessHistory.Last()){<text>,</text>}
+                                    }
+                                ]
+                    }]
+    };
+    var ctx = document.getElementById('visits-chart');
+    var config = {
+  type: 'bar',
+  data: data,
+  options: {
+    animation: {
+        duration: 300,
+      },
+      hover: {
+        animationDuration: 0,
+      },
+      responsive: true,
+      responsiveAnimationDuration: 0,
+      maintainAspectRatio: false,
+      legend: {
+        display: false,
+      },
+      title: {
+          display: false
+      },
+       scales: {
+      yAxes: [{
+        id: '1',
+        type: 'linear',
+        position: 'left',
+      }, {
+        id: '2',
+        type: 'linear',
+        position: 'right',
+      }]
+    }
+  }
+};
+ var visits_chart = new Chart(ctx, config);
+    </script>
+
+    </div>

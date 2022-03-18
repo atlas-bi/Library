@@ -64,6 +64,9 @@ indent_size = 2
 [*.scss]
 indent_size = 2
 
+[*.js]
+indent_size = 2
+
 [*.cs]
 # Extract this nested ternary operation into an independent statement
 dotnet_diagnostic.S3358.severity = None

@@ -17,6 +17,7 @@
         datasets: [{
                         "label": "Load Times (s)",
                         type: 'line',
+                        yAxisID: '1',
                         backgroundColor:'rgba(38,128,235,0.4)',
                         border:'rgba(38,128,235,0.5)',
                         "data": [
@@ -28,6 +29,7 @@
                     },
                     {
                         "label": "Visits",
+                        yAxisID: '2',
                         backgroundColor:'rgba(38,128,235,0.6)',
                         border:'rgba(38,128,235,0.7)',
                         "data": [
@@ -58,6 +60,17 @@
       title: {
           display: false
       },
+       scales: {
+      yAxes: [{
+        id: '1',
+        type: 'linear',
+        position: 'left',
+      }, {
+        id: '2',
+        type: 'linear',
+        position: 'right',
+      }]
+    }
   }
 };
  var myChart = new Chart(ctx, config);

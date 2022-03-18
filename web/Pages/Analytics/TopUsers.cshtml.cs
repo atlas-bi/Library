@@ -37,6 +37,7 @@ namespace Atlas_Web.Pages.Analytics
             public string Name { get; set; }
             public double Time { get; set; }
             public int Count { get; set; }
+            public int Sessions { get; set; }
         }
 
         public class ActiveUserData
@@ -69,12 +70,14 @@ namespace Atlas_Web.Pages.Analytics
         [BindProperty]
         public Models.Analytic NewAnalytic { get; set; }
 
-        public async Task<ActionResult> OnGetAsync()
+        public async Task<ActionResult> OnGetAsync(double start_at = -86400, double end_at = 0)
         {
             TopUsers = (
                 from a in (
                     from a in _context.Analytics
-                    where a.AccessDateTime >= DateTime.Today.AddDays(-7)
+                    where
+                        a.AccessDateTime >= DateTime.Now.AddSeconds(start_at)
+                        && a.AccessDateTime <= DateTime.Now.AddSeconds(end_at)
                     select new { a.User, a.LoadTime }
                 ).ToList()
                 group a by a.User into grp
@@ -89,8 +92,6 @@ namespace Atlas_Web.Pages.Analytics
                     Count = grp.Count()
                 }
             ).Take(10).ToList();
-
-
 
             return Page();
         }

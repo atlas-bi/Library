@@ -25,7 +25,6 @@
   }
 }
 
-
 [data-action='collapse'] {
   cursor: pointer;
 }
@@ -40,9 +39,7 @@
   }
 
   .panel-block {
-
     .is-collapsible {
-
       &:not(.is-active) {
         padding-bottom: 0;
         padding-top: 0;

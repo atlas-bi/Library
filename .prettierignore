@@ -1,5 +1,6 @@
 node_modules/*
-web/wwwroot/css/*
+web/wwwroot/css/*.css
+web/wwwroot/lib/*
 web/solr/*
 web/bin/*
 web/obj/*
@@ -9,3 +10,4 @@ web/wwwroot/lib/codemirror/*
 web/wwwroot/lib/flowchart/*
 web/wwwroot/lib/highlight/*
 *.min.js
+*.build.js

@@ -21,13 +21,12 @@
     padding-bottom: 1rem;
     padding-right: 130px;
   }
-
 }
 
 .query-copy {
   background-color: transparent;
   border: 1px solid transparent;
-  border-radius: .25rem;
+  border-radius: 0.25rem;
   display: inline-block;
   font-size: 1rem;
   height: 30px;
@@ -42,7 +41,6 @@
     outline: none;
   }
 }
-
 
 .query-box + .query-box {
   margin-top: 15px;

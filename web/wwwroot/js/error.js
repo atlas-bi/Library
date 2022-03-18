@@ -46,18 +46,18 @@
   }
 
   if (vars['error']) {
-    message = decodeURI(vars['error']).replaceAll('+', ' ');
+    message = decodeURI(vars['error']).replace(/\+/g, / /);
     addMessage('is-danger', message);
     updateUrl('error');
   }
 
   if (vars['success']) {
-    message = decodeURI(vars['success']).replaceAll('+', ' ');
+    message = decodeURI(vars['success']).replace(/\+/g, / /);
     addMessage('is-success', message);
     updateUrl('success');
   }
   if (vars['warning']) {
-    message = decodeURI(vars['warning']).replaceAll('+', ' ');
+    message = decodeURI(vars['warning']).replace(/\+/g, / /);
     addMessage('is-warning', message);
     updateUrl('warning');
   }

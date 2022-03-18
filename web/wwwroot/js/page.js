@@ -1,5 +1,5 @@
+// related reports
 (function () {
-  // related reports
   function relatedReports() {
     var links = document.querySelectorAll('.body-main a[href]'),
       ids = [],
