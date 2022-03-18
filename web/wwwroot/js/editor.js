@@ -1,5 +1,4 @@
-(function () {
-  /*
+/*
     get all "editors"
 
     <div class="editor"><textarea>initial value</textarea></div>
@@ -11,7 +10,7 @@
     	* data-inputId (optional id to assign to input when parent form is submitted for other uses)
 
     */
-
+(function () {
   var test = 0;
 
   function load() {

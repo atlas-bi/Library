@@ -301,9 +301,7 @@
     q.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
     q.send(JSON.stringify(item));
   }
-})();
 
-(function () {
   document.addEventListener('click', function ($e) {
     var $target, $props;
     if ($e.target.closest('a.star')) {

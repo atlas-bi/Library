@@ -1,30 +1,30 @@
 (function () {
   var d = document,
     a = function (url) {
-      if (cache.exists(url)) {
-        load(cache.get(url));
-      } else {
-        var q = new XMLHttpRequest();
-        q.open('get', url, true);
-        q.setRequestHeader(
-          'Content-Type',
-          'application/x-www-form-urlencoded; charset=UTF-8',
-        );
-        q.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-        q.send();
+      // if (cache.exists(url)) {
+      //   load(cache.get(url));
+      // } else {
+      var q = new XMLHttpRequest();
+      q.open('get', url, true);
+      q.setRequestHeader(
+        'Content-Type',
+        'application/x-www-form-urlencoded; charset=UTF-8',
+      );
+      q.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+      q.send();
 
-        q.onload = function () {
-          load(q.responseText);
-          var ccHeader =
-            q.getResponseHeader('Cache-Control') != null
-              ? (q.getResponseHeader('Cache-Control').match(/\d+/) || [null])[0]
-              : null;
+      q.onload = function () {
+        load(q.responseText);
+        // var ccHeader =
+        //   q.getResponseHeader('Cache-Control') != null
+        //     ? (q.getResponseHeader('Cache-Control').match(/\d+/) || [null])[0]
+        //     : null;
 
-          if (ccHeader) {
-            cache.set(url, q.responseText, ccHeader);
-          }
-        };
-      }
+        // if (ccHeader) {
+        //   cache.set(url, q.responseText, ccHeader);
+        // }
+        // };
+      };
 
       window.profileLoad = undefined;
     },

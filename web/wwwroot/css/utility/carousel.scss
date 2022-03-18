@@ -1,6 +1,6 @@
 $color-active: $grey-dark;
 $carousel-height: 400px;
-$carousel-transition: .1s;
+$carousel-transition: 0.1s;
 $carousel-dot-size: 15px;
 
 .carousel {
@@ -51,7 +51,7 @@ $carousel-dot-size: 15px;
     color: $white;
     display: flex;
     justify-content: center;
-    opacity: .9;
+    opacity: 0.9;
     position: absolute;
     top: 0;
     transition: background-color $carousel-transition ease;
@@ -102,10 +102,9 @@ $carousel-dot-size: 15px;
   }
 }
 
-
 @keyframes carousel-fade {
   from {
-    opacity: .4;
+    opacity: 0.4;
   }
 
   to {

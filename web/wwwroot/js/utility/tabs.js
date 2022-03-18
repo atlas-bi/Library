@@ -77,9 +77,7 @@
       }),
     );
   }
-})();
 
-(function () {
   /*
      div.tab
        div.tab-lnk.active data-target=tab1
@@ -161,9 +159,7 @@
       }),
     );
   }
-})();
 
-(function () {
   /*
      div.tab
        div.tab-lnk.active data-target=tab1

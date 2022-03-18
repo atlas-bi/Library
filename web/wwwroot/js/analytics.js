@@ -165,4 +165,137 @@
       send analitycs update every timeout interval.
       if update is sent because of page load, reset intereval (so we don't have dup data sends)
     */
+
+  // /* analytics page js for charts */
+  // const {
+  //   addMinutes,
+  //   addHours,
+  //   addDays,
+  //   addYears,
+  //   startOfDay,
+  //   startOfWeek,
+  //   startOfMonth,
+  //   startOfYear,
+  //   endOfDay,
+  //   endOfWeek,
+  //   endOfMonth,
+  //   endOfYear,
+  //   differenceInSeconds,
+  // } = require('date-fns');
+
+  document.addEventListener('click', function ($e) {
+    if ($e.target.closest('.dropdown.is-select .dropdown-item')) {
+      (
+        $e.target
+          .closest('.dropdown')
+          .querySelectorAll('.dropdown-item.is-active') || []
+      ).forEach(($el) => {
+        $el.classList.remove('is-active');
+      });
+      $e.target.classList.add('is-active');
+      var $target = $e.target.closest('.dropdown.is-select .dropdown-item');
+
+      $target.closest('.dropdown').querySelector('.select-value').innerText =
+        $target.innerText;
+      const $chartbox = document.getElementById(
+        $target.closest('.dropdown').dataset.target,
+      );
+      /* build date parameters */
+      let now = new Date();
+
+      // function formatDate(date){
+      //   return format(date, ""
+      // }
+
+      switch ($target.dataset.range) {
+        case '1':
+          // today
+          console.log('1');
+          $chartbox.dataset.param =
+            'start_at=' +
+            differenceInSeconds(startOfDay(now), now) +
+            '&end_at=' +
+            differenceInSeconds(endOfDay(now), now);
+
+          break;
+        default:
+        case '2':
+          // last 24 hours
+          console.log('2');
+          $chartbox.dataset.param =
+            'start_at=' +
+            differenceInSeconds(addHours(now, -24), now) +
+            '&end_at=0';
+
+          break;
+        case '3':
+          // this week
+          console.log('3');
+          $chartbox.dataset.param =
+            'start_at=' +
+            differenceInSeconds(startOfWeek(now, -24), now) +
+            '&end_at=' +
+            differenceInSeconds(endOfWeek(now), now);
+          break;
+        case '4':
+          // last 7 days
+          console.log('4');
+          $chartbox.dataset.param =
+            'start_at=' +
+            differenceInSeconds(startOfDay(addDays(now, -7)), now) +
+            '&end_at=0';
+          break;
+        case '5':
+          // this month
+          console.log('5');
+          $chartbox.dataset.param =
+            'start_at=' +
+            differenceInSeconds(startOfMonth(now), now) +
+            '&end_at=' +
+            differenceInSeconds(endOfMonth(now), now);
+          break;
+        case '6':
+          //last 30 days
+          console.log('6');
+          $chartbox.dataset.param =
+            'start_at=' +
+            differenceInSeconds(startOfDay(addDays(now, -30)), now) +
+            '&end_at=0';
+          break;
+        case '7':
+          //last 90 days
+          console.log('7');
+          $chartbox.dataset.param =
+            'start_at=' +
+            differenceInSeconds(startOfDay(addDays(now, -90)), now) +
+            '&end_at=0';
+          break;
+        case '8':
+          // this year
+          console.log('8');
+          $chartbox.dataset.param =
+            'start_at=' +
+            differenceInSeconds(startOfYear(now), now) +
+            '&end_at=' +
+            differenceInSeconds(endOfYear(now), now);
+          break;
+        case '9':
+          // all time
+          console.log('9');
+          $chartbox.dataset.param =
+            'start_at=' +
+            differenceInSeconds(addYears(now, -10), now) +
+            '&end_at=0';
+          break;
+        case '10':
+          // custom range
+          console.log('10');
+          break;
+      }
+
+      document
+        .getElementById($target.closest('.dropdown').dataset.target)
+        .dispatchEvent(new CustomEvent('reload'));
+    }
+  });
 })();

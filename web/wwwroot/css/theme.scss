@@ -17,7 +17,6 @@ $fontDir: '/font/inter/';
   $fontDir: '/font/inter/files/'
 );
 
-
 @include fontFace(
   $fontName: Inter,
   $weight: 600,
@@ -58,12 +57,16 @@ $weight-light: 400;
 $weight-semibold: 600;
 $weight-bold: 700;
 
-
 $dimensions: 16 24 32 48 64 96 128 256;
 $body-size: 14px;
 
 // reset
-h1,h2,h3,h4,h5,h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-weight: $weight-bold;
 }
 @import '../../../node_modules/bulma/sass/utilities/initial-variables';
@@ -72,10 +75,9 @@ $card-footer-padding: 0.5rem 0.75rem;
 @import '../../../node_modules/bulma-checkradio/src/sass/index';
 @import '../../../node_modules/bulma/bulma';
 
-
-
 // reset pre
-.content pre, pre {
+.content pre,
+pre {
   -webkit-overflow-scrolling: touch;
   background-color: transparent;
   font-size: 1em;
@@ -85,19 +87,18 @@ $card-footer-padding: 0.5rem 0.75rem;
   word-wrap: normal;
 }
 
-$badge-height:13px;
+$badge-height: 13px;
 @import '../../../node_modules/@creativebulma/bulma-badge/src/sass/index';
 @import '../../../node_modules/bulma-switch/src/sass/index';
-
 
 $steps-active-color: $link;
 $steps-completed-color: $link;
 @import '../../../node_modules/bulma-steps-component/bulma-steps';
-@import "../../../node_modules/@creativebulma/bulma-tooltip/src/sass/index";
+@import '../../../node_modules/@creativebulma/bulma-tooltip/src/sass/index';
 
 // override tooltip bottom border
-span[data-tooltip]{
-    border-bottom:None;
+span[data-tooltip] {
+  border-bottom: None;
 }
 
 @import './mail/mail';
@@ -181,20 +182,20 @@ $card-colors: (
 }
 
 /* load image */
-img[data-src="/img/loader.gif"],
-source[data-srcset="/img/loader.webp"] {
+img[data-src='/img/loader.gif'],
+source[data-srcset='/img/loader.webp'] {
   width: 25px !important;
   height: 25px !important;
   margin: auto;
 }
 
 .report-image {
-    height:400px;
+  height: 400px;
 }
 .report-image .image img,
 .report-image .image source {
-    width:auto;
-    height:400px;
+  width: auto;
+  height: 400px;
 }
 
 /* search */
@@ -248,7 +249,7 @@ source[data-srcset="/img/loader.webp"] {
   font-size: 50%;
   padding: 6px;
   width: 13px;
-  height:13px;
+  height: 13px;
 }
 
 .ss-content pre,
@@ -264,7 +265,6 @@ source[data-srcset="/img/loader.webp"] {
 .column {
   min-width: 1px;
 }
-
 
 /* fix nav dropdown in IE 11. focus within breaks it all */
 @include desktop {
@@ -347,15 +347,16 @@ a.navbar-link:hover,
 }
 
 /* sticky */
-.sticky {
+.sticky,
+.is-sticky {
   position: sticky;
-  top:calc(56px + 14px);
+  top: calc(56px + 14px);
 }
 
-nav.sticky {
- top: 0;
+nav.sticky,
+nav.is-sticky {
+  top: 0;
 }
-
 
 .panel-tab.is-active {
   color: $panel-list-item-hover-color;
@@ -368,24 +369,23 @@ nav.sticky {
   margin-bottom: 1.5rem;
 }
 
-
 .new-image,
 .new-image > label {
-    height:100%;
+  height: 100%;
 }
 .new-image .file-cta {
-    width:256px;
-    height:296px;
-    justify-content: center;
+  width: 256px;
+  height: 296px;
+  justify-content: center;
 }
 
 .image picture img {
-    max-height: 100%;
-    max-width:100%;
-    width:auto;
+  max-height: 100%;
+  max-width: 100%;
+  width: auto;
 }
 .steps .is-submit .steps-marker.is-hollow:hover {
-    border-color: $success-dark;
+  border-color: $success-dark;
 }
 
 .steps .is-cancel.steps-segment:after {
@@ -398,9 +398,8 @@ nav.sticky {
   border-color: $warning-dark;
 }
 
-
 .is-nobreak {
-    white-space:nowrap
+  white-space: nowrap;
 }
 .img-modal-lg {
   max-height: 80% !important;
@@ -412,13 +411,18 @@ code {
   border-radius: 3px;
 }
 
-[data-tooltip]:not(.is-disabled):hover:after, [data-tooltip]:not(.is-disabled):hover:before, [data-tooltip]:not(.is-loading):hover:after, [data-tooltip]:not(.is-loading):hover:before, [data-tooltip]:not([disabled]):hover:after, [data-tooltip]:not([disabled]):hover:before {
+[data-tooltip]:not(.is-disabled):hover:after,
+[data-tooltip]:not(.is-disabled):hover:before,
+[data-tooltip]:not(.is-loading):hover:after,
+[data-tooltip]:not(.is-loading):hover:before,
+[data-tooltip]:not([disabled]):hover:after,
+[data-tooltip]:not([disabled]):hover:before {
   font-weight: $weight-light;
 }
 
-
 // modal overrides
-.modal, .modal-content {
+.modal,
+.modal-content {
   overflow: visible;
 }
 
@@ -429,27 +433,27 @@ code {
 
 .modal-image {
   width: 90vw;
-  height:auto;
-  margin-top:auto;
-  margin-bottom:auto;
-  max-height:90vh
+  height: auto;
+  margin-top: auto;
+  margin-bottom: auto;
+  max-height: 90vh;
 }
 
 .modal-image img,
 .modal-image source {
-max-height:90vh !important
+  max-height: 90vh !important;
 }
 
 .js-modal-trigger {
-  cursor:pointer;
+  cursor: pointer;
 }
 
-button.is-ghost:not(.button){
-    background-color: transparent;
-    border: none;
-    font-size: 1rem;
-    font-weight: $weight-normal;
-    outline: none;
+button.is-ghost:not(.button) {
+  background-color: transparent;
+  border: none;
+  font-size: 1rem;
+  font-weight: $weight-normal;
+  outline: none;
 }
 
 .has-text-gold {
@@ -459,23 +463,23 @@ button.is-ghost:not(.button){
   padding: 0;
 }
 .has-shadow-gold {
-  box-shadow: 0 0.5em 1em -0.125em rgba(255,215,0, 0.1), 0 0px 0 1px rgba(255,215,0, 0.02);
-  border: 1px solid rgb(255,215,0);
+  box-shadow: 0 0.5em 1em -0.125em rgba(255, 215, 0, 0.1),
+    0 0px 0 1px rgba(255, 215, 0, 0.02);
+  border: 1px solid rgb(255, 215, 0);
 }
 
 .is-hover {
   border: 1px solid $warning;
 }
 .is-warning.is-outlined.is-active {
-  background-color:$warning;
+  background-color: $warning;
   border-color: transparent;
 }
 
-
 .fav-count {
   position: absolute;
-  top:-14px;
-  right:-14px;
+  top: -14px;
+  right: -14px;
 }
 .tag:not(body) {
   line-height: 2;
@@ -485,24 +489,25 @@ button.is-ghost:not(.button){
   font-weight: bold;
 }
 
-.button.favorite-reorder, .favorite-folder-controls {
+.button.favorite-reorder,
+.favorite-folder-controls {
   position: absolute;
   z-index: 1;
   top: 50%;
   transform: translateY(-50%);
-  display:none;
+  display: none;
 }
-.favorite-folder-controls{
-  right:-14px;
+.favorite-folder-controls {
+  right: -14px;
 }
 .button.favorite-reorder {
   left: 0px;
 }
 .favorite:hover .favorite-reorder {
-  display:block;
+  display: block;
 }
 
 .favorites-folder:hover .favorite-folder-controls,
 .favorites-show-all:hover .favorite-folder-controls {
-  display:block;
+  display: block;
 }

@@ -108,8 +108,6 @@ namespace Atlas_Web
                     pipeline.AddCssBundle("/css/site.min.css", "css/site.min.css");
 
                     /************   javascript   *************/
-
-                    // for ie11
                     pipeline.AddJavaScriptBundle("/js/polyfill.min.js", "/js/polyfill.min.js");
 
                     pipeline.AddJavaScriptBundle("/js/shared.min.js", "/js/shared.min.js");
@@ -281,12 +279,12 @@ namespace Atlas_Web
                 }
                 catch
                 {
-                    cache.Set("logo", "/img/atlas-logo.png");
+                    cache.Set("logo", "/img/atlas-logo-smooth.png");
                 }
             }
             else
             {
-                cache.Set("logo", "/img/atlas-logo.png");
+                cache.Set("logo", "/img/atlas-logo-smooth.png");
             }
         }
     }

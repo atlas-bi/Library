@@ -8,14 +8,14 @@
 @section SideBar {}
 @section AdBar {}
 @section js {
-    <script src="/js/settings.min.js" defer></script>
+    @* <script src="/js/settings.min.js" defer></script> *@
 }
 
 <h1 class="title is-1">@ViewData["Title"]</h1>
 
 
 <div class="columns">
-    <div class="column is-one-quarter sticky is-align-self-flex-start">
+    <div class="column is-one-quarter is-sticky is-align-self-flex-start">
         <nav class="panel">
             @if (ViewBag.Permissions.Contains(18))
             {

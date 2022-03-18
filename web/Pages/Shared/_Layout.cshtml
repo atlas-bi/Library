@@ -13,8 +13,11 @@
     <link rel="stylesheet" href="/css/site.min.css" />
     <style type="text/css" minify>@Cache.Get("global_css")</style>
 
+    @* <link rel="preload" href="/js/utility.min.js" as="script" />
     <link rel="preload" href="/js/main.min.js" as="script" />
-    <link rel="preload" href="/js/search.min.js" as="script" />
+    <link rel="repload" href="/js/editor.min.js" as="script" />
+    <link rel="repload" href="/js/flowchart.min.js" as="script" />
+    <link rel="repload" href="/js/highlight.min.js" as="script" /> *@
 
     @RenderSection("css", required: false)
 
@@ -32,6 +35,7 @@
     <link rel="preload" href="@Helpers.UrlHelpers.FontHash("/font/rasa/files/rasa-latin-600-normal.woff2", Cache)" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="@Helpers.UrlHelpers.FontHash("/font/inter/files/inter-latin-500-normal.woff2", Cache)" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="@Helpers.UrlHelpers.FontHash("/font/inter/files/inter-latin-700-normal.woff2", Cache)" as="font" type="font/woff2" crossorigin />
+
 </head>
 <body>
     <!-- site message -->
@@ -50,7 +54,7 @@
         </div>
     }
 
-    <nav class="navbar is-transparent atlas-navbar has-shadow sticky">
+    <nav class="navbar is-transparent atlas-navbar has-shadow is-sticky">
         <div class="container">
             <div class="navbar-brand">
                 <a href="/">
@@ -206,14 +210,16 @@
                 <div class="column is-narrow side-links" style="z-index: 2;">
                     @if (IsSectionDefined("SideBar"))
                     {
-        @RenderSection("SideBar") }
+                        @RenderSection("SideBar")
+                    }
                     else if (IsSectionDefined("Side_Links"))
                     {
-        <aside class="menu sticky">
-            <ul>
-                @RenderSection("Side_Links", false)
-            </ul>
-        </aside>}
+                        <aside class="menu is-sticky">
+                            <ul>
+                                @RenderSection("Side_Links", false)
+                            </ul>
+                        </aside>
+                    }
                 </div>
                 <div class="column body-mainCtn">
                     @RenderBody()
@@ -221,18 +227,22 @@
 
                 @if (IsSectionDefined("AdBar"))
                 {
-    @RenderSection("AdBar") }
+                    @RenderSection("AdBar")
+                }
                 else
                 {
-    <div class="column is-narrow-tablet is-hidden-mobile" id="AdColTwo" style="max-width:20%;">
-        <!-- sidebar -->
-        @if (ViewBag.AdLists != null)
-        {
-<div id="related-reports"></div>
-                    @foreach (var ad in ViewBag.AdLists)
-                    {
-<div class="col" data-ajax="yes" data-url="@ad.Url"></div>}}
-    </div>}
+                    <div class="column is-narrow-tablet is-hidden-mobile" id="AdColTwo" style="max-width:20%;">
+                        <!-- sidebar -->
+                        @if (ViewBag.AdLists != null)
+                        {
+                            <div id="related-reports"></div>
+                            @foreach (var ad in ViewBag.AdLists)
+                            {
+                                <div class="col" data-ajax="yes" data-url="@ad.Url"></div>
+                            }
+                        }
+                    </div>
+                }
             </div>
         </div>
     </section>
@@ -241,7 +251,12 @@
     <div class="mail-notification-container"></div>
     <partial name="_Messagebox" />
 
-    <!-- IE11 polyfill must come first -->
+    @*<script src="/js/main.min.js" async defer></script>
+    <script src="/js/utility.min.js" async defer></script>
+    <script src="/js/editor.min.js" async defer></script>
+    <script src="/js/flowchart.min.js" async defer></script>
+    <script src="/js/highlight.min.js" async defer></script>
+    *@
     <script src="/js/polyfill.min.js"></script>
     <script src="/js/shared.min.js"></script>
     <script src="/js/search.min.js" defer></script>
@@ -251,22 +266,6 @@
     <script src="/js/editor.min.js" defer></script>
 
     @RenderSection("js", required: false)
-
-    <script>
-        (function(){
-            try {
-                new Function('async () => {}')();
-                console.log("loading code highlight")
-
-                var element = document.createElement("script");
-                element.type = 'text/javascript';
-                element.src = "@this.AddBundleVersionToPath("/js/code.min.js")";
-                document.body.appendChild(element);
-            } catch (error) {
-            }
-        })()
-    </script>
-
 
 </body>
 </html>

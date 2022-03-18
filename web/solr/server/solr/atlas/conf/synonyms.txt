@@ -20,7 +20,7 @@ MB,mib,megabyte,megabytes
 
 
 carity,clarity
-covid,covid-19,corona virus,covid 19,covid dashboard,covid dash,covid department,sars,corona,covid19,the rona,sars-cov-2
+covid,covid-19,corona virus,covid 19,covid dashboard,covid dash,covid department,sars,corona,covid19,the rona,sars-cov-2,coronavirus
 vaccination,vax,vaxx,vaccinated,booster,boosted,jabbed
 chemo,chemotherapty
 ip,inpatient
