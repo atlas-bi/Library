@@ -544,5 +544,4 @@
         .dispatchEvent(new CustomEvent('reload'));
     }
   });
-
 })();
