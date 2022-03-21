@@ -264,7 +264,20 @@
     <script src="/js/main.min.js" defer></script>
     <script src="/js/profile.min.js" defer></script>
     <script src="/js/editor.min.js" defer></script>
+    <script>
+        (function(){
+            try {
+                new Function('async () => {}')();
+                console.log("loading code highlight")
 
+                var element = document.createElement("script");
+                element.type = 'text/javascript';
+                element.src = "@this.AddBundleVersionToPath("/js/code.min.js")";
+                document.body.appendChild(element);
+            } catch (error) {
+            }
+        })()
+    </script>
     @RenderSection("js", required: false)
 
 </body>
