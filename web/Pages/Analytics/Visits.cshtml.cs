@@ -73,6 +73,18 @@ namespace Atlas_Web.Pages.Analytics
 
         public async Task<ActionResult> OnGetAsync(double start_at = -86400, double end_at = 0)
         {
+            double diff = end_at - start_at;
+
+            /*
+            when start - end < 2days, use 1 AM, 2 AM...
+            when start - end < 8 days use  Sun 3/20, Mon 3/21...
+            when start - end < 365 days use Mar 1, Mar 2 ...
+            when start - end > 365 days use Jan, Feb ...
+
+            when using all time, get first day and last day and use the above rules
+            */
+
+
             AccessHistory = await (
                 from a in _context.Analytics
                 where
