@@ -6,7 +6,7 @@ const log = require('fancy-log');
 var iis;
 
 gulp.task('iis:kill', function (cb) {
-  var kill = spawn('taskkill', ['/IM', 'IISExpress.exe'], { detached: true });
+  var kill = spawn('taskkill', ['/IM', 'IISExpress.exe', '/F'], { detached: true });
   kill.stderr.on('data', (data) => {
     log.error(data.toString().replace(/^\s+|\s+$/g, ''));
   });

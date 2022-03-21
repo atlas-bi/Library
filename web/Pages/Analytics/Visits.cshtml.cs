@@ -73,9 +73,10 @@ namespace Atlas_Web.Pages.Analytics
 
         public async Task<ActionResult> OnGetAsync(double start_at = -86400, double end_at = 0)
         {
-            double diff = end_at - start_at;
 
-            /*
+           // double diff = end_at - start_at;
+
+             /*
             when start - end < 2days, use 1 AM, 2 AM...
             when start - end < 8 days use  Sun 3/20, Mon 3/21...
             when start - end < 365 days use Mar 1, Mar 2 ...
@@ -83,28 +84,68 @@ namespace Atlas_Web.Pages.Analytics
 
             when using all time, get first day and last day and use the above rules
             */
-
-
-            AccessHistory = await (
-                from a in _context.Analytics
-                where
-                    a.AccessDateTime >= DateTime.Now.AddSeconds(start_at)
-                    && a.AccessDateTime <= DateTime.Now.AddSeconds(end_at)
-                group a by new DateTime(
-                    (a.AccessDateTime ?? DateTime.Now).Year,
-                    (a.AccessDateTime ?? DateTime.Now).Month,
-                    (a.AccessDateTime ?? DateTime.Now).Day,
-                    0,
-                    0,
-                    0
-                ) into grp
-                select new AccessHistoryData
+            switch ( end_at - start_at)
                 {
-                    Date = grp.Key.ToString("MMMM dd"),
-                    Sessions = grp.Select(x => x.SessionId).Distinct().Count(),
-                    Pages = grp.Select(x => x.PageId).Distinct().Count()
+                    // for < 2 days
+                    // 1 AM, 2 AM etc..
+                    default:
+                    case < 172800:
+                        AccessHistory = await ( from a in _context.Analytics
+                                            where a.AccessDateTime >= DateTime.Now.AddSeconds(start_at)
+                                                    && a.AccessDateTime <= DateTime.Now.AddSeconds(end_at)
+                                            group a by new DateTime((a.AccessDateTime ?? DateTime.Now).Year, (a.AccessDateTime ?? DateTime.Now).Month, (a.AccessDateTime ?? DateTime.Now).Day,(a.AccessDateTime ?? DateTime.Now).Hour,0,0) into grp
+                                            select new AccessHistoryData {
+                                                Date =grp.Key.ToString("h tt"),
+                                                Sessions =grp.Select(x => x.SessionId).Distinct().Count(),
+                                                Pages = grp.Select(x => x.PageId).Distinct().Count()
+
+                                            }).ToListAsync();
+
+                        break;
+                    // for < 8 days
+                    //  Sun 3/20, Mon 3/21...
+                    case < 691200:
+                        AccessHistory = await ( from a in _context.Analytics
+                                            where a.AccessDateTime >= DateTime.Now.AddSeconds(start_at)
+                                                    && a.AccessDateTime <= DateTime.Now.AddSeconds(end_at)
+                                            group a by new DateTime((a.AccessDateTime ?? DateTime.Now).Year, (a.AccessDateTime ?? DateTime.Now).Month, (a.AccessDateTime ?? DateTime.Now).Day,0,0,0) into grp
+                                            select new AccessHistoryData {
+                                                Date =grp.Key.ToString("ddd M/d"),
+                                                Sessions =grp.Select(x => x.SessionId).Distinct().Count(),
+                                                Pages = grp.Select(x => x.PageId).Distinct().Count()
+
+                                            }).ToListAsync();
+                        break;
+                    // for < 365 days
+                    // Mar 1, Mar 2
+                    case < 31536000:
+                        AccessHistory = await ( from a in _context.Analytics
+                                        where a.AccessDateTime >= DateTime.Now.AddSeconds(start_at)
+                                                && a.AccessDateTime <= DateTime.Now.AddSeconds(end_at)
+                                        group a by new DateTime((a.AccessDateTime ?? DateTime.Now).Year, (a.AccessDateTime ?? DateTime.Now).Month, (a.AccessDateTime ?? DateTime.Now).Day,0,0,0) into grp
+                                        select new AccessHistoryData {
+                                            Date =grp.Key.ToString("MMM d"),
+                                            Sessions =grp.Select(x => x.SessionId).Distinct().Count(),
+                                            Pages = grp.Select(x => x.PageId).Distinct().Count()
+
+                                        }).ToListAsync();
+                        break;
+                    case >= 31536000:
+                        AccessHistory = await ( from a in _context.Analytics
+                                        where a.AccessDateTime >= DateTime.Now.AddSeconds(start_at)
+                                                && a.AccessDateTime <= DateTime.Now.AddSeconds(end_at)
+                                        group a by new DateTime((a.AccessDateTime ?? DateTime.Now).Year, (a.AccessDateTime ?? DateTime.Now).Month, 0,0,0,0) into grp
+                                        select new AccessHistoryData {
+                                            Date =grp.Key.ToString("MMM"),
+                                            Sessions =grp.Select(x => x.SessionId).Distinct().Count(),
+                                            Pages = grp.Select(x => x.PageId).Distinct().Count()
+
+                                        }).ToListAsync();
+                        break;
+
                 }
-            ).ToListAsync();
+
+
 
             // AccessHistory = (
             //     from a in _context.Analytics

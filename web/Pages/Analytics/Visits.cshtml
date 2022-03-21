@@ -12,23 +12,10 @@
     var data = {
         labels: [@foreach (var g in Model.AccessHistory){ <text>"@g.Date"</text> @if(g !=  @Model.AccessHistory.Last()){<text>,</text>} }],
         datasets: [{
-                        "label": "Load Times (s)",
-                        type: 'line',
-                        yAxisID: '1',
-                        backgroundColor:'rgba(38,128,235,0.4)',
-                        border:'rgba(38,128,235,0.5)',
-                        "data": [
-                                    @foreach (var g in Model.AccessHistory)
-                                    {
-                                        <text>"@g.Date"</text> @if(g !=  @Model.AccessHistory.Last()){<text>,</text>}
-                                    }
-                                ]
-                    },
-                    {
-                        "label": "Page Views",
-                        yAxisID: '2',
-                        backgroundColor:'rgba(38,128,235,0.4)',
-                        border:'rgba(38,128,235,0.5)',
+                        "label": "Views",
+                        backgroundColor:'rgba(38,128,235,0.2)',
+                        borderColor:'rgba(38,128,235,0.3)',
+                        stack: "bar",
                         "data": [
                                     @foreach (var g in Model.AccessHistory)
                                     {
@@ -37,10 +24,10 @@
                                 ]
                     },
                     {
-                        "label": "Sessions",
-                        yAxisID: '2',
-                        backgroundColor:'rgba(38,128,235,0.6)',
-                        border:'rgba(38,128,235,0.7)',
+                        "label": "Visitors",
+                        backgroundColor:'rgba(38,128,235,0.4)',
+                        borderColor:'rgba(38,128,235,0.5)',
+                        stack: "bar",
                         "data": [
                                     @foreach (var g in Model.AccessHistory)
                                     {
@@ -64,20 +51,29 @@
       responsiveAnimationDuration: 0,
       maintainAspectRatio: false,
       legend: {
-        display: false,
+        display: true,
+        position: 'bottom',
       },
       title: {
-          display: false
+          display: false,
+
       },
        scales: {
       yAxes: [{
-        id: '1',
+          ticks: {
+              beginAtZero: true,
+          },
+        stacked: false,
         type: 'linear',
         position: 'left',
-      }, {
-        id: '2',
-        type: 'linear',
-        position: 'right',
+      }],
+      xAxes: [{
+          stacked: true
+       //   type: 'time',
+       //   distribution: 'series',
+       //   ticks: {
+       //       autoSkipPadding: 1
+       //   }
       }]
     }
   }

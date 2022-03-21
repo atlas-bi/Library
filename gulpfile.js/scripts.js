@@ -1,12 +1,27 @@
 const concat = require('gulp-concat');
 const uglify = require('gulp-uglify');
 const gulp = require('gulp');
-const babel = require('gulp-babel');
 const log = require('fancy-log');
 const rollup = require('rollup-stream-gulp');
 const { nodeResolve } = require('@rollup/plugin-node-resolve');
 const commonjs = require('@rollup/plugin-commonjs');
+const {babel}=require('@rollup/plugin-babel');
 
+const rollupConfig = {
+  output: { format: 'iife', name: 'module' },
+  plugins: [
+    nodeResolve({ browser: true, preferBuiltins: false }),
+    commonjs(),
+    babel({
+      babelHelpers: 'bundled',
+    }),
+  ],
+}
+const uglifyConfig = {
+  ie: true,
+  v8: true,
+  webkit: true,
+}
 gulp.task('js:polyfill', function () {
   return gulp
     .src([
@@ -20,7 +35,8 @@ gulp.task('js:polyfill', function () {
       'web/wwwroot/js/polyfill/sticky.js',
     ])
     .pipe(concat('polyfill.min.js'))
-    .pipe(uglify())
+
+    .pipe(uglify(uglifyConfig))
     .pipe(gulp.dest('web/wwwroot/js/'));
 });
 
@@ -48,67 +64,39 @@ gulp.task('js:utility', function () {
         'web/wwwroot/js/utility/hamburger.js',
         'web/wwwroot/js/mini.js',
         'web/wwwroot/js/dropdown.js',
+        'node_modules/chart.js/dist/chart.js',
       ])
-
-      .pipe(
-        rollup({
-          output: { format: 'iife', name: 'module' },
-          plugins: [
-            nodeResolve({ browser: true, preferBuiltins: false }),
-            commonjs(),
-          ],
-        }),
-      )
+      .pipe(rollup(rollupConfig))
       .pipe(concat('utility.min.js'))
-      // .pipe(
-      //   babel({
-      //     presets: ['@babel/preset-env'],
-      //   }),
-      // )
-      .pipe(uglify())
+      .pipe(uglify(uglifyConfig))
       .pipe(gulp.dest('web/wwwroot/js/'))
   );
 });
 gulp.task('js:highlighter', () => {
   return gulp
     .src('web/wwwroot/lib/highlight/highlight.js')
-    .pipe(
-      rollup({
-        output: { format: 'iife', name: 'module' },
-        plugins: [
-          nodeResolve({ browser: true, preferBuiltins: false }),
-          commonjs(),
-        ],
-      }),
-    )
+    .pipe(rollup(rollupConfig))
     .pipe(concat('highlight.min.js'))
-    .pipe(uglify())
+    .pipe(uglify(uglifyConfig))
     .pipe(gulp.dest('web/wwwroot/js/'));
 });
 gulp.task('js:integrations:ssrs', function () {
   return gulp
     .src(['web/wwwroot/js/integrations/ssrs.js'])
+    .pipe(rollup(rollupConfig))
     .pipe(concat('ssrs.min.js'))
-    .pipe(
-      babel({
-        presets: ['@babel/preset-env'],
-      }),
-    )
-    .pipe(uglify())
+    .pipe(uglify(uglifyConfig))
     .pipe(gulp.dest('web/wwwroot/js/integrations/'));
 });
 
 gulp.task('js:shared', function () {
+  // shared functions should be imported as needed.
   return (
     gulp
-      .src(['web/wwwroot/js/shared.js', 'web/wwwroot/lib/chartjs/chart.js'])
+      .src(['web/wwwroot/js/shared.js'/*, 'web/wwwroot/lib/chartjs/chart.js'*/])
+     // .pipe(rollup(rollupConfig))
       .pipe(concat('shared.min.js'))
-      // .pipe(
-      //   babel({
-      //     presets: ['@babel/preset-env'],
-      //   }),
-      // )
-      .pipe(uglify())
+      .pipe(uglify(uglifyConfig))
       .pipe(gulp.dest('web/wwwroot/js/'))
   );
 });
@@ -116,13 +104,9 @@ gulp.task('js:shared', function () {
 gulp.task('js:search', function () {
   return gulp
     .src(['web/wwwroot/js/search.js', 'web/wwwroot/js/error.js'])
+    .pipe(rollup(rollupConfig))
     .pipe(concat('search.min.js'))
-    .pipe(
-      babel({
-        presets: ['@babel/preset-env'],
-      }),
-    )
-    .pipe(uglify())
+    .pipe(uglify(uglifyConfig))
     .pipe(gulp.dest('web/wwwroot/js/'));
 });
 
@@ -130,13 +114,9 @@ gulp.task('js:settings', function () {
   return (
     gulp
       .src(['web/wwwroot/js/settings.js', 'web/wwwroot/js/access.js'])
+      .pipe(rollup(rollupConfig))
       .pipe(concat('settings.min.js'))
-      // .pipe(
-      //   babel({
-      //     presets: ['@babel/preset-env'],
-      //   }),
-      // )
-      .pipe(uglify())
+      .pipe(uglify(uglifyConfig))
       .pipe(gulp.dest('web/wwwroot/js/'))
   );
 });
@@ -148,13 +128,9 @@ gulp.task('js:editor', function () {
       'web/wwwroot/js/utility/checkbox.js',
       'web/wwwroot/js/reportEditor.js',
     ])
+    .pipe(rollup(rollupConfig))
     .pipe(concat('editor.min.js'))
-    .pipe(
-      babel({
-        presets: ['@babel/preset-env'],
-      }),
-    )
-    .pipe(uglify())
+    .pipe(uglify(uglifyConfig))
     .pipe(gulp.dest('web/wwwroot/js/'));
 });
 
