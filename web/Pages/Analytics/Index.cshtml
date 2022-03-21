@@ -11,9 +11,7 @@
 
 <div id="active-users"></div>
 
-
-
-
+<div class="is-flex is-justify-content-space-between">
 <h3 class="title is-3">Access History</h3>
 <div class="dropdown is-select"  data-target="views-chart" >
         <div class="dropdown-trigger ">
@@ -63,8 +61,8 @@
             </div>
         </div>
     </div>
-    <div id="views-chart" data-ajax="yes" data-url="/Analytics/Views" data-param="" style="min-height:400px;"></div>
-
+</div>
+<div id="views-chart" data-ajax="yes" data-url="/Analytics/Visits" data-param="" style="min-height:400px;"></div>
 
 <h2 class="title is-2">Last 7 Days - Top Ten</h2>
 
@@ -119,7 +117,7 @@
         </div>
     </div>
 </div>
-<div id="top-users-chart" data-ajax="yes" data-url="/Analytics/TopUsers" data-param="type=Last 24 hours" style="min-height:400px;"></div>
+<div id="top-users-chart" data-ajax="yes" data-url="/Analytics/TopUsers" data-param="" style="min-height:400px;"></div>
 
 <h3 class="title is-3">Most Popular Pages</h3>
 

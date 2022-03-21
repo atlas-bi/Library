@@ -15,7 +15,7 @@
       $el
         .closest('.reorder')
         .querySelectorAll('.drg:not(.drag-source):not(.drag)')
-        .forEach(($child) => {
+        .forEach(function ($child) {
           var $child_cords = getOffset($child),
             $child_top = $child_cords.top,
             $child_bottom = $child_cords.top + $child.clientHeight,

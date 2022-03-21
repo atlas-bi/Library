@@ -250,13 +250,6 @@
 
     <div class="mail-notification-container"></div>
     <partial name="_Messagebox" />
-
-    @*<script src="/js/main.min.js" async defer></script>
-    <script src="/js/utility.min.js" async defer></script>
-    <script src="/js/editor.min.js" async defer></script>
-    <script src="/js/flowchart.min.js" async defer></script>
-    <script src="/js/highlight.min.js" async defer></script>
-    *@
     <script src="/js/polyfill.min.js"></script>
     <script src="/js/shared.min.js"></script>
     <script src="/js/search.min.js" defer></script>
@@ -269,7 +262,6 @@
             try {
                 new Function('async () => {}')();
                 console.log("loading code highlight")
-
                 var element = document.createElement("script");
                 element.type = 'text/javascript';
                 element.src = "@this.AddBundleVersionToPath("/js/code.min.js")";

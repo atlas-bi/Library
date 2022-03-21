@@ -50,11 +50,6 @@ gulp.task('js:utility', function () {
         'web/wwwroot/js/dropdown.js',
       ])
 
-      // .pipe(
-      //   babel({
-      //     presets: ['@babel/preset-env'],
-      //   }),
-      // )
       .pipe(
         rollup({
           output: { format: 'iife', name: 'module' },
@@ -65,11 +60,31 @@ gulp.task('js:utility', function () {
         }),
       )
       .pipe(concat('utility.min.js'))
+      // .pipe(
+      //   babel({
+      //     presets: ['@babel/preset-env'],
+      //   }),
+      // )
       .pipe(uglify())
       .pipe(gulp.dest('web/wwwroot/js/'))
   );
 });
-
+gulp.task('js:highlighter', () => {
+  return gulp
+    .src('web/wwwroot/lib/highlight/highlight.js')
+    .pipe(
+      rollup({
+        output: { format: 'iife', name: 'module' },
+        plugins: [
+          nodeResolve({ browser: true, preferBuiltins: false }),
+          commonjs(),
+        ],
+      }),
+    )
+    .pipe(concat('highlight.min.js'))
+    .pipe(uglify())
+    .pipe(gulp.dest('web/wwwroot/js/'));
+});
 gulp.task('js:integrations:ssrs', function () {
   return gulp
     .src(['web/wwwroot/js/integrations/ssrs.js'])
@@ -154,5 +169,6 @@ gulp.task(
     'js:shared',
     'js:utility',
     'js:integrations:ssrs',
+    'js:highlighter',
   ),
 );
