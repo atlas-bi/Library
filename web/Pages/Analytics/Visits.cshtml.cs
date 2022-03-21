@@ -56,8 +56,9 @@ namespace Atlas_Web.Pages.Analytics
 
         public class AccessHistoryData
         {
-            public string Month { get; set; }
-            public int Hits { get; set; }
+            public string Date { get; set; }
+            public int Pages { get; set; }
+            public int Sessions { get; set; }
         }
 
         public List<MediumData> TopUsers { get; set; }
@@ -72,23 +73,44 @@ namespace Atlas_Web.Pages.Analytics
 
         public async Task<ActionResult> OnGetAsync(double start_at = -86400, double end_at = 0)
         {
-            AccessHistory = (
+            AccessHistory = await (
                 from a in _context.Analytics
                 where
                     a.AccessDateTime >= DateTime.Now.AddSeconds(start_at)
                     && a.AccessDateTime <= DateTime.Now.AddSeconds(end_at)
-                group a by new
-                {
-                    year = a.AccessDateTime.Value.Year,
-                    month = a.AccessDateTime.Value.Month
-                } into tmp
-                orderby tmp.Key.year ,tmp.Key.month
+                group a by new DateTime(
+                    (a.AccessDateTime ?? DateTime.Now).Year,
+                    (a.AccessDateTime ?? DateTime.Now).Month,
+                    (a.AccessDateTime ?? DateTime.Now).Day,
+                    0,
+                    0,
+                    0
+                ) into grp
                 select new AccessHistoryData
                 {
-                    Month = tmp.Key.month.ToString() + "/01/" + tmp.Key.year.ToString(),
-                    Hits = tmp.Count()
+                    Date = grp.Key.ToString("MMMM dd"),
+                    Sessions = grp.Select(x => x.SessionId).Distinct().Count(),
+                    Pages = grp.Select(x => x.PageId).Distinct().Count()
                 }
-            ).ToList();
+            ).ToListAsync();
+
+            // AccessHistory = (
+            //     from a in _context.Analytics
+            //     where
+            //         a.AccessDateTime >= DateTime.Now.AddSeconds(start_at)
+            //         && a.AccessDateTime <= DateTime.Now.AddSeconds(end_at)
+            //     group a by new
+            //     {
+            //         year = a.AccessDateTime.Value.Year,
+            //         month = a.AccessDateTime.Value.Month
+            //     } into tmp
+            //     orderby tmp.Key.year ,tmp.Key.month
+            //     select new AccessHistoryData
+            //     {
+            //         Month = tmp.Key.month.ToString() + "/01/" + tmp.Key.year.ToString(),
+            //         Hits = tmp.Count()
+            //     }
+            // ).ToList();
 
             return Page();
         }

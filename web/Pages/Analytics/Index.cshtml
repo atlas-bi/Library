@@ -10,6 +10,62 @@
 <h1 class="title is-1">Analytics</h1>
 
 <div id="active-users"></div>
+
+
+
+
+<h3 class="title is-3">Access History</h3>
+<div class="dropdown is-select"  data-target="views-chart" >
+        <div class="dropdown-trigger ">
+            <button class="button" aria-haspopup="true" aria-controls="views-chart-dropdown">
+            <span class="select-value">Last 24 hours</span>
+            <span class="icon is-small">
+                <i class="fas fa-angle-down" aria-hidden="true"></i>
+            </span>
+            </button>
+        </div>
+        <div class="dropdown-menu" id="views-chart-dropdown"role="menu">
+            <div class="dropdown-content">
+            <a href="#" class="dropdown-item" data-range="1">
+                Today
+            </a>
+            <a class="dropdown-item is-active" data-range="2">
+                Last 24 hours
+            </a>
+            <hr class="dropdown-divider">
+            <a href="#" class="dropdown-item" data-range="3">
+                This week
+            </a>
+            <a href="#" class="dropdown-item" data-range="4">
+                Last 7 days
+            </a>
+            <hr class="dropdown-divider">
+            <a href="#" class="dropdown-item" data-range="5">
+            This month
+            </a>
+            <a href="#" class="dropdown-item" data-range="6">
+            Last 30 days
+            </a>
+            <a href="#" class="dropdown-item" data-range="7">
+            Last 90 days
+            </a>
+            <a href="#" class="dropdown-item" data-range="8">
+            This year
+            </a>
+            <hr class="dropdown-divider">
+            <a href="#" class="dropdown-item" data-range="9">
+                All time
+            </a>
+            <hr class="dropdown-divider">
+            <a href="#" class="dropdown-item" data-range="10">
+                Custom range
+            </a>
+            </div>
+        </div>
+    </div>
+    <div id="views-chart" data-ajax="yes" data-url="/Analytics/Views" data-param="" style="min-height:400px;"></div>
+
+
 <h2 class="title is-2">Last 7 Days - Top Ten</h2>
 
 <div class="is-flex is-justify-content-space-between">
@@ -108,80 +164,6 @@
     </script>
 </div>
 
-<h3 class="title is-3">Access History</h3>
-<div class="dropdown is-select"  data-target="views-chart" >
-        <div class="dropdown-trigger ">
-            <button class="button" aria-haspopup="true" aria-controls="views-chart-dropdown">
-            <span class="select-value">Last 24 hours</span>
-            <span class="icon is-small">
-                <i class="fas fa-angle-down" aria-hidden="true"></i>
-            </span>
-            </button>
-        </div>
-        <div class="dropdown-menu" id="views-chart-dropdown"role="menu">
-            <div class="dropdown-content">
-            <a href="#" class="dropdown-item" data-range="1">
-                Today
-            </a>
-            <a class="dropdown-item is-active" data-range="2">
-                Last 24 hours
-            </a>
-            <hr class="dropdown-divider">
-            <a href="#" class="dropdown-item" data-range="3">
-                This week
-            </a>
-            <a href="#" class="dropdown-item" data-range="4">
-                Last 7 days
-            </a>
-            <hr class="dropdown-divider">
-            <a href="#" class="dropdown-item" data-range="5">
-            This month
-            </a>
-            <a href="#" class="dropdown-item" data-range="6">
-            Last 30 days
-            </a>
-            <a href="#" class="dropdown-item" data-range="7">
-            Last 90 days
-            </a>
-            <a href="#" class="dropdown-item" data-range="8">
-            This year
-            </a>
-            <hr class="dropdown-divider">
-            <a href="#" class="dropdown-item" data-range="9">
-                All time
-            </a>
-            <hr class="dropdown-divider">
-            <a href="#" class="dropdown-item" data-range="10">
-                Custom range
-            </a>
-            </div>
-        </div>
-    </div>
-    <div id="views-chart" data-ajax="yes" data-url="/Analytics/Views" data-param="" style="min-height:400px;"></div>
-<div class="atlas-chart">
-    <div class="ajaxLoader"><img class="ajaxLoader-img" src="/img/loader.gif" /></div>
-    <script type="application/json">
-        {
-            "axis": {
-                "0": {"title":"visits"}
-            },
-            "type": "bar",
-            "height":"400",
-            "title": "Monthly Atlas Visits",
-            "data": [{
-                "title" : "Visits",
-                "axis":"0",
-                "type": "bar",
-                "data": [
-                        @foreach (var g in Model.AccessHistory)
-                        {
-                            <text>{ "title": "@g.Month", "data": "@g.Hits"}</text> @if(g != Model.AccessHistory.Last()){<text>,</text>}
-                        }
-                    ]
-               }]
-            }
-    </script>
-</div>
 
 <h3 class="title is-3">Search Access History</h3>
 

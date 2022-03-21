@@ -15,14 +15,18 @@ js changes > run js, styles
 c# changes > run dotnet
 html changes > run styles, dotnet
 */
-gulp.task('iis:run', gulp.series('iis:kill', 'dotnet:build', 'iis:start'));
+gulp.task('iis:run', gulp.series('dotnet:build', 'iis:start'));
 
 gulp.task(
   'run',
   gulp.series(gulp.series('build', 'iis:start'), function (cb) {
     gulp.watch(
-      ['web/wwwroot/**/*.scss', 'web/wwwroot/**/*.sass'],
-      gulp.series('styles', 'iis:run'),
+      [
+        'web/wwwroot/**/*.scss',
+        'web/wwwroot/**/*.sass',
+        'web/Pages/**/*.cshtml',
+      ],
+      gulp.series(gulp.parallel('styles', 'iis:kill'), 'iis:run'),
     );
 
     gulp.watch(
@@ -31,15 +35,17 @@ gulp.task(
         '!web/wwwroot/**/*.min.js',
         '!web/wwwroot/**/*.build.js',
       ],
-      gulp.series(gulp.parallel('scripts', 'styles'), 'iis:run'),
+      gulp.series(gulp.parallel('scripts', 'styles', 'iis:kill'), 'iis:run'),
     );
 
     gulp.watch('web/Pages/**/*.cshtml', gulp.series('styles'));
     gulp.watch(
       'web/font/fontawesome/**/*.scss',
-      gulp.series('fonts', 'styles', 'iis:run'),
+      gulp.series(
+        gulp.parallel('iis:kill', gulp.series('fonts', 'styles')),
+        'iis:run',
+      ),
     );
-    gulp.watch(['web/Pages/**/*.cshtml'], gulp.series('styles', 'iis:run'));
     gulp.watch(
       [
         'web/Pages/**/*.cshtml.cs',
@@ -53,7 +59,7 @@ gulp.task(
         'web/web.csproj',
         'web/appsettings.*.json',
       ],
-      gulp.series('iis:run'),
+      gulp.series('iis:kill', 'iis:run'),
     );
     cb();
   }),

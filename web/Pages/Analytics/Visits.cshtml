@@ -10,7 +10,7 @@
    <script>
 
     var data = {
-        labels: [@foreach (var g in Model.AccessHistory){ <text>"@g.Month"</text> @if(g !=  @Model.AccessHistory.Last()){<text>,</text>} }],
+        labels: [@foreach (var g in Model.AccessHistory){ <text>"@g.Date"</text> @if(g !=  @Model.AccessHistory.Last()){<text>,</text>} }],
         datasets: [{
                         "label": "Load Times (s)",
                         type: 'line',
@@ -20,7 +20,7 @@
                         "data": [
                                     @foreach (var g in Model.AccessHistory)
                                     {
-                                        <text>"@g.Month"</text> @if(g !=  @Model.AccessHistory.Last()){<text>,</text>}
+                                        <text>"@g.Date"</text> @if(g !=  @Model.AccessHistory.Last()){<text>,</text>}
                                     }
                                 ]
                     },
@@ -32,7 +32,7 @@
                         "data": [
                                     @foreach (var g in Model.AccessHistory)
                                     {
-                                        <text>@g.Hits</text> @if(g !=  @Model.AccessHistory.Last()){<text>,</text>}
+                                        <text>@g.Pages</text> @if(g !=  @Model.AccessHistory.Last()){<text>,</text>}
                                     }
                                 ]
                     },
@@ -44,7 +44,7 @@
                         "data": [
                                     @foreach (var g in Model.AccessHistory)
                                     {
-                                        <text>@g.Hits</text> @if(g != @Model.AccessHistory.Last()){<text>,</text>}
+                                        <text>@g.Sessions</text> @if(g != @Model.AccessHistory.Last()){<text>,</text>}
                                     }
                                 ]
                     }]
