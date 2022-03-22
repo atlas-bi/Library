@@ -15,6 +15,7 @@
                         "label": "Views",
                         backgroundColor:'rgba(38,128,235,0.2)',
                         borderColor:'rgba(38,128,235,0.3)',
+                        borderWidth:1,
                         stack: "bar",
                         "data": [
                                     @foreach (var g in Model.AccessHistory)
@@ -27,6 +28,7 @@
                         "label": "Visitors",
                         backgroundColor:'rgba(38,128,235,0.4)',
                         borderColor:'rgba(38,128,235,0.5)',
+                        borderWidth:1,
                         stack: "bar",
                         "data": [
                                     @foreach (var g in Model.AccessHistory)
@@ -36,11 +38,31 @@
                                 ]
                     }]
     };
-    var ctx = document.getElementById('visits-chart');
+    var ctx = document.getElementById('visits-chart').getContext("2d");
+    Chart.Tooltip.positioners.custom = function(elements, eventPosition) {
+
+    var tooltip = this;
+
+    /* ... */
+    console.log(eventPosition.x, eventPosition.y)
+    return {
+        x: eventPosition.x,
+        y: eventPosition.y
+    };
+}
     var config = {
   type: 'bar',
   data: data,
   options: {
+      tooltips: {
+            position : 'custom',
+            callbacks: {
+              label: function(tooltipItem, data) {
+                  console.log("callback")
+               var label = Math.floor(tooltipItem.yLabel*100)/100+" "+data.datasets[tooltipItem.datasetIndex].label;
+               return label;
+              }
+            } },
     animation: {
         duration: 300,
       },
@@ -53,6 +75,7 @@
       legend: {
         display: true,
         position: 'bottom',
+        userPointStyle: true,
       },
       title: {
           display: false,
@@ -67,8 +90,8 @@
         position: 'left',
       }],
       xAxes: [{
-          stacked: true
-       //   type: 'time',
+          stacked: true,
+
        //   distribution: 'series',
        //   ticks: {
        //       autoSkipPadding: 1

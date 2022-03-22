@@ -278,7 +278,7 @@
               var a = this;
               this._active &&
                 !this._removed &&
-                (this._clone.node.parentNode.removeChild(this._clone.node),
+                (this._clone.node.parentNode && this._clone.node.parentNode.removeChild(this._clone.node),
                 delete this._clone,
                 d(this._node.style, this._styles),
                 delete this._styles,

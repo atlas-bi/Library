@@ -7,6 +7,7 @@ require('./iis');
 require('./dotnet');
 require('./build');
 require('./watch');
+const open = require('open');
 
 /*
 style changes > run styles
@@ -16,10 +17,13 @@ c# changes > run dotnet
 html changes > run styles, dotnet
 */
 gulp.task('iis:run', gulp.series('dotnet:build', 'iis:start'));
-
+gulp.task('browser', function(cb){
+  open('https://localhost:44381');
+  cb();
+})
 gulp.task(
   'run',
-  gulp.series(gulp.series('build', 'iis:start'), function (cb) {
+  gulp.series(gulp.series('build', 'iis:start', 'browser'), function (cb) {
     gulp.watch(
       [
         'web/wwwroot/**/*.scss',
