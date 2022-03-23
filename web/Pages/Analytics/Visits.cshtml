@@ -5,18 +5,32 @@
     Layout = null;
 }
 
-<div>
- <canvas id="visits-chart" width="400" height="400"></canvas>
-   <script>
-
-    var data = {
-        labels: [@foreach (var g in Model.AccessHistory){ <text>"@g.Date"</text> @if(g !=  @Model.AccessHistory.Last()){<text>,</text>} }],
-        datasets: [{
+{
+    "views": "@Model.Views",
+    "visitors": "@Model.Visitors",
+    "load_time":"@Model.LoadTime",
+    "data": {
+        "labels": [@foreach (var g in Model.AccessHistory){ <text>"@g.Date"</text> @if(g !=  @Model.AccessHistory.Last()){<text>,</text>} }],
+        "datasets": [{
+                        "label": "Load Time",
+                        "borderColor":"rgba(38,128,235,0.2)",
+                        "backgroundColor": "transparent",
+                        "type": "line",
+                        "yAxisID": "2",
+                        "data": [
+                                    @foreach (var g in Model.AccessHistory)
+                                    {
+                                        <text>@g.LoadTime</text> @if(g != @Model.AccessHistory.Last()){<text>,</text>}
+                                    }
+                                ]
+                    },
+                    {
                         "label": "Views",
-                        backgroundColor:'rgba(38,128,235,0.2)',
-                        borderColor:'rgba(38,128,235,0.3)',
-                        borderWidth:1,
-                        stack: "bar",
+                        "backgroundColor":"rgba(38,128,235,0.3)",
+                        "borderColor":"rgba(38,128,235,0.4)",
+                        "borderWidth":1,
+                        "stack": "bar",
+                        "yAxisID": "1",
                         "data": [
                                     @foreach (var g in Model.AccessHistory)
                                     {
@@ -26,10 +40,11 @@
                     },
                     {
                         "label": "Visitors",
-                        backgroundColor:'rgba(38,128,235,0.4)',
-                        borderColor:'rgba(38,128,235,0.5)',
-                        borderWidth:1,
-                        stack: "bar",
+                        "backgroundColor":"rgba(38,128,235,0.5)",
+                        "borderColor":"rgba(38,128,235,0.6)",
+                        "borderWidth":1,
+                        "stack": "bar",
+                        "yAxisID": "1",
                         "data": [
                                     @foreach (var g in Model.AccessHistory)
                                     {
@@ -37,70 +52,5 @@
                                     }
                                 ]
                     }]
-    };
-    var ctx = document.getElementById('visits-chart').getContext("2d");
-    Chart.Tooltip.positioners.custom = function(elements, eventPosition) {
-
-    var tooltip = this;
-
-    /* ... */
-    console.log(eventPosition.x, eventPosition.y)
-    return {
-        x: eventPosition.x,
-        y: eventPosition.y
-    };
-}
-    var config = {
-  type: 'bar',
-  data: data,
-  options: {
-      tooltips: {
-            position : 'custom',
-            callbacks: {
-              label: function(tooltipItem, data) {
-                  console.log("callback")
-               var label = Math.floor(tooltipItem.yLabel*100)/100+" "+data.datasets[tooltipItem.datasetIndex].label;
-               return label;
-              }
-            } },
-    animation: {
-        duration: 300,
-      },
-      hover: {
-        animationDuration: 0,
-      },
-      responsive: true,
-      responsiveAnimationDuration: 0,
-      maintainAspectRatio: false,
-      legend: {
-        display: true,
-        position: 'bottom',
-        userPointStyle: true,
-      },
-      title: {
-          display: false,
-      },
-       scales: {
-      yAxes: [{
-          ticks: {
-              beginAtZero: true,
-          },
-        stacked: false,
-        type: 'linear',
-        position: 'left',
-      }],
-      xAxes: [{
-          stacked: true,
-
-       //   distribution: 'series',
-       //   ticks: {
-       //       autoSkipPadding: 1
-       //   }
-      }]
     }
-  }
-};
- var visits_chart = new Chart(ctx, config);
-    </script>
-
-    </div>
+}

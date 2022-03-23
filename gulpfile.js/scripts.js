@@ -5,7 +5,7 @@ const log = require('fancy-log');
 const rollup = require('rollup-stream-gulp');
 const { nodeResolve } = require('@rollup/plugin-node-resolve');
 const commonjs = require('@rollup/plugin-commonjs');
-const {babel}=require('@rollup/plugin-babel');
+const { babel } = require('@rollup/plugin-babel');
 
 const rollupConfig = {
   output: { format: 'iife', name: 'module' },
@@ -16,12 +16,12 @@ const rollupConfig = {
       babelHelpers: 'bundled',
     }),
   ],
-}
+};
 const uglifyConfig = {
   ie: true,
   v8: true,
   webkit: true,
-}
+};
 gulp.task('js:polyfill', function () {
   return gulp
     .src([
@@ -41,37 +41,53 @@ gulp.task('js:polyfill', function () {
 });
 
 gulp.task('js:utility', function () {
-  return (
-    gulp
-      .src([
-        'web/wwwroot/js/utility/tabs.js',
-        'web/wwwroot/js/utility/collapse.js',
-        'web/wwwroot/js/utility/carousel.js',
-        'web/wwwroot/js/utility/table.js',
-        'web/wwwroot/js/utility/drag.js',
-        'web/wwwroot/js/utility/reorder.js',
-        'web/wwwroot/js/utility/charts.js',
-        'web/wwwroot/js/utility/modal.js',
-        'web/wwwroot/js/utility/lazyload.js',
-        'web/wwwroot/js/utility/crumbs.js',
-        'web/wwwroot/js/page.js',
-        'web/wwwroot/js/hyperspace.js',
-        'web/wwwroot/js/favorites.js',
-        'web/wwwroot/js/ajax-content.js',
-        'web/wwwroot/js/messagebox.js',
-        'web/wwwroot/js/mail.js',
-        'web/wwwroot/js/analytics.js',
-        'web/wwwroot/js/utility/hamburger.js',
-        'web/wwwroot/js/mini.js',
-        'web/wwwroot/js/dropdown.js',
-        'node_modules/chart.js/dist/chart.js',
-      ])
-      .pipe(rollup(rollupConfig))
-      .pipe(concat('utility.min.js'))
-      .pipe(uglify(uglifyConfig))
-      .pipe(gulp.dest('web/wwwroot/js/'))
-  );
+  return gulp
+    .src([
+      'web/wwwroot/js/utility/tabs.js',
+      'web/wwwroot/js/utility/collapse.js',
+      'web/wwwroot/js/utility/carousel.js',
+      'web/wwwroot/js/utility/table.js',
+      'web/wwwroot/js/utility/drag.js',
+      'web/wwwroot/js/utility/reorder.js',
+      'web/wwwroot/js/utility/charts.js',
+      'web/wwwroot/js/utility/modal.js',
+      'web/wwwroot/js/utility/lazyload.js',
+      'web/wwwroot/js/utility/crumbs.js',
+      'web/wwwroot/js/page.js',
+      'web/wwwroot/js/hyperspace.js',
+      'web/wwwroot/js/favorites.js',
+      'web/wwwroot/js/ajax-content.js',
+      'web/wwwroot/js/messagebox.js',
+      'web/wwwroot/js/mail.js',
+      'web/wwwroot/js/utility/hamburger.js',
+      'web/wwwroot/js/mini.js',
+      'web/wwwroot/js/dropdown.js',
+      'node_modules/chart.js/dist/chart.js',
+    ])
+    .pipe(rollup(rollupConfig))
+    .pipe(concat('utility.min.js'))
+    .pipe(uglify(uglifyConfig))
+    .pipe(gulp.dest('web/wwwroot/js/'));
 });
+
+gulp.task('js:analytics', function () {
+  return gulp
+    .src(['web/wwwroot/js/analytics.js'])
+    .pipe(rollup(rollupConfig))
+    .pipe(concat('analytics.min.js'))
+    .pipe(uglify(uglifyConfig))
+    .pipe(gulp.dest('web/wwwroot/js/'));
+});
+
+gulp.task('js:tracker', function () {
+  return gulp
+    .src(['web/wwwroot/js/tracker.js'])
+    .pipe(rollup(rollupConfig))
+    .pipe(concat('alive.min.js'))
+    .pipe(uglify(uglifyConfig))
+    .pipe(gulp.dest('web/wwwroot/js/'));
+});
+
 gulp.task('js:highlighter', () => {
   return gulp
     .src('web/wwwroot/lib/highlight/highlight.js')
@@ -93,8 +109,8 @@ gulp.task('js:shared', function () {
   // shared functions should be imported as needed.
   return (
     gulp
-      .src(['web/wwwroot/js/shared.js'/*, 'web/wwwroot/lib/chartjs/chart.js'*/])
-     // .pipe(rollup(rollupConfig))
+      .src(['web/wwwroot/js/shared.js'])
+      // .pipe(rollup(rollupConfig))
       .pipe(concat('shared.min.js'))
       .pipe(uglify(uglifyConfig))
       .pipe(gulp.dest('web/wwwroot/js/'))
@@ -111,14 +127,12 @@ gulp.task('js:search', function () {
 });
 
 gulp.task('js:settings', function () {
-  return (
-    gulp
-      .src(['web/wwwroot/js/settings.js', 'web/wwwroot/js/access.js'])
-      .pipe(rollup(rollupConfig))
-      .pipe(concat('settings.min.js'))
-      .pipe(uglify(uglifyConfig))
-      .pipe(gulp.dest('web/wwwroot/js/'))
-  );
+  return gulp
+    .src(['web/wwwroot/js/settings.js', 'web/wwwroot/js/access.js'])
+    .pipe(rollup(rollupConfig))
+    .pipe(concat('settings.min.js'))
+    .pipe(uglify(uglifyConfig))
+    .pipe(gulp.dest('web/wwwroot/js/'));
 });
 
 gulp.task('js:editor', function () {
@@ -144,6 +158,8 @@ gulp.task(
     'js:search',
     'js:shared',
     'js:utility',
+    'js:analytics',
+    'js:tracker',
     'js:integrations:ssrs',
     'js:highlighter',
   ),

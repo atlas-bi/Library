@@ -511,3 +511,40 @@ button.is-ghost:not(.button) {
 .favorites-show-all:hover .favorite-folder-controls {
   display: block;
 }
+.table.is-no-border td,
+.table.is-no-border th {
+  border: 1px solid transparent;
+}
+.bar-percent {
+  display: inline-block;
+  min-width: 100px;
+}
+.bar-percent-fill {
+  background-color: rgba(38, 128, 235, 0.1);
+  border: 1px solid rgba(38, 128, 235, 0.2);
+  border-top-right-radius: 2px;
+  border-bottom-right-radius: 2px;
+  border-left: 1px solid $grey-light;
+  position: absolute;
+  height: 100%;
+  top: 0;
+  left: 0;
+}
+
+.table.bar tr:hover .bar-percent-fill {
+  background-color: rgba(38, 128, 235, 0.2);
+  border: 1px solid rgba(38, 128, 235, 0.3);
+  border-left: 1px solid $grey-light;
+}
+
+.bar-percent span strong {
+  color: $grey-light;
+}
+.bar-data-wrapper {
+  visibility: hidden;
+  transition: visibiliy 0.2s, opacity 0.2s;
+}
+
+.is-middle {
+  vertical-align: middle !important;
+}

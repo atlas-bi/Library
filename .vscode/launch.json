@@ -6,7 +6,7 @@
       "type": "coreclr",
       "request": "attach",
       "processName": "iisexpress.exe",
-      "requireExactSource": false,
+      "requireExactSource": false
     }
   ]
 }
