@@ -375,10 +375,12 @@ namespace Atlas_Web.Pages.Analytics
 
             BarDataSet = (
                 from a in grouped
-                join r in _context.ReportObjects on a.Key equals r.ReportObjectId
                 select new BarData
                 {
-                    Key = r.DisplayTitle != null ? r.DisplayTitle : r.Name,
+                    Key = _context.ReportObjects
+                        .Where(x => x.ReportObjectId == a.Key)
+                        .Select(r => r.DisplayTitle != null ? r.DisplayTitle : r.Name)
+                        .FirstOrDefault(),
                     Count = a.Count,
                     Percent = (double)a.Count / total,
                     Href = "/reports?id=" + a.Key,
