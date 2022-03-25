@@ -14,9 +14,7 @@ const { ja, tr } = require('date-fns/locale');
   }
 
   var primaryChart = document.getElementById('visits-chart');
-  document.querySelector('null').addEventListener('click', function () {
-    asdf;
-  });
+
   var primaryChartAjax = null;
   var config = {
     type: 'bar',

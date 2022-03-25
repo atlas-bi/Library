@@ -1,10 +1,10 @@
 (function () {
-  document.addEventListener('click', function (e) {
+   document.addEventListener('click', function (e) {
     if (
       e.target.matches('.role-permissions[type="checkbox"]') &&
       e.target.tagName == 'INPUT'
     ) {
-      var i = e.target,
+        var i = e.target,
         type = 1,
         q,
         url,
@@ -35,7 +35,7 @@
 
       q.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
-          ShowMessageBox('Changes saved.');
+          console.log('Changes saved.');
         }
       };
     }
