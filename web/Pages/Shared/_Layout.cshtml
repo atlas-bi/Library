@@ -13,11 +13,14 @@
     <link rel="stylesheet" href="/css/site.min.css" />
     <style type="text/css" minify>@Cache.Get("global_css")</style>
 
-    @* <link rel="preload" href="/js/utility.min.js" as="script" />
+    <link rel="preload" href="/js/polyfill.min.js" as="script" />
+    <link rel="preload" href="/js/shared.min.js" as="script" />
+    <link rel="preload" href="/js/alive.min.js" as="script" />
+    <link rel="preload" href="/js/search.min.js" as="script" />
+    <link rel="preload" href="/js/utility.min.js" as="script" />
     <link rel="preload" href="/js/main.min.js" as="script" />
-    <link rel="repload" href="/js/editor.min.js" as="script" />
-    <link rel="repload" href="/js/flowchart.min.js" as="script" />
-    <link rel="repload" href="/js/highlight.min.js" as="script" /> *@
+    <link rel="preload" href="/js/profile.min.js" as="script" />
+    <link rel="preload" href="/js/editor.min.js" as="script" />
 
     @RenderSection("css", required: false)
 
@@ -35,7 +38,14 @@
     <link rel="preload" href="@Helpers.UrlHelpers.FontHash("/font/rasa/files/rasa-latin-600-normal.woff2", Cache)" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="@Helpers.UrlHelpers.FontHash("/font/inter/files/inter-latin-500-normal.woff2", Cache)" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="@Helpers.UrlHelpers.FontHash("/font/inter/files/inter-latin-700-normal.woff2", Cache)" as="font" type="font/woff2" crossorigin />
-
+    <script>
+        __jsnlog_configure = function (JL) {
+        JL.setOptions({
+            "defaultAjaxUrl":"/analytics/trace"
+        })
+        };
+        try { __jsnlog_configure(JL); } catch(e) {};
+    </script>
 </head>
 <body>
     <!-- site message -->

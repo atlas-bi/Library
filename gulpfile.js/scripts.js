@@ -81,7 +81,7 @@ gulp.task('js:analytics', function () {
 
 gulp.task('js:tracker', function () {
   return gulp
-    .src(['web/wwwroot/js/tracker.js'])
+    .src(['web/wwwroot/js/tracker.js', 'node_modules/jsnlog/jsnlog.js'])
     .pipe(rollup(rollupConfig))
     .pipe(concat('alive.min.js'))
     .pipe(uglify(uglifyConfig))

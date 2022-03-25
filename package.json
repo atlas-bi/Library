@@ -31,6 +31,7 @@
     "gulp-sass": "^5.1.0",
     "gulp-uglify": "^3.0.2",
     "husky": "^7.0.0",
+    "jsnlog": "^2.30.0",
     "lint-staged": "^12.3.7",
     "open": "^8.4.0",
     "postcss": "^8.4.12",

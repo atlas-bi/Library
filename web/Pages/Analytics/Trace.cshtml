@@ -1,0 +1,54 @@
+
+@page
+@model Atlas_Web.Pages.Analytics.TraceModel
+@{
+    Layout = null;
+}
+@using UAParser;
+@using Newtonsoft.Json;
+<div>
+    <strong>Bug Tracing</strong>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Severity</th>
+                <th>Date</th>
+                <th>Message</th>
+                <th>User</th>
+                <th>OS</th>
+                <th>Browser</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var Trace in Model.Traces)
+            {
+                var uaParser = Parser.GetDefault();
+                var agent = uaParser.Parse(Trace.UserAgent);
+                dynamic message = JsonConvert.DeserializeObject(@Trace.Message);
+                <tr>
+                    <td>
+                        @Trace.Level
+                    </td>
+                    <td>
+                        @Trace.LogDateTime
+                    </td>
+                    <td>
+@message.logData.msg in @message.logData.url:@message.logData["line number"]:@message.logData.column
+                        <br>
+<pre><code> @message.logData.errorMsg</code></pre>
+
+                    </td>
+                    <td>
+                        @Trace.User.FullnameCalc
+                    </td>
+                    <td>
+                        @agent.OS.Family @agent.OS.Major
+                    </td>
+                    <td>
+                        @agent.UA.Family @agent.UA.Major
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

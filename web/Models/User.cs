@@ -8,6 +8,7 @@ namespace Atlas_Web.Models
         public User()
         {
             Analytics = new HashSet<Analytic>();
+            AnalyticsTraces = new HashSet<AnalyticsTrace>();
             DpAgreementUserLastUpdateUserNavigations = new HashSet<DpAgreementUser>();
             DpAgreementUserUsers = new HashSet<DpAgreementUser>();
             DpAgreements = new HashSet<DpAgreement>();
@@ -81,6 +82,7 @@ namespace Atlas_Web.Models
 
         public virtual UserNameDatum UserNameDatum { get; set; }
         public virtual ICollection<Analytic> Analytics { get; set; }
+        public virtual ICollection<AnalyticsTrace> AnalyticsTraces { get; set; }
         public virtual ICollection<DpAgreementUser> DpAgreementUserLastUpdateUserNavigations { get; set; }
         public virtual ICollection<DpAgreementUser> DpAgreementUserUsers { get; set; }
         public virtual ICollection<DpAgreement> DpAgreements { get; set; }
