@@ -562,7 +562,8 @@ namespace Atlas_Web.Pages.Users
                                 HttpContext,
                                 ro.ReportObjectType.Name,
                                 ro.ReportServerPath,
-                                ro.SourceServer
+                                ro.SourceServer,
+                                ro.OrphanedReportObjectYn
                             ),
                             EditReportUrl = HtmlHelpers.EditReportFromParams(
                                 _config["AppSettings:org_domain"],
@@ -571,7 +572,8 @@ namespace Atlas_Web.Pages.Users
                                 ro.SourceServer,
                                 ro.EpicMasterFile,
                                 ro.EpicReportTemplateId.ToString(),
-                                ro.EpicRecordId.ToString()
+                                ro.EpicRecordId.ToString(),
+                                ro.OrphanedReportObjectYn
                             ),
                         }
                     ).ToListAsync();
@@ -646,7 +648,8 @@ namespace Atlas_Web.Pages.Users
                                     d.ReportObject.SourceServer,
                                     d.ReportObject.EpicMasterFile,
                                     d.ReportObject.EpicReportTemplateId.ToString(),
-                                    d.ReportObject.EpicRecordId.ToString()
+                                    d.ReportObject.EpicRecordId.ToString(),
+                                    d.ReportObject.OrphanedReportObjectYn
                                 ),
                             }
                         ).Take(10).ToListAsync();

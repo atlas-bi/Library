@@ -29,14 +29,16 @@
                         Model.Report.SourceServer,
                         Model.Report.EpicMasterFile,
                         Model.Report.EpicReportTemplateId.ToString(),
-                        Model.Report.EpicRecordId.ToString()
+                        Model.Report.EpicRecordId.ToString(),
+                        Model.Report.OrphanedReportObjectYn
                     );
     ViewBag.ManageReportUrl = HtmlHelpers.ReportManageUrlFromParams(
                         Configuration["AppSettings:org_domain"],
                         ViewContext.HttpContext,
                         Model.Report.ReportObjectType.Name,
                         Model.Report.ReportServerPath,
-                        Model.Report.SourceServer
+                        Model.Report.SourceServer,
+                        Model.Report.OrphanedReportObjectYn
                     );
 
     ViewBag.HasDescription = Model.Report.ReportObjectDoc != null && !string.IsNullOrEmpty(Model.Report.ReportObjectDoc.DeveloperDescription) ||

@@ -139,7 +139,8 @@
                 var RecordViewerUrl = HtmlHelpers.RecordViewerLink(
                                ViewContext.HttpContext,
                                Model.Report.EpicMasterFile,
-                               Model.Report.EpicRecordId.ToString()
+                               Model.Report.EpicRecordId.ToString(),
+                               Model.Report.OrphanedReportObjectYn
                            );
                 <tr>
                     <td>Epic Identifier</td>
