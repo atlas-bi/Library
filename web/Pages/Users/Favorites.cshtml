@@ -23,7 +23,7 @@
                 </span>
             </div>
 
-            @if(Model.Reports.Any()){
+            @if(Model.Reports.Any() && (Model.Collections.Any() || Model.Initiatives.Any() || Model.Terms.Any() || Model.Users.Any() || Model.Searches.Any() || Model.Groups.Any())){
                 <a class="button is-warning is-outlined has-text-dark favorites-filter mr-5" data-type="report">
                     <span class="icon">
                         <i class="fas fa-chart-bar"></i>
@@ -31,7 +31,7 @@
                     <span>Reports</span>
                 </a>
             }
-            @if(Model.Collections.Any()){
+            @if(Model.Collections.Any() && (Model.Reports.Any() || Model.Initiatives.Any() || Model.Terms.Any() || Model.Users.Any() || Model.Searches.Any() || Model.Groups.Any())){
                 <a class="button is-warning is-outlined has-text-dark favorites-filter mr-5" data-type="collection">
                     <span class="icon">
                         <i class="fas fa-project-diagram"></i>
@@ -39,7 +39,7 @@
                     <span>Collections</span>
                 </a>
              }
-             @if(Model.Initiatives.Any()){
+             @if(Model.Initiatives.Any() && (Model.Reports.Any() || Model.Collections.Any() || Model.Terms.Any() || Model.Users.Any() || Model.Searches.Any() || Model.Groups.Any())){
                 <a class="button is-warning is-outlined has-text-dark favorites-filter mr-5" data-type="initiative">
                     <span class="icon">
                         <i class="fas fa-lightbulb"></i>
@@ -47,7 +47,7 @@
                     <span>Initiatives</span>
                 </a>
             }
-            @if(Model.Terms.Any()){
+            @if(Model.Terms.Any() && (Model.Reports.Any() || Model.Collections.Any() || Model.Initiatives.Any() || Model.Users.Any() || Model.Searches.Any() || Model.Groups.Any())){
                 <a class="button is-warning is-outlined has-text-dark favorites-filter mr-5" data-type="term">
                     <span class="icon">
                         <i class="fas fa-book"></i>
@@ -55,7 +55,7 @@
                     <span>Terms</span>
                 </a>
            }
-           @if(Model.Users.Any()){
+           @if(Model.Users.Any() && (Model.Reports.Any() || Model.Collections.Any() || Model.Initiatives.Any() || Model.Terms.Any() || Model.Searches.Any() || Model.Groups.Any())){
                 <a class="button is-warning is-outlined has-text-dark favorites-filter mr-5" data-type="user">
                     <span class="icon">
                         <i class="fas fa-user"></i>
@@ -63,7 +63,7 @@
                     <span>Users</span>
                 </a>
             }
-            @if(Model.Groups.Any()){
+            @if(Model.Groups.Any() && (Model.Reports.Any() || Model.Collections.Any() || Model.Initiatives.Any() || Model.Terms.Any() || Model.Searches.Any() || Model.Users.Any())){
                 <a class="button is-warning is-outlined has-text-dark favorites-filter mr-5" data-type="group">
                     <span class="icon">
                         <i class="fas fa-users"></i>
@@ -71,7 +71,7 @@
                     <span>Groups</span>
                 </a>
             }
-            @if(Model.Searches.Any()){
+            @if(Model.Searches.Any() && (Model.Reports.Any() || Model.Collections.Any() || Model.Initiatives.Any() || Model.Terms.Any() || Model.Groups.Any() || Model.Users.Any())){
                 <a class="button is-warning is-outlined has-text-dark favorites-filter mr-5" data-type="search">
                     <span class="icon">
                         <i class="fas fa-search"></i>
@@ -79,7 +79,6 @@
                     <span>Searches</span>
                 </a>
             }
-
         </section>
     }
 
