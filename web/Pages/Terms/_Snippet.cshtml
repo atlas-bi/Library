@@ -41,22 +41,19 @@
             <!-- extra wrap if to fix IE11 bug https://github.com/philipwalton/flexbugs#flexbug-3 -->
             <div class="is-flex is-flex-direction-column is-flex-grow-1">
                 <a class="media-content is-flex is-justify-content-space-between is-flex-direction-column is-min-h-96  has-text-dark" href="/Terms?id=@Model.TermId">
-                    @if (!string.IsNullOrEmpty(Model.Summary))
-                    {
-                        @(Model.Summary.Substring(0,Math.Min(160,Model.Summary.Length)) + " ...")
-                    } else if (!string.IsNullOrEmpty(Model.TechnicalDefinition))
-                    {
-                        @(Model.TechnicalDefinition.Substring(0,Math.Min(160,Model.TechnicalDefinition.Length)) + " ...")
-                    } else {
-                        <text>Open to view details.</text>
-                    }
-                    @*<div class="tags">
-                        @foreach (var d in Model.DpDataProjects)
+                    <p>
+                        @if (!string.IsNullOrEmpty(Model.Summary))
                         {
-                            <span class="tag is-link">@d.Name</span>
+                            @(Model.Summary.Substring(0,Math.Min(160,Model.Summary.Length)) + "... ")
+                            <span class="has-text-link">read more</span>
+                        } else if (!string.IsNullOrEmpty(Model.TechnicalDefinition))
+                        {
+                            @(Model.TechnicalDefinition.Substring(0,Math.Min(160,Model.TechnicalDefinition.Length)) + "... ")
+                            <span class="has-text-link">read more</span>
+                        } else {
+                            <span class="has-text-link">Open to view details.</span>
                         }
-                    </div>
-                    *@
+                    </p>
                 </a>
             </div>
         </div>
@@ -78,14 +75,6 @@
                     </span>
                     <span>Star <span class="tag is-rounded">@Model.StarredTerms.Count</span></span>
                 }
-            </span>
-        </a>
-        <a href="/Terms?id=@Model.TermId" class="card-footer-item">
-            <span class="icon-text">
-                <span class="icon">
-                    <i class="fas fa-book-open"></i>
-                </span>
-                <span>Read More</span>
             </span>
         </a>
         <div class="card-footer-item">

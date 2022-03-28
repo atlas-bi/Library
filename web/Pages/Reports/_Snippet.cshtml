@@ -133,18 +133,22 @@
             </div>
             <div class="is-flex is-flex-direction-column is-flex-grow-1">
                 <a class="media-content is-flex is-justify-content-space-between is-flex-direction-column is-min-h-96  has-text-dark" href="/Reports?id=@Model.ReportObjectId" >
-                    @if (Model.ReportObjectDoc != null && !string.IsNullOrEmpty(Model.ReportObjectDoc.DeveloperDescription))
-                    {
-                        @(Model.ReportObjectDoc.DeveloperDescription.Substring(0, Math.Min(160, Model.ReportObjectDoc.DeveloperDescription.Length)) +" ...")
-                    }
-                    else if (!string.IsNullOrEmpty(Model.Description))
-                    {
-                        @(Model.Description.Substring(0, Math.Min(160, Model.Description.Length)) +" ...")
-                    }
-                    else
-                    {
-                        <text>Open to view details.</text>
-                    }
+                    <p>
+                        @if (Model.ReportObjectDoc != null && !string.IsNullOrEmpty(Model.ReportObjectDoc.DeveloperDescription))
+                        {
+                            @(Model.ReportObjectDoc.DeveloperDescription.Substring(0, Math.Min(160, Model.ReportObjectDoc.DeveloperDescription.Length)) +"... ")
+                            <span class="has-text-link">read more</span>
+                        }
+                        else if (!string.IsNullOrEmpty(Model.Description))
+                        {
+                            @(Model.Description.Substring(0, Math.Min(160, Model.Description.Length)) +"... ")
+                            <span class="has-text-link">read more</span>
+                        }
+                        else
+                        {
+                            <span class="has-text-link">Open to view details.</span>
+                        }
+                    </p>
                 </a>
             </div>
         </div>
@@ -168,15 +172,6 @@
                 }
             </span>
         </a>
-        <a href="/Reports?id=@Model.ReportObjectId" class="card-footer-item px-0">
-            <span class="icon-text">
-                <span class="icon">
-                    <i class="fas fa-book-open"></i>
-                </span>
-                <span>Read More</span>
-            </span>
-        </a>
-
         @if (EditReportUrl != null && EditReportUrl != "" && ViewBag.Permissions.Contains(38))
         {
             <a class="card-footer-item px-0" target="_blank" href="@EditReportUrl">
