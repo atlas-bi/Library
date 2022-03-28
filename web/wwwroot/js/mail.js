@@ -597,8 +597,7 @@
           '.mlbx-newMsgRecip select option, .mail-to input[type="hidden"]',
         );
 
-        if (recp != null) {
-          console.log(recp);
+        if (recp != null && recp.length > 0) {
           for (var x = 0; x < recp.length; x++) {
             var g = recp[x].classList.contains('group') ? 'g' : '';
             to.push({
@@ -606,6 +605,17 @@
               Type: g,
             });
           }
+        } else {
+          var label = form
+            .querySelector('.mlbx-newMsgRecip,.mail-to')
+            .parentElement.querySelector('label');
+          if (label) {
+            label.insertAdjacentHTML(
+              'afterend',
+              '<p class="help is-danger">Recipients are required.</p>',
+            );
+          }
+          return false;
         }
 
         //subject
