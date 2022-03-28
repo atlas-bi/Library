@@ -6,7 +6,8 @@ require('./scripts');
 require('./iis');
 require('./dotnet');
 require('./build');
-require('./watch');
+
+const open = require('open');
 
 /*
 style changes > run styles
@@ -15,31 +16,138 @@ js changes > run js, styles
 c# changes > run dotnet
 html changes > run styles, dotnet
 */
-gulp.task('iis:run', gulp.series('iis:kill', 'dotnet:build', 'iis:start'));
-
+gulp.task('iis:run', gulp.series('dotnet:build', 'iis:start'));
+gulp.task('browser', function (cb) {
+  open('https://localhost:44381');
+  cb();
+});
 gulp.task(
   'run',
-  gulp.series(gulp.series('build', 'iis:start'), function (cb) {
-    gulp.watch(
-      ['web/wwwroot/**/*.scss', 'web/wwwroot/**/*.sass'],
-      gulp.series('styles', 'iis:run'),
-    );
-
+  gulp.series(gulp.series('build', 'iis:start', 'browser'), function (cb) {
     gulp.watch(
       [
-        'web/wwwroot/**/*.js',
-        '!web/wwwroot/**/*.min.js',
-        '!web/wwwroot/**/*.build.js',
+        'web/wwwroot/**/*.scss',
+        'web/wwwroot/**/*.sass',
+        'web/Pages/**/*.cshtml',
       ],
-      gulp.series(gulp.parallel('scripts', 'styles'), 'iis:run'),
+      gulp.series(gulp.parallel('styles', 'iis:kill'), 'iis:run'),
+    );
+
+    // utility
+    gulp.watch(
+      [
+        'web/wwwroot/js/utility/tabs.js',
+        'web/wwwroot/js/utility/collapse.js',
+        'web/wwwroot/js/utility/carousel.js',
+        'web/wwwroot/js/utility/table.js',
+        'web/wwwroot/js/utility/drag.js',
+        'web/wwwroot/js/utility/reorder.js',
+        'web/wwwroot/js/utility/charts.js',
+        'web/wwwroot/js/utility/modal.js',
+        'web/wwwroot/js/utility/lazyload.js',
+        'web/wwwroot/js/utility/crumbs.js',
+        'web/wwwroot/js/page.js',
+        'web/wwwroot/js/hyperspace.js',
+        'web/wwwroot/js/favorites.js',
+        'web/wwwroot/js/ajax-content.js',
+        'web/wwwroot/js/messagebox.js',
+        'web/wwwroot/js/mail.js',
+        'web/wwwroot/js/utility/hamburger.js',
+        'web/wwwroot/js/mini.js',
+        'web/wwwroot/js/dropdown.js',
+        'node_modules/chart.js/dist/chart.js',
+      ],
+      gulp.series(gulp.parallel('js:utility', 'styles', 'iis:kill'), 'iis:run'),
+    );
+    // analytics
+    gulp.watch(
+      ['web/wwwroot/js/analytics.js'],
+      gulp.series(
+        gulp.parallel('js:analytics', 'styles', 'iis:kill'),
+        'iis:run',
+      ),
+    );
+    // polyfill
+    gulp.watch(
+      [
+        'web/wwwroot/js/polyfill/classlist.js',
+        'web/wwwroot/js/polyfill/events.js',
+        'web/wwwroot/js/polyfill/focus-within.js',
+        'web/wwwroot/js/polyfill/foreach.js',
+        'web/wwwroot/js/polyfill/insert-after.js',
+        'web/wwwroot/js/polyfill/isinstance.js',
+        'web/wwwroot/js/polyfill/matches_closest.js',
+        'web/wwwroot/js/polyfill/sticky.js',
+      ],
+      gulp.series(
+        gulp.parallel('js:polyfill', 'styles', 'iis:kill'),
+        'iis:run',
+      ),
+    );
+
+    // tracker
+    gulp.watch(
+      ['web/wwwroot/js/tracker.js'],
+      gulp.series(gulp.parallel('js:tracker', 'styles', 'iis:kill'), 'iis:run'),
+    );
+
+    // highlighter
+    gulp.watch(
+      ['web/wwwroot/lib/highlight/highlight.js'],
+      gulp.series(
+        gulp.parallel('js:highlighter', 'styles', 'iis:kill'),
+        'iis:run',
+      ),
+    );
+
+    // integrations:ssrs
+    gulp.watch(
+      ['web/wwwroot/js/integrations/ssrs.js'],
+      gulp.series(
+        gulp.parallel('js:integrations:ssrs', 'styles', 'iis:kill'),
+        'iis:run',
+      ),
+    );
+
+    // shared
+    gulp.watch(
+      ['web/wwwroot/js/shared.js'],
+      gulp.series(gulp.parallel('js:shared', 'styles', 'iis:kill'), 'iis:run'),
+    );
+
+    // search
+    gulp.watch(
+      ['web/wwwroot/js/search.js', 'web/wwwroot/js/error.js'],
+      gulp.series(gulp.parallel('js:search', 'styles', 'iis:kill'), 'iis:run'),
+    );
+
+    // settings
+    gulp.watch(
+      ['web/wwwroot/js/settings.js', 'web/wwwroot/js/access.js'],
+      gulp.series(
+        gulp.parallel('js:settings', 'styles', 'iis:kill'),
+        'iis:run',
+      ),
+    );
+
+    // editor
+    gulp.watch(
+      [
+        'web/wwwroot/js/editor.js',
+        'web/wwwroot/js/utility/checkbox.js',
+        'web/wwwroot/js/reportEditor.js',
+      ],
+      gulp.series(gulp.parallel('js:editor', 'styles', 'iis:kill'), 'iis:run'),
     );
 
     gulp.watch('web/Pages/**/*.cshtml', gulp.series('styles'));
     gulp.watch(
       'web/font/fontawesome/**/*.scss',
-      gulp.series('fonts', 'styles', 'iis:run'),
+      gulp.series(
+        gulp.parallel('iis:kill', gulp.series('fonts', 'styles')),
+        'iis:run',
+      ),
     );
-    gulp.watch(['web/Pages/**/*.cshtml'], gulp.series('styles', 'iis:run'));
     gulp.watch(
       [
         'web/Pages/**/*.cshtml.cs',
@@ -51,9 +159,9 @@ gulp.task(
         'web/Program.cs',
         'web/Startup.cs',
         'web/web.csproj',
-        'web/appsettings.*.json',
+        'web/appsettings*.json',
       ],
-      gulp.series('iis:run'),
+      gulp.series('iis:kill', 'iis:run'),
     );
     cb();
   }),

@@ -34,12 +34,15 @@
             <!-- extra wrap if to fix IE11 bug https://github.com/philipwalton/flexbugs#flexbug-3 -->
             <div class="is-flex is-flex-direction-column is-flex-grow-1">
                 <a class="media-content is-flex is-justify-content-space-between is-flex-direction-column is-min-h-96  has-text-dark" href="/Initiatives?id=@Model.DataInitiativeId">
-                    @if (!string.IsNullOrEmpty(Model.Description))
-                    {
-                        @(Model.Description.Substring(0,Math.Min(160,Model.Description.Length)) + " ...")
-                    } else {
-                        <text>Open to view details.</text>
-                    }
+                    <p>
+                        @if (!string.IsNullOrEmpty(Model.Description))
+                        {
+                            @(Model.Description.Substring(0,Math.Min(160,Model.Description.Length)) + "... ")
+                            <span class="has-text-link">read more</span>
+                        } else {
+                            <span class="has-text-link">Open to view details</span>
+                        }
+                    </p>
                     <div class="tags">
                         @foreach (var d in Model.DpDataProjects)
                         {
@@ -67,14 +70,6 @@
                     </span>
                     <span>Star <span class="tag is-rounded star-count">@Model.StarredInitiatives.Count</span></span>
                 }
-            </span>
-        </a>
-        <a href="/Initiatives?id=@Model.DataInitiativeId" class="card-footer-item">
-            <span class="icon-text">
-                <span class="icon">
-                    <i class="fas fa-book-open"></i>
-                </span>
-                <span>Read More</span>
             </span>
         </a>
         <div class="card-footer-item">

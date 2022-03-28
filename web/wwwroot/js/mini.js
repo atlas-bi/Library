@@ -6,6 +6,14 @@
 
   function closeMini($el) {
     $el.classList.remove('is-active');
+    // if the mini input has remaining text, add red outline
+
+    var $input = $el.parentElement.querySelector(
+      'input.input-mini.multiselect',
+    );
+    if ($input && $input.value) {
+      $input.classList.add('is-danger');
+    }
   }
 
   function closeAllMinis() {
@@ -218,6 +226,7 @@
         if ($input.hasAttribute('search-area')) {
           $input.addEventListener('input', () => {
             window.clearTimeout(searchTimerId);
+            $input.classList.remove('is-danger');
             searchTimerId = window.setTimeout(function () {
               loadMini(
                 $input,
@@ -239,6 +248,7 @@
           // if it is a multiselect, we can use typing to filter the static list
           if ($input.classList.contains('multiselect')) {
             $input.addEventListener('input', () => {
+              $input.classList.remove('is-danger');
               inputFilter($input, $mini);
             });
           }
@@ -248,6 +258,7 @@
           $clear.addEventListener('click', function () {
             $hidden.value = '';
             $input.value = '';
+            $input.classList.remove('is-danger');
           });
         }
       },

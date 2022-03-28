@@ -35,7 +35,7 @@
 
       q.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
-          ShowMessageBox('Changes saved.');
+          console.log('Changes saved.');
         }
       };
     }

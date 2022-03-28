@@ -6,7 +6,7 @@
 }
 
 <div>
- <canvas id="myChart" width="400" height="400"></canvas>
+ @* <canvas id="myChart" width="400" height="400"></canvas>
     <script>
     @{
             var TopTen = Model.TopUsers.Take(10);
@@ -61,7 +61,7 @@
           display: false
       },
        scales: {
-      yAxes: [{
+      yAxis: [{
         id: '1',
         type: 'linear',
         position: 'left',
@@ -74,6 +74,6 @@
   }
 };
  var myChart = new Chart(ctx, config);
-    </script>
+    </script> *@
 
     </div>

@@ -7,7 +7,7 @@
     var $hash = document.location.hash ? '#' + document.location.hash : '';
 
     var $params = Object.keys(vars)
-      .map((x) => {
+      .map(function (x) {
         return x + '=' + vars[x];
       })
       .join('&');

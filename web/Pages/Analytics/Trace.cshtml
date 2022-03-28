@@ -1,0 +1,106 @@
+
+@page
+@model Atlas_Web.Pages.Analytics.TraceModel
+@{
+    Layout = null;
+}
+@using UAParser;
+@using Newtonsoft.Json;
+<div>
+    <div class="is-flex is-justify-content-space-between">
+        <strong>Bug Tracing - <span class=" @if(@Model.CountUnresolved > 0){<text>has-text-danger</text>}">@Model.CountUnresolved unresolved</span> of @Model.Count Messages</strong>
+        @if(Model.Pages > 1){
+            <nav class="pagination is-rounded is-small mb-0 mt-2" role="navigation" aria-label="pagination">
+                <ul class="pagination-list">
+                    <li>
+                        <a data-page="p=0" class="pagination-link @if(1==Model.CurrentPage){<text>is-current</text>}" aria-label="Goto page 1">1</a>
+                    </li>
+                    @if(Model.CurrentPage >= 4){
+                        <li>
+                            <span class="pagination-ellipsis">&hellip;</span>
+                        </li>
+                    }
+                    @for(var x = 1; x< Model.Pages-1; x++)
+                    {
+                        int CurrentPage = x+1;
+                        if(x >= Model.CurrentPage - 2 && x < Model.CurrentPage + 1 || x <=2 && Model.Pages >=2 && Model.CurrentPage <=2){
+                            <li>
+                                <a data-page="p=@x" class="pagination-link @if(CurrentPage==Model.CurrentPage){<text>is-current</text>}" aria-label="Goto page @CurrentPage">@CurrentPage</a>
+                            </li>
+                        }
+                    }
+                    @if(Model.CurrentPage <= Model.Pages-3){
+                        <li>
+                            <span class="pagination-ellipsis">&hellip;</span>
+                        </li>
+                    }
+                    <li>
+                    <a data-page="p=@(Model.Pages-1)" class="pagination-link @if(Model.Pages==Model.CurrentPage){<text>is-current</text>}" aria-label="Goto page @Model.Pages">@Model.Pages</a>
+                    </li>
+                </ul>
+            </nav>
+        }
+    </div>
+    <table class="table is-fullwidth">
+        <thead>
+            <tr>
+                <th>Severity</th>
+                <th>Date</th>
+                <th>Message</th>
+                <th>User</th>
+                <th>OS</th>
+                <th>Browser</th>
+                <th>Resolved</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var Trace in Model.Traces)
+            {
+                var uaParser = Parser.GetDefault();
+                var agent = uaParser.Parse(Trace.UserAgent);
+                dynamic message = JsonConvert.DeserializeObject(@Trace.Message);
+                Dictionary<int, string> Level = new() {{1000, "😊 Trace"}, {2000, "🙂 Debug"}, {3000, "😐 Info"}, {4000, "😨 Warning"}, {5000, "😠 Error"}, {6000, "😡 Fatal"}};
+
+                <tr @if(Trace.Handled == 1){<text>class="has-text-grey-light"</text>}>
+                    <td class="is-nobreak">
+                        @Level[(int)@Trace.Level]
+                    </td>
+                    <td>
+                        @Trace.LogDateTime
+                    </td>
+                    <td>
+@message.logData.msg at <a @if(Trace.Handled == 1){<text>class="has-text-grey-light"</text>} href='@Trace.Referer' target="_blank">@Trace.Referer</a><br>in <a @if(Trace.Handled == 1){<text>class="has-text-grey-light"</text>} href='@message.logData.url:@message.logData["line number"]:@message.logData.column' target="_blank">@message.logData.url:@message.logData["line number"]:@message.logData.column</a>
+    <div class="notification @if(Trace.Handled != 1){<text>is-danger</text>} is-family-monospace is-light mt-2">@message.logData.errorMsg</div>
+                    </td>
+                    <td>
+                        @if (@Configuration["features:enable_user_profile"] == null || @Configuration["features:enable_user_profile"].ToString().ToLower() == "true")
+                        {
+                            <a href="/users?id=@Trace.UserId">@Trace.User.FullnameCalc</a>
+                        } else {
+                            @Trace.User.FullnameCalc
+                        }
+                    </td>
+                    <td class="is-nobreak">
+                        @agent.OS.Family @agent.OS.Major
+                    </td>
+                    <td class="is-nobreak">
+                        @agent.UA.Family @agent.UA.Major
+                    </td>
+                    <td>
+                    <div class="field">
+                        <input class="is-checkradio trace-resolved is-info"
+                                id="@Trace.Id"
+                                type="checkbox"
+                                name="trace-@Trace.Id"
+                                @if (Trace.Handled == 1) {<text>checked="checked"</text>}
+                        />
+                        <label for="@Trace.Id"></label>
+                    </div>
+                </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <small class="has-text-grey-light">Pages @Model.CurrentPage of @Model.Pages</small>
+
+</div>

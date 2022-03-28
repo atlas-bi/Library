@@ -6,7 +6,9 @@ const log = require('fancy-log');
 var iis;
 
 gulp.task('iis:kill', function (cb) {
-  var kill = spawn('taskkill', ['/IM', 'IISExpress.exe'], { detached: true });
+  var kill = spawn('taskkill', ['/IM', 'IISExpress.exe', '/F'], {
+    detached: true,
+  });
   kill.stderr.on('data', (data) => {
     log.error(data.toString().replace(/^\s+|\s+$/g, ''));
   });
@@ -25,6 +27,8 @@ gulp.task('iis:start', function (cb) {
   env.LAUNCHER_PATH = 'bin/Debug/net6.0/Atlas_Web.exe';
   env.ASPNETCORE_ENVIRONMENT = 'Development';
   env.ENVIRONMENT = 'Development';
+  env.ATLAS_PATH = path.join(__dirname, '../web');
+
   iis = spawn(
     'C:/Program Files/IIS Express/iisexpress.exe',
     [
@@ -41,12 +45,25 @@ gulp.task('iis:start', function (cb) {
   iis.stdout.on('data', (data) => {
     log.info(data.toString().replace(/^\s+|\s+$/g, ''));
   });
-
+  log.warn(`
+################################################################################
+       .o88o.   oooooooo      .o8             .o8
+       888 '"  dP"""""""     "888            "888
+       o888oo  d88888b.   .oooo888   .ooooo.   888oooo.  oooo  oooo   .oooooooo
+       888        'Y88b  d88' '888  d88' '88b  d88' '88b '888  '888  888' '88b
+       888          ]88  888   888  888ooo888  888   888  888   888  888   888
+       888    o.   .88P  888   888  888    .o  888   888  888   888  '88bod8P'
+      o888o   '8bd88P'   'Y8bod88P" 'Y8bod8P'  'Y8bod8P'  'V88V"V8P' '8oooooo.
+                                                                      d"     YD
+                                                                      "Y88888P'
+################################################################################
+  `);
   iis.on('close', function (code) {
     if (code === 8) {
       log('Error detected, waiting for changes...');
     }
   });
+
   cb();
 });
 

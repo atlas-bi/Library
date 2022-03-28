@@ -69,101 +69,8 @@ namespace Atlas_Web.Pages.Analytics
         [BindProperty]
         public Models.Analytic NewAnalytic { get; set; }
 
-        public async Task<ActionResult> OnGetAsync()
+        public ActionResult OnGet()
         {
-            TopPages = await (
-                from a in _context.Analytics
-                where a.AccessDateTime >= DateTime.Today.AddDays(-7)
-                group a by a.Pathname.ToLower() into grp
-                orderby grp.Count() descending
-                select new MediumData
-                {
-                    Name = grp.Key,
-                    Time = Math.Round(
-                        grp.Average(i => Convert.ToDouble(i.LoadTime ?? "0")) / 1000,
-                        2
-                    ),
-                    Count = grp.Count()
-                }
-            ).Take(10).ToListAsync();
-
-            DateTime MyNow = DateTime.Today;
-
-            AccessHistory = (
-                from a in _context.Analytics
-                where
-                    a.AccessDateTime.HasValue
-                    && a.AccessDateTime < new DateTime(MyNow.Year, MyNow.Month, 1)
-                group a by new
-                {
-                    year = a.AccessDateTime.Value.Year,
-                    month = a.AccessDateTime.Value.Month
-                } into tmp
-                orderby tmp.Key.year ,tmp.Key.month
-                select new AccessHistoryData
-                {
-                    Month = tmp.Key.month.ToString() + "/01/" + tmp.Key.year.ToString(),
-                    Hits = tmp.Count()
-                }
-            ).ToList();
-
-            SearchHistory = (
-                from a in _context.Analytics
-                where
-                    a.AccessDateTime.HasValue
-                    && a.AccessDateTime < new DateTime(MyNow.Year, MyNow.Month, 1)
-                    && a.Pathname.ToLower() == "/search"
-                group a by new
-                {
-                    year = a.AccessDateTime.Value.Year,
-                    month = a.AccessDateTime.Value.Month
-                } into tmp
-                orderby tmp.Key.year ,tmp.Key.month
-                select new AccessHistoryData
-                {
-                    Month = tmp.Key.month.ToString() + "/01/" + tmp.Key.year.ToString(),
-                    Hits = tmp.Count()
-                }
-            ).ToList();
-
-            ReportHistory = (
-                from a in _context.Analytics
-                where
-                    a.AccessDateTime.HasValue
-                    && a.AccessDateTime < new DateTime(MyNow.Year, MyNow.Month, 1)
-                    && a.Pathname.ToLower() == "/reports"
-                group a by new
-                {
-                    year = a.AccessDateTime.Value.Year,
-                    month = a.AccessDateTime.Value.Month
-                } into tmp
-                orderby tmp.Key.year ,tmp.Key.month
-                select new AccessHistoryData
-                {
-                    Month = tmp.Key.month.ToString() + "/01/" + tmp.Key.year.ToString(),
-                    Hits = tmp.Count()
-                }
-            ).ToList();
-
-            TermHistory = (
-                from a in _context.Analytics
-                where
-                    a.AccessDateTime.HasValue
-                    && a.AccessDateTime < new DateTime(MyNow.Year, MyNow.Month, 1)
-                    && a.Pathname.ToLower() == "/terms"
-                group a by new
-                {
-                    year = a.AccessDateTime.Value.Year,
-                    month = a.AccessDateTime.Value.Month
-                } into tmp
-                orderby tmp.Key.year ,tmp.Key.month
-                select new AccessHistoryData
-                {
-                    Month = tmp.Key.month.ToString() + "/01/" + tmp.Key.year.ToString(),
-                    Hits = tmp.Count()
-                }
-            ).ToList();
-
             return Page();
         }
 
@@ -262,13 +169,7 @@ namespace Atlas_Web.Pages.Analytics
             */
             NewAnalytic.Username = User.Identity.Name;
             NewAnalytic.UserId = MyUser.UserId;
-            NewAnalytic.AppCodeName = package.Value<string>("appCodeName") ?? "";
-            NewAnalytic.AppName = package.Value<string>("appName") ?? "";
-            NewAnalytic.AppVersion = package.Value<string>("appVersion") ?? "";
-            NewAnalytic.CookieEnabled = package.Value<string>("cookieEnabled") ?? "";
             NewAnalytic.Language = package.Value<string>("language") ?? "";
-            NewAnalytic.Oscpu = package.Value<string>("oscpu") ?? "";
-            NewAnalytic.Platform = package.Value<string>("platform") ?? "";
             NewAnalytic.UserAgent = package.Value<string>("userAgent") ?? "";
             NewAnalytic.Host = package.Value<string>("host") ?? "";
             NewAnalytic.Hostname = package.Value<string>("hostname") ?? ""; // keep
@@ -276,11 +177,9 @@ namespace Atlas_Web.Pages.Analytics
             NewAnalytic.Protocol = package.Value<string>("protocol") ?? "";
             NewAnalytic.Search = package.Value<string>("search") ?? "";
             NewAnalytic.Pathname = package.Value<string>("pathname") ?? "";
-            NewAnalytic.Hash = package.Value<string>("hash") ?? "";
             NewAnalytic.ScreenHeight = package.Value<string>("screenHeight") ?? "";
             NewAnalytic.ScreenWidth = package.Value<string>("screenWidth") ?? "";
             NewAnalytic.Origin = package.Value<string>("origin") ?? "";
-            NewAnalytic.Title = package.Value<string>("title") ?? "";
             NewAnalytic.LoadTime = package.Value<string>("loadTime") ?? "";
             NewAnalytic.AccessDateTime = DateTime.Now;
             NewAnalytic.UpdateTime = DateTime.Now;

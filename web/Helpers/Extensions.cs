@@ -376,10 +376,15 @@ namespace Atlas_Web.Helpers
         public static string RecordViewerLink(
             HttpContext Context,
             string EpicMasterFile,
-            string EpicRecordId
+            string EpicRecordId,
+            string Orphan
         )
         {
             string Url = null;
+            if ((Orphan ?? "N") == "Y")
+            {
+                return null;
+            }
             bool Epic = IsEpic(Context);
 
             if (
@@ -402,10 +407,15 @@ namespace Atlas_Web.Helpers
             string SourceServer,
             string EpicMasterFile,
             string EpicReportTemplateId,
-            string EpicRecordId
+            string EpicRecordId,
+            string Orphan
         )
         {
             string Url = null;
+            if ((Orphan ?? "N") == "Y")
+            {
+                return null;
+            }
             bool Epic = IsEpic(Context);
             if (ReportServerPath != null && ReportServerPath != "" && !Epic)
             {
@@ -457,10 +467,17 @@ namespace Atlas_Web.Helpers
             HttpContext Context,
             string ReportType,
             string ReportServerPath,
-            string SourceServer
+            string SourceServer,
+            string Orphan
         )
         {
             string Url = null;
+
+            if ((Orphan ?? "N") == "Y")
+            {
+                return null;
+            }
+
             bool Epic = IsEpic(Context);
             if ((ReportType == "SSRS Report" || ReportType == "SSRS File") && !Epic)
             {
@@ -483,7 +500,7 @@ namespace Atlas_Web.Helpers
             string username
         )
         {
-            if (reportObject == null)
+            if (reportObject == null || (reportObject.OrphanedReportObjectYn ?? "N") == "Y")
             {
                 return null;
             }

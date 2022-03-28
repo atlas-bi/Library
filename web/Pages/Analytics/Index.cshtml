@@ -2,114 +2,30 @@
 @model Atlas_Web.Pages.Analytics.IndexModel
 @{ ViewData["Title"] = "Analytics"; }
 
-@*
 @section js {
-    <script async src="/js/realtime.min.js" defer></script>
+     <script src="/js/analytics.min.js" defer async></script>
 }
-*@
+
 <h1 class="title is-1">Analytics</h1>
 
 <div id="active-users"></div>
-<h2 class="title is-2">Last 7 Days - Top Ten</h2>
 
-<div class="is-flex is-justify-content-space-between">
-    <h3 class="title is-3">Most Active Users</h3>
-    <div class="dropdown is-select"  data-target="top-users-chart" >
-        <div class="dropdown-trigger ">
-            <button class="button" aria-haspopup="true" aria-controls="top-users-chart-dropdown">
-            <span class="select-value">Last 24 hours</span>
-            <span class="icon is-small">
-                <i class="fas fa-angle-down" aria-hidden="true"></i>
-            </span>
-            </button>
+<div class="is-flex mb-5 is-justify-content-space-between">
+    <div class="is-flex">
+        <div class="is-flex mr-5 is-flex-direction-column">
+            <h1 class="title is-2 mb-0 is-family-sans-serif"><span id="analytics-views">-</span></h1>
+            <span>Views</span>
         </div>
-        <div class="dropdown-menu" id="top-users-chart-dropdown"role="menu">
-            <div class="dropdown-content">
-            <a href="#" class="dropdown-item" data-range="1">
-                Today
-            </a>
-            <a class="dropdown-item is-active" data-range="2">
-                Last 24 hours
-            </a>
-            <hr class="dropdown-divider">
-            <a href="#" class="dropdown-item" data-range="3">
-                This week
-            </a>
-            <a href="#" class="dropdown-item" data-range="4">
-                Last 7 days
-            </a>
-            <hr class="dropdown-divider">
-            <a href="#" class="dropdown-item" data-range="5">
-            This month
-            </a>
-            <a href="#" class="dropdown-item" data-range="6">
-            Last 30 days
-            </a>
-            <a href="#" class="dropdown-item" data-range="7">
-            Last 90 days
-            </a>
-            <a href="#" class="dropdown-item" data-range="8">
-            This year
-            </a>
-            <hr class="dropdown-divider">
-            <a href="#" class="dropdown-item" data-range="9">
-                All time
-            </a>
-            <hr class="dropdown-divider">
-            <a href="#" class="dropdown-item" data-range="10">
-                Custom range
-            </a>
-            </div>
+        <div class="is-flex mx-5 is-flex-direction-column">
+            <h1 class="title is-2 mb-0 is-family-sans-serif"><span id="analytics-visitors">-</span></h1>
+            <span>Visitors</span>
+        </div>
+        <div class="is-flex ml-5 is-flex-direction-column">
+            <h1 class="title is-2 mb-0 is-family-sans-serif"><span id="analytics-load-time">-</span>s</text></h1>
+            <span>Load Time</span>
         </div>
     </div>
-</div>
-<div id="top-users-chart" data-ajax="yes" data-url="/Analytics/TopUsers" data-param="type=Last 24 hours" style="min-height:400px;"></div>
-
-<h3 class="title is-3">Most Popular Pages</h3>
-
-<div class="atlas-chart">
-    <div class="ajaxLoader"><img class="ajaxLoader-img" src="/img/loader.gif" /></div>
-    <script type="application/json">
-        @{
-            var TopTenTwo = Model.TopPages.Take(10);
-            var lastTwo = TopTenTwo.Last();
-        }
-        {
-            "axis": {
-                "0": {"title":"seconds"},
-                "1": {"title":"visits"}
-            },
-            "type": "bar",
-            "height":"400",
-            "title": "Top Pages",
-            "data": [{
-                "title" : "Load Time (s)",
-                "axis":"0",
-                "type": "line",
-                "units": "(s)",
-                "data": [
-                        @foreach (var g in TopTenTwo)
-                        {
-                            <text>{ "title": "@g.Name", "data": "@g.Time"}</text> @if(g != lastTwo){<text>,</text>}
-                        }
-                    ]
-               },{
-                "title" : "Visits",
-                "type": "bar",
-                "axis": "1",
-                "data": [
-                        @foreach (var g in TopTenTwo)
-                        {
-                            <text>{ "title": "@g.Name", "data": "@g.Count"}</text> @if(g != lastTwo){<text>,</text>}
-                        }
-                    ]
-               }]
-            }
-    </script>
-</div>
-
-<h3 class="title is-3">Access History</h3>
-<div class="dropdown is-select"  data-target="views-chart" >
+    <div class="dropdown mb-5 is-select"  data-target="views-chart" >
         <div class="dropdown-trigger ">
             <button class="button" aria-haspopup="true" aria-controls="views-chart-dropdown">
             <span class="select-value">Last 24 hours</span>
@@ -157,110 +73,59 @@
             </div>
         </div>
     </div>
-    <div id="views-chart" data-ajax="yes" data-url="/Analytics/Views" data-param="" style="min-height:400px;"></div>
-<div class="atlas-chart">
-    <div class="ajaxLoader"><img class="ajaxLoader-img" src="/img/loader.gif" /></div>
-    <script type="application/json">
-        {
-            "axis": {
-                "0": {"title":"visits"}
-            },
-            "type": "bar",
-            "height":"400",
-            "title": "Monthly Atlas Visits",
-            "data": [{
-                "title" : "Visits",
-                "axis":"0",
-                "type": "bar",
-                "data": [
-                        @foreach (var g in Model.AccessHistory)
-                        {
-                            <text>{ "title": "@g.Month", "data": "@g.Hits"}</text> @if(g != Model.AccessHistory.Last()){<text>,</text>}
-                        }
-                    ]
-               }]
-            }
-    </script>
+</div>
+<div class="chart-wrapper"  style="max-height:400px;">
+    <canvas id="visits-chart" data-url="/Analytics/Visits"  width="400" height="400"></canvas>
 </div>
 
-<h3 class="title is-3">Search Access History</h3>
-
-<div class="atlas-chart">
-    <div class="ajaxLoader"><img class="ajaxLoader-img" src="/img/loader.gif" /></div>
-    <script type="application/json">
-        {
-            "axis": {
-                "0": {"title":"searches"}
-            },
-            "type": "bar",
-            "height":"400",
-            "title": "Monthly Atlas Searches",
-            "data": [{
-                "title" : "Searches",
-                "axis":"0",
-                "type": "bar",
-                "data": [
-                        @foreach (var g in Model.SearchHistory)
-                        {
-                            <text>{ "title": "@g.Month", "data": "@g.Hits"}</text> @if(g != Model.SearchHistory.Last()){<text>,</text>}
-                        }
-                    ]
-               }]
-            }
-    </script>
-</div>
-
-<h3 class="title is-3">Report Access History</h3>
-
-<div class="atlas-chart">
-    <div class="ajaxLoader"><img class="ajaxLoader-img" src="/img/loader.gif" /></div>
-    <script type="application/json">
-        {
-            "axis": {
-                "0": {"title":"visits"}
-            },
-            "type": "bar",
-            "height":"400",
-            "title": "Monthly Atlas Report Access",
-            "data": [{
-                "title" : "Visits",
-                "axis":"0",
-                "type": "bar",
-                "data": [
-                        @foreach (var g in Model.ReportHistory)
-                        {
-                            <text>{ "title": "@g.Month", "data": "@g.Hits"}</text> @if(g != Model.ReportHistory.Last()){<text>,</text>}
-                        }
-                    ]
-               }]
-            }
-    </script>
+<div class="columns pt-5">
+    <div class="column is-one-third is-half-tablet">
+        <div class="bar-data-wrapper" data-url="/Analytics/Visits?handler=Browsers" data-callback="browser"></div>
+    </div>
+    <div class="column is-one-third is-half-tablet">
+        <div class="bar-data-wrapper" data-url="/Analytics/Visits?handler=Os" data-callback="os"></div>
+    </div>
+    <div class="column is-one-third is-half-tablet">
+        <div class="bar-data-wrapper" data-url="/Analytics/Visits?handler=Resolution" ></div>
+    </div>
 </div>
 
 
-<h3 class="title is-3">Term Access History</h3>
-
-<div class="atlas-chart">
-    <div class="ajaxLoader"><img class="ajaxLoader-img" src="/img/loader.gif" /></div>
-    <script type="application/json">
-        {
-            "axis": {
-                "0": {"title":"visits"}
-            },
-            "type": "bar",
-            "height":"400",
-            "title": "Monthly Atlas Term Access",
-            "data": [{
-                "title" : "Visits",
-                "axis":"0",
-                "type": "bar",
-                "data": [
-                        @foreach (var g in Model.TermHistory)
-                        {
-                            <text>{ "title": "@g.Month", "data": "@g.Hits"}</text> @if(g != Model.TermHistory.Last()){<text>,</text>}
-                        }
-                    ]
-               }]
-            }
-    </script>
+<div class="columns">
+    <div class="column is-one-third is-half-tablet">
+        <div class="bar-data-wrapper" data-url="/Analytics/Visits?handler=Users" ></div>
+    </div>
+    <div class="column is-one-third is-half-tablet">
+        <div class="bar-data-wrapper" data-url="/Analytics/Visits?handler=LoadTimes" ></div>
+    </div>
+    @* <div class="column is-one-third is-half-tablet">
+        <div class="bar-data-wrapper" data-url="/Analytics/Visits?handler=Reports" ></div>
+    </div> *@
+    @* <div class="column">
+        <div class="bar-data-wrapper" data-url="/Analytics/Visits?handler=Reports">
+            <h3 class="title is-3 is-family-sans-serif">Top Reports</h3>
+        </div>
+    </div>
+    <div class="column">
+        <div class="bar-data-wrapper" data-url="/Analytics/Visits?handler=Terms">
+            <h3 class="title is-3 is-family-sans-serif">Top Terms</h3>
+        </div>
+    </div> *@
 </div>
+
+<div data-ajax="yes" class="analytics no-loader" data-page="0" data-url="/Analytics/Trace"></div>
+@*
+<div class="columns">
+    <div class="column">
+        <div class="bar-data-wrapper" data-url="/Analytics/Visits?handler=Collections">
+            <h3 class="title is-3 is-family-sans-serif">Top Collections</h3>
+        </div>
+    </div>
+    <div class="column">
+        <div class="bar-data-wrapper" data-url="/Analytics/Visits?handler=Initiatives">
+            <h3 class="title is-3 is-family-sans-serif">Top Initiatives</h3>
+        </div>
+    </div>
+</div> *@
+
+

@@ -469,12 +469,14 @@ namespace Atlas_Web.Pages.Tasks
                         r.SourceServer,
                         r.EpicMasterFile,
                         r.EpicReportTemplateId.ToString(),
-                        r.EpicRecordId.ToString()
+                        r.EpicRecordId.ToString(),
+                        r.OrphanedReportObjectYn
                     ),
                     RecordViewerUrl = Helpers.HtmlHelpers.RecordViewerLink(
                         HttpContext,
                         r.EpicMasterFile,
-                        r.EpicRecordId.ToString()
+                        r.EpicRecordId.ToString(),
+                        r.OrphanedReportObjectYn
                     ),
                     Runs = ((int?)f.Cnt ?? 0)
                 }
