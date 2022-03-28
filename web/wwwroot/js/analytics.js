@@ -215,6 +215,7 @@ const { ja, tr } = require('date-fns/locale');
 
           loadChart(dataset);
           loadBoxes(dataset);
+          loadAjax(dataset);
         }),
       );
   };
@@ -245,6 +246,14 @@ const { ja, tr } = require('date-fns/locale');
     } else {
       return document.createElement('span');
     }
+  }
+  function loadAjax(params = '') {
+    console.log('params', params);
+    (document.querySelectorAll('.analytics[data-url]') || []).forEach(($el) => {
+      console.log($el);
+      $el.setAttribute('data-params', params);
+      $el.dispatchEvent(new CustomEvent('reload'));
+    });
   }
   function loadBoxes(params = '') {
     (document.querySelectorAll('.bar-data-wrapper[data-url]') || []).forEach(
@@ -303,6 +312,62 @@ const { ja, tr } = require('date-fns/locale');
     };
   }
 
+  document.addEventListener('click', (e) => {
+    if (
+      e.target.matches('.trace-resolved[type="checkbox"]') &&
+      e.target.tagName == 'INPUT'
+    ) {
+      var i = e.target,
+        type = 1,
+        q,
+        url,
+        data;
+
+      if (i.hasAttribute('checked')) {
+        i.removeAttribute('checked');
+        type = 2;
+        i.closest('tr.has-text-grey-light').classList.remove(
+          'has-text-grey-light',
+        );
+        (
+          i.closest('tr').querySelectorAll('a.has-text-grey-light') || []
+        ).forEach(($i) => {
+          $i.classList.remove('has-text-grey-light');
+        });
+        (i.closest('tr').querySelectorAll('div.notification') || []).forEach(
+          ($i) => {
+            $i.classList.add('is-danger');
+          },
+        );
+      } else {
+        i.setAttribute('checked', 'checked');
+        i.closest('tr').classList.add('has-text-grey-light');
+        (i.closest('tr').querySelectorAll('a') || []).forEach(($i) => {
+          $i.classList.add('has-text-grey-light');
+        });
+        (
+          i.closest('tr').querySelectorAll('div.notification.is-danger') || []
+        ).forEach(($i) => {
+          $i.classList.remove('is-danger');
+        });
+      }
+
+      data = {
+        Id: i.getAttribute('id'),
+        Type: type,
+      };
+      url = Object.keys(data)
+        .map(function (k) {
+          return encodeURIComponent(k) + '=' + encodeURIComponent(data[k]);
+        })
+        .join('&');
+      q = new XMLHttpRequest();
+      q.open('post', '/Analytics/Trace/?handler=Resolved&' + url, true);
+      q.setRequestHeader('Content-Type', 'text/html;charset=UTF-8`');
+      q.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+      q.send();
+    }
+  });
   var test = 0;
   function load() {
     // wait for chartjs to load.. basically 15 seconds max

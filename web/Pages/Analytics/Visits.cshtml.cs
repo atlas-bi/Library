@@ -158,7 +158,7 @@ namespace Atlas_Web.Pages.Analytics
                         group a by new DateTime(
                             (a.AccessDateTime ?? DateTime.Now).Year,
                             (a.AccessDateTime ?? DateTime.Now).Month,
-                            0,
+                            1,
                             0,
                             0,
                             0

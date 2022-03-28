@@ -27,6 +27,7 @@
   var sendAjax = function (e) {
     var u = e.getAttribute('data-url'),
       p = e.getAttribute('data-param'),
+      page = e.getAttribute('data-page'),
       l = e.getAttribute('data-loadtag'),
       q;
 
@@ -43,6 +44,15 @@
       }
 
       u += p;
+    }
+    // for paginated ajax boxes
+    if (page !== null && page !== '') {
+      if (u.indexOf('?') != -1) {
+        u += '&';
+      } else {
+        u += '?';
+      }
+      u += page;
     }
 
     q = new XMLHttpRequest();
@@ -203,4 +213,24 @@
       passive: true,
     },
   );
+
+  // trigger reload on paginated boxes
+  document.addEventListener('click', ($e) => {
+    if (
+      $e.target.closest('[data-url][data-page]') &&
+      $e.target.closest('.pagination-link[data-page]')
+    ) {
+      $e.target
+        .closest('[data-url][data-page]')
+        .setAttribute(
+          'data-page',
+          $e.target
+            .closest('.pagination-link[data-page]')
+            .getAttribute('data-page'),
+        );
+      $e.target
+        .closest('[data-url][data-page]')
+        .dispatchEvent(new CustomEvent('reload'));
+    }
+  });
 })();
