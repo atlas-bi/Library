@@ -9,13 +9,7 @@
         w = window,
         d = document,
         l = w.location;
-      a.appCodeName = n.appCodeName;
-      a.appName = n.appName;
-      a.appVersion = n.appVersion;
-      a.cookieEnabled = n.cookieEnabled;
       a.language = n.language;
-      a.oscpu = n.oscpu;
-      a.platform = n.platform;
       a.userAgent = n.userAgent;
       a.host = l.host;
       a.hostname = l.hostname;
@@ -23,11 +17,9 @@
       a.protocol = l.protocol;
       a.search = l.search;
       a.pathname = l.pathname;
-      a.hash = l.hash;
       a.screenHeight = d.documentElement.clientHeight;
       a.screenWidth = d.documentElement.clientWidth;
       a.origin = w.origin;
-      a.title = d.title;
       a.referrer = d.referrer;
       a.loadTime =
         loadTime ||

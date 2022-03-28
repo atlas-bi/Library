@@ -15,6 +15,7 @@ namespace Atlas_Web.Models
         public int? Handled { get; set; }
         public DateTime? UpdateTime { get; set; }
         public string UserAgent { get; set; }
+        public string Referer { get; set; }
 
         public virtual User User { get; set; }
     }

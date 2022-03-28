@@ -169,13 +169,7 @@ namespace Atlas_Web.Pages.Analytics
             */
             NewAnalytic.Username = User.Identity.Name;
             NewAnalytic.UserId = MyUser.UserId;
-            NewAnalytic.AppCodeName = package.Value<string>("appCodeName") ?? "";
-            NewAnalytic.AppName = package.Value<string>("appName") ?? "";
-            NewAnalytic.AppVersion = package.Value<string>("appVersion") ?? "";
-            NewAnalytic.CookieEnabled = package.Value<string>("cookieEnabled") ?? "";
             NewAnalytic.Language = package.Value<string>("language") ?? "";
-            NewAnalytic.Oscpu = package.Value<string>("oscpu") ?? "";
-            NewAnalytic.Platform = package.Value<string>("platform") ?? "";
             NewAnalytic.UserAgent = package.Value<string>("userAgent") ?? "";
             NewAnalytic.Host = package.Value<string>("host") ?? "";
             NewAnalytic.Hostname = package.Value<string>("hostname") ?? ""; // keep
@@ -183,11 +177,9 @@ namespace Atlas_Web.Pages.Analytics
             NewAnalytic.Protocol = package.Value<string>("protocol") ?? "";
             NewAnalytic.Search = package.Value<string>("search") ?? "";
             NewAnalytic.Pathname = package.Value<string>("pathname") ?? "";
-            NewAnalytic.Hash = package.Value<string>("hash") ?? "";
             NewAnalytic.ScreenHeight = package.Value<string>("screenHeight") ?? "";
             NewAnalytic.ScreenWidth = package.Value<string>("screenWidth") ?? "";
             NewAnalytic.Origin = package.Value<string>("origin") ?? "";
-            NewAnalytic.Title = package.Value<string>("title") ?? "";
             NewAnalytic.LoadTime = package.Value<string>("loadTime") ?? "";
             NewAnalytic.AccessDateTime = DateTime.Now;
             NewAnalytic.UpdateTime = DateTime.Now;

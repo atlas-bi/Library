@@ -205,6 +205,8 @@ namespace Atlas_Web.Models
 
                     entity.Property(e => e.LogId).HasColumnName("logId");
 
+                    entity.Property(e => e.Referer).HasColumnName("referer");
+
                     entity
                         .Property(e => e.UpdateTime)
                         .HasColumnType("datetime")
@@ -1096,11 +1098,24 @@ namespace Atlas_Web.Models
 
                     entity.HasIndex(e => e.EpicMasterFile, "epicmasterfile");
 
+                    entity.HasIndex(e => e.EpicMasterFile, "epicmasterfile + reportid");
+
                     entity.HasIndex(e => e.LastModifiedByUserId, "modifiedby");
 
                     entity.HasIndex(e => e.ReportObjectId, "reportid").IsUnique();
 
                     entity.HasIndex(e => e.ReportObjectTypeId, "typeid");
+
+                    entity.HasIndex(
+                        e =>
+                            new
+                            {
+                                e.DefaultVisibilityYn,
+                                e.OrphanedReportObjectYn,
+                                e.ReportObjectTypeId
+                            },
+                        "visibility + orphan + type"
+                    );
 
                     entity.Property(e => e.ReportObjectId).HasColumnName("ReportObjectID");
 

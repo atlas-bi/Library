@@ -87,7 +87,8 @@ namespace Atlas_Web.Pages.Analytics
                             Message = x.Value<string>("m"),
                             Logger = x.Value<string>("n"),
                             LogDateTime = DateTime.Now,
-                            UserAgent = Request.Headers["User-Agent"].ToString()
+                            UserAgent = Request.Headers["User-Agent"].ToString(),
+                            Referer = Request.Headers["Referer"].ToString(),
                         }
                     );
 
