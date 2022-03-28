@@ -432,10 +432,9 @@ code {
 }
 
 .modal-image {
-  width: 90vw;
+  max-width: 90vw;
+  width: auto;
   height: auto;
-  margin-top: auto;
-  margin-bottom: auto;
   max-height: 90vh;
 }
 
