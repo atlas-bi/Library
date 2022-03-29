@@ -29,13 +29,14 @@ jobs:
             - name: test
               run: |
                   # actual test runner
-                  coverlet web.Tests/bin/Debug/net6.0/web.Tests.dll --target "dotnet" --targetargs "test  --no-build" --format cobertura --threshold 95
+                  coverlet web.Tests/bin/Debug/net6.0/web.Tests.dll --target "dotnet" --targetargs "test  --no-build" --format cobertura
                   # generate a report just to show in the action history
                   reportgenerator -reports:coverage.cobertura.xml -targetdir:coverage/ -reporttypes:textSummary
                   # print out the report
                   cat coverage/Summary.txt
 
             - name: upload cov
+              if: always()
               uses: codecov/codecov-action@v2
               with:
                   files: ./coverage.cobertura.xml
