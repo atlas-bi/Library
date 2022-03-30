@@ -3,10 +3,10 @@
 The following command will run all tests, and then generate an html report showing hit miss analysis.
 
 ```bash
-dotnet build; \
-coverlet web.Tests/bin/Debug/net6.0/web.Tests.dll --target "dotnet" --targetargs "test  --no-build" --format cobertura --exclude-by-file "**/Migrations/*"; \
-reportgenerator -reports:coverage.cobertura.xml -targetdir:coverage/ -reporttypes:html
+dotnet restore
+npm run test:dev
 ```
+
 
 Tests require a few global tools:
 

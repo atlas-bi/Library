@@ -43,14 +43,15 @@ public class APIIndexTests : IClassFixture<TestDatabaseFixture>
 
     // }
 
-    [Fact]
-    public async void OnPostRenderMarkdown()
-    {
-        using var context = Fixture.CreateContext();
-        using var cache = Fixture.CreateCache();
-        var config = Fixture.CreateConfig();
-        var pageModel = new Atlas_Web.Pages.API.IndexModel(context, cache, config);
+    // [Fact]
+    // public async void OnPostRenderMarkdown()
+    // {
+    //     using var context = Fixture.CreateContext();
+    //     using var cache = Fixture.CreateCache();
+    //     var config = Fixture.CreateConfig();
+    //     var pageModel = new Atlas_Web.Pages.API.IndexModel(context, cache, config);
 
-        await pageModel.OnPostRenderMarkdown();
-    }
+    //     await pageModel.OnPostRenderMarkdown();
+    // }
+
 }

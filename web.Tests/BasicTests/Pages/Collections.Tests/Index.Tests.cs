@@ -24,9 +24,9 @@ using Newtonsoft.Json.Linq;
 
 namespace web.Tests;
 
-public class GroupsIndexTests : IClassFixture<TestDatabaseFixture>
+public class CollectionIndexTests : IClassFixture<TestDatabaseFixture>
 {
-    public GroupsIndexTests(TestDatabaseFixture fixture) => Fixture = fixture;
+    public CollectionIndexTests(TestDatabaseFixture fixture) => Fixture = fixture;
 
     public TestDatabaseFixture Fixture { get; }
 
@@ -37,33 +37,21 @@ public class GroupsIndexTests : IClassFixture<TestDatabaseFixture>
         var config = Fixture.CreateConfig();
         using var context = Fixture.CreateContext();
 
-        var pageModel = new Atlas_Web.Pages.Groups.IndexModel(context, cache, config);
+        var pageModel = new Atlas_Web.Pages.Collections.IndexModel(context, cache);
         await pageModel.OnGetAsync();
     }
 
-    [Fact]
-    public async void OnGetAsync_with_id()
-    {
-        using var cache = Fixture.CreateCache();
-        var config = Fixture.CreateConfig();
-        using var context = Fixture.CreateContext();
+    // [Fact]
+    // public async void OnGetAsync_with_id()
+    // {
+    //     using var cache = Fixture.CreateCache();
+    //     var config = Fixture.CreateConfig();
+    //     using var context = Fixture.CreateContext();
 
-        var pageModel = new Atlas_Web.Pages.Groups.IndexModel(context, cache, config);
+    //     var pageModel = new Atlas_Web.Pages.Collections.IndexModel(context, cache);
 
-        await pageModel.OnGetAsync(1);
-    }
-
-    [Fact]
-    public async void OnGetActivity_with_id()
-    {
-        using var cache = Fixture.CreateCache();
-        var config = Fixture.CreateConfig();
-        using var context = Fixture.CreateContext();
-
-        var pageModel = new Atlas_Web.Pages.Groups.IndexModel(context, cache, config);
-
-        await pageModel.OnGetActivity(1);
-    }
+    //     await pageModel.OnGetAsync(1);
+    // }
 
 
 }

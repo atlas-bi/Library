@@ -27,15 +27,12 @@ jobs:
         run: npm build
       - name: install dotnet deps
         run: |
-          dotnet tool install --global coverlet.console
+          dotnet tool install -g coverlet.console
           dotnet tool install -g dotnet-reportgenerator-globaltool
           dotnet restore
-      - name: build
-        run: dotnet build
       - name: test
         run: |
-          # actual test runner
-          coverlet web.Tests/bin/Debug/net6.0/web.Tests.dll --target "dotnet" --targetargs "test  --no-build" --format cobertura --exclude-by-file "**/Migrations/*"
+          npm run test:dev
           # generate a report just to show in the action history
           reportgenerator -reports:coverage.cobertura.xml -targetdir:coverage/ -reporttypes:textSummary
           # print out the report

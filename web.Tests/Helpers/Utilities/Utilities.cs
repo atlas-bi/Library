@@ -11,6 +11,42 @@ using Microsoft.Extensions.Configuration;
 
 namespace web.Tests
 {
+    public static class Utilities
+    {
+        public static void InitializeDbForTests(Atlas_WebContext db)
+        {
+            db.Users.AddRange(GetSeedUser());
+            //db.Messages.AddRange(GetSeedingMessages());
+            db.SaveChanges();
+        }
+
+        public static void ReinitializeDbForTests(Atlas_WebContext db)
+        {
+            db.Users.RemoveRange(GetSeedUser());
+            //db.Messages.RemoveRange(db.Messages);
+            InitializeDbForTests(db);
+        }
+
+        public static List<User> GetSeedUser()
+        {
+            return new List<User>()
+            {
+                new User() { Username = "default", UserId = 1 },
+                new User() { Username = "user 2", UserId = 2 }
+            };
+        }
+        // public static List<Message> GetSeedingMessages()
+        // {
+        //     return new List<Message>()
+        //     {
+        //         new Message(){ Text = "TEST RECORD: You're standing on my scarf." },
+        //         new Message(){ Text = "TEST RECORD: Would you like a jelly baby?" },
+        //         new Message(){ Text = "TEST RECORD: To the rational mind, " +
+        //             "nothing is inexplicable; only unexplained." }
+        //     };
+        // }
+    }
+
     public class TestDatabaseFixture
     {
         private const string ConnectionString =
