@@ -5,5 +5,7 @@ on:
 
 jobs:
   check:
-    - name: Codespell action
-      uses: plettich/python_codespell_action@v0.1
+    runs-on: ubuntu-latest
+    steps:
+      - name: Codespell action
+        uses: plettich/python_codespell_action@v0.1
