@@ -2,6 +2,7 @@ name: Update Dependencies
 on:
   schedule:
     - cron: '0 1 * * 1'
+
 jobs:
   update-dep:
     runs-on: ubuntu-latest
@@ -14,10 +15,10 @@ jobs:
         run: |
           npx -p npm-check-updates ncu -u
           npm install
-      - name: Update dotnet dependencies
-        uses: actions/setup-dotnet@v1
+      - uses: actions/setup-dotnet@v1
         with:
           dotnet-version: '6.0.x'
+      - name: Update dotnet dependencies
         run: |
           dotnet tool install --global dotnet-outdated-tool
           dotnet-outdated -u
