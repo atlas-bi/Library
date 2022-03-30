@@ -24,7 +24,7 @@ jobs:
       - name: install node deps
         run: npm install
       - name: node build
-        run: npm build
+        run: npm run build
       - name: install dotnet deps
         run: |
           dotnet tool install -g coverlet.console
