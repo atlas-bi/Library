@@ -1,44 +1,50 @@
 name: test
 on:
-    push:
-    pull_request:
+  push:
+  pull_request:
 
 jobs:
-    test:
-        name: test
-        runs-on: ubuntu-latest
-        env:
-            config: 'Release'
+  test:
+    name: test
+    runs-on: ubuntu-latest
+    env:
+      config: 'Release'
 
-        steps:
-            - name: checkout
-              uses: actions/checkout@v2
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
 
-            - name: setup dotnet
-              uses: actions/setup-dotnet@v1
-              with:
-                  dotnet-version: '6.0.x'
+      - name: setup dotnet
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '6.0.x'
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '16.x'
+      - name: install node deps
+        run: npm install
+      - name: node build
+        run: npm build
+      - name: install dotnet deps
+        run: |
+          dotnet tool install --global coverlet.console
+          dotnet tool install -g dotnet-reportgenerator-globaltool
+          dotnet restore
+      - name: build
+        run: dotnet build
+      - name: test
+        run: |
+          # actual test runner
+          coverlet web.Tests/bin/Debug/net6.0/web.Tests.dll --target "dotnet" --targetargs "test  --no-build" --format cobertura --exclude-by-file "**/Migrations/*"
+          # generate a report just to show in the action history
+          reportgenerator -reports:coverage.cobertura.xml -targetdir:coverage/ -reporttypes:textSummary
+          # print out the report
+          cat coverage/Summary.txt
 
-            - name: install deps
-              run: |
-                  dotnet tool install --global coverlet.console
-                  dotnet tool install -g dotnet-reportgenerator-globaltool
-                  dotnet restore
-            - name: build
-              run: dotnet build
-            - name: test
-              run: |
-                  # actual test runner
-                  coverlet web.Tests/bin/Debug/net6.0/web.Tests.dll --target "dotnet" --targetargs "test  --no-build" --format cobertura
-                  # generate a report just to show in the action history
-                  reportgenerator -reports:coverage.cobertura.xml -targetdir:coverage/ -reporttypes:textSummary
-                  # print out the report
-                  cat coverage/Summary.txt
-
-            - name: upload cov
-              if: always()
-              uses: codecov/codecov-action@v2
-              with:
-                  files: ./coverage.cobertura.xml
-                  fail_ci_if_error: true
-                  verbose: true
+      - name: upload cov
+        if: always()
+        uses: codecov/codecov-action@v2
+        with:
+          files: ./coverage.cobertura.xml
+          fail_ci_if_error: true
+          verbose: true

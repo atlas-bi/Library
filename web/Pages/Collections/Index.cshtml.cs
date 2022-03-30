@@ -30,7 +30,7 @@ namespace Atlas_Web.Pages.Collections
 
         public IEnumerable<DpDataProject> Collections { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(int? id)
+        public async Task<IActionResult> OnGetAsync(int? id = null)
         {
             // if the id null then list all
             if (id != null)

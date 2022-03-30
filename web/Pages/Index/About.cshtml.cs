@@ -10,7 +10,7 @@ using Atlas_Web.Helpers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Caching.Memory;
 
-namespace Atlas_Dotnet.Pages
+namespace Atlas_Web.Pages
 {
     public class AboutModel : PageModel
     {
