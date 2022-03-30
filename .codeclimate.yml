@@ -1,4 +1,4 @@
-version: '2'         # required to adjust maintainability checks
+version: '2' # required to adjust maintainability checks
 
 checks:
   file-lines:
@@ -15,26 +15,26 @@ checks:
       threshold: #language-specific defaults. overrides affect all languages.
 
 exclude_patterns:
-- .github/
-- .husky/
-- testing/
-- web/solr/
-- web/wwwroot/lib/
-- web/wwwroot/css/
-- web/wwwroot/font/
-- config/
-- db/
-- dist/
-- features/
-- "**/node_modules/"
-- script/
-- "**/spec/"
-- "**/test/"
-- "**/tests/"
-- Tests/
-- "**/vendor/"
-- "**/*_test.go"
-- "**/*.d.ts"
+  - .github/
+  - .husky/
+  - testing/
+  - web/solr/
+  - web/wwwroot/lib/
+  - web/wwwroot/css/
+  - web/wwwroot/font/
+  - config/
+  - db/
+  - dist/
+  - features/
+  - '**/node_modules/'
+  - script/
+  - '**/spec/'
+  - '**/test/'
+  - '**/tests/'
+  - Tests/
+  - '**/vendor/'
+  - '**/*_test.go'
+  - '**/*.d.ts'
 
 plugins:
   eslint:

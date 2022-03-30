@@ -8,9 +8,9 @@ metrics:
       metrics: metrics.txt
 
 stages:
- - test
- - build
- - publish
+  - test
+  - build
+  - publish
 
 precommit:
   image: mcr.microsoft.com/dotnet/sdk:5.0-alpine
@@ -40,38 +40,36 @@ precommit:
     - pre-commit run stylelint --all-files
 
 build_web:
- image: mcr.microsoft.com/dotnet/sdk:5.0-alpine
- stage: build
- except:
-  - public
- script:
-  - cd "web"
-  - sed -i '$s/}/,\n"banner_text":{"site_message":"Atlas Test"}}/' appsettings.json
-  - dotnet publish -r win-x86 --self-contained false -c Release -o out
- artifacts:
-  paths: ["/builds/atlas/web/atlas-dotnet/web/out/"]
-
+  image: mcr.microsoft.com/dotnet/sdk:5.0-alpine
+  stage: build
+  except:
+    - public
+  script:
+    - cd "web"
+    - sed -i '$s/}/,\n"banner_text":{"site_message":"Atlas Test"}}/' appsettings.json
+    - dotnet publish -r win-x86 --self-contained false -c Release -o out
+  artifacts:
+    paths: ['/builds/atlas/web/atlas-dotnet/web/out/']
 
 deploy_test:
- image: alpine:latest
- stage: publish
- except:
-  - public
- dependencies:
-  - build_web
- needs: [build_web]
- before_script:
-  - apk add --no-cache openssh
-  - eval $(ssh-agent -s)
-  - echo "$atlas_ssh_key" | ssh-add -
-  - mkdir -p ~/.ssh
-  - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
- script:
-  # empty folder
-  - ssh $atlas_ssh_user@$atlas_server "cd C:\inetpub\wwwroot\atlas-test && DEL /Q . && for /d %x in (C:\inetpub\wwwroot\atlas-test\*) do @rd /s /q \"%x\""
-  # load new site
-  - scp -r /builds/atlas/web/atlas-dotnet/web/out/* $atlas_ssh_user@$atlas_server:/c:/inetpub/wwwroot/atlas-test/
-
+  image: alpine:latest
+  stage: publish
+  except:
+    - public
+  dependencies:
+    - build_web
+  needs: [build_web]
+  before_script:
+    - apk add --no-cache openssh
+    - eval $(ssh-agent -s)
+    - echo "$atlas_ssh_key" | ssh-add -
+    - mkdir -p ~/.ssh
+    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+  script:
+    # empty folder
+    - ssh $atlas_ssh_user@$atlas_server "cd C:\inetpub\wwwroot\atlas-test && DEL /Q . && for /d %x in (C:\inetpub\wwwroot\atlas-test\*) do @rd /s /q \"%x\""
+    # load new site
+    - scp -r /builds/atlas/web/atlas-dotnet/web/out/* $atlas_ssh_user@$atlas_server:/c:/inetpub/wwwroot/atlas-test/
 
 public:
   stage: publish
@@ -113,8 +111,8 @@ public:
 github:
   when: manual
   needs:
-  - job: metrics
-    artifacts: false
+    - job: metrics
+      artifacts: false
   only:
     - public # public branch
   stage: publish

@@ -12,7 +12,6 @@ gulp.task(
       'packages',
       'scripts',
       'iis:clean_logs',
-      'iis:kill',
       gulp.series('fonts', 'styles'),
     ),
     'dotnet:build',

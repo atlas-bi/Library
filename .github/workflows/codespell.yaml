@@ -1,0 +1,9 @@
+name: Codespell
+
+on:
+  pull_request:
+
+jobs:
+  check:
+    - name: Codespell action
+      uses: plettich/python_codespell_action@v0.1
