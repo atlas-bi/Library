@@ -229,9 +229,11 @@ namespace Atlas_Web.Pages.Mail
             ).ToList();
 
             if (newMessagePreviews != null && newMessagePreviews.Count > 0)
+            {
                 ViewData["AllMail"] = newMessagePreviews;
+            }
 
-            return new PartialViewResult()
+            return new PartialViewResult
             {
                 ViewName = "Partials/_CheckForMail",
                 ViewData = ViewData
@@ -293,7 +295,7 @@ namespace Atlas_Web.Pages.Mail
                 .Where(x => x.FromUserId == MyUser.UserId)
                 .Count();
 
-            return new PartialViewResult() { ViewName = "Partials/_Mailbox", ViewData = ViewData };
+            return new PartialViewResult { ViewName = "Partials/_Mailbox", ViewData = ViewData };
         }
 
         public async Task<ActionResult> OnPostMarkMessageRead(int id)
@@ -358,7 +360,7 @@ namespace Atlas_Web.Pages.Mail
                 ViewData["Message"] = Message;
             }
 
-            return new PartialViewResult()
+            return new PartialViewResult
             {
                 ViewName = "Partials/_MessageBody",
                 ViewData = ViewData
@@ -393,16 +395,14 @@ namespace Atlas_Web.Pages.Mail
                 ViewData["Message"] = Message;
             }
 
-            return new PartialViewResult()
-            {
-                ViewName = "Partials/_DraftBody",
-                ViewData = ViewData
-            };
+            return new PartialViewResult { ViewName = "Partials/_DraftBody", ViewData = ViewData };
         }
 
         public async Task<ActionResult> OnPostSendMail()
         {
-            var body = await new System.IO.StreamReader(Request.Body).ReadToEndAsync();
+            var body = await new System.IO.StreamReader(Request.Body)
+                .ReadToEndAsync()
+                .ConfigureAwait(false);
             var package = JObject.Parse(body);
 
             int? DraftId = (int?)package["DraftId"];
@@ -429,7 +429,9 @@ namespace Atlas_Web.Pages.Mail
             );
 
             if (!Users.Any() && !GroupUsers.Any())
+            {
                 return Content("no users specefied");
+            }
 
             var MyUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
 
@@ -536,7 +538,9 @@ namespace Atlas_Web.Pages.Mail
         {
             var MyUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
 
-            var body = await new System.IO.StreamReader(Request.Body).ReadToEndAsync();
+            var body = await new System.IO.StreamReader(Request.Body)
+                .ReadToEndAsync()
+                .ConfigureAwait(false);
             var package = JObject.Parse(body);
 
             int? DraftId = (int?)package["DraftId"];
@@ -613,7 +617,7 @@ namespace Atlas_Web.Pages.Mail
                     ViewData["AllDrafts"] = AllDrafts;
                 }
 
-                return new PartialViewResult()
+                return new PartialViewResult
                 {
                     ViewName = "Partials/Mailbox/_DraftPreview",
                     ViewData = ViewData
@@ -652,7 +656,7 @@ namespace Atlas_Web.Pages.Mail
                     ViewData["AllMail"] = AllMail;
                 }
 
-                return new PartialViewResult()
+                return new PartialViewResult
                 {
                     ViewName = "Partials/Mailbox/_MessagePreview",
                     ViewData = ViewData

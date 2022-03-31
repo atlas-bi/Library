@@ -1,7 +1,7 @@
 <h1 align="center">
     <br>
     <a href="https://www.atlas.bi">
-        <img alt="atlas logo" src="https://raw.githubusercontent.com/atlas-bi/website/master/src/static/img/atlas-logo.png" width=420 />
+        <img alt="atlas logo" src="https://raw.githubusercontent.com/atlas-bi/atlas-bi-library/master/web/wwwroot/img/atlas-logo-smooth.png" width=420 />
     </a>
     <br>
 </h1>

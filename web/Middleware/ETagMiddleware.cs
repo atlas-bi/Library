@@ -47,20 +47,26 @@ namespace Atlas_Web.Middleware
             }
 
             ms.Position = 0;
-            await ms.CopyToAsync(originalStream);
+            await ms.CopyToAsync(originalStream).ConfigureAwait(false);
         }
 
         private static bool IsEtagSupported(HttpResponse response)
         {
             if (response.StatusCode != StatusCodes.Status200OK)
+            {
                 return false;
+            }
 
             // The 200kb length limit is not based in science. Feel free to change
             if (response.Body.Length > 200 * 1024)
+            {
                 return false;
+            }
 
             if (response.Headers.ContainsKey(HeaderNames.ETag))
+            {
                 return false;
+            }
 
             return true;
         }

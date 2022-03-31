@@ -57,8 +57,6 @@ namespace Atlas_Web.Pages.Analytics
 
         public async Task<ActionResult> OnGetAsync(double start_at = -86400, double end_at = 0)
         {
-            // double diff = end_at - start_at;
-
             /*
             when start - end < 2days, use 1 AM, 2 AM...
             when start - end < 8 days use  Sun 3/20, Mon 3/21...
@@ -178,7 +176,7 @@ namespace Atlas_Web.Pages.Analytics
             }
 
             Views = subquery.Count();
-            ;
+
             Visitors = subquery.Select(x => x.SessionId).Distinct().Count();
             LoadTime = Math.Round(
                 (subquery.Average(x => (long)Convert.ToDouble(x.LoadTime)) / 1000),
@@ -217,7 +215,7 @@ namespace Atlas_Web.Pages.Analytics
                 }
             ).OrderByDescending(x => x.Count).Take(10).ToList();
 
-            return new PartialViewResult() { ViewName = "Partials/_BarData", ViewData = ViewData };
+            return new PartialViewResult { ViewName = "Partials/_BarData", ViewData = ViewData };
         }
 
         public async Task<ActionResult> OnGetOsAsync(double start_at = -86400, double end_at = 0)
@@ -246,7 +244,7 @@ namespace Atlas_Web.Pages.Analytics
                 }
             ).OrderByDescending(x => x.Count).Take(10).ToList();
 
-            return new PartialViewResult() { ViewName = "Partials/_BarData", ViewData = ViewData };
+            return new PartialViewResult { ViewName = "Partials/_BarData", ViewData = ViewData };
         }
 
         public async Task<ActionResult> OnGetResolutionAsync(
@@ -273,7 +271,7 @@ namespace Atlas_Web.Pages.Analytics
                 }
             ).OrderByDescending(x => x.Count).Take(10).ToListAsync();
 
-            return new PartialViewResult() { ViewName = "Partials/_BarData", ViewData = ViewData };
+            return new PartialViewResult { ViewName = "Partials/_BarData", ViewData = ViewData };
         }
 
         public async Task<ActionResult> OnGetUsersAsync(double start_at = -86400, double end_at = 0)
@@ -305,7 +303,7 @@ namespace Atlas_Web.Pages.Analytics
                 }
             ).OrderByDescending(x => x.Count).Take(10).ToListAsync();
 
-            return new PartialViewResult() { ViewName = "Partials/_BarData", ViewData = ViewData };
+            return new PartialViewResult { ViewName = "Partials/_BarData", ViewData = ViewData };
         }
 
         public async Task<ActionResult> OnGetLoadTimesAsync(
@@ -334,63 +332,7 @@ namespace Atlas_Web.Pages.Analytics
                 }
             ).OrderByDescending(x => x.Count).Take(10).ToListAsync();
 
-            return new PartialViewResult() { ViewName = "Partials/_BarData", ViewData = ViewData };
+            return new PartialViewResult { ViewName = "Partials/_BarData", ViewData = ViewData };
         }
-
-        // this is being removed in place of adding a report access table with better details.
-        // public async Task<ActionResult> OnGetReportsAsync(
-        //     double start_at = -86400,
-        //     double end_at = 0
-        // )
-        // {
-        //     var subquery = _context.Analytics.Where(
-        //         x =>
-        //             x.Pathname.ToLower() == "/reports"
-        //             && x.AccessDateTime >= DateTime.Now.AddSeconds(start_at)
-        //             && x.AccessDateTime <= DateTime.Now.AddSeconds(end_at)
-        //     );
-        //     double total = subquery.Count();
-
-        //     if (total == 0)
-        //     {
-        //         BarDataSet = new List<BarData>();
-        //         return new PartialViewResult()
-        //         {
-        //             ViewName = "Partials/_BarData",
-        //             ViewData = ViewData
-        //         };
-        //     }
-
-        //     var parsed = await subquery
-        //         .Where(x => x.Search.IndexOf("id=") != -1)
-        //         .Select(x => x.Search)
-        //         .ToListAsync();
-
-        //     var grouped = parsed
-        //         .Select(x => Regex.Match(x, @"id=(\d+)").Groups[1].Value)
-        //         .GroupBy(x => x)
-        //         .OrderBy(x => x.Count())
-        //         .Select(x => new { Key = Int32.Parse(x.Key), Count = x.Count() })
-        //         .Take(10)
-        //         .ToList();
-
-        //     BarDataSet = (
-        //         from a in grouped
-        //         select new BarData
-        //         {
-        //             Key = _context.ReportObjects
-        //                 .Where(x => x.ReportObjectId == a.Key)
-        //                 .Select(r => r.DisplayTitle != null ? r.DisplayTitle : r.Name)
-        //                 .FirstOrDefault(),
-        //             Count = a.Count,
-        //             Percent = (double)a.Count / total,
-        //             Href = "/reports?id=" + a.Key,
-        //             TitleOne = "Reports",
-        //             TitleTwo = "Views"
-        //         }
-        //     ).OrderByDescending(x => x.Count).ToList();
-
-        //     return new PartialViewResult() { ViewName = "Partials/_BarData", ViewData = ViewData };
-        // }
     }
 }

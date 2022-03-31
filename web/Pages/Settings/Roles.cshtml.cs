@@ -151,7 +151,10 @@ namespace Atlas_Web.Pages.Settings
                     {
                         _cache.Remove(oldPerm[x]);
                     }
-                    catch { }
+                    catch
+                    {
+                        // if the perm failed to remove let it hang.
+                    }
                 }
                 _context.SaveChanges();
             }

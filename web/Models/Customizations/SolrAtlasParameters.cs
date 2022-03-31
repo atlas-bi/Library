@@ -8,14 +8,12 @@ namespace Atlas_Web.Models
     [NotMapped]
     public class SolrAtlasParameters
     {
-        public SolrAtlasParameters() { }
-
         public string Query { get; set; }
         public int? PageIndex { get; set; }
 
         public Dictionary<string, string> Filters { get; set; } = new();
 
-        public int PageSize = 20;
+        public readonly int PageSize = 20;
 
         public int EffectivePageIndex => PageIndex ?? 1;
         public int Start => (EffectivePageIndex - 1) * PageSize;

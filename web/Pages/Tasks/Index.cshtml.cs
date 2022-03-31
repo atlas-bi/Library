@@ -133,7 +133,7 @@ namespace Atlas_Web.Pages.Tasks
                 }
             ).ToListAsync();
 
-            return new PartialViewResult()
+            return new PartialViewResult
             {
                 ViewName = "Partials/_CanMakeReports",
                 ViewData = ViewData
@@ -159,7 +159,7 @@ namespace Atlas_Web.Pages.Tasks
                 }
             ).ToListAsync();
 
-            return new PartialViewResult()
+            return new PartialViewResult
             {
                 ViewName = "Partials/_RecommendRetire",
                 ViewData = ViewData
@@ -205,7 +205,7 @@ namespace Atlas_Web.Pages.Tasks
                 }
             ).Take(30).ToListAsync();
 
-            return new PartialViewResult() { ViewName = "Partials/_Unused", ViewData = ViewData };
+            return new PartialViewResult { ViewName = "Partials/_Unused", ViewData = ViewData };
         }
 
         public async Task<IActionResult> OnGetMaintRequired()
@@ -283,7 +283,7 @@ namespace Atlas_Web.Pages.Tasks
                 }
             ).ToListAsync();
 
-            return new PartialViewResult()
+            return new PartialViewResult
             {
                 ViewName = "Partials/_MaintRequired",
                 ViewData = ViewData
@@ -364,7 +364,7 @@ namespace Atlas_Web.Pages.Tasks
                 }
             ).ToListAsync();
 
-            return new PartialViewResult() { ViewName = "Partials/_Audit", ViewData = ViewData };
+            return new PartialViewResult { ViewName = "Partials/_Audit", ViewData = ViewData };
         }
 
         public async Task<IActionResult> OnGetNoSchedule()
@@ -418,11 +418,7 @@ namespace Atlas_Web.Pages.Tasks
                 }
             ).ToListAsync();
 
-            return new PartialViewResult()
-            {
-                ViewName = "Partials/_NoSchedule",
-                ViewData = ViewData
-            };
+            return new PartialViewResult { ViewName = "Partials/_NoSchedule", ViewData = ViewData };
         }
 
         public async Task<IActionResult> OnGetNotAnalytics()
@@ -482,7 +478,7 @@ namespace Atlas_Web.Pages.Tasks
                 }
             ).ToListAsync();
 
-            return new PartialViewResult()
+            return new PartialViewResult
             {
                 ViewName = "Partials/_NotAnalytics",
                 ViewData = ViewData
@@ -491,7 +487,7 @@ namespace Atlas_Web.Pages.Tasks
 
         public ActionResult OnGetTopUndocumented()
         {
-            var rpts = new int[] { 17, 28, 3, 20 };
+            int[] rpts = { 17, 28, 3, 20 };
             ViewData["Undocumented"] = (
                 from r in _context.ReportObjects
                 join t in _context.ReportObjectTypes
@@ -543,7 +539,7 @@ namespace Atlas_Web.Pages.Tasks
                 }
             ).Take(60).ToList();
 
-            return new PartialViewResult()
+            return new PartialViewResult
             {
                 ViewName = "Partials/_TopUndocumented",
                 ViewData = ViewData
@@ -552,7 +548,7 @@ namespace Atlas_Web.Pages.Tasks
 
         public ActionResult OnGetNewUndocumented()
         {
-            var rpts = new int[] { 17, 28, 3, 20 };
+            int[] rpts = { 17, 28, 3, 20 };
             ViewData["NewUndocumented"] = (
                 from r in _context.ReportObjects
                 join t in _context.ReportObjectTypes
@@ -607,7 +603,7 @@ namespace Atlas_Web.Pages.Tasks
                 }
             ).Take(60).ToList();
 
-            return new PartialViewResult()
+            return new PartialViewResult
             {
                 ViewName = "Partials/_NewUndocumented",
                 ViewData = ViewData

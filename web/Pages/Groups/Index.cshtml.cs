@@ -180,8 +180,8 @@ namespace Atlas_Web.Pages.Groups
 
         public async Task<ActionResult> OnGetActivity(int Id)
         {
-            var MyId = UserHelpers.GetUser(_cache, _context, User.Identity.Name).UserId;
-            var GroupUsers = _context.UserGroupsMemberships
+            var PrivateMyId = UserHelpers.GetUser(_cache, _context, User.Identity.Name).UserId;
+            var PrivateGroupUsers = _context.UserGroupsMemberships
                 .Where(x => x.GroupId == Id)
                 .Select(x => x.UserId)
                 .ToList();
@@ -191,8 +191,8 @@ namespace Atlas_Web.Pages.Groups
                 _context,
                 User.Identity.Name
             );
-            ViewData["MyId"] = MyId;
-            ViewData["UserId"] = MyId;
+            ViewData["MyId"] = PrivateMyId;
+            ViewData["UserId"] = PrivateMyId;
 
             ViewData["ReportRunTime"] = await _cache.GetOrCreateAsync<List<ReportRunTimeData>>(
                 "ReportRunTime-" + Id,
@@ -201,7 +201,7 @@ namespace Atlas_Web.Pages.Groups
                     cacheEntry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20);
                     return (
                         from d in _context.ReportObjectRunTimes
-                        where GroupUsers.Contains(d.RunUserId)
+                        where PrivateGroupUsers.Contains(d.RunUserId)
                         orderby d.RunWeek descending
                         select new ReportRunTimeData
                         {
@@ -221,7 +221,7 @@ namespace Atlas_Web.Pages.Groups
                     return (
                         from d in _context.ReportObjectTopRuns
                         where
-                            GroupUsers.Contains(d.RunUserId)
+                            PrivateGroupUsers.Contains(d.RunUserId)
                             && d.ReportObjectTypeId != 21
                             && d.ReportObjectTypeId != 39 // extensions
                             && d.ReportObjectTypeId != 40 // columns
@@ -247,7 +247,7 @@ namespace Atlas_Web.Pages.Groups
 
                     return (
                         from d in _context.ReportObjectRunData
-                        where GroupUsers.Contains(d.RunUserId) && d.RunStatus != "Success"
+                        where PrivateGroupUsers.Contains(d.RunUserId) && d.RunStatus != "Success"
                         orderby d.RunStartTime descending
                         select new FailedRunsData
                         {
@@ -260,7 +260,7 @@ namespace Atlas_Web.Pages.Groups
                 }
             );
 
-            return new PartialViewResult() { ViewName = "Sections/_Activity", ViewData = ViewData };
+            return new PartialViewResult { ViewName = "Sections/_Activity", ViewData = ViewData };
         }
     }
 }

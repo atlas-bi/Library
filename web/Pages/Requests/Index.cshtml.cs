@@ -30,7 +30,7 @@ namespace Atlas_Web.Pages.Requests
 
         public void OnGet()
         {
-            // api is never directlt accessed
+            // api is never directly accessed
         }
 
         public class ApiResponse
@@ -69,13 +69,13 @@ namespace Atlas_Web.Pages.Requests
                 {
                     foreach (var record in xdoc.Descendants("record"))
                     {
-                        var dict = new Dictionary<string, string>();
-                        dict = record
+                        var dict = record
                             .Descendants("parameter")
                             .ToDictionary(
                                 d => d.Element("name").Value,
                                 d => d.Element("value").Value
                             );
+
                         dict.Add("URL", record.Attribute("URI").Value);
                         dictList.Add(dict);
                         this.Details = dictList;

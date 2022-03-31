@@ -30,7 +30,9 @@ namespace Atlas_Web.Models
                     return "Yesterday";
                 }
                 else
+                {
                     return (EditDate ?? DateTime.Now).ToString("M/d/yy");
+                }
             }
         }
 
@@ -53,7 +55,10 @@ namespace Atlas_Web.Models
             get
             {
                 if (MessagePlainText is null)
+                {
                     return "";
+                }
+
                 return string.Join(" ", MessagePlainText.Split(' ').ToList().Take(10));
             }
         }

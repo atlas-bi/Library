@@ -124,10 +124,13 @@ namespace Atlas_Web.Pages.Analytics
 
             ViewData["ActiveUserData"] = new List<ActiveUserData>();
             if (ActiveUserData.Count > 0)
+            {
                 ViewData["ActiveUserData"] = ActiveUserData;
+            }
+
             ViewData["ActiveUsers"] = ActiveUsers;
 
-            return new PartialViewResult()
+            return new PartialViewResult
             {
                 ViewName = "Partials/_ActiveUsers",
                 ViewData = ViewData
@@ -136,7 +139,9 @@ namespace Atlas_Web.Pages.Analytics
 
         public async Task<ActionResult> OnPostBeacon()
         {
-            var body = await new System.IO.StreamReader(Request.Body).ReadToEndAsync();
+            var body = await new System.IO.StreamReader(Request.Body)
+                .ReadToEndAsync()
+                .ConfigureAwait(false);
             var package = JObject.Parse(body);
             var MyUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
 

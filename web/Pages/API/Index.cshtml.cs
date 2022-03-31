@@ -90,7 +90,9 @@ namespace Atlas_Web.Pages.API
             );
 
             if (!Users.Any() && !GroupUsers.Any())
+            {
                 return Content("no users specefied");
+            }
 
             await _context.AddRangeAsync(
                 Users.Select(
@@ -203,7 +205,9 @@ namespace Atlas_Web.Pages.API
 
         public async Task<ActionResult> OnPostRenderMarkdown()
         {
-            var body = await new System.IO.StreamReader(Request.Body).ReadToEndAsync();
+            var body = await new System.IO.StreamReader(Request.Body)
+                .ReadToEndAsync()
+                .ConfigureAwait(false);
             var package = JObject.Parse(body);
 
             var md = package.Value<string>("md");
@@ -216,7 +220,7 @@ namespace Atlas_Web.Pages.API
                 ViewData["html"] = md;
             }
 
-            return new PartialViewResult() { ViewName = "Partials/_Html", ViewData = ViewData };
+            return new PartialViewResult { ViewName = "Partials/_Html", ViewData = ViewData };
         }
     }
 }
