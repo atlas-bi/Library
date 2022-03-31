@@ -67,7 +67,7 @@
     "test:report_html": "reportgenerator -reports:coverage.cobertura.xml -targetdir:coverage/ -reporttypes:html",
     "test": "coverlet web.Tests/bin/Debug/net6.0/web.Tests.dll --target \"dotnet\" --targetargs \"test  --no-build\" --format cobertura --exclude-by-file \"**/Migrations/*\"",
     "test:dev": "npm run dotnet:build && (npm run test || true) && npm run test:report_html",
-    "commit": "cz"
+    "commit": "git add . && cz"
   },
   "lint-staged": {
     "*.cs": "dotnet csharpier .",
