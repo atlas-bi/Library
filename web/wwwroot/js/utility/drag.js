@@ -21,8 +21,8 @@
       // margin is not included in x and y.
       var style = getComputedStyle(dragSEl);
 
-      d1 = e.clientY - getOffset(dragSEl).top + parseInt(style.marginTop);
-      d2 = e.clientX - getOffset(dragSEl).left + parseInt(style.marginLeft);
+      d1 = e.clientY - getOffset(dragSEl).top + parseInt(style.marginTop, 10);
+      d2 = e.clientX - getOffset(dragSEl).left + parseInt(style.marginLeft, 10);
       dragSEl.parentElement.style.position = 'relative';
       dragSEl.parentElement.appendChild(dragEl);
       dragEl.style.top = e.clientY - d1 + 'px';

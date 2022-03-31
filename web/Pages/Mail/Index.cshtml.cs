@@ -404,7 +404,9 @@ namespace Atlas_Web.Pages.Mail
 
         public async Task<ActionResult> OnPostSendMail()
         {
-            var body = await new System.IO.StreamReader(Request.Body).ReadToEndAsync();
+            var body = await new System.IO.StreamReader(Request.Body)
+                .ReadToEndAsync()
+                .ConfigureAwait(false);
             var package = JObject.Parse(body);
 
             int? DraftId = (int?)package["DraftId"];

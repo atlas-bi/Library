@@ -306,7 +306,7 @@
       }
 
       // lines
-      var ticks = parseInt(height / 50);
+      var ticks = parseInt(height / 50, 10);
       for (c = 1; c <= ticks; c++) {
         html +=
           '<div class="chart-ticksTick' +

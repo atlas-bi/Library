@@ -217,14 +217,14 @@
 
         if ($folderid && $folder !== null) {
           $count = $folder.querySelector('.fav-count');
-          $count.innerText = parseInt($count.innerText) - 1;
+          $count.innerText = parseInt($count.innerText, 10) - 1;
         }
 
         UpdateFavFolder(e.detail.el, el);
 
         if (el.dataset.folderid !== '0') {
           $count = el.querySelector('.fav-count');
-          $count.innerText = parseInt($count.innerText) + 1;
+          $count.innerText = parseInt($count.innerText, 10) + 1;
         }
         el.click();
       }
@@ -349,7 +349,7 @@
 
           if ($folderid !== null && $folderid != '0' && $folder != null) {
             $folder.querySelector('.fav-count').innerText =
-              parseInt($folder.querySelector('.fav-count').innerText) - 1;
+              parseInt($folder.querySelector('.fav-count').innerText, 10) - 1;
           }
 
           // decrment all fav count
