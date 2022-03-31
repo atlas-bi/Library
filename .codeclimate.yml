@@ -22,6 +22,8 @@ exclude_patterns:
   - web/wwwroot/lib/
   - web/wwwroot/css/
   - web/wwwroot/font/
+  - web/wwwroot/js/polyfill/
+  - web/Migrations/
   - config/
   - db/
   - dist/
@@ -35,6 +37,7 @@ exclude_patterns:
   - '**/vendor/'
   - '**/*_test.go'
   - '**/*.d.ts'
+  - '**/*.min.js'
 
 plugins:
   eslint:
