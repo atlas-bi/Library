@@ -13,7 +13,7 @@
     "bulma": "^0.9.3",
     "bulma-checkradio": "^2.1.3",
     "bulma-switch": "^2.0.4",
-    "chart.js": "2.6.0",
+    "chart.js": "^2.9.4",
     "date-fns": "^2.28.0",
     "es6-symbol": "^3.1.3",
     "eslint": "^8.12.0",
@@ -60,6 +60,8 @@
     "format": "npm run format:static & npm run format:cs",
     "dotnet:build": "dotnet build",
     "dotnet:restore": "dotnet restore",
+    "db:update": "dotnet ef database update",
+    "dotnet:publish": "npm run build && npm run dotnet:restore && dotnet publish --configuration Release",
     "test:report_html": "reportgenerator -reports:coverage.cobertura.xml -targetdir:coverage/ -reporttypes:html",
     "test": "coverlet web.Tests/bin/Debug/net6.0/web.Tests.dll --target \"dotnet\" --targetargs \"test  --no-build\" --format cobertura --exclude-by-file \"**/Migrations/*\"",
     "test:dev": "npm run dotnet:build && npm run test & npm run test:report_html"

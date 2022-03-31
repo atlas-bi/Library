@@ -28,15 +28,39 @@ Atlas business intelligence library plugs in to your existing reporting platform
 ## :runner: Getting Started
 
 -   Get the code `git clone git@github.com:atlas-bi/atlas-bi-library.git`
--   Install the project dependencies `npm install` and `dotnet restore`
+-   Install the project dependencies `npm install` and `npm run dotnet:restore`
 -   Create an `appsettings.cust.json` and `appsettings.cust.Development.json` as specified in the [docs](git@github.com:atlas-bi/atlas-bi-library.git)
 -   Create a `.env` file with `NODE_ENV=development`
--   Initialize the database and create tables `dotnet ef database update`
+-   Initialize the database and create tables `npm run db:update`
 -   Finally, start up the website `npm start`
 
-Running `npm start` will build all the resources needed, start IISExpress, and then open your browser.
+> If this is your first time running a dotnet webapp, you will need to trust the cert with `dotnet dev-certs https --trust`
+>
+> Running `npm start` will build all the resources needed, start IISExpress, and then open your browser.
+>
+> Debugging code is simple. In Visual Studio Code, simply press `f5` to activate breakpoints. Saving any file will trigger a rebuild.
 
-Debugging code is simple. In Visual Studio Code, simply press `f5` to activate breakpoints. Saving any file will trigger a rebuild.
+## :test_tube: Testing
+
+Tests require two global dotnet tools.
+
+```bash
+dotnet tool install -g coverlet.console
+dotnet tool install -g dotnet-reportgenerator-globaltool
+```
+
+-   Install dependancies `npm install` and `npm run dotnet:restore`
+-   Run tests `npm run test:dev`
+
+A hit/miss html report will be in the folder `/coverage`.
+
+## :rocket: Deploy to IIS
+
+Build the release with `npm run dotnet:publish`.
+
+The output of `/bin/Release/net6.0/publish` to the folder of your IIS site.
+
+See the [docs](https://www.atlas.bi/docs/bi-library/) for aditional configuration and starting search.
 
 ## :trophy: Credits
 
