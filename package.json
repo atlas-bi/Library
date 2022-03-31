@@ -68,7 +68,7 @@
   },
   "lint-staged": {
     "*.cs": "dotnet csharpier .",
-    "**/*.{ts,css,less,scss,js,json,md,yaml,html}": "npm run format"
+    "**/*.{ts,css,less,scss,js,json,md,yaml,html}": "npm run format:static"
   },
   "dependencies": {
     "bulma-steps-component": "github:atlas-bi/bulma-steps",

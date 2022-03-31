@@ -30,14 +30,18 @@ jobs:
           dotnet tool install -g coverlet.console
           dotnet tool install -g dotnet-reportgenerator-globaltool
           dotnet restore
+      - name: build
+        run: npm run dotnet:build
       - name: test
         run: |
-          npm run test:dev
+          npm run test
+      - name: console coverage
+        if: always()
+        run: |
           # generate a report just to show in the action history
           reportgenerator -reports:coverage.cobertura.xml -targetdir:coverage/ -reporttypes:textSummary
           # print out the report
           cat coverage/Summary.txt
-
       - name: upload cov
         if: always()
         uses: codecov/codecov-action@v2
