@@ -370,31 +370,31 @@ namespace Atlas_Web.Pages.Users
             var MyUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
 
             _context.StarredCollections
-                .Where(x => x.Folderid == id)
+                .Where(x => x.Folderid == id && x.Ownerid == MyUser.UserId)
                 .ToList()
                 .ForEach(x => x.Folderid = null);
             _context.StarredReports
-                .Where(x => x.Folderid == id)
+                .Where(x => x.Folderid == id && x.Ownerid == MyUser.UserId)
                 .ToList()
                 .ForEach(x => x.Folderid = null);
             _context.StarredInitiatives
-                .Where(x => x.Folderid == id)
+                .Where(x => x.Folderid == id && x.Ownerid == MyUser.UserId)
                 .ToList()
                 .ForEach(x => x.Folderid = null);
             _context.StarredTerms
-                .Where(x => x.Folderid == id)
+                .Where(x => x.Folderid == id && x.Ownerid == MyUser.UserId)
                 .ToList()
                 .ForEach(x => x.Folderid = null);
             _context.StarredUsers
-                .Where(x => x.Folderid == id)
+                .Where(x => x.Folderid == id && x.Ownerid == MyUser.UserId)
                 .ToList()
                 .ForEach(x => x.Folderid = null);
             _context.StarredGroups
-                .Where(x => x.Folderid == id)
+                .Where(x => x.Folderid == id && x.Ownerid == MyUser.UserId)
                 .ToList()
                 .ForEach(x => x.Folderid = null);
             _context.StarredSearches
-                .Where(x => x.Folderid == id)
+                .Where(x => x.Folderid == id && x.Ownerid == MyUser.UserId)
                 .ToList()
                 .ForEach(x => x.Folderid = null);
             _context.SaveChanges();

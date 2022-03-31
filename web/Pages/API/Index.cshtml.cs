@@ -220,7 +220,7 @@ namespace Atlas_Web.Pages.API
                 ViewData["html"] = md;
             }
 
-            return new PartialViewResult() { ViewName = "Partials/_Html", ViewData = ViewData };
+            return new PartialViewResult { ViewName = "Partials/_Html", ViewData = ViewData };
         }
     }
 }
