@@ -39,7 +39,6 @@ namespace web.Tests
         // {
         //     return new List<Message>()
         //     {
-        //
         //         new Message(){ Text = "TEST RECORD: You're standing on my scarf." },
         //         new Message(){ Text = "TEST RECORD: Would you like a jelly baby?" },
         //         new Message(){ Text = "TEST RECORD: To the rational mind, " +

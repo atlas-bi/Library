@@ -1,0 +1,1 @@
+export FORCE_COLOR=1
