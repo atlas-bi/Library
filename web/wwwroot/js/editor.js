@@ -15,7 +15,7 @@
 
   function load() {
     // wait for codemirror to load
-    if (test == 50) {
+    if (test === 50) {
       return false;
     } else if (typeof CodeMirror == 'undefined') {
       setTimeout(function () {

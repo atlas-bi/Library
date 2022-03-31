@@ -229,7 +229,9 @@ namespace Atlas_Web.Pages.Mail
             ).ToList();
 
             if (newMessagePreviews != null && newMessagePreviews.Count > 0)
+            {
                 ViewData["AllMail"] = newMessagePreviews;
+            }
 
             return new PartialViewResult()
             {

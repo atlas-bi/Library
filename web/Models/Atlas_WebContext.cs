@@ -97,7 +97,10 @@ namespace Atlas_Web.Models
         public virtual DbSet<UserRole> UserRoles { get; set; }
         public virtual DbSet<UserRoleLink> UserRoleLinks { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) { }
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            // unused configuration, leftover from scafolding days.
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -90,7 +90,9 @@ namespace Atlas_Web.Pages.API
             );
 
             if (!Users.Any() && !GroupUsers.Any())
+            {
                 return Content("no users specefied");
+            }
 
             await _context.AddRangeAsync(
                 Users.Select(

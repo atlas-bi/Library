@@ -207,13 +207,13 @@
           thisChart = charts[c];
 
           var lheight =
-            parseFloat(thisChart.data[d].data) == 0
+            parseFloat(thisChart.data[d].data) === 0
               ? 0
               : (parseFloat(thisChart.data[d].data) / thisChart.range) * 100;
           maxHeight = Math.max(maxHeight, lheight);
           var lwidth = 'calc(' + 100 / bars + '% - 5px)';
 
-          if (c == 0)
+          if (c === 0)
             html +=
               '<th class="chart-xAxisTitle" scope="row" style="left:' +
               (-26 + ((colWidth / 100) * width) / 2 - 15) +
@@ -247,7 +247,7 @@
               lheight +
               '%">';
             html += '<p ' + p + '></p>';
-            if (!!thisChart.lastlinePointY || thisChart.lastlinePointY == 0) {
+            if (!!thisChart.lastlinePointY || thisChart.lastlinePointY === 0) {
               w = (colWidth / 100) * width;
               var angle =
                 (Math.atan2(
@@ -290,7 +290,7 @@
       html = '<caption class="chart-ticks">';
       for (c in axii) {
         style = (Math.floor(c / 2) + 1) * 55;
-        side = c % 2 == 1 ? 'right' : 'left';
+        side = c % 2 === 1 ? 'right' : 'left';
         if (typeof axis[a] != 'undefined') {
           html +=
             '<div class="chart-yAxisTitle ' +
@@ -310,12 +310,12 @@
       for (c = 1; c <= ticks; c++) {
         html +=
           '<div class="chart-ticksTick' +
-          (c == 1 ? ' first ' : '') +
+          (c === 1 ? ' first ' : '') +
           (c == ticks ? ' last ' : '') +
           '">';
         for (q in range) {
-          style = (Math.floor(q / 2) + 1) * (q % 2 == 1 ? 30 : 30);
-          side = q % 2 == 1 ? 'right' : 'left';
+          style = (Math.floor(q / 2) + 1) * (q % 2 === 1 ? 30 : 30);
+          side = q % 2 === 1 ? 'right' : 'left';
           if (range[q] > 0) {
             var val = range[q] - (range[q] / ticks) * (c - 1);
             val = val < 10 ? val.toFixed(2) : Math.round(val);

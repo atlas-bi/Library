@@ -80,6 +80,7 @@ namespace Atlas_Web.Helpers
             else
             {
                 foreach (var p in parameters)
+                {
                     // if we need an "uncheck" url, the pop the key.
                     if (qs.ContainsKey(p.Key) && qs[p.Key] == p.Value)
                     {
@@ -93,6 +94,7 @@ namespace Atlas_Web.Helpers
                             qs["type"] = "reports";
                         }
                     }
+                }
             }
             return helper.Request.Path + QueryString.Create(qs);
         }

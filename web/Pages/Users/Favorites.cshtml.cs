@@ -135,14 +135,14 @@ namespace Atlas_Web.Pages.Users
 
         public ActionResult OnGetEdit(string type, int id, string search)
         {
-            var UserId = UserHelpers.GetUser(_cache, _context, User.Identity.Name).UserId;
+            var MyId = UserHelpers.GetUser(_cache, _context, User.Identity.Name).UserId;
 
             if (type == "report")
             {
-                if (_context.StarredReports.Any(x => x.Ownerid == UserId && x.Reportid == id))
+                if (_context.StarredReports.Any(x => x.Ownerid == MyId && x.Reportid == id))
                 {
                     _context.RemoveRange(
-                        _context.StarredReports.Where(x => x.Ownerid == UserId && x.Reportid == id)
+                        _context.StarredReports.Where(x => x.Ownerid == MyId && x.Reportid == id)
                     );
                     _context.SaveChanges();
                 }
@@ -159,22 +159,18 @@ namespace Atlas_Web.Pages.Users
             }
             else if (type == "collection")
             {
-                if (
-                    _context.StarredCollections.Any(
-                        x => x.Ownerid == UserId && x.Collectionid == id
-                    )
-                )
+                if (_context.StarredCollections.Any(x => x.Ownerid == MyId && x.Collectionid == id))
                 {
                     _context.RemoveRange(
                         _context.StarredCollections.Where(
-                            x => x.Ownerid == UserId && x.Collectionid == id
+                            x => x.Ownerid == MyId && x.Collectionid == id
                         )
                     );
                     _context.SaveChanges();
                 }
                 else
                 {
-                    _context.Add(new StarredCollection { Ownerid = UserId, Collectionid = id });
+                    _context.Add(new StarredCollection { Ownerid = MyId, Collectionid = id });
                     _context.SaveChanges();
                 }
                 // pop from cache
@@ -186,15 +182,11 @@ namespace Atlas_Web.Pages.Users
             }
             else if (type == "initiative")
             {
-                if (
-                    _context.StarredInitiatives.Any(
-                        x => x.Ownerid == UserId && x.Initiativeid == id
-                    )
-                )
+                if (_context.StarredInitiatives.Any(x => x.Ownerid == MyId && x.Initiativeid == id))
                 {
                     _context.RemoveRange(
                         _context.StarredInitiatives.Where(
-                            x => x.Ownerid == UserId && x.Initiativeid == id
+                            x => x.Ownerid == MyId && x.Initiativeid == id
                         )
                     );
                     _context.SaveChanges();
@@ -213,16 +205,16 @@ namespace Atlas_Web.Pages.Users
             }
             else if (type == "term")
             {
-                if (_context.StarredTerms.Any(x => x.Ownerid == UserId && x.Termid == id))
+                if (_context.StarredTerms.Any(x => x.Ownerid == MyId && x.Termid == id))
                 {
                     _context.RemoveRange(
-                        _context.StarredTerms.Where(x => x.Ownerid == UserId && x.Termid == id)
+                        _context.StarredTerms.Where(x => x.Ownerid == MyId && x.Termid == id)
                     );
                     _context.SaveChanges();
                 }
                 else
                 {
-                    _context.Add(new StarredTerm { Ownerid = UserId, Termid = id });
+                    _context.Add(new StarredTerm { Ownerid = MyId, Termid = id });
                     _context.SaveChanges();
                 }
                 // pop from cache
@@ -232,16 +224,16 @@ namespace Atlas_Web.Pages.Users
             }
             else if (type == "user")
             {
-                if (_context.StarredUsers.Any(x => x.Ownerid == UserId && x.Userid == id))
+                if (_context.StarredUsers.Any(x => x.Ownerid == MyId && x.Userid == id))
                 {
                     _context.RemoveRange(
-                        _context.StarredUsers.Where(x => x.Ownerid == UserId && x.Userid == id)
+                        _context.StarredUsers.Where(x => x.Ownerid == MyId && x.Userid == id)
                     );
                     _context.SaveChanges();
                 }
                 else
                 {
-                    _context.Add(new StarredUser { Ownerid = UserId, Userid = id });
+                    _context.Add(new StarredUser { Ownerid = MyId, Userid = id });
                     _context.SaveChanges();
                 }
                 // pop from cache
@@ -250,16 +242,16 @@ namespace Atlas_Web.Pages.Users
             }
             else if (type == "group")
             {
-                if (_context.StarredGroups.Any(x => x.Ownerid == UserId && x.Groupid == id))
+                if (_context.StarredGroups.Any(x => x.Ownerid == MyId && x.Groupid == id))
                 {
                     _context.RemoveRange(
-                        _context.StarredGroups.Where(x => x.Ownerid == UserId && x.Groupid == id)
+                        _context.StarredGroups.Where(x => x.Ownerid == MyId && x.Groupid == id)
                     );
                     _context.SaveChanges();
                 }
                 else
                 {
-                    _context.Add(new StarredGroup { Ownerid = UserId, Groupid = id });
+                    _context.Add(new StarredGroup { Ownerid = MyId, Groupid = id });
                     _context.SaveChanges();
                 }
                 // pop from cache
@@ -270,7 +262,7 @@ namespace Atlas_Web.Pages.Users
             }
             else if (type == "search")
             {
-                if (_context.StarredSearches.Any(x => x.Ownerid == UserId && x.Search == search))
+                if (_context.StarredSearches.Any(x => x.Ownerid == MyId && x.Search == search))
                 {
                     _context.RemoveRange(
                         _context.StarredSearches.Where(
@@ -281,7 +273,7 @@ namespace Atlas_Web.Pages.Users
                 }
                 else
                 {
-                    _context.Add(new StarredSearch { Ownerid = UserId, Search = search });
+                    _context.Add(new StarredSearch { Ownerid = MyId, Search = search });
                     _context.SaveChanges();
                 }
 

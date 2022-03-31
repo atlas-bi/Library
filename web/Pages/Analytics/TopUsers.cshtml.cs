@@ -70,7 +70,7 @@ namespace Atlas_Web.Pages.Analytics
         [BindProperty]
         public Models.Analytic NewAnalytic { get; set; }
 
-        public async Task<ActionResult> OnGetAsync(double start_at = -86400, double end_at = 0)
+        public ActionResult OnGet(double start_at = -86400, double end_at = 0)
         {
             TopUsers = (
                 from a in (

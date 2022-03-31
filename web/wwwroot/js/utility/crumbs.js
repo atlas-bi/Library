@@ -57,7 +57,7 @@
       var $li = document.createElement('li');
       var $a = document.createElement('a');
 
-      if (x == 0) {
+      if (x === 0) {
         $a.setAttribute('href', '#');
         $li.classList.add('is-active');
       } else {

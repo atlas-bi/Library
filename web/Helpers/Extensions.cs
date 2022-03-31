@@ -33,7 +33,9 @@ namespace Atlas_Web.Helpers
                 return String.Concat(timeAgo.Hours.ToString(), " hours ago");
             }
             else
+            {
                 return (fixedDate ?? DateTime.Today).ToShortDateString();
+            }
         }
     }
 

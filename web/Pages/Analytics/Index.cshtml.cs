@@ -124,7 +124,10 @@ namespace Atlas_Web.Pages.Analytics
 
             ViewData["ActiveUserData"] = new List<ActiveUserData>();
             if (ActiveUserData.Count > 0)
+            {
                 ViewData["ActiveUserData"] = ActiveUserData;
+            }
+
             ViewData["ActiveUsers"] = ActiveUsers;
 
             return new PartialViewResult()
