@@ -1,4 +1,5 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
-env FORCE_COLOR=1 npm run pre-commit
+set FORCE_COLOR=1 && node .\\node_modules\\lint-staged\\bin\\lint-staged -r
+#npm run pre-commit
