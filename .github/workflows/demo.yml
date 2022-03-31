@@ -33,4 +33,3 @@ jobs:
           email: ${{ secrets.HEROKU_EMAIL }}
           dockerfile_name: Dockerfile
           docker_options: --no-cache --build-arg HOST=${{ secrets.SQL_HOST }} --build-arg PASSWORD=${{ secrets.SQL_PASS }} --build-arg USER=${{ secrets.SQL_USER }}
-

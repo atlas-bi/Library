@@ -7,8 +7,6 @@ namespace Atlas_Web.Models
 {
     public partial class Atlas_WebContext : DbContext
     {
-        public Atlas_WebContext() { }
-
         public Atlas_WebContext(DbContextOptions<Atlas_WebContext> options) : base(options) { }
 
         public virtual DbSet<Analytic> Analytics { get; set; }
@@ -99,16 +97,7 @@ namespace Atlas_Web.Models
         public virtual DbSet<UserRole> UserRoles { get; set; }
         public virtual DbSet<UserRoleLink> UserRoleLinks { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            if (!optionsBuilder.IsConfigured)
-            {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer(
-                    "Server=rhbidb01;Database=atlas;Trusted_Connection=True;"
-                );
-            }
-        }
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

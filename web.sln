@@ -10,6 +10,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "web.Tests", "web.Tests\web.Tests.csproj", "{A8CE6C48-B795-49A9-BAD4-611852EC42CA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,6 +25,12 @@ Global
 		{54765E87-FC46-4FD9-8D50-B1CCFF50501C}.Development|Any CPU.Build.0 = Debug|Any CPU
 		{54765E87-FC46-4FD9-8D50-B1CCFF50501C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{54765E87-FC46-4FD9-8D50-B1CCFF50501C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A8CE6C48-B795-49A9-BAD4-611852EC42CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A8CE6C48-B795-49A9-BAD4-611852EC42CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A8CE6C48-B795-49A9-BAD4-611852EC42CA}.Development|Any CPU.ActiveCfg = Debug|Any CPU
+		{A8CE6C48-B795-49A9-BAD4-611852EC42CA}.Development|Any CPU.Build.0 = Debug|Any CPU
+		{A8CE6C48-B795-49A9-BAD4-611852EC42CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A8CE6C48-B795-49A9-BAD4-611852EC42CA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

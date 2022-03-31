@@ -210,6 +210,10 @@ namespace Atlas_Web.Pages.Search
 
         public async Task<IActionResult> OnGet(string Query)
         {
+            if (string.IsNullOrEmpty(Query))
+            {
+                return RedirectToPage("/Index/Index");
+            }
             int PageIndex = Int32.Parse(Request.Query["PageIndex"].FirstOrDefault() ?? "1");
             string Type = Request.Query["type"].FirstOrDefault() ?? "query";
 

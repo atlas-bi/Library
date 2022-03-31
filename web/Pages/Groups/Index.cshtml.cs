@@ -106,27 +106,8 @@ namespace Atlas_Web.Pages.Groups
         public IEnumerable<ReportList> GroupReports { get; set; }
         public GroupItem Group { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(int? id)
+        public async Task<IActionResult> OnGetAsync(int id)
         {
-            UserDetails = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
-
-            // for the viewing user, not the viewed user
-
-            MyId = UserDetails.UserId;
-            // can user view others?
-            var checkpoint = UserHelpers.CheckUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name,
-                37
-            );
-            UserId = MyId;
-            if (checkpoint)
-            {
-                UserId = id ?? MyId;
-                UserDetails = _context.Users.Where(x => x.UserId == UserId).FirstOrDefault();
-            }
-
             Group = await _cache.GetOrCreateAsync<GroupItem>(
                 "Group-" + id,
                 cacheEntry =>
@@ -197,7 +178,7 @@ namespace Atlas_Web.Pages.Groups
             return Page();
         }
 
-        public async Task<ActionResult> OnGetActivity(int? Id)
+        public async Task<ActionResult> OnGetActivity(int Id)
         {
             var MyId = UserHelpers.GetUser(_cache, _context, User.Identity.Name).UserId;
             var GroupUsers = _context.UserGroupsMemberships

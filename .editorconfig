@@ -60,6 +60,11 @@ indent_style = tab
 
 [*.yml]
 indent_size = 2
+indent_style = space
+
+[*.yaml]
+indent_size = 2
+indent_style = space
 
 [*.scss]
 indent_size = 2
