@@ -64,7 +64,7 @@
     "dotnet:publish": "npm run build && npm run dotnet:restore && dotnet publish --configuration Release",
     "test:report_html": "reportgenerator -reports:coverage.cobertura.xml -targetdir:coverage/ -reporttypes:html",
     "test": "coverlet web.Tests/bin/Debug/net6.0/web.Tests.dll --target \"dotnet\" --targetargs \"test  --no-build\" --format cobertura --exclude-by-file \"**/Migrations/*\"",
-    "test:dev": "npm run dotnet:build && npm run test & npm run test:report_html"
+    "test:dev": "npm run dotnet:build && (npm run test || true) && npm run test:report_html"
   },
   "lint-staged": {
     "*.cs": "dotnet csharpier .",
