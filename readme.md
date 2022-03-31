@@ -63,6 +63,12 @@ The output of `/bin/Release/net6.0/publish` to the folder of your IIS site.
 
 See the [docs](https://www.atlas.bi/docs/bi-library/) for aditional configuration and starting search.
 
+## :gift: Contributing
+
+Contributions are welcome! Please open an [issue](https://github.com/atlas-bi/atlas-bi-library/issues) describing an issue or feature.
+
+This repository uses commitizen. Commit code changes for pr's with `npm run commit`.
+
 ## :trophy: Credits
 
 Atlas was created by the Riverside Healthcare Analytics team. See the [credits](https://www.atlas.bi/about/) for more details.
