@@ -129,7 +129,6 @@ namespace Atlas_Web
 
                     pipeline.AddJavaScriptBundle("/js/profile.min.js", "js/profile.js");
 
-                    // pipeline.AddJavaScriptBundle("/js/code.min.js", "lib/highlight/highlight.js");
                     pipeline.AddJavaScriptBundle("/js/code.min.js", "js/highlight.min.js");
 
                     pipeline.AddJavaScriptBundle("/js/analytics.min.js", "js/analytics.min.js");
@@ -253,7 +252,7 @@ namespace Atlas_Web
                 async (context, next) =>
                 {
                     context.Response.GetTypedHeaders().CacheControl =
-                        new Microsoft.Net.Http.Headers.CacheControlHeaderValue()
+                        new Microsoft.Net.Http.Headers.CacheControlHeaderValue
                         {
                             Public = true,
                             MaxAge = TimeSpan.FromMinutes(20)

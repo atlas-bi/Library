@@ -343,7 +343,7 @@ namespace Atlas_Web.Pages.Reports
                 select new MaintStatus { Required = "Report requires maintenance." }
             ).FirstOrDefaultAsync();
 
-            return new PartialViewResult()
+            return new PartialViewResult
             {
                 ViewName = "Partials/_MaintStatus",
                 ViewData = ViewData

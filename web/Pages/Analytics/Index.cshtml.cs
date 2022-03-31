@@ -130,7 +130,7 @@ namespace Atlas_Web.Pages.Analytics
 
             ViewData["ActiveUsers"] = ActiveUsers;
 
-            return new PartialViewResult()
+            return new PartialViewResult
             {
                 ViewName = "Partials/_ActiveUsers",
                 ViewData = ViewData

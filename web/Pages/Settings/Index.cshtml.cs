@@ -44,7 +44,7 @@ namespace Atlas_Web.Pages.Settings
                 _context,
                 User.Identity.Name
             );
-            return new PartialViewResult()
+            return new PartialViewResult
             {
                 ViewName = "Partials/_SiteMessages",
                 ViewData = ViewData
@@ -89,7 +89,7 @@ namespace Atlas_Web.Pages.Settings
 
         public IActionResult OnGetEtl()
         {
-            return new PartialViewResult() { ViewName = "Partials/_Etl", ViewData = ViewData };
+            return new PartialViewResult { ViewName = "Partials/_Etl", ViewData = ViewData };
         }
 
         public async Task<IActionResult> OnGetTheme()
@@ -105,7 +105,7 @@ namespace Atlas_Web.Pages.Settings
                 User.Identity.Name
             );
 
-            return new PartialViewResult() { ViewName = "Partials/_Theme", ViewData = ViewData };
+            return new PartialViewResult { ViewName = "Partials/_Theme", ViewData = ViewData };
         }
 
         public ActionResult OnPostUpdateGlobalCss()

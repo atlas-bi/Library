@@ -79,7 +79,7 @@ namespace Atlas_Web.Pages.Settings
                 User.Identity.Name
             );
 
-            return new PartialViewResult()
+            return new PartialViewResult
             {
                 ViewName = "Partials/_OrganizationalValueList",
                 ViewData = ViewData
@@ -103,7 +103,7 @@ namespace Atlas_Web.Pages.Settings
                 User.Identity.Name
             );
 
-            return new PartialViewResult()
+            return new PartialViewResult
             {
                 ViewName = "Partials/_EstimatedRunFrequencyList",
                 ViewData = ViewData
@@ -127,7 +127,7 @@ namespace Atlas_Web.Pages.Settings
                 User.Identity.Name
             );
 
-            return new PartialViewResult()
+            return new PartialViewResult
             {
                 ViewName = "Partials/_MaintenanceScheduleList",
                 ViewData = ViewData
@@ -151,7 +151,7 @@ namespace Atlas_Web.Pages.Settings
                 User.Identity.Name
             );
 
-            return new PartialViewResult()
+            return new PartialViewResult
             {
                 ViewName = "Partials/_FragilityList",
                 ViewData = ViewData
@@ -175,7 +175,7 @@ namespace Atlas_Web.Pages.Settings
                 User.Identity.Name
             );
 
-            return new PartialViewResult()
+            return new PartialViewResult
             {
                 ViewName = "Partials/_FragilityTagList",
                 ViewData = ViewData
@@ -199,7 +199,7 @@ namespace Atlas_Web.Pages.Settings
                 User.Identity.Name
             );
 
-            return new PartialViewResult()
+            return new PartialViewResult
             {
                 ViewName = "Partials/_MaintenanceLogStatusList",
                 ViewData = ViewData
@@ -223,7 +223,7 @@ namespace Atlas_Web.Pages.Settings
                 User.Identity.Name
             );
 
-            return new PartialViewResult()
+            return new PartialViewResult
             {
                 ViewName = "Partials/_FinancialImpactList",
                 ViewData = ViewData
@@ -247,7 +247,7 @@ namespace Atlas_Web.Pages.Settings
                 User.Identity.Name
             );
 
-            return new PartialViewResult()
+            return new PartialViewResult
             {
                 ViewName = "Partials/_StrategicImportanceList",
                 ViewData = ViewData

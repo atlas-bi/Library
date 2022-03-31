@@ -442,7 +442,7 @@ namespace Atlas_Web.Pages.Users
             HttpContext.Response.Headers.Add("Pragma", "no-cache"); // HTTP 1.0.
             HttpContext.Response.Headers.Add("Expires", "0"); // Proxies.
 
-            return new PartialViewResult()
+            return new PartialViewResult
             {
                 ViewName = "Sections/_SearchHistory",
                 ViewData = ViewData
@@ -668,11 +668,7 @@ namespace Atlas_Web.Pages.Users
                 ViewData["AdLists"] = AdLists;
             }
 
-            return new PartialViewResult()
-            {
-                ViewName = "Sections/_Favorites",
-                ViewData = ViewData
-            };
+            return new PartialViewResult { ViewName = "Sections/_Favorites", ViewData = ViewData };
         }
 
         public ActionResult OnGetChangeRole(int Id, string Url)
@@ -767,7 +763,7 @@ namespace Atlas_Web.Pages.Users
                 }
             ).ToList();
 
-            return new PartialViewResult()
+            return new PartialViewResult
             {
                 ViewName = "Partials/_SharedObjects",
                 ViewData = ViewData
@@ -829,7 +825,7 @@ namespace Atlas_Web.Pages.Users
                 }
             );
 
-            return new PartialViewResult() { ViewName = "Sections/_Groups", ViewData = ViewData };
+            return new PartialViewResult { ViewName = "Sections/_Groups", ViewData = ViewData };
         }
 
         public async Task<ActionResult> OnGetSubscriptions(int? id)
@@ -891,7 +887,7 @@ namespace Atlas_Web.Pages.Users
                 }
             );
 
-            return new PartialViewResult()
+            return new PartialViewResult
             {
                 ViewName = "Sections/_Subscriptions",
                 ViewData = ViewData
@@ -1076,7 +1072,7 @@ namespace Atlas_Web.Pages.Users
                 }
             );
 
-            return new PartialViewResult() { ViewName = "Sections/_Atlas", ViewData = ViewData };
+            return new PartialViewResult { ViewName = "Sections/_Atlas", ViewData = ViewData };
         }
 
         public async Task<ActionResult> OnGetActivity(int? id)
@@ -1172,7 +1168,7 @@ namespace Atlas_Web.Pages.Users
                 }
             );
 
-            return new PartialViewResult() { ViewName = "Sections/_Activity", ViewData = ViewData };
+            return new PartialViewResult { ViewName = "Sections/_Activity", ViewData = ViewData };
         }
     }
 }

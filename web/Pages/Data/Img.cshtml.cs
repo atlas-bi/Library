@@ -73,12 +73,12 @@ namespace Atlas_Web.Pages.Data
             using var ms = new MemoryStream();
             if (extension == "webp")
             {
-                var webpEncoder = new WebpEncoder() { Quality = 75 };
+                var webpEncoder = new WebpEncoder { Quality = 75 };
                 image.Save(ms, webpEncoder);
             }
             else
             {
-                var jpegEncoder = new JpegEncoder() { Quality = 75 };
+                var jpegEncoder = new JpegEncoder { Quality = 75 };
                 image.Save(ms, jpegEncoder);
             }
 

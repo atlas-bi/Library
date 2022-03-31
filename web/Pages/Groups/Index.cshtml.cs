@@ -260,7 +260,7 @@ namespace Atlas_Web.Pages.Groups
                 }
             );
 
-            return new PartialViewResult() { ViewName = "Sections/_Activity", ViewData = ViewData };
+            return new PartialViewResult { ViewName = "Sections/_Activity", ViewData = ViewData };
         }
     }
 }

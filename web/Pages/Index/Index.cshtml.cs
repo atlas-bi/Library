@@ -92,7 +92,7 @@ namespace Atlas_Web.Pages
             }
             HttpContext.Response.Headers.Remove("Cache-Control");
             HttpContext.Response.Headers.Add("Cache-Control", "max-age=7200");
-            return new PartialViewResult()
+            return new PartialViewResult
             {
                 ViewName = "Partials/_RecentTerms",
                 ViewData = ViewData
@@ -131,7 +131,7 @@ namespace Atlas_Web.Pages
             ).Take(10).ToListAsync();
             HttpContext.Response.Headers.Remove("Cache-Control");
             HttpContext.Response.Headers.Add("Cache-Control", "max-age=7200");
-            return new PartialViewResult()
+            return new PartialViewResult
             {
                 ViewName = "Partials/_RecentReports",
                 ViewData = ViewData
@@ -166,7 +166,7 @@ namespace Atlas_Web.Pages
             HttpContext.Response.Headers.Remove("Cache-Control");
             HttpContext.Response.Headers.Add("Cache-Control", "max-age=7200");
 
-            return new PartialViewResult()
+            return new PartialViewResult
             {
                 ViewName = "Partials/_RecentCollections",
                 ViewData = ViewData
@@ -200,7 +200,7 @@ namespace Atlas_Web.Pages
             HttpContext.Response.Headers.Remove("Cache-Control");
             HttpContext.Response.Headers.Add("Cache-Control", "max-age=7200");
 
-            return new PartialViewResult()
+            return new PartialViewResult
             {
                 ViewName = "Partials/_RecentInitiatives",
                 ViewData = ViewData

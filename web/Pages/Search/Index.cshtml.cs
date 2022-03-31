@@ -546,97 +546,100 @@ namespace Atlas_Web.Pages.Search
         public ActionResult OnPostReportSearch(string s)
         {
             if (s != null)
-                SearchString = s;
             {
-                ObjectSearch = _solr
-                    .Query(
-                        new SolrQuery(BuildSearchString(SearchString, Request.Query)),
-                        new QueryOptions
-                        {
-                            RequestHandler = new RequestHandlerParameters("/reports"),
-                            StartOrCursor = new StartOrCursor.Start(0),
-                            Rows = 10,
-                        }
-                    )
-                    .Select(
-                        x =>
-                            new ObjectSearch
-                            {
-                                ObjectId = x.AtlasId.First(),
-                                Name = x.Name,
-                                Description =
-                                    x.Description != null ? x.Description.FirstOrDefault() : ""
-                            }
-                    )
-                    .ToList();
-                var json = JsonConvert.SerializeObject(ObjectSearch);
-                return Content(json);
+                SearchString = s;
             }
+
+            ObjectSearch = _solr
+                .Query(
+                    new SolrQuery(BuildSearchString(SearchString, Request.Query)),
+                    new QueryOptions
+                    {
+                        RequestHandler = new RequestHandlerParameters("/reports"),
+                        StartOrCursor = new StartOrCursor.Start(0),
+                        Rows = 10,
+                    }
+                )
+                .Select(
+                    x =>
+                        new ObjectSearch
+                        {
+                            ObjectId = x.AtlasId.First(),
+                            Name = x.Name,
+                            Description =
+                                x.Description != null ? x.Description.FirstOrDefault() : ""
+                        }
+                )
+                .ToList();
+            var json = JsonConvert.SerializeObject(ObjectSearch);
+            return Content(json);
         }
 
         public ActionResult OnPostTermSearch(string s)
         {
             if (s != null)
-                SearchString = s;
             {
-                ObjectSearch = _solr
-                    .Query(
-                        new SolrQuery(BuildSearchString(SearchString, Request.Query)),
-                        new QueryOptions
-                        {
-                            RequestHandler = new RequestHandlerParameters("/aterms"),
-                            StartOrCursor = new StartOrCursor.Start(0),
-                            Rows = 10,
-                        }
-                    )
-                    .Select(
-                        x =>
-                            new ObjectSearch
-                            {
-                                ObjectId = x.AtlasId.First(),
-                                Name = x.Name,
-                                Description =
-                                    x.Description != null ? x.Description.FirstOrDefault() : ""
-                            }
-                    )
-                    .ToList();
-                var json = JsonConvert.SerializeObject(ObjectSearch);
-
-                return Content(json);
+                SearchString = s;
             }
+
+            ObjectSearch = _solr
+                .Query(
+                    new SolrQuery(BuildSearchString(SearchString, Request.Query)),
+                    new QueryOptions
+                    {
+                        RequestHandler = new RequestHandlerParameters("/aterms"),
+                        StartOrCursor = new StartOrCursor.Start(0),
+                        Rows = 10,
+                    }
+                )
+                .Select(
+                    x =>
+                        new ObjectSearch
+                        {
+                            ObjectId = x.AtlasId.First(),
+                            Name = x.Name,
+                            Description =
+                                x.Description != null ? x.Description.FirstOrDefault() : ""
+                        }
+                )
+                .ToList();
+            var json = JsonConvert.SerializeObject(ObjectSearch);
+
+            return Content(json);
         }
 
         public ActionResult OnPostCollectionSearch(string s)
         {
             if (s != null)
-                SearchString = s;
             {
-                ObjectSearch = _solr
-                    .Query(
-                        new SolrQuery(BuildSearchString(SearchString, Request.Query)),
-                        new QueryOptions
-                        {
-                            RequestHandler = new RequestHandlerParameters("/collections"),
-                            StartOrCursor = new StartOrCursor.Start(0),
-                            Rows = 10,
-                        }
-                    )
-                    .Select(
-                        x =>
-                            new ObjectSearch
-                            {
-                                ObjectId = x.AtlasId.First(),
-                                Name = x.Name,
-                                Description =
-                                    x.Description != null ? x.Description.FirstOrDefault() : ""
-                            }
-                    )
-                    .ToList();
-
-                var json = JsonConvert.SerializeObject(ObjectSearch);
-
-                return Content(json);
+                SearchString = s;
             }
+
+            ObjectSearch = _solr
+                .Query(
+                    new SolrQuery(BuildSearchString(SearchString, Request.Query)),
+                    new QueryOptions
+                    {
+                        RequestHandler = new RequestHandlerParameters("/collections"),
+                        StartOrCursor = new StartOrCursor.Start(0),
+                        Rows = 10,
+                    }
+                )
+                .Select(
+                    x =>
+                        new ObjectSearch
+                        {
+                            ObjectId = x.AtlasId.First(),
+                            Name = x.Name,
+                            Description =
+                                x.Description != null ? x.Description.FirstOrDefault() : ""
+                        }
+                )
+                .ToList();
+
+            var json = JsonConvert.SerializeObject(ObjectSearch);
+
+            return Content(json);
         }
 
         public ActionResult OnPostUserSearch(string s)
@@ -854,7 +857,7 @@ namespace Atlas_Web.Pages.Search
 
             HttpContext.Response.Headers.Remove("Cache-Control");
             HttpContext.Response.Headers.Add("Cache-Control", "max-age=7200");
-            return new PartialViewResult()
+            return new PartialViewResult
             {
                 ViewName = "Partials/_RelatedReports",
                 ViewData = ViewData
