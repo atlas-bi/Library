@@ -50,7 +50,7 @@ namespace Atlas_Web.Pages.Users
         {
             public string Date { get; set; }
             public int Cnt { get; set; }
-            public decimal Avg { get; set; }
+            public double Avg { get; set; }
         }
 
         public class FavData
@@ -1066,7 +1066,7 @@ namespace Atlas_Web.Pages.Users
                             Date = grp.Key,
                             Cnt = grp.Count(),
                             Avg = Math.Round(
-                                (decimal)grp.Average(x => Convert.ToInt32(x.LoadTime)) / 1000,
+                                (double)grp.Average(x => Convert.ToInt32(x.LoadTime)) / 1000,
                                 2
                             )
                         }
@@ -1117,7 +1117,7 @@ namespace Atlas_Web.Pages.Users
                         {
                             Date = d.RunWeekString,
                             Cnt = d.Runs ?? 0,
-                            Avg = d.RunTime ?? 0
+                            Avg = (double)(d.RunTime ?? 0)
                         }
                     ).ToListAsync();
                 }
