@@ -736,6 +736,10 @@ namespace Atlas_Web.Pages.Search
             string index_type = "";
             switch (s)
             {
+                default:
+                    index_type = null;
+                    break;
+
                 case "org-value":
                     index_type = "organizational_value";
                     break;

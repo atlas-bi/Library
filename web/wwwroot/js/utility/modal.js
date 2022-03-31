@@ -151,7 +151,7 @@
       q.setRequestHeader('Content-Type', 'text/html;charset=UTF-8`');
       q.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
       q.send();
-      ShowMessageBox('Thanks for the feedback.');
+      //ShowMessageBox('Thanks for the feedback.');
       textarea.value = '';
       closeAllModals();
     }
@@ -175,7 +175,7 @@
       q.setRequestHeader('Content-Type', 'text/html;charset=UTF-8`');
       q.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
       q.send();
-      ShowMessageBox('Your request has been submitted.');
+      //ShowMessageBox('Your request has been submitted.');
       closeAllModals();
     }
   });
