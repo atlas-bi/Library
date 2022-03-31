@@ -56,7 +56,7 @@
     "build": "gulp build",
     "watch": "gulp watch",
     "prepare": "husky install",
-    "pre-commit": "set FORCE_COLOR=1 && lint-staged",
+    "pre-commit": "lint-staged",
     "format:static": "prettier --config .prettierrc \"**/*.{ts,css,less,scss,js,json,md,yaml,yml,html}\" --write",
     "format:cs": "dotnet csharpier .",
     "format": "npm run format:static & npm run format:cs",
