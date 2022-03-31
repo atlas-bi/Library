@@ -50,10 +50,15 @@ jobs:
           reportgenerator -reports:coverage.cobertura.xml -targetdir:coverage/ -reporttypes:textSummary
           # print out the report
           cat coverage/Summary.txt
-      - name: upload cov
+      - name: upload cov to codecov
         if: always()
         uses: codecov/codecov-action@v2
         with:
           files: ./coverage.cobertura.xml
           fail_ci_if_error: true
           verbose: true
+      - name: upload cov to codacy
+        uses: codacy/codacy-coverage-reporter-action@v1
+        with:
+          project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
+          coverage-reports: ./coverage.cobertura.xml
