@@ -85,7 +85,7 @@ namespace Atlas_Web.Pages.Search
             Microsoft.AspNetCore.Http.IQueryCollection query
         )
         {
-            string[] illegal_chars = new string[]
+            string[] illegal_chars =
             {
                 "\\",
                 "+",
@@ -343,7 +343,7 @@ namespace Atlas_Web.Pages.Search
                 var FilterQuery = new Dictionary<string, string>();
                 foreach (string key in query.Keys)
                 {
-                    FilterQuery.Add(key.ToLower(), query[key].First());
+                    FilterQuery.Add(key.ToLowerInvariant(), query[key].First());
                 }
 
                 return FilterQuery;
@@ -642,92 +642,95 @@ namespace Atlas_Web.Pages.Search
         public ActionResult OnPostUserSearch(string s)
         {
             if (s != null)
-                SearchString = s;
             {
-                UserSearch = _solr
-                    .Query(
-                        new SolrQuery(BuildSearchString(SearchString, Request.Query)),
-                        new QueryOptions
-                        {
-                            RequestHandler = new RequestHandlerParameters("/users"),
-                            StartOrCursor = new StartOrCursor.Start(0),
-                            Rows = 10,
-                        }
-                    )
-                    .Select(
-                        x =>
-                            new ObjectSearch
-                            {
-                                ObjectId = x.AtlasId.First(),
-                                Name = x.Name,
-                                Type = "u"
-                            }
-                    )
-                    .ToList();
-
-                var json = JsonConvert.SerializeObject(UserSearch);
-
-                return Content(json);
+                SearchString = s;
             }
+
+            UserSearch = _solr
+                .Query(
+                    new SolrQuery(BuildSearchString(SearchString, Request.Query)),
+                    new QueryOptions
+                    {
+                        RequestHandler = new RequestHandlerParameters("/users"),
+                        StartOrCursor = new StartOrCursor.Start(0),
+                        Rows = 10,
+                    }
+                )
+                .Select(
+                    x =>
+                        new ObjectSearch
+                        {
+                            ObjectId = x.AtlasId.First(),
+                            Name = x.Name,
+                            Type = "u"
+                        }
+                )
+                .ToList();
+
+            var json = JsonConvert.SerializeObject(UserSearch);
+
+            return Content(json);
         }
 
         public ActionResult OnPostUserSearchMail(string s)
         {
             if (s != null)
-                SearchString = s;
             {
-                UserSearch = _solr
-                    .Query(
-                        new SolrQuery(BuildSearchString(SearchString, Request.Query)),
-                        new QueryOptions
-                        {
-                            RequestHandler = new RequestHandlerParameters("/users"),
-                            StartOrCursor = new StartOrCursor.Start(0),
-                            Rows = 20,
-                        }
-                    )
-                    .Select(
-                        x =>
-                            new ObjectSearch
-                            {
-                                ObjectId = x.AtlasId.First(),
-                                Name = x.Name,
-                                Type = "u"
-                            }
-                    )
-                    .ToList();
-
-                var json = JsonConvert.SerializeObject(UserSearch);
-
-                return Content(json);
+                SearchString = s;
             }
+
+            UserSearch = _solr
+                .Query(
+                    new SolrQuery(BuildSearchString(SearchString, Request.Query)),
+                    new QueryOptions
+                    {
+                        RequestHandler = new RequestHandlerParameters("/users"),
+                        StartOrCursor = new StartOrCursor.Start(0),
+                        Rows = 20,
+                    }
+                )
+                .Select(
+                    x =>
+                        new ObjectSearch
+                        {
+                            ObjectId = x.AtlasId.First(),
+                            Name = x.Name,
+                            Type = "u"
+                        }
+                )
+                .ToList();
+
+            var json = JsonConvert.SerializeObject(UserSearch);
+
+            return Content(json);
         }
 
         public ActionResult OnPostDirector(string s)
         {
             if (s != null)
-                SearchString = s;
             {
-                UserSearch = _solr
-                    .Query(
-                        new SolrQuery(
-                            BuildSearchString(SearchString, Request.Query)
-                                + " AND user_roles:(Director)"
-                        ),
-                        new QueryOptions
-                        {
-                            RequestHandler = new RequestHandlerParameters("/users"),
-                            StartOrCursor = new StartOrCursor.Start(0),
-                            Rows = 20,
-                        }
-                    )
-                    .Select(x => new ObjectSearch { Description = x.Email, Name = x.Name })
-                    .ToList();
-
-                var json = JsonConvert.SerializeObject(UserSearch);
-
-                return Content(json);
+                SearchString = s;
             }
+
+            UserSearch = _solr
+                .Query(
+                    new SolrQuery(
+                        BuildSearchString(SearchString, Request.Query)
+                            + " AND user_roles:(Director)"
+                    ),
+                    new QueryOptions
+                    {
+                        RequestHandler = new RequestHandlerParameters("/users"),
+                        StartOrCursor = new StartOrCursor.Start(0),
+                        Rows = 20,
+                    }
+                )
+                .Select(x => new ObjectSearch { Description = x.Email, Name = x.Name })
+                .ToList();
+
+            var json = JsonConvert.SerializeObject(UserSearch);
+
+            return Content(json);
         }
 
         public ActionResult OnPostValueList(string s)

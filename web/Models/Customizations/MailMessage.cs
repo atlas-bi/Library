@@ -59,11 +59,13 @@ namespace Atlas_Web.Models
                     );
                 }
                 else
+                {
                     return string.Concat(
                         (SendDate ?? DateTime.Now).ToString("M/d/yy"),
                         " at ",
                         (SendDate ?? DateTime.Now).ToString("h:mm tt")
                     );
+                }
             }
         }
 

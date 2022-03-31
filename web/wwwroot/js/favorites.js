@@ -357,6 +357,7 @@
             parseInt(
               document.querySelector('.favorites-show-all .fav-count')
                 .innerText,
+              10,
             ) - 1;
         }
       };

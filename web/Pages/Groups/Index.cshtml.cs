@@ -180,7 +180,7 @@ namespace Atlas_Web.Pages.Groups
 
         public async Task<ActionResult> OnGetActivity(int Id)
         {
-            var MyId = UserHelpers.GetUser(_cache, _context, User.Identity.Name).UserId;
+            var PrivateMyId = UserHelpers.GetUser(_cache, _context, User.Identity.Name).UserId;
             var PrivateGroupUsers = _context.UserGroupsMemberships
                 .Where(x => x.GroupId == Id)
                 .Select(x => x.UserId)
@@ -191,8 +191,8 @@ namespace Atlas_Web.Pages.Groups
                 _context,
                 User.Identity.Name
             );
-            ViewData["MyId"] = MyId;
-            ViewData["UserId"] = MyId;
+            ViewData["MyId"] = PrivateMyId;
+            ViewData["UserId"] = PrivateMyId;
 
             ViewData["ReportRunTime"] = await _cache.GetOrCreateAsync<List<ReportRunTimeData>>(
                 "ReportRunTime-" + Id,

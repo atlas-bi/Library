@@ -552,7 +552,7 @@ namespace Atlas_Web.Pages.Tasks
 
         public ActionResult OnGetNewUndocumented()
         {
-            var rpts = new int[] { 17, 28, 3, 20 };
+            int[] rpts = { 17, 28, 3, 20 };
             ViewData["NewUndocumented"] = (
                 from r in _context.ReportObjects
                 join t in _context.ReportObjectTypes

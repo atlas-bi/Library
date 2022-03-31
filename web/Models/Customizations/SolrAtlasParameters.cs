@@ -8,8 +8,6 @@ namespace Atlas_Web.Models
     [NotMapped]
     public class SolrAtlasParameters
     {
-        public SolrAtlasParameters() { }
-
         public string Query { get; set; }
         public int? PageIndex { get; set; }
 
