@@ -37,7 +37,7 @@ namespace web.Tests
         }
         // public static List<Message> GetSeedingMessages()
         // {
-        //     return new List<Message>()asdf
+        //     return new List<Message>()
         //     {
         //         new Message(){ Text = "TEST RECORD: You're standing on my scarf." },
         //         new Message(){ Text = "TEST RECORD: Would you like a jelly baby?" },
