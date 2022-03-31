@@ -472,7 +472,9 @@ namespace Atlas_Web.Pages.Users
 
         public async Task<ActionResult> OnPostUpdateFavoriteFolder()
         {
-            var body = await new System.IO.StreamReader(Request.Body).ReadToEndAsync();
+            var body = await new System.IO.StreamReader(Request.Body)
+                .ReadToEndAsync()
+                .ConfigureAwait(false);
             var package = JObject.Parse(body);
 
             var MyUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);

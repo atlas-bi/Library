@@ -203,7 +203,9 @@ namespace Atlas_Web.Pages.API
 
         public async Task<ActionResult> OnPostRenderMarkdown()
         {
-            var body = await new System.IO.StreamReader(Request.Body).ReadToEndAsync();
+            var body = await new System.IO.StreamReader(Request.Body)
+                .ReadToEndAsync()
+                .ConfigureAwait(false);
             var package = JObject.Parse(body);
 
             var md = package.Value<string>("md");
