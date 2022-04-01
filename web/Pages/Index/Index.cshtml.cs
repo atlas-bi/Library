@@ -58,6 +58,7 @@ namespace Atlas_Web.Pages
                 new AdList { Url = "/Users?handler=SharedObjects", Column = 2 },
             };
             ViewData["AdLists"] = AdLists;
+            throw new Exception();
             return Page();
         }
 

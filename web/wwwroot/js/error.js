@@ -12,7 +12,7 @@
       })
       .join('&');
 
-    $params = $params !== undefined ? '?' + $params : '';
+    $params = $params !== undefined && $params !== '' ? '?' + $params : '';
 
     var $newUrl =
       window.location.origin + window.location.pathname + $params + $hash;
