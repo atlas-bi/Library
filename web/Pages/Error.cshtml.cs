@@ -9,9 +9,12 @@ using System.Threading.Tasks;
 using Atlas_Web.Helpers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.AspNetCore.Diagnostics;
 
 namespace Atlas_Web.Pages
 {
+    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+    [IgnoreAntiforgeryToken]
     public class ErrorModel : PageModel
     {
         private readonly Atlas_WebContext _context;
@@ -25,26 +28,37 @@ namespace Atlas_Web.Pages
             _cache = cache;
         }
 
-        public List<int?> Permissions { get; set; }
-        public int UserId { get; set; }
-        public string FirstName { get; set; }
-        public List<UserPreference> Preferences { get; set; }
-        public int? Error { get; set; }
-        public User PublicUser { get; set; }
+        public string RequestId { get; set; }
+        public bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
+
+        public string ExceptionMessage { get; set; }
 
         public ActionResult OnGetAsync(int? id)
         {
-            Error = id;
-            PublicUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
-            var MyUser = PublicUser;
-            UserId = MyUser.UserId;
-            FirstName = MyUser.FirstnameCalc;
-            Permissions = UserHelpers.GetUserPermissions(_cache, _context, User.Identity.Name);
-            ViewData["Permissions"] = Permissions;
-            Preferences = UserHelpers.GetPreferences(_cache, _context, User.Identity.Name);
-            ViewData["MyRole"] = UserHelpers.GetMyRole(_context, User.Identity.Name);
+            var MyUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
 
-            return Page();
+            if (id == 400)
+            {
+                return RedirectToPage(
+                    "/Index/Index",
+                    new { error = "Sorry that page does not exist." }
+                );
+            }
+            // RequestId = HttpContext.TraceIdentifier;
+
+            // var exceptionHandlerPathFeature =
+            //     HttpContext.Features.Get<IExceptionHandlerPathFeature>();
+
+            // exceptionHandlerPathFeature?.Path
+            // exceptionHandlerPathFeature?.Endpoint?.DisplayName
+            // exceptionHandlerPathFeature?.Error?.Message
+            // exceptionHandlerPathFeature?.Error?.StackTrace
+            // if (exceptionHandlerPathFeature?.Path == "/")
+            // {
+            //     ExceptionMessage ??= string.Empty;
+            // }
+
+            return RedirectToPage("/Index/Index", new { error = "Sorry there was an error." });
         }
     }
 }

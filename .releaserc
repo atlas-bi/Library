@@ -1,0 +1,21 @@
+{
+  "branch": "master",
+  "plugins": [
+    "@semantic-release/commit-analyzer",
+    "@semantic-release/release-notes-generator",
+    "@semantic-release/changelog",
+    ["@semantic-release/npm", {
+      "publish": "false"
+    }],
+
+    ["@semantic-release/exec", {
+      "prepareCmd" : "echo ${nextRelease.version} > .version"
+    }],
+    ["@semantic-release/git", {
+      "assets": ["package.json", ".version"]
+    }],
+    ["@semantic-release/github", {
+      "assets": ["package.json", ".version"]
+    }]
+  ]
+}
