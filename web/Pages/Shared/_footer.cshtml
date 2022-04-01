@@ -1,10 +1,15 @@
 ﻿@inject IConfiguration Configuration
-
+@inject IMemoryCache Cache
 <footer class="footer">
     <div class="container">
         <div class="columns">
             <div class="column">
                 &copy; @DateTime.Now.Year - @Configuration["AppSettings:org_name"]
+                <br>
+                @if(!string.IsNullOrEmpty(Cache.Get<string>("version")))
+                {
+                    <text>Version: v</text>@Cache.Get("version")
+                }
             </div>
         </div>
     </div>
