@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Net.Http.Headers;
 using System;
+using System.IO;
 using System.Collections.Generic;
 using System.IO.Compression;
 using WebMarkupMin.AspNet.Common.Compressors;
@@ -18,6 +19,7 @@ using Microsoft.Extensions.Caching.Memory;
 using System.Linq;
 using Atlas_Web.Middleware;
 using Atlas_Web.Helpers;
+using Newtonsoft.Json.Linq;
 
 namespace Atlas_Web
 {
@@ -290,6 +292,21 @@ namespace Atlas_Web
             {
                 cache.Set("logo", "/img/atlas-logo-smooth.png");
             }
+            // set version
+            try
+            {
+                var d = JObject.Parse(File.ReadAllText("../package.json"));
+                if (d["version"] != null)
+                {
+                    cache.Set("version", d.Value<string>("version"));
+                }
+            }
+            catch
+            {
+                // not set
+            }
+
+
         }
     }
 }
