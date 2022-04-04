@@ -1,0 +1,4 @@
+{
+  "extends": ["github>commitizen/commitizen-renovate-config"],
+  "ignoreDeps": ["@fortawesome/fontawesome-free", "chart.js"]
+}
