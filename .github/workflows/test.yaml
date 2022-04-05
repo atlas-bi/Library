@@ -56,7 +56,7 @@ jobs:
           cat coverage/Summary.txt
       - name: upload cov
         if: always()
-        uses: codecov/codecov-action@v2
+        uses: codecov/codecov-action@v3
         with:
           files: ./coverage.cobertura.xml
           fail_ci_if_error: true
