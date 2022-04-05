@@ -8,6 +8,24 @@ on:
       - master
 
 jobs:
+  lint:
+    name: lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+
+      - name: setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16.x'
+
+      - name: install node deps
+        run: npm install
+
+      - name: lint
+        run: npm run lint
+
   test:
     name: test
     runs-on: windows-latest

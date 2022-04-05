@@ -1,5 +1,5 @@
 .atlas-chart {
-  background: rgba(0, 0, 0, 0.05);
+  background: rgba(0 0 0 / 5%);
   border-radius: 6px;
   min-height: 652px;
   padding-bottom: 1px;
@@ -38,7 +38,7 @@
 
 .chart-headClr {
   background: #8e8e93;
-  border: 2px solid rgba(0, 0, 0, 0.1);
+  border: 2px solid rgba(0 0 0 / 10%);
   display: inline-block;
   height: 15px;
   margin-left: 20px;
@@ -101,7 +101,7 @@
 
 .chart-bar::after {
   background-color: #8e8e93;
-  border: 2px solid rgba(0, 0, 0, 0.1);
+  border: 2px solid rgba(0 0 0 / 10%);
   border-top-left-radius: 2px;
   border-top-right-radius: 2px;
   bottom: 0;
@@ -137,8 +137,8 @@
 
 .chart-line div {
   background-color: #8e8e93;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid rgba(0 0 0 / 10%);
+  border-top: 1px solid rgba(0 0 0 / 10%);
   height: 3px;
   left: -2px;
   position: absolute;
@@ -162,7 +162,7 @@
 
 .chart-line::after {
   background-color: #8e8e93;
-  border: 2px solid rgba(0, 0, 0, 0.1);
+  border: 2px solid rgba(0 0 0 / 10%);
   border-radius: 10px;
   content: '';
   height: 10px;
@@ -201,14 +201,14 @@
 }
 
 .chart-ticksTick {
-  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+  border-bottom: 1px solid rgba(0 0 0 / 20%);
   height: 50px;
   position: relative;
   width: 100%;
 }
 
 .chart-ticksTick.first {
-  border-top: 1px solid rgba(0, 0, 0, 0.2);
+  border-top: 1px solid rgba(0 0 0 / 20%);
 }
 
 .chart-ticksTick.last {

@@ -1,8 +1,4 @@
 .message-wrapper {
-  -moz-box-shadow: 0 0 30px 10px #d1d1d1;
-  -moz-transition: all 0.5s;
-  -webkit-box-shadow: 0 0 30px 10px #d1d1d1;
-  -webkit-transition: all 0.5s;
   background-color: #fff;
   border: 1px solid #b7b7b7;
   border-radius: 6px;
@@ -26,16 +22,12 @@
 }
 
 .message-wrapper.hidden {
-  -moz-transition: all 1s;
-  -webkit-transition: all 1s;
   opacity: 0;
   top: -200px;
   transition: all 1s;
 }
 
 .message-wrapper button {
-  -moz-transition: all 0.2s;
-  -webkit-transition: all 0.2s;
   border-radius: 6px;
   height: 12px;
   position: absolute;

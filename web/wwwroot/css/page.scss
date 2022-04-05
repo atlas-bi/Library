@@ -17,16 +17,16 @@ section {
 }
 
 .pageNav-badgeGreen {
-  border: 2px solid rgb(41, 206, 66);
+  border: 2px solid rgb(41 206 66);
   border-radius: 3px;
-  color: rgb(41, 206, 66);
+  color: rgb(41 206 66);
   padding: 0 5px;
 }
 
 .pageNav-badgeBlue {
-  border: 2px solid rgb(35, 96, 252);
+  border: 2px solid rgb(35 96 252);
   border-radius: 3px;
-  color: rgb(35, 96, 252);
+  color: rgb(35 96 252);
   padding: 0 5px;
 }
 
@@ -112,6 +112,7 @@ button .icon-sm {
   flex-direction: row;
   margin-top: 10px;
 }
+
 .snippet-left {
   width: auto;
 }
@@ -130,5 +131,5 @@ button .icon-sm {
  */
 .CodeMirror
   .cm-spell-error:not(.cm-url):not(.cm-comment):not(.cm-tag):not(.cm-word) {
-  background: rgba(255, 0, 0, 0.15);
+  background: rgba(255 0 0 / 15%);
 }
