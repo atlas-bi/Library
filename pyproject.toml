@@ -19,7 +19,7 @@ packages = [{ include = "testing" }]
 [tool.poetry.dependencies]
 python = "^3.6.2"
 urllib3 = "^1.26.3"
-selenium = "^3.141.0"
+selenium = "^4.0.0"
 
 [tool.poetry.extras]
 docs = ["Sphinx", "Pygments", "furo", "sphinx-copybutton", "sphinx-inline-tabs", "myst-parser", "colorama", "sphinx-panels", "sphinxcontrib-youtube"]
