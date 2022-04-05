@@ -1,26 +1,28 @@
 (function () {
-  var vars = getUrlVars(),
-    message;
+  const vars = getUrlVars();
+  let message;
 
   function updateUrl($key) {
     delete vars[$key];
-    var $hash = document.location.hash ? '#' + document.location.hash : '';
+    const $hash = document.location.hash ? '#' + document.location.hash : '';
 
-    var $params = Object.keys(vars)
+    let $parameters = Object.keys(vars)
       .map(function (x) {
         return x + '=' + vars[x];
       })
       .join('&');
 
-    $params = $params !== undefined && $params !== '' ? '?' + $params : '';
+    $parameters =
+      $parameters !== undefined && $parameters !== '' ? '?' + $parameters : '';
 
-    var $newUrl =
-      window.location.origin + window.location.pathname + $params + $hash;
+    const $newUrl =
+      window.location.origin + window.location.pathname + $parameters + $hash;
 
     history.replaceState({}, document.title, $newUrl);
   }
+
   function addMessage($class, $message) {
-    var div = document.createElement('div');
+    const div = document.createElement('div');
     div.classList.add(
       'notification',
       'is-light',
@@ -29,11 +31,11 @@
       'my-0',
     );
 
-    var button = document.createElement('button');
+    const button = document.createElement('button');
 
     button.classList.add('delete');
     button.addEventListener('click', function () {
-      div.parentNode.removeChild(div);
+      div.remove();
     });
 
     div.innerHTML = '<p><b>' + $message + '</b></p>';
@@ -45,19 +47,20 @@
       .insertBefore(div, document.querySelector('body').firstChild);
   }
 
-  if (vars['error']) {
-    message = decodeURI(vars['error']).replace(/\+/g, / /);
+  if (vars.error) {
+    message = decodeURI(vars.error).replace(/\+/g, / /);
     addMessage('is-danger', message);
     updateUrl('error');
   }
 
-  if (vars['success']) {
-    message = decodeURI(vars['success']).replace(/\+/g, / /);
+  if (vars.success) {
+    message = decodeURI(vars.success).replace(/\+/g, / /);
     addMessage('is-success', message);
     updateUrl('success');
   }
-  if (vars['warning']) {
-    message = decodeURI(vars['warning']).replace(/\+/g, / /);
+
+  if (vars.warning) {
+    message = decodeURI(vars.warning).replace(/\+/g, / /);
     addMessage('is-warning', message);
     updateUrl('warning');
   }

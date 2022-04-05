@@ -1,94 +1,93 @@
 (function () {
-  var d = document;
+  const d = document;
 
-  d.addEventListener('click', function (e) {
-    if (e.target.closest('.favorites-show-all')) {
+  d.addEventListener('click', function (event) {
+    if (event.target.closest('.favorites-show-all')) {
       showall();
-    } else if (e.target.closest('.favorites-folder')) {
-      var $target = e.target.closest('.favorites-folder');
+    } else if (event.target.closest('.favorites-folder')) {
+      const $target = event.target.closest('.favorites-folder');
 
-      // close other folders
+      // Close other folders
       (
         document.querySelectorAll(
           '.favorites-folder.is-active,.favorites-show-all.is-active',
         ) || []
-      ).forEach(($el) => {
-        $el.classList.remove('is-active');
+      ).forEach(($element) => {
+        $element.classList.remove('is-active');
       });
 
       (
         document.querySelectorAll(
           '.favorites-folder .fa-folder-open,.favorites-show-all .fa-folder-open',
         ) || []
-      ).forEach(($el) => {
-        $el.classList.remove('fa-folder-open');
-        $el.classList.add('fa-folder');
+      ).forEach(($element) => {
+        $element.classList.remove('fa-folder-open');
+        $element.classList.add('fa-folder');
       });
 
-      // update icon
+      // Update icon
       if ($target.querySelector('.fa-folder')) {
-        var $icon = $target.querySelector('.fa-folder');
+        const $icon = $target.querySelector('.fa-folder');
         $icon.classList.remove('fa-folder');
         $icon.classList.add('fa-folder-open');
       }
 
-      // make active
+      // Make active
       $target.classList.add('is-active');
 
-      // filter favs
-      document.querySelectorAll('.favorites .favorite').forEach(($el) => {
-        if ($target.dataset.folderid == $el.dataset.folderid) {
-          $el.style.display = '';
-        } else {
-          $el.style.display = 'None';
-        }
+      // Filter favs
+      document.querySelectorAll('.favorites .favorite').forEach(($element) => {
+        const newLocal = $target.dataset.folderid === $element.dataset.folderid;
+        $element.style.display = newLocal ? '' : 'None';
       });
     }
   });
 
   function showall() {
-    // show everything
-    (document.querySelectorAll('.favorites .favorite') || []).forEach(($el) => {
-      $el.style.display = '';
-    });
-
-    // clear filters
-    (document.querySelectorAll('a.favorites-filter.is-active') || []).forEach(
-      ($el) => {
-        $el.classList.remove('is-active');
+    // Show everything
+    (document.querySelectorAll('.favorites .favorite') || []).forEach(
+      ($element) => {
+        $element.style.display = '';
       },
     );
 
-    // clear input
+    // Clear filters
+    (document.querySelectorAll('a.favorites-filter.is-active') || []).forEach(
+      ($element) => {
+        $element.classList.remove('is-active');
+      },
+    );
+
+    // Clear input
     document.querySelector('input.favorites-filter').value = '';
 
-    // clear folders
+    // Clear folders
     (document.querySelectorAll('.favorites-folder.is-active') || []).forEach(
-      ($el) => {
-        $el.classList.remove('is-active');
+      ($element) => {
+        $element.classList.remove('is-active');
       },
     );
 
-    // reset icon
+    // Reset icon
     if (document.querySelector('.favorites-show-all .fa-folder')) {
-      var $el = document.querySelector('.favorites-show-all .fa-folder');
-      $el.classList.remove('fa-folder');
-      $el.classList.add('fa-folder-open');
+      const $element = document.querySelector('.favorites-show-all .fa-folder');
+      $element.classList.remove('fa-folder');
+      $element.classList.add('fa-folder-open');
     }
 
     (
       document.querySelectorAll('.favorites-folder .fa-folder-open') || []
-    ).forEach(($el) => {
-      $el.classList.remove('fa-folder-open');
-      $el.classList.add('fa-folder');
+    ).forEach(($element) => {
+      $element.classList.remove('fa-folder-open');
+      $element.classList.add('fa-folder');
     });
   }
 
-  document.addEventListener('click', function (e) {
-    if (e.target.closest('.favorite-folder-delete')) {
-      e.preventDefault();
-      var $target = e.target.closest('.favorite-folder-delete');
-      var q = new XMLHttpRequest();
+  document.addEventListener('click', function (event) {
+    if (event.target.closest('.favorite-folder-delete')) {
+      event.preventDefault();
+      const $target = event.target.closest('.favorite-folder-delete');
+      const q = new XMLHttpRequest();
       q.open(
         'post',
         '/users/favorites?handler=DeleteFolder&id=' + $target.dataset.folderid,
@@ -100,21 +99,22 @@
       );
       q.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
       q.send();
-      var folder = e.target.closest('.favorites-folder');
-      folder.parentElement.removeChild(folder);
-      // open all
+      const folder = event.target.closest('.favorites-folder');
+      folder.remove();
+      // Open all
       document.querySelector('.favorites-show-all').click();
     }
   });
   d.addEventListener(
     'submit',
-    function (e) {
-      // no event for adding a new folder. we allow a refresh in that case.
-      var $target, q;
-      if (e.target.closest('.favorite-folder-new')) {
-        e.preventDefault();
+    function (event) {
+      // No event for adding a new folder. we allow a refresh in that case.
+      let $target;
+      let q;
+      if (event.target.closest('.favorite-folder-new')) {
+        event.preventDefault();
 
-        $target = e.target.closest('.favorite-folder-new');
+        $target = event.target.closest('.favorite-folder-new');
         q = new XMLHttpRequest();
         q.open(
           'post',
@@ -132,14 +132,14 @@
         window.location.reload();
       }
 
-      if (e.target.closest('.favorite-folder-rename')) {
-        e.preventDefault();
-        $target = e.target.closest('.favorite-folder-rename');
+      if (event.target.closest('.favorite-folder-rename')) {
+        event.preventDefault();
+        $target = event.target.closest('.favorite-folder-rename');
         document.querySelector(
           '.favorite-folders .favorites-folder[data-folderid="' +
             $target.dataset.folderid +
             '"] .favorite-folder-name',
-        ).innerText = $target.querySelector('input').value;
+        ).textContent = $target.querySelector('input').value;
         q = new XMLHttpRequest();
         q.open(
           'post',
@@ -162,14 +162,14 @@
 
   d.addEventListener(
     'reorder',
-    function (e) {
-      var array = [],
-        i = 0,
-        q;
-      if (e.target.closest('.favorite-folders.reorder')) {
-        document.querySelectorAll('.favorites-folder').forEach(($el) => {
-          var item = {};
-          item.FolderId = $el.dataset.folderid;
+    function (event) {
+      const array = [];
+      let i = 0;
+      let q;
+      if (event.target.closest('.favorite-folders.reorder')) {
+        document.querySelectorAll('.favorites-folder').forEach(($element) => {
+          const item = {};
+          item.FolderId = $element.dataset.folderid;
           item.FolderRank = i;
           i++;
           array.push(item);
@@ -180,12 +180,12 @@
         q.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
         q.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
         q.send(JSON.stringify(array));
-      } else if (e.target.closest('.favorites .reorder')) {
-        document.querySelectorAll('.favorite').forEach(($el) => {
-          var item = {};
-          item.FavoriteId = $el.dataset.favoriteid;
+      } else if (event.target.closest('.favorites .reorder')) {
+        document.querySelectorAll('.favorite').forEach(($element) => {
+          const item = {};
+          item.FavoriteId = $element.dataset.favoriteid;
           item.FavoriteRank = i;
-          item.FavoriteType = $el.dataset.type;
+          item.FavoriteType = $element.dataset.type;
 
           i++;
           array.push(item);
@@ -201,15 +201,19 @@
     false,
   );
 
-  // remove hover style
-  d.addEventListener('dragEnd', function (e) {
-    if (typeof e.detail !== 'undefined') {
-      var el = getHoveredFolder(e.detail.el, e.detail.x, e.detail.y);
-      if (e.target.closest('.favorite') && el) {
-        var $count;
-        // decrment current folder count
-        var $folderid = e.detail.el.dataset.folderid;
-        var $folder = document.querySelector(
+  // Remove hover style
+  d.addEventListener('dragEnd', function (event) {
+    if (typeof event.detail !== 'undefined') {
+      const element = getHoveredFolder(
+        event.detail.el,
+        event.detail.x,
+        event.detail.y,
+      );
+      if (event.target.closest('.favorite') && element) {
+        let $count;
+        // Decrment current folder count
+        const $folderid = event.detail.el.dataset.folderid;
+        const $folder = document.querySelector(
           '.favorite-folders .favorites-folder[data-folderid="' +
             $folderid +
             '"]',
@@ -217,59 +221,65 @@
 
         if ($folderid && $folder !== null) {
           $count = $folder.querySelector('.fav-count');
-          $count.innerText = parseInt($count.innerText, 10) - 1;
+          $count.textContent = parseInt($count.textContent, 10) - 1;
         }
 
-        UpdateFavFolder(e.detail.el, el);
+        updateFavFolder(event.detail.el, element);
 
-        if (el.dataset.folderid !== '0') {
-          $count = el.querySelector('.fav-count');
-          $count.innerText = parseInt($count.innerText, 10) + 1;
+        if (element.dataset.folderid !== '0') {
+          $count = element.querySelector('.fav-count');
+          $count.textContent = parseInt($count.textContent, 10) + 1;
         }
-        el.click();
+
+        element.click();
       }
     }
 
-    document.querySelectorAll('.favorite-folders .is-hover').forEach(($el) => {
-      $el.classList.remove('is-hover');
-    });
+    document
+      .querySelectorAll('.favorite-folders .is-hover')
+      .forEach(($element) => {
+        $element.classList.remove('is-hover');
+      });
   });
   d.addEventListener(
     'dragMove',
-    function (e) {
-      if (typeof e.detail !== 'undefined') {
-        var i = d.querySelectorAll(
-            '.favorite-folders .favorites-show-all,.favorite-folders .favorites-folder',
-          ),
-          l,
-          el;
+    function (event) {
+      if (typeof event.detail !== 'undefined') {
+        const i = d.querySelectorAll(
+          '.favorite-folders .favorites-show-all,.favorite-folders .favorites-folder',
+        );
+        let l;
 
         for (l = 0; l < i.length; l++) {
           i[l].classList.remove('is-hover');
         }
 
-        el = getHoveredFolder(e.detail.el, e.detail.x, e.detail.y);
+        const element = getHoveredFolder(
+          event.detail.el,
+          event.detail.x,
+          event.detail.y,
+        );
 
-        if (el && el !== null) {
-          el.classList.add('is-hover');
+        if (element && element !== null) {
+          element.classList.add('is-hover');
         }
       }
     },
     false,
   );
 
-  function getHoveredFolder(el, x, y) {
-    if (el.classList.contains('favorite')) {
-      var i = d.querySelectorAll(
-          '.favorite-folders .favorites-show-all,.favorite-folders .favorites-folder',
-        ),
-        l,
-        g,
-        o,
-        top,
-        bottom,
-        left,
-        right;
+  function getHoveredFolder(element, x, y) {
+    if (element.classList.contains('favorite')) {
+      const i = d.querySelectorAll(
+        '.favorite-folders .favorites-show-all,.favorite-folders .favorites-folder',
+      );
+      let l;
+      let g;
+      let o;
+      let top;
+      let bottom;
+      let left;
+      let right;
 
       for (l = 0; l < i.length; l++) {
         g = i[l];
@@ -288,32 +298,32 @@
     }
   }
 
-  function UpdateFavFolder($favorite, $folder) {
-    var item = {},
-      q;
+  function updateFavFolder($favorite, $folder) {
+    const item = {};
     $favorite.dataset.folderid = $folder.dataset.folderid;
     item.FavoriteId = $favorite.dataset.favoriteid;
     item.FolderId = $folder.dataset.folderid;
     item.FavoriteType = $favorite.dataset.type;
-    q = new XMLHttpRequest();
+    const q = new XMLHttpRequest();
     q.open('post', '/Users/Favorites?handler=UpdateFavoriteFolder', true);
     q.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
     q.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
     q.send(JSON.stringify(item));
   }
 
-  document.addEventListener('click', function ($e) {
-    var $target, $props;
-    if ($e.target.closest('a.star')) {
-      $e.preventDefault();
-      $target = $e.target.closest('a.star');
+  document.addEventListener('click', function (event) {
+    let $target;
+    let $props;
+    if (event.target.closest('a.star')) {
+      event.preventDefault();
+      $target = event.target.closest('a.star');
       $props = $target.dataset;
 
-      var $ajax = new XMLHttpRequest();
+      const $ajax = new XMLHttpRequest();
       $ajax.open('get', $props.href, true);
       $ajax.send();
-      $ajax.onload = function () {
-        // swap classes and update count.
+      $ajax.addEventListener('load', function () {
+        // Swap classes and update count.
         if ($target.querySelector('.fa-star').classList.contains('fas')) {
           $target.querySelector('.fa-star').classList.remove('fas');
           $target.querySelector('.fa-star').classList.add('far');
@@ -332,103 +342,98 @@
           $target.querySelector('.star-count') &&
           $ajax.responseText !== 'error'
         ) {
-          $target.querySelector('.star-count').innerText = $ajax.responseText;
+          $target.querySelector('.star-count').textContent = $ajax.responseText;
         }
-        // if we are on the fav's page, should we refresh the page, or delete the element?
-        // pop it
-        if ($target.closest('.favorite') != null) {
-          var $fav = $target.closest('.favorite');
-          var $folderid = $target.closest('.favorite').dataset.folderid;
-          $fav.parentElement.removeChild($fav);
 
-          var $folder = document.querySelector(
+        // If we are on the fav's page, should we refresh the page, or delete the element?
+        // pop it
+        if ($target.closest('.favorite') !== null) {
+          const $fav = $target.closest('.favorite');
+          const $folderid = $target.closest('.favorite').dataset.folderid;
+          $fav.remove();
+
+          const $folder = document.querySelector(
             '.favorite-folders .favorites-folder[data-folderid="' +
               $folderid +
               '"]',
           );
 
-          if ($folderid !== null && $folderid != '0' && $folder != null) {
-            $folder.querySelector('.fav-count').innerText =
-              parseInt($folder.querySelector('.fav-count').innerText, 10) - 1;
+          if ($folderid !== null && $folderid !== '0' && $folder !== null) {
+            $folder.querySelector('.fav-count').textContent =
+              parseInt($folder.querySelector('.fav-count').textContent, 10) - 1;
           }
 
-          // decrment all fav count
-          document.querySelector('.favorites-show-all .fav-count').innerText =
+          // Decrment all fav count
+          document.querySelector('.favorites-show-all .fav-count').textContent =
             parseInt(
               document.querySelector('.favorites-show-all .fav-count')
-                .innerText,
+                .textContent,
               10,
             ) - 1;
         }
-      };
-    } else if ($e.target.closest('a.favorites-filter.is-active')) {
-      $target = $e.target.closest('a.favorites-filter.is-active');
+      });
+    } else if (event.target.closest('a.favorites-filter.is-active')) {
+      $target = event.target.closest('a.favorites-filter.is-active');
       $props = $target.dataset;
       $target.classList.remove('is-active');
-      // unhide everything
-      document.querySelectorAll('.favorites .favorite').forEach(($el) => {
-        $el.style.display = '';
+      // Unhide everything
+      document.querySelectorAll('.favorites .favorite').forEach(($element) => {
+        $element.style.display = '';
       });
-    } else if ($e.target.closest('a.favorites-filter')) {
-      $target = $e.target.closest('a.favorites-filter');
+    } else if (event.target.closest('a.favorites-filter')) {
+      $target = event.target.closest('a.favorites-filter');
       $props = $target.dataset;
-      // remove other active filters
+      // Remove other active filters
       document
         .querySelectorAll('a.favorites-filter.is-active')
-        .forEach(($el) => {
-          $el.classList.remove('is-active');
+        .forEach(($element) => {
+          $element.classList.remove('is-active');
         });
 
-      // reset input
+      // Reset input
       document.querySelector('input.favorites-filter').value = '';
-      // active
+      // Active
       $target.classList.add('is-active');
 
-      document.querySelectorAll('.favorites .favorite').forEach(($el) => {
-        if ($el.classList.contains($props.type)) {
-          $el.style.display = '';
-        } else {
-          $el.style.display = 'None';
-        }
+      document.querySelectorAll('.favorites .favorite').forEach(($element) => {
+        $element.style.display = $element.classList.contains($props.type)
+          ? ''
+          : 'None';
       });
     }
   });
 
   function fuzzysearch(needle, haystack) {
-    var words = needle.toLowerCase().split(' ');
-    var haystack_words = haystack.toLowerCase().split(' ');
-    return (
-      haystack_words.filter(($el) => {
-        return (
-          words.indexOf($el) != -1 ||
-          words.filter(($sel) => {
-            return $el.indexOf($sel) != -1;
-          }).length > 0
-        );
-      }).length > 0
-    );
+    const words = needle.toLowerCase().split(' ');
+    const haystackWords = haystack.toLowerCase().split(' ');
+    return haystackWords.some(($element) => {
+      return (
+        words.includes($element) ||
+        words.some(($sel) => {
+          return $element.includes($sel);
+        })
+      );
+    });
   }
 
-  document.addEventListener('input', function ($e) {
-    var $target;
-    if ($e.target.closest('input.favorites-filter')) {
-      $target = $e.target;
-      // clear other filters
+  document.addEventListener('input', function (event) {
+    let $target;
+    if (event.target.closest('input.favorites-filter')) {
+      $target = event.target;
+      // Clear other filters
       document
         .querySelectorAll('a.favorites-filter.is-active')
-        .forEach(($el) => {
-          $el.classList.remove('is-active');
+        .forEach(($element) => {
+          $element.classList.remove('is-active');
         });
 
-      document.querySelectorAll('.favorites .favorite').forEach(($el) => {
+      document.querySelectorAll('.favorites .favorite').forEach(($element) => {
         if ($target.value.trim() === '') {
-          $el.style.display = '';
+          $element.style.display = '';
+        } else if (fuzzysearch($target.value, $element.textContent)) {
+          $element.style.display = '';
         } else {
-          if (fuzzysearch($target.value, $el.textContent)) {
-            $el.style.display = '';
-          } else {
-            $el.style.display = 'None';
-          }
+          $element.style.display = 'None';
         }
       });
     }

@@ -1,4 +1,4 @@
-// get data elements
+// Get data elements
 //  1. enable ajax
 //   data-ajax=yes
 //  2. get url
@@ -8,54 +8,47 @@
 //  4. if we need to refresh somteims
 //   data-refresh=5
 (function () {
-  var d = document;
+  const d = document;
 
-  var isInViewport = function isInViewport(elem) {
-    var bounding = elem.getBoundingClientRect(),
-      padding = 400;
+  const isInViewport = function (element) {
+    const bounding = element.getBoundingClientRect();
+    const padding = 400;
     return (
       bounding.top >= 0 &&
       bounding.left >= 0 &&
-      bounding.bottom - elem.clientHeight - padding <=
+      bounding.bottom - element.clientHeight - padding <=
         (document.documentElement.clientHeight ||
           d.documentElement.clientHeight) &&
-      bounding.right - padding - elem.clientWidth <=
+      bounding.right - padding - element.clientWidth <=
         (document.documentElement.clientWidth || d.documentElement.clientWidth)
     );
   };
 
-  var sendAjax = function (e) {
-    var u = e.getAttribute('data-url'),
-      p = e.getAttribute('data-param'),
-      page = e.getAttribute('data-page'),
-      l = e.getAttribute('data-loadtag'),
-      q;
+  const sendAjax = function (element) {
+    let u = element.getAttribute('data-url');
+    const p = element.getAttribute('data-param');
+    const page = element.getAttribute('data-page');
+    const l = element.getAttribute('data-loadtag');
 
-    if (!e.classList.contains('no-loader')) {
-      e.innerHTML =
+    if (!element.classList.contains('no-loader')) {
+      element.innerHTML =
         '<div class="ajaxLoader"><img class="ajaxLoader-img" src="/img/loader.gif" /></div>';
     }
 
     if (p !== null && p !== '') {
-      if (u.indexOf('?') != -1) {
-        u += '&';
-      } else {
-        u += '?';
-      }
+      u += u.includes('?') ? '&' : '?';
 
       u += p;
     }
-    // for paginated ajax boxes
+
+    // For paginated ajax boxes
     if (page !== null && page !== '') {
-      if (u.indexOf('?') != -1) {
-        u += '&';
-      } else {
-        u += '?';
-      }
+      u += u.includes('?') ? '&' : '?';
+
       u += page;
     }
 
-    q = new XMLHttpRequest();
+    const q = new XMLHttpRequest();
     q.open('get', u, true);
     q.setRequestHeader(
       'Content-Type',
@@ -64,108 +57,108 @@
     q.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
     q.send();
 
-    q.onload = function () {
-      a(e, l, q.responseText);
-    };
-  };
-  var loadAjaxContent = function () {
-    [].forEach.call(d.querySelectorAll('[data-ajax="yes"]'), function (e) {
-      if (
-        !e.closest('#AdColOne') &&
-        !e.closest('#AdColTwo [data-ajax="yes"]') &&
-        isInViewport(e) &&
-        // is visible
-        e.offsetParent !== null
-      ) {
-        sendAjax(e);
-        e.removeAttribute('data-ajax');
-        // allow events to reload container
-        e.addEventListener('reload', function () {
-          sendAjax(e);
-        });
-      }
+    q.addEventListener('load', function () {
+      a(element, l, q.responseText);
     });
   };
 
-  var a = function (e, l, t) {
-    if (e == undefined) {
+  const loadAjaxContent = function () {
+    Array.prototype.forEach.call(
+      d.querySelectorAll('[data-ajax="yes"]'),
+      function (element) {
+        if (
+          !element.closest('#AdColOne') &&
+          !element.closest('#AdColTwo [data-ajax="yes"]') &&
+          isInViewport(element) &&
+          // Is visible
+          element.offsetParent !== null
+        ) {
+          sendAjax(element);
+          element.removeAttribute('data-ajax');
+          // Allow events to reload container
+          element.addEventListener('reload', function () {
+            sendAjax(element);
+          });
+        }
+      },
+    );
+  };
+
+  const a = function (element, l, t) {
+    if (element === undefined) {
       return;
     }
-    try {
-      //e.style.opacity = 0;
-      e.style.visibility = 'hidden';
-      e.style.transition = 'visibility 0.3s ease-in-out';
 
-      if (!e.parentNode) return;
-      var sc,
-        el = d.createElement('div');
-      el.innerHTML = t;
+    try {
+      // E.style.opacity = 0;
+      element.style.visibility = 'hidden';
+      element.style.transition = 'visibility 0.3s ease-in-out';
+
+      if (!element.parentNode) return;
+      let sc;
+      let newElement = d.createElement('div');
+      newElement.innerHTML = t;
 
       if (l !== null && l !== '') {
-        el = el.querySelector(l);
-        el.setAttribute('data-loadtag', l);
+        newElement = element.querySelector(l);
+        newElement.setAttribute('data-loadtag', l);
       } else {
-        el = el.children[0];
+        newElement = newElement.children[0];
       }
 
-      e.innerHTML = el.innerHTML;
+      element.innerHTML = newElement.innerHTML;
 
-      if (e.querySelector('script:not([type="application/json"])')) {
+      if (element.querySelector('script:not([type="application/json"])')) {
         sc = Array.prototype.slice.call(
-          e.querySelectorAll('script:not([type="application/json"])'),
+          element.querySelectorAll('script:not([type="application/json"])'),
         );
 
-        for (var x = 0; x < sc.length; x++) {
-          var s = d.createElement('script');
-          s.innerHTML = sc[x].innerHTML;
+        for (const element_ of sc) {
+          const s = d.createElement('script');
+          s.innerHTML = element_.innerHTML;
           s.type = 'text/javascript';
-          if (sc[x].hasAttribute('src')) {
-            s.setAttribute('src', sc[x].hasAttribute('src'));
+          if (element_.hasAttribute('src')) {
+            s.setAttribute('src', element_.hasAttribute('src'));
             s.setAttribute('async', 'true');
           }
 
-          e.appendChild(s);
-          sc[x].parentNode.removeChild(sc[x]);
+          element.append(s);
+          element_.remove();
         }
       }
 
-      e.style.visibility = 'visible';
+      element.style.visibility = 'visible';
 
       d.dispatchEvent(new CustomEvent('ajax'));
-    } catch (e) {
-      console.log(e);
+    } catch (error) {
+      console.log(error);
     }
   };
 
-  var loadAdAjaxContent = function () {
-    [].forEach.call(
+  const loadAdAjaxContent = function () {
+    Array.prototype.forEach.call(
       d.querySelectorAll('#AdColTwo [data-ajax="yes"]'),
-      function (e) {
-        if (isInViewport(e)) {
-          var u = e.getAttribute('data-url'),
-            p = e.getAttribute('data-param'),
-            l = e.getAttribute('data-loadtag'),
-            q;
+      function (element) {
+        if (isInViewport(element)) {
+          let u = element.getAttribute('data-url');
+          const p = element.getAttribute('data-param');
+          const l = element.getAttribute('data-loadtag');
 
-          if (!e.classList.contains('no-loader')) {
-            e.innerHTML =
+          if (!element.classList.contains('no-loader')) {
+            element.innerHTML =
               '<div class="ajaxLoader"><img class="ajaxLoader-img" src="/img/loader.gif" /></div>';
           }
 
           if (p !== null && p !== '') {
-            if (u.indexOf('?') != -1) {
-              u += '&';
-            } else {
-              u += '?';
-            }
+            u += u.includes('?') ? '&' : '?';
 
             u += p;
           }
 
-          e.style.visibility = 'hidden';
-          e.removeAttribute('data-ajax');
+          element.style.visibility = 'hidden';
+          element.removeAttribute('data-ajax');
 
-          q = new XMLHttpRequest();
+          const q = new XMLHttpRequest();
           q.open('get', u, true);
           q.setRequestHeader(
             'Content-Type',
@@ -174,9 +167,9 @@
           q.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
           q.send();
 
-          q.onload = function () {
-            a(e, l, q.responseText);
-          };
+          q.addEventListener('load', function () {
+            a(element, l, q.responseText);
+          });
         }
       },
     );
@@ -214,21 +207,21 @@
     },
   );
 
-  // trigger reload on paginated boxes
-  document.addEventListener('click', ($e) => {
+  // Trigger reload on paginated boxes
+  document.addEventListener('click', (event) => {
     if (
-      $e.target.closest('[data-url][data-page]') &&
-      $e.target.closest('.pagination-link[data-page]')
+      event.target.closest('[data-url][data-page]') &&
+      event.target.closest('.pagination-link[data-page]')
     ) {
-      $e.target
+      event.target
         .closest('[data-url][data-page]')
         .setAttribute(
           'data-page',
-          $e.target
+          event.target
             .closest('.pagination-link[data-page]')
             .getAttribute('data-page'),
         );
-      $e.target
+      event.target
         .closest('[data-url][data-page]')
         .dispatchEvent(new CustomEvent('reload'));
     }

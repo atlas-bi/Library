@@ -49,7 +49,12 @@
     "regenerator-runtime": "^0.13.9",
     "rollup-stream-gulp": "^0.0.3",
     "sass": "^1.49.9",
-    "semantic-release": "^19.0.2"
+    "semantic-release": "^19.0.2",
+    "stylelint": "^14.6.1",
+    "stylelint-config-prettier-scss": "^0.0.1",
+    "stylelint-config-standard-scss": "^3.0.0",
+    "stylelint-scss": "^4.2.0",
+    "xo": "^0.48.0"
   },
   "homepage": "https://demo.atlas.bi",
   "license": "AGPL-3.0-or-later",
@@ -60,7 +65,7 @@
     "url": "github:atlas-bi/atlas-bi-library"
   },
   "scripts": {
-    "start": "gulp run",
+    "start": "gulp start",
     "build": "gulp build",
     "watch": "gulp watch",
     "prepare": "husky install",
@@ -74,6 +79,9 @@
     "dotnet:publish": "npm run build && npm run dotnet:restore && dotnet publish --configuration Release",
     "test:report_html": "reportgenerator -reports:coverage.cobertura.xml -targetdir:coverage/ -reporttypes:html",
     "test": "coverlet web.Tests/bin/Debug/net6.0/web.Tests.dll --target \"dotnet\" --targetargs \"test  --no-build\" --format cobertura --exclude-by-file \"**/Migrations/*\"",
+    "lint:js": "xo web/wwwroot/js",
+    "lint:scss": "stylelint \"web/wwwroot/css/**/*.scss",
+    "lint": "npm run lint:js & npm run lint:scss",
     "test:dev": "npm run dotnet:build && (npm run test || true) && npm run test:report_html",
     "commit": "git add . && cz"
   },
@@ -88,6 +96,54 @@
   "config": {
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
+    }
+  },
+  "xo": {
+    "space": true,
+    "prettier": true,
+    "ignores": [
+      "web/wwwroot/js/polyfill/",
+      "web/wwwroot/js/**/*.min.js"
+    ],
+    "globals": [
+      "cache",
+      "__dirname",
+      "debounce",
+      "showMessageBox",
+      "CodeMirror",
+      "getUrlVars",
+      "serialize",
+      "getOffset",
+      "getCookie",
+      "setCookie",
+      "window",
+      "document",
+      "CustomEvent",
+      "history",
+      "sessionStorage",
+      "getComputedStyle",
+      "parseInt",
+      "XMLHttpRequest",
+      "Node",
+      "navigator",
+      "FormData",
+      "Chart",
+      "event"
+    ],
+    "rules": {
+      "unicorn/no-for-loop": "off",
+      "unicorn/no-array-for-each": "off",
+      "guard-for-in": "warn",
+      "unicorn/no-this-assignment": "off",
+      "unicorn/prefer-default-parameters": "off",
+      "unicorn/no-document-cookie": "off",
+      "unicorn/prefer-dom-node-dataset": "off",
+      "unicorn/no-empty-file": "off",
+      "unicorn/prefer-module": "off",
+      "unicorn/prefer-query-selector": "warn",
+      "unicorn/prefer-number-properties": "off",
+      "no-negated-condition": "warn",
+      "no-multi-assign": "warn"
     }
   }
 }

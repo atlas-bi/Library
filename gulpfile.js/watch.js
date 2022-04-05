@@ -22,7 +22,7 @@ gulp.task('browser', function (cb) {
   cb();
 });
 gulp.task(
-  'run',
+  'start',
   gulp.series(
     gulp.series('iis:kill', 'build', 'iis:start', 'browser'),
     function (cb) {
@@ -83,6 +83,8 @@ gulp.task(
           'web/wwwroot/js/polyfill/isinstance.js',
           'web/wwwroot/js/polyfill/matches_closest.js',
           'web/wwwroot/js/polyfill/sticky.js',
+          'web/wwwroot/js/polyfill/remove.js',
+          'web/wwwroot/js/polyfill/includes.js',
         ],
         gulp.series(
           gulp.parallel('js:polyfill', 'styles', 'iis:kill'),
@@ -108,15 +110,6 @@ gulp.task(
         ),
       );
 
-      // integrations:ssrs
-      gulp.watch(
-        ['web/wwwroot/js/integrations/ssrs.js'],
-        gulp.series(
-          gulp.parallel('js:integrations:ssrs', 'styles', 'iis:kill'),
-          'iis:run',
-        ),
-      );
-
       // shared
       gulp.watch(
         ['web/wwwroot/js/shared.js'],
@@ -135,6 +128,15 @@ gulp.task(
         ),
       );
 
+      // profile
+      gulp.watch(
+        'web/wwwroot/js/profile.js',
+        gulp.series(
+          gulp.parallel('js:profile', 'styles', 'iis:kill'),
+          'iis:run',
+        ),
+      );
+
       // settings
       gulp.watch(
         ['web/wwwroot/js/settings.js', 'web/wwwroot/js/access.js'],
@@ -149,7 +151,7 @@ gulp.task(
         [
           'web/wwwroot/js/editor.js',
           'web/wwwroot/js/utility/checkbox.js',
-          'web/wwwroot/js/reportEditor.js',
+          'web/wwwroot/js/report-editor.js',
         ],
         gulp.series(
           gulp.parallel('js:editor', 'styles', 'iis:kill'),

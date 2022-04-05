@@ -129,7 +129,7 @@ namespace Atlas_Web
 
                     pipeline.AddJavaScriptBundle("/js/settings.min.js", "js/settings.min.js");
 
-                    pipeline.AddJavaScriptBundle("/js/profile.min.js", "js/profile.js");
+                    pipeline.AddJavaScriptBundle("/js/profile.min.js", "js/profile.min.js");
 
                     pipeline.AddJavaScriptBundle("/js/code.min.js", "js/highlight.min.js");
 

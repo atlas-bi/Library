@@ -1,12 +1,12 @@
 (function () {
-  // Get all "navbar-burger" elements
-  (document.querySelectorAll('.navbar-burger') || []).forEach(function (el) {
-    el.addEventListener('click', function () {
-      // Get the target from the "data-target" attribute
-      var target = el.dataset.target;
-      var $target = document.getElementById(target); // Toggle the "is-active" class on both the "navbar-burger" and the "navbar-menu"
+  (document.querySelectorAll('.navbar-burger') || []).forEach(function (
+    element,
+  ) {
+    element.addEventListener('click', function () {
+      const target = element.dataset.target;
+      const $target = document.querySelector(`#${target}`);
 
-      el.classList.toggle('is-active');
+      element.classList.toggle('is-active');
       $target.classList.toggle('is-active');
     });
   });

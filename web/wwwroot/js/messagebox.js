@@ -1,7 +1,7 @@
 (function () {
-  function ShowMessageBox(message) {
-    var d = document,
-      w = d.getElementsByClassName('message-wrapper')[0];
+  function showMessageBox(message) {
+    const d = document;
+    const w = d.querySelectorAll('.message-wrapper')[0];
     d.querySelector('.message-container .message-inner').innerHTML = message;
     w.classList.remove('hidden');
     setTimeout(function () {
@@ -9,20 +9,24 @@
     }, 2000);
   }
 
-  document.addEventListener('click', function (e) {
+  document.addEventListener('click', function (event) {
     if (
-      e.target.matches('.message-close') &&
-      e.target.parentElement.matches('.message-wrapper')
+      event.target.matches('.message-close') &&
+      event.target.parentElement.matches('.message-wrapper')
     ) {
-      e.target.parentElement.classList.add('hidden');
+      event.target.parentElement.classList.add('hidden');
     }
   });
 
   document.addEventListener(
     'show-message',
-    function (e) {
-      if (typeof e.detail !== 'undefined' && !!e.detail && !!e.detail.value) {
-        ShowMessageBox(e.detail.value);
+    function (event) {
+      if (
+        typeof event.detail !== 'undefined' &&
+        Boolean(event.detail) &&
+        Boolean(event.detail.value)
+      ) {
+        showMessageBox(event.detail.value);
       }
     },
     false,

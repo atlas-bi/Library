@@ -1,30 +1,33 @@
 (function () {
-  function closeModals(el) {
-    if (typeof el == 'undefined') {
-      // hide all other modals
-      [].forEach.call(document.getElementsByClassName('mdl-o'), function (i) {
-        i.classList.remove('mdl-o');
-        i.dispatchEvent(new CustomEvent('mdl-close'));
-      });
+  function closeModals(element) {
+    if (typeof element === 'undefined') {
+      // Hide all other modals
+      Array.prototype.forEach.call(
+        document.querySelectorAll('.mdl-o'),
+        function (i) {
+          i.classList.remove('mdl-o');
+          i.dispatchEvent(new CustomEvent('mdl-close'));
+        },
+      );
     } else {
-      el.classList.remove('mdl-o');
-      el.dispatchEvent(new CustomEvent('mdl-close'));
+      element.classList.remove('mdl-o');
+      element.dispatchEvent(new CustomEvent('mdl-close'));
     }
 
-    if (!(document.getElementsByClassName('mdl-o').length > 0)) {
-      document.getElementsByTagName('body')[0].classList.remove('b-mdl');
+    if (document.querySelectorAll('.mdl-o').length === 0) {
+      document.querySelectorAll('body')[0].classList.remove('b-mdl');
     }
   }
 
-  function showModal(el, e) {
-    var d = document;
-    d.getElementsByTagName('body')[0].classList.toggle('b-mdl');
-    el.classList.toggle('mdl-o');
-    el.dispatchEvent(
+  function showModal(element, child) {
+    const d = document;
+    d.querySelectorAll('body')[0].classList.toggle('b-mdl');
+    element.classList.toggle('mdl-o');
+    element.dispatchEvent(
       new CustomEvent('mdl-open', {
         cancelable: true,
         detail: {
-          e: e,
+          child,
         },
       }),
     );
@@ -32,33 +35,37 @@
 
   document.addEventListener(
     'click',
-    function (e) {
-      var el,
-        d = document; // open modal
+    function (event) {
+      let element;
+      const d = document; // Open modal
       if (
-        e.target.closest('[data-toggle]') &&
-        e.target.closest('[data-toggle]').getAttribute('data-toggle') == 'mdl'
+        event.target.closest('[data-toggle]') &&
+        event.target.closest('[data-toggle]').getAttribute('data-toggle') ===
+          'mdl'
       ) {
-        el = d.getElementById(
-          e.target.closest('[data-toggle]').getAttribute('data-target'),
+        element = d.querySelector(
+          `#${event.target
+            .closest('[data-toggle]')
+            .getAttribute('data-target')}`,
         );
-        showModal(el, e.target.closest('[data-toggle]'));
-      } // close modal
+        showModal(element, event.target.closest('[data-toggle]'));
+      } // Close modal
       else if (
-        (e.target.closest('[data-dismiss]') &&
-          e.target.closest('[data-dismiss]').getAttribute('data-dismiss') ==
-            'mdl') ||
-        //e.target.closest('.mdl:not(#editModal)') ||
-        e.target.closest('.editorMdl-close')
+        (event.target.closest('[data-dismiss]') &&
+          event.target
+            .closest('[data-dismiss]')
+            .getAttribute('data-dismiss') === 'mdl') ||
+        // E.target.closest('.mdl:not(#editModal)') ||
+        event.target.closest('.editorMdl-close')
       ) {
-        // close closest modal
-        closeModals(e.target.closest('.mdl'));
-      } else if (e.target.closest('.pop')) {
-        d.getElementsByClassName('imagepreview')[0].setAttribute(
+        // Close closest modal
+        closeModals(event.target.closest('.mdl'));
+      } else if (event.target.closest('.pop')) {
+        d.querySelectorAll('.imagepreview')[0].setAttribute(
           'src',
-          e.target.closest('.pop').children[0].getAttribute('src'),
+          event.target.closest('.pop').children[0].getAttribute('src'),
         );
-        showModal(d.getElementById('image-modal'), null);
+        showModal(d.querySelector('#image-modal'), null);
       }
     },
     true,
@@ -71,13 +78,13 @@
 
 (function () {
   // Functions to open and close a modal
-  function openModal($el) {
-    $el.classList.add('is-active');
+  function openModal($element) {
+    $element.classList.add('is-active');
     document.dispatchEvent(new CustomEvent('modal-open'));
   }
 
-  function closeModal($el) {
-    $el.classList.remove('is-active');
+  function closeModal($element) {
+    $element.classList.remove('is-active');
   }
 
   function closeAllModals() {
@@ -88,9 +95,9 @@
 
   // Add a keyboard event to close all modals
   document.addEventListener('keydown', (event) => {
-    const e = event || window.event;
+    event = event || window.event;
 
-    if (e.keyCode === 27) {
+    if (event.key === 27) {
       // Escape key
       closeAllModals();
     }
@@ -102,17 +109,17 @@
   });
 
   // global click event to capture dynamically added modals.
-  document.addEventListener('click', ($e) => {
-    var $trigger = $e.target,
-      data,
-      q,
-      url,
-      $target;
+  document.addEventListener('click', (event) => {
+    const $trigger = event.target;
+    let data;
+    let q;
+    let url;
+    let $target;
 
     // Add a click event on buttons to open a specific modal
     if ($trigger.closest('.js-modal-trigger')) {
       $target = $trigger.closest('.js-modal-trigger');
-      openModal(document.getElementById($target.dataset.target));
+      openModal(document.querySelector(`#${$target.dataset.target}`));
     }
 
     // Add a click event on various child elements to close the parent modal
@@ -127,10 +134,10 @@
       closeModal($target.closest('.modal'));
     }
 
-    // share feedback
+    // Share feedback
     else if ($trigger.closest('.modal button.share-feedback')) {
       $target = $trigger.closest('.modal button.share-feedback');
-      var textarea = $target.parentNode.getElementsByTagName('textarea')[0];
+      const textarea = $target.parentNode.querySelectorAll('textarea')[0];
 
       data = {
         reportName: $target.hasAttribute('data-name')
@@ -151,12 +158,12 @@
       q.setRequestHeader('Content-Type', 'text/html;charset=UTF-8`');
       q.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
       q.send();
-      //ShowMessageBox('Thanks for the feedback.');
+      // ShowMessageBox('Thanks for the feedback.');
       textarea.value = '';
       closeAllModals();
     }
 
-    // request access
+    // Request access
     else if ($trigger.closest('.modal button.request-access')) {
       $target = $trigger.closest('.modal button.request-access');
       data = {
@@ -175,7 +182,7 @@
       q.setRequestHeader('Content-Type', 'text/html;charset=UTF-8`');
       q.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
       q.send();
-      //ShowMessageBox('Your request has been submitted.');
+      // ShowMessageBox('Your request has been submitted.');
       closeAllModals();
     }
   });

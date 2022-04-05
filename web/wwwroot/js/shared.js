@@ -1,23 +1,25 @@
+// eslint-disable-next-line no-unused-vars
 function debounce(func, wait, immediate) {
-  var timeout;
+  let timeout;
   return function () {
-    var context = this,
-      args = arguments;
+    const context = this;
+    const args = arguments;
 
-    var later = function later() {
+    const later = function () {
       timeout = null;
       if (!immediate) func.apply(context, args);
     };
 
-    var callNow = immediate && !timeout;
+    const callNow = immediate && !timeout;
     clearTimeout(timeout);
     timeout = setTimeout(later, wait);
     if (callNow) func.apply(context, args);
   };
 }
 
+// eslint-disable-next-line no-unused-vars
 function getUrlVars() {
-  var vars = {};
+  const vars = {};
   window.location.href
     .split('#')[0]
     .replace(/[?&]+([^=&]+)=([^&]*)/gi, function (m, key, value) {
@@ -26,15 +28,16 @@ function getUrlVars() {
   return vars;
 }
 
+// eslint-disable-next-line no-unused-vars
 function getOffset(element) {
-  if (!element.getClientRects().length) {
+  if (element.getClientRects().length === 0) {
     return {
       top: 0,
       left: 0,
     };
   }
 
-  var rect = element.getBoundingClientRect();
+  const rect = element.getBoundingClientRect();
 
   return {
     top: rect.top,
@@ -42,12 +45,13 @@ function getOffset(element) {
   };
 }
 
+// eslint-disable-next-line no-unused-vars
 function serialize(form) {
   // Setup our serialized data
-  var serialized = []; // Loop through each field in the form
+  const serialized = []; // Loop through each field in the form
 
-  for (var i = 0; i < form.elements.length; i++) {
-    var field = form.elements[i]; // Don't serialize fields without a name, submits, buttons, file and reset inputs, and disabled fields
+  for (let i = 0; i < form.elements.length; i++) {
+    const field = form.elements[i]; // Don't serialize fields without a name, submits, buttons, file and reset inputs, and disabled fields
 
     if (
       !field.name ||
@@ -60,7 +64,7 @@ function serialize(form) {
       continue; // If a multi-select, get all selections
 
     if (field.type === 'select-multiple') {
-      for (var n = 0; n < field.options.length; n++) {
+      for (let n = 0; n < field.options.length; n++) {
         if (!field.options[n].selected) continue;
         serialized.push(
           encodeURIComponent(field.name) +
@@ -82,9 +86,10 @@ function serialize(form) {
   return serialized.join('&');
 }
 
+// eslint-disable-next-line no-unused-vars
 function setCookie(name, value, days) {
-  var expires = '',
-    date = new Date();
+  let expires = '';
+  const date = new Date();
 
   days = days || 1;
   date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
@@ -93,24 +98,25 @@ function setCookie(name, value, days) {
   document.cookie = name + '=' + (value || '') + expires + '; path=/';
 }
 
+// eslint-disable-next-line no-unused-vars
 function getCookie(name) {
-  var nameEQ = name + '=';
-  var ca = document.cookie.split(';');
+  const nameEQ = name + '=';
+  const ca = document.cookie.split(';');
 
-  for (var i = 0; i < ca.length; i++) {
-    var c = ca[i];
+  for (let i = 0; i < ca.length; i++) {
+    let c = ca[i];
 
-    while (c.charAt(0) == ' ') {
-      c = c.substring(1, c.length);
+    while (c.charAt(0) === ' ') {
+      c = c.slice(1, c.length);
     }
 
-    if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+    if (c.indexOf(nameEQ) === 0) return c.slice(nameEQ.length, c.length);
   }
 
   return null;
 }
 
-//  function cache = {
+//  Function cache = {
 //   timeout: 30 * 60,
 //   // mins
 //   data: {},

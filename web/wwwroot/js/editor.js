@@ -1,5 +1,5 @@
 /*
-    get all "editors"
+    Get all "editors"
 
     <div class="editor"><textarea>initial value</textarea></div>
 
@@ -11,13 +11,15 @@
 
     */
 (function () {
-  var test = 0;
+  let test = 0;
 
   function load() {
-    // wait for codemirror to load
+    // Wait for codemirror to load
     if (test === 50) {
       return false;
-    } else if (typeof CodeMirror == 'undefined') {
+    }
+
+    if (typeof CodeMirror === 'undefined') {
       setTimeout(function () {
         test++;
         load();
@@ -29,21 +31,22 @@
   }
 
   function l() {
-    var editor = Array.prototype.slice.call(
-        document.querySelectorAll('.editor:not(.loaded)'),
-      ),
-      x;
+    const editor = Array.prototype.slice.call(
+      document.querySelectorAll('.editor:not(.loaded)'),
+    );
+    let x;
 
     for (x = 0; x < editor.length; x++) {
-      new e(editor[x]);
+      // eslint-disable-next-line no-new
+      new Loader(editor[x]);
     }
   }
 
-  function e(b) {
+  function Loader(b) {
     this.mdrequest = null;
     this.target = b;
     this.target.classList.add('loaded');
-    // editor input
+    // Editor input
     this.editorInput = document.createElement('div');
     this.editorInput.classList.add('liveEditor', 'box', 'p-0', 'pb-2');
 
@@ -51,10 +54,10 @@
     this.editorBody.classList.add('liveEditor-body', 'p-2');
     this.editorText = document.createElement('textarea');
     this.editorText.classList.add('textarea');
-    var initialValue = '';
-    if (this.target.getElementsByTagName('textarea').length > 0) {
-      initialValue = this.target.getElementsByTagName('textarea')[0].value;
-      this.target.removeChild(this.target.getElementsByTagName('textarea')[0]);
+    let initialValue = '';
+    if (this.target.querySelectorAll('textarea').length > 0) {
+      initialValue = this.target.querySelector('textarea').value;
+      this.target.querySelector('textarea').remove();
     }
 
     this.editorText.setAttribute(
@@ -66,16 +69,17 @@
       this.target.getAttribute('data-inputName'),
     );
 
-    this.editorBody.appendChild(this.editorText);
+    this.editorBody.append(this.editorText);
 
-    // editor output
-    this.editorPrev = document.createElement('div');
+    const newLocal = this;
+    // Editor output
+    newLocal.editorPrev = document.createElement('div');
     this.editorPrev.classList.add('editor-liveEditorPrev', 'is-hidden', 'p-2');
 
     this.editorPrevText = document.createElement('div');
-    this.editorPrev.appendChild(this.editorPrevText);
+    this.editorPrev.append(this.editorPrevText);
 
-    // create buttons
+    // Create buttons
 
     this.btn = document.createElement('div');
     this.btn.classList.add(
@@ -90,8 +94,8 @@
     this.btnRight = document.createElement('span');
     this.btnRight.classList.add('is-flex');
 
-    this.btn.appendChild(this.btnLeft);
-    this.btn.appendChild(this.btnRight);
+    this.btn.append(this.btnLeft);
+    this.btn.append(this.btnRight);
 
     this.btnBold = document.createElement('button');
     this.btnBold.classList.add('liveEditor-btn', 'button', 'is-light');
@@ -99,7 +103,7 @@
     this.btnBold.innerHTML =
       '<span class="icon"><i class="fas fa-bold"></i></span>';
 
-    this.btnLeft.appendChild(this.btnBold);
+    this.btnLeft.append(this.btnBold);
 
     this.btnBold.addEventListener('click', this.insertBold.bind(this), false);
 
@@ -109,7 +113,7 @@
     this.btnItalic.innerHTML =
       '<span class="icon"><i class="fas fa-italic"></i></span>';
 
-    this.btnLeft.appendChild(this.btnItalic);
+    this.btnLeft.append(this.btnItalic);
     this.btnItalic.addEventListener(
       'click',
       this.insertItalics.bind(this),
@@ -122,7 +126,7 @@
     this.btnHeading.innerHTML =
       '<span class="icon"><i class="fas fa-heading"></i></span>';
 
-    this.btnLeft.appendChild(this.btnHeading);
+    this.btnLeft.append(this.btnHeading);
     this.btnHeading.addEventListener(
       'click',
       this.insertHeading.bind(this),
@@ -131,7 +135,7 @@
 
     this.btnHeadingSep = document.createElement('span');
     this.btnHeadingSep.classList.add('liveEditor-btnSep');
-    this.btnLeft.appendChild(this.btnHeadingSep);
+    this.btnLeft.append(this.btnHeadingSep);
 
     this.btnQuote = document.createElement('button');
     this.btnQuote.classList.add('liveEditor-btn', 'button', 'is-light');
@@ -139,7 +143,7 @@
     this.btnQuote.innerHTML =
       '<span class="icon"><i class="fas fa-quote-left"></i></span>';
 
-    this.btnLeft.appendChild(this.btnQuote);
+    this.btnLeft.append(this.btnQuote);
     this.btnQuote.addEventListener('click', this.insertQuote.bind(this), false);
 
     this.btnCode = document.createElement('button');
@@ -148,12 +152,12 @@
     this.btnCode.innerHTML =
       '<span class="icon"><i class="fas fa-code"></i></span>';
 
-    this.btnLeft.appendChild(this.btnCode);
+    this.btnLeft.append(this.btnCode);
     this.btnCode.addEventListener('click', this.insertCode.bind(this), false);
 
     this.btnCodeSep = document.createElement('span');
     this.btnCodeSep.classList.add('liveEditor-btnSep');
-    this.btnLeft.appendChild(this.btnCodeSep);
+    this.btnLeft.append(this.btnCodeSep);
 
     this.btnUl = document.createElement('button');
     this.btnUl.classList.add('liveEditor-btn', 'button', 'is-light');
@@ -161,7 +165,7 @@
     this.btnUl.innerHTML =
       '<span class="icon"><i class="fas fa-list-ul"></i></span>';
 
-    this.btnLeft.appendChild(this.btnUl);
+    this.btnLeft.append(this.btnUl);
     this.btnUl.addEventListener('click', this.insertUl.bind(this), false);
 
     this.btnOl = document.createElement('button');
@@ -170,12 +174,12 @@
     this.btnOl.innerHTML =
       '<span class="icon"><i class="fas fa-list-ol"></i></span>';
 
-    this.btnLeft.appendChild(this.btnOl);
+    this.btnLeft.append(this.btnOl);
     this.btnOl.addEventListener('click', this.insertOl.bind(this), false);
 
     this.btnOlSep = document.createElement('span');
     this.btnOlSep.classList.add('liveEditor-btnSep');
-    this.btnLeft.appendChild(this.btnOlSep);
+    this.btnLeft.append(this.btnOlSep);
 
     this.btnLink = document.createElement('button');
     this.btnLink.classList.add('liveEditor-btn', 'button', 'is-light');
@@ -183,10 +187,10 @@
     this.btnLink.innerHTML =
       '<span class="icon"><i class="fas fa-link"></i></span>';
 
-    this.btnLeft.appendChild(this.btnLink);
+    this.btnLeft.append(this.btnLink);
     this.btnLink.addEventListener('click', this.insertLink.bind(this), false);
 
-    this.editorInput.appendChild(this.btn);
+    this.editorInput.append(this.btn);
 
     if (this.target.getAttribute('data-saveUrl')) {
       this.btnSave = document.createElement('button');
@@ -197,7 +201,7 @@
         '<span class="icon"><i class="fas fa-save"></i></span>';
       this.btnSave.addEventListener('click', this.save.bind(this), false);
 
-      this.btnRight.appendChild(this.btnSave);
+      this.btnRight.append(this.btnSave);
 
       this.saveUrl = this.target.getAttribute('data-saveUrl');
     }
@@ -212,13 +216,13 @@
       'is-light',
     );
     this.editorPrevTitleButton.classList.add('save');
-    this.btnRight.appendChild(this.editorPrevTitleButton);
+    this.btnRight.append(this.editorPrevTitleButton);
 
-    this.editorInput.appendChild(this.editorBody);
-    this.target.appendChild(this.editorInput);
-    this.editorInput.appendChild(this.editorPrev);
+    this.editorInput.append(this.editorBody);
+    this.target.append(this.editorInput);
+    this.editorInput.append(this.editorPrev);
 
-    // load code mirror
+    // Load code mirror
     this.mirror = CodeMirror.fromTextArea(this.editorText, {
       mode: 'gfm',
       autoRefresh: true,
@@ -229,14 +233,12 @@
     this.mirror.setValue(initialValue);
     this.mirror.getInputField().spellcheck = true;
 
-    // this.mirror.on("change", this.updateMirror.bind(this), false);
-
-    // load markdown-it for previews
+    // Load markdown-it for previews
     this.md = window.markdownit({
       html: true,
       linkify: true,
       typographer: true,
-      breaks: false, // false here, true in markdig
+      breaks: false, // False here, true in markdig
     });
 
     this.editorPrevTitleButton.addEventListener(
@@ -252,31 +254,31 @@
     }
   }
 
-  var k =
+  const k =
     document.requestAnimationFrame ||
     document.setImmediate ||
     function (b) {
       return setTimeout(b, 0);
     };
 
-  e.prototype = {
-    // mirror even
-    updateMirror: function updateMirror() {
-      var a = this,
-        md = this.md,
-        button = this.editorPrevTitleButton;
+  Loader.prototype = {
+    // Mirror even
+    updateMirror() {
+      const a = this;
+      const md = this.md;
+      const button = this.editorPrevTitleButton;
       k(function () {
-        var icon = button.querySelector('i.fas');
+        const icon = button.querySelector('i.fas');
         if (icon.classList.contains('fa-eye')) {
           a.editorPrevText.innerHTML = md.render(a.mirror.getValue());
           icon.classList.remove('fa-eye');
           icon.classList.add('fa-eye-slash');
 
-          // switch preview box and code box
+          // Switch preview box and code box
           a.editorPrev.classList.remove('is-hidden');
           a.editorBody.classList.add('is-hidden');
-          (a.btnLeft.querySelectorAll('button') || []).forEach((e) => {
-            e.setAttribute('disabled', 'disabled');
+          (a.btnLeft.querySelectorAll('button') || []).forEach((element) => {
+            element.setAttribute('disabled', 'disabled');
           });
           document.dispatchEvent(new CustomEvent('code-highlight'));
           document.dispatchEvent(new CustomEvent('load-charts'));
@@ -284,20 +286,20 @@
           icon.classList.remove('fa-eye-slash');
           icon.classList.add('fa-eye');
           a.editorPrev.classList.add('is-hidden');
-          (a.btnLeft.querySelectorAll('button') || []).forEach((e) => {
-            e.removeAttribute('disabled');
+          (a.btnLeft.querySelectorAll('button') || []).forEach((element) => {
+            element.removeAttribute('disabled');
           });
           a.editorBody.classList.remove('is-hidden');
         }
       });
     },
-    // button events
-    insertBold: function insertBold() {
-      var a = this;
+    // Button events
+    insertBold() {
+      const a = this;
 
       k(function () {
-        var word = a.mirror.findWordAt(a.mirror.getCursor());
-        var selection = a.mirror.getSelection().trim();
+        const word = a.mirror.findWordAt(a.mirror.getCursor());
+        let selection = a.mirror.getSelection().trim();
         if (a.mirror.getSelection().length > 0) {
           a.mirror.replaceSelection(
             '**' + a.mirror.getSelection().trim() + '**',
@@ -305,81 +307,85 @@
         } else {
           a.mirror.setSelection(word.anchor, word.head);
 
-          if (selection == '') {
+          if (selection === '') {
             selection = 'bold text';
           }
 
           a.mirror.replaceSelection('**' + selection + '**');
         }
+
         a.mirror.focus();
       });
     },
-    insertItalics: function insertItalics() {
-      var a = this;
+    insertItalics() {
+      const a = this;
       k(function () {
-        var word = a.mirror.findWordAt(a.mirror.getCursor());
-        var selection = a.mirror.getSelection().trim();
+        const word = a.mirror.findWordAt(a.mirror.getCursor());
+        let selection = a.mirror.getSelection().trim();
         if (a.mirror.getSelection().length > 0) {
           a.mirror.replaceSelection('*' + a.mirror.getSelection().trim() + '*');
         } else {
           a.mirror.setSelection(word.anchor, word.head);
 
-          if (selection == '') {
+          if (selection === '') {
             selection = 'italic text';
           }
+
           a.mirror.replaceSelection('*' + selection + '*');
         }
+
         a.mirror.focus();
       });
     },
-    insertHeading: function insertHeading() {
-      var a = this;
+    insertHeading() {
+      const a = this;
       k(function () {
-        var line = a.mirror.getCursor().line,
-          currentHead = a.mirror.getLine(line),
-          start = currentHead.split(' ')[0];
+        const line = a.mirror.getCursor().line;
+        const currentHead = a.mirror.getLine(line);
+        const start = currentHead.split(' ')[0];
 
-        if (currentHead == '') {
+        if (currentHead === '') {
           a.mirror.replaceRange('# Heading', {
-            line: line,
+            line,
             ch: 0,
           });
-        } else if (start[0] != '#') {
+        } else if (start[0] !== '#') {
           a.mirror.replaceRange('# ', {
-            line: line,
+            line,
             ch: 0,
           });
         } else {
-          var level = (start.match(/#/g) || []).length;
+          const level = (start.match(/#/g) || []).length;
           if (level >= 6) {
             a.mirror.replaceRange(
-              currentHead.substring(currentHead.indexOf(' ') + 1),
+              currentHead.slice(Math.max(0, currentHead.indexOf(' ') + 1)),
               {
-                line: line,
+                line,
                 ch: 0,
               },
               {
-                line: line,
+                line,
                 ch: currentHead.length,
               },
             );
           } else {
             a.mirror.replaceRange('#', {
-              line: line,
+              line,
               ch: 0,
             });
           }
         }
+
         a.mirror.focus();
       });
     },
-    insertQuote: function insertQuote() {
-      var a = this;
+    insertQuote() {
+      const a = this;
       k(function () {
-        var word = a.mirror.findWordAt(a.mirror.getCursor());
-        var selection = a.mirror.getSelection().trim();
+        const word = a.mirror.findWordAt(a.mirror.getCursor());
+        const selection = a.mirror.getSelection().trim();
         if (a.mirror.getSelection().length > 0) {
-          // expand selection to be full lines
+          // Expand selection to be full lines
           a.mirror.setSelection(
             {
               line: Math.min(
@@ -413,20 +419,21 @@
               ch: 1,
             },
           );
-          if (selection == '') {
+          if (selection === '') {
             a.mirror.replaceSelection('> fancy blockquote');
           } else {
             a.mirror.replaceSelection('> ' + selection);
           }
         }
+
         a.mirror.focus();
       });
     },
-    insertCode: function insertCode() {
-      var a = this;
+    insertCode() {
+      const a = this;
       k(function () {
-        var word = a.mirror.findWordAt(a.mirror.getCursor());
-        var selection = a.mirror.getSelection().trim();
+        const word = a.mirror.findWordAt(a.mirror.getCursor());
+        const selection = a.mirror.getSelection().trim();
         if (a.mirror.getSelection().length > 0) {
           a.mirror.replaceSelection(
             '\n```sql\n' + a.mirror.getSelection() + '\n```\n',
@@ -434,7 +441,7 @@
         } else {
           a.mirror.setSelection(word.anchor, word.head);
 
-          if (selection == '') {
+          if (selection === '') {
             a.mirror.replaceSelection(
               '\n```sql\nselect smiles; -- :) --\n```\n',
             );
@@ -442,16 +449,17 @@
             a.mirror.replaceSelection('`' + selection + '`');
           }
         }
+
         a.mirror.focus();
       });
     },
-    insertUl: function insertUl() {
-      var a = this;
+    insertUl() {
+      const a = this;
       k(function () {
-        var word = a.mirror.findWordAt(a.mirror.getCursor());
-        var selection = a.mirror.getSelection().trim();
+        const word = a.mirror.findWordAt(a.mirror.getCursor());
+        const selection = a.mirror.getSelection().trim();
         if (a.mirror.getSelection().length > 0) {
-          // expand selection to be full lines
+          // Expand selection to be full lines
           a.mirror.setSelection(
             {
               line: Math.min(
@@ -486,22 +494,23 @@
             },
           );
 
-          if (selection == '') {
+          if (selection === '') {
             a.mirror.replaceSelection('- item one\n- item two\n- item three');
           } else {
             a.mirror.replaceSelection('- ' + selection);
           }
         }
+
         a.mirror.focus();
       });
     },
-    insertOl: function insertOl() {
-      var a = this;
+    insertOl() {
+      const a = this;
       k(function () {
-        var word = a.mirror.findWordAt(a.mirror.getCursor());
-        var selection = a.mirror.getSelection().trim();
+        const word = a.mirror.findWordAt(a.mirror.getCursor());
+        const selection = a.mirror.getSelection().trim();
         if (a.mirror.getSelection().length > 0) {
-          // expand selection to be full lines
+          // Expand selection to be full lines
           a.mirror.setSelection(
             {
               line: Math.min(
@@ -518,7 +527,7 @@
               ch: 1,
             },
           );
-          var number = 1;
+          let number = 1;
           a.mirror.replaceSelection(
             number +
               '. ' +
@@ -538,7 +547,7 @@
             },
           );
 
-          if (selection == '') {
+          if (selection === '') {
             a.mirror.replaceSelection(
               '1. item one\n2. item two\n3. item three',
             );
@@ -546,11 +555,12 @@
             a.mirror.replaceSelection('1. ' + selection);
           }
         }
+
         a.mirror.focus();
       });
     },
-    insertLink: function insertLink() {
-      var a = this;
+    insertLink() {
+      const a = this;
       k(function () {
         if (a.mirror.getSelection().length > 0) {
           a.mirror.replaceSelection(
@@ -559,30 +569,31 @@
         } else {
           a.mirror.replaceSelection('[Link Title](https://atlas)');
         }
+
         a.mirror.focus();
       });
     },
-    save: function save() {
-      var a = this;
+    save() {
+      const a = this;
       k(function () {
-        var data = {};
+        const data = {};
         data.id = getUrlVars().id;
         data.description = a.mirror.getValue();
-        var q = new XMLHttpRequest();
+        const q = new XMLHttpRequest();
         q.open('post', a.saveUrl, true);
         q.setRequestHeader('Content-Type', 'text/plain;charset=UTF-8`');
         q.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
         q.send(JSON.stringify(data));
 
-        q.onload = function () {
-          document.getElementById('editorMdl-titleSave').style.visibility =
+        q.addEventListener('load', function () {
+          document.querySelector('#editorMdl-titleSave').style.visibility =
             'visible';
           setTimeout(function () {
             document
-              .getElementById('editorMdl-titleSave')
+              .querySelector('#editorMdl-titleSave')
               .style.removeProperty('visibility');
           }, 750);
-        };
+        });
       });
     },
   };

@@ -1,5 +1,5 @@
 (function () {
-  // add page location to breadcrumbs when leaving page
+  // Add page location to breadcrumbs when leaving page
 
   // window.onbeforeunload = function () {
   //   setTimeout(function () {
@@ -7,22 +7,21 @@
   //   }, 0);
   // };
 
-  var breadcrumbs = function () {
-    var title =
-        document.title.indexOf(' | ') != -1
-          ? document.title.split(' | ')[0]
-          : document.title,
-      url = window.location.href,
-      j = {},
-      crumbs = sessionStorage.getItem('breadcrumbs');
+  const breadcrumbs = function () {
+    const title = document.title.includes(' | ')
+      ? document.title.split(' | ')[0]
+      : document.title;
+    const url = window.location.href;
+    const j = {};
+    let crumbs = sessionStorage.getItem('breadcrumbs');
 
     crumbs = crumbs !== null ? JSON.parse(crumbs) : [];
 
     if (
       crumbs.length === 0 ||
       !(
-        crumbs[crumbs.length - 1].title == title &&
-        crumbs[crumbs.length - 1].url == url
+        crumbs[crumbs.length - 1].title === title &&
+        crumbs[crumbs.length - 1].url === url
       )
     ) {
       j.title = title;
@@ -40,22 +39,22 @@
       sessionStorage.setItem('breadcrumbs', JSON.stringify(crumbs));
     }
 
-    var el = document.getElementsByClassName('breadcrumb')[0];
+    const element = document.querySelector('.breadcrumb');
     if (crumbs.length <= 1) return;
-    el.innerHTML = buildcrumbs(crumbs).outerHTML;
-    el.style.opacity = 1;
+    element.innerHTML = buildcrumbs(crumbs).outerHTML;
+    element.style.opacity = 1;
   };
 
-  var buildcrumbs = function (crumbs) {
-    var $ul = document.createElement('ul');
+  function buildcrumbs(crumbs) {
+    const $ul = document.createElement('ul');
 
     crumbs = crumbs.slice(Math.max(crumbs.length - 7, 0));
     crumbs.reverse();
 
-    for (var x = 0; x < crumbs.length; x++) {
-      // if name is long, get a substring of it and add a tooltip.
-      var $li = document.createElement('li');
-      var $a = document.createElement('a');
+    for (let x = 0; x < crumbs.length; x++) {
+      // If name is long, get a substring of it and add a tooltip.
+      const $li = document.createElement('li');
+      const $a = document.createElement('a');
 
       if (x === 0) {
         $a.setAttribute('href', '#');
@@ -64,15 +63,15 @@
         $a.setAttribute('href', crumbs[x].url);
       }
 
-      var $words = crumbs[x].title.split(' ');
-      var $combined_words = '';
+      const $words = crumbs[x].title.split(' ');
+      let $combinedWords = '';
 
-      for (var w = 0; w < $words.length; w++) {
-        $combined_words += $words[w] + ' ';
+      for (let w = 0; w < $words.length; w++) {
+        $combinedWords += $words[w] + ' ';
 
-        if ($combined_words.length > 15) {
+        if ($combinedWords.length > 15) {
           if (w < $words.length) {
-            $combined_words += '…';
+            $combinedWords += '…';
             $a.classList.add(
               'is-block',
               'has-tooltip-bottom',
@@ -80,17 +79,18 @@
             );
             $a.setAttribute('data-tooltip', crumbs[x].title);
           }
+
           break;
         }
       }
 
-      $a.innerText = $combined_words;
-      $li.appendChild($a);
-      $ul.appendChild($li);
+      $a.textContent = $combinedWords;
+      $li.append($a);
+      $ul.append($li);
     }
 
     return $ul;
-  };
+  }
 
   breadcrumbs();
 })();
