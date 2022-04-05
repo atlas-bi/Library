@@ -1,5 +1,10 @@
 {
   "extends": ["github>commitizen/commitizen-renovate-config"],
   "ignoreDeps": ["@fortawesome/fontawesome-free", "chart.js"],
-  "automerge": false
+  "packageRules": [
+    {
+      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
+      "automerge": false
+    }
+  ]
 }
