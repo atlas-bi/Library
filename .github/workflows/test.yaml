@@ -16,10 +16,10 @@ jobs:
 
     steps:
       - name: checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: setup dotnet
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v2
         with:
           dotnet-version: '6.0.x'
       - name: setup node
@@ -27,7 +27,7 @@ jobs:
         with:
           node-version: '16.x'
       - name: setup java
-        uses: actions/setup-java@v2
+        uses: actions/setup-java@v3
         with:
           distribution: 'microsoft'
           java-version: '17'

@@ -14,13 +14,13 @@ FROM mcr.microsoft.com/dotnet/sdk:6.0-alpine AS build
 WORKDIR /app
 COPY web.sln .
 COPY ["./web/web.csproj", "./web/"]
-RUN dotnet restore
+RUN dotnet restore ./web/web.csproj
 
 COPY ["./web/.", "./web/"]
 WORKDIR "/app/web/"
 # add analytics
 RUN  sed -i -e 's/<\/body>/<script async defer data-website-id="833156f8-3343-4da3-b7d5-45b5fa4f224d" src="https:\/\/analytics.atlas.bi\/umami.js"><\/script><\/body>/g' Pages/Shared/_Layout.cshtml
-RUN dotnet publish -c Release -o out
+RUN dotnet publish -c Release -o out web.csproj
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0-alpine
 WORKDIR /app
