@@ -80,7 +80,7 @@
     "test:report_html": "reportgenerator -reports:coverage.cobertura.xml -targetdir:coverage/ -reporttypes:html",
     "test": "coverlet web.Tests/bin/Debug/net6.0/web.Tests.dll --target \"dotnet\" --targetargs \"test  --no-build\" --format cobertura --exclude-by-file \"**/Migrations/*\"",
     "lint:js": "xo web/wwwroot/js",
-    "lint:scss": "stylelint \"web/wwwroot/css/**/*.scss",
+    "lint:scss": "stylelint \"web/wwwroot/css/**/*.scss\"",
     "lint": "npm run lint:js & npm run lint:scss",
     "test:dev": "npm run dotnet:build && (npm run test || true) && npm run test:report_html",
     "commit": "git add . && cz"
