@@ -22,6 +22,8 @@ Atlas business intelligence library plugs in to your existing reporting platform
   <img alt="coverage badge" src="https://codecov.io/gh/atlas-bi/atlas-bi-library/branch/master/graph/badge.svg?token=p1fWnQvPnf"/>
 </a>
 <a href="https://github.com/atlas-bi/atlas-bi-library/actions/workflows/test.yaml" target="_blank"><img src="https://github.com/atlas-bi/atlas-bi-library/actions/workflows/test.yaml/badge.svg" /></a>
+<a href="https://discord.gg/hdz2cpygQD"><img alt="discord chat" src="https://badgen.net/discord/online-members/hdz2cpygQD/" /></a>
+<a href="https://github.com/atlas-bi/atlas-bi-library/releases"><img alt="latest release" src="https://badgen.net/github/release/atlas-bi/atlas-bi-library" /></a>
 </p>
 
 ## :runner: Getting Started

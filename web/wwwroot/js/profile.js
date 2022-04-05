@@ -1,45 +1,48 @@
 (function () {
-  var d = document,
-    a = function (url) {
-      // if (cache.exists(url)) {
-      //   load(cache.get(url));
-      // } else {
-      var q = new XMLHttpRequest();
-      q.open('get', url, true);
-      q.setRequestHeader(
-        'Content-Type',
-        'application/x-www-form-urlencoded; charset=UTF-8',
+  const d = document;
+  const a = function (url) {
+    // If (cache.exists(url)) {
+    //   load(cache.get(url));
+    // } else {
+    const q = new XMLHttpRequest();
+    q.open('get', url, true);
+    q.setRequestHeader(
+      'Content-Type',
+      'application/x-www-form-urlencoded; charset=UTF-8',
+    );
+    q.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+    q.send();
+
+    q.addEventListener('load', function () {
+      load(q.responseText);
+      // Var ccHeader =
+      //   q.getResponseHeader('Cache-Control') != null
+      //     ? (q.getResponseHeader('Cache-Control').match(/\d+/) || [null])[0]
+      //     : null;
+
+      // if (ccHeader) {
+      //   cache.set(url, q.responseText, ccHeader);
+      // }
+      // };
+    });
+
+    window.profileLoad = undefined;
+  };
+
+  const load = function (text) {
+    if (d.querySelectorAll('.profile-buttonHidden')[0]) {
+      d.querySelectorAll('.profile-buttonHidden')[0].classList.remove(
+        'profile-buttonHidden',
       );
-      q.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-      q.send();
+    }
 
-      q.onload = function () {
-        load(q.responseText);
-        // var ccHeader =
-        //   q.getResponseHeader('Cache-Control') != null
-        //     ? (q.getResponseHeader('Cache-Control').match(/\d+/) || [null])[0]
-        //     : null;
+    const modal = d.querySelector('#profile-modal .mdl-b');
+    if (modal) {
+      modal.innerHTML = text;
+      d.dispatchEvent(new CustomEvent('load-charts'));
+    }
+  };
 
-        // if (ccHeader) {
-        //   cache.set(url, q.responseText, ccHeader);
-        // }
-        // };
-      };
-
-      window.profileLoad = undefined;
-    },
-    load = function (text) {
-      if (d.getElementsByClassName('profile-buttonHidden')[0]) {
-        d.getElementsByClassName('profile-buttonHidden')[0].classList.remove(
-          'profile-buttonHidden',
-        );
-      }
-      var modal = d.querySelector('#profile-modal .mdl-b');
-      if (modal != undefined) {
-        modal.innerHTML = text;
-        d.dispatchEvent(new CustomEvent('load-charts'));
-      }
-    };
   if (
     window.location.pathname.toLowerCase() === '/reports' &&
     getUrlVars().id

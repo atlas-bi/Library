@@ -1,23 +1,24 @@
 (function () {
-  var d = document,
-    checkbox = function (el) {
-      el.classList.add('loaded');
-      var check = el.querySelector('#editModal input[type=checkbox]'),
-        input = el.querySelector('#editModal input[type=hidden');
+  const d = document;
+  const checkbox = function (element) {
+    element.classList.add('loaded');
+    const check = element.querySelector('#editModal input[type=checkbox]');
+    const input = element.querySelector('#editModal input[type=hidden');
 
-      if (check && input) {
-        check.checked = input.value == 'Y' ? true : false;
-        check.addEventListener('change', function () {
-          input.value = check.checked ? 'Y' : 'N';
-        });
-      }
-    },
-    loadCheckbox = function () {
-      var els = d.querySelectorAll('.form-check:not(.loaded)');
-      for (var x = 0; x < els.length; x++) {
-        checkbox(els[x]);
-      }
-    };
+    if (check && input) {
+      check.checked = input.value === 'Y';
+      check.addEventListener('change', function () {
+        input.value = check.checked ? 'Y' : 'N';
+      });
+    }
+  };
+
+  const loadCheckbox = function () {
+    const els = d.querySelectorAll('.form-check:not(.loaded)');
+    for (let x = 0; x < els.length; x++) {
+      checkbox(els[x]);
+    }
+  };
 
   loadCheckbox();
   d.addEventListener('ajax', function () {
@@ -26,25 +27,26 @@
 })();
 
 (function () {
-  var d = document,
-    checkbox = function (el) {
-      el.classList.add('loaded');
-      var check = el.querySelector('input[type=checkbox]'),
-        input = el.querySelector('input[type=hidden');
+  const d = document;
+  const checkbox = function (element) {
+    element.classList.add('loaded');
+    const check = element.querySelector('input[type=checkbox]');
+    const input = element.querySelector('input[type=hidden');
 
-      if (check && input) {
-        check.checked = input.value == 'Y' ? true : false;
-        check.addEventListener('change', function () {
-          input.value = check.checked ? 'Y' : 'N';
-        });
-      }
-    },
-    loadCheckbox = function () {
-      var els = d.querySelectorAll('.toggle');
-      for (var x = 0; x < els.length; x++) {
-        checkbox(els[x]);
-      }
-    };
+    if (check && input) {
+      check.checked = input.value === 'Y';
+      check.addEventListener('change', function () {
+        input.value = check.checked ? 'Y' : 'N';
+      });
+    }
+  };
+
+  const loadCheckbox = function () {
+    const els = d.querySelectorAll('.toggle');
+    for (let x = 0; x < els.length; x++) {
+      checkbox(els[x]);
+    }
+  };
 
   loadCheckbox();
   d.addEventListener('ajax', function () {

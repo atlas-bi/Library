@@ -1,58 +1,60 @@
 (function () {
   /*
-      div.carousel
-        div.carousel-itm
-        div.carousel-itm
-        div.carousel-ind
-          span.carousel-dot
-          span.carousel-dot
-        a.carousel-prev
-        a.carousel-next
+    Example usage
+    div.carousel
+      div.carousel-itm
+      div.carousel-itm
+      div.carousel-ind
+        span.carousel-dot
+        span.carousel-dot
+      a.carousel-prev
+      a.carousel-next
     */
-  var d = document;
+  const d = document;
 
   function l() {
-    var carousel = document.getElementsByClassName('carousel'),
-      x;
+    const carousel = document.querySelectorAll('.carousel');
+    let x;
 
     for (x = 0; x < carousel.length; x++) {
       if (carousel[x].classList.contains('carousel-p')) {
         continue;
       }
 
-      new c(carousel[x]);
+      // eslint-disable-next-line no-new
+      new CarBuilder(carousel[x]);
     }
   }
 
-  function c(b) {
+  function CarBuilder(b) {
     this.target = b;
-    this.next = b.getElementsByClassName('carousel-next')[0];
-    this.prev = b.getElementsByClassName('carousel-prev')[0];
-    this.dots = b.getElementsByClassName('carousel-dot');
-    this.slides = b.getElementsByClassName('carousel-itm');
+    this.next = b.querySelector('.carousel-next');
+    this.prev = b.querySelector('.carousel-prev');
+    this.dots = b.querySelectorAll('.carousel-dot');
+    this.slides = b.querySelectorAll('.carousel-itm');
     this.target.classList.add('carousel-p');
     this.next.addEventListener('click', this.showSlides.bind(this, 1), false);
     this.prev.addEventListener('click', this.showSlides.bind(this, -1), false);
 
-    for (var q = 0; q < this.dots.length; q++) {
-      var el = this.dots[q];
-      el.addEventListener('click', this.showSlides.bind(this, 0), false);
+    for (let q = 0; q < this.dots.length; q++) {
+      const element = this.dots[q];
+      element.addEventListener('click', this.showSlides.bind(this, 0), false);
     }
   }
 
-  var k =
+  const k =
     d.requestAnimationFrame ||
     d.setImmediate ||
     function (b) {
       return setTimeout(b, 0);
     };
 
-  c.prototype = {
-    showSlides: function showSlides(n, b) {
-      var i,
-        slides = this.slides,
-        aslide,
-        dots = this.dots;
+  CarBuilder.prototype = {
+    showSlides(n, b) {
+      let i;
+      const slides = this.slides;
+      let aslide;
+      const dots = this.dots;
       k(function () {
         if (b.target.matches('.carousel-dot')) {
           n = b.target.getAttribute('slide');

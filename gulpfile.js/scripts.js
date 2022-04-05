@@ -33,6 +33,8 @@ gulp.task('js:polyfill', function () {
       'web/wwwroot/js/polyfill/isinstance.js',
       'web/wwwroot/js/polyfill/matches_closest.js',
       'web/wwwroot/js/polyfill/sticky.js',
+      'web/wwwroot/js/polyfill/remove.js',
+      'web/wwwroot/js/polyfill/includes.js',
     ])
     .pipe(concat('polyfill.min.js'))
 
@@ -79,6 +81,15 @@ gulp.task('js:analytics', function () {
     .pipe(gulp.dest('web/wwwroot/js/'));
 });
 
+gulp.task('js:profile', function () {
+  return gulp
+    .src(['web/wwwroot/js/profile.js'])
+    .pipe(rollup(rollupConfig))
+    .pipe(concat('profile.min.js'))
+    .pipe(uglify(uglifyConfig))
+    .pipe(gulp.dest('web/wwwroot/js/'));
+});
+
 gulp.task('js:tracker', function () {
   return gulp
     .src(['web/wwwroot/js/tracker.js', 'node_modules/jsnlog/jsnlog.js'])
@@ -95,14 +106,6 @@ gulp.task('js:highlighter', () => {
     .pipe(concat('highlight.min.js'))
     .pipe(uglify(uglifyConfig))
     .pipe(gulp.dest('web/wwwroot/js/'));
-});
-gulp.task('js:integrations:ssrs', function () {
-  return gulp
-    .src(['web/wwwroot/js/integrations/ssrs.js'])
-    .pipe(rollup(rollupConfig))
-    .pipe(concat('ssrs.min.js'))
-    .pipe(uglify(uglifyConfig))
-    .pipe(gulp.dest('web/wwwroot/js/integrations/'));
 });
 
 gulp.task('js:shared', function () {
@@ -140,7 +143,7 @@ gulp.task('js:editor', function () {
     .src([
       'web/wwwroot/js/editor.js',
       'web/wwwroot/js/utility/checkbox.js',
-      'web/wwwroot/js/reportEditor.js',
+      'web/wwwroot/js/report-editor.js',
     ])
     .pipe(rollup(rollupConfig))
     .pipe(concat('editor.min.js'))
@@ -148,7 +151,6 @@ gulp.task('js:editor', function () {
     .pipe(gulp.dest('web/wwwroot/js/'));
 });
 
-//gulp.task('scripts', gulp.parallel('webpack', 'js:integrations:ssrs'));
 gulp.task(
   'scripts',
   gulp.parallel(
@@ -160,7 +162,7 @@ gulp.task(
     'js:utility',
     'js:analytics',
     'js:tracker',
-    'js:integrations:ssrs',
     'js:highlighter',
+    'js:profile',
   ),
 );
