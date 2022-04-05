@@ -94,9 +94,6 @@ th {
 }
 
 .markdown dl {
-  -ms-flex-wrap: wrap;
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
   flex-wrap: wrap;
   margin-left: -15px;
@@ -105,14 +102,12 @@ th {
 
 @media (min-width: 576px) {
   .markdown dt {
-    -ms-flex: 0 0 25%;
     -webkit-box-flex: 0;
     flex: 0 0 25%;
     max-width: 25%;
   }
 
   .markdown dd {
-    -ms-flex: 0 0 75%;
     -webkit-box-flex: 0;
     flex: 0 0 75%;
     max-width: 75%;
