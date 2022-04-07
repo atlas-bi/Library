@@ -62,7 +62,7 @@ namespace web.Tests
                             var scopedServices = scope.ServiceProvider;
                             var db = scopedServices.GetRequiredService<Atlas_WebContext>();
                             var logger = scopedServices.GetRequiredService<
-                                ILogger<CustomWebApplicationFactory<TStartup>>
+                                ILogger<WebFactory<TStartup>>
                             >();
 
                             db.Database.EnsureDeleted();
