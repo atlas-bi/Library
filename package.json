@@ -146,7 +146,8 @@
       "unicorn/prefer-query-selector": "warn",
       "unicorn/prefer-number-properties": "off",
       "no-negated-condition": "warn",
-      "no-multi-assign": "warn"
+      "no-multi-assign": "warn",
+      "unicorn/prefer-keyboard-event-key": "off"
     }
   }
 }

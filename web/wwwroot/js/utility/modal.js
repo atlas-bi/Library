@@ -97,7 +97,7 @@
   document.addEventListener('keydown', (event) => {
     event = event || window.event;
 
-    if (event.key === 27) {
+    if (Number(event.keyCode) === 27) {
       // Escape key
       closeAllModals();
     }

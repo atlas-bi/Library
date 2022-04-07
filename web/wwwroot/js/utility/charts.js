@@ -152,7 +152,7 @@
       cols = Math.max(cols, charts[c].data.length);
     }
 
-    const colWidth = (width / width / cols) * 100; // As %
+    const colWidth = (width / cols) * 100; // As %
 
     // create range for axis
     for (a in axii) {
