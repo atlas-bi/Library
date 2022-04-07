@@ -148,7 +148,7 @@ namespace Atlas_Web.Pages.Users
                 }
                 else
                 {
-                    _context.Add(new StarredReport { Ownerid = UserId, Reportid = id });
+                    _context.Add(new StarredReport { Ownerid = MyId, Reportid = id });
                     _context.SaveChanges();
                 }
                 // pop from cache
