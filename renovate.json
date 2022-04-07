@@ -1,22 +1,17 @@
 {
   "extends": [
-    "config:base", 
+    "config:base",
     "group:allNonMajor",
     ":separateMultipleMajorReleases",
     ":ignoreUnstable",
     ":enableVulnerabilityAlertsWithLabel(security)",
-    ":rebaseStalePrs", 
+    ":rebaseStalePrs",
     ":npm",
     "npm:unpublishSafe"
   ],
   "ignoreDeps": ["@fortawesome/fontawesome-free", "chart.js"],
-  "assignees": [
-    "christopherpickering"
-  ],
+  "assignees": ["christopherpickering"],
   "bumpVersion": "patch",
   "commitMessagePrefix": "chore(deps)",
-  "labels": [
-    "maintenance", 
-    "renovate"
-  ]
+  "labels": ["maintenance", "renovate"]
 }

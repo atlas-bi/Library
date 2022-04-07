@@ -62,6 +62,7 @@ jobs:
         run: npm run dotnet:build
       - name: start solr
         run: ./web/solr/bin/solr start
+
       - name: test
         run: |
           npm run test
@@ -72,6 +73,7 @@ jobs:
           reportgenerator -reports:coverage.cobertura.xml -targetdir:coverage/ -reporttypes:textSummary
           # print out the report
           cat coverage/Summary.txt
+
       - name: upload cov
         if: always()
         uses: codecov/codecov-action@v3

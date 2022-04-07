@@ -9,8 +9,7 @@ using Atlas_Web.Models;
 
 namespace web.Tests
 {
-    public class CustomWebApplicationFactory<TStartup> : WebApplicationFactory<TStartup>
-        where TStartup : class
+    public class WebFactory<TStartup> : WebApplicationFactory<TStartup> where TStartup : class
     {
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
@@ -26,7 +25,7 @@ namespace web.Tests
                     services.AddDbContext<Atlas_WebContext>(
                         options =>
                         {
-                            options.UseInMemoryDatabase("InMemoryDbForTesting");
+                            options.UseInMemoryDatabase("AtlasIntegrationDb");
                         }
                     );
 
@@ -37,7 +36,7 @@ namespace web.Tests
                         var scopedServices = scope.ServiceProvider;
                         var db = scopedServices.GetRequiredService<Atlas_WebContext>();
                         var logger = scopedServices.GetRequiredService<
-                            ILogger<CustomWebApplicationFactory<TStartup>>
+                            ILogger<WebFactory<TStartup>>
                         >();
 
                         db.Database.EnsureCreated();

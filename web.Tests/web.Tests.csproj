@@ -8,7 +8,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="BrowserStackLocal" Version="2.0.0" />
+    <PackageReference Include="MartinCostello.BrowserStack.Automate" Version="3.0.3" />
+    <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="2.2.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.1.0" />
+
     <PackageReference Include="Moq" Version="4.17.2" />
     <PackageReference Include="Selenium.WebDriver" Version="4.1.0" />
     <PackageReference Include="xunit" Version="2.4.1" />
@@ -32,5 +36,9 @@
    <ItemGroup>
     <ProjectReference Include="..\web\web.csproj" />
   </ItemGroup>
-
+  <ItemGroup>
+    <Content Include="..\.env">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
 </Project>

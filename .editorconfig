@@ -69,6 +69,9 @@ indent_style = space
 [*.scss]
 indent_size = 2
 
+[*.csproj]
+indent_size = 2
+
 [*.js]
 indent_size = 2
 

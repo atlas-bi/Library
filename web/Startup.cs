@@ -215,6 +215,7 @@ namespace Atlas_Web
                 app.UseHsts();
                 app.UseStatusCodePagesWithRedirects("/Error?id={0}");
                 // app.UseExceptionHandler("/Error");
+                app.UseHttpsRedirection();
             }
             else
             {
@@ -223,7 +224,6 @@ namespace Atlas_Web
 
             app.UseWebMarkupMin();
             app.UseWebOptimizer();
-            app.UseHttpsRedirection();
 
             app.UseStaticFiles(
                 new StaticFileOptions
