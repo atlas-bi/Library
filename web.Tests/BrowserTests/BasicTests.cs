@@ -112,6 +112,7 @@ public class BasicTests : IClassFixture<BrowserFactory<Atlas_Web.Startup>>
         // no errors
         //Assert.NotEqual("", consoleLogs);
         Assert.DoesNotContain("ERROR", consoleLogs);
+        Assert.DoesNotContain("SEVERE", consoleLogs);
         // Console.Write(consoleLogs);
 
         var networkLogs = await client.GetSessionNetworkLogsAsync(
