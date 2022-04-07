@@ -2,7 +2,8 @@
   function showMessageBox(message) {
     const d = document;
     const w = d.querySelectorAll('.message-wrapper')[0];
-    d.querySelector('.message-container .message-inner').innerHTML = message;
+    d.querySelector('.message-container .message-inner').innerHTML =
+      DOMPurify.sanitize(message);
     w.classList.remove('hidden');
     setTimeout(function () {
       w.classList.add('hidden');

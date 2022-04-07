@@ -59,6 +59,9 @@ indent_style = tab
 indent_style = tab
 
 [*.yml]
+indent_size = 2
+indent_style = space
+
 [*.snyk]
 indent_size = 2
 indent_style = space

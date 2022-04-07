@@ -41,7 +41,7 @@
 
     const element = document.querySelector('.breadcrumb');
     if (crumbs.length <= 1) return;
-    element.innerHTML = buildcrumbs(crumbs).outerHTML;
+    element.innerHTML = DOMPurify.sanitize(buildcrumbs(crumbs).outerHTML);
     element.style.opacity = 1;
   };
 

@@ -23,7 +23,7 @@
     newMesQ.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
     newMesQ.send();
     newMesQ.addEventListener('load', function () {
-      div.innerHTML = newMesQ.responseText;
+      div.innerHTML = DOMPurify.sanitize(newMesQ.responseText);
       parseNewMailData(div);
     });
   };
@@ -51,7 +51,7 @@
     for (x = 0; x < unreadMessage.length; x++) {
       if (newUnreadMessage > 0) {
         unreadMessage[x].style.display = 'inline-block';
-        unreadMessage[x].innerHTML = newUnreadMessage;
+        unreadMessage[x].innerHTML = DOMPurify.sanitize(newUnreadMessage);
       } else {
         unreadMessage[x].style.display = 'none';
         unreadMessage[x].innerHTML = '';
@@ -59,7 +59,7 @@
     }
 
     for (x = 0; x < allMessage.length; x++) {
-      allMessage[x].innerHTML = newAllMessage;
+      allMessage[x].innerHTML = DOMPurify.sanitize(newAllMessage);
     }
 
     // Show new mail notification.
@@ -67,7 +67,7 @@
       const notBox = document.querySelectorAll(
         '.mail-notification-container',
       )[0];
-      notBox.innerHTML = not.innerHTML;
+      notBox.innerHTML = DOMPurify.sanitize(not.innerHTML);
       notBox.style.transition = 'margin-right .5s';
       notBox.style.marginRight = '500px';
 
@@ -83,7 +83,9 @@
     // only if in inbox
     if (d.querySelector('#mlbx-fldrsInbox.active') !== null) {
       const div = document.createElement('div');
-      div.innerHTML = element.querySelector('#new_message_previews').innerHTML;
+      div.innerHTML = DOMPurify.sanitize(
+        element.querySelector('#new_message_previews').innerHTML,
+      );
 
       if (div.innerHTML.length > 0) {
         // 1 get existing repid
@@ -113,9 +115,13 @@
       if (d.querySelector('.mlbx-msgs .ss-content').children.length > 0) {
         d.querySelector(
           '.mlbx-msgs .ss-content',
-        ).children[0].insertAdjacentHTML('beforebegin', div.innerHTML);
+        ).children[0].insertAdjacentHTML(
+          'beforebegin',
+          DOMPurify.sanitize(div.innerHTML),
+        );
       } else {
-        d.querySelector('.mlbx-msgs .ss-content').innerHTML = div.innerHTML;
+        d.querySelector('.mlbx-msgs .ss-content').innerHTML =
+          DOMPurify.sanitize(div.innerHTML);
       }
     }
   };
@@ -138,7 +144,7 @@
     loadMesQ.addEventListener('load', function () {
       const previousBox = d.querySelectorAll('.mlbx-msgsScroll')[0];
       previousBox.classList.remove('ss-container');
-      previousBox.innerHTML = loadMesQ.responseText;
+      previousBox.innerHTML = DOMPurify.sanitize(loadMesQ.responseText);
       document.dispatchEvent(
         new CustomEvent('ss-load', {
           cancelable: true,
@@ -248,8 +254,9 @@
       ipt.style.display = 'none';
       div.querySelector('form').append(ipt);
 
-      d.querySelectorAll('.mlbx-rdr')[0].innerHTML =
-        div.querySelectorAll('.mlbx-newMsg')[0].outerHTML;
+      d.querySelectorAll('.mlbx-rdr')[0].innerHTML = DOMPurify.sanitize(
+        div.querySelectorAll('.mlbx-newMsg')[0].outerHTML,
+      );
       document.dispatchEvent(
         new CustomEvent('dropdown', {
           cancelable: true,
@@ -336,11 +343,13 @@
     }
 
     if (typeof subject !== 'undefined') {
-      messagebox.querySelector('.mlbx-newMsgSubjIpt').innerHTML = subject;
+      messagebox.querySelector('.mlbx-newMsgSubjIpt').innerHTML =
+        DOMPurify.sanitize(subject);
     }
 
     if (typeof message !== 'undefined') {
-      messagebox.querySelector('.mlbx-newMsgMsg').innerHTML = message.innerHTML;
+      messagebox.querySelector('.mlbx-newMsgMsg').innerHTML =
+        DOMPurify.sanitize(message.innerHTML);
     }
 
     if (typeof to !== 'undefined' && to !== null) {
@@ -350,15 +359,19 @@
       to.forEach(function (t) {
         dds.innerHTML +=
           '<option selected="selected" class="' +
-          t[2] +
+          DOMPurify.sanitize(t[2]) +
           '" value="' +
-          t[0] +
+          DOMPurify.sanitize(t[0]) +
           '">' +
-          t[1] +
+          DOMPurify.sanitize(t[1]) +
           '</option>';
         ddw.children[0].insertAdjacentHTML(
           'beforebegin',
-          '<div class="dd-itm ' + t[2] + '">' + t[1] + '</div>',
+          '<div class="dd-itm ' +
+            DOMPurify.sanitize(t[2]) +
+            '">' +
+            DOMPurify.sanitize(t[1]) +
+            '</div>',
         );
         // Move placeholder after input
         // dd.find('.dynamic-dropdown-input-container').after(dd.find('.placeholder'))
@@ -394,7 +407,9 @@
     loadMesQ.send();
     loadMesQ.addEventListener('load', function () {
       if (d.querySelectorAll('.mlbx-rdr')[0])
-        d.querySelectorAll('.mlbx-rdr')[0].innerHTML = loadMesQ.responseText;
+        d.querySelectorAll('.mlbx-rdr')[0].innerHTML = DOMPurify.sanitize(
+          loadMesQ.responseText,
+        );
       document.dispatchEvent(new CustomEvent('ss-load'));
     });
   };
@@ -750,9 +765,9 @@
       message = document.createElement('div');
       messageLiner = document.createElement('div');
       messageLiner.classList.add('message-reply');
-      messageLiner.innerHTML = d.querySelector(
-        '.mlbx-rdr .ss-content',
-      ).innerHTML;
+      messageLiner.innerHTML = DOMPurify.sanitize(
+        d.querySelector('.mlbx-rdr .ss-content').innerHTML,
+      );
 
       messageLiner.querySelector('.mlbx-rdrHead-controls').remove();
 
@@ -805,9 +820,9 @@
       message = document.createElement('div');
       messageLiner = document.createElement('div');
       messageLiner.classList.add('message-reply');
-      messageLiner.innerHTML = d.querySelector(
-        '.mlbx-rdr .ss-content',
-      ).innerHTML;
+      messageLiner.innerHTML = DOMPurify.sanitize(
+        d.querySelector('.mlbx-rdr .ss-content').innerHTML,
+      );
 
       messageLiner.querySelector('.mlbx-rdrHead-controls').remove();
 

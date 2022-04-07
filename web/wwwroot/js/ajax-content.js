@@ -113,7 +113,8 @@
           element.querySelectorAll('script:not([type="application/json"])'),
         );
 
-        for (const element_ of sc) {
+        for (let x = 0; x < sc.length; x++) {
+          const element_ = sc[x];
           const s = d.createElement('script');
           s.innerHTML = element_.innerHTML;
           s.type = 'text/javascript';

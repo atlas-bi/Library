@@ -116,7 +116,9 @@
     this.table.style.width = width + 'px';
 
     this.table.innerHTML +=
-      '<caption class="chart-caption">' + chart.title + '</caption>';
+      '<caption class="chart-caption">' +
+      DOMPurify.sanitize(chart.title) +
+      '</caption>';
 
     if (
       (Boolean(options) &&
@@ -132,9 +134,9 @@
         th = document.createElement('th');
         th.innerHTML +=
           '<span class="chart-headClr ' +
-          numbers[c] +
+          DOMPurify.sanitize(numbers[c]) +
           '"></span>' +
-          charts[c].title;
+          DOMPurify.sanitize(charts[c].title);
         this.thead.append(th);
       }
 
@@ -290,7 +292,7 @@
       html += '</tr>';
     }
 
-    this.table.innerHTML += html + '</tbody>';
+    this.table.innerHTML += DOMPurify.sanitize(html) + '</tbody>';
     // Build grid lines. scale is every 50 px
 
     // titles
@@ -340,7 +342,7 @@
 
     html += '</table>';
 
-    this.table.innerHTML += '</tbody>' + html;
+    this.table.innerHTML += '</tbody>' + DOMPurify.sanitize(html);
 
     return this.table;
   };

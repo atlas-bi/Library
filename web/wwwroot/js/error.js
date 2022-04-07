@@ -38,7 +38,7 @@
       div.remove();
     });
 
-    div.innerHTML = '<p><b>' + $message + '</b></p>';
+    div.innerHTML = '<p><b>' + DOMPurify.sanitize($message) + '</b></p>';
 
     div.insertBefore(button, div.firstChild);
 
