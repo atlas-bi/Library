@@ -66,6 +66,10 @@ jobs:
       - name: test
         run: |
           npm run test
+        env:
+          BROWSERSTACK_ACCESS_KEY: ${{ secrets.BROWSERSTACK_ACCESS_KEY }}
+          BROWSERSTACK_USERNAME: ${{ secrets.BROWSERSTACK_USERNAME }}
+
       - name: console coverage
         if: always()
         run: |
