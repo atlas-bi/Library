@@ -48,7 +48,7 @@
     "proxy-polyfill": "0.3.2",
     "regenerator-runtime": "0.13.9",
     "rollup-stream-gulp": "0.0.3",
-    "sass": "1.49.11",
+    "sass": "1.50.0",
     "semantic-release": "19.0.2"
   },
   "homepage": "https://demo.atlas.bi",
@@ -90,5 +90,5 @@
       "path": "./node_modules/cz-conventional-changelog"
     }
   },
-  "version": "2.2.1"
+  "version": "2.2.2"
 }
