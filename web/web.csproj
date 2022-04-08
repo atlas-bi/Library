@@ -32,7 +32,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="NUglify" Version="1.19.2" />
+    <PackageReference Include="NUglify" Version="1.20.0" />
     <PackageReference Include="SixLabors.ImageSharp" Version="2.1.0" />
     <PackageReference Include="SolrNet" Version="1.0.19" />
     <PackageReference Include="SolrNet.Core" Version="1.0.19" />
