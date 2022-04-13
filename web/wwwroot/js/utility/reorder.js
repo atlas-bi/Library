@@ -1,87 +1,88 @@
 (function () {
-  var dragMoveOrder = function ($event) {
-    var $el = $event.detail.el;
-    var $x = $event.detail.x;
-    var $y = $event.detail.y;
+  const dragMoveOrder = function ($event) {
+    const $element = $event.detail.el;
+    const $x = $event.detail.x;
+    const $y = $event.detail.y;
 
-    if ($el.closest('.reorder')) {
-      var $el_vmid = $y,
-        $el_hmid = $x;
+    if ($element.closest('.reorder')) {
+      const $elementVmid = $y;
+      const $elementHmid = $x;
 
-      // get all drag elements. Insert dragged at the right place.
-      var $drag_source = $el
+      // Get all drag elements. Insert dragged at the right place.
+      const $dragSource = $element
         .closest('.reorder')
         .querySelector('.drg.drag-source');
-      $el
+      $element
         .closest('.reorder')
         .querySelectorAll('.drg:not(.drag-source):not(.drag)')
         .forEach(function ($child) {
-          var $child_cords = getOffset($child),
-            $child_top = $child_cords.top,
-            $child_bottom = $child_cords.top + $child.clientHeight,
-            $child_left = $child_cords.left,
-            $child_right = $child_cords.left + $child.clientWidth,
-            $child_index = Array.prototype.indexOf.call(
-              $drag_source.parentNode.children,
-              $child,
-            ),
-            $drag_source_index = Array.prototype.indexOf.call(
-              $drag_source.parentNode.children,
-              $drag_source,
-            );
+          const $childCords = getOffset($child);
+          const $childTop = $childCords.top;
+          const $childBottom = $childCords.top + $child.clientHeight;
+          const $childLeft = $childCords.left;
+          const $childRight = $childCords.left + $child.clientWidth;
+          const $childIndex = Array.prototype.indexOf.call(
+            $dragSource.parentNode.children,
+            $child,
+          );
+          const $dragSourceIndex = Array.prototype.indexOf.call(
+            $dragSource.parentNode.children,
+            $dragSource,
+          );
 
           // => right can only happen with h siblings
           if (
-            $child_left <= $el_hmid &&
-            $el_vmid >= $child_top &&
-            $el_vmid <= $child_bottom &&
-            $child_index > $drag_source_index
+            $childLeft <= $elementHmid &&
+            $elementVmid >= $childTop &&
+            $elementVmid <= $childBottom &&
+            $childIndex > $dragSourceIndex
           ) {
-            $drag_source.parentNode.insertBefore($child, $drag_source);
+            $dragSource.parentNode.insertBefore($child, $dragSource);
           }
 
           // <= left can only happen with h siblings
           else if (
-            $child_right >= $el_hmid &&
-            $el_vmid >= $child_top &&
-            $el_vmid <= $child_bottom &&
-            $child_index < $drag_source_index
+            $childRight >= $elementHmid &&
+            $elementVmid >= $childTop &&
+            $elementVmid <= $childBottom &&
+            $childIndex < $dragSourceIndex
           ) {
-            $drag_source.parentNode.insertBefore($drag_source, $child);
+            $dragSource.parentNode.insertBefore($dragSource, $child);
           }
 
           // ^ up
-          if ($child_top > $el_vmid && $child_index < $drag_source_index) {
-            $drag_source.parentNode.insertBefore($drag_source, $child);
+          if ($childTop > $elementVmid && $childIndex < $dragSourceIndex) {
+            $dragSource.parentNode.insertBefore($dragSource, $child);
           }
 
           // ⌄ down
           else if (
-            $child_bottom < $el_vmid &&
-            $child_index > $drag_source_index
+            $childBottom < $elementVmid &&
+            $childIndex > $dragSourceIndex
           ) {
-            $drag_source.parentNode.insertBefore($child, $drag_source);
+            $dragSource.parentNode.insertBefore($child, $dragSource);
           }
         });
     }
   };
 
-  document.addEventListener('dragMove', function (e) {
-    var $event = e || window.event;
-    if ($event.detail == undefined || $event.detail.el == undefined) {
+  document.addEventListener('dragMove', function (event) {
+    event = event || window.event;
+    if (event.detail === undefined || event.detail.el === undefined) {
       return !1;
     }
-    debounce(dragMoveOrder($event), 250);
+
+    debounce(dragMoveOrder(event), 250);
   });
 
-  document.addEventListener('dragEnd', function (e) {
-    var $event = e || window.event;
-    if ($event.detail == undefined || $event.detail.el == undefined) {
+  document.addEventListener('dragEnd', function (event) {
+    event = event || window.event;
+    if (event.detail === undefined || event.detail.el === undefined) {
       return !1;
     }
 
-    if ($event.detail.el.closest('.reorder')) {
-      $event.detail.el
+    if (event.detail.el.closest('.reorder')) {
+      event.detail.el
         .closest('.reorder')
         .dispatchEvent(new CustomEvent('reorder', { bubbles: true }));
     }

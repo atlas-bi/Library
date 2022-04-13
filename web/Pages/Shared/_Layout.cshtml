@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="/css/site.min.css" />
     <style type="text/css" minify>@Cache.Get("global_css")</style>
 
+    <link rel="preload" href="/js/purify.min.js" as="script" />
     <link rel="preload" href="/js/polyfill.min.js" as="script" />
     <link rel="preload" href="/js/shared.min.js" as="script" />
     <link rel="preload" href="/js/alive.min.js" as="script" />
@@ -38,6 +39,8 @@
     <link rel="preload" href="@Helpers.UrlHelpers.FontHash("/font/rasa/files/rasa-latin-600-normal.woff2", Cache)" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="@Helpers.UrlHelpers.FontHash("/font/inter/files/inter-latin-500-normal.woff2", Cache)" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="@Helpers.UrlHelpers.FontHash("/font/inter/files/inter-latin-700-normal.woff2", Cache)" as="font" type="font/woff2" crossorigin />
+    <script src="/js/polyfill.min.js"></script>
+    <script src="/js/purify.min.js"></script>
     <script>
         __jsnlog_configure = function (JL) {
         JL.setOptions({
@@ -260,7 +263,7 @@
 
     <div class="mail-notification-container"></div>
     <partial name="_Messagebox" />
-    <script src="/js/polyfill.min.js"></script>
+
     <script src="/js/shared.min.js"></script>
     <script src="/js/alive.min.js"></script>
     <script src="/js/search.min.js" defer></script>

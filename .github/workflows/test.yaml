@@ -8,6 +8,24 @@ on:
       - master
 
 jobs:
+  lint:
+    name: lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+
+      - name: setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16.x'
+
+      - name: install node deps
+        run: npm install
+
+      - name: lint
+        run: npm run lint
+
   test:
     name: test
     runs-on: windows-latest
@@ -44,9 +62,14 @@ jobs:
         run: npm run dotnet:build
       - name: start solr
         run: ./web/solr/bin/solr start
+
       - name: test
         run: |
           npm run test
+        env:
+          BROWSERSTACK_ACCESS_KEY: ${{ secrets.BROWSERSTACK_ACCESS_KEY }}
+          BROWSERSTACK_USERNAME: ${{ secrets.BROWSERSTACK_USERNAME }}
+
       - name: console coverage
         if: always()
         run: |
@@ -54,6 +77,7 @@ jobs:
           reportgenerator -reports:coverage.cobertura.xml -targetdir:coverage/ -reporttypes:textSummary
           # print out the report
           cat coverage/Summary.txt
+
       - name: upload cov
         if: always()
         uses: codecov/codecov-action@v3

@@ -22,6 +22,8 @@ Atlas business intelligence library plugs in to your existing reporting platform
   <img alt="coverage badge" src="https://codecov.io/gh/atlas-bi/atlas-bi-library/branch/master/graph/badge.svg?token=p1fWnQvPnf"/>
 </a>
 <a href="https://github.com/atlas-bi/atlas-bi-library/actions/workflows/test.yaml" target="_blank"><img src="https://github.com/atlas-bi/atlas-bi-library/actions/workflows/test.yaml/badge.svg" /></a>
+<a href="https://discord.gg/hdz2cpygQD"><img alt="discord chat" src="https://badgen.net/discord/online-members/hdz2cpygQD/" /></a>
+<a href="https://github.com/atlas-bi/atlas-bi-library/releases"><img alt="latest release" src="https://badgen.net/github/release/atlas-bi/atlas-bi-library" /></a>
 </p>
 
 ## :runner: Getting Started
@@ -59,7 +61,7 @@ A hit/miss html report will be in the folder `/coverage`.
 
 Build the release with `npm run dotnet:publish`.
 
-The output of `/bin/Release/net6.0/publish` to the folder of your IIS site.
+Copy the output of `/bin/Release/net6.0/publish` to the folder of your IIS site.
 
 See the [docs](https://www.atlas.bi/docs/bi-library/) for aditional configuration and starting search.
 
@@ -72,3 +74,11 @@ This repository uses commitizen. Commit code changes for pr's with `npm run comm
 ## :trophy: Credits
 
 Atlas was created by the Riverside Healthcare Analytics team. See the [credits](https://www.atlas.bi/about/) for more details.
+
+## :wrench: Tools
+
+Special thanks to a few other tools used here.
+
+<a href="https://automate.browserstack.com/public-build/bGhJNzFxaXI1MFFONmh2TlQwdW5MQXNyblFtYXorbEQxdU4wNnpqWFYzWT0tLVN1L2l1Mi9ueGFXQ0hIYmUxWll2c2c9PQ==--0a7425816259714011cafee8777c3fe2e15baaba"><img src='https://automate.browserstack.com/badge.svg?badge_key=bGhJNzFxaXI1MFFONmh2TlQwdW5MQXNyblFtYXorbEQxdU4wNnpqWFYzWT0tLVN1L2l1Mi9ueGFXQ0hIYmUxWll2c2c9PQ==--0a7425816259714011cafee8777c3fe2e15baaba'/></a>
+<img src="https://badgen.net/badge/icon/gitguardian?icon=gitguardian&label" alt="gitguardian"> <img src="https://img.shields.io/badge/renovate-configured-green?logo=renovatebot" alt="renovate"> <a href="https://snyk.io/test/github/atlas-bi/atlas-bi-library"><img src="https://snyk.io/test/github/atlas-bi/atlas-bi-library/badge.svg" alt="snyk" /></a> <a href="https://sonarcloud.io/summary/new_code?id=atlas-bi_atlas-bi-library"><img src="https://sonarcloud.io/api/project_badges/measure?project=atlas-bi_atlas-bi-library&metric=alert_status" alt="quality gate sonar" /></a> <a href="http://commitizen.github.io/cz-cli/"><a src="https://img.shields.io/badge/commitizen-friendly-brightgreen.svg" alt="commitizen"></a>
+<a href="https://github.com/semantic-release/semantic-release"><img src="https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg" alt="semantic-release" /></a>

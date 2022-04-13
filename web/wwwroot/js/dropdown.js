@@ -2,33 +2,34 @@
 (function () {
   function closeDropdowns() {
     (document.querySelectorAll('.dropdown:not(.is-hoverable)') || []).forEach(
-      function ($el) {
-        $el.classList.remove('is-active');
+      function ($element) {
+        $element.classList.remove('is-active');
       },
     );
   }
-  document.addEventListener('click', function ($e) {
-    if (!$e.target.closest('.dropdown.is-active')) {
+
+  document.addEventListener('click', function (event) {
+    if (!event.target.closest('.dropdown.is-active')) {
       closeDropdowns();
     }
   });
 
   // Close dropdowns if ESC pressed
   document.addEventListener('keydown', function (event) {
-    var e = event || window.event;
-    if (e.keyCode === 27) {
+    event = event || window.event;
+    if (Number(event.keyCode) === 27) {
       closeDropdowns();
     }
   });
-  document.addEventListener('click', ($e) => {
-    if ($e.target.closest('.dropdown:not(.is-hoverable)')) {
-      var $el = $e.target.closest('.dropdown:not(.is-hoverable)');
-      $e.stopPropagation();
+  document.addEventListener('click', (event) => {
+    if (event.target.closest('.dropdown:not(.is-hoverable)')) {
+      const $element = event.target.closest('.dropdown:not(.is-hoverable)');
+      event.stopPropagation();
 
-      if ($el.classList.contains('is-active')) {
-        $el.classList.remove('is-active');
+      if ($element.classList.contains('is-active')) {
+        $element.classList.remove('is-active');
       } else {
-        $el.classList.add('is-active');
+        $element.classList.add('is-active');
       }
     }
   });

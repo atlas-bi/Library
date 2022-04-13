@@ -1,4 +1,4 @@
-// document.addEventListener('DOMContentLoaded', function () {
+// Document.addEventListener('DOMContentLoaded', function () {
 //   var e = document,
 //     t = null,
 //     getActiveUsers = function () {

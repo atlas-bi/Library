@@ -110,9 +110,12 @@ namespace Atlas_Web
                     pipeline.AddCssBundle("/css/site.min.css", "css/site.min.css");
 
                     /************   javascript   *************/
-                    pipeline.AddJavaScriptBundle("/js/polyfill.min.js", "/js/polyfill.min.js");
-
-                    pipeline.AddJavaScriptBundle("/js/shared.min.js", "/js/shared.min.js");
+                    pipeline.AddJavaScriptBundle("/js/polyfill.min.js", "js/polyfill.min.js");
+                    pipeline.AddJavaScriptBundle(
+                        "/js/purify.min.js",
+                        "lib/dompurify/purify.min.js"
+                    );
+                    pipeline.AddJavaScriptBundle("/js/shared.min.js", "js/shared.min.js");
                     pipeline.AddJavaScriptBundle("/js/realtime.min.js", "js/realtime.js");
 
                     // required for page load
@@ -129,7 +132,7 @@ namespace Atlas_Web
 
                     pipeline.AddJavaScriptBundle("/js/settings.min.js", "js/settings.min.js");
 
-                    pipeline.AddJavaScriptBundle("/js/profile.min.js", "js/profile.js");
+                    pipeline.AddJavaScriptBundle("/js/profile.min.js", "js/profile.min.js");
 
                     pipeline.AddJavaScriptBundle("/js/code.min.js", "js/highlight.min.js");
 
@@ -215,6 +218,7 @@ namespace Atlas_Web
                 app.UseHsts();
                 app.UseStatusCodePagesWithRedirects("/Error?id={0}");
                 // app.UseExceptionHandler("/Error");
+                app.UseHttpsRedirection();
             }
             else
             {
@@ -223,7 +227,6 @@ namespace Atlas_Web
 
             app.UseWebMarkupMin();
             app.UseWebOptimizer();
-            app.UseHttpsRedirection();
 
             app.UseStaticFiles(
                 new StaticFileOptions

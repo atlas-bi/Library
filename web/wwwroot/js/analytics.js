@@ -1,22 +1,20 @@
-const { ja, tr } = require('date-fns/locale');
-
 (function () {
   function bigNumber(text) {
-    var n = parseInt(text),
-      p = Math.pow,
-      d = p(10, 0),
-      i = 7,
-      s;
+    let n = parseInt(text, 10);
+    const d = 10 ** 0;
+    let i = 7;
+    let s;
     while (i)
-      (s = p(10, i-- * 3)) <= n &&
+      // eslint-disable-next-line no-unused-expressions
+      (s = 10 ** (i-- * 3)) <= n &&
         (n = Math.round((n * d) / s) / d + 'kMGTPE'[i]);
     return n;
   }
 
-  var primaryChart = document.getElementById('visits-chart');
+  const primaryChart = document.querySelector('#visits-chart');
 
-  var primaryChartAjax = null;
-  var config = {
+  let primaryChartAjax = null;
+  const config = {
     type: 'bar',
     options: {
       tooltips: {
@@ -46,7 +44,7 @@ const { ja, tr } = require('date-fns/locale');
             id: '1',
             ticks: {
               beginAtZero: true,
-              callback: function (value, index, values) {
+              callback(value) {
                 return bigNumber(value);
               },
             },
@@ -58,7 +56,7 @@ const { ja, tr } = require('date-fns/locale');
             id: '2',
             ticks: {
               beginAtZero: true,
-              callback: function (value, index, values) {
+              callback(value) {
                 return Math.round(value * 10) / 10 + 's';
               },
             },
@@ -78,12 +76,12 @@ const { ja, tr } = require('date-fns/locale');
       },
     },
   };
-  var ctx = document.getElementById('visits-chart').getContext('2d');
+  const ctx = document.querySelector('#visits-chart').getContext('2d');
 
-  var activate = () => {
+  const activate = () => {
     // /* analytics page js for charts */
 
-    window.visits_chart = new Chart(ctx, config);
+    window.visitsChart = new Chart(ctx, config);
 
     loadChart();
     loadBoxes();
@@ -108,28 +106,30 @@ const { ja, tr } = require('date-fns/locale');
         '.dropdown.is-select[data-target="views-chart"] .dropdown-item',
       )
       .forEach(($x) =>
-        $x.addEventListener('click', ($e) => {
+        $x.addEventListener('click', (event) => {
           (
-            $e.target
+            event.target
               .closest('.dropdown')
               .querySelectorAll('.dropdown-item.is-active') || []
-          ).forEach(($el) => {
-            $el.classList.remove('is-active');
+          ).forEach(($element) => {
+            $element.classList.remove('is-active');
           });
-          $e.target.classList.add('is-active');
-          var $target = $e.target.closest('.dropdown.is-select .dropdown-item');
+          event.target.classList.add('is-active');
+          const $target = event.target.closest(
+            '.dropdown.is-select .dropdown-item',
+          );
 
           $target
             .closest('.dropdown')
-            .querySelector('.select-value').innerText = $target.innerText;
+            .querySelector('.select-value').textContent = $target.textContent;
 
-          /* build date parameters */
-          let now = new Date();
+          /* Build date parameters */
+          const now = new Date();
 
-          var dataset;
+          let dataset;
           switch ($target.dataset.range) {
             case '1':
-              // today
+              // Today
 
               dataset =
                 '?start_at=' +
@@ -138,18 +138,9 @@ const { ja, tr } = require('date-fns/locale');
                 differenceInSeconds(endOfDay(now), now);
 
               break;
-            default:
-            case '2':
-              // last 24 hours
 
-              dataset =
-                '?start_at=' +
-                differenceInSeconds(addHours(now, -24), now) +
-                '&end_at=0';
-
-              break;
             case '3':
-              // this week
+              // This week
 
               dataset =
                 '?start_at=' +
@@ -158,7 +149,7 @@ const { ja, tr } = require('date-fns/locale');
                 differenceInSeconds(endOfWeek(now), now);
               break;
             case '4':
-              // last 7 days
+              // Last 7 days
 
               dataset =
                 '?start_at=' +
@@ -166,7 +157,7 @@ const { ja, tr } = require('date-fns/locale');
                 '&end_at=0';
               break;
             case '5':
-              // this month
+              // This month
 
               dataset =
                 '?start_at=' +
@@ -175,7 +166,7 @@ const { ja, tr } = require('date-fns/locale');
                 differenceInSeconds(endOfMonth(now), now);
               break;
             case '6':
-              //last 30 days
+              // Last 30 days
 
               dataset =
                 '?start_at=' +
@@ -183,7 +174,7 @@ const { ja, tr } = require('date-fns/locale');
                 '&end_at=0';
               break;
             case '7':
-              //last 90 days
+              // Last 90 days
 
               dataset =
                 '?start_at=' +
@@ -191,7 +182,7 @@ const { ja, tr } = require('date-fns/locale');
                 '&end_at=0';
               break;
             case '8':
-              // this year
+              // This year
 
               dataset =
                 '?start_at=' +
@@ -200,7 +191,7 @@ const { ja, tr } = require('date-fns/locale');
                 differenceInSeconds(endOfYear(now), now);
               break;
             case '9':
-              // all time
+              // All time
 
               dataset =
                 '?start_at=' +
@@ -208,7 +199,17 @@ const { ja, tr } = require('date-fns/locale');
                 '&end_at=0';
               break;
             case '10':
-              // custom range
+              // Custom range
+
+              break;
+            case '2':
+            default:
+              // Last 24 hours
+
+              dataset =
+                '?start_at=' +
+                differenceInSeconds(addHours(now, -24), now) +
+                '&end_at=0';
 
               break;
           }
@@ -219,16 +220,17 @@ const { ja, tr } = require('date-fns/locale');
         }),
       );
   };
+
   function buildDataTable(data) {
-    if (data.length) {
-      var table = document.createElement('table');
+    if (data.length > 0) {
+      const table = document.createElement('table');
       table.classList.add('table', 'is-no-border', 'is-fullwidth', 'bar');
-      var header = document.createElement('tr');
+      const header = document.createElement('tr');
       header.innerHTML = `<tr><th>${data[0].title_one}</th><th class="is-narrow">${data[0].title_two}</th></tr>`;
-      table.appendChild(header);
+      table.append(header);
       data.forEach(($r) => {
-        var row = document.createElement('tr');
-        var $link = $r.href ? `<a href="${$r.href}">${$r.key}</a>` : $r.key;
+        const row = document.createElement('tr');
+        const $link = $r.href ? `<a href="${$r.href}">${$r.key}</a>` : $r.key;
         row.innerHTML = `<td class="is-middle">${$link}</td><td class="is-narrow has-text-right"><strong class="mr-2">${bigNumber(
           $r.count,
         )}</strong>`;
@@ -239,28 +241,37 @@ const { ja, tr } = require('date-fns/locale');
             $r.percent * 100,
           )}%</strong></span>`;
         }
+
         row.innerHTML += `</td>`;
-        table.appendChild(row);
+        table.append(row);
       });
       return table;
-    } else {
-      return document.createElement('span');
     }
+
+    return document.createElement('span');
   }
-  function loadAjax(params = '') {
-    console.log('params', params);
-    (document.querySelectorAll('.analytics[data-url]') || []).forEach(($el) => {
-      console.log($el);
-      $el.setAttribute('data-params', params);
-      $el.dispatchEvent(new CustomEvent('reload'));
-    });
+
+  function loadAjax(parameters = '') {
+    console.log('params', parameters);
+    (document.querySelectorAll('.analytics[data-url]') || []).forEach(
+      ($element) => {
+        console.log($element);
+        $element.setAttribute('data-params', parameters);
+        $element.dispatchEvent(new CustomEvent('reload'));
+      },
+    );
   }
-  function loadBoxes(params = '') {
+
+  function loadBoxes(parameters = '') {
     (document.querySelectorAll('.bar-data-wrapper[data-url]') || []).forEach(
-      ($el) => {
-        $el.style.opacity = '.5';
-        var aj = new XMLHttpRequest();
-        aj.open('get', $el.dataset.url + params.replace('?', '&'), true);
+      ($element) => {
+        $element.style.opacity = '.5';
+        const aj = new XMLHttpRequest();
+        aj.open(
+          'get',
+          $element.dataset.url + parameters.replace('?', '&'),
+          true,
+        );
         aj.setRequestHeader(
           'Content-Type',
           'application/x-www-form-urlencoded; charset=UTF-8',
@@ -268,23 +279,23 @@ const { ja, tr } = require('date-fns/locale');
         aj.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
         aj.send();
 
-        aj.onload = function () {
-          $el.innerHTML = '';
-          $el.appendChild(buildDataTable(JSON.parse(aj.responseText)));
-          $el.style.visibility = 'visible';
-          $el.style.opacity = '1';
-        };
+        aj.addEventListener('load', function () {
+          $element.innerHTML = '';
+          $element.append(buildDataTable(JSON.parse(aj.responseText)));
+          $element.style.visibility = 'visible';
+          $element.style.opacity = '1';
+        });
       },
     );
   }
 
-  function loadChart(params = '') {
+  function loadChart(parameters = '') {
     if (primaryChartAjax !== null) {
       primaryChartAjax.abort();
     }
 
     primaryChartAjax = new XMLHttpRequest();
-    primaryChartAjax.open('get', primaryChart.dataset.url + params, true);
+    primaryChartAjax.open('get', primaryChart.dataset.url + parameters, true);
     primaryChartAjax.setRequestHeader(
       'Content-Type',
       'application/x-www-form-urlencoded; charset=UTF-8',
@@ -292,36 +303,36 @@ const { ja, tr } = require('date-fns/locale');
     primaryChartAjax.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
     primaryChartAjax.send();
 
-    primaryChartAjax.onload = function () {
-      var rep = JSON.parse(primaryChartAjax.responseText);
+    primaryChartAjax.addEventListener('load', function () {
+      const rep = JSON.parse(primaryChartAjax.responseText);
 
-      var views = document.getElementById('analytics-views');
+      const views = document.querySelector('#analytics-views');
       if (views) {
-        views.innerText = bigNumber(rep.views);
+        views.textContent = bigNumber(rep.views);
       }
-      var visitors = document.getElementById('analytics-visitors');
+
+      const visitors = document.querySelector('#analytics-visitors');
       if (visitors) {
-        visitors.innerText = bigNumber(rep.visitors);
+        visitors.textContent = bigNumber(rep.visitors);
       }
-      var load_time = document.getElementById('analytics-load-time');
-      if (load_time) {
-        load_time.innerText = rep.load_time;
+
+      const loadTime = document.querySelector('#analytics-load-time');
+      if (loadTime) {
+        loadTime.textContent = rep.load_time;
       }
-      window.visits_chart.data = rep.data;
-      window.visits_chart.update();
-    };
+
+      window.visitsChart.data = rep.data;
+      window.visitsChart.update();
+    });
   }
 
-  document.addEventListener('click', (e) => {
+  document.addEventListener('click', (event) => {
     if (
-      e.target.matches('.trace-resolved[type="checkbox"]') &&
-      e.target.tagName == 'INPUT'
+      event.target.matches('.trace-resolved[type="checkbox"]') &&
+      event.target.tagName === 'INPUT'
     ) {
-      var i = e.target,
-        type = 1,
-        q,
-        url,
-        data;
+      const i = event.target;
+      let type = 1;
 
       if (i.hasAttribute('checked')) {
         i.removeAttribute('checked');
@@ -352,28 +363,30 @@ const { ja, tr } = require('date-fns/locale');
         });
       }
 
-      data = {
+      const data = {
         Id: i.getAttribute('id'),
         Type: type,
       };
-      url = Object.keys(data)
+      const url = Object.keys(data)
         .map(function (k) {
           return encodeURIComponent(k) + '=' + encodeURIComponent(data[k]);
         })
         .join('&');
-      q = new XMLHttpRequest();
+      const q = new XMLHttpRequest();
       q.open('post', '/Analytics/Trace/?handler=Resolved&' + url, true);
       q.setRequestHeader('Content-Type', 'text/html;charset=UTF-8`');
       q.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
       q.send();
     }
   });
-  var test = 0;
+  let test = 0;
   function load() {
-    // wait for chartjs to load.. basically 15 seconds max
-    if (test == 300) {
+    // Wait for chartjs to load.. basically 15 seconds max
+    if (test === 300) {
       return false;
-    } else if (typeof Chart == 'undefined') {
+    }
+
+    if (typeof Chart === 'undefined') {
       setTimeout(function () {
         test++;
         load();
@@ -383,5 +396,6 @@ const { ja, tr } = require('date-fns/locale');
       activate();
     }
   }
+
   load();
 })();

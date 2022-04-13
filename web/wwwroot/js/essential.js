@@ -1,23 +1,23 @@
 (function () {
-  document.addEventListener('change', function (e) {
-    if (e.target.closest('#change-role')) {
-      e.target.closest('form').querySelector('#MyRole_Url').value =
+  document.addEventListener('change', function (event) {
+    if (event.target.closest('#change-role')) {
+      event.target.closest('form').querySelector('#MyRole_Url').value =
         window.location.href;
-      e.target.closest('form').submit();
+      event.target.closest('form').submit();
     }
   });
 
   function showScrollToTop() {
     if (window.pageYOffset > 50) {
-      document.getElementById('back-to-top').style.visibility = 'visible';
+      document.querySelector('#back-to-top').style.visibility = 'visible';
     } else {
-      document.getElementById('back-to-top').style.visibility = 'hidden';
+      document.querySelector('#back-to-top').style.visibility = 'hidden';
     }
   }
 
   showScrollToTop();
-  document.addEventListener('click', function (e) {
-    if (e.target.closest('#back-to-top')) {
+  document.addEventListener('click', function (event) {
+    if (event.target.closest('#back-to-top')) {
       document.documentElement.scrollTop = document.body.scrollTop = 0;
       return false;
     }

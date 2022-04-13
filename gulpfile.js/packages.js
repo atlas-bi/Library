@@ -6,4 +6,13 @@ gulp.task('package:markdown-it', () => {
     .pipe(gulp.dest('web/wwwroot/lib/markdown-it'));
 });
 
-gulp.task('packages', gulp.parallel('package:markdown-it'));
+gulp.task('package:dompurify', () => {
+  return gulp
+    .src('node_modules/dompurify/dist/purify.min.js')
+    .pipe(gulp.dest('web/wwwroot/lib/dompurify'));
+});
+
+gulp.task(
+  'packages',
+  gulp.parallel('package:markdown-it', 'package:dompurify'),
+);

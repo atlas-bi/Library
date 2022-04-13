@@ -3,85 +3,88 @@
     [data-toggle="clps"][data-target="#el"]
     #el
     */
-  var d = document;
-  d.addEventListener('click', function (e) {
-    var el;
+  const d = document;
+  d.addEventListener('click', (event) => {
+    let element;
 
-    if (e.target.closest('[data-toggle="clps"]')) {
-      el = d.getElementById(
-        e.target
+    if (event.target.closest('[data-toggle="clps"]')) {
+      element = d.querySelector(
+        `#${event.target
           .closest('[data-toggle]')
           .getAttribute('data-target')
-          .replace('#', ''),
+          .replace('#', '')}`,
       );
 
-      if (el == null) {
+      if (element === null) {
         return;
       }
 
-      if (el.style.maxHeight || el.classList.contains('clps-o')) {
-        c(el);
+      if (element.style.maxHeight || element.classList.contains('clps-o')) {
+        c(element);
       } else {
-        o(el);
+        o(element);
       }
-    } else if (e.target.closest('.clps:not(.clps-o')) {
-      o(e.target.closest('.clps:not(.clps-o'));
+    } else if (event.target.closest('.clps:not(.clps-o')) {
+      o(event.target.closest('.clps:not(.clps-o'));
     }
   });
 
-  function h(el) {
-    el.style.maxHeight = el.scrollHeight + 20 + 'px';
+  function h(element) {
+    element.style.maxHeight = element.scrollHeight + 20 + 'px';
   }
 
-  function c(el) {
-    el.style.maxHeight = '';
-    el.style.overflow = 'hidden';
-    el.classList.remove('clps-o');
+  function c(element) {
+    element.style.maxHeight = '';
+    element.style.overflow = 'hidden';
+    element.classList.remove('clps-o');
   }
 
-  function o(el) {
-    el.classList.add('clps-o');
-    h(el);
-    var l = el;
+  function o(element) {
+    element.classList.add('clps-o');
+    h(element);
+    let l = element;
     while ((l = l.parentElement.closest('.clps-o'))) {
       l.style.removeProperty('max-height');
     }
+
     d.dispatchEvent(new CustomEvent('collapse-opened'));
 
-    // close siblings
-    var o = el.parentElement.querySelector('.clps-o'),
-      r = [];
+    // Close siblings
+    let o = element.parentElement.querySelector('.clps-o');
+    const r = [];
 
     while (o) {
-      if (o !== el && o.nodeType === Node.ELEMENT_NODE) r.push(o);
+      if (o !== element && o.nodeType === Node.ELEMENT_NODE) r.push(o);
       o = o.nextElementSibling || o.nextSibling;
     }
 
-    for (var x = 0; x < r.length; x++) c(r[x]);
+    for (let x = 0; x < r.length; x++) c(r[x]);
 
-    // after animation finished add max-height back
+    // After animation finished add max-height back
     window.setTimeout(function () {
-      var l = el.parentElement.closest('.clps-o');
+      let l = element.parentElement.closest('.clps-o');
       while (l) {
         h(l);
         l = l.parentElement.closest('.clps-o');
       }
-      if (el.classList.contains('clps-o')) {
-        el.style.overflow = 'visible';
+
+      if (element.classList.contains('clps-o')) {
+        element.style.overflow = 'visible';
       }
     }, 300);
   }
 
-  d.addEventListener('change', function (e) {
-    if (e.target.closest('.clps-o')) {
-      var l = e.target.closest('.clps-o');
+  d.addEventListener('change', function (event) {
+    if (event.target.closest('.clps-o')) {
+      let l = event.target.closest('.clps-o');
       while (l) {
         l.style.removeProperty('max-height');
         l = l.parentElement.closest('.clps-o');
       }
-      // after animation finished add max-height back
+
+      // After animation finished add max-height back
       window.setTimeout(function () {
-        var l = e.target.closest('.clps-o');
+        let l = event.target.closest('.clps-o');
         while (l) {
           h(l);
           l = l.parentElement.closest('.clps-o');
@@ -92,18 +95,18 @@
 
   d.addEventListener(
     'clps-close',
-    function (e) {
-      if (typeof e.detail !== 'undefined') {
-        c(e.detail.el);
+    function (event) {
+      if (typeof event.detail !== 'undefined') {
+        c(event.detail.el);
       }
     },
     false,
   );
   d.addEventListener(
     'clps-open',
-    function (e) {
-      if (typeof e.detail !== 'undefined') {
-        o(e.detail.el);
+    function (event) {
+      if (typeof event.detail !== 'undefined') {
+        o(event.detail.el);
       }
     },
     false,
@@ -115,22 +118,25 @@
     [data-action="collapse"][data-target="#el"]
     #el
     */
-  var d = document;
-  d.addEventListener('click', function (e) {
-    var el, src;
+  const d = document;
+  d.addEventListener('click', function (event) {
+    let element;
+    let src;
 
-    if (e.target.closest('[data-action="collapse"]')) {
-      src = e.target.closest('[data-action="collapse"]');
-      el = d.getElementById(src.getAttribute('data-target').replace('#', ''));
-      if (el == null) {
+    if (event.target.closest('[data-action="collapse"]')) {
+      src = event.target.closest('[data-action="collapse"]');
+      element = d.querySelector(
+        `#${src.getAttribute('data-target').replace('#', '')}`,
+      );
+      if (element === null) {
         return;
       }
 
-      if (el.style.maxHeight || el.classList.contains('is-active')) {
-        el.classList.remove('is-active');
+      if (element.style.maxHeight || element.classList.contains('is-active')) {
+        element.classList.remove('is-active');
         src.classList.remove('is-active');
       } else {
-        el.classList.add('is-active');
+        element.classList.add('is-active');
         src.classList.add('is-active');
       }
     }

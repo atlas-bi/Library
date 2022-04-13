@@ -1,28 +1,25 @@
 .mlbx {
   border-radius: 6px;
-  border: 1px solid rgb(202, 202, 200);
-  margin-left: 0 !important;
-  margin-right: 0 !important;
-  box-shadow: 0 0 30px 10px rgb(209, 209, 209);
+  border: 1px solid rgb(202 202 200);
+  margin: 30px 0 50px !important;
+  box-shadow: 0 0 30px 10px rgb(209 209 209);
   flex: 1;
-  margin-bottom: 50px;
-  margin-top: 30px;
   position: relative;
-  color: rgb(39, 39, 39);
+  color: rgb(39 39 39);
   letter-spacing: 0.4px;
 }
 
 .mlbx-dvdr {
   height: 1px;
-  background-color: rgb(230, 230, 230);
+  background-color: rgb(230 230 230);
 }
 
 .mlbx-dvdr.medium {
-  background-color: rgb(201, 201, 201);
+  background-color: rgb(201 201 201);
 }
 
 .mlbx-dvdr.dark {
-  background-color: rgb(166, 166, 166);
+  background-color: rgb(166 166 166);
 }
 
 .mlbx-bd::after {
@@ -41,7 +38,7 @@
   height: 50px;
   margin-top: -35px;
   background: #fff;
-  background: linear-gradient(rgba(255, 255, 255, 0), #fff);
+  background: linear-gradient(rgba(255 255 255 / 0%), #fff);
   position: absolute;
   bottom: 0;
   left: -30px;
@@ -52,7 +49,7 @@
 }
 
 .mlbx-bd {
-  background-color: rgb(255, 255, 255);
+  background-color: rgb(255 255 255);
   border-bottom-right-radius: inherit;
   border-bottom-left-radius: inherit;
   font-size: 14px;
@@ -65,21 +62,11 @@
 
 .mailbox-filters-outer {
   height: 30px;
-  background: rgb(208, 208, 208);
-  background: -moz-linear-gradient(
-    180deg,
-    rgba(208, 208, 208, 1) 35%,
-    rgba(201, 201, 201, 1) 100%
-  );
-  background: -webkit-linear-gradient(
-    180deg,
-    rgba(208, 208, 208, 1) 35%,
-    rgba(201, 201, 201, 1) 100%
-  );
+  background: rgb(208 208 208);
   background: linear-gradient(
     180deg,
-    rgba(208, 208, 208, 1) 35%,
-    rgba(201, 201, 201, 1) 100%
+    rgba(208 208 208 / 100%) 35%,
+    rgba(201 201 201 / 100%) 100%
   );
   filter: progid:dximagetransform.microsoft.gradient(startColorstr="#d0d0d0", endColorstr="#c9c9c9", GradientType=1);
 }
