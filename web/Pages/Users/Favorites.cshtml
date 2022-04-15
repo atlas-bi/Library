@@ -80,12 +80,11 @@
                 </a>
             }
         </section>
-    }
 
-    <div class="columns">
-        @if (Model.Reports.Any() || Model.Collections.Any() || Model.Initiatives.Any() || Model.Terms.Any() || Model.Users.Any() || Model.Searches.Any() || Model.Groups.Any())
-        {
-            var total = Model.Reports.Count() + Model.Collections.Count() + Model.Initiatives.Count() + Model.Terms.Count() + Model.Users.Count() + Model.Searches.Count() + Model.Groups.Count();
+        <div class="columns">
+           @{
+               var total = Model.Reports.Count() + Model.Collections.Count() + Model.Initiatives.Count() + Model.Terms.Count() + Model.Users.Count() + Model.Searches.Count() + Model.Groups.Count();
+            }
             <div class="column is-one-quarter is-sticky is-align-self-flex-start">
                 <div class="is-relative favorite-folders @if(ViewBag.IsMe){<text>reorder</text>}">
                     <div class="box active favorites-show-all is-clickable is-relative" data-folderid="0">
@@ -289,6 +288,18 @@
                     })()
                 </script>
             </div>
-        }
-    </div>
+        </div>
+    } else if (Model.RunReports != null) {
+        <h2 class="title is-2" id="reports">You don't have any favorites! Here's some reports you've used.</h2>
+        <div class="columns is-multiline">
+            @foreach (var t in Model.RunReports)
+            {
+                <div class="column is-half ">
+                    <partial name="Reports/_Snippet" model="t" />
+                </div>
+            }
+        </div>
+    } else {
+        <p>You don't have any favorites! Search to get started.</p>
+    }
 </div>
