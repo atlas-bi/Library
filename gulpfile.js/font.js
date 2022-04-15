@@ -26,6 +26,7 @@ gulp.task('font:fontawesome', (done) => {
         'star',
         'paper-plane',
         'image',
+        'copy',
       ],
       solid: [
         'plus-circle',

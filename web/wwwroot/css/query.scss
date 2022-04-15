@@ -1,6 +1,6 @@
 .query-box {
   background: #474949;
-  border-radius: 6px;
+  border-radius: $radius;
   margin-right: 1px;
   max-height: 500px;
   overflow: hidden;
@@ -21,27 +21,4 @@
     padding-bottom: 1rem;
     padding-right: 130px;
   }
-}
-
-.query-copy {
-  background-color: transparent;
-  border: 1px solid transparent;
-  border-radius: 0.25rem;
-  display: inline-block;
-  font-size: 1rem;
-  height: 30px;
-  line-height: 1.5;
-  text-align: center;
-  user-select: none;
-  vertical-align: middle;
-  white-space: nowrap;
-  width: 30px;
-
-  &:focus {
-    outline: none;
-  }
-}
-
-.query-box + .query-box {
-  margin-top: 15px;
 }
