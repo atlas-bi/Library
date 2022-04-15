@@ -84,7 +84,7 @@
     "lint:scss": "stylelint \"web/wwwroot/css/**/*.scss\"",
     "lint": "npm run lint:js & npm run lint:scss",
     "test:dev": "npm run dotnet:build && (npm run test || true) && npm run test:report_html",
-    "commit": "git add . && cz"
+    "commit": "git add . && npm run pre-commit && cz --no-verify"
   },
   "lint-staged": {
     "*.cs": "dotnet csharpier .",
