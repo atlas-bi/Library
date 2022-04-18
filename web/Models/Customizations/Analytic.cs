@@ -26,7 +26,7 @@ namespace Atlas_Web.Models
                 {
                     return 0;
                 }
-                if (!Search.Contains("&", StringComparison.CurrentCulture))
+                if (!Search.Contains('&', StringComparison.CurrentCulture))
                 {
                     Length = Search.Length - StartIndex;
                 }
@@ -35,7 +35,7 @@ namespace Atlas_Web.Models
                     Length = (Search.IndexOf("&") - StartIndex);
                 }
 
-                return Int32.TryParse(Search.Substring(StartIndex, Length), out int result)
+                return Int32.TryParse(Search.AsSpan(StartIndex, Length), out int result)
                   ? result
                   : 0;
             }
@@ -56,7 +56,7 @@ namespace Atlas_Web.Models
                 {
                     return "None";
                 }
-                if (!Search.Contains("&", StringComparison.CurrentCulture))
+                if (!Search.Contains('&', StringComparison.CurrentCulture))
                 {
                     Length = Search.Length - StartIndex;
                 }

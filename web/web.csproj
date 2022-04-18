@@ -11,7 +11,7 @@
   </PropertyGroup>
   <ItemGroup>
     <SonarQubeSetting Include="sonar.exclusions">
-      <Value>wwwroot/font/**/*, wwwroot/js/polyfill/**/*, wwwroot/lib/**/*, solr/**/*, atlas-creation_script.sql</Value>
+      <Value>wwwroot/font/**/*, wwwroot/js/polyfill/**/*, wwwroot/lib/**/*, solr/**/*, atlas-creation_script.sql, atlas-demo-seed_script.sql, Migrations/**/*</Value>
     </SonarQubeSetting>
   </ItemGroup>
   <PropertyGroup>
