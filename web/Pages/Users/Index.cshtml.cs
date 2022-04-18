@@ -1129,10 +1129,7 @@ namespace Atlas_Web.Pages.Users
                     return (
                         from d in _context.ReportObjectTopRuns
                         where
-                            d.RunUserId == UserId
-                            && d.ReportObjectTypeId != 21
-                            && d.ReportObjectTypeId != 39 // extensions
-                            && d.ReportObjectTypeId != 40 // columns
+                            d.RunUserId == UserId && d.ReportObject.ReportObjectType.Visible == "Y"
                         orderby d.Runs descending
                         select new ReportRunData
                         {
@@ -1155,7 +1152,10 @@ namespace Atlas_Web.Pages.Users
 
                     return (
                         from d in _context.ReportObjectRunData
-                        where d.RunUserId == UserId && d.RunStatus != "Success"
+                        where
+                            d.RunUserId == UserId
+                            && d.RunStatus != "Success"
+                            && d.ReportObject.ReportObjectType.Visible == "Y"
                         orderby d.RunStartTime descending
                         select new FailedRunsData
                         {

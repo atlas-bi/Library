@@ -6,6 +6,7 @@ const rollup = require('rollup-stream-gulp');
 const { nodeResolve } = require('@rollup/plugin-node-resolve');
 const commonjs = require('@rollup/plugin-commonjs');
 const { babel } = require('@rollup/plugin-babel');
+const json = require('@rollup/plugin-json');
 
 const rollupConfig = {
   output: { format: 'iife', name: 'module' },
@@ -15,6 +16,7 @@ const rollupConfig = {
     babel({
       babelHelpers: 'bundled',
     }),
+    json(),
   ],
 };
 const uglifyConfig = {

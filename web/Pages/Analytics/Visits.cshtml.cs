@@ -66,11 +66,13 @@ namespace Atlas_Web.Pages.Analytics
             when using all time, get first day and last day and use the above rules
             */
 
-            var subquery = _context.Analytics.Where(
-                x =>
-                    x.AccessDateTime >= DateTime.Now.AddSeconds(start_at)
-                    && x.AccessDateTime <= DateTime.Now.AddSeconds(end_at)
-            );
+            var subquery = _context.Analytics
+                .Where(
+                    x =>
+                        x.AccessDateTime >= DateTime.Now.AddSeconds(start_at)
+                        && x.AccessDateTime <= DateTime.Now.AddSeconds(end_at)
+                )
+                .OrderBy(x => x.AccessDateTime);
             switch (end_at - start_at)
             {
                 // for < 2 days

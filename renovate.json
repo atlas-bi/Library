@@ -13,13 +13,10 @@
   "assignees": ["christopherpickering"],
   "bumpVersion": "patch",
   "commitMessagePrefix": "chore(deps)",
-  "labels": [
-    "maintenance", 
-    "renovate"
-  ],
+  "labels": ["maintenance", "renovate"],
   "packageRules": [
     {
-      "matchUpdateTypes": ["pin","digest"],
+      "matchUpdateTypes": ["pin", "digest"],
       "automerge": true
     },
     {
@@ -37,9 +34,7 @@
       "automerge": true
     },
     {
-      "matchDepTypes": [
-        "devDependencies"
-      ],
+      "matchDepTypes": ["devDependencies"],
       "automerge": true
     }
   ],

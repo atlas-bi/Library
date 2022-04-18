@@ -60,6 +60,8 @@ namespace Atlas_Web.Pages.Users
         public List<StarredGroup> Groups { get; set; }
         public List<StarredSearch> Searches { get; set; }
 
+        public List<ReportObject> RunReports { get; set; }
+
         public async Task<ActionResult> OnGet(int? id)
         {
             UserId = UserHelpers.GetUser(_cache, _context, User.Identity.Name).UserId;
@@ -129,6 +131,35 @@ namespace Atlas_Web.Pages.Users
                 new AdList { Url = "/Users?handler=SharedObjects", Column = 2 },
             };
             ViewData["AdLists"] = AdLists;
+
+            if (
+                Reports.Count
+                    + Collections.Count
+                    + Initiatives.Count
+                    + Terms.Count
+                    + Users.Count
+                    + Searches.Count
+                    + Groups.Count
+                == 0
+            )
+            {
+                RunReports = await _context.ReportObjects
+                    .Where(
+                        x =>
+                            x.ReportObjectTopRuns.Any(y => y.RunUserId == UserId)
+                            && x.ReportObjectType.Visible == "Y"
+                    )
+                    .Include(x => x.ReportObjectDoc)
+                    .Include(x => x.ReportObjectType)
+                    .Include(x => x.ReportObjectAttachments)
+                    .Include(x => x.StarredReports)
+                    .OrderByDescending(
+                        x =>
+                            x.ReportObjectTopRuns.Where(y => y.RunUserId == UserId).Sum(x => x.Runs)
+                    )
+                    .Take(30)
+                    .ToListAsync();
+            }
 
             return Page();
         }
