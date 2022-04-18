@@ -43,35 +43,7 @@ namespace Atlas_Web.Pages.API
 
         public List<AdList> AdLists { get; set; }
 
-        public void OnGet()
-        {
-            ViewData["stuff"] = (
-                from u in (
-                    from u in _context.Users
-                    group u by u.FullnameCalc into grp
-                    select new { grp.Key, cnt = grp.Count() }
-                )
-                where u.cnt > 1
-                orderby u.cnt descending
-                select new Stuffdata { Key = u.Key, Cnt = u.cnt }
-            ).ToList();
-            ViewData["summary"] = (
-                from u in (
-                    from u in _context.Users
-                    group u by u.FullnameCalc into grp
-                    select new { grp.Key, cnt = grp.Count() }
-                )
-                where u.cnt > 1
-                group u by u.cnt into grp
-                orderby grp.Count() descending
-                select new Stuffdata { Key = grp.Key.ToString(), Cnt = grp.Count() }
-            ).ToList();
-
-            ViewData["alluserrs"] = (
-                from u in _context.Users
-                select new Stuffdata { Key = u.FullnameCalc, Cnt = 0 }
-            ).ToList();
-        }
+        public void OnGet() { }
 
         public async Task<ActionResult> OnPostShareObject(string to, string url, string name)
         {

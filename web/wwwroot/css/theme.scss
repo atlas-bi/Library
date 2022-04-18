@@ -121,10 +121,11 @@ span[data-tooltip] {
 
 @import './utility/drag';
 @import './utility/chart';
-@import './markdown';
+
 @import './messagebox';
 
 /* purgecss start ignore */
+@import './editor'; // codemirror format
 @import '../lib/scrollbars/simple-scrollbar';
 @import '../lib/highlight/rainbow';
 

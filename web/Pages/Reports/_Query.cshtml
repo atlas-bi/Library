@@ -12,10 +12,20 @@
     <div class="panel-block is-collapsible is-block py-0" id="query-data">
         @if (!ViewContext.HttpContext.Request.Headers["User-Agent"].ToString().Contains("Trident"))
         {
-            @foreach (var t in Model.Report.ReportObjectQueries)
+            @for (var q=0; q< Model.Report.ReportObjectQueries.Count; q++)
             {
-                <button class="query-copy" onclick="copyQuery(event,@t.ReportObjectQueryId)"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M433.941 65.941l-51.882-51.882A48 48 0 0 0 348.118 0H176c-26.51 0-48 21.49-48 48v48H48c-26.51 0-48 21.49-48 48v320c0 26.51 21.49 48 48 48h224c26.51 0 48-21.49 48-48v-48h80c26.51 0 48-21.49 48-48V99.882a48 48 0 0 0-14.059-33.941zM266 464H54a6 6 0 0 1-6-6V150a6 6 0 0 1 6-6h74v224c0 26.51 21.49 48 48 48h96v42a6 6 0 0 1-6 6zm128-96H182a6 6 0 0 1-6-6V54a6 6 0 0 1 6-6h106v88c0 13.255 10.745 24 24 24h88v202a6 6 0 0 1-6 6zm6-256h-64V48h9.632c1.591 0 3.117.632 4.243 1.757l48.368 48.368a6 6 0 0 1 1.757 4.243V112z"/></svg></button>
-                <div class="query-box">
+                var t = Model.Report.ReportObjectQueries.ToList()[q];
+
+                <div class="is-flex is-justify-content-space-between m-3 mb-0 mt-5">
+                    <h3 class="title is-3 mb-0">Query #@(q+1) | @t.Name</h3>
+                    <button class="button" onclick="copyQuery(event,@t.ReportObjectQueryId)">
+                        <span class="icon">
+                            <i class="far fa-copy"></i>
+                        </span>
+                        <span>Copy Query</span>
+                    </button>
+                </div>
+                <div class="query-box m-3">
                     <div class="query-box-inner light @if (!ViewContext.HttpContext.Request.Headers["User-Agent"].ToString().Contains("Trident"))
                     {<text>ss-preview</text>}" id='query-@t.ReportObjectQueryId' @if (!ViewContext.HttpContext.Request.Headers["User-Agent"].ToString().Contains("Trident"))
                 {<text>ss-container</text>}>
@@ -27,10 +37,17 @@
             <!-- metric queries -->
             @foreach (var t in Model.ComponentQueries)
             {
-                <h4><a href="/Reports?id=@t.ReportObjectId">@t.Name (@t.ReportObject.EpicMasterFile @t.ReportObject.EpicRecordId)</a></h4>
+                <div class="is-flex is-justify-content-space-between m-3 mb-0 mt-5">
+                    <h3 class="title is-3 mb-0"><a href="/Reports?id=@t.ReportObjectId">@t.Name (@t.ReportObject.EpicMasterFile @t.ReportObject.EpicRecordId)</a></h3>
+                    <button class="button m-3 mb-0" onclick="copyQuery(event,query-@t.ReportObjectId)">
+                        <span class="icon">
+                            <i class="far fa-copy"></i>
+                        </span>
+                        <span>Copy Query</span>
+                    </button>
+                </div>
                 <p>@t.ReportObject.Description</p>
-                <button class="query-copy " onclick="copyQuery(event,query-@t.ReportObjectId)"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M433.941 65.941l-51.882-51.882A48 48 0 0 0 348.118 0H176c-26.51 0-48 21.49-48 48v48H48c-26.51 0-48 21.49-48 48v320c0 26.51 21.49 48 48 48h224c26.51 0 48-21.49 48-48v-48h80c26.51 0 48-21.49 48-48V99.882a48 48 0 0 0-14.059-33.941zM266 464H54a6 6 0 0 1-6-6V150a6 6 0 0 1 6-6h74v224c0 26.51 21.49 48 48 48h96v42a6 6 0 0 1-6 6zm128-96H182a6 6 0 0 1-6-6V54a6 6 0 0 1 6-6h106v88c0 13.255 10.745 24 24 24h88v202a6 6 0 0 1-6 6zm6-256h-64V48h9.632c1.591 0 3.117.632 4.243 1.757l48.368 48.368a6 6 0 0 1 1.757 4.243V112z"/></svg></button>
-                <div class="query-box">
+                <div class="query-box m-3">
                     <div class="query-box-inner light @if (!ViewContext.HttpContext.Request.Headers["User-Agent"].ToString().Contains("Trident"))
                     {<text>ss-preview</text>}" id='query-@t.ReportObjectId' @if (!ViewContext.HttpContext.Request.Headers["User-Agent"].ToString().Contains("Trident"))
                 {<text>ss-container</text>}>
