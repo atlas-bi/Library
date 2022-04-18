@@ -9,6 +9,11 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <Optimize>true</Optimize>
   </PropertyGroup>
+  <ItemGroup>
+    <SonarQubeSetting Include="sonar.coverage.exclusions">
+      <Value>**/wwwroot/font/**/*, **/wwwroot/js/polyfill/**/*</Value>
+    </SonarQubeSetting>
+  </ItemGroup>
   <PropertyGroup>
     <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
     <OutputType>Exe</OutputType>

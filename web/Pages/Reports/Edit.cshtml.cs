@@ -340,15 +340,7 @@ namespace Atlas_Web.Pages.Reports
                     return false;
                 }
 
-                if (file == null)
-                {
-                    ModelState.AddModelError(
-                        file.Name,
-                        "The file was not received by the server. If this issue persists please contact Analytics."
-                    );
-                    return false;
-                }
-                else if (file.Length > 1024 * 1024)
+                if (file.Length > 1024 * 1024)
                 {
                     ModelState.AddModelError(
                         file.Name,

@@ -5,7 +5,7 @@
 @if(ViewBag.ActiveUserData.Count > 0)
 {
     <div class="table-responsive">
-        <table class="table @if (ViewBag.ActiveUserData.Count > 1) {<text>sort</text>} ">
+        <table class="table @if (ViewBag.ActiveUserData.Count > 1) {<text>sort</text>} " aria-label="active users">
             <thead>
                 <tr>
                     <th>User</th>

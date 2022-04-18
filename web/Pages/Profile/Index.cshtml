@@ -48,7 +48,7 @@
                 <div class="tab-cnt">
                     <div class="tab-dta" id="top-user-chart">
                         <div class="atlas-chart">
-                            <div class="ajaxLoader"><img class="ajaxLoader-img" src="/img/loader.gif" /></div>
+                            <div class="ajaxLoader"><img class="ajaxLoader-img" src="/img/loader.gif" alt="loader" /></div>
                             <script type="application/json">
                                 @{
                                     var TopTen = Model.TopUsers.Take(10);
@@ -80,7 +80,7 @@
                                         "axis": "1",
                                         "data": [
                                                 @foreach (var g in TopTen)
-                                                { 
+                                                {
                                                     <text>{ "title": "@g.Username", "data": "@g.Hits"}</text> @if(g != last){<text>,</text>}
                                                 }
                                             ]
@@ -92,7 +92,7 @@
                     <div class="tab-dta active" id="top-user-table">
                         <span class="has-text-grey">Data shown represents the last two years of usage.</span>
                         <div class="table-responsive">
-                            <table class="table sort">
+                            <table class="table sort" aria-label="top users">
                                 <thead>
                                     <tr>
                                         <th>User</th>
@@ -130,7 +130,7 @@
                 <div class="tab-cnt">
                     <div class="tab-dta" id="run-time-chart">
                          <div class="atlas-chart">
-                            <div class="ajaxLoader"><img class="ajaxLoader-img" src="/img/loader.gif" /></div>
+                            <div class="ajaxLoader"><img class="ajaxLoader-img" src="/img/loader.gif" alt="loader" /></div>
                             <script type="application/json">
                                 @{
                                     var runs = Model.RunTime.Take(25);
@@ -174,7 +174,7 @@
                     <div class="tab-dta active" id="run-time-table">
                         <span class="has-text-grey">Data shown represents the last two years of usage.</span>
                         <div class="table-responsive">
-                            <table class="table sort">
+                            <table class="table sort" aria-label="run time">
                                 <thead>
                                     <tr>
                                         <th>Week Starting At</th>
@@ -203,7 +203,7 @@
             <div class="tab-dta @if(!TopUsers && !RunHistory){<text>active</text>} my-4" id="failed-runs">
                 <h3>Failed Runs</h3>
                 <div class="table-responsive">
-                    <table class="table sort">
+                    <table class="table sort" aria-label="failed runs">
                         <thead>
                             <tr>
                                 <th>Run Date</th>
@@ -230,7 +230,7 @@
             <div class="tab-dta @if(!TopUsers && !RunHistory && !FailedRuns){<text>active</text>}" id="user-subscriptions">
                 <h3>Subscriptions</h3>
                 <div class="table-responsive">
-                    <table class="table sort">
+                    <table class="table sort" aria-label="user subscriptions">
                         <thead>
                             <tr>
                                 <th>Description</th>
@@ -262,7 +262,7 @@
 
                 <h3>User Favorites</h3>
                 <div class="table-responsive">
-                    <table class="table sort">
+                    <table class="table sort" aria-label="user favorites">
                         <thead>
                             <tr>
                                 <th>User</th>
