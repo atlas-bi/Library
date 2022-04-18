@@ -148,7 +148,6 @@ namespace Atlas_Web
 
                     pipeline.AddJavaScriptBundle(
                         "/js/editor.min.js",
-                        "lib/markdown-it/markdown-it.min.js",
                         "lib/codemirror/codemirror.js",
                         "lib/codemirror/autorefresh.js",
                         "lib/codemirror/overlay.js",

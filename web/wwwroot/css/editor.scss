@@ -1,0 +1,39 @@
+.editor-liveEditorPrev {
+  @extend %block;
+}
+
+@each $size in $sizes {
+  $i: index($sizes, $size);
+  .content h#{$i},
+  .cm-header.cm-header-#{$i} {
+    font-size: $size;
+    color: $title-color;
+    @if $title-family {
+      font-family: $title-family;
+    }
+
+    font-weight: $title-weight;
+    line-height: $title-line-height;
+
+    strong {
+      color: $title-strong-color;
+      font-weight: $title-strong-weight;
+    }
+
+    &:not(.is-spaced) + .subtitle {
+      margin-top: $subtitle-negative-margin;
+    }
+  }
+}
+
+pre > code,
+.CodeMirror-code {
+  border-radius: $radius;
+  tab-size: 2;
+}
+
+.cm-s-default .cm-link,
+.cm-link:hover {
+  color: $link;
+  text-decoration: none;
+}

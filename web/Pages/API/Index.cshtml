@@ -3,29 +3,3 @@
 @{
     ViewData["Title"] = "Index";
 }
-<div>
-    <h1>Dup Summary</h1>
-    <table>
-        @foreach (var i in ViewBag.summary)
-        {
-            <tr><td>@i.Key</td><td>@i.Cnt</td></tr>
-
-        }
-    </table>
-    <h1>Duplicate Users</h1>
-    <table>
-        @foreach (var i in ViewBag.stuff)
-        {
-            <tr><td>@i.Key</td><td>@i.Cnt</td></tr>
-
-        }
-    </table>
-   
-    <h1>All Users</h1>
-    <table>
-        @foreach (var i in ViewBag.alluserrs)
-        {
-            <tr><td>@i.Key</td></tr>
-        }
-    </table>
-</div>

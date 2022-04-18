@@ -240,6 +240,7 @@ $icons: (
   users: $fa-var-users,
   lightbulb: $fa-var-lightbulb,
   project-diagram: $fa-var-project-diagram,
+  copy: $fa-var-copy,
 );
 
 @each $key, $value in $icons {

@@ -74,7 +74,12 @@
     const newLocal = this;
     // Editor output
     newLocal.editorPrev = document.createElement('div');
-    this.editorPrev.classList.add('editor-liveEditorPrev', 'is-hidden', 'p-2');
+    this.editorPrev.classList.add(
+      'editor-liveEditorPrev',
+      'is-hidden',
+      'p-2',
+      'content',
+    );
 
     this.editorPrevText = document.createElement('div');
     this.editorPrev.append(this.editorPrevText);
@@ -234,12 +239,24 @@
     this.mirror.getInputField().spellcheck = true;
 
     // Load markdown-it for previews
-    this.md = window.markdownit({
+    const mapping = {
+      h1: 'title is-1',
+      h2: 'title is-2',
+      h3: 'title is-3',
+      h4: 'title is-4',
+      h5: 'title is-5',
+      h6: 'title is-5',
+      p: 'block',
+      table: 'table',
+    };
+
+    const markdownIt = require('markdown-it')({
       html: true,
+      breaks: false,
       linkify: true,
       typographer: true,
-      breaks: false, // False here, true in markdig
     });
+    this.md = markdownIt.use(require('@toycode/markdown-it-class'), mapping);
 
     this.editorPrevTitleButton.addEventListener(
       'click',
