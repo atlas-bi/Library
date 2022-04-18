@@ -10,8 +10,8 @@
     <Optimize>true</Optimize>
   </PropertyGroup>
   <ItemGroup>
-    <SonarQubeSetting Include="sonar.coverage.exclusions">
-      <Value>**/wwwroot/font/**/*, **/wwwroot/js/polyfill/**/*</Value>
+    <SonarQubeSetting Include="sonar.exclusions">
+      <Value>wwwroot/font/**/*, wwwroot/js/polyfill/**/*, wwwroot/lib/**/*, solr/**/*, atlas-creation_script.sql</Value>
     </SonarQubeSetting>
   </ItemGroup>
   <PropertyGroup>
