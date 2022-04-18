@@ -14,7 +14,7 @@
         <h3>Details</h3>
 
         <div class="table-container">
-            <table class="table is-narrow">
+            <table class="table is-narrow" aria-label="Details">
                 @if (Model.Group.Email != "" && Model.Group.Email != null)
                 {
                     <tr>
@@ -48,7 +48,7 @@
         {
 <h3>Users With This Group</h3>
                 <div class="table-responsive">
-                    <table class="table sort">
+                    <table class="table sort" aria-label="users with this group">
                         <thead>
                             <tr>
                                 <th>Name</th>
@@ -85,7 +85,7 @@
         {
 <h3>Reports With This Group</h3>
                 <div class="table-responsive">
-                    <table class="table sort">
+                    <table class="table sort" aria-label="reports with this group">
                         <thead>
                             <tr>
                                 <th>Name</th>

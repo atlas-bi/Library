@@ -218,7 +218,7 @@
         maxHeight = Math.max(maxHeight, lheight);
         const lwidth = 'calc(' + 100 / bars + '% - 5px)';
 
-        if (c === 0)
+        if (Number(c) === 0)
           html +=
             '<th class="chart-xAxisTitle" scope="row" style="left:' +
             (-26 + ((colWidth / 100) * width) / 2 - 15) +
@@ -323,7 +323,7 @@
         (c === ticks ? ' last ' : '') +
         '">';
       for (q in range) {
-        style = (Math.floor(q / 2) + 1) * (q % 2 === 1 ? 30 : 30);
+        style = (Math.floor(q / 2) + 1) * 30;
         side = q % 2 === 1 ? 'right' : 'left';
         if (range[q] > 0) {
           let value = range[q] - (range[q] / ticks) * (c - 1);

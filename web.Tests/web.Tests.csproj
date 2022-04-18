@@ -6,7 +6,10 @@
 
     <IsPackable>false</IsPackable>
   </PropertyGroup>
-
+  <PropertyGroup>
+    <!-- Exclude the project from analysis -->
+    <SonarQubeExclude>true</SonarQubeExclude>
+</PropertyGroup>
   <ItemGroup>
     <PackageReference Include="BrowserStackLocal" Version="2.0.0" />
     <PackageReference Include="MartinCostello.BrowserStack.Automate" Version="3.0.3" />

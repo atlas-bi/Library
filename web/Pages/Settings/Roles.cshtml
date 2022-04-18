@@ -24,13 +24,13 @@
 	</form>
 
 	<div class="table-container">
-		<table class="table is-narrow is-fullwidth is-align-middel">
+		<table class="table is-narrow is-fullwidth is-align-middel" aria-label="user roles">
 			<thead>
 				<tr>
-					<th>Permission</th>
+					<th scope="col">Permission</th>
 					@foreach(var r in Model.UserRoles)
 					{
-						<th>
+						<th scope="col">
 							@if( r.Id != 1 && r.Id != 5 && r.Name != "Director")
 							{
 								@r.Name<a href="/Settings/Roles/?handler=DeleteRole&Id=@r.Id" onclick="return confirm('Are you sure you want to remove this?');">
@@ -49,7 +49,7 @@
 				@foreach (var q in Model.RolePermissions)
 				{
 					<tr>
-						<th>@q.Name</th>
+						<th scope="row">@q.Name</th>
 						@foreach (var r in Model.UserRoles)
 						{
 							<td>

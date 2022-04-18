@@ -21,7 +21,7 @@
             <div class="tab-cnt">
                 <div class="tab-dta" id="top-reports-chart">
                     <div class="atlas-chart">
-                        <div class="ajaxLoader"><img class="ajaxLoader-img" src="/img/loader.gif" /></div>
+                        <div class="ajaxLoader"><img class="ajaxLoader-img" src="/img/loader.gif" alt="loader" /></div>
                         <script type="application/json">
                             @{
                                 var TopTen = ViewBag.TopRunReports;
@@ -53,7 +53,7 @@
                                     "units": "(s)",
                                     "data": [
                                             @foreach (var g in TopTen)
-                                            { 
+                                            {
                                                 <text>{ "title": "<a href='@g.Url'>@Name(g.Name)</a>", "data": "@g.RunTime"}</text> @if(i < 9 && i < TopTen.Count-1){<text>,</text>}
 
                                                 @if(i == 9 || i == TopTen.Count -1)
@@ -72,7 +72,7 @@
                                                 i = 0;
                                             }
                                             @foreach (var g in TopTen)
-                                            { 
+                                            {
                                                 <text>{ "title": "<a href='@g.Url'>@Name(g.Name)</a>", "data": "@g.Hits"}</text> @if(i < 9 && i < TopTen.Count -1){<text>,</text>}
                                                 @if(i == 9 || i == TopTen.Count-1)
                                                 {
@@ -91,7 +91,7 @@
 
                     <span class="has-text-grey">Data shown represents the last two years of usage.</span>
                     <div class="table-responsive">
-                        <table class="table sort">
+                        <table class="table sort" aria-label="top reports">
                             <thead>
                                 <tr>
                                     <th>Report</th>
@@ -109,7 +109,7 @@
                                     <td>@u.Type</td>
                                     <td>@u.Hits</td>
                                     @if (u.RunTime != 0) { <td>@u.RunTime</td>}
-                                    else {<td> </td>}                                    
+                                    else {<td> </td>}
                                     <td>@u.LastRun</td>
                                 </tr>
                                 }
@@ -133,7 +133,7 @@
             <div class="tab-cnt">
                 <div class="tab-dta active " id="run-time-chart">
                     <div class="atlas-chart">
-                        <div class="ajaxLoader"><img class="ajaxLoader-img" src="/img/loader.gif" /></div>
+                        <div class="ajaxLoader"><img class="ajaxLoader-img" src="/img/loader.gif" alt="loader" /></div>
                         <script type="application/json">
                             @{
                                 var TopTenRun = ViewBag.ReportRunTime;
@@ -154,7 +154,7 @@
                                     "units": "(s)",
                                     "data": [
                                             @foreach (var g in TopTenRun)
-                                            { 
+                                            {
                                                 <text>{ "title": "@Name(g.Date)", "data": "@g.Avg"}</text> @if(i < 19 && i < TopTenRun.Count - 1){<text>,</text>}
 
 
@@ -174,7 +174,7 @@
                                                 i = 0;
                                             }
                                             @foreach (var g in TopTenRun)
-                                            { 
+                                            {
                                                 <text>{ "title": "@Name(g.Date)", "data": "@g.Cnt"}</text> @if(i < 19 && i < TopTenRun.Count - 1){<text>,</text>}
                                                 @if(i == 19 )
                                                 {
@@ -194,7 +194,7 @@
 
                     <span class="has-text-grey">Data shown represents the last two years of usage.</span>
                     <div class="table-responsive">
-                        <table class="table sort">
+                        <table class="table sort" aria-label="run time">
                             <thead>
                                 <tr>
                                     <th>Week Starting</th>
@@ -221,7 +221,7 @@
             {
                 <h3>Failed Runs</h3>
                 <div class="table-responsive">
-                    <table class="table table-border">
+                    <table class="table table-border" aria-label="failed runs">
                         <thead>
                             <tr>
                                 <th>Report Name</th>
