@@ -289,7 +289,7 @@
                 </script>
             </div>
         </div>
-    } else if (Model.RunReports != null) {
+    } else if (Model.RunReports != null && Model.RunReports.Count > 0) {
         <h3 class="title is-3" id="reports">You don't have any favorites! Here's some reports you've used.</h3>
         <div class="columns is-multiline">
             @foreach (var t in Model.RunReports)

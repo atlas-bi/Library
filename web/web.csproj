@@ -58,6 +58,9 @@
     <None Include="solr\**\*" CopyToPublishDirectory="PreserveNewest" />
   </ItemGroup>
   <ItemGroup>
+    <Content Update=".env" CopyToPublishDirectory="Never" />
+  </ItemGroup>
+  <ItemGroup>
     <Folder Include="Pages\API\Partials\" />
     <Folder Include="Pages\Groups\Sections\" />
   </ItemGroup>
