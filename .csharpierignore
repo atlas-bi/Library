@@ -16,3 +16,4 @@ coverage*
 **/Migrations/*
 web.Tests/bin/*
 web.Tests/obj/*
+out/

@@ -34,9 +34,10 @@ Atlas business intelligence library plugs in to your existing reporting platform
 
 -   Get the code `git clone git@github.com:atlas-bi/atlas-bi-library.git`
 -   Install the project dependencies `npm install` and `npm run dotnet:restore`
--   Create an `appsettings.cust.json` and `appsettings.cust.Development.json` as specified in the [docs](git@github.com:atlas-bi/atlas-bi-library.git)
+-   Create an `appsettings.cust.json` and `appsettings.cust.Development.json` as specified in the [docs](https://www.atlas.bi/docs/bi-library/deploy/configuration/)
 -   Create a `.env` file with `NODE_ENV=development`
 -   Initialize the database and create tables `npm run db:update`
+-   Run the [ETL](https://www.atlas.bi/docs/bi-library/deploy/configuration/), or just insert your account name into the `dbo.[User]` `username` column.
 -   Finally, start up the website `npm start`
 
 > If this is your first time running a dotnet webapp, you will need to trust the cert with `dotnet dev-certs https --trust` \
@@ -61,7 +62,7 @@ A hit/miss html report will be in the folder `/coverage`.
 
 Build the release with `npm run dotnet:publish`.
 
-Copy the output of `/bin/Release/net6.0/publish` to the folder of your IIS site.
+Copy the output of `/out` to the folder of your IIS site.
 
 See the [docs](https://www.atlas.bi/docs/bi-library/) for aditional configuration and starting search.
 

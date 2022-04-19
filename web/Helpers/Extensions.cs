@@ -120,8 +120,14 @@ namespace Atlas_Web.Helpers
                 cacheEntry =>
                 {
                     cacheEntry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20);
-
-                    return _context.Users.Where(u => u.Username.Equals(username)).FirstOrDefault();
+                    if (_context.Users.Any(u => u.Username.Equals(username)))
+                    {
+                        return _context.Users.SingleOrDefault(u => u.Username == username);
+                    }
+                    else
+                    {
+                        return _context.Users.SingleOrDefault(u => u.Username == "default");
+                    }
                 }
             );
         }
