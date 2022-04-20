@@ -12,7 +12,7 @@ namespace Atlas_Web.Models
         public int? Folderid { get; set; }
 
         public virtual UserFavoriteFolder Folder { get; set; }
-        public virtual DpDataInitiative Initiative { get; set; }
+        public virtual Initiative Initiative { get; set; }
         public virtual User Owner { get; set; }
     }
 }

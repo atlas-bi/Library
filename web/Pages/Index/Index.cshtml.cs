@@ -146,7 +146,7 @@ namespace Atlas_Web.Pages
             ViewData["UserId"] = user.UserId;
 
             ViewData["NewestCollections"] = await (
-                from dp in _context.DpDataProjects
+                from dp in _context.Collections
                 join q in (
                     from f in _context.UserFavorites
                     where f.ItemType.ToLower() == "collection" && f.UserId == user.UserId
@@ -181,7 +181,7 @@ namespace Atlas_Web.Pages
             ViewData["UserId"] = user.UserId;
 
             ViewData["NewestInitiatives"] = await (
-                from di in _context.DpDataInitiatives
+                from di in _context.Initiatives
                 join q in (
                     from f in _context.UserFavorites
                     where f.ItemType.ToLower() == "initiative" && f.UserId == user.UserId

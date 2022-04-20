@@ -84,10 +84,10 @@
     </table>
 </div>
 
-@if(@Model.Initiative.DpDataProjects.Count > 0){
+@if(@Model.Initiative.Collections.Count > 0){
     <h2 id="collections" class="title is-2">Linked Collections</h2>
     <div class="columns is-multiline">
-        @foreach (var d in @Model.Initiative.DpDataProjects)
+        @foreach (var d in @Model.Initiative.Collections)
         {
             <div class="column is-half ">
                 <partial name="Collections/_Snippet" model="d" />

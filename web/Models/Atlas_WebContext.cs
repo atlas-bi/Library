@@ -11,21 +11,8 @@ namespace Atlas_Web.Models
 
         public virtual DbSet<Analytic> Analytics { get; set; }
         public virtual DbSet<AnalyticsTrace> AnalyticsTraces { get; set; }
-        public virtual DbSet<DpAgreement> DpAgreements { get; set; }
-        public virtual DbSet<DpAgreementUser> DpAgreementUsers { get; set; }
-        public virtual DbSet<DpAttachment> DpAttachments { get; set; }
-        public virtual DbSet<DpContact> DpContacts { get; set; }
-        public virtual DbSet<DpContactLink> DpContactLinks { get; set; }
-        public virtual DbSet<DpDataInitiative> DpDataInitiatives { get; set; }
-        public virtual DbSet<DpDataProject> DpDataProjects { get; set; }
-        public virtual DbSet<DpDataProjectConversation> DpDataProjectConversations { get; set; }
-        public virtual DbSet<DpDataProjectConversationMessage> DpDataProjectConversationMessages { get; set; }
-        public virtual DbSet<DpMilestoneChecklist> DpMilestoneChecklists { get; set; }
-        public virtual DbSet<DpMilestoneChecklistCompleted> DpMilestoneChecklistCompleteds { get; set; }
-        public virtual DbSet<DpMilestoneFrequency> DpMilestoneFrequencies { get; set; }
-        public virtual DbSet<DpMilestoneTask> DpMilestoneTasks { get; set; }
-        public virtual DbSet<DpMilestoneTasksCompleted> DpMilestoneTasksCompleteds { get; set; }
-        public virtual DbSet<DpMilestoneTemplate> DpMilestoneTemplates { get; set; }
+        public virtual DbSet<Initiative> Initiatives { get; set; }
+        public virtual DbSet<Collection> Collections { get; set; }
         public virtual DbSet<DpReportAnnotation> DpReportAnnotations { get; set; }
         public virtual DbSet<DpTermAnnotation> DpTermAnnotations { get; set; }
         public virtual DbSet<EstimatedRunFrequency> EstimatedRunFrequencies { get; set; }
@@ -214,134 +201,14 @@ namespace Atlas_Web.Models
                 }
             );
 
-            modelBuilder.Entity<DpAgreement>(
-                entity =>
-                {
-                    entity.HasKey(e => e.AgreementId).HasName("PK__DP_Agree__0A309D2318E98A83");
-
-                    entity.ToTable("DP_Agreement", "app");
-
-                    entity.Property(e => e.AgreementId).HasColumnName("AgreementID");
-
-                    entity.Property(e => e.EffectiveDate).HasColumnType("datetime");
-
-                    entity.Property(e => e.LastUpdateDate).HasColumnType("datetime");
-
-                    entity.Property(e => e.MeetingDate).HasColumnType("datetime");
-
-                    entity
-                        .HasOne(d => d.DataProject)
-                        .WithMany(p => p.DpAgreements)
-                        .HasForeignKey(d => d.DataProjectId)
-                        .HasConstraintName("FK_DP_Agreement_DP_DataProject");
-
-                    entity
-                        .HasOne(d => d.LastUpdateUserNavigation)
-                        .WithMany(p => p.DpAgreements)
-                        .HasForeignKey(d => d.LastUpdateUser)
-                        .HasConstraintName("FK_DP_Agreement_WebAppUsers");
-                }
-            );
-
-            modelBuilder.Entity<DpAgreementUser>(
-                entity =>
-                {
-                    entity
-                        .HasKey(e => e.AgreementUsersId)
-                        .HasName("PK__DP_Agree__3DA9AA218A1E6C55");
-
-                    entity.ToTable("DP_AgreementUsers", "app");
-
-                    entity.Property(e => e.AgreementUsersId).HasColumnName("AgreementUsersID");
-
-                    entity.Property(e => e.AgreementId).HasColumnName("AgreementID");
-
-                    entity.Property(e => e.LastUpdateDate).HasColumnType("datetime");
-
-                    entity
-                        .HasOne(d => d.Agreement)
-                        .WithMany(p => p.DpAgreementUsers)
-                        .HasForeignKey(d => d.AgreementId)
-                        .HasConstraintName("FK_DP_AgreementUsers_DP_Agreement");
-
-                    entity
-                        .HasOne(d => d.LastUpdateUserNavigation)
-                        .WithMany(p => p.DpAgreementUserLastUpdateUserNavigations)
-                        .HasForeignKey(d => d.LastUpdateUser)
-                        .HasConstraintName("FK_DP_AgreementUsers_WebAppUsers");
-
-                    entity
-                        .HasOne(d => d.User)
-                        .WithMany(p => p.DpAgreementUserUsers)
-                        .HasForeignKey(d => d.UserId)
-                        .HasConstraintName("FK_DP_AgreementUsers_User");
-                }
-            );
-
-            modelBuilder.Entity<DpAttachment>(
-                entity =>
-                {
-                    entity.HasKey(e => e.AttachmentId).HasName("PK__DP_Attac__442C64BE2CE337F1");
-
-                    entity.ToTable("DP_Attachments", "app");
-
-                    entity.Property(e => e.AttachmentData).IsRequired();
-
-                    entity.Property(e => e.AttachmentName).IsUnicode(false);
-
-                    entity.Property(e => e.AttachmentType).IsRequired().IsUnicode(false);
-
-                    entity
-                        .HasOne(d => d.DataProject)
-                        .WithMany(p => p.DpAttachments)
-                        .HasForeignKey(d => d.DataProjectId)
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK_DP_Attachments_DP_DataProject");
-                }
-            );
-
-            modelBuilder.Entity<DpContact>(
-                entity =>
-                {
-                    entity.HasKey(e => e.ContactId).HasName("PK__DP_Conta__5C6625BB13B948C2");
-
-                    entity.ToTable("DP_Contact", "app");
-
-                    entity.Property(e => e.ContactId).HasColumnName("ContactID");
-
-                    entity.Property(e => e.Phone).HasMaxLength(55);
-                }
-            );
-
-            modelBuilder.Entity<DpContactLink>(
-                entity =>
-                {
-                    entity.HasKey(e => e.LinkId).HasName("PK__DP_Conta__2D1221358626B09F");
-
-                    entity.ToTable("DP_Contact_Links", "app");
-
-                    entity
-                        .HasOne(d => d.Contact)
-                        .WithMany(p => p.DpContactLinks)
-                        .HasForeignKey(d => d.ContactId)
-                        .HasConstraintName("FK_DP_Contact_Links_DP_Contact");
-
-                    entity
-                        .HasOne(d => d.Initiative)
-                        .WithMany(p => p.DpContactLinks)
-                        .HasForeignKey(d => d.InitiativeId)
-                        .HasConstraintName("FK_DP_Contact_Links_DP_DataInitiative");
-                }
-            );
-
-            modelBuilder.Entity<DpDataInitiative>(
+            modelBuilder.Entity<Initiative>(
                 entity =>
                 {
                     entity
                         .HasKey(e => e.DataInitiativeId)
                         .HasName("PK__DP_DataI__1EFC948C3A83A845");
 
-                    entity.ToTable("DP_DataInitiative", "app");
+                    entity.ToTable("Initiative", "app");
 
                     entity.HasIndex(e => e.ExecutiveOwnerId, "executiveownerid");
 
@@ -373,7 +240,7 @@ namespace Atlas_Web.Models
 
                     entity
                         .HasOne(d => d.FinancialImpactNavigation)
-                        .WithMany(p => p.DpDataInitiatives)
+                        .WithMany(p => p.Initiatives)
                         .HasForeignKey(d => d.FinancialImpact)
                         .HasConstraintName("FK_DP_DataInitiative_FinancialImpact");
 
@@ -391,18 +258,18 @@ namespace Atlas_Web.Models
 
                     entity
                         .HasOne(d => d.StrategicImportanceNavigation)
-                        .WithMany(p => p.DpDataInitiatives)
+                        .WithMany(p => p.Initiatives)
                         .HasForeignKey(d => d.StrategicImportance)
                         .HasConstraintName("FK_DP_DataInitiative_StrategicImportance");
                 }
             );
 
-            modelBuilder.Entity<DpDataProject>(
+            modelBuilder.Entity<Collection>(
                 entity =>
                 {
                     entity.HasKey(e => e.DataProjectId).HasName("PK__DP_DataP__E8D09D08794EBFAD");
 
-                    entity.ToTable("DP_DataProject", "app");
+                    entity.ToTable("Collection", "app");
 
                     entity.HasIndex(e => e.AnalyticsOwnerId, "analyticsownerid");
 
@@ -451,8 +318,8 @@ namespace Atlas_Web.Models
                         .HasConstraintName("FK_DP_DataProject_WebAppUsers1");
 
                     entity
-                        .HasOne(d => d.DataInitiative)
-                        .WithMany(p => p.DpDataProjects)
+                        .HasOne(d => d.Initiative)
+                        .WithMany(p => p.Collections)
                         .HasForeignKey(d => d.DataInitiativeId)
                         .HasConstraintName("FK_DP_DataProject_DP_DataInitiative");
 
@@ -470,7 +337,7 @@ namespace Atlas_Web.Models
 
                     entity
                         .HasOne(d => d.FinancialImpactNavigation)
-                        .WithMany(p => p.DpDataProjects)
+                        .WithMany(p => p.Collections)
                         .HasForeignKey(d => d.FinancialImpact)
                         .HasConstraintName("FK_DP_DataProject_FinancialImpact");
 
@@ -488,204 +355,9 @@ namespace Atlas_Web.Models
 
                     entity
                         .HasOne(d => d.StrategicImportanceNavigation)
-                        .WithMany(p => p.DpDataProjects)
+                        .WithMany(p => p.Collections)
                         .HasForeignKey(d => d.StrategicImportance)
                         .HasConstraintName("FK_DP_DataProject_StrategicImportance");
-                }
-            );
-
-            modelBuilder.Entity<DpDataProjectConversation>(
-                entity =>
-                {
-                    entity
-                        .HasKey(e => e.DataProjectConversationId)
-                        .HasName("PK__Dp_DataP__A555F1EB255B0952");
-
-                    entity.ToTable("Dp_DataProjectConversation", "app");
-
-                    entity
-                        .HasOne(d => d.DataProject)
-                        .WithMany(p => p.DpDataProjectConversations)
-                        .HasForeignKey(d => d.DataProjectId)
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK_Dp_DataProjectConversation_DP_DataProject");
-                }
-            );
-
-            modelBuilder.Entity<DpDataProjectConversationMessage>(
-                entity =>
-                {
-                    entity
-                        .HasKey(e => e.DataProjectConversationMessageId)
-                        .HasName("PK__Dp_DataP__06C6EA493F53AEBA");
-
-                    entity.ToTable("Dp_DataProjectConversationMessage", "app");
-
-                    entity.Property(e => e.MessageText).HasMaxLength(4000);
-
-                    entity.Property(e => e.PostDateTime).HasColumnType("datetime");
-
-                    entity
-                        .HasOne(d => d.DataProjectConversation)
-                        .WithMany(p => p.DpDataProjectConversationMessages)
-                        .HasForeignKey(d => d.DataProjectConversationId)
-                        .HasConstraintName(
-                            "FK_Dp_DataProjectConversationMessage_Dp_DataProjectConversation"
-                        );
-
-                    entity
-                        .HasOne(d => d.User)
-                        .WithMany(p => p.DpDataProjectConversationMessages)
-                        .HasForeignKey(d => d.UserId)
-                        .HasConstraintName("FK_Dp_DataProjectConversationMessage_User");
-                }
-            );
-
-            modelBuilder.Entity<DpMilestoneChecklist>(
-                entity =>
-                {
-                    entity
-                        .HasKey(e => e.MilestoneChecklistId)
-                        .HasName("PK__DP_Miles__53ECAE4A5F858065");
-
-                    entity.ToTable("DP_MilestoneChecklist", "app");
-
-                    entity
-                        .HasOne(d => d.MilestoneTask)
-                        .WithMany(p => p.DpMilestoneChecklists)
-                        .HasForeignKey(d => d.MilestoneTaskId)
-                        .HasConstraintName("FK_DP_MilestoneChecklist_DP_MilestoneTasks");
-                }
-            );
-
-            modelBuilder.Entity<DpMilestoneChecklistCompleted>(
-                entity =>
-                {
-                    entity
-                        .HasKey(e => e.MilestoneChecklistCompletedId)
-                        .HasName("PK__DP_Miles__E081AA701711E585");
-
-                    entity.ToTable("DP_MilestoneChecklistCompleted", "app");
-
-                    entity.Property(e => e.ChecklistStatus).HasDefaultValueSql("((0))");
-
-                    entity.Property(e => e.CompletionDate).HasColumnType("datetime");
-
-                    entity.Property(e => e.TaskDate).HasColumnType("datetime");
-
-                    entity
-                        .HasOne(d => d.CompletionUserNavigation)
-                        .WithMany(p => p.DpMilestoneChecklistCompleteds)
-                        .HasForeignKey(d => d.CompletionUser)
-                        .HasConstraintName("FK_DP_MilestoneChecklistCompleted_User");
-
-                    entity
-                        .HasOne(d => d.DataProject)
-                        .WithMany(p => p.DpMilestoneChecklistCompleteds)
-                        .HasForeignKey(d => d.DataProjectId)
-                        .HasConstraintName("FK_DP_MilestoneChecklistCompleted_DP_DataProject");
-                }
-            );
-
-            modelBuilder.Entity<DpMilestoneFrequency>(
-                entity =>
-                {
-                    entity.HasKey(e => e.MilestoneTypeId).HasName("PK__DP_Miles__B88C49912ECA633F");
-
-                    entity.ToTable("DP_MilestoneFrequency", "app");
-
-                    entity.Property(e => e.LastUpdateDate).HasColumnType("datetime");
-
-                    entity
-                        .HasOne(d => d.LastUpdateUserNavigation)
-                        .WithMany(p => p.DpMilestoneFrequencies)
-                        .HasForeignKey(d => d.LastUpdateUser)
-                        .HasConstraintName("FK_DP_MilestoneTypes_WebAppUsers");
-                }
-            );
-
-            modelBuilder.Entity<DpMilestoneTask>(
-                entity =>
-                {
-                    entity.HasKey(e => e.MilestoneTaskId).HasName("PK__DP_Miles__64647109FB6B4EDB");
-
-                    entity.ToTable("DP_MilestoneTasks", "app");
-
-                    entity.Property(e => e.EndDate).HasColumnType("datetime");
-
-                    entity.Property(e => e.LastUpdateDate).HasColumnType("datetime");
-
-                    entity.Property(e => e.StartDate).HasColumnType("datetime");
-
-                    entity
-                        .HasOne(d => d.DataProject)
-                        .WithMany(p => p.DpMilestoneTasks)
-                        .HasForeignKey(d => d.DataProjectId)
-                        .HasConstraintName("FK_DP_MilestoneTasks_DP_DataProject");
-
-                    entity
-                        .HasOne(d => d.LastUpdateUserNavigation)
-                        .WithMany(p => p.DpMilestoneTaskLastUpdateUserNavigations)
-                        .HasForeignKey(d => d.LastUpdateUser)
-                        .HasConstraintName("FK_DP_MilestoneTasks_LastUpdateUser");
-
-                    entity
-                        .HasOne(d => d.MilestoneTemplate)
-                        .WithMany(p => p.DpMilestoneTasks)
-                        .HasForeignKey(d => d.MilestoneTemplateId)
-                        .HasConstraintName("FK_DP_MilestoneTasks_DP_MilestoneTemplates");
-
-                    entity
-                        .HasOne(d => d.Owner)
-                        .WithMany(p => p.DpMilestoneTaskOwners)
-                        .HasForeignKey(d => d.OwnerId)
-                        .HasConstraintName("FK_DP_MilestoneTasks_User");
-                }
-            );
-
-            modelBuilder.Entity<DpMilestoneTasksCompleted>(
-                entity =>
-                {
-                    entity
-                        .HasKey(e => e.MilestoneTaskCompletedId)
-                        .HasName("PK__DP_Miles__3226EEDD7DAFACC3");
-
-                    entity.ToTable("DP_MilestoneTasksCompleted", "app");
-
-                    entity.Property(e => e.CompletionDate).HasColumnType("datetime");
-
-                    entity.Property(e => e.DueDate).HasColumnType("datetime");
-
-                    entity
-                        .HasOne(d => d.DataProject)
-                        .WithMany(p => p.DpMilestoneTasksCompleteds)
-                        .HasForeignKey(d => d.DataProjectId)
-                        .HasConstraintName("FK_DP_MilestoneTasksCompleted_DP_DataProject");
-                }
-            );
-
-            modelBuilder.Entity<DpMilestoneTemplate>(
-                entity =>
-                {
-                    entity
-                        .HasKey(e => e.MilestoneTemplateId)
-                        .HasName("PK__DP_Miles__6A72A86C4B768C43");
-
-                    entity.ToTable("DP_MilestoneTemplates", "app");
-
-                    entity.Property(e => e.LastUpdateDate).HasColumnType("datetime");
-
-                    entity
-                        .HasOne(d => d.LastUpdateUserNavigation)
-                        .WithMany(p => p.DpMilestoneTemplates)
-                        .HasForeignKey(d => d.LastUpdateUser)
-                        .HasConstraintName("FK_DP_MilestoneTemplates_WebAppUsers");
-
-                    entity
-                        .HasOne(d => d.MilestoneType)
-                        .WithMany(p => p.DpMilestoneTemplates)
-                        .HasForeignKey(d => d.MilestoneTypeId)
-                        .HasConstraintName("FK_DP_MilestoneTemplates_DP_MilestoneTypes");
                 }
             );
 

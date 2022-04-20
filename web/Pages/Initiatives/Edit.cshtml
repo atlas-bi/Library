@@ -141,12 +141,12 @@
     <div class="field">
         <label class="label">Linked Collections</label>
         <div class="mini-tags field is-grouped is-grouped-multiline">
-            @for (var x = 0; x < @Model.Initiative.DpDataProjects.Count; x++)
+            @for (var x = 0; x < @Model.Initiative.Collections.Count; x++)
             {
                     <div class="control">
                         <div class="tags has-addons">
-                            <span class="tag is-link">@Model.Initiative.DpDataProjects.ToList()[x]..Name</span>
-                            <input type="hidden" name="Collections[@x].DataProjectId" value="@Model.Initiative.DpDataProjects.ToList()[x].DataProjectId" />
+                            <span class="tag is-link">@Model.Initiative.Collections.ToList()[x]..Name</span>
+                            <input type="hidden" name="Collections[@x].DataProjectId" value="@Model.Initiative.Collections.ToList()[x].DataProjectId" />
                             <a class="tag is-delete"></a>
                         </div>
                     </div>

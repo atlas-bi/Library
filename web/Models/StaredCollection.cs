@@ -12,7 +12,7 @@ namespace Atlas_Web.Models
         public int? Collectionid { get; set; }
         public int? Ownerid { get; set; }
 
-        public virtual DpDataProject Collection { get; set; }
+        public virtual Collection Collection { get; set; }
         public virtual User Owner { get; set; }
     }
 }
