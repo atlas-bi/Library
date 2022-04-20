@@ -48,9 +48,11 @@ namespace Atlas_Web.Migrations
                 name: "DP_MilestoneTasks",
                 schema: "app");
 
-            migrationBuilder.DropTable(
+            migrationBuilder.RenameTable(
                 name: "DP_DataProject",
-                schema: "app");
+                schema: "app",
+                newName: "Collection",
+                newSchema: "app");
 
             migrationBuilder.DropTable(
                 name: "DP_MilestoneTemplates",
@@ -60,162 +62,6 @@ namespace Atlas_Web.Migrations
                 name: "DP_MilestoneFrequency",
                 schema: "app");
 
-            migrationBuilder.CreateTable(
-                name: "Collection",
-                schema: "app",
-                columns: table => new
-                {
-                    DataProjectID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    DataInitiativeID = table.Column<int>(type: "int", nullable: true),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Purpose = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    OperationOwnerID = table.Column<int>(type: "int", nullable: true),
-                    ExecutiveOwnerID = table.Column<int>(type: "int", nullable: true),
-                    AnalyticsOwnerID = table.Column<int>(type: "int", nullable: true),
-                    DataManagerID = table.Column<int>(type: "int", nullable: true),
-                    FinancialImpact = table.Column<int>(type: "int", nullable: true),
-                    StrategicImportance = table.Column<int>(type: "int", nullable: true),
-                    ExternalDocumentationURL = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    LastUpdateDate = table.Column<DateTime>(type: "datetime", nullable: true),
-                    LastUpdateUser = table.Column<int>(type: "int", nullable: true),
-                    Hidden = table.Column<string>(type: "nchar(1)", fixedLength: true, maxLength: 1, nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK__DP_DataP__E8D09D08794EBFAD", x => x.DataProjectID);
-                    table.ForeignKey(
-                        name: "FK_DP_DataProject_DP_DataInitiative",
-                        column: x => x.DataInitiativeID,
-                        principalSchema: "app",
-                        principalTable: "Initiative",
-                        principalColumn: "DataInitiativeID");
-                    table.ForeignKey(
-                        name: "FK_DP_DataProject_FinancialImpact",
-                        column: x => x.FinancialImpact,
-                        principalSchema: "app",
-                        principalTable: "FinancialImpact",
-                        principalColumn: "FinancialImpactId");
-                    table.ForeignKey(
-                        name: "FK_DP_DataProject_StrategicImportance",
-                        column: x => x.StrategicImportance,
-                        principalSchema: "app",
-                        principalTable: "StrategicImportance",
-                        principalColumn: "StrategicImportanceId");
-                    table.ForeignKey(
-                        name: "FK_DP_DataProject_User",
-                        column: x => x.ExecutiveOwnerID,
-                        principalTable: "User",
-                        principalColumn: "UserID");
-                    table.ForeignKey(
-                        name: "FK_DP_DataProject_User1",
-                        column: x => x.OperationOwnerID,
-                        principalTable: "User",
-                        principalColumn: "UserID");
-                    table.ForeignKey(
-                        name: "FK_DP_DataProject_User2",
-                        column: x => x.DataManagerID,
-                        principalTable: "User",
-                        principalColumn: "UserID");
-                    table.ForeignKey(
-                        name: "FK_DP_DataProject_WebAppUsers",
-                        column: x => x.LastUpdateUser,
-                        principalTable: "User",
-                        principalColumn: "UserID");
-                    table.ForeignKey(
-                        name: "FK_DP_DataProject_WebAppUsers1",
-                        column: x => x.AnalyticsOwnerID,
-                        principalTable: "User",
-                        principalColumn: "UserID");
-                });
-
-            migrationBuilder.CreateIndex(
-                name: "analyticsownerid",
-                schema: "app",
-                table: "Collection",
-                column: "AnalyticsOwnerID");
-
-            migrationBuilder.CreateIndex(
-                name: "collectionid",
-                schema: "app",
-                table: "Collection",
-                column: "DataProjectID");
-
-            migrationBuilder.CreateIndex(
-                name: "datamanagerid",
-                schema: "app",
-                table: "Collection",
-                column: "DataManagerID");
-
-            migrationBuilder.CreateIndex(
-                name: "executiveownerid",
-                schema: "app",
-                table: "Collection",
-                column: "ExecutiveOwnerID");
-
-            migrationBuilder.CreateIndex(
-                name: "financialimpact",
-                schema: "app",
-                table: "Collection",
-                column: "FinancialImpact");
-
-            migrationBuilder.CreateIndex(
-                name: "initiativeid",
-                schema: "app",
-                table: "Collection",
-                column: "DataInitiativeID");
-
-            migrationBuilder.CreateIndex(
-                name: "lastupdatedate",
-                schema: "app",
-                table: "Collection",
-                column: "LastUpdateDate");
-
-            migrationBuilder.CreateIndex(
-                name: "lastupdateuser",
-                schema: "app",
-                table: "Collection",
-                column: "LastUpdateUser");
-
-            migrationBuilder.CreateIndex(
-                name: "operationownerid",
-                schema: "app",
-                table: "Collection",
-                column: "OperationOwnerID");
-
-            migrationBuilder.CreateIndex(
-                name: "strategicimportance",
-                schema: "app",
-                table: "Collection",
-                column: "StrategicImportance");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_DP_ReportAnnotation_DP_DataProject",
-                schema: "app",
-                table: "DP_ReportAnnotation",
-                column: "DataProjectId",
-                principalSchema: "app",
-                principalTable: "Collection",
-                principalColumn: "DataProjectID");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_DP_TermAnnotation_DP_DataProject",
-                schema: "app",
-                table: "DP_TermAnnotation",
-                column: "DataProjectId",
-                principalSchema: "app",
-                principalTable: "Collection",
-                principalColumn: "DataProjectID");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_StarredCollections_DP_DataProject",
-                schema: "app",
-                table: "StarredCollections",
-                column: "collectionid",
-                principalSchema: "app",
-                principalTable: "Collection",
-                principalColumn: "DataProjectID");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -235,79 +81,13 @@ namespace Atlas_Web.Migrations
                 schema: "app",
                 table: "StarredCollections");
 
-            migrationBuilder.DropTable(
-                name: "Collection",
-                schema: "app");
 
-            migrationBuilder.CreateTable(
-                name: "DP_DataProject",
+            migrationBuilder.RenameTable(
+                name: "Collection",
                 schema: "app",
-                columns: table => new
-                {
-                    DataProjectID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    AnalyticsOwnerID = table.Column<int>(type: "int", nullable: true),
-                    DataInitiativeID = table.Column<int>(type: "int", nullable: true),
-                    DataManagerID = table.Column<int>(type: "int", nullable: true),
-                    ExecutiveOwnerID = table.Column<int>(type: "int", nullable: true),
-                    FinancialImpact = table.Column<int>(type: "int", nullable: true),
-                    LastUpdateUser = table.Column<int>(type: "int", nullable: true),
-                    OperationOwnerID = table.Column<int>(type: "int", nullable: true),
-                    StrategicImportance = table.Column<int>(type: "int", nullable: true),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ExternalDocumentationURL = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Hidden = table.Column<string>(type: "nchar(1)", fixedLength: true, maxLength: 1, nullable: true),
-                    LastUpdateDate = table.Column<DateTime>(type: "datetime", nullable: true),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Purpose = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK__DP_DataP__E8D09D08794EBFAD", x => x.DataProjectID);
-                    table.ForeignKey(
-                        name: "FK_DP_DataProject_DP_DataInitiative",
-                        column: x => x.DataInitiativeID,
-                        principalSchema: "app",
-                        principalTable: "Initiative",
-                        principalColumn: "DataInitiativeID");
-                    table.ForeignKey(
-                        name: "FK_DP_DataProject_FinancialImpact",
-                        column: x => x.FinancialImpact,
-                        principalSchema: "app",
-                        principalTable: "FinancialImpact",
-                        principalColumn: "FinancialImpactId");
-                    table.ForeignKey(
-                        name: "FK_DP_DataProject_StrategicImportance",
-                        column: x => x.StrategicImportance,
-                        principalSchema: "app",
-                        principalTable: "StrategicImportance",
-                        principalColumn: "StrategicImportanceId");
-                    table.ForeignKey(
-                        name: "FK_DP_DataProject_User",
-                        column: x => x.ExecutiveOwnerID,
-                        principalTable: "User",
-                        principalColumn: "UserID");
-                    table.ForeignKey(
-                        name: "FK_DP_DataProject_User1",
-                        column: x => x.OperationOwnerID,
-                        principalTable: "User",
-                        principalColumn: "UserID");
-                    table.ForeignKey(
-                        name: "FK_DP_DataProject_User2",
-                        column: x => x.DataManagerID,
-                        principalTable: "User",
-                        principalColumn: "UserID");
-                    table.ForeignKey(
-                        name: "FK_DP_DataProject_WebAppUsers",
-                        column: x => x.LastUpdateUser,
-                        principalTable: "User",
-                        principalColumn: "UserID");
-                    table.ForeignKey(
-                        name: "FK_DP_DataProject_WebAppUsers1",
-                        column: x => x.AnalyticsOwnerID,
-                        principalTable: "User",
-                        principalColumn: "UserID");
-                });
+                newName: "DP_DataProject",
+                newSchema: "app");
+
 
             migrationBuilder.CreateTable(
                 name: "DP_MilestoneFrequency",
@@ -527,66 +307,6 @@ namespace Atlas_Web.Migrations
                         principalTable: "DP_MilestoneTasks",
                         principalColumn: "MilestoneTaskId");
                 });
-
-            migrationBuilder.CreateIndex(
-                name: "analyticsownerid",
-                schema: "app",
-                table: "DP_DataProject",
-                column: "AnalyticsOwnerID");
-
-            migrationBuilder.CreateIndex(
-                name: "collectionid",
-                schema: "app",
-                table: "DP_DataProject",
-                column: "DataProjectID");
-
-            migrationBuilder.CreateIndex(
-                name: "datamanagerid",
-                schema: "app",
-                table: "DP_DataProject",
-                column: "DataManagerID");
-
-            migrationBuilder.CreateIndex(
-                name: "executiveownerid",
-                schema: "app",
-                table: "DP_DataProject",
-                column: "ExecutiveOwnerID");
-
-            migrationBuilder.CreateIndex(
-                name: "financialimpact",
-                schema: "app",
-                table: "DP_DataProject",
-                column: "FinancialImpact");
-
-            migrationBuilder.CreateIndex(
-                name: "initiativeid",
-                schema: "app",
-                table: "DP_DataProject",
-                column: "DataInitiativeID");
-
-            migrationBuilder.CreateIndex(
-                name: "lastupdatedate",
-                schema: "app",
-                table: "DP_DataProject",
-                column: "LastUpdateDate");
-
-            migrationBuilder.CreateIndex(
-                name: "lastupdateuser",
-                schema: "app",
-                table: "DP_DataProject",
-                column: "LastUpdateUser");
-
-            migrationBuilder.CreateIndex(
-                name: "operationownerid",
-                schema: "app",
-                table: "DP_DataProject",
-                column: "OperationOwnerID");
-
-            migrationBuilder.CreateIndex(
-                name: "strategicimportance",
-                schema: "app",
-                table: "DP_DataProject",
-                column: "StrategicImportance");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Dp_DataProjectConversation_DataProjectId",

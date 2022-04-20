@@ -94,6 +94,14 @@ namespace Atlas_Web.Models
 
                     entity.HasIndex(e => e.AccessDateTime, "accessdatetime");
 
+                    entity
+                        .HasIndex(e => e.AccessDateTime, "accessdatetime_session")
+                        .IncludeProperties(p => new { p.PageId, p.SessionId });
+
+                    entity
+                        .HasIndex(e => new { e.AccessDateTime, e.UserId }, "accessdatetime_userid")
+                        .IncludeProperties(p => new { p.Pathname, p.LoadTime });
+
                     entity.HasIndex(e => e.UserId, "userid");
 
                     entity
