@@ -22,9 +22,9 @@ namespace Atlas_Web.Pages.Initiatives
             _cache = cache;
         }
 
-        public DpDataInitiative Initiative { get; set; }
+        public Initiative Initiative { get; set; }
 
-        public IEnumerable<DpDataInitiative> Initiatives { get; set; }
+        public IEnumerable<Initiative> Initiatives { get; set; }
 
         public string Favorite { get; set; }
 
@@ -33,14 +33,14 @@ namespace Atlas_Web.Pages.Initiatives
             // if the id null then list all
             if (id != null)
             {
-                Initiative = await _cache.GetOrCreateAsync<DpDataInitiative>(
+                Initiative = await _cache.GetOrCreateAsync<Initiative>(
                     "initiative-" + id,
                     cacheEntry =>
                     {
                         cacheEntry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20);
 
-                        return _context.DpDataInitiatives
-                            .Include(x => x.DpDataProjects)
+                        return _context.Initiatives
+                            .Include(x => x.Collections)
                             .ThenInclude(x => x.DpReportAnnotations)
                             .Include(x => x.OperationOwner)
                             .Include(x => x.ExecutiveOwner)
@@ -58,14 +58,14 @@ namespace Atlas_Web.Pages.Initiatives
                 }
             }
 
-            Initiatives = await _cache.GetOrCreateAsync<List<DpDataInitiative>>(
+            Initiatives = await _cache.GetOrCreateAsync<List<Initiative>>(
                 "initiatives",
                 cacheEntry =>
                 {
                     cacheEntry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20);
 
-                    return _context.DpDataInitiatives
-                        .Include(x => x.DpDataProjects)
+                    return _context.Initiatives
+                        .Include(x => x.Collections)
                         .Include(x => x.StarredInitiatives)
                         .ToListAsync();
                 }
@@ -92,13 +92,13 @@ namespace Atlas_Web.Pages.Initiatives
             }
 
             // remove project links, contacts and remove initiative.
-            _context.DpDataProjects
+            _context.Collections
                 .Where(d => d.DataInitiativeId == Id)
                 .ToList()
                 .ForEach(x => x.DataInitiativeId = null);
 
             _context.Remove(
-                _context.DpDataInitiatives.Where(x => x.DataInitiativeId == Id).FirstOrDefault()
+                _context.Initiatives.Where(x => x.DataInitiativeId == Id).FirstOrDefault()
             );
             _context.SaveChanges();
 

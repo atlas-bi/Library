@@ -214,7 +214,7 @@ namespace Atlas_Web.Pages.Settings
                 {
                     Id = o.FinancialImpactId,
                     Name = o.Name,
-                    Used = o.DpDataInitiatives.Count + o.DpDataProjects.Count
+                    Used = o.Initiatives.Count + o.Collections.Count
                 }
             ).ToListAsync();
             ViewData["Permissions"] = UserHelpers.GetUserPermissions(
@@ -238,7 +238,7 @@ namespace Atlas_Web.Pages.Settings
                 {
                     Id = o.StrategicImportanceId,
                     Name = o.Name,
-                    Used = o.DpDataInitiatives.Count + o.DpDataProjects.Count
+                    Used = o.Initiatives.Count + o.Collections.Count
                 }
             ).ToListAsync();
             ViewData["Permissions"] = UserHelpers.GetUserPermissions(
@@ -563,11 +563,11 @@ namespace Atlas_Web.Pages.Settings
             );
             if (ModelState.IsValid && FinancialImpact.FinancialImpactId > 0 && checkpoint)
             {
-                _context.DpDataProjects
+                _context.Collections
                     .Where(x => x.FinancialImpact.Equals(FinancialImpact.FinancialImpactId))
                     .ToList()
                     .ForEach(q => q.FinancialImpact = null);
-                _context.DpDataInitiatives
+                _context.Initiatives
                     .Where(x => x.FinancialImpact.Equals(FinancialImpact.FinancialImpactId))
                     .ToList()
                     .ForEach(q => q.FinancialImpact = null);
@@ -605,13 +605,13 @@ namespace Atlas_Web.Pages.Settings
             );
             if (ModelState.IsValid && StrategicImportance.StrategicImportanceId > 0 && checkpoint)
             {
-                _context.DpDataProjects
+                _context.Collections
                     .Where(
                         x => x.StrategicImportance.Equals(StrategicImportance.StrategicImportanceId)
                     )
                     .ToList()
                     .ForEach(q => q.StrategicImportance = null);
-                _context.DpDataInitiatives
+                _context.Initiatives
                     .Where(
                         x => x.StrategicImportance.Equals(StrategicImportance.StrategicImportanceId)
                     )

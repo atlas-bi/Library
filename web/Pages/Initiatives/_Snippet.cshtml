@@ -1,4 +1,4 @@
-@model Atlas_Web.Models.DpDataInitiative
+@model Atlas_Web.Models.Initiative
 
 <div class="card">
     <div class="card-header">
@@ -44,7 +44,7 @@
                         }
                     </p>
                     <div class="tags">
-                        @foreach (var d in Model.DpDataProjects)
+                        @foreach (var d in Model.Collections)
                         {
                             <span class="tag is-link">@d.Name</span>
                         }

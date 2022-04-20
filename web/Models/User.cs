@@ -9,23 +9,14 @@ namespace Atlas_Web.Models
         {
             Analytics = new HashSet<Analytic>();
             AnalyticsTraces = new HashSet<AnalyticsTrace>();
-            DpAgreementUserLastUpdateUserNavigations = new HashSet<DpAgreementUser>();
-            DpAgreementUserUsers = new HashSet<DpAgreementUser>();
-            DpAgreements = new HashSet<DpAgreement>();
-            DpDataInitiativeExecutiveOwners = new HashSet<DpDataInitiative>();
-            DpDataInitiativeLastUpdateUserNavigations = new HashSet<DpDataInitiative>();
-            DpDataInitiativeOperationOwners = new HashSet<DpDataInitiative>();
-            DpDataProjectAnalyticsOwners = new HashSet<DpDataProject>();
-            DpDataProjectConversationMessages = new HashSet<DpDataProjectConversationMessage>();
-            DpDataProjectDataManagers = new HashSet<DpDataProject>();
-            DpDataProjectExecutiveOwners = new HashSet<DpDataProject>();
-            DpDataProjectLastUpdateUserNavigations = new HashSet<DpDataProject>();
-            DpDataProjectOperationOwners = new HashSet<DpDataProject>();
-            DpMilestoneChecklistCompleteds = new HashSet<DpMilestoneChecklistCompleted>();
-            DpMilestoneFrequencies = new HashSet<DpMilestoneFrequency>();
-            DpMilestoneTaskLastUpdateUserNavigations = new HashSet<DpMilestoneTask>();
-            DpMilestoneTaskOwners = new HashSet<DpMilestoneTask>();
-            DpMilestoneTemplates = new HashSet<DpMilestoneTemplate>();
+            DpDataInitiativeExecutiveOwners = new HashSet<Initiative>();
+            DpDataInitiativeLastUpdateUserNavigations = new HashSet<Initiative>();
+            DpDataInitiativeOperationOwners = new HashSet<Initiative>();
+            DpDataProjectAnalyticsOwners = new HashSet<Collection>();
+            DpDataProjectDataManagers = new HashSet<Collection>();
+            DpDataProjectExecutiveOwners = new HashSet<Collection>();
+            DpDataProjectLastUpdateUserNavigations = new HashSet<Collection>();
+            DpDataProjectOperationOwners = new HashSet<Collection>();
             MailDrafts = new HashSet<MailDraft>();
             MailFolders = new HashSet<MailFolder>();
             MailMessages = new HashSet<MailMessage>();
@@ -83,23 +74,14 @@ namespace Atlas_Web.Models
         public virtual UserNameDatum UserNameDatum { get; set; }
         public virtual ICollection<Analytic> Analytics { get; set; }
         public virtual ICollection<AnalyticsTrace> AnalyticsTraces { get; set; }
-        public virtual ICollection<DpAgreementUser> DpAgreementUserLastUpdateUserNavigations { get; set; }
-        public virtual ICollection<DpAgreementUser> DpAgreementUserUsers { get; set; }
-        public virtual ICollection<DpAgreement> DpAgreements { get; set; }
-        public virtual ICollection<DpDataInitiative> DpDataInitiativeExecutiveOwners { get; set; }
-        public virtual ICollection<DpDataInitiative> DpDataInitiativeLastUpdateUserNavigations { get; set; }
-        public virtual ICollection<DpDataInitiative> DpDataInitiativeOperationOwners { get; set; }
-        public virtual ICollection<DpDataProject> DpDataProjectAnalyticsOwners { get; set; }
-        public virtual ICollection<DpDataProjectConversationMessage> DpDataProjectConversationMessages { get; set; }
-        public virtual ICollection<DpDataProject> DpDataProjectDataManagers { get; set; }
-        public virtual ICollection<DpDataProject> DpDataProjectExecutiveOwners { get; set; }
-        public virtual ICollection<DpDataProject> DpDataProjectLastUpdateUserNavigations { get; set; }
-        public virtual ICollection<DpDataProject> DpDataProjectOperationOwners { get; set; }
-        public virtual ICollection<DpMilestoneChecklistCompleted> DpMilestoneChecklistCompleteds { get; set; }
-        public virtual ICollection<DpMilestoneFrequency> DpMilestoneFrequencies { get; set; }
-        public virtual ICollection<DpMilestoneTask> DpMilestoneTaskLastUpdateUserNavigations { get; set; }
-        public virtual ICollection<DpMilestoneTask> DpMilestoneTaskOwners { get; set; }
-        public virtual ICollection<DpMilestoneTemplate> DpMilestoneTemplates { get; set; }
+        public virtual ICollection<Initiative> DpDataInitiativeExecutiveOwners { get; set; }
+        public virtual ICollection<Initiative> DpDataInitiativeLastUpdateUserNavigations { get; set; }
+        public virtual ICollection<Initiative> DpDataInitiativeOperationOwners { get; set; }
+        public virtual ICollection<Collection> DpDataProjectAnalyticsOwners { get; set; }
+        public virtual ICollection<Collection> DpDataProjectDataManagers { get; set; }
+        public virtual ICollection<Collection> DpDataProjectExecutiveOwners { get; set; }
+        public virtual ICollection<Collection> DpDataProjectLastUpdateUserNavigations { get; set; }
+        public virtual ICollection<Collection> DpDataProjectOperationOwners { get; set; }
         public virtual ICollection<MailDraft> MailDrafts { get; set; }
         public virtual ICollection<MailFolder> MailFolders { get; set; }
         public virtual ICollection<MailMessage> MailMessages { get; set; }

@@ -23,7 +23,7 @@ namespace Atlas_Web.Pages.Collections
         }
 
         [BindProperty]
-        public DpDataProject Collection { get; set; }
+        public Collection Collection { get; set; }
 
         [BindProperty]
         public List<DpTermAnnotation> Terms { get; set; }
@@ -48,7 +48,7 @@ namespace Atlas_Web.Pages.Collections
                 );
             }
 
-            Collection = await _context.DpDataProjects
+            Collection = await _context.Collections
                 .Include(x => x.DpReportAnnotations)
                 .ThenInclude(x => x.Report)
                 .Include(x => x.DpTermAnnotations)
@@ -84,7 +84,7 @@ namespace Atlas_Web.Pages.Collections
             }
 
             // we get a copy of the initiative and then will only update several fields.
-            DpDataProject NewCollection = _context.DpDataProjects.Find(Collection.DataProjectId);
+            Collection NewCollection = _context.Collections.Find(Collection.DataProjectId);
 
             // update last update values & values that were posted
             NewCollection.LastUpdateUser =

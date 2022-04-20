@@ -23,10 +23,10 @@ namespace Atlas_Web.Pages.Initiatives
         }
 
         [BindProperty]
-        public DpDataInitiative Initiative { get; set; }
+        public Initiative Initiative { get; set; }
 
         [BindProperty]
-        public List<DpDataProject> Collections { get; set; }
+        public List<Collection> Collections { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int id)
         {
@@ -45,8 +45,8 @@ namespace Atlas_Web.Pages.Initiatives
                 );
             }
 
-            Initiative = await _context.DpDataInitiatives
-                .Include(x => x.DpDataProjects)
+            Initiative = await _context.Initiatives
+                .Include(x => x.Collections)
                 .ThenInclude(x => x.DpReportAnnotations)
                 .Include(x => x.OperationOwner)
                 .Include(x => x.ExecutiveOwner)
@@ -83,7 +83,7 @@ namespace Atlas_Web.Pages.Initiatives
             }
 
             // we get a copy of the initiative and then will only update several fields.
-            DpDataInitiative NewInitiative = _context.DpDataInitiatives
+            Initiative NewInitiative = _context.Initiatives
                 .Where(m => m.DataInitiativeId == Initiative.DataInitiativeId)
                 .FirstOrDefault();
 
@@ -102,14 +102,14 @@ namespace Atlas_Web.Pages.Initiatives
             _context.SaveChanges();
 
             // updated any linked data projects that were added and remove any that were delinked.
-            _context.DpDataProjects
+            _context.Collections
                 .Where(d => Collections.Select(x => x.DataProjectId).Contains(d.DataProjectId))
                 .ToList()
                 .ForEach(x => x.DataInitiativeId = Initiative.DataInitiativeId);
 
             _context.SaveChanges();
 
-            _context.DpDataProjects
+            _context.Collections
                 .Where(d => d.DataInitiativeId == Initiative.DataInitiativeId)
                 .Where(d => !Collections.Select(x => x.DataProjectId).Contains(d.DataProjectId))
                 .ToList()

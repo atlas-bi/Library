@@ -502,7 +502,7 @@ namespace Atlas_Web.Pages.Users
                             }
                             into tms
                         from tm in tms.DefaultIfEmpty()
-                        join pj in _context.DpDataProjects
+                        join pj in _context.Collections
                             on new { Id = (int)q.ItemId, Type = q.ItemType } equals new
                             {
                                 Id = pj.DataProjectId,
@@ -510,7 +510,7 @@ namespace Atlas_Web.Pages.Users
                             }
                             into pjs
                         from pj in pjs.DefaultIfEmpty()
-                        join di in _context.DpDataInitiatives
+                        join di in _context.Initiatives
                             on new { Id = (int)q.ItemId, Type = q.ItemType } equals new
                             {
                                 Id = di.DataInitiativeId,
@@ -991,7 +991,7 @@ namespace Atlas_Web.Pages.Users
                 {
                     cacheEntry.SlidingExpiration = TimeSpan.FromMinutes(10);
                     return (
-                        from r in _context.DpDataInitiatives
+                        from r in _context.Initiatives
                         where
                             r.LastUpdateUser == UserId
                             && r.LastUpdateDate > DateTime.Today.AddDays(-30)
@@ -1012,7 +1012,7 @@ namespace Atlas_Web.Pages.Users
                 {
                     cacheEntry.SlidingExpiration = TimeSpan.FromMinutes(10);
                     return (
-                        from r in _context.DpDataProjects
+                        from r in _context.Collections
                         where
                             r.LastUpdateUser == UserId
                             && r.LastUpdateDate > DateTime.Today.AddDays(-30)

@@ -4,6 +4,7 @@ using Atlas_Web.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Atlas_Web.Migrations
 {
     [DbContext(typeof(Atlas_WebContext))]
-    partial class Atlas_WebContextModelSnapshot : ModelSnapshot
+    [Migration("20220420134504_RenameInitiativeTable")]
+    partial class RenameInitiativeTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -214,7 +216,7 @@ namespace Atlas_Web.Migrations
                     b.ToTable("AnalyticsTrace", "app");
                 });
 
-            modelBuilder.Entity("Atlas_Web.Models.Collection", b =>
+            modelBuilder.Entity("Atlas_Web.Models.DpDataProject", b =>
                 {
                     b.Property<int>("DataProjectId")
                         .ValueGeneratedOnAdd()
@@ -296,7 +298,261 @@ namespace Atlas_Web.Migrations
 
                     b.HasIndex(new[] { "StrategicImportance" }, "strategicimportance");
 
-                    b.ToTable("Collection", "app");
+                    b.ToTable("DP_DataProject", "app");
+                });
+
+            modelBuilder.Entity("Atlas_Web.Models.DpDataProjectConversation", b =>
+                {
+                    b.Property<int>("DataProjectConversationId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DataProjectConversationId"), 1L, 1);
+
+                    b.Property<int>("DataProjectId")
+                        .HasColumnType("int");
+
+                    b.HasKey("DataProjectConversationId")
+                        .HasName("PK__Dp_DataP__A555F1EB255B0952");
+
+                    b.HasIndex("DataProjectId");
+
+                    b.ToTable("Dp_DataProjectConversation", "app");
+                });
+
+            modelBuilder.Entity("Atlas_Web.Models.DpDataProjectConversationMessage", b =>
+                {
+                    b.Property<int>("DataProjectConversationMessageId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DataProjectConversationMessageId"), 1L, 1);
+
+                    b.Property<int?>("DataProjectConversationId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("MessageText")
+                        .HasMaxLength(4000)
+                        .HasColumnType("nvarchar(4000)");
+
+                    b.Property<DateTime?>("PostDateTime")
+                        .HasColumnType("datetime");
+
+                    b.Property<int?>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("DataProjectConversationMessageId")
+                        .HasName("PK__Dp_DataP__06C6EA493F53AEBA");
+
+                    b.HasIndex("DataProjectConversationId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Dp_DataProjectConversationMessage", "app");
+                });
+
+            modelBuilder.Entity("Atlas_Web.Models.DpMilestoneChecklist", b =>
+                {
+                    b.Property<int>("MilestoneChecklistId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MilestoneChecklistId"), 1L, 1);
+
+                    b.Property<string>("Item")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("MilestoneTaskId")
+                        .HasColumnType("int");
+
+                    b.HasKey("MilestoneChecklistId")
+                        .HasName("PK__DP_Miles__53ECAE4A5F858065");
+
+                    b.HasIndex("MilestoneTaskId");
+
+                    b.ToTable("DP_MilestoneChecklist", "app");
+                });
+
+            modelBuilder.Entity("Atlas_Web.Models.DpMilestoneChecklistCompleted", b =>
+                {
+                    b.Property<int>("MilestoneChecklistCompletedId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MilestoneChecklistCompletedId"), 1L, 1);
+
+                    b.Property<bool?>("ChecklistStatus")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValueSql("((0))");
+
+                    b.Property<DateTime?>("CompletionDate")
+                        .HasColumnType("datetime");
+
+                    b.Property<int?>("CompletionUser")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("DataProjectId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("MilestoneChecklistId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("TaskDate")
+                        .HasColumnType("datetime");
+
+                    b.Property<int?>("TaskId")
+                        .HasColumnType("int");
+
+                    b.HasKey("MilestoneChecklistCompletedId")
+                        .HasName("PK__DP_Miles__E081AA701711E585");
+
+                    b.HasIndex("CompletionUser");
+
+                    b.HasIndex("DataProjectId");
+
+                    b.ToTable("DP_MilestoneChecklistCompleted", "app");
+                });
+
+            modelBuilder.Entity("Atlas_Web.Models.DpMilestoneFrequency", b =>
+                {
+                    b.Property<int>("MilestoneTypeId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MilestoneTypeId"), 1L, 1);
+
+                    b.Property<DateTime?>("LastUpdateDate")
+                        .HasColumnType("datetime");
+
+                    b.Property<int?>("LastUpdateUser")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("MilestoneTypeId")
+                        .HasName("PK__DP_Miles__B88C49912ECA633F");
+
+                    b.HasIndex("LastUpdateUser");
+
+                    b.ToTable("DP_MilestoneFrequency", "app");
+                });
+
+            modelBuilder.Entity("Atlas_Web.Models.DpMilestoneTask", b =>
+                {
+                    b.Property<int>("MilestoneTaskId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MilestoneTaskId"), 1L, 1);
+
+                    b.Property<int?>("DataProjectId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("EndDate")
+                        .HasColumnType("datetime");
+
+                    b.Property<DateTime?>("LastUpdateDate")
+                        .HasColumnType("datetime");
+
+                    b.Property<int?>("LastUpdateUser")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("MilestoneTemplateId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("OwnerId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("StartDate")
+                        .HasColumnType("datetime");
+
+                    b.HasKey("MilestoneTaskId")
+                        .HasName("PK__DP_Miles__64647109FB6B4EDB");
+
+                    b.HasIndex("DataProjectId");
+
+                    b.HasIndex("LastUpdateUser");
+
+                    b.HasIndex("MilestoneTemplateId");
+
+                    b.HasIndex("OwnerId");
+
+                    b.ToTable("DP_MilestoneTasks", "app");
+                });
+
+            modelBuilder.Entity("Atlas_Web.Models.DpMilestoneTasksCompleted", b =>
+                {
+                    b.Property<int>("MilestoneTaskCompletedId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MilestoneTaskCompletedId"), 1L, 1);
+
+                    b.Property<string>("Comments")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("CompletionDate")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("CompletionUser")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("DataProjectId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("DueDate")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("Owner")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("MilestoneTaskCompletedId")
+                        .HasName("PK__DP_Miles__3226EEDD7DAFACC3");
+
+                    b.HasIndex("DataProjectId");
+
+                    b.ToTable("DP_MilestoneTasksCompleted", "app");
+                });
+
+            modelBuilder.Entity("Atlas_Web.Models.DpMilestoneTemplate", b =>
+                {
+                    b.Property<int>("MilestoneTemplateId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MilestoneTemplateId"), 1L, 1);
+
+                    b.Property<int?>("Interval")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("LastUpdateDate")
+                        .HasColumnType("datetime");
+
+                    b.Property<int?>("LastUpdateUser")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("MilestoneTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("MilestoneTemplateId")
+                        .HasName("PK__DP_Miles__6A72A86C4B768C43");
+
+                    b.HasIndex("LastUpdateUser");
+
+                    b.HasIndex("MilestoneTypeId");
+
+                    b.ToTable("DP_MilestoneTemplates", "app");
                 });
 
             modelBuilder.Entity("Atlas_Web.Models.DpReportAnnotation", b =>
@@ -2851,7 +3107,7 @@ namespace Atlas_Web.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Atlas_Web.Models.Collection", b =>
+            modelBuilder.Entity("Atlas_Web.Models.DpDataProject", b =>
                 {
                     b.HasOne("Atlas_Web.Models.User", "AnalyticsOwner")
                         .WithMany("DpDataProjectAnalyticsOwners")
@@ -2859,7 +3115,7 @@ namespace Atlas_Web.Migrations
                         .HasConstraintName("FK_DP_DataProject_WebAppUsers1");
 
                     b.HasOne("Atlas_Web.Models.Initiative", "Initiative")
-                        .WithMany("Collections")
+                        .WithMany("DpDataProjects")
                         .HasForeignKey("DataInitiativeId")
                         .HasConstraintName("FK_DP_DataProject_DP_DataInitiative");
 
@@ -2874,7 +3130,7 @@ namespace Atlas_Web.Migrations
                         .HasConstraintName("FK_DP_DataProject_User");
 
                     b.HasOne("Atlas_Web.Models.FinancialImpact", "FinancialImpactNavigation")
-                        .WithMany("Collections")
+                        .WithMany("DpDataProjects")
                         .HasForeignKey("FinancialImpact")
                         .HasConstraintName("FK_DP_DataProject_FinancialImpact");
 
@@ -2889,7 +3145,7 @@ namespace Atlas_Web.Migrations
                         .HasConstraintName("FK_DP_DataProject_User1");
 
                     b.HasOne("Atlas_Web.Models.StrategicImportance", "StrategicImportanceNavigation")
-                        .WithMany("Collections")
+                        .WithMany("DpDataProjects")
                         .HasForeignKey("StrategicImportance")
                         .HasConstraintName("FK_DP_DataProject_StrategicImportance");
 
@@ -2910,9 +3166,132 @@ namespace Atlas_Web.Migrations
                     b.Navigation("StrategicImportanceNavigation");
                 });
 
+            modelBuilder.Entity("Atlas_Web.Models.DpDataProjectConversation", b =>
+                {
+                    b.HasOne("Atlas_Web.Models.DpDataProject", "DataProject")
+                        .WithMany("DpDataProjectConversations")
+                        .HasForeignKey("DataProjectId")
+                        .IsRequired()
+                        .HasConstraintName("FK_Dp_DataProjectConversation_DP_DataProject");
+
+                    b.Navigation("DataProject");
+                });
+
+            modelBuilder.Entity("Atlas_Web.Models.DpDataProjectConversationMessage", b =>
+                {
+                    b.HasOne("Atlas_Web.Models.DpDataProjectConversation", "DataProjectConversation")
+                        .WithMany("DpDataProjectConversationMessages")
+                        .HasForeignKey("DataProjectConversationId")
+                        .HasConstraintName("FK_Dp_DataProjectConversationMessage_Dp_DataProjectConversation");
+
+                    b.HasOne("Atlas_Web.Models.User", "User")
+                        .WithMany("DpDataProjectConversationMessages")
+                        .HasForeignKey("UserId")
+                        .HasConstraintName("FK_Dp_DataProjectConversationMessage_User");
+
+                    b.Navigation("DataProjectConversation");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Atlas_Web.Models.DpMilestoneChecklist", b =>
+                {
+                    b.HasOne("Atlas_Web.Models.DpMilestoneTask", "MilestoneTask")
+                        .WithMany("DpMilestoneChecklists")
+                        .HasForeignKey("MilestoneTaskId")
+                        .HasConstraintName("FK_DP_MilestoneChecklist_DP_MilestoneTasks");
+
+                    b.Navigation("MilestoneTask");
+                });
+
+            modelBuilder.Entity("Atlas_Web.Models.DpMilestoneChecklistCompleted", b =>
+                {
+                    b.HasOne("Atlas_Web.Models.User", "CompletionUserNavigation")
+                        .WithMany("DpMilestoneChecklistCompleteds")
+                        .HasForeignKey("CompletionUser")
+                        .HasConstraintName("FK_DP_MilestoneChecklistCompleted_User");
+
+                    b.HasOne("Atlas_Web.Models.DpDataProject", "DataProject")
+                        .WithMany("DpMilestoneChecklistCompleteds")
+                        .HasForeignKey("DataProjectId")
+                        .HasConstraintName("FK_DP_MilestoneChecklistCompleted_DP_DataProject");
+
+                    b.Navigation("CompletionUserNavigation");
+
+                    b.Navigation("DataProject");
+                });
+
+            modelBuilder.Entity("Atlas_Web.Models.DpMilestoneFrequency", b =>
+                {
+                    b.HasOne("Atlas_Web.Models.User", "LastUpdateUserNavigation")
+                        .WithMany("DpMilestoneFrequencies")
+                        .HasForeignKey("LastUpdateUser")
+                        .HasConstraintName("FK_DP_MilestoneTypes_WebAppUsers");
+
+                    b.Navigation("LastUpdateUserNavigation");
+                });
+
+            modelBuilder.Entity("Atlas_Web.Models.DpMilestoneTask", b =>
+                {
+                    b.HasOne("Atlas_Web.Models.DpDataProject", "DataProject")
+                        .WithMany("DpMilestoneTasks")
+                        .HasForeignKey("DataProjectId")
+                        .HasConstraintName("FK_DP_MilestoneTasks_DP_DataProject");
+
+                    b.HasOne("Atlas_Web.Models.User", "LastUpdateUserNavigation")
+                        .WithMany("DpMilestoneTaskLastUpdateUserNavigations")
+                        .HasForeignKey("LastUpdateUser")
+                        .HasConstraintName("FK_DP_MilestoneTasks_LastUpdateUser");
+
+                    b.HasOne("Atlas_Web.Models.DpMilestoneTemplate", "MilestoneTemplate")
+                        .WithMany("DpMilestoneTasks")
+                        .HasForeignKey("MilestoneTemplateId")
+                        .HasConstraintName("FK_DP_MilestoneTasks_DP_MilestoneTemplates");
+
+                    b.HasOne("Atlas_Web.Models.User", "Owner")
+                        .WithMany("DpMilestoneTaskOwners")
+                        .HasForeignKey("OwnerId")
+                        .HasConstraintName("FK_DP_MilestoneTasks_User");
+
+                    b.Navigation("DataProject");
+
+                    b.Navigation("LastUpdateUserNavigation");
+
+                    b.Navigation("MilestoneTemplate");
+
+                    b.Navigation("Owner");
+                });
+
+            modelBuilder.Entity("Atlas_Web.Models.DpMilestoneTasksCompleted", b =>
+                {
+                    b.HasOne("Atlas_Web.Models.DpDataProject", "DataProject")
+                        .WithMany("DpMilestoneTasksCompleteds")
+                        .HasForeignKey("DataProjectId")
+                        .HasConstraintName("FK_DP_MilestoneTasksCompleted_DP_DataProject");
+
+                    b.Navigation("DataProject");
+                });
+
+            modelBuilder.Entity("Atlas_Web.Models.DpMilestoneTemplate", b =>
+                {
+                    b.HasOne("Atlas_Web.Models.User", "LastUpdateUserNavigation")
+                        .WithMany("DpMilestoneTemplates")
+                        .HasForeignKey("LastUpdateUser")
+                        .HasConstraintName("FK_DP_MilestoneTemplates_WebAppUsers");
+
+                    b.HasOne("Atlas_Web.Models.DpMilestoneFrequency", "MilestoneType")
+                        .WithMany("DpMilestoneTemplates")
+                        .HasForeignKey("MilestoneTypeId")
+                        .HasConstraintName("FK_DP_MilestoneTemplates_DP_MilestoneTypes");
+
+                    b.Navigation("LastUpdateUserNavigation");
+
+                    b.Navigation("MilestoneType");
+                });
+
             modelBuilder.Entity("Atlas_Web.Models.DpReportAnnotation", b =>
                 {
-                    b.HasOne("Atlas_Web.Models.Collection", "DataProject")
+                    b.HasOne("Atlas_Web.Models.DpDataProject", "DataProject")
                         .WithMany("DpReportAnnotations")
                         .HasForeignKey("DataProjectId")
                         .HasConstraintName("FK_DP_ReportAnnotation_DP_DataProject");
@@ -2929,7 +3308,7 @@ namespace Atlas_Web.Migrations
 
             modelBuilder.Entity("Atlas_Web.Models.DpTermAnnotation", b =>
                 {
-                    b.HasOne("Atlas_Web.Models.Collection", "DataProject")
+                    b.HasOne("Atlas_Web.Models.DpDataProject", "DataProject")
                         .WithMany("DpTermAnnotations")
                         .HasForeignKey("DataProjectId")
                         .HasConstraintName("FK_DP_TermAnnotation_DP_DataProject");
@@ -3506,7 +3885,7 @@ namespace Atlas_Web.Migrations
 
             modelBuilder.Entity("Atlas_Web.Models.StarredCollection", b =>
                 {
-                    b.HasOne("Atlas_Web.Models.Collection", "Collection")
+                    b.HasOne("Atlas_Web.Models.DpDataProject", "Collection")
                         .WithMany("StarredCollections")
                         .HasForeignKey("Collectionid")
                         .HasConstraintName("FK_StarredCollections_DP_DataProject");
@@ -3785,13 +4164,41 @@ namespace Atlas_Web.Migrations
                     b.Navigation("UserRoles");
                 });
 
-            modelBuilder.Entity("Atlas_Web.Models.Collection", b =>
+            modelBuilder.Entity("Atlas_Web.Models.DpDataProject", b =>
                 {
+                    b.Navigation("DpDataProjectConversations");
+
+                    b.Navigation("DpMilestoneChecklistCompleteds");
+
+                    b.Navigation("DpMilestoneTasks");
+
+                    b.Navigation("DpMilestoneTasksCompleteds");
+
                     b.Navigation("DpReportAnnotations");
 
                     b.Navigation("DpTermAnnotations");
 
                     b.Navigation("StarredCollections");
+                });
+
+            modelBuilder.Entity("Atlas_Web.Models.DpDataProjectConversation", b =>
+                {
+                    b.Navigation("DpDataProjectConversationMessages");
+                });
+
+            modelBuilder.Entity("Atlas_Web.Models.DpMilestoneFrequency", b =>
+                {
+                    b.Navigation("DpMilestoneTemplates");
+                });
+
+            modelBuilder.Entity("Atlas_Web.Models.DpMilestoneTask", b =>
+                {
+                    b.Navigation("DpMilestoneChecklists");
+                });
+
+            modelBuilder.Entity("Atlas_Web.Models.DpMilestoneTemplate", b =>
+                {
+                    b.Navigation("DpMilestoneTasks");
                 });
 
             modelBuilder.Entity("Atlas_Web.Models.EstimatedRunFrequency", b =>
@@ -3801,7 +4208,7 @@ namespace Atlas_Web.Migrations
 
             modelBuilder.Entity("Atlas_Web.Models.FinancialImpact", b =>
                 {
-                    b.Navigation("Collections");
+                    b.Navigation("DpDataProjects");
 
                     b.Navigation("Initiatives");
                 });
@@ -3818,7 +4225,7 @@ namespace Atlas_Web.Migrations
 
             modelBuilder.Entity("Atlas_Web.Models.Initiative", b =>
                 {
-                    b.Navigation("Collections");
+                    b.Navigation("DpDataProjects");
 
                     b.Navigation("StarredInitiatives");
                 });
@@ -3930,7 +4337,7 @@ namespace Atlas_Web.Migrations
 
             modelBuilder.Entity("Atlas_Web.Models.StrategicImportance", b =>
                 {
-                    b.Navigation("Collections");
+                    b.Navigation("DpDataProjects");
 
                     b.Navigation("Initiatives");
                 });
@@ -3965,6 +4372,8 @@ namespace Atlas_Web.Migrations
 
                     b.Navigation("DpDataProjectAnalyticsOwners");
 
+                    b.Navigation("DpDataProjectConversationMessages");
+
                     b.Navigation("DpDataProjectDataManagers");
 
                     b.Navigation("DpDataProjectExecutiveOwners");
@@ -3972,6 +4381,16 @@ namespace Atlas_Web.Migrations
                     b.Navigation("DpDataProjectLastUpdateUserNavigations");
 
                     b.Navigation("DpDataProjectOperationOwners");
+
+                    b.Navigation("DpMilestoneChecklistCompleteds");
+
+                    b.Navigation("DpMilestoneFrequencies");
+
+                    b.Navigation("DpMilestoneTaskLastUpdateUserNavigations");
+
+                    b.Navigation("DpMilestoneTaskOwners");
+
+                    b.Navigation("DpMilestoneTemplates");
 
                     b.Navigation("MailDrafts");
 

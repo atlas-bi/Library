@@ -19,7 +19,7 @@ namespace Atlas_Web.Pages.Collections
         }
 
         [BindProperty]
-        public DpDataProject Collection { get; set; }
+        public Collection Collection { get; set; }
 
         [BindProperty]
         public int[] Terms { get; set; }

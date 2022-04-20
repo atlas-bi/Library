@@ -11,7 +11,7 @@ namespace Atlas_Web.Models
         public int? DataProjectId { get; set; }
         public int? Rank { get; set; }
 
-        public virtual DpDataProject DataProject { get; set; }
+        public virtual Collection DataProject { get; set; }
         public virtual ReportObject Report { get; set; }
     }
 }
