@@ -11,38 +11,40 @@
 
 <partial name="_Links" />
 
-<h2 id="details" class="title is-2">Description</h2>
+<div class="content">
+    <h2 id="details" class="title is-2">Description</h2>
 
-@if (Model.Term.Summary != null && Model.Term.Summary != "")
-{
-    <h3 class="title is-3">Summary</h3>
-    <div class="markdown">
-        @Html.Raw(@Helpers.HtmlHelpers.MarkdownToHtml(Model.Term.Summary))
-    </div>
-}
+    @if (Model.Term.Summary != null && Model.Term.Summary != "")
+    {
+        <h3 class="title is-3">Summary</h3>
+        <div class="markdown">
+            @Html.Raw(@Helpers.HtmlHelpers.MarkdownToHtml(Model.Term.Summary))
+        </div>
+    }
 
-@if (Model.Term.TechnicalDefinition != null && Model.Term.TechnicalDefinition != "")
-{
-    <h3 class="title is-3">Technical Definition</h3>
-    <div class="markdown">
-        @Html.Raw(@Helpers.HtmlHelpers.MarkdownToHtml(Model.Term.TechnicalDefinition))
-    </div>
-}
+    @if (Model.Term.TechnicalDefinition != null && Model.Term.TechnicalDefinition != "")
+    {
+        <h3 class="title is-3">Technical Definition</h3>
+        <div class="markdown">
+            @Html.Raw(@Helpers.HtmlHelpers.MarkdownToHtml(Model.Term.TechnicalDefinition))
+        </div>
+    }
 
 
-@if (Model.RelatedReports.Count() > 0)
-{
-    <h2 id="reports" class="title is-2">Linked Reports</h2>
+    @if (Model.RelatedReports.Count() > 0)
+    {
+        <h2 id="reports" class="title is-2">Linked Reports</h2>
 
-    <div class="columns is-multiline">
-        @foreach (var r in Model.RelatedReports)
-        {
-            <div class="column is-half ">
-                <partial name="Reports/_Snippet" model="r" />
-            </div>
-        }
-    </div>
-}
+        <div class="columns is-multiline">
+            @foreach (var r in Model.RelatedReports)
+            {
+                <div class="column is-half ">
+                    <partial name="Reports/_Snippet" model="r" />
+                </div>
+            }
+        </div>
+    }
+</div>
 
 <h2 id="meta" class="title is-2">Details</h2>
 
