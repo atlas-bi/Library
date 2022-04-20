@@ -58,10 +58,6 @@ namespace Atlas_Web.Models
         public virtual DbSet<ReportObjectWeightedRunRank> ReportObjectWeightedRunRanks { get; set; }
         public virtual DbSet<RolePermission> RolePermissions { get; set; }
         public virtual DbSet<RolePermissionLink> RolePermissionLinks { get; set; }
-        public virtual DbSet<SearchBasicSearchDataSmall> SearchBasicSearchDataSmalls { get; set; }
-        public virtual DbSet<SearchBasicSearchDatum> SearchBasicSearchData { get; set; }
-        public virtual DbSet<SearchReportObjectSearchDatum> SearchReportObjectSearchData { get; set; }
-        public virtual DbSet<SearchTable> SearchTables { get; set; }
         public virtual DbSet<SharedItem> SharedItems { get; set; }
         public virtual DbSet<StarredCollection> StarredCollections { get; set; }
         public virtual DbSet<StarredGroup> StarredGroups { get; set; }
@@ -1479,101 +1475,6 @@ namespace Atlas_Web.Models
                         .WithMany(p => p.RolePermissionLinks)
                         .HasForeignKey(d => d.RolePermissionsId)
                         .HasConstraintName("FK_RolePermissionLinks_RolePermissions");
-                }
-            );
-
-            modelBuilder.Entity<SearchBasicSearchDataSmall>(
-                entity =>
-                {
-                    entity.ToTable("Search_BasicSearchData_Small", "app");
-
-                    entity.Property(e => e.CertificationTag).HasMaxLength(200);
-
-                    entity.Property(e => e.ItemType).HasMaxLength(100);
-
-                    entity.Property(e => e.SearchFieldDescription).HasMaxLength(100);
-                }
-            );
-
-            modelBuilder.Entity<SearchBasicSearchDatum>(
-                entity =>
-                {
-                    entity.ToTable("Search_BasicSearchData", "app");
-
-                    entity.Property(e => e.CertificationTag).HasMaxLength(200);
-
-                    entity.Property(e => e.ItemType).HasMaxLength(100);
-
-                    entity.Property(e => e.SearchFieldDescription).HasMaxLength(100);
-                }
-            );
-
-            modelBuilder.Entity<SearchReportObjectSearchDatum>(
-                entity =>
-                {
-                    entity.HasKey(e => e.Pk).HasName("Search_ReportObjectSearchData_PK");
-
-                    entity.ToTable("Search_ReportObjectSearchData", "app");
-
-                    entity.Property(e => e.Pk).HasColumnName("pk");
-
-                    entity.Property(e => e.CertificationTag).HasColumnName("certificationTag");
-
-                    entity
-                        .Property(e => e.DefaultVisibilityYn)
-                        .HasMaxLength(1)
-                        .HasColumnName("DefaultVisibilityYN");
-
-                    entity.Property(e => e.DocCreated).HasColumnType("datetime");
-
-                    entity.Property(e => e.DocDoNotPurge).HasMaxLength(1).IsFixedLength();
-
-                    entity.Property(e => e.DocExecVis).HasMaxLength(1).IsFixedLength();
-
-                    entity.Property(e => e.DocHidden).HasMaxLength(1).IsFixedLength();
-
-                    entity.Property(e => e.DocHypeEnabled).HasMaxLength(1).IsFixedLength();
-
-                    entity.Property(e => e.DocLastUpdated).HasColumnType("datetime");
-
-                    entity.Property(e => e.EpicMasterFile).HasMaxLength(3);
-
-                    entity.Property(e => e.EpicReportTemplateId).HasColumnType("numeric(18, 0)");
-
-                    entity
-                        .Property(e => e.LastModifiedByUserId)
-                        .HasColumnName("LastModifiedByUserID");
-
-                    entity.Property(e => e.LastModifiedDate).HasColumnType("datetime");
-
-                    entity
-                        .Property(e => e.OrphanedReportObjectYn)
-                        .HasMaxLength(1)
-                        .HasColumnName("OrphanedReportObjectYN")
-                        .IsFixedLength();
-
-                    entity.Property(e => e.ReportObjectTypeId).HasColumnName("ReportObjectTypeID");
-
-                    entity
-                        .Property(e => e.SourceDb)
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnName("SourceDB");
-
-                    entity.Property(e => e.SourceServer).IsRequired().HasMaxLength(255);
-
-                    entity.Property(e => e.SourceTable).IsRequired().HasMaxLength(255);
-                }
-            );
-
-            modelBuilder.Entity<SearchTable>(
-                entity =>
-                {
-                    entity.ToTable("SearchTable", "app");
-
-                    entity.Property(e => e.ItemType).HasMaxLength(100);
-
-                    entity.Property(e => e.SearchFieldDescription).HasMaxLength(100);
                 }
             );
 
