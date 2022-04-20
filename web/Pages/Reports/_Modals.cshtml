@@ -132,38 +132,37 @@ Regards!</textarea>
 @if (Model.ReportObjectAttachments.Any()){
     <div class="modal" id="report-run-@Model.ReportObjectId">
         <div class="modal-background"></div>
-        <div class="modal-content">
-            <div class="box">
+        <div class="modal-card box">
+            <div class="modal-card-body content">
                 <strong class="my-4">Run This Report</strong>
-                <div class="content">
-                    <p>
-                        This is a Crystal Report. Here are the recent run outputs.
 
-                        <ul>
-                            @foreach (var r in Model.ReportObjectAttachments)
-                            {
-                                var url = Helpers.HtmlHelpers.IsEpic(Context) ? "EpicAct:AC_RW_WEB_BROWSER,LaunchOptions:2,runparams:" + Context.Request.Scheme + "://" + Context.Request.Host.Value+"/Data/File?handler=CrystalRun&id="+r.ReportObjectAttachmentId+"|FormCaption="+r.Name+"|ActivityName="+Model.Name : "/Data/File?handler=CrystalRun&id="+r.ReportObjectAttachmentId;
-                            <li><a href="@url" target="_blank">@r.Name</a><span> ·  @r.CreationDate</span></li>
-                            }
-                        </ul>
-                    </p>
-                    <p>
-                        If you need a <strong>newer</strong> dataset request a new run from the Report Library.
-                        <ol>
-                            <li>Open the Report Library</li>
-                            <li>Search for this report</li>
-                            <li>Click "view" > click "Request"</li>
-                        </ol>
-                    </p>
-                    <p>
-                        ~ after 5 minutes ~
-                        <ol>
-                            <li>Open My Reports</li>
-                            <li>In the lower section of the screen you will find the report listed</li>
-                            <li>Click "View Output"</li>
-                        </ol>
-                    </p>
-                </div>
+                <p>
+                    This is a Crystal Report. Here are the recent run outputs.
+
+                    <ul>
+                        @foreach (var r in Model.ReportObjectAttachments.OrderByDescending(x => x.CreationDate))
+                        {
+                            var url = Helpers.HtmlHelpers.IsEpic(Context) ? "EpicAct:AC_RW_WEB_BROWSER,LaunchOptions:2,runparams:" + Context.Request.Scheme + "://" + Context.Request.Host.Value+"/Data/File?handler=CrystalRun&id="+r.ReportObjectAttachmentId+"|FormCaption="+r.Name+"|ActivityName="+Model.Name : "/Data/File?handler=CrystalRun&id="+r.ReportObjectAttachmentId;
+                        <li><a href="@url" target="_blank">@r.Name</a><span> ·  @r.CreationDate</span></li>
+                        }
+                    </ul>
+                </p>
+                <p>
+                    If you need a <strong>newer</strong> dataset request a new run from the Report Library.
+                    <ol>
+                        <li>Open the Report Library</li>
+                        <li>Search for this report</li>
+                        <li>Click "view" > click "Request"</li>
+                    </ol>
+                </p>
+                <p>
+                    ~ after 5 minutes ~
+                    <ol>
+                        <li>Open My Reports</li>
+                        <li>In the lower section of the screen you will find the report listed</li>
+                        <li>Click "View Output"</li>
+                    </ol>
+                </p>
             </div>
         </div>
         <button class="modal-close is-large" aria-label="close"></button>
