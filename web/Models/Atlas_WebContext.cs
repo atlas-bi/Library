@@ -11,6 +11,7 @@ namespace Atlas_Web.Models
 
         public virtual DbSet<Analytic> Analytics { get; set; }
         public virtual DbSet<AnalyticsTrace> AnalyticsTraces { get; set; }
+        public virtual DbSet<AnalyticsError> AnalyticsErrors { get; set; }
         public virtual DbSet<Initiative> Initiatives { get; set; }
         public virtual DbSet<Collection> Collections { get; set; }
         public virtual DbSet<DpReportAnnotation> DpReportAnnotations { get; set; }
@@ -202,6 +203,35 @@ namespace Atlas_Web.Models
                         .WithMany(p => p.AnalyticsTraces)
                         .HasForeignKey(d => d.UserId)
                         .HasConstraintName("FK_Analytics_Trace_User");
+                }
+            );
+
+            modelBuilder.Entity<AnalyticsError>(
+                entity =>
+                {
+                    entity.ToTable("AnalyticsError", "app");
+
+                    entity.Property(e => e.Handled).HasColumnName("handled");
+
+                    entity
+                        .Property(e => e.LogDateTime)
+                        .HasColumnType("datetime")
+                        .HasColumnName("logDateTime");
+
+                    entity.Property(e => e.Referer).HasColumnName("referer");
+
+                    entity
+                        .Property(e => e.UpdateTime)
+                        .HasColumnType("datetime")
+                        .HasColumnName("updateTime");
+
+                    entity.Property(e => e.UserAgent).HasColumnName("userAgent");
+
+                    entity
+                        .HasOne(d => d.User)
+                        .WithMany(p => p.AnalyticsErrors)
+                        .HasForeignKey(d => d.UserId)
+                        .HasConstraintName("FK_Analytics_Error_User");
                 }
             );
 

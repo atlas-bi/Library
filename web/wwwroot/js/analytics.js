@@ -252,10 +252,8 @@
   }
 
   function loadAjax(parameters = '') {
-    console.log('params', parameters);
     (document.querySelectorAll('.analytics[data-url]') || []).forEach(
       ($element) => {
-        console.log($element);
         $element.setAttribute('data-params', parameters);
         $element.dispatchEvent(new CustomEvent('reload'));
       },
@@ -290,8 +288,22 @@
   }
 
   function loadChart(parameters = '') {
+    primaryChart.style.opacity = '.5';
+
+    const views = document.querySelector('#analytics-views');
+    const visitors = document.querySelector('#analytics-visitors');
+    const loadTime = document.querySelector('#analytics-load-time');
+
+    views.style.opacity = '.5';
+    visitors.style.opacity = '.5';
+    loadTime.style.opacity = '.5';
+
     if (primaryChartAjax !== null) {
       primaryChartAjax.abort();
+    }
+
+    if (primaryChart.dataset.url.includes('?')) {
+      parameters = parameters.replace('?', '&');
     }
 
     primaryChartAjax = new XMLHttpRequest();
@@ -306,29 +318,31 @@
     primaryChartAjax.addEventListener('load', function () {
       const rep = JSON.parse(primaryChartAjax.responseText);
 
-      const views = document.querySelector('#analytics-views');
       if (views) {
         views.textContent = bigNumber(rep.views);
       }
 
-      const visitors = document.querySelector('#analytics-visitors');
       if (visitors) {
         visitors.textContent = bigNumber(rep.visitors);
       }
 
-      const loadTime = document.querySelector('#analytics-load-time');
       if (loadTime) {
         loadTime.textContent = rep.load_time;
       }
 
       window.visitsChart.data = rep.data;
       window.visitsChart.update();
+      primaryChart.style.opacity = '1';
+      views.style.opacity = '1';
+      visitors.style.opacity = '1';
+      loadTime.style.opacity = '1';
     });
   }
 
   document.addEventListener('click', (event) => {
     if (
-      event.target.matches('.trace-resolved[type="checkbox"]') &&
+      (event.target.matches('.trace-resolved[type="checkbox"]') ||
+        event.target.matches('.error-resolved[type="checkbox"]')) &&
       event.target.tagName === 'INPUT'
     ) {
       const i = event.target;
@@ -364,7 +378,7 @@
       }
 
       const data = {
-        Id: i.getAttribute('id'),
+        Id: i.dataset.id,
         Type: type,
       };
       const url = Object.keys(data)
@@ -373,7 +387,7 @@
         })
         .join('&');
       const q = new XMLHttpRequest();
-      q.open('post', '/Analytics/Trace/?handler=Resolved&' + url, true);
+      q.open('post', i.dataset.url + '?handler=Resolved&' + url, true);
       q.setRequestHeader('Content-Type', 'text/html;charset=UTF-8`');
       q.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
       q.send();

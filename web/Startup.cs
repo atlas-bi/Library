@@ -215,9 +215,10 @@ namespace Atlas_Web
             if (!env.IsDevelopment())
             {
                 app.UseHsts();
-                app.UseStatusCodePagesWithRedirects("/Error?id={0}");
-                // app.UseExceptionHandler("/Error");
+
                 app.UseHttpsRedirection();
+                app.UseStatusCodePagesWithReExecute("/Error", "?id={0}");
+                app.UseExceptionHandler("/Error");
             }
             else
             {

@@ -22,6 +22,12 @@
         <li>
             <a class="tab-lnk" href="#groups">Groups</a>
         </li>
+        @if (ViewBag.Permissions.Contains(36))
+        {
+            <li>
+                <a class="tab-lnk" href="#analytics">Analytics</a>
+            </li>
+        }
     </ul>
 </nav>
 
