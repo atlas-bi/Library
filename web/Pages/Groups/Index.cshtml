@@ -2,7 +2,10 @@
 @inject IConfiguration Configuration
 
 @model Atlas_Web.Pages.Groups.IndexModel
-@{ ViewData["Title"] = @Model.Group.Name; }
+@{
+    ViewData["Title"] = @Model.Group.Name;
+    ViewBag.GroupId = @Model.Group.Id;
+}
 
 
 <h1 class="title is-1">@Model.Group.Name</h1>
@@ -116,4 +119,13 @@
     <div class="tab-dta" id="activity">
         <div data-ajax="yes" data-url="/Groups?handler=Activity" data-param="id=@Model.Group.Id"></div>
     </div>
+    @if (ViewBag.Permissions.Contains(36))
+    {
+        <div class="tab-dta" id="analytics">
+            @section js {
+                <script src="/js/analytics.min.js" defer async></script>
+            }
+            <partial name="Analytics/Partials/_Index" />
+        </div>
+    }
 </section>

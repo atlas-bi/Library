@@ -9,6 +9,7 @@ namespace Atlas_Web.Models
         {
             Analytics = new HashSet<Analytic>();
             AnalyticsTraces = new HashSet<AnalyticsTrace>();
+            AnalyticsErrors = new HashSet<AnalyticsError>();
             DpDataInitiativeExecutiveOwners = new HashSet<Initiative>();
             DpDataInitiativeLastUpdateUserNavigations = new HashSet<Initiative>();
             DpDataInitiativeOperationOwners = new HashSet<Initiative>();
@@ -74,6 +75,7 @@ namespace Atlas_Web.Models
         public virtual UserNameDatum UserNameDatum { get; set; }
         public virtual ICollection<Analytic> Analytics { get; set; }
         public virtual ICollection<AnalyticsTrace> AnalyticsTraces { get; set; }
+        public virtual ICollection<AnalyticsError> AnalyticsErrors { get; set; }
         public virtual ICollection<Initiative> DpDataInitiativeExecutiveOwners { get; set; }
         public virtual ICollection<Initiative> DpDataInitiativeLastUpdateUserNavigations { get; set; }
         public virtual ICollection<Initiative> DpDataInitiativeOperationOwners { get; set; }

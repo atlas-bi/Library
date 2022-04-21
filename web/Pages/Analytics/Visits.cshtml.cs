@@ -55,7 +55,12 @@ namespace Atlas_Web.Pages.Analytics
 
         public List<BarData> BarDataSet { get; set; }
 
-        public async Task<ActionResult> OnGetAsync(double start_at = -86400, double end_at = 0)
+        public async Task<ActionResult> OnGetAsync(
+            double start_at = -86400,
+            double end_at = 0,
+            int? userId = -1,
+            int? groupId = -1
+        )
         {
             /*
             when start - end < 2days, use 1 AM, 2 AM...
@@ -66,13 +71,25 @@ namespace Atlas_Web.Pages.Analytics
             when using all time, get first day and last day and use the above rules
             */
 
-            var subquery = _context.Analytics
-                .Where(
-                    x =>
-                        x.AccessDateTime >= DateTime.Now.AddSeconds(start_at)
-                        && x.AccessDateTime <= DateTime.Now.AddSeconds(end_at)
-                )
-                .OrderBy(x => x.AccessDateTime);
+            var subquery = _context.Analytics.Where(
+                x =>
+                    x.AccessDateTime >= DateTime.Now.AddSeconds(start_at)
+                    && x.AccessDateTime <= DateTime.Now.AddSeconds(end_at)
+            );
+
+            if (userId > 0 && _context.Users.Any(x => x.UserId == userId))
+            {
+                subquery = subquery.Where(x => x.UserId == userId);
+            }
+
+            if (groupId > 0 && _context.UserGroups.Any(x => x.GroupId == groupId))
+            {
+                subquery = subquery.Where(
+                    x => x.User.UserGroupsMemberships.Any(y => y.GroupId == groupId)
+                );
+            }
+            subquery = subquery.OrderBy(x => x.AccessDateTime);
+
             switch (end_at - start_at)
             {
                 // for < 2 days
@@ -165,7 +182,7 @@ namespace Atlas_Web.Pages.Analytics
                         ) into grp
                         select new AccessHistoryData
                         {
-                            Date = grp.Key.ToString("MMM"),
+                            Date = grp.Key.ToString("MMM yy"),
                             Sessions = grp.Select(x => x.SessionId).Distinct().Count(),
                             Pages = grp.Select(x => x.PageId).Distinct().Count(),
                             LoadTime = Math.Round(
@@ -180,17 +197,27 @@ namespace Atlas_Web.Pages.Analytics
             Views = subquery.Count();
 
             Visitors = subquery.Select(x => x.SessionId).Distinct().Count();
-            LoadTime = Math.Round(
-                (subquery.Average(x => (long)Convert.ToDouble(x.LoadTime)) / 1000),
-                1
-            );
+
+            if (Views > 0)
+            {
+                LoadTime = Math.Round(
+                    (subquery.Average(x => (long)Convert.ToDouble(x.LoadTime)) / 1000),
+                    1
+                );
+            }
+            else
+            {
+                LoadTime = 0;
+            }
 
             return Page();
         }
 
         public async Task<ActionResult> OnGetBrowsersAsync(
             double start_at = -86400,
-            double end_at = 0
+            double end_at = 0,
+            int? userId = -1,
+            int? groupId = -1
         )
         {
             var uaParser = Parser.GetDefault();
@@ -199,6 +226,19 @@ namespace Atlas_Web.Pages.Analytics
                     x.AccessDateTime >= DateTime.Now.AddSeconds(start_at)
                     && x.AccessDateTime <= DateTime.Now.AddSeconds(end_at)
             );
+
+            if (userId > 0 && _context.Users.Any(x => x.UserId == userId))
+            {
+                subquery = subquery.Where(x => x.UserId == userId);
+            }
+
+            if (groupId > 0 && _context.UserGroups.Any(x => x.GroupId == groupId))
+            {
+                subquery = subquery.Where(
+                    x => x.User.UserGroupsMemberships.Any(y => y.GroupId == groupId)
+                );
+            }
+
             double total = subquery.Count();
             var grouped = await subquery
                 .GroupBy(x => x.UserAgent)
@@ -220,7 +260,12 @@ namespace Atlas_Web.Pages.Analytics
             return new PartialViewResult { ViewName = "Partials/_BarData", ViewData = ViewData };
         }
 
-        public async Task<ActionResult> OnGetOsAsync(double start_at = -86400, double end_at = 0)
+        public async Task<ActionResult> OnGetOsAsync(
+            double start_at = -86400,
+            double end_at = 0,
+            int? userId = -1,
+            int? groupId = -1
+        )
         {
             var uaParser = Parser.GetDefault();
             var subquery = _context.Analytics.Where(
@@ -228,6 +273,19 @@ namespace Atlas_Web.Pages.Analytics
                     x.AccessDateTime >= DateTime.Now.AddSeconds(start_at)
                     && x.AccessDateTime <= DateTime.Now.AddSeconds(end_at)
             );
+
+            if (userId > 0 && _context.Users.Any(x => x.UserId == userId))
+            {
+                subquery = subquery.Where(x => x.UserId == userId);
+            }
+
+            if (groupId > 0 && _context.UserGroups.Any(x => x.GroupId == groupId))
+            {
+                subquery = subquery.Where(
+                    x => x.User.UserGroupsMemberships.Any(y => y.GroupId == groupId)
+                );
+            }
+
             double total = subquery.Count();
             var grouped = await subquery
                 .GroupBy(x => x.UserAgent)
@@ -251,7 +309,9 @@ namespace Atlas_Web.Pages.Analytics
 
         public async Task<ActionResult> OnGetResolutionAsync(
             double start_at = -86400,
-            double end_at = 0
+            double end_at = 0,
+            int? userId = -1,
+            int? groupId = -1
         )
         {
             var subquery = _context.Analytics.Where(
@@ -259,6 +319,19 @@ namespace Atlas_Web.Pages.Analytics
                     x.AccessDateTime >= DateTime.Now.AddSeconds(start_at)
                     && x.AccessDateTime <= DateTime.Now.AddSeconds(end_at)
             );
+
+            if (userId > 0 && _context.Users.Any(x => x.UserId == userId))
+            {
+                subquery = subquery.Where(x => x.UserId == userId);
+            }
+
+            if (groupId > 0 && _context.UserGroups.Any(x => x.GroupId == groupId))
+            {
+                subquery = subquery.Where(
+                    x => x.User.UserGroupsMemberships.Any(y => y.GroupId == groupId)
+                );
+            }
+
             double total = subquery.Count();
             BarDataSet = await (
                 from a in subquery
@@ -276,13 +349,31 @@ namespace Atlas_Web.Pages.Analytics
             return new PartialViewResult { ViewName = "Partials/_BarData", ViewData = ViewData };
         }
 
-        public async Task<ActionResult> OnGetUsersAsync(double start_at = -86400, double end_at = 0)
+        public async Task<ActionResult> OnGetUsersAsync(
+            double start_at = -86400,
+            double end_at = 0,
+            int? userId = -1,
+            int? groupId = -1
+        )
         {
             var subquery = _context.Analytics.Where(
                 x =>
                     x.AccessDateTime >= DateTime.Now.AddSeconds(start_at)
                     && x.AccessDateTime <= DateTime.Now.AddSeconds(end_at)
             );
+
+            if (userId > 0 && _context.Users.Any(x => x.UserId == userId))
+            {
+                subquery = subquery.Where(x => x.UserId == userId);
+            }
+
+            if (groupId > 0 && _context.UserGroups.Any(x => x.GroupId == groupId))
+            {
+                subquery = subquery.Where(
+                    x => x.User.UserGroupsMemberships.Any(y => y.GroupId == groupId)
+                );
+            }
+
             double total = subquery.Count();
             BarDataSet = await (
                 from a in subquery
@@ -310,7 +401,9 @@ namespace Atlas_Web.Pages.Analytics
 
         public async Task<ActionResult> OnGetLoadTimesAsync(
             double start_at = -86400,
-            double end_at = 0
+            double end_at = 0,
+            int? userId = -1,
+            int? groupId = -1
         )
         {
             var subquery = _context.Analytics.Where(
@@ -318,6 +411,18 @@ namespace Atlas_Web.Pages.Analytics
                     x.AccessDateTime >= DateTime.Now.AddSeconds(start_at)
                     && x.AccessDateTime <= DateTime.Now.AddSeconds(end_at)
             );
+
+            if (userId > 0 && _context.Users.Any(x => x.UserId == userId))
+            {
+                subquery = subquery.Where(x => x.UserId == userId);
+            }
+
+            if (groupId > 0 && _context.UserGroups.Any(x => x.GroupId == groupId))
+            {
+                subquery = subquery.Where(
+                    x => x.User.UserGroupsMemberships.Any(y => y.GroupId == groupId)
+                );
+            }
 
             BarDataSet = await (
                 from a in subquery

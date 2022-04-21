@@ -14,20 +14,20 @@ using UAParser;
 
 namespace Atlas_Web.Pages.Analytics
 {
-    public class TraceModel : PageModel
+    public class ErrorModel : PageModel
     {
         private readonly Atlas_WebContext _context;
         private readonly IMemoryCache _cache;
         private readonly IConfiguration _config;
 
-        public TraceModel(Atlas_WebContext context, IMemoryCache cache, IConfiguration config)
+        public ErrorModel(Atlas_WebContext context, IMemoryCache cache, IConfiguration config)
         {
             _context = context;
             _cache = cache;
             _config = config;
         }
 
-        public List<AnalyticsTrace> Traces { get; set; }
+        public List<AnalyticsError> Errors { get; set; }
         public int Pages { get; set; }
         public int CurrentPage { get; set; }
         public int Count { get; set; }
@@ -42,7 +42,7 @@ namespace Atlas_Web.Pages.Analytics
         )
         {
             var page_size = 10;
-            var root = _context.AnalyticsTraces
+            var root = _context.AnalyticsErrors
                 .Where(x => x.UserAgent != null)
                 .Where(
                     x =>
@@ -65,7 +65,7 @@ namespace Atlas_Web.Pages.Analytics
             Pages = (int)Math.Ceiling(Count / (double)page_size);
             CurrentPage = p + 1;
 
-            Traces = await root.Include(x => x.User)
+            Errors = await root.Include(x => x.User)
                 .OrderByDescending(x => x.LogDateTime)
                 .Skip(p * page_size)
                 .Take(page_size)
@@ -82,51 +82,20 @@ namespace Atlas_Web.Pages.Analytics
             return Page();
         }
 
-        public async Task<ActionResult> OnPost()
-        {
-            var body = await new System.IO.StreamReader(Request.Body)
-                .ReadToEndAsync()
-                .ConfigureAwait(false);
-            var package = JObject.Parse(body);
-            var MyUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
-            if (package["lg"] != null)
-            {
-                foreach (var x in package["lg"])
-                {
-                    await _context.AddAsync(
-                        new AnalyticsTrace
-                        {
-                            UserId = MyUser.UserId,
-                            Level = x.Value<int>("l"),
-                            Message = x.Value<string>("m"),
-                            Logger = x.Value<string>("n"),
-                            LogDateTime = DateTime.Now,
-                            UserAgent = Request.Headers["User-Agent"].ToString(),
-                            Referer = Request.Headers["Referer"].ToString(),
-                        }
-                    );
-
-                    await _context.SaveChangesAsync();
-                }
-            }
-
-            return Content("ok");
-        }
-
         public async Task<ActionResult> OnPostResolved(int Id, int Type)
         {
-            AnalyticsTrace Trace = await _context.AnalyticsTraces.SingleOrDefaultAsync(
+            AnalyticsError Error = await _context.AnalyticsErrors.SingleOrDefaultAsync(
                 x => x.Id == Id
             );
-            if (Trace != null)
+            if (Error != null)
             {
                 if (Type == 1)
                 {
-                    Trace.Handled = 1;
+                    Error.Handled = 1;
                 }
                 else
                 {
-                    Trace.Handled = null;
+                    Error.Handled = null;
                 }
                 await _context.SaveChangesAsync();
             }
