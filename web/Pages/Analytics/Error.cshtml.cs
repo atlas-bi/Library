@@ -17,13 +17,11 @@ namespace Atlas_Web.Pages.Analytics
     public class ErrorModel : PageModel
     {
         private readonly Atlas_WebContext _context;
-        private readonly IMemoryCache _cache;
         private readonly IConfiguration _config;
 
-        public ErrorModel(Atlas_WebContext context, IMemoryCache cache, IConfiguration config)
+        public ErrorModel(Atlas_WebContext context, IConfiguration config)
         {
             _context = context;
-            _cache = cache;
             _config = config;
         }
 

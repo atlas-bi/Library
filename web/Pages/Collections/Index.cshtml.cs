@@ -26,7 +26,7 @@ namespace Atlas_Web.Pages.Collections
         public Collection Collection { get; set; }
 
         [BindProperty]
-        public DpReportAnnotation DpReportAnnotation { get; set; }
+        public CollectionReport CollectionReport { get; set; }
 
         public IEnumerable<Collection> Collections { get; set; }
 
@@ -42,21 +42,21 @@ namespace Atlas_Web.Pages.Collections
                         cacheEntry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20);
                         return _context.Collections
                             .Include(x => x.LastUpdateUserNavigation)
-                            .Include(x => x.DpTermAnnotations)
+                            .Include(x => x.CollectionTerms)
                             .ThenInclude(x => x.Term)
-                            .Include(x => x.DpTermAnnotations)
+                            .Include(x => x.CollectionTerms)
                             .ThenInclude(x => x.Term)
                             .ThenInclude(x => x.StarredTerms)
-                            .Include(x => x.DpReportAnnotations)
+                            .Include(x => x.CollectionReports)
                             .ThenInclude(x => x.Report)
                             .ThenInclude(x => x.ReportObjectDoc)
-                            .Include(x => x.DpReportAnnotations)
+                            .Include(x => x.CollectionReports)
                             .ThenInclude(x => x.Report)
                             .ThenInclude(x => x.ReportObjectType)
-                            .Include(x => x.DpReportAnnotations)
+                            .Include(x => x.CollectionReports)
                             .ThenInclude(x => x.Report)
                             .ThenInclude(x => x.ReportObjectAttachments)
-                            .Include(x => x.DpReportAnnotations)
+                            .Include(x => x.CollectionReports)
                             .ThenInclude(x => x.Report)
                             .ThenInclude(x => x.StarredReports)
                             .Include(x => x.StarredCollections)
@@ -104,9 +104,9 @@ namespace Atlas_Web.Pages.Collections
 
             // delete report annotations and term annotations
             // then delete project and save.
-            _context.RemoveRange(_context.DpReportAnnotations.Where(m => m.DataProjectId == Id));
+            _context.RemoveRange(_context.CollectionReports.Where(m => m.DataProjectId == Id));
             _context.SaveChanges();
-            _context.RemoveRange(_context.DpTermAnnotations.Where(m => m.DataProjectId == Id));
+            _context.RemoveRange(_context.CollectionTerms.Where(m => m.DataProjectId == Id));
             _context.SaveChanges();
 
             _context.Remove(

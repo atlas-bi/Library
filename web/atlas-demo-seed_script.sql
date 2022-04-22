@@ -37318,14 +37318,6 @@ insert into app.UserFavoriteFolders (FolderName,UserId) values
 ('Top Reports',1),
 ('Other',1)
 GO
-insert into app.userfavorites (ItemType,ItemId,UserId,FolderId) values
-('report','5','1','1'),
-('report','39','1','1'),
-('report','44','1','1'),
-('report','22','1','2'),
-('report','25','1','2'),
-('report','28','1','2')
-GO
 
 /* images
 --insert into app.reportobjectimages_doc (ReportObjectID,ImageData) values

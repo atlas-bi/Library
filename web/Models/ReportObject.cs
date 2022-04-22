@@ -7,11 +7,10 @@ namespace Atlas_Web.Models
     {
         public ReportObject()
         {
-            DpReportAnnotations = new HashSet<DpReportAnnotation>();
+            CollectionReports = new HashSet<CollectionReport>();
             ReportGroupsMemberships = new HashSet<ReportGroupsMembership>();
             ReportManageEngineTickets = new HashSet<ReportManageEngineTicket>();
             ReportObjectAttachments = new HashSet<ReportObjectAttachment>();
-            ReportObjectConversationDocs = new HashSet<ReportObjectConversationDoc>();
             ReportObjectHierarchyChildReportObjects = new HashSet<ReportObjectHierarchy>();
             ReportObjectHierarchyParentReportObjects = new HashSet<ReportObjectHierarchy>();
             ReportObjectImagesDocs = new HashSet<ReportObjectImagesDoc>();
@@ -58,11 +57,10 @@ namespace Atlas_Web.Models
         public virtual User LastModifiedByUser { get; set; }
         public virtual ReportObjectType ReportObjectType { get; set; }
         public virtual ReportObjectDoc ReportObjectDoc { get; set; }
-        public virtual ICollection<DpReportAnnotation> DpReportAnnotations { get; set; }
+        public virtual ICollection<CollectionReport> CollectionReports { get; set; }
         public virtual ICollection<ReportGroupsMembership> ReportGroupsMemberships { get; set; }
         public virtual ICollection<ReportManageEngineTicket> ReportManageEngineTickets { get; set; }
         public virtual ICollection<ReportObjectAttachment> ReportObjectAttachments { get; set; }
-        public virtual ICollection<ReportObjectConversationDoc> ReportObjectConversationDocs { get; set; }
         public virtual ICollection<ReportObjectHierarchy> ReportObjectHierarchyChildReportObjects { get; set; }
         public virtual ICollection<ReportObjectHierarchy> ReportObjectHierarchyParentReportObjects { get; set; }
         public virtual ICollection<ReportObjectImagesDoc> ReportObjectImagesDocs { get; set; }

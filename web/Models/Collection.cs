@@ -7,8 +7,8 @@ namespace Atlas_Web.Models
     {
         public Collection()
         {
-            DpReportAnnotations = new HashSet<DpReportAnnotation>();
-            DpTermAnnotations = new HashSet<DpTermAnnotation>();
+            CollectionReports = new HashSet<CollectionReport>();
+            CollectionTerms = new HashSet<CollectionTerm>();
             StarredCollections = new HashSet<StarredCollection>();
         }
 
@@ -36,8 +36,8 @@ namespace Atlas_Web.Models
         public virtual User LastUpdateUserNavigation { get; set; }
         public virtual User OperationOwner { get; set; }
         public virtual StrategicImportance StrategicImportanceNavigation { get; set; }
-        public virtual ICollection<DpReportAnnotation> DpReportAnnotations { get; set; }
-        public virtual ICollection<DpTermAnnotation> DpTermAnnotations { get; set; }
+        public virtual ICollection<CollectionReport> CollectionReports { get; set; }
+        public virtual ICollection<CollectionTerm> CollectionTerms { get; set; }
         public virtual ICollection<StarredCollection> StarredCollections { get; set; }
     }
 }

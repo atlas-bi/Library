@@ -100,7 +100,7 @@ namespace Atlas_Web.Pages.Analytics
                 join u in _context.Users on b.UserId equals u.UserId
                 select new ActiveUserData
                 {
-                    Fullname = u.UserNameDatum.Fullname,
+                    Fullname = u.FullnameCalc,
                     UserId = (int)b.UserId,
                     SessionId = b.SessionId,
                     SessionTime = TimeSpan.FromMilliseconds(sub.SessionTime).ToString(@"h\:mm\:ss"),

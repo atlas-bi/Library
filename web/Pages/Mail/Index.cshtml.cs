@@ -124,7 +124,7 @@ namespace Atlas_Web.Pages.Mail
                 {
                     MessId = mr.Message.MessageId,
                     RepId = mr.Id,
-                    From = mr.Message.FromUser.UserNameDatum.Fullname,
+                    From = mr.Message.FromUser.FullnameCalc,
                     FromId = (int)mr.Message.FromUserId,
                     Message = mr.Message.SmallMessage,
                     Subject = mr.Message.SmallSubject,
@@ -267,7 +267,7 @@ namespace Atlas_Web.Pages.Mail
                 {
                     MessId = r.Message.MessageId,
                     RepId = r.Id,
-                    From = r.Message.FromUser.UserNameDatum.Fullname,
+                    From = r.Message.FromUser.FullnameCalc,
                     Message = r.Message.SmallMessage,
                     Subject = r.Message.SmallSubject,
                     Sent_Preview = r.Message.SendDate_MessagePreview,
@@ -329,7 +329,7 @@ namespace Atlas_Web.Pages.Mail
                 {
                     MessId = (int)r.MessageId,
                     RepId = r.Id,
-                    From = r.Message.FromUser.UserNameDatum.Fullname,
+                    From = r.Message.FromUser.FullnameCalc,
                     FromId = (int)r.Message.FromUserId,
                     Message = r.Message.Message,
                     Subject = r.Message.Subject,
@@ -340,7 +340,7 @@ namespace Atlas_Web.Pages.Mail
                         select new MailRecipientsData
                         {
                             Id = (int)(u.ToGroupId ?? u.ToUserId),
-                            Fullname = u.ToGroup.GroupName ?? u.ToUser.UserNameDatum.Fullname,
+                            Fullname = u.ToGroup.GroupName ?? u.ToUser.FullnameCalc,
                             Type = u.ToGroupId == null ? "" : "group"
                         }
                     ).ToList(),
@@ -376,7 +376,7 @@ namespace Atlas_Web.Pages.Mail
                 select new DraftData
                 {
                     DraftId = r.DraftId,
-                    From = r.FromUser.UserNameDatum.Fullname,
+                    From = r.FromUser.FullnameCalc,
                     FromId = (int)r.FromUserId,
                     To = r.Recipients,
                     Message = r.Message,
@@ -598,7 +598,7 @@ namespace Atlas_Web.Pages.Mail
                     select new DraftData
                     {
                         DraftId = r.DraftId,
-                        From = r.FromUser.UserNameDatum.Fullname,
+                        From = r.FromUser.FullnameCalc,
                         To = r.Recipients,
                         Message = r.SmallMessage,
                         Subject = r.SmallSubject,
@@ -633,7 +633,7 @@ namespace Atlas_Web.Pages.Mail
                     {
                         MessId = r.Message.MessageId,
                         RepId = r.Id,
-                        From = r.Message.FromUser.UserNameDatum.Fullname,
+                        From = r.Message.FromUser.FullnameCalc,
                         Message = r.Message.SmallMessage,
                         Subject = r.Message.SmallSubject,
                         Sent_Preview = r.Message.SendDate_MessagePreview,

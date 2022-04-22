@@ -4,6 +4,7 @@ using Atlas_Web.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Atlas_Web.Migrations
 {
     [DbContext(typeof(Atlas_WebContext))]
-    partial class Atlas_WebContextModelSnapshot : ModelSnapshot
+    [Migration("20220422165109_RemovedTermConvTables")]
+    partial class RemovedTermConvTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1155,6 +1157,64 @@ namespace Atlas_Web.Migrations
                     b.ToTable("ReportObjectAttachments");
                 });
 
+            modelBuilder.Entity("Atlas_Web.Models.ReportObjectConversationDoc", b =>
+                {
+                    b.Property<int>("ConversationId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("ConversationID");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ConversationId"), 1L, 1);
+
+                    b.Property<int>("ReportObjectId")
+                        .HasColumnType("int")
+                        .HasColumnName("ReportObjectID");
+
+                    b.HasKey("ConversationId")
+                        .HasName("PK__ReportOb__C050D8972E11C321");
+
+                    b.HasIndex("ReportObjectId");
+
+                    b.ToTable("ReportObjectConversation_doc", "app");
+                });
+
+            modelBuilder.Entity("Atlas_Web.Models.ReportObjectConversationMessageDoc", b =>
+                {
+                    b.Property<int>("MessageId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("MessageID");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MessageId"), 1L, 1);
+
+                    b.Property<int>("ConversationId")
+                        .HasColumnType("int")
+                        .HasColumnName("ConversationID");
+
+                    b.Property<string>("MessageText")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("PostDateTime")
+                        .HasColumnType("datetime");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int")
+                        .HasColumnName("UserID");
+
+                    b.Property<string>("Username")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("MessageId")
+                        .HasName("PK__ReportOb__C87C037C3C86464B");
+
+                    b.HasIndex("ConversationId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("ReportObjectConversationMessage_doc", "app");
+                });
+
             modelBuilder.Entity("Atlas_Web.Models.ReportObjectDoc", b =>
                 {
                     b.Property<int>("ReportObjectId")
@@ -2288,6 +2348,42 @@ namespace Atlas_Web.Migrations
                     b.ToTable("User", (string)null);
                 });
 
+            modelBuilder.Entity("Atlas_Web.Models.UserFavorite", b =>
+                {
+                    b.Property<int>("UserFavoritesId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserFavoritesId"), 1L, 1);
+
+                    b.Property<int?>("FolderId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ItemId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ItemName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("ItemRank")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ItemType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("UserFavoritesId")
+                        .HasName("PK__UserFavo__1D23EA13087A927D");
+
+                    b.HasIndex("FolderId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserFavorites", "app");
+                });
+
             modelBuilder.Entity("Atlas_Web.Models.UserFavoriteFolder", b =>
                 {
                     b.Property<int>("UserFavoriteFolderId")
@@ -2374,6 +2470,26 @@ namespace Atlas_Web.Migrations
                     b.HasIndex(new[] { "UserId", "GroupId" }, "userid+groupid");
 
                     b.ToTable("UserGroupsMembership", (string)null);
+                });
+
+            modelBuilder.Entity("Atlas_Web.Models.UserNameDatum", b =>
+                {
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Firstname")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Fullname")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Lastname")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("UserId")
+                        .HasName("PK__User_Nam__1788CC4CF297F9FC");
+
+                    b.ToTable("User_NameData", "app");
                 });
 
             modelBuilder.Entity("Atlas_Web.Models.UserPreference", b =>
@@ -2793,6 +2909,36 @@ namespace Atlas_Web.Migrations
                         .HasConstraintName("FK_ReportObjectAttachments_ReportObject");
 
                     b.Navigation("ReportObject");
+                });
+
+            modelBuilder.Entity("Atlas_Web.Models.ReportObjectConversationDoc", b =>
+                {
+                    b.HasOne("Atlas_Web.Models.ReportObject", "ReportObject")
+                        .WithMany("ReportObjectConversationDocs")
+                        .HasForeignKey("ReportObjectId")
+                        .IsRequired()
+                        .HasConstraintName("FK__ReportObj__Repor__3B21036F");
+
+                    b.Navigation("ReportObject");
+                });
+
+            modelBuilder.Entity("Atlas_Web.Models.ReportObjectConversationMessageDoc", b =>
+                {
+                    b.HasOne("Atlas_Web.Models.ReportObjectConversationDoc", "Conversation")
+                        .WithMany("ReportObjectConversationMessageDocs")
+                        .HasForeignKey("ConversationId")
+                        .IsRequired()
+                        .HasConstraintName("FK__ReportObj__Conve__4E53A1AA");
+
+                    b.HasOne("Atlas_Web.Models.User", "User")
+                        .WithMany("ReportObjectConversationMessageDocs")
+                        .HasForeignKey("UserId")
+                        .IsRequired()
+                        .HasConstraintName("FK_ReportObjectConversationMessage_doc_User");
+
+                    b.Navigation("Conversation");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Atlas_Web.Models.ReportObjectDoc", b =>
@@ -3282,6 +3428,23 @@ namespace Atlas_Web.Migrations
                     b.Navigation("UpdatedByUser");
                 });
 
+            modelBuilder.Entity("Atlas_Web.Models.UserFavorite", b =>
+                {
+                    b.HasOne("Atlas_Web.Models.UserFavoriteFolder", "Folder")
+                        .WithMany("UserFavorites")
+                        .HasForeignKey("FolderId")
+                        .HasConstraintName("FK_UserFavorites_UserFavoriteFolders");
+
+                    b.HasOne("Atlas_Web.Models.User", "User")
+                        .WithMany("UserFavorites")
+                        .HasForeignKey("UserId")
+                        .HasConstraintName("FK_UserFavorites_User");
+
+                    b.Navigation("Folder");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Atlas_Web.Models.UserGroupsMembership", b =>
                 {
                     b.HasOne("Atlas_Web.Models.UserGroup", "Group")
@@ -3295,6 +3458,17 @@ namespace Atlas_Web.Migrations
                         .HasConstraintName("FK_UserGroupsMembership_User");
 
                     b.Navigation("Group");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Atlas_Web.Models.UserNameDatum", b =>
+                {
+                    b.HasOne("Atlas_Web.Models.User", "User")
+                        .WithOne("UserNameDatum")
+                        .HasForeignKey("Atlas_Web.Models.UserNameDatum", "UserId")
+                        .IsRequired()
+                        .HasConstraintName("FK_User_NameData_User");
 
                     b.Navigation("User");
                 });
@@ -3413,6 +3587,8 @@ namespace Atlas_Web.Migrations
 
                     b.Navigation("ReportObjectAttachments");
 
+                    b.Navigation("ReportObjectConversationDocs");
+
                     b.Navigation("ReportObjectDoc");
 
                     b.Navigation("ReportObjectHierarchyChildReportObjects");
@@ -3436,6 +3612,11 @@ namespace Atlas_Web.Migrations
                     b.Navigation("ReportObjectTopRuns");
 
                     b.Navigation("StarredReports");
+                });
+
+            modelBuilder.Entity("Atlas_Web.Models.ReportObjectConversationDoc", b =>
+                {
+                    b.Navigation("ReportObjectConversationMessageDocs");
                 });
 
             modelBuilder.Entity("Atlas_Web.Models.ReportObjectDoc", b =>
@@ -3516,6 +3697,8 @@ namespace Atlas_Web.Migrations
 
                     b.Navigation("ReportObjectAuthorUsers");
 
+                    b.Navigation("ReportObjectConversationMessageDocs");
+
                     b.Navigation("ReportObjectDocOperationalOwnerUsers");
 
                     b.Navigation("ReportObjectDocRequesterNavigations");
@@ -3556,7 +3739,11 @@ namespace Atlas_Web.Migrations
 
                     b.Navigation("TermUpdatedByUsers");
 
+                    b.Navigation("UserFavorites");
+
                     b.Navigation("UserGroupsMemberships");
+
+                    b.Navigation("UserNameDatum");
 
                     b.Navigation("UserPreferences");
 
@@ -3578,6 +3765,8 @@ namespace Atlas_Web.Migrations
                     b.Navigation("StarredTerms");
 
                     b.Navigation("StarredUsers");
+
+                    b.Navigation("UserFavorites");
                 });
 
             modelBuilder.Entity("Atlas_Web.Models.UserGroup", b =>

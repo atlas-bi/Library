@@ -21,9 +21,9 @@ jobs:
         with:
           project: https://github.com/atlas-bi/atlas-bi-library/projects/2
           column_name: 'Needs triage'
-      - name: Assign issues and with `feature` label to feature project
+      - name: Assign issues and with `chore` label to feature project
         uses: srggrs/assign-one-project-github-action@1.3.1
-        if: contains(github.event.issue.labels.*.name, 'feature')
+        if: contains(github.event.issue.labels.*.name, 'chore')
         with:
-          project: https://github.com/atlas-bi/atlas-bi-library/projects/2
+          project: https://github.com/atlas-bi/atlas-bi-library/projects/3
           column_name: 'Needs triage'

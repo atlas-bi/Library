@@ -4,11 +4,11 @@
 <h1 class="title is-1">@Model.Collection.Name</h1>
 <partial name="_Links" />
 
-@if (Model.Collection.DpReportAnnotations.Any())
+@if (Model.Collection.CollectionReports.Any())
 {
     <h2 class="title is-2" id="reports">Reports</h2>
     <div class="columns is-multiline">
-        @foreach (var t in Model.Collection.DpReportAnnotations)
+        @foreach (var t in Model.Collection.CollectionReports)
         {
             <div class="column is-half ">
                 <partial name="Reports/_Snippet" model="t.Report" />
@@ -19,11 +19,11 @@
 
 @if (@Configuration["features:enable_terms"] == null || @Configuration["features:enable_terms"].ToString().ToLower() == "true")
 {
-    @if (Model.Collection.DpTermAnnotations.Any())
+    @if (Model.Collection.CollectionTerms.Any())
     {
         <h2 class="title is-2" id="terms">Terms</h2>
         <div class="columns is-multiline">
-            @foreach (var t in Model.Collection.DpTermAnnotations)
+            @foreach (var t in Model.Collection.CollectionTerms)
             {
                 <div class="column is-half ">
                     <partial name="Terms/_Snippet" model="t.Term" />
