@@ -193,7 +193,7 @@ namespace Atlas_Web.Pages.Profile
 
         public async Task<IActionResult> OnGetCollectionsAsync(int? id)
         {
-            var ReportList = _context.DpReportAnnotations
+            var ReportList = _context.CollectionReports
                 .Where(x => x.DataProjectId == id)
                 .Select(x => x.ReportId)
                 .ToList();

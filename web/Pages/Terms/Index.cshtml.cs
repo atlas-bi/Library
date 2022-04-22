@@ -193,24 +193,12 @@ namespace Atlas_Web.Pages.Terms
             }
 
             // delete:
-            //  comments
             //  replys
             //  report links
             //  initiative term annotations
 
-            _context.RemoveRange(
-                _context.TermConversationMessages.Where(
-                    x =>
-                        x.TermConversationId
-                        == _context.TermConversations
-                            .Where(g => g.TermId == Id)
-                            .Select(h => h.TermConversationId)
-                            .FirstOrDefault()
-                )
-            );
-            _context.RemoveRange(_context.TermConversations.Where(x => x.TermId == Id));
             _context.RemoveRange(_context.ReportObjectDocTerms.Where(x => x.TermId == Id));
-            _context.RemoveRange(_context.DpTermAnnotations.Where(x => x.TermId == Id));
+            _context.RemoveRange(_context.CollectionTerms.Where(x => x.TermId == Id));
             _context.Remove(_context.Terms.Where(x => x.TermId == Id).FirstOrDefault());
             _context.SaveChanges();
 

@@ -166,9 +166,9 @@ namespace Atlas_Web.Pages.Groups
                             Runs = a.Report.ReportObjectRunData.Count,
                             Subscriptions = a.Report.ReportObjectSubscriptions.Count,
                             Favs = (
-                                from f in _context.UserFavorites
-                                where f.ItemType.ToLower() == "report" && f.ItemId == a.ReportId
-                                select new { f.ItemId }
+                                from f in _context.StarredReports
+                                where f.Reportid == a.ReportId
+                                select new { f.Reportid }
                             ).Count()
                         }
                     ).ToListAsync();

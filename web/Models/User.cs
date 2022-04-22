@@ -25,7 +25,6 @@ namespace Atlas_Web.Models
             MailRecipientsDeleteds = new HashSet<MailRecipientsDeleted>();
             MaintenanceLogs = new HashSet<MaintenanceLog>();
             ReportObjectAuthorUsers = new HashSet<ReportObject>();
-            ReportObjectConversationMessageDocs = new HashSet<ReportObjectConversationMessageDoc>();
             ReportObjectDocOperationalOwnerUsers = new HashSet<ReportObjectDoc>();
             ReportObjectDocRequesterNavigations = new HashSet<ReportObjectDoc>();
             ReportObjectDocUpdatedByNavigations = new HashSet<ReportObjectDoc>();
@@ -45,9 +44,7 @@ namespace Atlas_Web.Models
             StarredUserOwners = new HashSet<StarredUser>();
             StarredUserUsers = new HashSet<StarredUser>();
             TermApprovedByUsers = new HashSet<Term>();
-            TermConversationMessages = new HashSet<TermConversationMessage>();
             TermUpdatedByUsers = new HashSet<Term>();
-            UserFavorites = new HashSet<UserFavorite>();
             UserGroupsMemberships = new HashSet<UserGroupsMembership>();
             UserPreferences = new HashSet<UserPreference>();
             UserRoleLinks = new HashSet<UserRoleLink>();
@@ -71,8 +68,6 @@ namespace Atlas_Web.Models
         public DateTime? LastLogin { get; set; }
         public string FullnameCalc { get; set; }
         public string FirstnameCalc { get; set; }
-
-        public virtual UserNameDatum UserNameDatum { get; set; }
         public virtual ICollection<Analytic> Analytics { get; set; }
         public virtual ICollection<AnalyticsTrace> AnalyticsTraces { get; set; }
         public virtual ICollection<AnalyticsError> AnalyticsErrors { get; set; }
@@ -91,7 +86,6 @@ namespace Atlas_Web.Models
         public virtual ICollection<MailRecipientsDeleted> MailRecipientsDeleteds { get; set; }
         public virtual ICollection<MaintenanceLog> MaintenanceLogs { get; set; }
         public virtual ICollection<ReportObject> ReportObjectAuthorUsers { get; set; }
-        public virtual ICollection<ReportObjectConversationMessageDoc> ReportObjectConversationMessageDocs { get; set; }
         public virtual ICollection<ReportObjectDoc> ReportObjectDocOperationalOwnerUsers { get; set; }
         public virtual ICollection<ReportObjectDoc> ReportObjectDocRequesterNavigations { get; set; }
         public virtual ICollection<ReportObjectDoc> ReportObjectDocUpdatedByNavigations { get; set; }
@@ -111,9 +105,7 @@ namespace Atlas_Web.Models
         public virtual ICollection<StarredUser> StarredUserOwners { get; set; }
         public virtual ICollection<StarredUser> StarredUserUsers { get; set; }
         public virtual ICollection<Term> TermApprovedByUsers { get; set; }
-        public virtual ICollection<TermConversationMessage> TermConversationMessages { get; set; }
         public virtual ICollection<Term> TermUpdatedByUsers { get; set; }
-        public virtual ICollection<UserFavorite> UserFavorites { get; set; }
         public virtual ICollection<UserGroupsMembership> UserGroupsMemberships { get; set; }
         public virtual ICollection<UserPreference> UserPreferences { get; set; }
         public virtual ICollection<UserRoleLink> UserRoleLinks { get; set; }
