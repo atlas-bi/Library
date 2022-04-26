@@ -13,6 +13,12 @@
         <li>
             <a class="tab-lnk" href="#activity">Report Activity</a>
         </li>
+        @if (ViewBag.Permissions.Contains(36))
+        {
+            <li>
+                <a class="tab-lnk" href="#analytics">Analytics</a>
+            </li>
+        }
     </ul>
 </nav>
 

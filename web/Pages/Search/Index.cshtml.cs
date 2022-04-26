@@ -441,13 +441,13 @@ namespace Atlas_Web.Pages.Search
                                             : null,
                                     collection =
                                         x.Type.First() == "collections"
-                                            ? _cache.GetOrCreate<DpDataProject>(
+                                            ? _cache.GetOrCreate<Collection>(
                                                   "search-collection-" + x.AtlasId.First(),
                                                   cacheEntry =>
                                                   {
                                                       cacheEntry.AbsoluteExpirationRelativeToNow =
                                                           TimeSpan.FromMinutes(20);
-                                                      return _context.DpDataProjects
+                                                      return _context.Collections
                                                           .Include(x => x.StarredCollections)
                                                           .AsSingleQuery()
                                                           .SingleOrDefault(
@@ -477,13 +477,13 @@ namespace Atlas_Web.Pages.Search
                                             : null,
                                     initiative =
                                         x.Type.First() == "initiatives"
-                                            ? _cache.GetOrCreate<DpDataInitiative>(
+                                            ? _cache.GetOrCreate<Initiative>(
                                                   "search-initaitive-" + x.AtlasId.First(),
                                                   cacheEntry =>
                                                   {
                                                       cacheEntry.AbsoluteExpirationRelativeToNow =
                                                           TimeSpan.FromMinutes(20);
-                                                      return _context.DpDataInitiatives
+                                                      return _context.Initiatives
                                                           .Include(x => x.StarredInitiatives)
                                                           .AsSingleQuery()
                                                           .SingleOrDefault(

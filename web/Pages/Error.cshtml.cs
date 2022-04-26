@@ -37,28 +37,66 @@ namespace Atlas_Web.Pages
         {
             var MyUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
 
-            if (id == 400)
+            RequestId = HttpContext.TraceIdentifier;
+
+            var exceptionHandlerPathFeature =
+                HttpContext.Features.Get<IExceptionHandlerPathFeature>();
+
+            if (exceptionHandlerPathFeature == null)
             {
-                return RedirectToPage(
-                    "/Index/Index",
-                    new { error = "Sorry that page does not exist." }
+                var statusCodeReExecuteFeature =
+                    HttpContext.Features.Get<IStatusCodeReExecuteFeature>();
+
+                string referer = Request.Headers["Referer"].ToString();
+                if (statusCodeReExecuteFeature is not null)
+                {
+                    referer = string.Join(
+                        statusCodeReExecuteFeature.OriginalPathBase,
+                        statusCodeReExecuteFeature.OriginalPath,
+                        statusCodeReExecuteFeature.OriginalQueryString
+                    );
+                }
+
+                _context.Add(
+                    new AnalyticsError
+                    {
+                        UserId = MyUser.UserId,
+                        StatusCode = id,
+                        Referer = referer,
+                        Message = "Invalid request.",
+                        LogDateTime = DateTime.Now,
+                        UserAgent = Request.Headers["User-Agent"].ToString(),
+                    }
                 );
+                _context.SaveChanges();
+
+                ExceptionMessage = "Sorry that page does not exist.";
+
+                return Page();
             }
-            // RequestId = HttpContext.TraceIdentifier;
 
-            // var exceptionHandlerPathFeature =
-            //     HttpContext.Features.Get<IExceptionHandlerPathFeature>();
+            var message =
+                exceptionHandlerPathFeature?.Error?.Message
+                + " Url: "
+                + exceptionHandlerPathFeature?.Endpoint?.DisplayName;
 
-            // exceptionHandlerPathFeature?.Path
-            // exceptionHandlerPathFeature?.Endpoint?.DisplayName
-            // exceptionHandlerPathFeature?.Error?.Message
-            // exceptionHandlerPathFeature?.Error?.StackTrace
-            // if (exceptionHandlerPathFeature?.Path == "/")
-            // {
-            //     ExceptionMessage ??= string.Empty;
-            // }
+            _context.Add(
+                new AnalyticsError
+                {
+                    UserId = MyUser.UserId,
+                    StatusCode = Response.StatusCode,
+                    Referer = exceptionHandlerPathFeature?.Path,
+                    Message = message,
+                    Trace = exceptionHandlerPathFeature?.Error?.StackTrace,
+                    LogDateTime = DateTime.Now,
+                    UserAgent = Request.Headers["User-Agent"].ToString(),
+                }
+            );
+            _context.SaveChanges();
 
-            return RedirectToPage("/Index/Index", new { error = "Sorry there was an error." });
+            ExceptionMessage = "Sorry there was an error accessing that page.";
+
+            return Page();
         }
     }
 }

@@ -50,9 +50,9 @@
     <div class="field">
         <label class="label">Linked Terms</label>
         <div class="mini-tags field is-grouped is-grouped-multiline">
-            @for(var x = 0; x < @Model.Collection.DpTermAnnotations.Count; x++ )
+            @for(var x = 0; x < @Model.Collection.CollectionTerms.Count; x++ )
             {
-                var Terms = @Model.Collection.DpTermAnnotations.OrderBy(x => x.Term.Name).ToList();
+                var Terms = @Model.Collection.CollectionTerms.OrderBy(x => x.Term.Name).ToList();
                 <div class="control">
                     <div class="tags has-addons">
                         <span class="tag is-link">@Terms[x].Term.Name</span>
@@ -78,9 +78,9 @@
     <div class="field">
         <label class="label">Linked Reports</label>
         <div class="mini-tags field is-grouped is-grouped-multiline reorder">
-            @for(var x = 0; x < @Model.Collection.DpReportAnnotations.Count; x++ )
+            @for(var x = 0; x < @Model.Collection.CollectionReports.Count; x++ )
             {
-                var Reports = @Model.Collection.DpReportAnnotations.OrderBy(x => x.Rank).ThenBy(x => x.Report.Name).ToList();
+                var Reports = @Model.Collection.CollectionReports.OrderBy(x => x.Rank).ThenBy(x => x.Report.Name).ToList();
                 <div class="control drg">
                     <div class="tags has-addons">
                         <span class="tag is-link drg-hdl">@Reports[x].Report.Name</span>

@@ -514,11 +514,7 @@ namespace Atlas_Web.Pages.Tasks
                     Runs = r.ReportObjectRunData.Count,
                     LastMaintained = (r.LastModifiedDate ?? DateTime.Today.AddYears(-1)),
                     LastRun = (r.ReportObjectRunData.Max(x => x.RunStartTime) ?? DateTime.Now),
-                    Favs = (
-                        from f in _context.UserFavorites
-                        where f.ItemType.ToLower() == "report" && f.ItemId == r.ReportObjectId
-                        select new { f.ItemId }
-                    ).FirstOrDefault()
+                    Favs = 999999
                 } into tmp
                 join o in _context.ReportObjectDocs
                     on tmp.ReportObjectId equals o.ReportObjectId
@@ -578,11 +574,7 @@ namespace Atlas_Web.Pages.Tasks
                     Runs = r.ReportObjectRunData.Count,
                     LastMaintained = (r.LastModifiedDate ?? DateTime.Today.AddYears(-1)),
                     LastRun = (r.ReportObjectRunData.Max(x => x.RunStartTime) ?? DateTime.Now),
-                    Favs = (
-                        from f in _context.UserFavorites
-                        where f.ItemType.ToLower() == "report" && f.ItemId == r.ReportObjectId
-                        select new { f.ItemId }
-                    ).FirstOrDefault()
+                    Favs = 999999
                 } into tmp
                 join o in _context.ReportObjectDocs
                     on tmp.ReportObjectId equals o.ReportObjectId

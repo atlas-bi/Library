@@ -7,8 +7,8 @@
 @using UAParser;
 @using Newtonsoft.Json;
 <div>
-    <div class="is-flex is-justify-content-space-between">
-        <strong>Bug Tracing - <span class=" @if(@Model.CountUnresolved > 0){<text>has-text-danger</text>}">@Model.CountUnresolved unresolved</span> of @Model.Count Messages</strong>
+    <div class="is-flex is-justify-content-space-between mt-3">
+        <strong>Browser Errors - <span class=" @if(@Model.CountUnresolved > 0){<text>has-text-danger</text>}">@Model.CountUnresolved unresolved</span> of @Model.Count Messages</strong>
         @if(Model.Pages > 1){
             <nav class="pagination is-rounded is-small mb-0 mt-2" role="navigation" aria-label="pagination">
                 <ul class="pagination-list">
@@ -41,66 +41,69 @@
             </nav>
         }
     </div>
-    <table class="table is-fullwidth">
-        <thead>
-            <tr>
-                <th>Severity</th>
-                <th>Date</th>
-                <th>Message</th>
-                <th>User</th>
-                <th>OS</th>
-                <th>Browser</th>
-                <th>Resolved</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var Trace in Model.Traces)
-            {
-                var uaParser = Parser.GetDefault();
-                var agent = uaParser.Parse(Trace.UserAgent);
-                dynamic message = JsonConvert.DeserializeObject(@Trace.Message);
-                Dictionary<int, string> Level = new() {{1000, "😊 Trace"}, {2000, "🙂 Debug"}, {3000, "😐 Info"}, {4000, "😨 Warning"}, {5000, "😠 Error"}, {6000, "😡 Fatal"}};
-
-                <tr @if(Trace.Handled == 1){<text>class="has-text-grey-light"</text>}>
-                    <td class="is-nobreak">
-                        @Level[(int)@Trace.Level]
-                    </td>
-                    <td>
-                        @Trace.LogDateTime
-                    </td>
-                    <td>
-@message.logData.msg at <a @if(Trace.Handled == 1){<text>class="has-text-grey-light"</text>} href='@Trace.Referer' target="_blank">@Trace.Referer</a><br>in <a @if(Trace.Handled == 1){<text>class="has-text-grey-light"</text>} href='@message.logData.url:@message.logData["line number"]:@message.logData.column' target="_blank">@message.logData.url:@message.logData["line number"]:@message.logData.column</a>
-    <div class="notification @if(Trace.Handled != 1){<text>is-danger</text>} is-family-monospace is-light mt-2">@message.logData.errorMsg</div>
-                    </td>
-                    <td>
-                        @if (@Configuration["features:enable_user_profile"] == null || @Configuration["features:enable_user_profile"].ToString().ToLower() == "true")
-                        {
-                            <a href="/users?id=@Trace.UserId">@Trace.User.FullnameCalc</a>
-                        } else {
-                            @Trace.User.FullnameCalc
-                        }
-                    </td>
-                    <td class="is-nobreak">
-                        @agent.OS.Family @agent.OS.Major
-                    </td>
-                    <td class="is-nobreak">
-                        @agent.UA.Family @agent.UA.Major
-                    </td>
-                    <td>
-                    <div class="field">
-                        <input class="is-checkradio trace-resolved is-info"
-                                id="@Trace.Id"
-                                type="checkbox"
-                                name="trace-@Trace.Id"
-                                @if (Trace.Handled == 1) {<text>checked="checked"</text>}
-                        />
-                        <label for="@Trace.Id"></label>
-                    </div>
-                </td>
+    <div class="table-container">
+        <table class="table is-fullwidth">
+            <thead>
+                <tr>
+                    <th>Severity</th>
+                    <th>Date</th>
+                    <th>Message</th>
+                    <th>User</th>
+                    <th>OS</th>
+                    <th>Browser</th>
+                    <th>Resolved</th>
                 </tr>
-            }
-        </tbody>
-    </table>
-    <small class="has-text-grey-light">Pages @Model.CurrentPage of @Model.Pages</small>
+            </thead>
+            <tbody>
+                @foreach (var Trace in Model.Traces)
+                {
+                    var uaParser = Parser.GetDefault();
+                    var agent = uaParser.Parse(Trace.UserAgent);
+                    dynamic message = JsonConvert.DeserializeObject(@Trace.Message);
+                    Dictionary<int, string> Level = new() {{1000, "😊 Trace"}, {2000, "🙂 Debug"}, {3000, "😐 Info"}, {4000, "😨 Warning"}, {5000, "😠 Error"}, {6000, "😡 Fatal"}};
 
+                    <tr @if(Trace.Handled == 1){<text>class="has-text-grey-light"</text>}>
+                        <td class="is-nobreak">
+                            @Level[(int)@Trace.Level]
+                        </td>
+                        <td>
+                            @Trace.LogDateTime
+                        </td>
+                        <td>
+    @message.logData.msg at <a @if(Trace.Handled == 1){<text>class="has-text-grey-light"</text>} href='@Trace.Referer' target="_blank">@Trace.Referer</a><br>in <a @if(Trace.Handled == 1){<text>class="has-text-grey-light"</text>} href='@message.logData.url:@message.logData["line number"]:@message.logData.column' target="_blank">@message.logData.url:@message.logData["line number"]:@message.logData.column</a>
+        <div class="notification @if(Trace.Handled != 1){<text>is-danger</text>} is-family-monospace is-light mt-2 is-wordbreak">@message.logData.errorMsg</div>
+                        </td>
+                        <td>
+                            @if (@Configuration["features:enable_user_profile"] == null || @Configuration["features:enable_user_profile"].ToString().ToLower() == "true")
+                            {
+                                <a href="/users?id=@Trace.UserId">@Trace.User.FullnameCalc</a>
+                            } else {
+                                @Trace.User.FullnameCalc
+                            }
+                        </td>
+                        <td class="is-nobreak">
+                            @agent.OS.Family @agent.OS.Major
+                        </td>
+                        <td class="is-nobreak">
+                            @agent.UA.Family @agent.UA.Major
+                        </td>
+                        <td>
+                        <div class="field">
+                            <input class="is-checkradio trace-resolved is-info"
+                                    id="trace-@Trace.Id"
+                                    data-id="@Trace.Id"
+                                    type="checkbox"
+                                    name="trace-@Trace.Id"
+                                    data-url="/Analytics/Trace/"
+                                    @if (Trace.Handled == 1) {<text>checked="checked"</text>}
+                            />
+                            <label for="trace-@Trace.Id"></label>
+                        </div>
+                    </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <small class="has-text-grey-light">Pages @Model.CurrentPage of @Model.Pages</small>
 </div>

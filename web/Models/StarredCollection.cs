@@ -11,7 +11,7 @@ namespace Atlas_Web.Models
         public int? Ownerid { get; set; }
         public int? Folderid { get; set; }
 
-        public virtual DpDataProject Collection { get; set; }
+        public virtual Collection Collection { get; set; }
         public virtual UserFavoriteFolder Folder { get; set; }
         public virtual User Owner { get; set; }
     }

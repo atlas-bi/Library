@@ -3,15 +3,18 @@
 @{
     ViewData["Title"] = @Model.UserDetails.FullnameCalc;
     var FirstName = @Model.UserDetails.FirstnameCalc;
+    var FullName = @Model.UserDetails.FullnameCalc;
 }
 
 <h1 class="title is-1">
-
+    @{
+        ViewBag.UserId = Model.UserId;
+    }
     @if(@Model.UserId == @Model.MyId)
     {
        <text>Hi, @FirstName</text>
     } else {
-        <text>You are viewing @FirstName's Profile</text>
+        <text>You are viewing @FullName's Profile</text>
     }
 </h1>
 
@@ -39,4 +42,13 @@
     <div class="tab-dta" id="groups">
         <div data-ajax="yes" data-url="/Users?handler=Groups" data-param="id=@Model.UserId"></div>
     </div>
+    @if (ViewBag.Permissions.Contains(36))
+    {
+        <div class="tab-dta" id="analytics">
+            @section js {
+                <script src="/js/analytics.min.js" defer async></script>
+            }
+            <partial name="Analytics/Partials/_Index" />
+        </div>
+    }
 </section>

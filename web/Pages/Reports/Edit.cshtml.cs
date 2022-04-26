@@ -26,7 +26,7 @@ namespace Atlas_Web.Pages.Reports
         }
 
         [BindProperty]
-        public List<DpReportAnnotation> Collections { get; set; }
+        public List<CollectionReport> Collections { get; set; }
 
         [BindProperty]
         public List<ReportObjectDocTerm> Terms { get; set; }
@@ -107,7 +107,7 @@ namespace Atlas_Web.Pages.Reports
                 .ThenInclude(x => x.ReportManageEngineTickets)
                 /* collections */
                 .Include(x => x.ReportObject)
-                .ThenInclude(x => x.DpReportAnnotations)
+                .ThenInclude(x => x.CollectionReports)
                 .ThenInclude(x => x.DataProject)
                 /* terms */
                 .Include(x => x.ReportObjectDocTerms)
@@ -186,13 +186,13 @@ namespace Atlas_Web.Pages.Reports
             // update linked collections
             for (int i = 0; i < Collections.Count; i++)
             {
-                DpReportAnnotation collection = Collections[i];
+                CollectionReport collection = Collections[i];
 
                 collection.ReportId = id;
                 collection.Rank = i;
 
                 // if annotation exists, update rank and text
-                DpReportAnnotation oldCollection = _context.DpReportAnnotations
+                CollectionReport oldCollection = _context.CollectionReports
                     .Where(
                         x =>
                             x.ReportId == collection.ReportId
@@ -212,7 +212,7 @@ namespace Atlas_Web.Pages.Reports
             }
 
             _context.RemoveRange(
-                _context.DpReportAnnotations
+                _context.CollectionReports
                     .Where(d => d.ReportId == id)
                     .Where(
                         d =>

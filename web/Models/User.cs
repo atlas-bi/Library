@@ -9,23 +9,15 @@ namespace Atlas_Web.Models
         {
             Analytics = new HashSet<Analytic>();
             AnalyticsTraces = new HashSet<AnalyticsTrace>();
-            DpAgreementUserLastUpdateUserNavigations = new HashSet<DpAgreementUser>();
-            DpAgreementUserUsers = new HashSet<DpAgreementUser>();
-            DpAgreements = new HashSet<DpAgreement>();
-            DpDataInitiativeExecutiveOwners = new HashSet<DpDataInitiative>();
-            DpDataInitiativeLastUpdateUserNavigations = new HashSet<DpDataInitiative>();
-            DpDataInitiativeOperationOwners = new HashSet<DpDataInitiative>();
-            DpDataProjectAnalyticsOwners = new HashSet<DpDataProject>();
-            DpDataProjectConversationMessages = new HashSet<DpDataProjectConversationMessage>();
-            DpDataProjectDataManagers = new HashSet<DpDataProject>();
-            DpDataProjectExecutiveOwners = new HashSet<DpDataProject>();
-            DpDataProjectLastUpdateUserNavigations = new HashSet<DpDataProject>();
-            DpDataProjectOperationOwners = new HashSet<DpDataProject>();
-            DpMilestoneChecklistCompleteds = new HashSet<DpMilestoneChecklistCompleted>();
-            DpMilestoneFrequencies = new HashSet<DpMilestoneFrequency>();
-            DpMilestoneTaskLastUpdateUserNavigations = new HashSet<DpMilestoneTask>();
-            DpMilestoneTaskOwners = new HashSet<DpMilestoneTask>();
-            DpMilestoneTemplates = new HashSet<DpMilestoneTemplate>();
+            AnalyticsErrors = new HashSet<AnalyticsError>();
+            DpDataInitiativeExecutiveOwners = new HashSet<Initiative>();
+            DpDataInitiativeLastUpdateUserNavigations = new HashSet<Initiative>();
+            DpDataInitiativeOperationOwners = new HashSet<Initiative>();
+            DpDataProjectAnalyticsOwners = new HashSet<Collection>();
+            DpDataProjectDataManagers = new HashSet<Collection>();
+            DpDataProjectExecutiveOwners = new HashSet<Collection>();
+            DpDataProjectLastUpdateUserNavigations = new HashSet<Collection>();
+            DpDataProjectOperationOwners = new HashSet<Collection>();
             MailDrafts = new HashSet<MailDraft>();
             MailFolders = new HashSet<MailFolder>();
             MailMessages = new HashSet<MailMessage>();
@@ -33,7 +25,6 @@ namespace Atlas_Web.Models
             MailRecipientsDeleteds = new HashSet<MailRecipientsDeleted>();
             MaintenanceLogs = new HashSet<MaintenanceLog>();
             ReportObjectAuthorUsers = new HashSet<ReportObject>();
-            ReportObjectConversationMessageDocs = new HashSet<ReportObjectConversationMessageDoc>();
             ReportObjectDocOperationalOwnerUsers = new HashSet<ReportObjectDoc>();
             ReportObjectDocRequesterNavigations = new HashSet<ReportObjectDoc>();
             ReportObjectDocUpdatedByNavigations = new HashSet<ReportObjectDoc>();
@@ -53,9 +44,7 @@ namespace Atlas_Web.Models
             StarredUserOwners = new HashSet<StarredUser>();
             StarredUserUsers = new HashSet<StarredUser>();
             TermApprovedByUsers = new HashSet<Term>();
-            TermConversationMessages = new HashSet<TermConversationMessage>();
             TermUpdatedByUsers = new HashSet<Term>();
-            UserFavorites = new HashSet<UserFavorite>();
             UserGroupsMemberships = new HashSet<UserGroupsMembership>();
             UserPreferences = new HashSet<UserPreference>();
             UserRoleLinks = new HashSet<UserRoleLink>();
@@ -79,27 +68,17 @@ namespace Atlas_Web.Models
         public DateTime? LastLogin { get; set; }
         public string FullnameCalc { get; set; }
         public string FirstnameCalc { get; set; }
-
-        public virtual UserNameDatum UserNameDatum { get; set; }
         public virtual ICollection<Analytic> Analytics { get; set; }
         public virtual ICollection<AnalyticsTrace> AnalyticsTraces { get; set; }
-        public virtual ICollection<DpAgreementUser> DpAgreementUserLastUpdateUserNavigations { get; set; }
-        public virtual ICollection<DpAgreementUser> DpAgreementUserUsers { get; set; }
-        public virtual ICollection<DpAgreement> DpAgreements { get; set; }
-        public virtual ICollection<DpDataInitiative> DpDataInitiativeExecutiveOwners { get; set; }
-        public virtual ICollection<DpDataInitiative> DpDataInitiativeLastUpdateUserNavigations { get; set; }
-        public virtual ICollection<DpDataInitiative> DpDataInitiativeOperationOwners { get; set; }
-        public virtual ICollection<DpDataProject> DpDataProjectAnalyticsOwners { get; set; }
-        public virtual ICollection<DpDataProjectConversationMessage> DpDataProjectConversationMessages { get; set; }
-        public virtual ICollection<DpDataProject> DpDataProjectDataManagers { get; set; }
-        public virtual ICollection<DpDataProject> DpDataProjectExecutiveOwners { get; set; }
-        public virtual ICollection<DpDataProject> DpDataProjectLastUpdateUserNavigations { get; set; }
-        public virtual ICollection<DpDataProject> DpDataProjectOperationOwners { get; set; }
-        public virtual ICollection<DpMilestoneChecklistCompleted> DpMilestoneChecklistCompleteds { get; set; }
-        public virtual ICollection<DpMilestoneFrequency> DpMilestoneFrequencies { get; set; }
-        public virtual ICollection<DpMilestoneTask> DpMilestoneTaskLastUpdateUserNavigations { get; set; }
-        public virtual ICollection<DpMilestoneTask> DpMilestoneTaskOwners { get; set; }
-        public virtual ICollection<DpMilestoneTemplate> DpMilestoneTemplates { get; set; }
+        public virtual ICollection<AnalyticsError> AnalyticsErrors { get; set; }
+        public virtual ICollection<Initiative> DpDataInitiativeExecutiveOwners { get; set; }
+        public virtual ICollection<Initiative> DpDataInitiativeLastUpdateUserNavigations { get; set; }
+        public virtual ICollection<Initiative> DpDataInitiativeOperationOwners { get; set; }
+        public virtual ICollection<Collection> DpDataProjectAnalyticsOwners { get; set; }
+        public virtual ICollection<Collection> DpDataProjectDataManagers { get; set; }
+        public virtual ICollection<Collection> DpDataProjectExecutiveOwners { get; set; }
+        public virtual ICollection<Collection> DpDataProjectLastUpdateUserNavigations { get; set; }
+        public virtual ICollection<Collection> DpDataProjectOperationOwners { get; set; }
         public virtual ICollection<MailDraft> MailDrafts { get; set; }
         public virtual ICollection<MailFolder> MailFolders { get; set; }
         public virtual ICollection<MailMessage> MailMessages { get; set; }
@@ -107,7 +86,6 @@ namespace Atlas_Web.Models
         public virtual ICollection<MailRecipientsDeleted> MailRecipientsDeleteds { get; set; }
         public virtual ICollection<MaintenanceLog> MaintenanceLogs { get; set; }
         public virtual ICollection<ReportObject> ReportObjectAuthorUsers { get; set; }
-        public virtual ICollection<ReportObjectConversationMessageDoc> ReportObjectConversationMessageDocs { get; set; }
         public virtual ICollection<ReportObjectDoc> ReportObjectDocOperationalOwnerUsers { get; set; }
         public virtual ICollection<ReportObjectDoc> ReportObjectDocRequesterNavigations { get; set; }
         public virtual ICollection<ReportObjectDoc> ReportObjectDocUpdatedByNavigations { get; set; }
@@ -127,9 +105,7 @@ namespace Atlas_Web.Models
         public virtual ICollection<StarredUser> StarredUserOwners { get; set; }
         public virtual ICollection<StarredUser> StarredUserUsers { get; set; }
         public virtual ICollection<Term> TermApprovedByUsers { get; set; }
-        public virtual ICollection<TermConversationMessage> TermConversationMessages { get; set; }
         public virtual ICollection<Term> TermUpdatedByUsers { get; set; }
-        public virtual ICollection<UserFavorite> UserFavorites { get; set; }
         public virtual ICollection<UserGroupsMembership> UserGroupsMemberships { get; set; }
         public virtual ICollection<UserPreference> UserPreferences { get; set; }
         public virtual ICollection<UserRoleLink> UserRoleLinks { get; set; }

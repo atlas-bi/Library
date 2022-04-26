@@ -132,29 +132,6 @@ namespace Atlas_Web.Helpers
             );
         }
 
-        public static List<UserFavorite> GetUserFavorites(
-            IMemoryCache cache,
-            Atlas_WebContext _context,
-            string username
-        )
-        {
-            username ??= "default";
-            return cache.GetOrCreate<List<UserFavorite>>(
-                "Favorites-" + username,
-                cacheEntry =>
-                {
-                    cacheEntry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20);
-                    return _context.UserFavorites
-                        .Where(
-                            x =>
-                                x.User == (UserHelpers.GetUser(cache, _context, username))
-                                && (x.ItemId > 0 || x.ItemName != null)
-                        )
-                        .ToList();
-                }
-            );
-        }
-
         public static List<int?> GetUserPermissions(
             IMemoryCache cache,
             Atlas_WebContext _context,

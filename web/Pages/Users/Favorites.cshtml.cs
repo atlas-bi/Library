@@ -315,61 +315,6 @@ namespace Atlas_Web.Pages.Users
             return Content("error");
         }
 
-        public ActionResult OnPostEditFavorites(
-            int actionType,
-            int objectId,
-            string favoriteType,
-            string objectName
-        )
-        {
-            var MyUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
-            if (actionType == 1)
-            {
-                var type = favoriteType;
-                if (favoriteType.EndsWith("s"))
-                {
-                    type = favoriteType.Remove(favoriteType.Length - 1);
-                }
-
-                _context.Add(
-                    new UserFavorite
-                    {
-                        UserId = MyUser.UserId,
-                        ItemRank = -1,
-                        ItemId = objectId,
-                        ItemType = type,
-                        ItemName = objectName == "null" ? null : objectName
-                    }
-                );
-            }
-            else if (actionType == 0)
-            {
-                if (favoriteType == "search")
-                {
-                    _context.RemoveRange(
-                        _context.UserFavorites.Where(
-                            x =>
-                                x.UserId == MyUser.UserId
-                                && x.ItemId == objectId
-                                && x.ItemType == favoriteType
-                        )
-                    );
-                }
-                else
-                {
-                    _context.RemoveRange(
-                        _context.UserFavorites.Where(
-                            x => x.ItemId == objectId && x.ItemType == favoriteType
-                        )
-                    );
-                }
-            }
-
-            _context.SaveChanges();
-
-            return Content("ok");
-        }
-
         public ActionResult OnPostNewFolder(string name)
         {
             var MyUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);

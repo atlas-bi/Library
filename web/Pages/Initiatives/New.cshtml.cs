@@ -24,10 +24,10 @@ namespace Atlas_Web.Pages.Initiatives
         }
 
         [BindProperty]
-        public DpDataInitiative Initiative { get; set; }
+        public Initiative Initiative { get; set; }
 
         [BindProperty]
-        public List<DpDataProject> Collections { get; set; }
+        public List<Collection> Collections { get; set; }
 
         public IActionResult OnGet()
         {
@@ -83,7 +83,7 @@ namespace Atlas_Web.Pages.Initiatives
             _context.SaveChanges();
 
             // updated any linked data projects that were added and remove any that were delinked.
-            _context.DpDataProjects
+            _context.Collections
                 .Where(d => Collections.Select(x => x.DataProjectId).Contains(d.DataProjectId))
                 .ToList()
                 .ForEach(x => x.DataInitiativeId = Initiative.DataInitiativeId);

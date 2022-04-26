@@ -33,7 +33,7 @@
             </li>
         }
 
-        @if (Model.Parents.Any() || Model.Children.Any() || Model.Report.ReportGroupsMemberships.Any() || Model.Report.DpReportAnnotations.Any())
+        @if (Model.Parents.Any() || Model.Children.Any() || Model.Report.ReportGroupsMemberships.Any() || Model.Report.CollectionReports.Any())
         {
             <li>
                 <a href="#relationships">Relationships</a>

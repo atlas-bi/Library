@@ -36,7 +36,9 @@ namespace Atlas_Web.Pages.Analytics
         public async Task<ActionResult> OnGetAsync(
             int p = 0,
             double start_at = -86400,
-            double end_at = 0
+            double end_at = 0,
+            int? userId = -1,
+            int? groupId = -1
         )
         {
             var page_size = 10;
@@ -47,6 +49,16 @@ namespace Atlas_Web.Pages.Analytics
                         x.LogDateTime >= DateTime.Now.AddSeconds(start_at)
                         && x.LogDateTime <= DateTime.Now.AddSeconds(end_at)
                 );
+
+            if (userId > 0 && _context.Users.Any(x => x.UserId == userId))
+            {
+                root = root.Where(x => x.UserId == userId);
+            }
+
+            if (groupId > 0 && _context.UserGroups.Any(x => x.GroupId == groupId))
+            {
+                root = root.Where(x => x.User.UserGroupsMemberships.Any(y => y.GroupId == groupId));
+            }
 
             Count = await root.CountAsync();
             CountUnresolved = await root.CountAsync(x => x.Handled != 1);

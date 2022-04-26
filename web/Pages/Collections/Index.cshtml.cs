@@ -23,40 +23,40 @@ namespace Atlas_Web.Pages.Collections
         }
 
         [BindProperty]
-        public DpDataProject Collection { get; set; }
+        public Collection Collection { get; set; }
 
         [BindProperty]
-        public DpReportAnnotation DpReportAnnotation { get; set; }
+        public CollectionReport CollectionReport { get; set; }
 
-        public IEnumerable<DpDataProject> Collections { get; set; }
+        public IEnumerable<Collection> Collections { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? id = null)
         {
             // if the id null then list all
             if (id != null)
             {
-                Collection = await _cache.GetOrCreateAsync<DpDataProject>(
+                Collection = await _cache.GetOrCreateAsync<Collection>(
                     "collection-" + id,
                     cacheEntry =>
                     {
                         cacheEntry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20);
-                        return _context.DpDataProjects
+                        return _context.Collections
                             .Include(x => x.LastUpdateUserNavigation)
-                            .Include(x => x.DpTermAnnotations)
+                            .Include(x => x.CollectionTerms)
                             .ThenInclude(x => x.Term)
-                            .Include(x => x.DpTermAnnotations)
+                            .Include(x => x.CollectionTerms)
                             .ThenInclude(x => x.Term)
                             .ThenInclude(x => x.StarredTerms)
-                            .Include(x => x.DpReportAnnotations)
+                            .Include(x => x.CollectionReports)
                             .ThenInclude(x => x.Report)
                             .ThenInclude(x => x.ReportObjectDoc)
-                            .Include(x => x.DpReportAnnotations)
+                            .Include(x => x.CollectionReports)
                             .ThenInclude(x => x.Report)
                             .ThenInclude(x => x.ReportObjectType)
-                            .Include(x => x.DpReportAnnotations)
+                            .Include(x => x.CollectionReports)
                             .ThenInclude(x => x.Report)
                             .ThenInclude(x => x.ReportObjectAttachments)
-                            .Include(x => x.DpReportAnnotations)
+                            .Include(x => x.CollectionReports)
                             .ThenInclude(x => x.Report)
                             .ThenInclude(x => x.StarredReports)
                             .Include(x => x.StarredCollections)
@@ -70,12 +70,12 @@ namespace Atlas_Web.Pages.Collections
                 }
             }
 
-            Collections = await _cache.GetOrCreateAsync<List<DpDataProject>>(
+            Collections = await _cache.GetOrCreateAsync<List<Collection>>(
                 "collections",
                 cacheEntry =>
                 {
                     cacheEntry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20);
-                    return _context.DpDataProjects.ToListAsync();
+                    return _context.Collections.ToListAsync();
                 }
             );
 
@@ -104,23 +104,13 @@ namespace Atlas_Web.Pages.Collections
 
             // delete report annotations and term annotations
             // then delete project and save.
-            _context.RemoveRange(
-                _context.DpDataProjectConversationMessages.Where(
-                    x => x.DataProjectConversation.DataProjectId == Id
-                )
-            );
+            _context.RemoveRange(_context.CollectionReports.Where(m => m.DataProjectId == Id));
             _context.SaveChanges();
-            _context.RemoveRange(
-                _context.DpDataProjectConversations.Where(x => x.DataProjectId == Id)
-            );
-            _context.SaveChanges();
-            _context.RemoveRange(_context.DpReportAnnotations.Where(m => m.DataProjectId == Id));
-            _context.SaveChanges();
-            _context.RemoveRange(_context.DpTermAnnotations.Where(m => m.DataProjectId == Id));
+            _context.RemoveRange(_context.CollectionTerms.Where(m => m.DataProjectId == Id));
             _context.SaveChanges();
 
             _context.Remove(
-                _context.DpDataProjects.Where(m => m.DataProjectId == Id).FirstOrDefault()
+                _context.Collections.Where(m => m.DataProjectId == Id).FirstOrDefault()
             );
             _context.SaveChanges();
 

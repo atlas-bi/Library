@@ -7,8 +7,8 @@ namespace Atlas_Web.Models
     public class ResultModel
     {
         public ReportObject report { get; set; }
-        public DpDataProject collection { get; set; }
-        public DpDataInitiative initiative { get; set; }
+        public Collection collection { get; set; }
+        public Initiative initiative { get; set; }
         public Term term { get; set; }
         public User user { get; set; }
         public UserGroup group { get; set; }

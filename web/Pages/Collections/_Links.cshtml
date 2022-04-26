@@ -5,13 +5,13 @@
         <li>
             <a href="#details">Details</a>
         </li>
-        @if (@Model.Collection.DpReportAnnotations.Count() > 0)
+        @if (@Model.Collection.CollectionReports.Count() > 0)
         {
             <li>
                 <a href="#reports">Linked Reports</a>
             </li>
         }
-        @if (@Model.Collection.DpTermAnnotations.Count() > 0)
+        @if (@Model.Collection.CollectionTerms.Count() > 0)
         {
             <li>
                 <a href="#terms">Linked Terms</a>

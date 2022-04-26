@@ -40,15 +40,15 @@
 
     @if (!string.IsNullOrEmpty(Model.Report.RepositoryDescription))
     {
-        <nav id="maintenance" class="panel">
-            <div class="panel-heading is-flex is-justify-content-space-between" data-action="collapse" data-target="collapseTerm27">
+        <nav id="repository-description" class="panel mt-5">
+            <div class="panel-heading is-flex is-justify-content-space-between" data-action="collapse" data-target="collapse-repository-description">
                 <span>Repository Description</span>
                 <span class="icon">
                   <i class="fas fa-chevron-down"></i>
                 </span>
             </div>
 
-            <div id="collapseTerm27" class="panel-block is-collapsible @if(ViewBag.HasDescription){<text></text>} else {<text>is-active</text>}" role="tabpanel">
+            <div id="collapse-repository-description" class="panel-block is-collapsible @if(ViewBag.HasDescription){<text></text>} else {<text>is-active</text>}" role="tabpanel">
                 <div class="markdown p-5">
                     @Html.Raw(HtmlHelpers.MarkdownToHtml(Model.Report.RepositoryDescription))
                 </div>
@@ -58,7 +58,7 @@
 </div>
 
 @if(Model.Report.ReportObjectParameters.Any()){
-    <nav id="parameters" class="panel">
+    <nav id="parameters" class="panel mt-5">
         <p class="panel-heading is-flex is-justify-content-space-between" data-action="collapse" data-target="parameter-data">
             <span>Parameters</span>
             <span class="icon">

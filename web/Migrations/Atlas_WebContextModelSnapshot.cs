@@ -17,7 +17,7 @@ namespace Atlas_Web.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.2")
+                .HasAnnotation("ProductVersion", "6.0.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
@@ -158,9 +158,64 @@ namespace Atlas_Web.Migrations
 
                     b.HasIndex(new[] { "AccessDateTime" }, "accessdatetime");
 
+                    b.HasIndex(new[] { "AccessDateTime" }, "accessdatetime_session");
+
+                    SqlServerIndexBuilderExtensions.IncludeProperties(b.HasIndex(new[] { "AccessDateTime" }, "accessdatetime_session"), new[] { "PageId", "SessionId" });
+
+                    b.HasIndex(new[] { "AccessDateTime", "UserId" }, "accessdatetime_userid");
+
+                    SqlServerIndexBuilderExtensions.IncludeProperties(b.HasIndex(new[] { "AccessDateTime", "UserId" }, "accessdatetime_userid"), new[] { "Pathname", "LoadTime" });
+
                     b.HasIndex(new[] { "UserId" }, "userid");
 
                     b.ToTable("Analytics", "app");
+                });
+
+            modelBuilder.Entity("Atlas_Web.Models.AnalyticsError", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int?>("Handled")
+                        .HasColumnType("int")
+                        .HasColumnName("handled");
+
+                    b.Property<DateTime?>("LogDateTime")
+                        .HasColumnType("datetime")
+                        .HasColumnName("logDateTime");
+
+                    b.Property<string>("Message")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Referer")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("referer");
+
+                    b.Property<int?>("StatusCode")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Trace")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("UpdateTime")
+                        .HasColumnType("datetime")
+                        .HasColumnName("updateTime");
+
+                    b.Property<string>("UserAgent")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("userAgent");
+
+                    b.Property<int?>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AnalyticsError", "app");
                 });
 
             modelBuilder.Entity("Atlas_Web.Models.AnalyticsTrace", b =>
@@ -214,226 +269,7 @@ namespace Atlas_Web.Migrations
                     b.ToTable("AnalyticsTrace", "app");
                 });
 
-            modelBuilder.Entity("Atlas_Web.Models.DpAgreement", b =>
-                {
-                    b.Property<int>("AgreementId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("AgreementID");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AgreementId"), 1L, 1);
-
-                    b.Property<int?>("DataProjectId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("EffectiveDate")
-                        .HasColumnType("datetime");
-
-                    b.Property<DateTime?>("LastUpdateDate")
-                        .HasColumnType("datetime");
-
-                    b.Property<int?>("LastUpdateUser")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("MeetingDate")
-                        .HasColumnType("datetime");
-
-                    b.Property<int?>("Rank")
-                        .HasColumnType("int");
-
-                    b.HasKey("AgreementId")
-                        .HasName("PK__DP_Agree__0A309D2318E98A83");
-
-                    b.HasIndex("DataProjectId");
-
-                    b.HasIndex("LastUpdateUser");
-
-                    b.ToTable("DP_Agreement", "app");
-                });
-
-            modelBuilder.Entity("Atlas_Web.Models.DpAgreementUser", b =>
-                {
-                    b.Property<int>("AgreementUsersId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("AgreementUsersID");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AgreementUsersId"), 1L, 1);
-
-                    b.Property<int?>("AgreementId")
-                        .HasColumnType("int")
-                        .HasColumnName("AgreementID");
-
-                    b.Property<DateTime?>("LastUpdateDate")
-                        .HasColumnType("datetime");
-
-                    b.Property<int?>("LastUpdateUser")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("AgreementUsersId")
-                        .HasName("PK__DP_Agree__3DA9AA218A1E6C55");
-
-                    b.HasIndex("AgreementId");
-
-                    b.HasIndex("LastUpdateUser");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("DP_AgreementUsers", "app");
-                });
-
-            modelBuilder.Entity("Atlas_Web.Models.DpAttachment", b =>
-                {
-                    b.Property<int>("AttachmentId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AttachmentId"), 1L, 1);
-
-                    b.Property<byte[]>("AttachmentData")
-                        .IsRequired()
-                        .HasColumnType("varbinary(max)");
-
-                    b.Property<string>("AttachmentName")
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(max)");
-
-                    b.Property<int?>("AttachmentSize")
-                        .HasColumnType("int");
-
-                    b.Property<string>("AttachmentType")
-                        .IsRequired()
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(max)");
-
-                    b.Property<int>("DataProjectId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Rank")
-                        .HasColumnType("int");
-
-                    b.HasKey("AttachmentId")
-                        .HasName("PK__DP_Attac__442C64BE2CE337F1");
-
-                    b.HasIndex("DataProjectId");
-
-                    b.ToTable("DP_Attachments", "app");
-                });
-
-            modelBuilder.Entity("Atlas_Web.Models.DpContact", b =>
-                {
-                    b.Property<int>("ContactId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("ContactID");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ContactId"), 1L, 1);
-
-                    b.Property<string>("Company")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Email")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Phone")
-                        .HasMaxLength(55)
-                        .HasColumnType("nvarchar(55)");
-
-                    b.HasKey("ContactId")
-                        .HasName("PK__DP_Conta__5C6625BB13B948C2");
-
-                    b.ToTable("DP_Contact", "app");
-                });
-
-            modelBuilder.Entity("Atlas_Web.Models.DpContactLink", b =>
-                {
-                    b.Property<int>("LinkId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("LinkId"), 1L, 1);
-
-                    b.Property<int?>("ContactId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("InitiativeId")
-                        .HasColumnType("int");
-
-                    b.HasKey("LinkId")
-                        .HasName("PK__DP_Conta__2D1221358626B09F");
-
-                    b.HasIndex("ContactId");
-
-                    b.HasIndex("InitiativeId");
-
-                    b.ToTable("DP_Contact_Links", "app");
-                });
-
-            modelBuilder.Entity("Atlas_Web.Models.DpDataInitiative", b =>
-                {
-                    b.Property<int>("DataInitiativeId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("DataInitiativeID");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DataInitiativeId"), 1L, 1);
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("ExecutiveOwnerId")
-                        .HasColumnType("int")
-                        .HasColumnName("ExecutiveOwnerID");
-
-                    b.Property<int?>("FinancialImpact")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("LastUpdateDate")
-                        .HasColumnType("datetime");
-
-                    b.Property<int?>("LastUpdateUser")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("OperationOwnerId")
-                        .HasColumnType("int")
-                        .HasColumnName("OperationOwnerID");
-
-                    b.Property<int?>("StrategicImportance")
-                        .HasColumnType("int");
-
-                    b.HasKey("DataInitiativeId")
-                        .HasName("PK__DP_DataI__1EFC948C3A83A845");
-
-                    b.HasIndex(new[] { "ExecutiveOwnerId" }, "executiveownerid");
-
-                    b.HasIndex(new[] { "FinancialImpact" }, "financialimpact");
-
-                    b.HasIndex(new[] { "DataInitiativeId" }, "initiativeid");
-
-                    b.HasIndex(new[] { "LastUpdateDate" }, "lastupdatedate");
-
-                    b.HasIndex(new[] { "LastUpdateUser" }, "lastupdateuser");
-
-                    b.HasIndex(new[] { "OperationOwnerId" }, "operationownderid");
-
-                    b.HasIndex(new[] { "StrategicImportance" }, "strategicimportance");
-
-                    b.ToTable("DP_DataInitiative", "app");
-                });
-
-            modelBuilder.Entity("Atlas_Web.Models.DpDataProject", b =>
+            modelBuilder.Entity("Atlas_Web.Models.Collection", b =>
                 {
                     b.Property<int>("DataProjectId")
                         .ValueGeneratedOnAdd()
@@ -501,284 +337,24 @@ namespace Atlas_Web.Migrations
 
                     b.HasIndex(new[] { "DataManagerId" }, "datamanagerid");
 
-                    b.HasIndex(new[] { "ExecutiveOwnerId" }, "executiveownerid")
-                        .HasDatabaseName("executiveownerid1");
+                    b.HasIndex(new[] { "ExecutiveOwnerId" }, "executiveownerid");
 
-                    b.HasIndex(new[] { "FinancialImpact" }, "financialimpact")
-                        .HasDatabaseName("financialimpact1");
+                    b.HasIndex(new[] { "FinancialImpact" }, "financialimpact");
 
-                    b.HasIndex(new[] { "DataInitiativeId" }, "initiativeid")
-                        .HasDatabaseName("initiativeid1");
+                    b.HasIndex(new[] { "DataInitiativeId" }, "initiativeid");
 
-                    b.HasIndex(new[] { "LastUpdateDate" }, "lastupdatedate")
-                        .HasDatabaseName("lastupdatedate1");
+                    b.HasIndex(new[] { "LastUpdateDate" }, "lastupdatedate");
 
-                    b.HasIndex(new[] { "LastUpdateUser" }, "lastupdateuser")
-                        .HasDatabaseName("lastupdateuser1");
+                    b.HasIndex(new[] { "LastUpdateUser" }, "lastupdateuser");
 
                     b.HasIndex(new[] { "OperationOwnerId" }, "operationownerid");
 
-                    b.HasIndex(new[] { "StrategicImportance" }, "strategicimportance")
-                        .HasDatabaseName("strategicimportance1");
+                    b.HasIndex(new[] { "StrategicImportance" }, "strategicimportance");
 
-                    b.ToTable("DP_DataProject", "app");
+                    b.ToTable("Collection", "app");
                 });
 
-            modelBuilder.Entity("Atlas_Web.Models.DpDataProjectConversation", b =>
-                {
-                    b.Property<int>("DataProjectConversationId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DataProjectConversationId"), 1L, 1);
-
-                    b.Property<int>("DataProjectId")
-                        .HasColumnType("int");
-
-                    b.HasKey("DataProjectConversationId")
-                        .HasName("PK__Dp_DataP__A555F1EB255B0952");
-
-                    b.HasIndex("DataProjectId");
-
-                    b.ToTable("Dp_DataProjectConversation", "app");
-                });
-
-            modelBuilder.Entity("Atlas_Web.Models.DpDataProjectConversationMessage", b =>
-                {
-                    b.Property<int>("DataProjectConversationMessageId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DataProjectConversationMessageId"), 1L, 1);
-
-                    b.Property<int?>("DataProjectConversationId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("MessageText")
-                        .HasMaxLength(4000)
-                        .HasColumnType("nvarchar(4000)");
-
-                    b.Property<DateTime?>("PostDateTime")
-                        .HasColumnType("datetime");
-
-                    b.Property<int?>("UserId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UserName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("DataProjectConversationMessageId")
-                        .HasName("PK__Dp_DataP__06C6EA493F53AEBA");
-
-                    b.HasIndex("DataProjectConversationId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Dp_DataProjectConversationMessage", "app");
-                });
-
-            modelBuilder.Entity("Atlas_Web.Models.DpMilestoneChecklist", b =>
-                {
-                    b.Property<int>("MilestoneChecklistId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MilestoneChecklistId"), 1L, 1);
-
-                    b.Property<string>("Item")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("MilestoneTaskId")
-                        .HasColumnType("int");
-
-                    b.HasKey("MilestoneChecklistId")
-                        .HasName("PK__DP_Miles__53ECAE4A5F858065");
-
-                    b.HasIndex("MilestoneTaskId");
-
-                    b.ToTable("DP_MilestoneChecklist", "app");
-                });
-
-            modelBuilder.Entity("Atlas_Web.Models.DpMilestoneChecklistCompleted", b =>
-                {
-                    b.Property<int>("MilestoneChecklistCompletedId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MilestoneChecklistCompletedId"), 1L, 1);
-
-                    b.Property<bool?>("ChecklistStatus")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValueSql("((0))");
-
-                    b.Property<DateTime?>("CompletionDate")
-                        .HasColumnType("datetime");
-
-                    b.Property<int?>("CompletionUser")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("DataProjectId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("MilestoneChecklistId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("TaskDate")
-                        .HasColumnType("datetime");
-
-                    b.Property<int?>("TaskId")
-                        .HasColumnType("int");
-
-                    b.HasKey("MilestoneChecklistCompletedId")
-                        .HasName("PK__DP_Miles__E081AA701711E585");
-
-                    b.HasIndex("CompletionUser");
-
-                    b.HasIndex("DataProjectId");
-
-                    b.ToTable("DP_MilestoneChecklistCompleted", "app");
-                });
-
-            modelBuilder.Entity("Atlas_Web.Models.DpMilestoneFrequency", b =>
-                {
-                    b.Property<int>("MilestoneTypeId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MilestoneTypeId"), 1L, 1);
-
-                    b.Property<DateTime?>("LastUpdateDate")
-                        .HasColumnType("datetime");
-
-                    b.Property<int?>("LastUpdateUser")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("MilestoneTypeId")
-                        .HasName("PK__DP_Miles__B88C49912ECA633F");
-
-                    b.HasIndex("LastUpdateUser");
-
-                    b.ToTable("DP_MilestoneFrequency", "app");
-                });
-
-            modelBuilder.Entity("Atlas_Web.Models.DpMilestoneTask", b =>
-                {
-                    b.Property<int>("MilestoneTaskId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MilestoneTaskId"), 1L, 1);
-
-                    b.Property<int?>("DataProjectId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("EndDate")
-                        .HasColumnType("datetime");
-
-                    b.Property<DateTime?>("LastUpdateDate")
-                        .HasColumnType("datetime");
-
-                    b.Property<int?>("LastUpdateUser")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("MilestoneTemplateId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("OwnerId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("StartDate")
-                        .HasColumnType("datetime");
-
-                    b.HasKey("MilestoneTaskId")
-                        .HasName("PK__DP_Miles__64647109FB6B4EDB");
-
-                    b.HasIndex("DataProjectId");
-
-                    b.HasIndex("LastUpdateUser");
-
-                    b.HasIndex("MilestoneTemplateId");
-
-                    b.HasIndex("OwnerId");
-
-                    b.ToTable("DP_MilestoneTasks", "app");
-                });
-
-            modelBuilder.Entity("Atlas_Web.Models.DpMilestoneTasksCompleted", b =>
-                {
-                    b.Property<int>("MilestoneTaskCompletedId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MilestoneTaskCompletedId"), 1L, 1);
-
-                    b.Property<string>("Comments")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("CompletionDate")
-                        .HasColumnType("datetime");
-
-                    b.Property<string>("CompletionUser")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("DataProjectId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("DueDate")
-                        .HasColumnType("datetime");
-
-                    b.Property<string>("Owner")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("MilestoneTaskCompletedId")
-                        .HasName("PK__DP_Miles__3226EEDD7DAFACC3");
-
-                    b.HasIndex("DataProjectId");
-
-                    b.ToTable("DP_MilestoneTasksCompleted", "app");
-                });
-
-            modelBuilder.Entity("Atlas_Web.Models.DpMilestoneTemplate", b =>
-                {
-                    b.Property<int>("MilestoneTemplateId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MilestoneTemplateId"), 1L, 1);
-
-                    b.Property<int?>("Interval")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("LastUpdateDate")
-                        .HasColumnType("datetime");
-
-                    b.Property<int?>("LastUpdateUser")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("MilestoneTypeId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("MilestoneTemplateId")
-                        .HasName("PK__DP_Miles__6A72A86C4B768C43");
-
-                    b.HasIndex("LastUpdateUser");
-
-                    b.HasIndex("MilestoneTypeId");
-
-                    b.ToTable("DP_MilestoneTemplates", "app");
-                });
-
-            modelBuilder.Entity("Atlas_Web.Models.DpReportAnnotation", b =>
+            modelBuilder.Entity("Atlas_Web.Models.CollectionReport", b =>
                 {
                     b.Property<int>("ReportAnnotationId")
                         .ValueGeneratedOnAdd()
@@ -806,10 +382,10 @@ namespace Atlas_Web.Migrations
 
                     b.HasIndex(new[] { "ReportId", "DataProjectId" }, "reportid+dataprojectid");
 
-                    b.ToTable("DP_ReportAnnotation", "app");
+                    b.ToTable("CollectionReport", "app");
                 });
 
-            modelBuilder.Entity("Atlas_Web.Models.DpTermAnnotation", b =>
+            modelBuilder.Entity("Atlas_Web.Models.CollectionTerm", b =>
                 {
                     b.Property<int>("TermAnnotationId")
                         .ValueGeneratedOnAdd()
@@ -837,7 +413,7 @@ namespace Atlas_Web.Migrations
 
                     b.HasIndex(new[] { "TermId", "DataProjectId" }, "termid+dataprojectid");
 
-                    b.ToTable("DP_TermAnnotation", "app");
+                    b.ToTable("CollectionTerm", "app");
                 });
 
             modelBuilder.Entity("Atlas_Web.Models.EstimatedRunFrequency", b =>
@@ -935,6 +511,67 @@ namespace Atlas_Web.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("GlobalSiteSettings", "app");
+                });
+
+            modelBuilder.Entity("Atlas_Web.Models.Initiative", b =>
+                {
+                    b.Property<int>("DataInitiativeId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("DataInitiativeID");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DataInitiativeId"), 1L, 1);
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("ExecutiveOwnerId")
+                        .HasColumnType("int")
+                        .HasColumnName("ExecutiveOwnerID");
+
+                    b.Property<int?>("FinancialImpact")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("LastUpdateDate")
+                        .HasColumnType("datetime");
+
+                    b.Property<int?>("LastUpdateUser")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("OperationOwnerId")
+                        .HasColumnType("int")
+                        .HasColumnName("OperationOwnerID");
+
+                    b.Property<int?>("StrategicImportance")
+                        .HasColumnType("int");
+
+                    b.HasKey("DataInitiativeId")
+                        .HasName("PK__DP_DataI__1EFC948C3A83A845");
+
+                    b.HasIndex(new[] { "ExecutiveOwnerId" }, "executiveownerid")
+                        .HasDatabaseName("executiveownerid1");
+
+                    b.HasIndex(new[] { "FinancialImpact" }, "financialimpact")
+                        .HasDatabaseName("financialimpact1");
+
+                    b.HasIndex(new[] { "DataInitiativeId" }, "initiativeid")
+                        .HasDatabaseName("initiativeid1");
+
+                    b.HasIndex(new[] { "LastUpdateDate" }, "lastupdatedate")
+                        .HasDatabaseName("lastupdatedate1");
+
+                    b.HasIndex(new[] { "LastUpdateUser" }, "lastupdateuser")
+                        .HasDatabaseName("lastupdateuser1");
+
+                    b.HasIndex(new[] { "OperationOwnerId" }, "operationownderid");
+
+                    b.HasIndex(new[] { "StrategicImportance" }, "strategicimportance")
+                        .HasDatabaseName("strategicimportance1");
+
+                    b.ToTable("Initiative", "app");
                 });
 
             modelBuilder.Entity("Atlas_Web.Models.MailConversation", b =>
@@ -1516,64 +1153,6 @@ namespace Atlas_Web.Migrations
                         .HasDatabaseName("reportid2");
 
                     b.ToTable("ReportObjectAttachments");
-                });
-
-            modelBuilder.Entity("Atlas_Web.Models.ReportObjectConversationDoc", b =>
-                {
-                    b.Property<int>("ConversationId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("ConversationID");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ConversationId"), 1L, 1);
-
-                    b.Property<int>("ReportObjectId")
-                        .HasColumnType("int")
-                        .HasColumnName("ReportObjectID");
-
-                    b.HasKey("ConversationId")
-                        .HasName("PK__ReportOb__C050D8972E11C321");
-
-                    b.HasIndex("ReportObjectId");
-
-                    b.ToTable("ReportObjectConversation_doc", "app");
-                });
-
-            modelBuilder.Entity("Atlas_Web.Models.ReportObjectConversationMessageDoc", b =>
-                {
-                    b.Property<int>("MessageId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("MessageID");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MessageId"), 1L, 1);
-
-                    b.Property<int>("ConversationId")
-                        .HasColumnType("int")
-                        .HasColumnName("ConversationID");
-
-                    b.Property<string>("MessageText")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("PostDateTime")
-                        .HasColumnType("datetime");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int")
-                        .HasColumnName("UserID");
-
-                    b.Property<string>("Username")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("MessageId")
-                        .HasName("PK__ReportOb__C87C037C3C86464B");
-
-                    b.HasIndex("ConversationId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("ReportObjectConversationMessage_doc", "app");
                 });
 
             modelBuilder.Entity("Atlas_Web.Models.ReportObjectDoc", b =>
@@ -2226,272 +1805,6 @@ namespace Atlas_Web.Migrations
                     b.ToTable("RolePermissionLinks", "app");
                 });
 
-            modelBuilder.Entity("Atlas_Web.Models.SearchBasicSearchDataSmall", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("CertificationTag")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<int?>("Hidden")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ItemId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ItemRank")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ItemType")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<int?>("Orphaned")
-                        .HasColumnType("int");
-
-                    b.Property<string>("SearchField")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("SearchFieldDescription")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<int?>("TypeId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("VisibleType")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Search_BasicSearchData_Small", "app");
-                });
-
-            modelBuilder.Entity("Atlas_Web.Models.SearchBasicSearchDatum", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("CertificationTag")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<int?>("Hidden")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ItemId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ItemRank")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ItemType")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<int?>("Orphaned")
-                        .HasColumnType("int");
-
-                    b.Property<string>("SearchField")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("SearchFieldDescription")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<int?>("TypeId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("VisibleType")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Search_BasicSearchData", "app");
-                });
-
-            modelBuilder.Entity("Atlas_Web.Models.SearchReportObjectSearchDatum", b =>
-                {
-                    b.Property<int>("Pk")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("pk");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Pk"), 1L, 1);
-
-                    b.Property<int?>("AuthorUserId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("CertificationTag")
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("certificationTag");
-
-                    b.Property<string>("ColumnName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("DefaultVisibilityYn")
-                        .HasMaxLength(1)
-                        .HasColumnType("nvarchar(1)")
-                        .HasColumnName("DefaultVisibilityYN");
-
-                    b.Property<DateTime?>("DocCreated")
-                        .HasColumnType("datetime");
-
-                    b.Property<int?>("DocCreatedBy")
-                        .HasColumnType("int");
-
-                    b.Property<string>("DocDoNotPurge")
-                        .HasMaxLength(1)
-                        .HasColumnType("nchar(1)")
-                        .IsFixedLength();
-
-                    b.Property<string>("DocExecVis")
-                        .HasMaxLength(1)
-                        .HasColumnType("nchar(1)")
-                        .IsFixedLength();
-
-                    b.Property<int?>("DocFragId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("DocHidden")
-                        .HasMaxLength(1)
-                        .HasColumnType("nchar(1)")
-                        .IsFixedLength();
-
-                    b.Property<string>("DocHypeEnabled")
-                        .HasMaxLength(1)
-                        .HasColumnType("nchar(1)")
-                        .IsFixedLength();
-
-                    b.Property<DateTime?>("DocLastUpdated")
-                        .HasColumnType("datetime");
-
-                    b.Property<int?>("DocMainSchedId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("DocOrgValueId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("DocOwnerId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("DocRequesterId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("DocRunFreqId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("DocUpdatedBy")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Documented")
-                        .HasColumnType("int");
-
-                    b.Property<string>("EpicMasterFile")
-                        .HasMaxLength(3)
-                        .HasColumnType("nvarchar(3)");
-
-                    b.Property<decimal?>("EpicReportTemplateId")
-                        .HasColumnType("numeric(18,0)");
-
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("LastModifiedByUserId")
-                        .HasColumnType("int")
-                        .HasColumnName("LastModifiedByUserID");
-
-                    b.Property<DateTime?>("LastModifiedDate")
-                        .HasColumnType("datetime");
-
-                    b.Property<int?>("OneMonthRuns")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("OneYearRuns")
-                        .HasColumnType("int");
-
-                    b.Property<string>("OrphanedReportObjectYn")
-                        .HasMaxLength(1)
-                        .HasColumnType("nchar(1)")
-                        .HasColumnName("OrphanedReportObjectYN")
-                        .IsFixedLength();
-
-                    b.Property<int?>("ReportObjectTypeId")
-                        .HasColumnType("int")
-                        .HasColumnName("ReportObjectTypeID");
-
-                    b.Property<int?>("SixMonthsRuns")
-                        .HasColumnType("int");
-
-                    b.Property<string>("SourceDb")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)")
-                        .HasColumnName("SourceDB");
-
-                    b.Property<string>("SourceServer")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
-                    b.Property<string>("SourceTable")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
-                    b.Property<int?>("TwoYearRuns")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Value")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Pk")
-                        .HasName("Search_ReportObjectSearchData_PK");
-
-                    b.ToTable("Search_ReportObjectSearchData", "app");
-                });
-
-            modelBuilder.Entity("Atlas_Web.Models.SearchTable", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int?>("ItemId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ItemRank")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ItemType")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("SearchField")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("SearchFieldDescription")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<int?>("TypeId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("SearchTable", "app");
-                });
-
             modelBuilder.Entity("Atlas_Web.Models.SharedItem", b =>
                 {
                     b.Property<int>("Id")
@@ -2902,61 +2215,6 @@ namespace Atlas_Web.Migrations
                     b.ToTable("Term", "app");
                 });
 
-            modelBuilder.Entity("Atlas_Web.Models.TermConversation", b =>
-                {
-                    b.Property<int>("TermConversationId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TermConversationId"), 1L, 1);
-
-                    b.Property<int>("TermId")
-                        .HasColumnType("int");
-
-                    b.HasKey("TermConversationId");
-
-                    b.HasIndex("TermId");
-
-                    b.ToTable("TermConversation", "app");
-                });
-
-            modelBuilder.Entity("Atlas_Web.Models.TermConversationMessage", b =>
-                {
-                    b.Property<int>("TermConversationMessageId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("TermConversationMessageID");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TermConversationMessageId"), 1L, 1);
-
-                    b.Property<string>("MessageText")
-                        .IsRequired()
-                        .HasMaxLength(4000)
-                        .HasColumnType("nvarchar(4000)");
-
-                    b.Property<DateTime>("PostDateTime")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime")
-                        .HasDefaultValueSql("(getdate())");
-
-                    b.Property<int>("TermConversationId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UserName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("TermConversationMessageId");
-
-                    b.HasIndex("TermConversationId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("TermConversationMessage", "app");
-                });
-
             modelBuilder.Entity("Atlas_Web.Models.User", b =>
                 {
                     b.Property<int>("UserId")
@@ -3028,42 +2286,6 @@ namespace Atlas_Web.Migrations
                         .HasDatabaseName("userid2");
 
                     b.ToTable("User", (string)null);
-                });
-
-            modelBuilder.Entity("Atlas_Web.Models.UserFavorite", b =>
-                {
-                    b.Property<int>("UserFavoritesId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserFavoritesId"), 1L, 1);
-
-                    b.Property<int?>("FolderId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ItemId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ItemName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("ItemRank")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ItemType")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("UserFavoritesId")
-                        .HasName("PK__UserFavo__1D23EA13087A927D");
-
-                    b.HasIndex("FolderId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UserFavorites", "app");
                 });
 
             modelBuilder.Entity("Atlas_Web.Models.UserFavoriteFolder", b =>
@@ -3154,26 +2376,6 @@ namespace Atlas_Web.Migrations
                     b.ToTable("UserGroupsMembership", (string)null);
                 });
 
-            modelBuilder.Entity("Atlas_Web.Models.UserNameDatum", b =>
-                {
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Firstname")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Fullname")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Lastname")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("UserId")
-                        .HasName("PK__User_Nam__1788CC4CF297F9FC");
-
-                    b.ToTable("User_NameData", "app");
-                });
-
             modelBuilder.Entity("Atlas_Web.Models.UserPreference", b =>
                 {
                     b.Property<int>("UserPreferenceId")
@@ -3259,6 +2461,16 @@ namespace Atlas_Web.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Atlas_Web.Models.AnalyticsError", b =>
+                {
+                    b.HasOne("Atlas_Web.Models.User", "User")
+                        .WithMany("AnalyticsErrors")
+                        .HasForeignKey("UserId")
+                        .HasConstraintName("FK_Analytics_Error_User");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Atlas_Web.Models.AnalyticsTrace", b =>
                 {
                     b.HasOne("Atlas_Web.Models.User", "User")
@@ -3269,122 +2481,15 @@ namespace Atlas_Web.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Atlas_Web.Models.DpAgreement", b =>
-                {
-                    b.HasOne("Atlas_Web.Models.DpDataProject", "DataProject")
-                        .WithMany("DpAgreements")
-                        .HasForeignKey("DataProjectId")
-                        .HasConstraintName("FK_DP_Agreement_DP_DataProject");
-
-                    b.HasOne("Atlas_Web.Models.User", "LastUpdateUserNavigation")
-                        .WithMany("DpAgreements")
-                        .HasForeignKey("LastUpdateUser")
-                        .HasConstraintName("FK_DP_Agreement_WebAppUsers");
-
-                    b.Navigation("DataProject");
-
-                    b.Navigation("LastUpdateUserNavigation");
-                });
-
-            modelBuilder.Entity("Atlas_Web.Models.DpAgreementUser", b =>
-                {
-                    b.HasOne("Atlas_Web.Models.DpAgreement", "Agreement")
-                        .WithMany("DpAgreementUsers")
-                        .HasForeignKey("AgreementId")
-                        .HasConstraintName("FK_DP_AgreementUsers_DP_Agreement");
-
-                    b.HasOne("Atlas_Web.Models.User", "LastUpdateUserNavigation")
-                        .WithMany("DpAgreementUserLastUpdateUserNavigations")
-                        .HasForeignKey("LastUpdateUser")
-                        .HasConstraintName("FK_DP_AgreementUsers_WebAppUsers");
-
-                    b.HasOne("Atlas_Web.Models.User", "User")
-                        .WithMany("DpAgreementUserUsers")
-                        .HasForeignKey("UserId")
-                        .HasConstraintName("FK_DP_AgreementUsers_User");
-
-                    b.Navigation("Agreement");
-
-                    b.Navigation("LastUpdateUserNavigation");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Atlas_Web.Models.DpAttachment", b =>
-                {
-                    b.HasOne("Atlas_Web.Models.DpDataProject", "DataProject")
-                        .WithMany("DpAttachments")
-                        .HasForeignKey("DataProjectId")
-                        .IsRequired()
-                        .HasConstraintName("FK_DP_Attachments_DP_DataProject");
-
-                    b.Navigation("DataProject");
-                });
-
-            modelBuilder.Entity("Atlas_Web.Models.DpContactLink", b =>
-                {
-                    b.HasOne("Atlas_Web.Models.DpContact", "Contact")
-                        .WithMany("DpContactLinks")
-                        .HasForeignKey("ContactId")
-                        .HasConstraintName("FK_DP_Contact_Links_DP_Contact");
-
-                    b.HasOne("Atlas_Web.Models.DpDataInitiative", "Initiative")
-                        .WithMany("DpContactLinks")
-                        .HasForeignKey("InitiativeId")
-                        .HasConstraintName("FK_DP_Contact_Links_DP_DataInitiative");
-
-                    b.Navigation("Contact");
-
-                    b.Navigation("Initiative");
-                });
-
-            modelBuilder.Entity("Atlas_Web.Models.DpDataInitiative", b =>
-                {
-                    b.HasOne("Atlas_Web.Models.User", "ExecutiveOwner")
-                        .WithMany("DpDataInitiativeExecutiveOwners")
-                        .HasForeignKey("ExecutiveOwnerId")
-                        .HasConstraintName("FK_DP_DataInitiative_User");
-
-                    b.HasOne("Atlas_Web.Models.FinancialImpact", "FinancialImpactNavigation")
-                        .WithMany("DpDataInitiatives")
-                        .HasForeignKey("FinancialImpact")
-                        .HasConstraintName("FK_DP_DataInitiative_FinancialImpact");
-
-                    b.HasOne("Atlas_Web.Models.User", "LastUpdateUserNavigation")
-                        .WithMany("DpDataInitiativeLastUpdateUserNavigations")
-                        .HasForeignKey("LastUpdateUser")
-                        .HasConstraintName("FK_DP_DataInitiative_WebAppUsers");
-
-                    b.HasOne("Atlas_Web.Models.User", "OperationOwner")
-                        .WithMany("DpDataInitiativeOperationOwners")
-                        .HasForeignKey("OperationOwnerId")
-                        .HasConstraintName("FK_DP_DataInitiative_User1");
-
-                    b.HasOne("Atlas_Web.Models.StrategicImportance", "StrategicImportanceNavigation")
-                        .WithMany("DpDataInitiatives")
-                        .HasForeignKey("StrategicImportance")
-                        .HasConstraintName("FK_DP_DataInitiative_StrategicImportance");
-
-                    b.Navigation("ExecutiveOwner");
-
-                    b.Navigation("FinancialImpactNavigation");
-
-                    b.Navigation("LastUpdateUserNavigation");
-
-                    b.Navigation("OperationOwner");
-
-                    b.Navigation("StrategicImportanceNavigation");
-                });
-
-            modelBuilder.Entity("Atlas_Web.Models.DpDataProject", b =>
+            modelBuilder.Entity("Atlas_Web.Models.Collection", b =>
                 {
                     b.HasOne("Atlas_Web.Models.User", "AnalyticsOwner")
                         .WithMany("DpDataProjectAnalyticsOwners")
                         .HasForeignKey("AnalyticsOwnerId")
                         .HasConstraintName("FK_DP_DataProject_WebAppUsers1");
 
-                    b.HasOne("Atlas_Web.Models.DpDataInitiative", "DataInitiative")
-                        .WithMany("DpDataProjects")
+                    b.HasOne("Atlas_Web.Models.Initiative", "Initiative")
+                        .WithMany("Collections")
                         .HasForeignKey("DataInitiativeId")
                         .HasConstraintName("FK_DP_DataProject_DP_DataInitiative");
 
@@ -3399,7 +2504,7 @@ namespace Atlas_Web.Migrations
                         .HasConstraintName("FK_DP_DataProject_User");
 
                     b.HasOne("Atlas_Web.Models.FinancialImpact", "FinancialImpactNavigation")
-                        .WithMany("DpDataProjects")
+                        .WithMany("Collections")
                         .HasForeignKey("FinancialImpact")
                         .HasConstraintName("FK_DP_DataProject_FinancialImpact");
 
@@ -3414,15 +2519,87 @@ namespace Atlas_Web.Migrations
                         .HasConstraintName("FK_DP_DataProject_User1");
 
                     b.HasOne("Atlas_Web.Models.StrategicImportance", "StrategicImportanceNavigation")
-                        .WithMany("DpDataProjects")
+                        .WithMany("Collections")
                         .HasForeignKey("StrategicImportance")
                         .HasConstraintName("FK_DP_DataProject_StrategicImportance");
 
                     b.Navigation("AnalyticsOwner");
 
-                    b.Navigation("DataInitiative");
-
                     b.Navigation("DataManager");
+
+                    b.Navigation("ExecutiveOwner");
+
+                    b.Navigation("FinancialImpactNavigation");
+
+                    b.Navigation("Initiative");
+
+                    b.Navigation("LastUpdateUserNavigation");
+
+                    b.Navigation("OperationOwner");
+
+                    b.Navigation("StrategicImportanceNavigation");
+                });
+
+            modelBuilder.Entity("Atlas_Web.Models.CollectionReport", b =>
+                {
+                    b.HasOne("Atlas_Web.Models.Collection", "DataProject")
+                        .WithMany("CollectionReports")
+                        .HasForeignKey("DataProjectId")
+                        .HasConstraintName("FK_DP_ReportAnnotation_DP_DataProject");
+
+                    b.HasOne("Atlas_Web.Models.ReportObject", "Report")
+                        .WithMany("CollectionReports")
+                        .HasForeignKey("ReportId")
+                        .HasConstraintName("FK_DP_ReportAnnotation_ReportObject");
+
+                    b.Navigation("DataProject");
+
+                    b.Navigation("Report");
+                });
+
+            modelBuilder.Entity("Atlas_Web.Models.CollectionTerm", b =>
+                {
+                    b.HasOne("Atlas_Web.Models.Collection", "DataProject")
+                        .WithMany("CollectionTerms")
+                        .HasForeignKey("DataProjectId")
+                        .HasConstraintName("FK_DP_TermAnnotation_DP_DataProject");
+
+                    b.HasOne("Atlas_Web.Models.Term", "Term")
+                        .WithMany("CollectionTerms")
+                        .HasForeignKey("TermId")
+                        .HasConstraintName("FK_DP_TermAnnotation_Term");
+
+                    b.Navigation("DataProject");
+
+                    b.Navigation("Term");
+                });
+
+            modelBuilder.Entity("Atlas_Web.Models.Initiative", b =>
+                {
+                    b.HasOne("Atlas_Web.Models.User", "ExecutiveOwner")
+                        .WithMany("DpDataInitiativeExecutiveOwners")
+                        .HasForeignKey("ExecutiveOwnerId")
+                        .HasConstraintName("FK_DP_DataInitiative_User");
+
+                    b.HasOne("Atlas_Web.Models.FinancialImpact", "FinancialImpactNavigation")
+                        .WithMany("Initiatives")
+                        .HasForeignKey("FinancialImpact")
+                        .HasConstraintName("FK_DP_DataInitiative_FinancialImpact");
+
+                    b.HasOne("Atlas_Web.Models.User", "LastUpdateUserNavigation")
+                        .WithMany("DpDataInitiativeLastUpdateUserNavigations")
+                        .HasForeignKey("LastUpdateUser")
+                        .HasConstraintName("FK_DP_DataInitiative_WebAppUsers");
+
+                    b.HasOne("Atlas_Web.Models.User", "OperationOwner")
+                        .WithMany("DpDataInitiativeOperationOwners")
+                        .HasForeignKey("OperationOwnerId")
+                        .HasConstraintName("FK_DP_DataInitiative_User1");
+
+                    b.HasOne("Atlas_Web.Models.StrategicImportance", "StrategicImportanceNavigation")
+                        .WithMany("Initiatives")
+                        .HasForeignKey("StrategicImportance")
+                        .HasConstraintName("FK_DP_DataInitiative_StrategicImportance");
 
                     b.Navigation("ExecutiveOwner");
 
@@ -3433,163 +2610,6 @@ namespace Atlas_Web.Migrations
                     b.Navigation("OperationOwner");
 
                     b.Navigation("StrategicImportanceNavigation");
-                });
-
-            modelBuilder.Entity("Atlas_Web.Models.DpDataProjectConversation", b =>
-                {
-                    b.HasOne("Atlas_Web.Models.DpDataProject", "DataProject")
-                        .WithMany("DpDataProjectConversations")
-                        .HasForeignKey("DataProjectId")
-                        .IsRequired()
-                        .HasConstraintName("FK_Dp_DataProjectConversation_DP_DataProject");
-
-                    b.Navigation("DataProject");
-                });
-
-            modelBuilder.Entity("Atlas_Web.Models.DpDataProjectConversationMessage", b =>
-                {
-                    b.HasOne("Atlas_Web.Models.DpDataProjectConversation", "DataProjectConversation")
-                        .WithMany("DpDataProjectConversationMessages")
-                        .HasForeignKey("DataProjectConversationId")
-                        .HasConstraintName("FK_Dp_DataProjectConversationMessage_Dp_DataProjectConversation");
-
-                    b.HasOne("Atlas_Web.Models.User", "User")
-                        .WithMany("DpDataProjectConversationMessages")
-                        .HasForeignKey("UserId")
-                        .HasConstraintName("FK_Dp_DataProjectConversationMessage_User");
-
-                    b.Navigation("DataProjectConversation");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Atlas_Web.Models.DpMilestoneChecklist", b =>
-                {
-                    b.HasOne("Atlas_Web.Models.DpMilestoneTask", "MilestoneTask")
-                        .WithMany("DpMilestoneChecklists")
-                        .HasForeignKey("MilestoneTaskId")
-                        .HasConstraintName("FK_DP_MilestoneChecklist_DP_MilestoneTasks");
-
-                    b.Navigation("MilestoneTask");
-                });
-
-            modelBuilder.Entity("Atlas_Web.Models.DpMilestoneChecklistCompleted", b =>
-                {
-                    b.HasOne("Atlas_Web.Models.User", "CompletionUserNavigation")
-                        .WithMany("DpMilestoneChecklistCompleteds")
-                        .HasForeignKey("CompletionUser")
-                        .HasConstraintName("FK_DP_MilestoneChecklistCompleted_User");
-
-                    b.HasOne("Atlas_Web.Models.DpDataProject", "DataProject")
-                        .WithMany("DpMilestoneChecklistCompleteds")
-                        .HasForeignKey("DataProjectId")
-                        .HasConstraintName("FK_DP_MilestoneChecklistCompleted_DP_DataProject");
-
-                    b.Navigation("CompletionUserNavigation");
-
-                    b.Navigation("DataProject");
-                });
-
-            modelBuilder.Entity("Atlas_Web.Models.DpMilestoneFrequency", b =>
-                {
-                    b.HasOne("Atlas_Web.Models.User", "LastUpdateUserNavigation")
-                        .WithMany("DpMilestoneFrequencies")
-                        .HasForeignKey("LastUpdateUser")
-                        .HasConstraintName("FK_DP_MilestoneTypes_WebAppUsers");
-
-                    b.Navigation("LastUpdateUserNavigation");
-                });
-
-            modelBuilder.Entity("Atlas_Web.Models.DpMilestoneTask", b =>
-                {
-                    b.HasOne("Atlas_Web.Models.DpDataProject", "DataProject")
-                        .WithMany("DpMilestoneTasks")
-                        .HasForeignKey("DataProjectId")
-                        .HasConstraintName("FK_DP_MilestoneTasks_DP_DataProject");
-
-                    b.HasOne("Atlas_Web.Models.User", "LastUpdateUserNavigation")
-                        .WithMany("DpMilestoneTaskLastUpdateUserNavigations")
-                        .HasForeignKey("LastUpdateUser")
-                        .HasConstraintName("FK_DP_MilestoneTasks_LastUpdateUser");
-
-                    b.HasOne("Atlas_Web.Models.DpMilestoneTemplate", "MilestoneTemplate")
-                        .WithMany("DpMilestoneTasks")
-                        .HasForeignKey("MilestoneTemplateId")
-                        .HasConstraintName("FK_DP_MilestoneTasks_DP_MilestoneTemplates");
-
-                    b.HasOne("Atlas_Web.Models.User", "Owner")
-                        .WithMany("DpMilestoneTaskOwners")
-                        .HasForeignKey("OwnerId")
-                        .HasConstraintName("FK_DP_MilestoneTasks_User");
-
-                    b.Navigation("DataProject");
-
-                    b.Navigation("LastUpdateUserNavigation");
-
-                    b.Navigation("MilestoneTemplate");
-
-                    b.Navigation("Owner");
-                });
-
-            modelBuilder.Entity("Atlas_Web.Models.DpMilestoneTasksCompleted", b =>
-                {
-                    b.HasOne("Atlas_Web.Models.DpDataProject", "DataProject")
-                        .WithMany("DpMilestoneTasksCompleteds")
-                        .HasForeignKey("DataProjectId")
-                        .HasConstraintName("FK_DP_MilestoneTasksCompleted_DP_DataProject");
-
-                    b.Navigation("DataProject");
-                });
-
-            modelBuilder.Entity("Atlas_Web.Models.DpMilestoneTemplate", b =>
-                {
-                    b.HasOne("Atlas_Web.Models.User", "LastUpdateUserNavigation")
-                        .WithMany("DpMilestoneTemplates")
-                        .HasForeignKey("LastUpdateUser")
-                        .HasConstraintName("FK_DP_MilestoneTemplates_WebAppUsers");
-
-                    b.HasOne("Atlas_Web.Models.DpMilestoneFrequency", "MilestoneType")
-                        .WithMany("DpMilestoneTemplates")
-                        .HasForeignKey("MilestoneTypeId")
-                        .HasConstraintName("FK_DP_MilestoneTemplates_DP_MilestoneTypes");
-
-                    b.Navigation("LastUpdateUserNavigation");
-
-                    b.Navigation("MilestoneType");
-                });
-
-            modelBuilder.Entity("Atlas_Web.Models.DpReportAnnotation", b =>
-                {
-                    b.HasOne("Atlas_Web.Models.DpDataProject", "DataProject")
-                        .WithMany("DpReportAnnotations")
-                        .HasForeignKey("DataProjectId")
-                        .HasConstraintName("FK_DP_ReportAnnotation_DP_DataProject");
-
-                    b.HasOne("Atlas_Web.Models.ReportObject", "Report")
-                        .WithMany("DpReportAnnotations")
-                        .HasForeignKey("ReportId")
-                        .HasConstraintName("FK_DP_ReportAnnotation_ReportObject");
-
-                    b.Navigation("DataProject");
-
-                    b.Navigation("Report");
-                });
-
-            modelBuilder.Entity("Atlas_Web.Models.DpTermAnnotation", b =>
-                {
-                    b.HasOne("Atlas_Web.Models.DpDataProject", "DataProject")
-                        .WithMany("DpTermAnnotations")
-                        .HasForeignKey("DataProjectId")
-                        .HasConstraintName("FK_DP_TermAnnotation_DP_DataProject");
-
-                    b.HasOne("Atlas_Web.Models.Term", "Term")
-                        .WithMany("DpTermAnnotations")
-                        .HasForeignKey("TermId")
-                        .HasConstraintName("FK_DP_TermAnnotation_Term");
-
-                    b.Navigation("DataProject");
-
-                    b.Navigation("Term");
                 });
 
             modelBuilder.Entity("Atlas_Web.Models.MailConversation", b =>
@@ -3773,36 +2793,6 @@ namespace Atlas_Web.Migrations
                         .HasConstraintName("FK_ReportObjectAttachments_ReportObject");
 
                     b.Navigation("ReportObject");
-                });
-
-            modelBuilder.Entity("Atlas_Web.Models.ReportObjectConversationDoc", b =>
-                {
-                    b.HasOne("Atlas_Web.Models.ReportObject", "ReportObject")
-                        .WithMany("ReportObjectConversationDocs")
-                        .HasForeignKey("ReportObjectId")
-                        .IsRequired()
-                        .HasConstraintName("FK__ReportObj__Repor__3B21036F");
-
-                    b.Navigation("ReportObject");
-                });
-
-            modelBuilder.Entity("Atlas_Web.Models.ReportObjectConversationMessageDoc", b =>
-                {
-                    b.HasOne("Atlas_Web.Models.ReportObjectConversationDoc", "Conversation")
-                        .WithMany("ReportObjectConversationMessageDocs")
-                        .HasForeignKey("ConversationId")
-                        .IsRequired()
-                        .HasConstraintName("FK__ReportObj__Conve__4E53A1AA");
-
-                    b.HasOne("Atlas_Web.Models.User", "User")
-                        .WithMany("ReportObjectConversationMessageDocs")
-                        .HasForeignKey("UserId")
-                        .IsRequired()
-                        .HasConstraintName("FK_ReportObjectConversationMessage_doc_User");
-
-                    b.Navigation("Conversation");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Atlas_Web.Models.ReportObjectDoc", b =>
@@ -4116,7 +3106,7 @@ namespace Atlas_Web.Migrations
 
             modelBuilder.Entity("Atlas_Web.Models.StarredCollection", b =>
                 {
-                    b.HasOne("Atlas_Web.Models.DpDataProject", "Collection")
+                    b.HasOne("Atlas_Web.Models.Collection", "Collection")
                         .WithMany("StarredCollections")
                         .HasForeignKey("Collectionid")
                         .HasConstraintName("FK_StarredCollections_DP_DataProject");
@@ -4169,7 +3159,7 @@ namespace Atlas_Web.Migrations
                         .HasForeignKey("Folderid")
                         .HasConstraintName("FK_StarredInitiatives_UserFavoriteFolders");
 
-                    b.HasOne("Atlas_Web.Models.DpDataInitiative", "Initiative")
+                    b.HasOne("Atlas_Web.Models.Initiative", "Initiative")
                         .WithMany("StarredInitiatives")
                         .HasForeignKey("Initiativeid")
                         .HasConstraintName("FK_StarredInitiatives_DP_DataInitiative");
@@ -4292,54 +3282,6 @@ namespace Atlas_Web.Migrations
                     b.Navigation("UpdatedByUser");
                 });
 
-            modelBuilder.Entity("Atlas_Web.Models.TermConversation", b =>
-                {
-                    b.HasOne("Atlas_Web.Models.Term", "Term")
-                        .WithMany("TermConversations")
-                        .HasForeignKey("TermId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("FK__TermConve__TermI__7C4F7684");
-
-                    b.Navigation("Term");
-                });
-
-            modelBuilder.Entity("Atlas_Web.Models.TermConversationMessage", b =>
-                {
-                    b.HasOne("Atlas_Web.Models.TermConversation", "TermConversation")
-                        .WithMany("TermConversationMessages")
-                        .HasForeignKey("TermConversationId")
-                        .IsRequired()
-                        .HasConstraintName("FK_TermConversationMessage_TermConversation");
-
-                    b.HasOne("Atlas_Web.Models.User", "User")
-                        .WithMany("TermConversationMessages")
-                        .HasForeignKey("UserId")
-                        .IsRequired()
-                        .HasConstraintName("FK_TermConversationMessage_User");
-
-                    b.Navigation("TermConversation");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Atlas_Web.Models.UserFavorite", b =>
-                {
-                    b.HasOne("Atlas_Web.Models.UserFavoriteFolder", "Folder")
-                        .WithMany("UserFavorites")
-                        .HasForeignKey("FolderId")
-                        .HasConstraintName("FK_UserFavorites_UserFavoriteFolders");
-
-                    b.HasOne("Atlas_Web.Models.User", "User")
-                        .WithMany("UserFavorites")
-                        .HasForeignKey("UserId")
-                        .HasConstraintName("FK_UserFavorites_User");
-
-                    b.Navigation("Folder");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("Atlas_Web.Models.UserGroupsMembership", b =>
                 {
                     b.HasOne("Atlas_Web.Models.UserGroup", "Group")
@@ -4353,17 +3295,6 @@ namespace Atlas_Web.Migrations
                         .HasConstraintName("FK_UserGroupsMembership_User");
 
                     b.Navigation("Group");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Atlas_Web.Models.UserNameDatum", b =>
-                {
-                    b.HasOne("Atlas_Web.Models.User", "User")
-                        .WithOne("UserNameDatum")
-                        .HasForeignKey("Atlas_Web.Models.UserNameDatum", "UserId")
-                        .IsRequired()
-                        .HasConstraintName("FK_User_NameData_User");
 
                     b.Navigation("User");
                 });
@@ -4395,64 +3326,13 @@ namespace Atlas_Web.Migrations
                     b.Navigation("UserRoles");
                 });
 
-            modelBuilder.Entity("Atlas_Web.Models.DpAgreement", b =>
+            modelBuilder.Entity("Atlas_Web.Models.Collection", b =>
                 {
-                    b.Navigation("DpAgreementUsers");
-                });
+                    b.Navigation("CollectionReports");
 
-            modelBuilder.Entity("Atlas_Web.Models.DpContact", b =>
-                {
-                    b.Navigation("DpContactLinks");
-                });
-
-            modelBuilder.Entity("Atlas_Web.Models.DpDataInitiative", b =>
-                {
-                    b.Navigation("DpContactLinks");
-
-                    b.Navigation("DpDataProjects");
-
-                    b.Navigation("StarredInitiatives");
-                });
-
-            modelBuilder.Entity("Atlas_Web.Models.DpDataProject", b =>
-                {
-                    b.Navigation("DpAgreements");
-
-                    b.Navigation("DpAttachments");
-
-                    b.Navigation("DpDataProjectConversations");
-
-                    b.Navigation("DpMilestoneChecklistCompleteds");
-
-                    b.Navigation("DpMilestoneTasks");
-
-                    b.Navigation("DpMilestoneTasksCompleteds");
-
-                    b.Navigation("DpReportAnnotations");
-
-                    b.Navigation("DpTermAnnotations");
+                    b.Navigation("CollectionTerms");
 
                     b.Navigation("StarredCollections");
-                });
-
-            modelBuilder.Entity("Atlas_Web.Models.DpDataProjectConversation", b =>
-                {
-                    b.Navigation("DpDataProjectConversationMessages");
-                });
-
-            modelBuilder.Entity("Atlas_Web.Models.DpMilestoneFrequency", b =>
-                {
-                    b.Navigation("DpMilestoneTemplates");
-                });
-
-            modelBuilder.Entity("Atlas_Web.Models.DpMilestoneTask", b =>
-                {
-                    b.Navigation("DpMilestoneChecklists");
-                });
-
-            modelBuilder.Entity("Atlas_Web.Models.DpMilestoneTemplate", b =>
-                {
-                    b.Navigation("DpMilestoneTasks");
                 });
 
             modelBuilder.Entity("Atlas_Web.Models.EstimatedRunFrequency", b =>
@@ -4462,9 +3342,9 @@ namespace Atlas_Web.Migrations
 
             modelBuilder.Entity("Atlas_Web.Models.FinancialImpact", b =>
                 {
-                    b.Navigation("DpDataInitiatives");
+                    b.Navigation("Collections");
 
-                    b.Navigation("DpDataProjects");
+                    b.Navigation("Initiatives");
                 });
 
             modelBuilder.Entity("Atlas_Web.Models.Fragility", b =>
@@ -4475,6 +3355,13 @@ namespace Atlas_Web.Migrations
             modelBuilder.Entity("Atlas_Web.Models.FragilityTag", b =>
                 {
                     b.Navigation("ReportObjectDocFragilityTags");
+                });
+
+            modelBuilder.Entity("Atlas_Web.Models.Initiative", b =>
+                {
+                    b.Navigation("Collections");
+
+                    b.Navigation("StarredInitiatives");
                 });
 
             modelBuilder.Entity("Atlas_Web.Models.MailFolder", b =>
@@ -4518,15 +3405,13 @@ namespace Atlas_Web.Migrations
 
             modelBuilder.Entity("Atlas_Web.Models.ReportObject", b =>
                 {
-                    b.Navigation("DpReportAnnotations");
+                    b.Navigation("CollectionReports");
 
                     b.Navigation("ReportGroupsMemberships");
 
                     b.Navigation("ReportManageEngineTickets");
 
                     b.Navigation("ReportObjectAttachments");
-
-                    b.Navigation("ReportObjectConversationDocs");
 
                     b.Navigation("ReportObjectDoc");
 
@@ -4551,11 +3436,6 @@ namespace Atlas_Web.Migrations
                     b.Navigation("ReportObjectTopRuns");
 
                     b.Navigation("StarredReports");
-                });
-
-            modelBuilder.Entity("Atlas_Web.Models.ReportObjectConversationDoc", b =>
-                {
-                    b.Navigation("ReportObjectConversationMessageDocs");
                 });
 
             modelBuilder.Entity("Atlas_Web.Models.ReportObjectDoc", b =>
@@ -4584,38 +3464,27 @@ namespace Atlas_Web.Migrations
 
             modelBuilder.Entity("Atlas_Web.Models.StrategicImportance", b =>
                 {
-                    b.Navigation("DpDataInitiatives");
+                    b.Navigation("Collections");
 
-                    b.Navigation("DpDataProjects");
+                    b.Navigation("Initiatives");
                 });
 
             modelBuilder.Entity("Atlas_Web.Models.Term", b =>
                 {
-                    b.Navigation("DpTermAnnotations");
+                    b.Navigation("CollectionTerms");
 
                     b.Navigation("ReportObjectDocTerms");
 
                     b.Navigation("StarredTerms");
-
-                    b.Navigation("TermConversations");
-                });
-
-            modelBuilder.Entity("Atlas_Web.Models.TermConversation", b =>
-                {
-                    b.Navigation("TermConversationMessages");
                 });
 
             modelBuilder.Entity("Atlas_Web.Models.User", b =>
                 {
                     b.Navigation("Analytics");
 
+                    b.Navigation("AnalyticsErrors");
+
                     b.Navigation("AnalyticsTraces");
-
-                    b.Navigation("DpAgreementUserLastUpdateUserNavigations");
-
-                    b.Navigation("DpAgreementUserUsers");
-
-                    b.Navigation("DpAgreements");
 
                     b.Navigation("DpDataInitiativeExecutiveOwners");
 
@@ -4625,8 +3494,6 @@ namespace Atlas_Web.Migrations
 
                     b.Navigation("DpDataProjectAnalyticsOwners");
 
-                    b.Navigation("DpDataProjectConversationMessages");
-
                     b.Navigation("DpDataProjectDataManagers");
 
                     b.Navigation("DpDataProjectExecutiveOwners");
@@ -4634,16 +3501,6 @@ namespace Atlas_Web.Migrations
                     b.Navigation("DpDataProjectLastUpdateUserNavigations");
 
                     b.Navigation("DpDataProjectOperationOwners");
-
-                    b.Navigation("DpMilestoneChecklistCompleteds");
-
-                    b.Navigation("DpMilestoneFrequencies");
-
-                    b.Navigation("DpMilestoneTaskLastUpdateUserNavigations");
-
-                    b.Navigation("DpMilestoneTaskOwners");
-
-                    b.Navigation("DpMilestoneTemplates");
 
                     b.Navigation("MailDrafts");
 
@@ -4658,8 +3515,6 @@ namespace Atlas_Web.Migrations
                     b.Navigation("MaintenanceLogs");
 
                     b.Navigation("ReportObjectAuthorUsers");
-
-                    b.Navigation("ReportObjectConversationMessageDocs");
 
                     b.Navigation("ReportObjectDocOperationalOwnerUsers");
 
@@ -4699,15 +3554,9 @@ namespace Atlas_Web.Migrations
 
                     b.Navigation("TermApprovedByUsers");
 
-                    b.Navigation("TermConversationMessages");
-
                     b.Navigation("TermUpdatedByUsers");
 
-                    b.Navigation("UserFavorites");
-
                     b.Navigation("UserGroupsMemberships");
-
-                    b.Navigation("UserNameDatum");
 
                     b.Navigation("UserPreferences");
 
@@ -4729,8 +3578,6 @@ namespace Atlas_Web.Migrations
                     b.Navigation("StarredTerms");
 
                     b.Navigation("StarredUsers");
-
-                    b.Navigation("UserFavorites");
                 });
 
             modelBuilder.Entity("Atlas_Web.Models.UserGroup", b =>

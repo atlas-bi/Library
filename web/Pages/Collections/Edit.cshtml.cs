@@ -23,13 +23,13 @@ namespace Atlas_Web.Pages.Collections
         }
 
         [BindProperty]
-        public DpDataProject Collection { get; set; }
+        public Collection Collection { get; set; }
 
         [BindProperty]
-        public List<DpTermAnnotation> Terms { get; set; }
+        public List<CollectionTerm> Terms { get; set; }
 
         [BindProperty]
-        public List<DpReportAnnotation> Reports { get; set; }
+        public List<CollectionReport> Reports { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int id)
         {
@@ -48,10 +48,10 @@ namespace Atlas_Web.Pages.Collections
                 );
             }
 
-            Collection = await _context.DpDataProjects
-                .Include(x => x.DpReportAnnotations)
+            Collection = await _context.Collections
+                .Include(x => x.CollectionReports)
                 .ThenInclude(x => x.Report)
-                .Include(x => x.DpTermAnnotations)
+                .Include(x => x.CollectionTerms)
                 .ThenInclude(x => x.Term)
                 .SingleAsync(x => x.DataProjectId == id);
 
@@ -84,7 +84,7 @@ namespace Atlas_Web.Pages.Collections
             }
 
             // we get a copy of the initiative and then will only update several fields.
-            DpDataProject NewCollection = _context.DpDataProjects.Find(Collection.DataProjectId);
+            Collection NewCollection = _context.Collections.Find(Collection.DataProjectId);
 
             // update last update values & values that were posted
             NewCollection.LastUpdateUser =
@@ -102,7 +102,7 @@ namespace Atlas_Web.Pages.Collections
                 term.DataProjectId = NewCollection.DataProjectId;
 
                 if (
-                    !_context.DpTermAnnotations.Any(
+                    !_context.CollectionTerms.Any(
                         x => x.TermId == term.TermId && x.DataProjectId == term.DataProjectId
                     )
                 )
@@ -113,7 +113,7 @@ namespace Atlas_Web.Pages.Collections
             _context.SaveChanges();
 
             _context.RemoveRange(
-                _context.DpTermAnnotations
+                _context.CollectionTerms
                     .Where(d => d.DataProjectId == NewCollection.DataProjectId)
                     .Where(d => !Terms.Select(x => x.TermId).Contains((int)d.TermId))
             );
@@ -122,13 +122,13 @@ namespace Atlas_Web.Pages.Collections
             // update linked reports
             for (int i = 0; i < Reports.Count; i++)
             {
-                DpReportAnnotation report = Reports[i];
+                CollectionReport report = Reports[i];
 
                 report.DataProjectId = NewCollection.DataProjectId;
                 report.Rank = i;
 
                 // if annotation exists, update rank and text
-                DpReportAnnotation oldReport = _context.DpReportAnnotations
+                CollectionReport oldReport = _context.CollectionReports
                     .Where(
                         x =>
                             x.ReportId == report.ReportId && x.DataProjectId == report.DataProjectId
@@ -147,7 +147,7 @@ namespace Atlas_Web.Pages.Collections
             }
 
             _context.RemoveRange(
-                _context.DpReportAnnotations
+                _context.CollectionReports
                     .Where(d => d.DataProjectId == NewCollection.DataProjectId)
                     .Where(d => !Reports.Select(x => x.ReportId).Contains((int)d.ReportId))
             );

@@ -14,7 +14,6 @@ namespace Atlas_Web.Models
             StarredSearches = new HashSet<StarredSearch>();
             StarredTerms = new HashSet<StarredTerm>();
             StarredUsers = new HashSet<StarredUser>();
-            UserFavorites = new HashSet<UserFavorite>();
         }
 
         public int UserFavoriteFolderId { get; set; }
@@ -29,6 +28,5 @@ namespace Atlas_Web.Models
         public virtual ICollection<StarredSearch> StarredSearches { get; set; }
         public virtual ICollection<StarredTerm> StarredTerms { get; set; }
         public virtual ICollection<StarredUser> StarredUsers { get; set; }
-        public virtual ICollection<UserFavorite> UserFavorites { get; set; }
     }
 }

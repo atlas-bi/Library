@@ -284,9 +284,9 @@
         <div class="field">
             <label class="label">Linked Collections</label>
             <div class="mini-tags field is-grouped is-grouped-multiline reorder">
-                @for(var x = 0; x < @Model.Report.ReportObject.DpReportAnnotations.Count; x++ )
+                @for(var x = 0; x < @Model.Report.ReportObject.CollectionReports.Count; x++ )
                 {
-                    var Collections = @Model.Report.ReportObject.DpReportAnnotations.OrderBy(x => x.Rank).ThenBy(x => x.DataProject.Name).ToList();
+                    var Collections = @Model.Report.ReportObject.CollectionReports.OrderBy(x => x.Rank).ThenBy(x => x.DataProject.Name).ToList();
                     <div class="control drg">
                         <div class="tags has-addons">
                             <span class="tag is-link drg-hdl">@Collections[x].DataProject.Name</span>

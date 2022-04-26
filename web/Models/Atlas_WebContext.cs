@@ -11,23 +11,11 @@ namespace Atlas_Web.Models
 
         public virtual DbSet<Analytic> Analytics { get; set; }
         public virtual DbSet<AnalyticsTrace> AnalyticsTraces { get; set; }
-        public virtual DbSet<DpAgreement> DpAgreements { get; set; }
-        public virtual DbSet<DpAgreementUser> DpAgreementUsers { get; set; }
-        public virtual DbSet<DpAttachment> DpAttachments { get; set; }
-        public virtual DbSet<DpContact> DpContacts { get; set; }
-        public virtual DbSet<DpContactLink> DpContactLinks { get; set; }
-        public virtual DbSet<DpDataInitiative> DpDataInitiatives { get; set; }
-        public virtual DbSet<DpDataProject> DpDataProjects { get; set; }
-        public virtual DbSet<DpDataProjectConversation> DpDataProjectConversations { get; set; }
-        public virtual DbSet<DpDataProjectConversationMessage> DpDataProjectConversationMessages { get; set; }
-        public virtual DbSet<DpMilestoneChecklist> DpMilestoneChecklists { get; set; }
-        public virtual DbSet<DpMilestoneChecklistCompleted> DpMilestoneChecklistCompleteds { get; set; }
-        public virtual DbSet<DpMilestoneFrequency> DpMilestoneFrequencies { get; set; }
-        public virtual DbSet<DpMilestoneTask> DpMilestoneTasks { get; set; }
-        public virtual DbSet<DpMilestoneTasksCompleted> DpMilestoneTasksCompleteds { get; set; }
-        public virtual DbSet<DpMilestoneTemplate> DpMilestoneTemplates { get; set; }
-        public virtual DbSet<DpReportAnnotation> DpReportAnnotations { get; set; }
-        public virtual DbSet<DpTermAnnotation> DpTermAnnotations { get; set; }
+        public virtual DbSet<AnalyticsError> AnalyticsErrors { get; set; }
+        public virtual DbSet<Initiative> Initiatives { get; set; }
+        public virtual DbSet<Collection> Collections { get; set; }
+        public virtual DbSet<CollectionReport> CollectionReports { get; set; }
+        public virtual DbSet<CollectionTerm> CollectionTerms { get; set; }
         public virtual DbSet<EstimatedRunFrequency> EstimatedRunFrequencies { get; set; }
         public virtual DbSet<FinancialImpact> FinancialImpacts { get; set; }
         public virtual DbSet<Fragility> Fragilities { get; set; }
@@ -50,8 +38,6 @@ namespace Atlas_Web.Models
         public virtual DbSet<ReportManageEngineTicket> ReportManageEngineTickets { get; set; }
         public virtual DbSet<ReportObject> ReportObjects { get; set; }
         public virtual DbSet<ReportObjectAttachment> ReportObjectAttachments { get; set; }
-        public virtual DbSet<ReportObjectConversationDoc> ReportObjectConversationDocs { get; set; }
-        public virtual DbSet<ReportObjectConversationMessageDoc> ReportObjectConversationMessageDocs { get; set; }
         public virtual DbSet<ReportObjectDoc> ReportObjectDocs { get; set; }
         public virtual DbSet<ReportObjectDocFragilityTag> ReportObjectDocFragilityTags { get; set; }
         public virtual DbSet<ReportObjectDocMaintenanceLog> ReportObjectDocMaintenanceLogs { get; set; }
@@ -71,10 +57,6 @@ namespace Atlas_Web.Models
         public virtual DbSet<ReportObjectWeightedRunRank> ReportObjectWeightedRunRanks { get; set; }
         public virtual DbSet<RolePermission> RolePermissions { get; set; }
         public virtual DbSet<RolePermissionLink> RolePermissionLinks { get; set; }
-        public virtual DbSet<SearchBasicSearchDataSmall> SearchBasicSearchDataSmalls { get; set; }
-        public virtual DbSet<SearchBasicSearchDatum> SearchBasicSearchData { get; set; }
-        public virtual DbSet<SearchReportObjectSearchDatum> SearchReportObjectSearchData { get; set; }
-        public virtual DbSet<SearchTable> SearchTables { get; set; }
         public virtual DbSet<SharedItem> SharedItems { get; set; }
         public virtual DbSet<StarredCollection> StarredCollections { get; set; }
         public virtual DbSet<StarredGroup> StarredGroups { get; set; }
@@ -85,14 +67,10 @@ namespace Atlas_Web.Models
         public virtual DbSet<StarredUser> StarredUsers { get; set; }
         public virtual DbSet<StrategicImportance> StrategicImportances { get; set; }
         public virtual DbSet<Term> Terms { get; set; }
-        public virtual DbSet<TermConversation> TermConversations { get; set; }
-        public virtual DbSet<TermConversationMessage> TermConversationMessages { get; set; }
         public virtual DbSet<User> Users { get; set; }
-        public virtual DbSet<UserFavorite> UserFavorites { get; set; }
         public virtual DbSet<UserFavoriteFolder> UserFavoriteFolders { get; set; }
         public virtual DbSet<UserGroup> UserGroups { get; set; }
         public virtual DbSet<UserGroupsMembership> UserGroupsMemberships { get; set; }
-        public virtual DbSet<UserNameDatum> UserNameData { get; set; }
         public virtual DbSet<UserPreference> UserPreferences { get; set; }
         public virtual DbSet<UserRole> UserRoles { get; set; }
         public virtual DbSet<UserRoleLink> UserRoleLinks { get; set; }
@@ -110,6 +88,14 @@ namespace Atlas_Web.Models
                     entity.ToTable("Analytics", "app");
 
                     entity.HasIndex(e => e.AccessDateTime, "accessdatetime");
+
+                    entity
+                        .HasIndex(e => e.AccessDateTime, "accessdatetime_session")
+                        .IncludeProperties(p => new { p.PageId, p.SessionId });
+
+                    entity
+                        .HasIndex(e => new { e.AccessDateTime, e.UserId }, "accessdatetime_userid")
+                        .IncludeProperties(p => new { p.Pathname, p.LoadTime });
 
                     entity.HasIndex(e => e.UserId, "userid");
 
@@ -214,134 +200,43 @@ namespace Atlas_Web.Models
                 }
             );
 
-            modelBuilder.Entity<DpAgreement>(
+            modelBuilder.Entity<AnalyticsError>(
                 entity =>
                 {
-                    entity.HasKey(e => e.AgreementId).HasName("PK__DP_Agree__0A309D2318E98A83");
+                    entity.ToTable("AnalyticsError", "app");
 
-                    entity.ToTable("DP_Agreement", "app");
-
-                    entity.Property(e => e.AgreementId).HasColumnName("AgreementID");
-
-                    entity.Property(e => e.EffectiveDate).HasColumnType("datetime");
-
-                    entity.Property(e => e.LastUpdateDate).HasColumnType("datetime");
-
-                    entity.Property(e => e.MeetingDate).HasColumnType("datetime");
+                    entity.Property(e => e.Handled).HasColumnName("handled");
 
                     entity
-                        .HasOne(d => d.DataProject)
-                        .WithMany(p => p.DpAgreements)
-                        .HasForeignKey(d => d.DataProjectId)
-                        .HasConstraintName("FK_DP_Agreement_DP_DataProject");
+                        .Property(e => e.LogDateTime)
+                        .HasColumnType("datetime")
+                        .HasColumnName("logDateTime");
+
+                    entity.Property(e => e.Referer).HasColumnName("referer");
 
                     entity
-                        .HasOne(d => d.LastUpdateUserNavigation)
-                        .WithMany(p => p.DpAgreements)
-                        .HasForeignKey(d => d.LastUpdateUser)
-                        .HasConstraintName("FK_DP_Agreement_WebAppUsers");
-                }
-            );
+                        .Property(e => e.UpdateTime)
+                        .HasColumnType("datetime")
+                        .HasColumnName("updateTime");
 
-            modelBuilder.Entity<DpAgreementUser>(
-                entity =>
-                {
-                    entity
-                        .HasKey(e => e.AgreementUsersId)
-                        .HasName("PK__DP_Agree__3DA9AA218A1E6C55");
-
-                    entity.ToTable("DP_AgreementUsers", "app");
-
-                    entity.Property(e => e.AgreementUsersId).HasColumnName("AgreementUsersID");
-
-                    entity.Property(e => e.AgreementId).HasColumnName("AgreementID");
-
-                    entity.Property(e => e.LastUpdateDate).HasColumnType("datetime");
-
-                    entity
-                        .HasOne(d => d.Agreement)
-                        .WithMany(p => p.DpAgreementUsers)
-                        .HasForeignKey(d => d.AgreementId)
-                        .HasConstraintName("FK_DP_AgreementUsers_DP_Agreement");
-
-                    entity
-                        .HasOne(d => d.LastUpdateUserNavigation)
-                        .WithMany(p => p.DpAgreementUserLastUpdateUserNavigations)
-                        .HasForeignKey(d => d.LastUpdateUser)
-                        .HasConstraintName("FK_DP_AgreementUsers_WebAppUsers");
+                    entity.Property(e => e.UserAgent).HasColumnName("userAgent");
 
                     entity
                         .HasOne(d => d.User)
-                        .WithMany(p => p.DpAgreementUserUsers)
+                        .WithMany(p => p.AnalyticsErrors)
                         .HasForeignKey(d => d.UserId)
-                        .HasConstraintName("FK_DP_AgreementUsers_User");
+                        .HasConstraintName("FK_Analytics_Error_User");
                 }
             );
 
-            modelBuilder.Entity<DpAttachment>(
-                entity =>
-                {
-                    entity.HasKey(e => e.AttachmentId).HasName("PK__DP_Attac__442C64BE2CE337F1");
-
-                    entity.ToTable("DP_Attachments", "app");
-
-                    entity.Property(e => e.AttachmentData).IsRequired();
-
-                    entity.Property(e => e.AttachmentName).IsUnicode(false);
-
-                    entity.Property(e => e.AttachmentType).IsRequired().IsUnicode(false);
-
-                    entity
-                        .HasOne(d => d.DataProject)
-                        .WithMany(p => p.DpAttachments)
-                        .HasForeignKey(d => d.DataProjectId)
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK_DP_Attachments_DP_DataProject");
-                }
-            );
-
-            modelBuilder.Entity<DpContact>(
-                entity =>
-                {
-                    entity.HasKey(e => e.ContactId).HasName("PK__DP_Conta__5C6625BB13B948C2");
-
-                    entity.ToTable("DP_Contact", "app");
-
-                    entity.Property(e => e.ContactId).HasColumnName("ContactID");
-
-                    entity.Property(e => e.Phone).HasMaxLength(55);
-                }
-            );
-
-            modelBuilder.Entity<DpContactLink>(
-                entity =>
-                {
-                    entity.HasKey(e => e.LinkId).HasName("PK__DP_Conta__2D1221358626B09F");
-
-                    entity.ToTable("DP_Contact_Links", "app");
-
-                    entity
-                        .HasOne(d => d.Contact)
-                        .WithMany(p => p.DpContactLinks)
-                        .HasForeignKey(d => d.ContactId)
-                        .HasConstraintName("FK_DP_Contact_Links_DP_Contact");
-
-                    entity
-                        .HasOne(d => d.Initiative)
-                        .WithMany(p => p.DpContactLinks)
-                        .HasForeignKey(d => d.InitiativeId)
-                        .HasConstraintName("FK_DP_Contact_Links_DP_DataInitiative");
-                }
-            );
-
-            modelBuilder.Entity<DpDataInitiative>(
+            modelBuilder.Entity<Initiative>(
                 entity =>
                 {
                     entity
                         .HasKey(e => e.DataInitiativeId)
                         .HasName("PK__DP_DataI__1EFC948C3A83A845");
 
-                    entity.ToTable("DP_DataInitiative", "app");
+                    entity.ToTable("Initiative", "app");
 
                     entity.HasIndex(e => e.ExecutiveOwnerId, "executiveownerid");
 
@@ -373,7 +268,7 @@ namespace Atlas_Web.Models
 
                     entity
                         .HasOne(d => d.FinancialImpactNavigation)
-                        .WithMany(p => p.DpDataInitiatives)
+                        .WithMany(p => p.Initiatives)
                         .HasForeignKey(d => d.FinancialImpact)
                         .HasConstraintName("FK_DP_DataInitiative_FinancialImpact");
 
@@ -391,18 +286,18 @@ namespace Atlas_Web.Models
 
                     entity
                         .HasOne(d => d.StrategicImportanceNavigation)
-                        .WithMany(p => p.DpDataInitiatives)
+                        .WithMany(p => p.Initiatives)
                         .HasForeignKey(d => d.StrategicImportance)
                         .HasConstraintName("FK_DP_DataInitiative_StrategicImportance");
                 }
             );
 
-            modelBuilder.Entity<DpDataProject>(
+            modelBuilder.Entity<Collection>(
                 entity =>
                 {
                     entity.HasKey(e => e.DataProjectId).HasName("PK__DP_DataP__E8D09D08794EBFAD");
 
-                    entity.ToTable("DP_DataProject", "app");
+                    entity.ToTable("Collection", "app");
 
                     entity.HasIndex(e => e.AnalyticsOwnerId, "analyticsownerid");
 
@@ -451,8 +346,8 @@ namespace Atlas_Web.Models
                         .HasConstraintName("FK_DP_DataProject_WebAppUsers1");
 
                     entity
-                        .HasOne(d => d.DataInitiative)
-                        .WithMany(p => p.DpDataProjects)
+                        .HasOne(d => d.Initiative)
+                        .WithMany(p => p.Collections)
                         .HasForeignKey(d => d.DataInitiativeId)
                         .HasConstraintName("FK_DP_DataProject_DP_DataInitiative");
 
@@ -470,7 +365,7 @@ namespace Atlas_Web.Models
 
                     entity
                         .HasOne(d => d.FinancialImpactNavigation)
-                        .WithMany(p => p.DpDataProjects)
+                        .WithMany(p => p.Collections)
                         .HasForeignKey(d => d.FinancialImpact)
                         .HasConstraintName("FK_DP_DataProject_FinancialImpact");
 
@@ -488,215 +383,20 @@ namespace Atlas_Web.Models
 
                     entity
                         .HasOne(d => d.StrategicImportanceNavigation)
-                        .WithMany(p => p.DpDataProjects)
+                        .WithMany(p => p.Collections)
                         .HasForeignKey(d => d.StrategicImportance)
                         .HasConstraintName("FK_DP_DataProject_StrategicImportance");
                 }
             );
 
-            modelBuilder.Entity<DpDataProjectConversation>(
-                entity =>
-                {
-                    entity
-                        .HasKey(e => e.DataProjectConversationId)
-                        .HasName("PK__Dp_DataP__A555F1EB255B0952");
-
-                    entity.ToTable("Dp_DataProjectConversation", "app");
-
-                    entity
-                        .HasOne(d => d.DataProject)
-                        .WithMany(p => p.DpDataProjectConversations)
-                        .HasForeignKey(d => d.DataProjectId)
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK_Dp_DataProjectConversation_DP_DataProject");
-                }
-            );
-
-            modelBuilder.Entity<DpDataProjectConversationMessage>(
-                entity =>
-                {
-                    entity
-                        .HasKey(e => e.DataProjectConversationMessageId)
-                        .HasName("PK__Dp_DataP__06C6EA493F53AEBA");
-
-                    entity.ToTable("Dp_DataProjectConversationMessage", "app");
-
-                    entity.Property(e => e.MessageText).HasMaxLength(4000);
-
-                    entity.Property(e => e.PostDateTime).HasColumnType("datetime");
-
-                    entity
-                        .HasOne(d => d.DataProjectConversation)
-                        .WithMany(p => p.DpDataProjectConversationMessages)
-                        .HasForeignKey(d => d.DataProjectConversationId)
-                        .HasConstraintName(
-                            "FK_Dp_DataProjectConversationMessage_Dp_DataProjectConversation"
-                        );
-
-                    entity
-                        .HasOne(d => d.User)
-                        .WithMany(p => p.DpDataProjectConversationMessages)
-                        .HasForeignKey(d => d.UserId)
-                        .HasConstraintName("FK_Dp_DataProjectConversationMessage_User");
-                }
-            );
-
-            modelBuilder.Entity<DpMilestoneChecklist>(
-                entity =>
-                {
-                    entity
-                        .HasKey(e => e.MilestoneChecklistId)
-                        .HasName("PK__DP_Miles__53ECAE4A5F858065");
-
-                    entity.ToTable("DP_MilestoneChecklist", "app");
-
-                    entity
-                        .HasOne(d => d.MilestoneTask)
-                        .WithMany(p => p.DpMilestoneChecklists)
-                        .HasForeignKey(d => d.MilestoneTaskId)
-                        .HasConstraintName("FK_DP_MilestoneChecklist_DP_MilestoneTasks");
-                }
-            );
-
-            modelBuilder.Entity<DpMilestoneChecklistCompleted>(
-                entity =>
-                {
-                    entity
-                        .HasKey(e => e.MilestoneChecklistCompletedId)
-                        .HasName("PK__DP_Miles__E081AA701711E585");
-
-                    entity.ToTable("DP_MilestoneChecklistCompleted", "app");
-
-                    entity.Property(e => e.ChecklistStatus).HasDefaultValueSql("((0))");
-
-                    entity.Property(e => e.CompletionDate).HasColumnType("datetime");
-
-                    entity.Property(e => e.TaskDate).HasColumnType("datetime");
-
-                    entity
-                        .HasOne(d => d.CompletionUserNavigation)
-                        .WithMany(p => p.DpMilestoneChecklistCompleteds)
-                        .HasForeignKey(d => d.CompletionUser)
-                        .HasConstraintName("FK_DP_MilestoneChecklistCompleted_User");
-
-                    entity
-                        .HasOne(d => d.DataProject)
-                        .WithMany(p => p.DpMilestoneChecklistCompleteds)
-                        .HasForeignKey(d => d.DataProjectId)
-                        .HasConstraintName("FK_DP_MilestoneChecklistCompleted_DP_DataProject");
-                }
-            );
-
-            modelBuilder.Entity<DpMilestoneFrequency>(
-                entity =>
-                {
-                    entity.HasKey(e => e.MilestoneTypeId).HasName("PK__DP_Miles__B88C49912ECA633F");
-
-                    entity.ToTable("DP_MilestoneFrequency", "app");
-
-                    entity.Property(e => e.LastUpdateDate).HasColumnType("datetime");
-
-                    entity
-                        .HasOne(d => d.LastUpdateUserNavigation)
-                        .WithMany(p => p.DpMilestoneFrequencies)
-                        .HasForeignKey(d => d.LastUpdateUser)
-                        .HasConstraintName("FK_DP_MilestoneTypes_WebAppUsers");
-                }
-            );
-
-            modelBuilder.Entity<DpMilestoneTask>(
-                entity =>
-                {
-                    entity.HasKey(e => e.MilestoneTaskId).HasName("PK__DP_Miles__64647109FB6B4EDB");
-
-                    entity.ToTable("DP_MilestoneTasks", "app");
-
-                    entity.Property(e => e.EndDate).HasColumnType("datetime");
-
-                    entity.Property(e => e.LastUpdateDate).HasColumnType("datetime");
-
-                    entity.Property(e => e.StartDate).HasColumnType("datetime");
-
-                    entity
-                        .HasOne(d => d.DataProject)
-                        .WithMany(p => p.DpMilestoneTasks)
-                        .HasForeignKey(d => d.DataProjectId)
-                        .HasConstraintName("FK_DP_MilestoneTasks_DP_DataProject");
-
-                    entity
-                        .HasOne(d => d.LastUpdateUserNavigation)
-                        .WithMany(p => p.DpMilestoneTaskLastUpdateUserNavigations)
-                        .HasForeignKey(d => d.LastUpdateUser)
-                        .HasConstraintName("FK_DP_MilestoneTasks_LastUpdateUser");
-
-                    entity
-                        .HasOne(d => d.MilestoneTemplate)
-                        .WithMany(p => p.DpMilestoneTasks)
-                        .HasForeignKey(d => d.MilestoneTemplateId)
-                        .HasConstraintName("FK_DP_MilestoneTasks_DP_MilestoneTemplates");
-
-                    entity
-                        .HasOne(d => d.Owner)
-                        .WithMany(p => p.DpMilestoneTaskOwners)
-                        .HasForeignKey(d => d.OwnerId)
-                        .HasConstraintName("FK_DP_MilestoneTasks_User");
-                }
-            );
-
-            modelBuilder.Entity<DpMilestoneTasksCompleted>(
-                entity =>
-                {
-                    entity
-                        .HasKey(e => e.MilestoneTaskCompletedId)
-                        .HasName("PK__DP_Miles__3226EEDD7DAFACC3");
-
-                    entity.ToTable("DP_MilestoneTasksCompleted", "app");
-
-                    entity.Property(e => e.CompletionDate).HasColumnType("datetime");
-
-                    entity.Property(e => e.DueDate).HasColumnType("datetime");
-
-                    entity
-                        .HasOne(d => d.DataProject)
-                        .WithMany(p => p.DpMilestoneTasksCompleteds)
-                        .HasForeignKey(d => d.DataProjectId)
-                        .HasConstraintName("FK_DP_MilestoneTasksCompleted_DP_DataProject");
-                }
-            );
-
-            modelBuilder.Entity<DpMilestoneTemplate>(
-                entity =>
-                {
-                    entity
-                        .HasKey(e => e.MilestoneTemplateId)
-                        .HasName("PK__DP_Miles__6A72A86C4B768C43");
-
-                    entity.ToTable("DP_MilestoneTemplates", "app");
-
-                    entity.Property(e => e.LastUpdateDate).HasColumnType("datetime");
-
-                    entity
-                        .HasOne(d => d.LastUpdateUserNavigation)
-                        .WithMany(p => p.DpMilestoneTemplates)
-                        .HasForeignKey(d => d.LastUpdateUser)
-                        .HasConstraintName("FK_DP_MilestoneTemplates_WebAppUsers");
-
-                    entity
-                        .HasOne(d => d.MilestoneType)
-                        .WithMany(p => p.DpMilestoneTemplates)
-                        .HasForeignKey(d => d.MilestoneTypeId)
-                        .HasConstraintName("FK_DP_MilestoneTemplates_DP_MilestoneTypes");
-                }
-            );
-
-            modelBuilder.Entity<DpReportAnnotation>(
+            modelBuilder.Entity<CollectionReport>(
                 entity =>
                 {
                     entity
                         .HasKey(e => e.ReportAnnotationId)
                         .HasName("PK__DP_Repor__84AFA7F30D34E922");
 
-                    entity.ToTable("DP_ReportAnnotation", "app");
+                    entity.ToTable("CollectionReport", "app");
 
                     entity.HasIndex(
                         e => new { e.ReportId, e.DataProjectId },
@@ -707,26 +407,26 @@ namespace Atlas_Web.Models
 
                     entity
                         .HasOne(d => d.DataProject)
-                        .WithMany(p => p.DpReportAnnotations)
+                        .WithMany(p => p.CollectionReports)
                         .HasForeignKey(d => d.DataProjectId)
                         .HasConstraintName("FK_DP_ReportAnnotation_DP_DataProject");
 
                     entity
                         .HasOne(d => d.Report)
-                        .WithMany(p => p.DpReportAnnotations)
+                        .WithMany(p => p.CollectionReports)
                         .HasForeignKey(d => d.ReportId)
                         .HasConstraintName("FK_DP_ReportAnnotation_ReportObject");
                 }
             );
 
-            modelBuilder.Entity<DpTermAnnotation>(
+            modelBuilder.Entity<CollectionTerm>(
                 entity =>
                 {
                     entity
                         .HasKey(e => e.TermAnnotationId)
                         .HasName("PK__DP_TermA__1BB492E32D415E15");
 
-                    entity.ToTable("DP_TermAnnotation", "app");
+                    entity.ToTable("CollectionTerm", "app");
 
                     entity.HasIndex(e => new { e.TermId, e.DataProjectId }, "termid+dataprojectid");
 
@@ -734,13 +434,13 @@ namespace Atlas_Web.Models
 
                     entity
                         .HasOne(d => d.DataProject)
-                        .WithMany(p => p.DpTermAnnotations)
+                        .WithMany(p => p.CollectionTerms)
                         .HasForeignKey(d => d.DataProjectId)
                         .HasConstraintName("FK_DP_TermAnnotation_DP_DataProject");
 
                     entity
                         .HasOne(d => d.Term)
-                        .WithMany(p => p.DpTermAnnotations)
+                        .WithMany(p => p.CollectionTerms)
                         .HasForeignKey(d => d.TermId)
                         .HasConstraintName("FK_DP_TermAnnotation_Term");
                 }
@@ -1205,59 +905,6 @@ namespace Atlas_Web.Models
                         .HasForeignKey(d => d.ReportObjectId)
                         .OnDelete(DeleteBehavior.ClientSetNull)
                         .HasConstraintName("FK_ReportObjectAttachments_ReportObject");
-                }
-            );
-
-            modelBuilder.Entity<ReportObjectConversationDoc>(
-                entity =>
-                {
-                    entity.HasKey(e => e.ConversationId).HasName("PK__ReportOb__C050D8972E11C321");
-
-                    entity.ToTable("ReportObjectConversation_doc", "app");
-
-                    entity.Property(e => e.ConversationId).HasColumnName("ConversationID");
-
-                    entity.Property(e => e.ReportObjectId).HasColumnName("ReportObjectID");
-
-                    entity
-                        .HasOne(d => d.ReportObject)
-                        .WithMany(p => p.ReportObjectConversationDocs)
-                        .HasForeignKey(d => d.ReportObjectId)
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK__ReportObj__Repor__3B21036F");
-                }
-            );
-
-            modelBuilder.Entity<ReportObjectConversationMessageDoc>(
-                entity =>
-                {
-                    entity.HasKey(e => e.MessageId).HasName("PK__ReportOb__C87C037C3C86464B");
-
-                    entity.ToTable("ReportObjectConversationMessage_doc", "app");
-
-                    entity.Property(e => e.MessageId).HasColumnName("MessageID");
-
-                    entity.Property(e => e.ConversationId).HasColumnName("ConversationID");
-
-                    entity.Property(e => e.MessageText).IsRequired();
-
-                    entity.Property(e => e.PostDateTime).HasColumnType("datetime");
-
-                    entity.Property(e => e.UserId).HasColumnName("UserID");
-
-                    entity
-                        .HasOne(d => d.Conversation)
-                        .WithMany(p => p.ReportObjectConversationMessageDocs)
-                        .HasForeignKey(d => d.ConversationId)
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK__ReportObj__Conve__4E53A1AA");
-
-                    entity
-                        .HasOne(d => d.User)
-                        .WithMany(p => p.ReportObjectConversationMessageDocs)
-                        .HasForeignKey(d => d.UserId)
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK_ReportObjectConversationMessage_doc_User");
                 }
             );
 
@@ -1810,101 +1457,6 @@ namespace Atlas_Web.Models
                 }
             );
 
-            modelBuilder.Entity<SearchBasicSearchDataSmall>(
-                entity =>
-                {
-                    entity.ToTable("Search_BasicSearchData_Small", "app");
-
-                    entity.Property(e => e.CertificationTag).HasMaxLength(200);
-
-                    entity.Property(e => e.ItemType).HasMaxLength(100);
-
-                    entity.Property(e => e.SearchFieldDescription).HasMaxLength(100);
-                }
-            );
-
-            modelBuilder.Entity<SearchBasicSearchDatum>(
-                entity =>
-                {
-                    entity.ToTable("Search_BasicSearchData", "app");
-
-                    entity.Property(e => e.CertificationTag).HasMaxLength(200);
-
-                    entity.Property(e => e.ItemType).HasMaxLength(100);
-
-                    entity.Property(e => e.SearchFieldDescription).HasMaxLength(100);
-                }
-            );
-
-            modelBuilder.Entity<SearchReportObjectSearchDatum>(
-                entity =>
-                {
-                    entity.HasKey(e => e.Pk).HasName("Search_ReportObjectSearchData_PK");
-
-                    entity.ToTable("Search_ReportObjectSearchData", "app");
-
-                    entity.Property(e => e.Pk).HasColumnName("pk");
-
-                    entity.Property(e => e.CertificationTag).HasColumnName("certificationTag");
-
-                    entity
-                        .Property(e => e.DefaultVisibilityYn)
-                        .HasMaxLength(1)
-                        .HasColumnName("DefaultVisibilityYN");
-
-                    entity.Property(e => e.DocCreated).HasColumnType("datetime");
-
-                    entity.Property(e => e.DocDoNotPurge).HasMaxLength(1).IsFixedLength();
-
-                    entity.Property(e => e.DocExecVis).HasMaxLength(1).IsFixedLength();
-
-                    entity.Property(e => e.DocHidden).HasMaxLength(1).IsFixedLength();
-
-                    entity.Property(e => e.DocHypeEnabled).HasMaxLength(1).IsFixedLength();
-
-                    entity.Property(e => e.DocLastUpdated).HasColumnType("datetime");
-
-                    entity.Property(e => e.EpicMasterFile).HasMaxLength(3);
-
-                    entity.Property(e => e.EpicReportTemplateId).HasColumnType("numeric(18, 0)");
-
-                    entity
-                        .Property(e => e.LastModifiedByUserId)
-                        .HasColumnName("LastModifiedByUserID");
-
-                    entity.Property(e => e.LastModifiedDate).HasColumnType("datetime");
-
-                    entity
-                        .Property(e => e.OrphanedReportObjectYn)
-                        .HasMaxLength(1)
-                        .HasColumnName("OrphanedReportObjectYN")
-                        .IsFixedLength();
-
-                    entity.Property(e => e.ReportObjectTypeId).HasColumnName("ReportObjectTypeID");
-
-                    entity
-                        .Property(e => e.SourceDb)
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnName("SourceDB");
-
-                    entity.Property(e => e.SourceServer).IsRequired().HasMaxLength(255);
-
-                    entity.Property(e => e.SourceTable).IsRequired().HasMaxLength(255);
-                }
-            );
-
-            modelBuilder.Entity<SearchTable>(
-                entity =>
-                {
-                    entity.ToTable("SearchTable", "app");
-
-                    entity.Property(e => e.ItemType).HasMaxLength(100);
-
-                    entity.Property(e => e.SearchFieldDescription).HasMaxLength(100);
-                }
-            );
-
             modelBuilder.Entity<SharedItem>(
                 entity =>
                 {
@@ -2294,51 +1846,6 @@ namespace Atlas_Web.Models
                 }
             );
 
-            modelBuilder.Entity<TermConversation>(
-                entity =>
-                {
-                    entity.ToTable("TermConversation", "app");
-
-                    entity
-                        .HasOne(d => d.Term)
-                        .WithMany(p => p.TermConversations)
-                        .HasForeignKey(d => d.TermId)
-                        .HasConstraintName("FK__TermConve__TermI__7C4F7684");
-                }
-            );
-
-            modelBuilder.Entity<TermConversationMessage>(
-                entity =>
-                {
-                    entity.ToTable("TermConversationMessage", "app");
-
-                    entity
-                        .Property(e => e.TermConversationMessageId)
-                        .HasColumnName("TermConversationMessageID");
-
-                    entity.Property(e => e.MessageText).IsRequired().HasMaxLength(4000);
-
-                    entity
-                        .Property(e => e.PostDateTime)
-                        .HasColumnType("datetime")
-                        .HasDefaultValueSql("(getdate())");
-
-                    entity
-                        .HasOne(d => d.TermConversation)
-                        .WithMany(p => p.TermConversationMessages)
-                        .HasForeignKey(d => d.TermConversationId)
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK_TermConversationMessage_TermConversation");
-
-                    entity
-                        .HasOne(d => d.User)
-                        .WithMany(p => p.TermConversationMessages)
-                        .HasForeignKey(d => d.UserId)
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK_TermConversationMessage_User");
-                }
-            );
-
             modelBuilder.Entity<User>(
                 entity =>
                 {
@@ -2359,27 +1866,6 @@ namespace Atlas_Web.Models
                     entity.Property(e => e.LastLogin).HasColumnType("datetime");
 
                     entity.Property(e => e.Username).IsRequired();
-                }
-            );
-
-            modelBuilder.Entity<UserFavorite>(
-                entity =>
-                {
-                    entity.HasKey(e => e.UserFavoritesId).HasName("PK__UserFavo__1D23EA13087A927D");
-
-                    entity.ToTable("UserFavorites", "app");
-
-                    entity
-                        .HasOne(d => d.Folder)
-                        .WithMany(p => p.UserFavorites)
-                        .HasForeignKey(d => d.FolderId)
-                        .HasConstraintName("FK_UserFavorites_UserFavoriteFolders");
-
-                    entity
-                        .HasOne(d => d.User)
-                        .WithMany(p => p.UserFavorites)
-                        .HasForeignKey(d => d.UserId)
-                        .HasConstraintName("FK_UserFavorites_User");
                 }
             );
 
@@ -2427,24 +1913,6 @@ namespace Atlas_Web.Models
                         .WithMany(p => p.UserGroupsMemberships)
                         .HasForeignKey(d => d.UserId)
                         .HasConstraintName("FK_UserGroupsMembership_User");
-                }
-            );
-
-            modelBuilder.Entity<UserNameDatum>(
-                entity =>
-                {
-                    entity.HasKey(e => e.UserId).HasName("PK__User_Nam__1788CC4CF297F9FC");
-
-                    entity.ToTable("User_NameData", "app");
-
-                    entity.Property(e => e.UserId).ValueGeneratedNever();
-
-                    entity
-                        .HasOne(d => d.User)
-                        .WithOne(p => p.UserNameDatum)
-                        .HasForeignKey<UserNameDatum>(d => d.UserId)
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK_User_NameData_User");
                 }
             );
 

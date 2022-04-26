@@ -81,7 +81,7 @@ namespace Atlas_Web.Pages.Reports
                         .Include(x => x.ReportGroupsMemberships)
                         .ThenInclude(x => x.Group)
                         .Include(x => x.ReportObjectQueries)
-                        .Include(x => x.DpReportAnnotations)
+                        .Include(x => x.CollectionReports)
                         .ThenInclude(x => x.DataProject)
                         .Include(x => x.StarredReports)
                         .Include(x => x.ReportObjectParameters)

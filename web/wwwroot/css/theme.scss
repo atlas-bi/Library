@@ -361,7 +361,7 @@ a.navbar-link:hover,
 .sticky,
 .is-sticky {
   position: sticky;
-  top: calc(56px + 14px);
+  top: calc(56px + 24px);
 }
 
 nav.sticky,
@@ -409,6 +409,10 @@ nav.is-sticky {
 
 .is-nobreak {
   white-space: nowrap;
+}
+
+.is-wordbreak {
+  word-break: break-word;
 }
 
 .img-modal-lg {

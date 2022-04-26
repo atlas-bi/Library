@@ -194,64 +194,6 @@ namespace Atlas_Web.Pages.Users
             return Page();
         }
 
-        public ActionResult OnPostEditFavorites(
-            int actionType,
-            int objectId,
-            string favoriteType,
-            string objectName
-        )
-        {
-            var MyUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
-            if (actionType == 1)
-            {
-                var type = favoriteType;
-                if (favoriteType.EndsWith("s"))
-                {
-                    type = favoriteType.Remove(favoriteType.Length - 1);
-                }
-
-                _context.Add(
-                    new UserFavorite
-                    {
-                        UserId = MyUser.UserId,
-                        ItemRank = -1,
-                        ItemId = objectId,
-                        ItemType = type,
-                        ItemName = objectName == "null" ? null : objectName
-                    }
-                );
-            }
-            else if (actionType == 0)
-            {
-                if (favoriteType == "search")
-                {
-                    _context.RemoveRange(
-                        _context.UserFavorites.Where(
-                            x =>
-                                x.UserId == MyUser.UserId
-                                && x.ItemId == objectId
-                                && x.ItemType == favoriteType
-                        )
-                    );
-                }
-                else
-                {
-                    _context.RemoveRange(
-                        _context.UserFavorites.Where(
-                            x => x.ItemId == objectId && x.ItemType == favoriteType
-                        )
-                    );
-                }
-            }
-
-            _context.SaveChanges();
-            // remove cache
-            _cache.Remove("FavoriteReports-" + MyUser.UserId);
-            _cache.Remove("FavoriteFolders-" + MyUser.UserId);
-            _cache.Remove("Favorites-" + User.Identity.Name);
-            return Content("ok");
-        }
-
         public ActionResult OnPostCreateFolder()
         {
             var MyUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
@@ -272,15 +214,7 @@ namespace Atlas_Web.Pages.Users
             if (ModelState.IsValid)
             {
                 // remove any report links to this folder
-                List<UserFavorite> Favs = _context.UserFavorites
-                    .Where(
-                        x => x.FolderId == Folder.UserFavoriteFolderId && x.UserId == MyUser.UserId
-                    )
-                    .ToList();
-                foreach (UserFavorite Fav in Favs)
-                {
-                    Fav.FolderId = null;
-                }
+
                 _context.Remove(Folder);
                 _context.SaveChanges();
                 _cache.Remove("FavoriteFolders-" + MyUser.UserId);
@@ -288,55 +222,6 @@ namespace Atlas_Web.Pages.Users
                 return Content(Folder.UserFavoriteFolderId.ToString());
             }
             return Content("error");
-        }
-
-        public ActionResult OnPostReorderFavorites([FromBody] dynamic package)
-        {
-            var MyUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
-
-            foreach (var l in package)
-            {
-                var id = (int)l.FavoriteId;
-                var fav = (
-                    from u in _context.UserFavorites
-                    where u.UserFavoritesId == id && u.UserId == MyUser.UserId
-                    select u
-                ).FirstOrDefault();
-                var r = (int)l.FavoriteRank;
-                fav.ItemRank = r;
-            }
-            _context.SaveChanges();
-            _cache.Remove("FavoriteFolders-" + MyUser.UserId);
-            _cache.Remove("FavoriteReports-" + MyUser.UserId);
-            return Content("ok");
-        }
-
-        public async Task<ActionResult> OnPostUpdateFavoriteFolder()
-        {
-            var body = await new System.IO.StreamReader(Request.Body)
-                .ReadToEndAsync()
-                .ConfigureAwait(false);
-            var package = JObject.Parse(body);
-
-            var MyUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
-            var FavoriteId = (int)package["FavoriteId"];
-            var FolderId = (int)package["FolderId"];
-            if (FolderId == 0)
-            {
-                _context.UserFavorites
-                    .Where(x => x.UserFavoritesId == FavoriteId && x.UserId == MyUser.UserId)
-                    .FirstOrDefault().FolderId = null;
-            }
-            else
-            {
-                _context.UserFavorites
-                    .Where(x => x.UserFavoritesId == FavoriteId && x.UserId == MyUser.UserId)
-                    .FirstOrDefault().FolderId = FolderId;
-            }
-            _cache.Remove("FavoriteFolders-" + MyUser.UserId);
-            _cache.Remove("FavoriteReports-" + MyUser.UserId);
-            _context.SaveChanges();
-            return Content("ok");
         }
 
         public ActionResult OnPostReorderFolders([FromBody] dynamic package)
@@ -383,55 +268,6 @@ namespace Atlas_Web.Pages.Users
                 .Take(7)
                 .ToListAsync();
 
-            ViewData["SearchFavorites"] = await _cache.GetOrCreateAsync<List<SearchHistoryData>>(
-                "SearchFavorites-" + MyUser.UserId,
-                cacheEntry =>
-                {
-                    cacheEntry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20);
-                    return (
-                        from f in _context.UserFavorites
-                        where f.ItemType == "search" && f.UserId == MyUser.UserId
-                        select new SearchHistoryData
-                        {
-                            SearchUrl = f.ItemName.Replace("%25", "%"),
-                            Id = f.UserFavoritesId,
-                            SearchString = Regex.Match(f.ItemName + " ", @"s=(.*?)[&|?|\s]").Groups[
-                                1
-                            ].Value
-                                .Replace("%25", "%")
-                                .Replace("%20", " ")
-                                .Replace("%2C", ","),
-                            ReportType = Regex.Match(f.ItemName + " ", @"f=(.*?)[&|?|\s]").Groups[
-                                1
-                            ].Value
-                                .Replace("%25", "%")
-                                .Replace("%20", " ")
-                                .Replace("%2C", ","),
-                            HiddenTypes = Regex.Match(f.ItemName + " ", @"t=(.*?)[&|?|\s]").Groups[
-                                1
-                            ].Value
-                                .Replace("%25", "%")
-                                .Replace("%20", " "),
-                            Hidden = Regex.Match(f.ItemName + " ", @"h=(.*?)[&|?|\s]").Groups[
-                                1
-                            ].Value
-                                .Replace("%25", "%")
-                                .Replace("%20", " "),
-                            Orphans = Regex.Match(f.ItemName + " ", @"o=(.*?)[&|?|\s]").Groups[
-                                1
-                            ].Value
-                                .Replace("%25", "%")
-                                .Replace("%20", " "),
-                            SearchField = Regex.Match(f.ItemName + " ", @"sf=(.*?)[&|?|\s]").Groups[
-                                1
-                            ].Value
-                                .Replace("%25", "%")
-                                .Replace("%20", " ")
-                                .Replace("%2C", " & ")
-                        }
-                    ).ToListAsync();
-                }
-            );
             HttpContext.Response.Headers.Remove("Cache-Control");
             HttpContext.Response.Headers.Remove("Pragma");
             HttpContext.Response.Headers.Remove("Expires");
@@ -474,116 +310,6 @@ namespace Atlas_Web.Pages.Users
             ViewData["MyId"] = MyId;
             ViewData["UserId"] = UserId;
 
-            FavoriteReports = await _cache.GetOrCreateAsync<List<FavData>>(
-                "FavoriteReports-" + UserId,
-                cacheEntry =>
-                {
-                    cacheEntry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20);
-                    return (
-                        from q in _context.UserFavorites
-                        join ro in _context.ReportObjects
-                            on new { Id = (int)q.ItemId, Type = q.ItemType } equals new
-                            {
-                                Id = ro.ReportObjectId,
-                                Type = "report"
-                            }
-                            into t
-                        from ro in t.DefaultIfEmpty()
-                        where
-                            (
-                                (ro.DefaultVisibilityYn == "Y" && q.ItemType == "report")
-                                || q.ItemType != "report"
-                            )
-                        join tm in _context.Terms
-                            on new { Id = (int)q.ItemId, Type = q.ItemType } equals new
-                            {
-                                Id = tm.TermId,
-                                Type = "term"
-                            }
-                            into tms
-                        from tm in tms.DefaultIfEmpty()
-                        join pj in _context.DpDataProjects
-                            on new { Id = (int)q.ItemId, Type = q.ItemType } equals new
-                            {
-                                Id = pj.DataProjectId,
-                                Type = "collection"
-                            }
-                            into pjs
-                        from pj in pjs.DefaultIfEmpty()
-                        join di in _context.DpDataInitiatives
-                            on new { Id = (int)q.ItemId, Type = q.ItemType } equals new
-                            {
-                                Id = di.DataInitiativeId,
-                                Type = "initiative"
-                            }
-                            into dis
-                        from di in dis.DefaultIfEmpty()
-                        where q.UserId == UserId && q.ItemId != 0
-                        orderby q.ItemRank ,q.ItemName
-                        select new FavData
-                        {
-                            FavoriteId = q.UserFavoritesId,
-                            Name = String.IsNullOrEmpty(ro.DisplayName)
-                              ? (tm.Name ?? pj.Name ?? di.Name ?? q.ItemName)
-                              : ro.DisplayName,
-                            ItemId = (int)q.ItemId,
-                            ItemType = q.ItemType_Proper,
-                            AtlasUrl =
-                                q.ItemType
-                                + (q.ItemType == "search" ? "?" : "s")
-                                + (q.ItemName ?? "?id=" + q.ItemId.ToString() ?? ""),
-                            EpicReportTemplateId = ro.EpicReportTemplateId.ToString(),
-                            FolderId = q.FolderId,
-                            FolderName = q.Folder.FolderName,
-                            ItemRank = q.ItemRank,
-                            EpicReleased = ro.CertificationTag,
-                            FolderRank = q.Folder.FolderRank,
-                            Description = (
-                                ro.ReportObjectDoc.DeveloperDescription
-                                ?? ro.Description
-                                ?? ro.DetailedDescription
-                                ?? ro.ReportObjectDoc.KeyAssumptions
-                                ?? tm.Summary
-                                ?? tm.TechnicalDefinition
-                                ?? pj.Purpose
-                                ?? pj.Description
-                                ?? di.Description
-                            ),
-                            EpicRecordId = ro.EpicRecordId.ToString(),
-                            EpicMasterFile = ro.EpicMasterFile,
-                            ReportServerPath = ro.ReportServerPath,
-                            SourceServer = ro.SourceServer,
-                            ReportUrl = HtmlHelpers.ReportUrlFromParams(
-                                HttpContext,
-                                ro,
-                                _context,
-                                User.Identity.Name
-                            ),
-                            ManageReportUrl = HtmlHelpers.ReportManageUrlFromParams(
-                                _config["AppSettings:org_domain"],
-                                HttpContext,
-                                ro.ReportObjectType.Name,
-                                ro.ReportServerPath,
-                                ro.SourceServer,
-                                ro.OrphanedReportObjectYn
-                            ),
-                            EditReportUrl = HtmlHelpers.EditReportFromParams(
-                                _config["AppSettings:org_domain"],
-                                HttpContext,
-                                ro.ReportServerPath,
-                                ro.SourceServer,
-                                ro.EpicMasterFile,
-                                ro.EpicReportTemplateId.ToString(),
-                                ro.EpicRecordId.ToString(),
-                                ro.OrphanedReportObjectYn
-                            ),
-                        }
-                    ).ToListAsync();
-                }
-            );
-
-            ViewData["FavoriteReports"] = FavoriteReports;
-
             ViewData["FavoriteFolders"] = await _cache.GetOrCreateAsync<List<FolderList>>(
                 "FavoriteFolders-" + UserId,
                 cacheEntry =>
@@ -599,7 +325,7 @@ namespace Atlas_Web.Pages.Users
                             FolderName = l.FolderName,
                             FolderId = l.UserFavoriteFolderId,
                             FolderRank = l.FolderRank,
-                            FavCount = (from f in l.UserFavorites select f.UserFavoritesId).Count()
+                            FavCount = 0
                         }
                     ).ToListAsync();
                 }
@@ -991,7 +717,7 @@ namespace Atlas_Web.Pages.Users
                 {
                     cacheEntry.SlidingExpiration = TimeSpan.FromMinutes(10);
                     return (
-                        from r in _context.DpDataInitiatives
+                        from r in _context.Initiatives
                         where
                             r.LastUpdateUser == UserId
                             && r.LastUpdateDate > DateTime.Today.AddDays(-30)
@@ -1012,7 +738,7 @@ namespace Atlas_Web.Pages.Users
                 {
                     cacheEntry.SlidingExpiration = TimeSpan.FromMinutes(10);
                     return (
-                        from r in _context.DpDataProjects
+                        from r in _context.Collections
                         where
                             r.LastUpdateUser == UserId
                             && r.LastUpdateDate > DateTime.Today.AddDays(-30)

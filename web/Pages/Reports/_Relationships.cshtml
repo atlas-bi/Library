@@ -62,11 +62,11 @@
         </div>
     }
 
-    @if (Model.Report.DpReportAnnotations.Any())
+    @if (Model.Report.CollectionReports.Any())
     {
         <h3 id="collections" class="title is-3">Linked Collections</h3>
         <div class="columns is-multiline">
-            @foreach (var d in @Model.Report.DpReportAnnotations)
+            @foreach (var d in @Model.Report.CollectionReports)
             {
                 <div class="column is-half ">
                     <partial name="Collections/_Snippet" model="d.DataProject" />

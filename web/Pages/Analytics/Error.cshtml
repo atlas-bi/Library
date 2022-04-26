@@ -1,0 +1,111 @@
+
+@page
+@model Atlas_Web.Pages.Analytics.ErrorModel
+@{
+    Layout = null;
+}
+@using UAParser;
+
+<div>
+    <div class="is-flex is-justify-content-space-between mt-3">
+        <strong>Server Errors - <span class=" @if(@Model.CountUnresolved > 0){<text>has-text-danger</text>}">@Model.CountUnresolved unresolved</span> of @Model.Count Messages</strong>
+        @if(Model.Pages > 1){
+            <nav class="pagination is-rounded is-small mb-0 mt-2" role="navigation" aria-label="pagination">
+                <ul class="pagination-list">
+                    <li>
+                        <a data-page="p=0" class="pagination-link @if(1==Model.CurrentPage){<text>is-current</text>}" aria-label="Goto page 1">1</a>
+                    </li>
+                    @if(Model.CurrentPage >= 4){
+                        <li>
+                            <span class="pagination-ellipsis">&hellip;</span>
+                        </li>
+                    }
+                    @for(var x = 1; x< Model.Pages-1; x++)
+                    {
+                        int CurrentPage = x+1;
+                        if(x >= Model.CurrentPage - 2 && x < Model.CurrentPage + 1 || x <=2 && Model.Pages >=2 && Model.CurrentPage <=2){
+                            <li>
+                                <a data-page="p=@x" class="pagination-link @if(CurrentPage==Model.CurrentPage){<text>is-current</text>}" aria-label="Goto page @CurrentPage">@CurrentPage</a>
+                            </li>
+                        }
+                    }
+                    @if(Model.CurrentPage <= Model.Pages-3){
+                        <li>
+                            <span class="pagination-ellipsis">&hellip;</span>
+                        </li>
+                    }
+                    <li>
+                    <a data-page="p=@(Model.Pages-1)" class="pagination-link @if(Model.Pages==Model.CurrentPage){<text>is-current</text>}" aria-label="Goto page @Model.Pages">@Model.Pages</a>
+                    </li>
+                </ul>
+            </nav>
+        }
+    </div>
+    <div class="table-container">
+        <table class="table is-fullwidth">
+            <thead>
+                <tr>
+                    <th>Status Code</th>
+                    <th>Date</th>
+                    <th>Message</th>
+                    <th>User</th>
+                    <th>OS</th>
+                    <th>Browser</th>
+                    <th>Resolved</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var Error in Model.Errors)
+                {
+                    var uaParser = Parser.GetDefault();
+                    var agent = uaParser.Parse(Error.UserAgent);
+
+                    <tr @if(Error.Handled == 1){<text>class="has-text-grey-light"</text>}>
+                        <td class="is-nobreak">
+                            @Error.StatusCode
+                        </td>
+                        <td>
+                            @Error.LogDateTime
+                        </td>
+                        <td>
+                            <a href="@Error.Referer">@Error.Referer</a>
+                            @Error.Message
+                            @if(!string.IsNullOrEmpty(@Error.Trace)){
+                                <div class="notification @if(Error.Handled != 1){<text>is-danger</text>} is-family-monospace is-light mt-2 is-wordbreak">@Error.Trace</div>
+                            }
+                        </td>
+                        <td>
+                            @if (@Configuration["features:enable_user_profile"] == null || @Configuration["features:enable_user_profile"].ToString().ToLower() == "true")
+                            {
+                                <a href="/users?id=@Error.UserId">@Error.User.FullnameCalc</a>
+                            } else {
+                                @Error.User.FullnameCalc
+                            }
+                        </td>
+                        <td class="is-nobreak">
+                            @agent.OS.Family @agent.OS.Major
+                        </td>
+                        <td class="is-nobreak">
+                            @agent.UA.Family @agent.UA.Major
+                        </td>
+                        <td>
+                        <div class="field">
+                            <input class="is-checkradio error-resolved is-info"
+                                    id="error-@Error.Id"
+                                    data-id="@Error.Id"
+                                    type="checkbox"
+                                    name="Error-@Error.Id"
+                                    data-url="/Analytics/Error/"
+                                    @if (Error.Handled == 1) {<text>checked="checked"</text>}
+                            />
+                            <label for="error-@Error.Id"></label>
+                        </div>
+                    </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <small class="has-text-grey-light">Pages @Model.CurrentPage of @Model.Pages</small>
+
+</div>
