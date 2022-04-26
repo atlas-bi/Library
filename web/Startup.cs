@@ -300,13 +300,9 @@ namespace Atlas_Web
             {
                 var d = "";
 
-                if (File.Exists("../.version"))
+                if (File.Exists("version"))
                 {
-                    d = File.ReadAllText("../.version");
-                }
-                else if (File.Exists(".version"))
-                {
-                    d = File.ReadAllText(".version");
+                    d = File.ReadAllText("version");
                 }
 
                 if (!string.IsNullOrEmpty(d))

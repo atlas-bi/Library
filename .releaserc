@@ -9,10 +9,10 @@
     }],
 
     ["@semantic-release/exec", {
-      "prepareCmd" : "echo ${nextRelease.version} > .version"
+      "prepareCmd" : "echo ${nextRelease.version} > web/version"
     }],
     ["@semantic-release/git", {
-      "assets": ["package.json", ".version"]
+      "assets": ["package.json", "web/version"]
     }],
     "@semantic-release/github"
   ]
