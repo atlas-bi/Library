@@ -298,10 +298,20 @@ namespace Atlas_Web
             // set version
             try
             {
-                var d = JObject.Parse(File.ReadAllText("../package.json"));
-                if (d["version"] != null)
+                var d = "";
+
+                if (File.Exists("../.version"))
                 {
-                    cache.Set("version", d.Value<string>("version"));
+                    d = File.ReadAllText("../.version");
+                }
+                else if (File.Exists(".version"))
+                {
+                    d = File.ReadAllText(".version");
+                }
+
+                if (!string.IsNullOrEmpty(d))
+                {
+                    cache.Set("version", d);
                 }
             }
             catch
