@@ -61,6 +61,12 @@
     <Content Update=".env" CopyToPublishDirectory="Never" />
   </ItemGroup>
   <ItemGroup>
+    <None Update="../.version" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="../.version" CopyToPublishDirectory="PreserveNewest" />
+  </ItemGroup>
+  <ItemGroup>
     <Folder Include="Pages\API\Partials\" />
     <Folder Include="Pages\Groups\Sections\" />
   </ItemGroup>
