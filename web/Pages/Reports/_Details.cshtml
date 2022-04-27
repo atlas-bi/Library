@@ -31,7 +31,7 @@
             <tr>
                 <td>Last Modified</td>
                 <td>
-                    @Model.Report.LastModifiedDate
+                    @Model.Report.LastUpdatedDateDisplayString
                     @if (@Model.Report.LastModifiedByUser != null)
                     {
                         <text>&nbsp;&middot;&nbsp;</text>
@@ -52,7 +52,7 @@
                 <tr>
                     <td>Documentation Last Modified</td>
                     <td>
-                        @Model.Report.ReportObjectDoc.LastUpdateDateTime
+                        @Model.Report.ReportObjectDoc.LastUpdatedDateTimeDisplayString
                         @if (@Model.Report.ReportObjectDoc.UpdatedByNavigation != null)
                         {
                             <text>&nbsp;&middot;&nbsp;</text>
