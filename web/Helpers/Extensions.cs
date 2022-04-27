@@ -548,6 +548,10 @@ namespace Atlas_Web.Helpers
                         + "|"
                         + EpicRecordId;
                 }
+                else if (EpicMasterFile == "HGR")
+                {
+                    NewUrl = "EpicAct:AC_RW_STATUS,RUNPARAMS:" + EpicRecordId;
+                }
                 else if (EpicMasterFile == "IDM")
                 {
                     NewUrl = "EpicAct:WM_DASHBOARD_LAUNCHER,runparams:" + EpicRecordId;
