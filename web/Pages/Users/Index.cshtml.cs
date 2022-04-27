@@ -775,29 +775,6 @@ namespace Atlas_Web.Pages.Users
                 }
             );
 
-            ViewData["LoadTime"] = await _cache.GetOrCreateAsync<List<ReportRunTimeData>>(
-                "LoadTime-" + UserId,
-                cacheEntry =>
-                {
-                    cacheEntry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20);
-                    return (
-                        from a in _context.Analytics
-                        where a.AccessDateTime > DateTime.Now.AddDays(-7) && a.UserId == UserId
-                        group a by a.Pathname.ToLower() into grp
-                        orderby grp.Count() descending
-                        select new ReportRunTimeData
-                        {
-                            Date = grp.Key,
-                            Cnt = grp.Count(),
-                            Avg = Math.Round(
-                                (double)grp.Average(x => Convert.ToInt32(x.LoadTime)) / 1000,
-                                2
-                            )
-                        }
-                    ).ToListAsync();
-                }
-            );
-
             return new PartialViewResult { ViewName = "Sections/_Atlas", ViewData = ViewData };
         }
 
