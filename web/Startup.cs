@@ -67,7 +67,9 @@ namespace Atlas_Web
                 options =>
                     options.UseSqlServer(
                         connection,
-                        o => o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)
+                        o =>
+                            o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)
+                                .CommandTimeout(60)
                     )
             );
 

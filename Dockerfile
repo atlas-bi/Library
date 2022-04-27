@@ -32,7 +32,7 @@ RUN echo "{\"solr\": {\"atlas_address\": \"https://atlas-dotnet-search.herokuapp
 RUN dotnet tool install --global dotnet-ef \
   && export PATH="$PATH:/root/.dotnet/tools"
 
-RUN dotnet tool restore && dotnet ef database update --project web.csproj -v
+RUN  dotnet ef database update --project web.csproj -v
 
 RUN dotnet publish -c Release -o out web.csproj
 
