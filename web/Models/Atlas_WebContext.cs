@@ -118,17 +118,7 @@ namespace Atlas_Web.Models
 
                     entity.Property(e => e.Active).HasColumnName("active");
 
-                    entity.Property(e => e.AppCodeName).HasColumnName("appCodeName");
-
-                    entity.Property(e => e.AppName).HasColumnName("appName");
-
-                    entity.Property(e => e.AppVersion).HasColumnName("appVersion");
-
-                    entity.Property(e => e.CookieEnabled).HasColumnName("cookieEnabled");
-
                     entity.Property(e => e.Hash).HasColumnName("hash");
-
-                    entity.Property(e => e.Host).HasColumnName("host");
 
                     entity.Property(e => e.Hostname).HasColumnName("hostname");
 
@@ -140,15 +130,11 @@ namespace Atlas_Web.Models
 
                     entity.Property(e => e.Origin).HasColumnName("origin");
 
-                    entity.Property(e => e.Oscpu).HasColumnName("oscpu");
-
                     entity.Property(e => e.PageId).HasColumnName("pageId");
 
                     entity.Property(e => e.PageTime).HasColumnName("pageTime");
 
                     entity.Property(e => e.Pathname).HasColumnName("pathname");
-
-                    entity.Property(e => e.Platform).HasColumnName("platform");
 
                     entity.Property(e => e.Protocol).HasColumnName("protocol");
 
@@ -161,10 +147,6 @@ namespace Atlas_Web.Models
                     entity.Property(e => e.Search).HasColumnName("search");
 
                     entity.Property(e => e.SessionId).HasColumnName("sessionId");
-
-                    entity.Property(e => e.SessionTime).HasColumnName("sessionTime");
-
-                    entity.Property(e => e.Title).HasColumnName("title");
 
                     entity
                         .Property(e => e.UpdateTime)

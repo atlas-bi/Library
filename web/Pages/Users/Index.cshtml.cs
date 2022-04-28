@@ -661,7 +661,7 @@ namespace Atlas_Web.Pages.Users
                         orderby a.AccessDateTime descending
                         select new AtlasHistoryData
                         {
-                            Name = a.Title,
+                            Name = a.Pathname,
                             Type = (
                                 a.Pathname.ToLower() == "/reports"
                                     ? "Reports"
