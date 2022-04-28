@@ -94,6 +94,18 @@ namespace Atlas_Web.Models
                         .IncludeProperties(p => new { p.PageId, p.SessionId });
 
                     entity
+                        .HasIndex(e => e.AccessDateTime, "accessdatetime_screen")
+                        .IncludeProperties(p => new { p.ScreenHeight, p.ScreenWidth });
+
+                    entity
+                        .HasIndex(e => e.AccessDateTime, "accessdatetime_useragent")
+                        .IncludeProperties(p => new { p.UserAgent });
+
+                    entity
+                        .HasIndex(e => e.AccessDateTime, "accessdatetime_sessionId")
+                        .IncludeProperties(p => new { p.SessionId });
+
+                    entity
                         .HasIndex(e => new { e.AccessDateTime, e.UserId }, "accessdatetime_userid")
                         .IncludeProperties(p => new { p.Pathname, p.LoadTime });
 
@@ -914,6 +926,32 @@ namespace Atlas_Web.Models
                     entity.HasKey(e => e.ReportObjectId).HasName("PK__ReportOb__B7A74135D2A44EFC");
 
                     entity.ToTable("ReportObject_doc", "app");
+
+                    entity
+                        .HasIndex(e => e.ExecutiveVisibilityYn, "execvis_reportid")
+                        .IncludeProperties(p => p.ReportObjectId);
+
+                    entity
+                        .HasIndex(e => e.MaintenanceScheduleId, "maintschedule_report_updated")
+                        .IncludeProperties(
+                            p => new { p.ReportObjectId, p.LastUpdateDateTime, p.UpdatedBy }
+                        );
+
+                    entity
+                        .HasIndex(
+                            e => e.MaintenanceScheduleId,
+                            "maintschedule_report_updated_created"
+                        )
+                        .IncludeProperties(
+                            p =>
+                                new
+                                {
+                                    p.ReportObjectId,
+                                    p.LastUpdateDateTime,
+                                    p.UpdatedBy,
+                                    p.CreatedDateTime
+                                }
+                        );
 
                     entity.HasIndex(e => e.CreatedBy, "createdby");
 
