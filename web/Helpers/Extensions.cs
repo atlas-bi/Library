@@ -413,6 +413,10 @@ namespace Atlas_Web.Helpers
                     + Domain
                     + "%3A443%2FReportServer";
             }
+            else if (EpicMasterFile == "HGR" && EpicRecordId != null && Epic)
+            {
+                Url = "EpicAct:AC_NEW_REPORT_ADMIN,INFONAME:HGRRECORDID,INFOVALUE:" + EpicRecordId;
+            }
             else if (EpicMasterFile == "IDM" && EpicRecordId != null && Epic)
             {
                 Url = "EpicAct:WM_DASHBOARD_EDITOR,INFONAME:IDMRECORDID,INFOVALUE:" + EpicRecordId;
