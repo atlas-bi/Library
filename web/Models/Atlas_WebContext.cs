@@ -1252,7 +1252,32 @@ namespace Atlas_Web.Models
 
                     entity.HasIndex(e => e.ReportObjectId, "reportid");
 
-                    entity.HasIndex(e => e.RunUserId, "runuser + report");
+                    entity.HasIndex(e => e.RunUserId, "runuser");
+
+                    entity
+                        .HasIndex(
+                            e => new { e.ReportObjectId, e.RunStatus },
+                            "reportid_status_run_user"
+                        )
+                        .IncludeProperties(
+                            p => new { p.RunUserId, p.RunStartTime, p.RunDurationSeconds }
+                        );
+
+                    entity
+                        .HasIndex(
+                            e => new { e.ReportObjectId, e.RunStartTime },
+                            "reportid_starttime_user"
+                        )
+                        .IncludeProperties(p => new { p.RunUserId });
+
+                    entity.HasIndex(
+                        e => new { e.ReportObjectId, e.RunStartTime, e.RunStatus },
+                        "reportid_starttime_status"
+                    );
+
+                    entity.HasIndex(e => e.RunStartTime, "runstarttime");
+
+                    entity.HasIndex(e => new { e.ReportObjectId, e.RunStartTime });
 
                     entity.Property(e => e.ReportObjectId).HasColumnName("ReportObjectID");
 

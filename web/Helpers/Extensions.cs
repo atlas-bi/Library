@@ -139,7 +139,7 @@ namespace Atlas_Web.Helpers
         )
         {
             username ??= "default";
-            // master permision cache - so we can clear all when a perm changes.
+            // master permission cache - so we can clear all when a perm changes.
             var master = cache.GetOrCreate<List<string>>(
                 "MasterUserPermissions",
                 cacheEntry =>

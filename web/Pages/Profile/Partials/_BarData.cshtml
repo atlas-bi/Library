@@ -1,0 +1,7 @@
+@model Atlas_Web.Pages.Profile.IndexModel
+[
+    @foreach (var item in @Model.BarDataSet)
+    {
+        <text>{"key": "@item.Key", "count": "@item.Count", "percent": "@item.Percent", "href": "@item.Href", "title_one": "@item.TitleOne", "title_two": "@item.TitleTwo"}</text>@if(item != @Model.BarDataSet.Last()){<text>,</text>}
+    }
+]
