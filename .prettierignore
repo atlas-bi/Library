@@ -6,6 +6,7 @@ web/bin/*
 web/obj/*
 web/wwwroot/font/rasa/*
 web/wwwroot/font/inter/*
+web/wwwroot/font/source-code-pro/*
 web/wwwroot/lib/codemirror/*
 web/wwwroot/lib/flowchart/*
 web/wwwroot/lib/highlight/*

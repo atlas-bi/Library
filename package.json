@@ -9,9 +9,9 @@
     "@fontsource/source-code-pro": "^4.5.9",
     "@fortawesome/fontawesome-free": "5.15.4",
     "@rollup/plugin-babel": "5.3.1",
-    "@rollup/plugin-commonjs": "21.0.3",
-    "@rollup/plugin-json": "4.1.0",
     "@rollup/plugin-node-resolve": "13.2.1",
+    "@rollup/plugin-commonjs": "22.0.0",
+    "@rollup/plugin-json": "4.1.0",
     "@semantic-release/changelog": "6.0.1",
     "@semantic-release/commit-analyzer": "9.0.2",
     "@semantic-release/exec": "6.0.3",
@@ -54,7 +54,7 @@
     "rollup-stream-gulp": "0.0.3",
     "sass": "1.50.0",
     "semantic-release": "19.0.2",
-    "stylelint": "14.7.1",
+    "stylelint": "14.8.1",
     "stylelint-config-prettier-scss": "0.0.1",
     "stylelint-config-standard-scss": "3.0.0",
     "stylelint-scss": "4.2.0",
@@ -152,5 +152,5 @@
       "unicorn/prefer-keyboard-event-key": "off"
     }
   },
-  "version": "3.0.1"
+  "version": "3.1.3"
 }
