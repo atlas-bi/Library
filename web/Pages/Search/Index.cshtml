@@ -2,26 +2,56 @@
 @inject IConfiguration Configuration
 
 @model Atlas_Web.Pages.Search.IndexModel
-@{ ViewData["Title"] = "Search " + Model.SearchString;
+@{
+    ViewData["Title"] = "Search " + Model.SearchString;
 
-@if (HttpContext.Request.Headers["x-requested-with"] == "XMLHttpRequest")
-{
-    Layout = null;
-}
-else
-{
-    Layout = "../Shared/_Layout.cshtml";
-} }
-
-@{ // url w/out page #
-    //IEnumerable<dynamic> favs = ViewBag.Favorites;
-    //var searchUrl = "s=" + Model.SearchString + "&f=" + Model.SearchFilter;
-    //var searchFavorite = favs.Any(x => x.ItemType.ToLower().Equals("search") && x.ItemName.Equals(searchUrl));
-
+    @if (HttpContext.Request.Headers["x-requested-with"] == "XMLHttpRequest")
+    {
+        Layout = null;
+    }
+    else
+    {
+        Layout = "../Shared/_Layout.cshtml";
     }
 
-<div class="columns">
+    var clearFilters = Model.SearchResults.Parameters.Filters.Where(x => x.Key != "query" && x.Key != "advanced");
+    ViewBag.AppliedFilters =  Model.SearchResults.Parameters.Filters.Count(x => x.Key != "query");
+    ViewBag.Query =  Model.SearchResults.Parameters.Filters.SingleOrDefault(x => x.Key == "query").Value;
+}
 
+<section class="section my-5 p-0 is-flex is-flex-direction-row is-align-items-center">
+    <div class="icon-text mr-5">
+        <span class="icon">
+            <i class="fas fa-filter"></i>
+        </span>
+        <strong>Filter Results</strong>
+    </div>
+    @if(clearFilters.Any()){
+        <div class="field is-grouped is-grouped-multiline">
+            @foreach (var field in clearFilters)
+            {
+                <div class="control">
+                    <div class="tags has-addons">
+                        @if(field.Key == "field"){
+                            <span class="tag is-light is-medium">Field</span>
+                            <span class="tag is-warning is-medium" >@Model.SearchResults.FilterFields.SingleOrDefault(x => x.Key == field.Value).FriendlyName<a class="delete is-small" href="@UrlHelpers.SetSearchFacetUrl(ViewContext.HttpContext, @field.Key, @field.Value)"></a></span>
+                        } else {
+                            <span class="tag is-light is-medium">@Model.SearchResults.FacetFields.SingleOrDefault(x => x.Key == field.Key).FriendlyName</span>
+                            @* if there are 0 results, the filters do not show or have values *@
+                            @if(@Model.SearchResults.FacetFields.SingleOrDefault(x => x.Key == field.Key).Values.Count > 0){
+                                <span class="tag is-warning is-medium" >@Model.SearchResults.FacetFields.SingleOrDefault(x => x.Key == field.Key).Values.SingleOrDefault(x => x.Value == field.Value).FriendlyName<a class="delete is-small" href="@UrlHelpers.SetSearchFacetUrl(ViewContext.HttpContext, @field.Key, @field.Value)"></a></span>
+                            } else {
+                                <span class="tag is-warning is-medium" >@field.Value<a class="delete is-small" href="@UrlHelpers.SetSearchFacetUrl(ViewContext.HttpContext, @field.Key, @field.Value)"></a></span>
+                            }
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</section>
+
+<div class="columns">
     <div class="column is-one-quarter is-sticky is-align-self-flex-start" style="max-height:calc(100vh - 137px); overflow-Y:auto">
         <partial name="Partials/_Filters" />
     </div>

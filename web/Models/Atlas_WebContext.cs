@@ -94,6 +94,18 @@ namespace Atlas_Web.Models
                         .IncludeProperties(p => new { p.PageId, p.SessionId });
 
                     entity
+                        .HasIndex(e => e.AccessDateTime, "accessdatetime_screen")
+                        .IncludeProperties(p => new { p.ScreenHeight, p.ScreenWidth });
+
+                    entity
+                        .HasIndex(e => e.AccessDateTime, "accessdatetime_useragent")
+                        .IncludeProperties(p => new { p.UserAgent });
+
+                    entity
+                        .HasIndex(e => e.AccessDateTime, "accessdatetime_sessionId")
+                        .IncludeProperties(p => new { p.SessionId });
+
+                    entity
                         .HasIndex(e => new { e.AccessDateTime, e.UserId }, "accessdatetime_userid")
                         .IncludeProperties(p => new { p.Pathname, p.LoadTime });
 
@@ -106,17 +118,7 @@ namespace Atlas_Web.Models
 
                     entity.Property(e => e.Active).HasColumnName("active");
 
-                    entity.Property(e => e.AppCodeName).HasColumnName("appCodeName");
-
-                    entity.Property(e => e.AppName).HasColumnName("appName");
-
-                    entity.Property(e => e.AppVersion).HasColumnName("appVersion");
-
-                    entity.Property(e => e.CookieEnabled).HasColumnName("cookieEnabled");
-
                     entity.Property(e => e.Hash).HasColumnName("hash");
-
-                    entity.Property(e => e.Host).HasColumnName("host");
 
                     entity.Property(e => e.Hostname).HasColumnName("hostname");
 
@@ -128,15 +130,11 @@ namespace Atlas_Web.Models
 
                     entity.Property(e => e.Origin).HasColumnName("origin");
 
-                    entity.Property(e => e.Oscpu).HasColumnName("oscpu");
-
                     entity.Property(e => e.PageId).HasColumnName("pageId");
 
                     entity.Property(e => e.PageTime).HasColumnName("pageTime");
 
                     entity.Property(e => e.Pathname).HasColumnName("pathname");
-
-                    entity.Property(e => e.Platform).HasColumnName("platform");
 
                     entity.Property(e => e.Protocol).HasColumnName("protocol");
 
@@ -149,10 +147,6 @@ namespace Atlas_Web.Models
                     entity.Property(e => e.Search).HasColumnName("search");
 
                     entity.Property(e => e.SessionId).HasColumnName("sessionId");
-
-                    entity.Property(e => e.SessionTime).HasColumnName("sessionTime");
-
-                    entity.Property(e => e.Title).HasColumnName("title");
 
                     entity
                         .Property(e => e.UpdateTime)
@@ -915,6 +909,32 @@ namespace Atlas_Web.Models
 
                     entity.ToTable("ReportObject_doc", "app");
 
+                    entity
+                        .HasIndex(e => e.ExecutiveVisibilityYn, "execvis_reportid")
+                        .IncludeProperties(p => p.ReportObjectId);
+
+                    entity
+                        .HasIndex(e => e.MaintenanceScheduleId, "maintschedule_report_updated")
+                        .IncludeProperties(
+                            p => new { p.ReportObjectId, p.LastUpdateDateTime, p.UpdatedBy }
+                        );
+
+                    entity
+                        .HasIndex(
+                            e => e.MaintenanceScheduleId,
+                            "maintschedule_report_updated_created"
+                        )
+                        .IncludeProperties(
+                            p =>
+                                new
+                                {
+                                    p.ReportObjectId,
+                                    p.LastUpdateDateTime,
+                                    p.UpdatedBy,
+                                    p.CreatedDateTime
+                                }
+                        );
+
                     entity.HasIndex(e => e.CreatedBy, "createdby");
 
                     entity.HasIndex(e => e.EstimatedRunFrequencyId, "estimatedrunfreqid");
@@ -1232,7 +1252,32 @@ namespace Atlas_Web.Models
 
                     entity.HasIndex(e => e.ReportObjectId, "reportid");
 
-                    entity.HasIndex(e => e.RunUserId, "runuser + report");
+                    entity.HasIndex(e => e.RunUserId, "runuser");
+
+                    entity
+                        .HasIndex(
+                            e => new { e.ReportObjectId, e.RunStatus },
+                            "reportid_status_run_user"
+                        )
+                        .IncludeProperties(
+                            p => new { p.RunUserId, p.RunStartTime, p.RunDurationSeconds }
+                        );
+
+                    entity
+                        .HasIndex(
+                            e => new { e.ReportObjectId, e.RunStartTime },
+                            "reportid_starttime_user"
+                        )
+                        .IncludeProperties(p => new { p.RunUserId });
+
+                    entity.HasIndex(
+                        e => new { e.ReportObjectId, e.RunStartTime, e.RunStatus },
+                        "reportid_starttime_status"
+                    );
+
+                    entity.HasIndex(e => e.RunStartTime, "runstarttime");
+
+                    entity.HasIndex(e => new { e.ReportObjectId, e.RunStartTime });
 
                     entity.Property(e => e.ReportObjectId).HasColumnName("ReportObjectID");
 

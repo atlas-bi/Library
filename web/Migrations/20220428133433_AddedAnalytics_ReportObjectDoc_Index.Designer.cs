@@ -4,6 +4,7 @@ using Atlas_Web.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Atlas_Web.Migrations
 {
     [DbContext(typeof(Atlas_WebContext))]
-    partial class Atlas_WebContextModelSnapshot : ModelSnapshot
+    [Migration("20220428133433_AddedAnalytics_ReportObjectDoc_Index")]
+    partial class AddedAnalytics_ReportObjectDoc_Index
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -38,12 +40,32 @@ namespace Atlas_Web.Migrations
                         .HasColumnType("int")
                         .HasColumnName("active");
 
+                    b.Property<string>("AppCodeName")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("appCodeName");
+
+                    b.Property<string>("AppName")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("appName");
+
+                    b.Property<string>("AppVersion")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("appVersion");
+
+                    b.Property<string>("CookieEnabled")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("cookieEnabled");
+
                     b.Property<int?>("Epic")
                         .HasColumnType("int");
 
                     b.Property<string>("Hash")
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("hash");
+
+                    b.Property<string>("Host")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("host");
 
                     b.Property<string>("Hostname")
                         .HasColumnType("nvarchar(max)")
@@ -65,6 +87,10 @@ namespace Atlas_Web.Migrations
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("origin");
 
+                    b.Property<string>("Oscpu")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("oscpu");
+
                     b.Property<string>("PageId")
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("pageId");
@@ -76,6 +102,10 @@ namespace Atlas_Web.Migrations
                     b.Property<string>("Pathname")
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("pathname");
+
+                    b.Property<string>("Platform")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("platform");
 
                     b.Property<string>("Protocol")
                         .HasColumnType("nvarchar(max)")
@@ -101,6 +131,14 @@ namespace Atlas_Web.Migrations
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("sessionId");
 
+                    b.Property<int?>("SessionTime")
+                        .HasColumnType("int")
+                        .HasColumnName("sessionTime");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("title");
+
                     b.Property<DateTime?>("UpdateTime")
                         .HasColumnType("datetime")
                         .HasColumnName("updateTime");
@@ -111,6 +149,9 @@ namespace Atlas_Web.Migrations
 
                     b.Property<int?>("UserId")
                         .HasColumnType("int");
+
+                    b.Property<string>("Username")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<double?>("Zoom")
                         .HasColumnType("float");
@@ -336,6 +377,9 @@ namespace Atlas_Web.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ReportAnnotationId"), 1L, 1);
 
+                    b.Property<string>("Annotation")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int?>("DataProjectId")
                         .HasColumnType("int");
 
@@ -363,6 +407,9 @@ namespace Atlas_Web.Migrations
                         .HasColumnName("TermAnnotationID");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TermAnnotationId"), 1L, 1);
+
+                    b.Property<string>("Annotation")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("DataProjectId")
                         .HasColumnType("int");
@@ -1509,24 +1556,10 @@ namespace Atlas_Web.Migrations
 
                     b.HasKey("ReportObjectId", "RunId");
 
-                    b.HasIndex("ReportObjectId", "RunStartTime");
-
                     b.HasIndex(new[] { "ReportObjectId" }, "reportid")
                         .HasDatabaseName("reportid6");
 
-                    b.HasIndex(new[] { "ReportObjectId", "RunStartTime", "RunStatus" }, "reportid_starttime_status");
-
-                    b.HasIndex(new[] { "ReportObjectId", "RunStartTime" }, "reportid_starttime_user");
-
-                    SqlServerIndexBuilderExtensions.IncludeProperties(b.HasIndex(new[] { "ReportObjectId", "RunStartTime" }, "reportid_starttime_user"), new[] { "RunUserId" });
-
-                    b.HasIndex(new[] { "ReportObjectId", "RunStatus" }, "reportid_status_run_user");
-
-                    SqlServerIndexBuilderExtensions.IncludeProperties(b.HasIndex(new[] { "ReportObjectId", "RunStatus" }, "reportid_status_run_user"), new[] { "RunUserId", "RunStartTime", "RunDurationSeconds" });
-
-                    b.HasIndex(new[] { "RunStartTime" }, "runstarttime");
-
-                    b.HasIndex(new[] { "RunUserId" }, "runuser");
+                    b.HasIndex(new[] { "RunUserId" }, "runuser + report");
 
                     b.ToTable("ReportObjectRunData");
                 });

@@ -70,7 +70,7 @@ namespace Atlas_Web.Pages.Analytics
 
             when using all time, get first day and last day and use the above rules
             */
-
+            DateTime MinDate = new DateTime(1900, 01, 01, 00, 00, 00);
             var subquery = _context.Analytics.Where(
                 x =>
                     x.AccessDateTime >= DateTime.Now.AddSeconds(start_at)
@@ -88,7 +88,6 @@ namespace Atlas_Web.Pages.Analytics
                     x => x.User.UserGroupsMemberships.Any(y => y.GroupId == groupId)
                 );
             }
-            subquery = subquery.OrderBy(x => x.AccessDateTime);
 
             switch (end_at - start_at)
             {
@@ -98,14 +97,11 @@ namespace Atlas_Web.Pages.Analytics
                 case < 172800:
                     AccessHistory = await (
                         from a in subquery
-                        group a by new DateTime(
-                            (a.AccessDateTime ?? DateTime.Now).Year,
-                            (a.AccessDateTime ?? DateTime.Now).Month,
-                            (a.AccessDateTime ?? DateTime.Now).Day,
-                            (a.AccessDateTime ?? DateTime.Now).Hour,
-                            0,
-                            0
+                        // in linqpad, use SqlMethods.DateDiffHour instead of EF.Functions.DateDiffHour
+                        group a by MinDate.AddHours(
+                            EF.Functions.DateDiffHour(MinDate, (a.AccessDateTime ?? DateTime.Now))
                         ) into grp
+                        orderby grp.Key
                         select new AccessHistoryData
                         {
                             Date = grp.Key.ToString("h tt"),
@@ -124,14 +120,10 @@ namespace Atlas_Web.Pages.Analytics
                 case < 691200:
                     AccessHistory = await (
                         from a in subquery
-                        group a by new DateTime(
-                            (a.AccessDateTime ?? DateTime.Now).Year,
-                            (a.AccessDateTime ?? DateTime.Now).Month,
-                            (a.AccessDateTime ?? DateTime.Now).Day,
-                            0,
-                            0,
-                            0
+                        group a by MinDate.AddDays(
+                            EF.Functions.DateDiffDay(MinDate, (a.AccessDateTime ?? DateTime.Now))
                         ) into grp
+                        orderby grp.Key
                         select new AccessHistoryData
                         {
                             Date = grp.Key.ToString("ddd M/d"),
@@ -149,14 +141,10 @@ namespace Atlas_Web.Pages.Analytics
                 case < 31536000:
                     AccessHistory = await (
                         from a in subquery
-                        group a by new DateTime(
-                            (a.AccessDateTime ?? DateTime.Now).Year,
-                            (a.AccessDateTime ?? DateTime.Now).Month,
-                            (a.AccessDateTime ?? DateTime.Now).Day,
-                            0,
-                            0,
-                            0
+                        group a by MinDate.AddDays(
+                            EF.Functions.DateDiffDay(MinDate, (a.AccessDateTime ?? DateTime.Now))
                         ) into grp
+                        orderby grp.Key
                         select new AccessHistoryData
                         {
                             Date = grp.Key.ToString("MMM d"),
@@ -172,14 +160,10 @@ namespace Atlas_Web.Pages.Analytics
                 case >= 31536000:
                     AccessHistory = await (
                         from a in subquery
-                        group a by new DateTime(
-                            (a.AccessDateTime ?? DateTime.Now).Year,
-                            (a.AccessDateTime ?? DateTime.Now).Month,
-                            1,
-                            0,
-                            0,
-                            0
+                        group a by MinDate.AddMonths(
+                            EF.Functions.DateDiffMonth(MinDate, (a.AccessDateTime ?? DateTime.Now))
                         ) into grp
+                        orderby grp.Key
                         select new AccessHistoryData
                         {
                             Date = grp.Key.ToString("MMM yy"),

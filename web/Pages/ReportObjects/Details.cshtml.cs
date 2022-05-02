@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 /**************** notice ****************/
 // this section of the website is only
-// kept to allow old urls to acces
+// kept to allow old urls to access
 // the reports. example of the old url:
 // /ReportObjects/Detials?id=73715
 

@@ -4,6 +4,7 @@ using Atlas_Web.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Atlas_Web.Migrations
 {
     [DbContext(typeof(Atlas_WebContext))]
-    partial class Atlas_WebContextModelSnapshot : ModelSnapshot
+    [Migration("20220429145008_AddedRunDataIndex")]
+    partial class AddedRunDataIndex
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1514,17 +1516,9 @@ namespace Atlas_Web.Migrations
                     b.HasIndex(new[] { "ReportObjectId" }, "reportid")
                         .HasDatabaseName("reportid6");
 
-                    b.HasIndex(new[] { "ReportObjectId", "RunStartTime", "RunStatus" }, "reportid_starttime_status");
-
-                    b.HasIndex(new[] { "ReportObjectId", "RunStartTime" }, "reportid_starttime_user");
-
-                    SqlServerIndexBuilderExtensions.IncludeProperties(b.HasIndex(new[] { "ReportObjectId", "RunStartTime" }, "reportid_starttime_user"), new[] { "RunUserId" });
-
                     b.HasIndex(new[] { "ReportObjectId", "RunStatus" }, "reportid_status_run_user");
 
                     SqlServerIndexBuilderExtensions.IncludeProperties(b.HasIndex(new[] { "ReportObjectId", "RunStatus" }, "reportid_status_run_user"), new[] { "RunUserId", "RunStartTime", "RunDurationSeconds" });
-
-                    b.HasIndex(new[] { "RunStartTime" }, "runstarttime");
 
                     b.HasIndex(new[] { "RunUserId" }, "runuser");
 

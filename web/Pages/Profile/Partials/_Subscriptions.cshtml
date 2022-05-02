@@ -1,0 +1,32 @@
+@model Atlas_Web.Pages.Profile.IndexModel
+
+<div>
+    @if(Model.UserSubscriptions.Count > 0)
+    {
+        <div class="table-responsive">
+            <table class="table" aria-label="active users">
+                <tbody>
+                    @foreach(var d in Model.UserSubscriptions.OrderBy(x => x.FullnameCalc))
+                    {
+                        <tr>
+                            <td>
+                                @if (@Configuration["features:enable_user_profile"] == null || @Configuration["features:enable_user_profile"].ToString().ToLower() == "true")
+                                {
+                                    <a href="users?id=@d.UserId">@d.FullnameCalc</a>
+                                }
+                                else
+                                {
+                                    @d.FullnameCalc
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <strong>There are no subscriptions.</strong>
+    }
+</div>

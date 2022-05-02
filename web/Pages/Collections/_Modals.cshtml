@@ -21,8 +21,12 @@
     <div class="box modal-card modal-large">
 
         <section class="modal-card-body">
-            <strong class="mb-5">Profile</strong>
-            <div data-ajax="yes" data-url="/Profile?handler=Collections&id=@Model.DataProjectId"></div>
+            <h3 class="title is-3">Profile</h3>
+            @{
+                ViewBag.ProfileType="collection";
+                ViewBag.ProfileId=@Model.DataProjectId;
+            }
+            <partial name="Profile/Partials/_Profile" />
         </section>
     </div>
     <button class="modal-close is-large" aria-label="close"></button>
