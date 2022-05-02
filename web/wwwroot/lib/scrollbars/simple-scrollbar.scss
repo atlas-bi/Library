@@ -127,6 +127,7 @@
 .ss-container.ss-grabbed > .ss-wrapper > .ss-hscroll {
   opacity: 1;
   transition: opacity 0.25s linear 0s;
+  z-index:1;
 }
 
 .sp-wrapper {
