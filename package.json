@@ -95,7 +95,7 @@
   },
   "dependencies": {
     "bulma-steps-component": "github:atlas-bi/bulma-steps",
-    "markdown-it": "12.3.2"
+    "markdown-it": "13.0.1"
   },
   "config": {
     "commitizen": {
