@@ -97,6 +97,14 @@ namespace Atlas_Web.Pages.Profile
             public double RunTime { get; set; }
         }
 
+        public class Filters
+        {
+            public string Key { get; set; }
+            public string Value { get; set; }
+            public string FriendlyValue { get; set; }
+            public int Count { get; set; }
+        }
+
         public int Runs { get; set; }
         public int Users { get; set; }
         public double RunTime { get; set; }
@@ -108,11 +116,241 @@ namespace Atlas_Web.Pages.Profile
 
         public List<BarData> BarDataSet { get; set; }
 
-        public async Task<ActionResult> OnGetAsync(
+        public List<Filters> Filter_Server { get; set; }
+        public List<Filters> Filter_Database { get; set; }
+        public List<Filters> Filter_MasterFile { get; set; }
+        public List<Filters> Filter_Visible { get; set; }
+        public List<Filters> Filter_Certification { get; set; }
+        public List<Filters> Filter_Availabiltiy { get; set; }
+        public List<Filters> Filter_ReportType { get; set; }
+
+        public async Task<ActionResult> OnGetAsync()
+        {
+            return Page();
+        }
+
+        public async Task<ActionResult> OnGetFiltersAsync(
+            double start_at = -604800, // last 7 days
+            double end_at = 0,
+            string server = "all",
+            string database = "all",
+            string masterFile = "all",
+            string visible = "all",
+            string certification = "all",
+            string availability = "all",
+            int reportType = -1
+        )
+        {
+            var reports = _context.ReportObjects.Where(
+                x =>
+                    _context.ReportObjectRunData.Any(
+                        r =>
+                            r.RunStartTime >= DateTime.Now.AddSeconds(start_at)
+                            && r.RunStartTime <= DateTime.Now.AddSeconds(end_at)
+                    )
+            );
+
+            if (server != "all")
+            {
+                reports = reports.Where(x => x.SourceServer == server);
+            }
+
+            if (database != "all")
+            {
+                reports = reports.Where(x => x.SourceDb == database);
+            }
+
+            if (masterFile != "all")
+            {
+                if (masterFile == "None")
+                {
+                    reports = reports.Where(x => string.IsNullOrEmpty(x.EpicMasterFile));
+                }
+                else
+                {
+                    reports = reports.Where(x => x.EpicMasterFile == masterFile);
+                }
+            }
+
+            if (visible != "all")
+            {
+                reports = reports.Where(x => x.DefaultVisibilityYn == visible);
+            }
+
+            if (certification != "all")
+            {
+                reports = reports.Where(x => x.CertificationTag == certification);
+            }
+
+            if (availability != "all")
+            {
+                reports = reports.Where(x => x.Availability == availability);
+            }
+
+            if (reportType != -1)
+            {
+                reports = reports.Where(x => x.ReportObjectTypeId == reportType);
+            }
+
+            Filter_Server = await _context.ReportObjects
+                .GroupBy(x => x.SourceServer)
+                .Select(
+                    x =>
+                        new Filters
+                        {
+                            Key = "server",
+                            Value = x.Key,
+                            FriendlyValue = x.Key,
+                            Count = reports.Count(c => c.SourceServer == x.Key)
+                        }
+                )
+                .ToListAsync();
+
+            Filter_Database = await _context.ReportObjects
+                .GroupBy(x => x.SourceDb)
+                .Select(
+                    x =>
+                        new Filters
+                        {
+                            Key = "database",
+                            Value = x.Key,
+                            FriendlyValue = x.Key,
+                            Count = reports.Count(c => c.SourceDb == x.Key)
+                        }
+                )
+                .ToListAsync();
+
+            Filter_ReportType = await _context.ReportObjects
+                .GroupBy(x => new { x.ReportObjectTypeId, x.ReportObjectType.Name })
+                .Select(
+                    x =>
+                        new Filters
+                        {
+                            Key = "reportType",
+                            Value = x.Key.ReportObjectTypeId.ToString(),
+                            FriendlyValue = x.Key.Name,
+                            Count = reports.Count(
+                                c => c.ReportObjectTypeId == x.Key.ReportObjectTypeId
+                            )
+                        }
+                )
+                .ToListAsync();
+
+            Filter_MasterFile = await _context.ReportObjects
+                .GroupBy(
+                    x =>
+                        new
+                        {
+                            Key = "masterFile",
+                            Value = string.IsNullOrEmpty(x.EpicMasterFile)
+                              ? "None"
+                              : x.EpicMasterFile,
+                        }
+                )
+                .Select(
+                    x =>
+                        new Filters
+                        {
+                            Key = x.Key.Key,
+                            Value = x.Key.Value,
+                            FriendlyValue = x.Key.Value,
+                            Count = reports.Count(
+                                c =>
+                                    (
+                                        string.IsNullOrEmpty(c.EpicMasterFile)
+                                          ? "None"
+                                          : c.EpicMasterFile
+                                    ) == x.Key.Value
+                            )
+                        }
+                )
+                .ToListAsync();
+
+            Filter_Visible = await _context.ReportObjects
+                .GroupBy(
+                    x =>
+                        new
+                        {
+                            Key = "visible",
+                            Value = x.DefaultVisibilityYn == "N" ? "N" : "Y",
+                            FriendlyValue = x.DefaultVisibilityYn == "N" ? "No" : "Yes"
+                        }
+                )
+                .Select(
+                    x =>
+                        new Filters
+                        {
+                            Key = x.Key.Key,
+                            Value = x.Key.Value,
+                            FriendlyValue = x.Key.FriendlyValue,
+                            Count = reports.Count(
+                                c =>
+                                    (
+                                        string.IsNullOrEmpty(c.DefaultVisibilityYn)
+                                          ? "Y"
+                                          : c.DefaultVisibilityYn
+                                    ) == x.Key.Value
+                            )
+                        }
+                )
+                .ToListAsync();
+
+            Filter_Certification = await _context.ReportObjects
+                .GroupBy(x => x.CertificationTag)
+                .Select(
+                    x =>
+                        new Filters
+                        {
+                            Key = "certification",
+                            Value = x.Key,
+                            FriendlyValue = x.Key,
+                            Count = reports.Count(c => c.CertificationTag == x.Key)
+                        }
+                )
+                .ToListAsync();
+
+            Filter_Availabiltiy = await _context.ReportObjects
+                .GroupBy(
+                    x =>
+                        new
+                        {
+                            Key = "availability",
+                            Value = string.IsNullOrEmpty(x.Availability) ? "Public" : x.Availability
+                        }
+                )
+                .Select(
+                    x =>
+                        new Filters
+                        {
+                            Key = x.Key.Key,
+                            Value = x.Key.Value,
+                            FriendlyValue = x.Key.Value,
+                            Count = reports.Count(
+                                c =>
+                                    (
+                                        string.IsNullOrEmpty(c.Availability)
+                                          ? "Public"
+                                          : c.Availability
+                                    ) == x.Key.Value
+                            )
+                        }
+                )
+                .ToListAsync();
+            return new PartialViewResult { ViewName = "Partials/_Filters", ViewData = ViewData };
+        }
+
+        public async Task<ActionResult> OnGetChartAsync(
             int id,
             string type,
             double start_at = -604800, // last 7 days
-            double end_at = 0
+            double end_at = 0,
+            List<string> server = null,
+            List<string> database = null,
+            List<string> masterFile = null,
+            List<string> visible = null,
+            List<string> certification = null,
+            List<string> availability = null,
+            List<int> reportType = null
         )
         {
             /*
@@ -153,6 +391,66 @@ namespace Atlas_Web.Pages.Profile
                             .Select(c => c.ReportId)
                             .Contains(x.ReportObjectId)
                 );
+            }
+            else if (type == "report" && id == -1)
+            {
+                if (server.Any())
+                {
+                    subquery = subquery.Where(x => server.Contains(x.ReportObject.SourceServer));
+                }
+
+                if (database.Any())
+                {
+                    subquery = subquery.Where(x => database.Contains(x.ReportObject.SourceDb));
+                }
+
+                if (masterFile.Any())
+                {
+                    subquery = subquery.Where(
+                        x =>
+                            masterFile.Contains(x.ReportObject.EpicMasterFile)
+                            || masterFile.Contains("None")
+                                && string.IsNullOrEmpty(x.ReportObject.EpicMasterFile)
+                    );
+                }
+
+                if (visible.Any())
+                {
+                    subquery = subquery.Where(
+                        x =>
+                            visible.Contains(x.ReportObject.DefaultVisibilityYn)
+                            || (
+                                visible.Contains("Y")
+                                && string.IsNullOrEmpty(x.ReportObject.DefaultVisibilityYn)
+                            )
+                    );
+                }
+
+                if (certification.Any())
+                {
+                    subquery = subquery.Where(
+                        x => certification.Contains(x.ReportObject.CertificationTag)
+                    );
+                }
+
+                if (availability.Any())
+                {
+                    subquery = subquery.Where(
+                        x =>
+                            availability.Contains(x.ReportObject.Availability)
+                            || (
+                                availability.Contains("Public")
+                                && string.IsNullOrEmpty(x.ReportObject.Availability)
+                            )
+                    );
+                }
+
+                if (reportType.Any())
+                {
+                    subquery = subquery.Where(
+                        x => reportType.Contains((int)x.ReportObject.ReportObjectTypeId)
+                    );
+                }
             }
             else
             {
@@ -262,7 +560,7 @@ namespace Atlas_Web.Pages.Profile
                 RunTime = 0;
             }
 
-            return Page();
+            return new PartialViewResult { ViewName = "Partials/_Chart", ViewData = ViewData };
         }
 
         public async Task<ActionResult> OnGetUsersAsync(

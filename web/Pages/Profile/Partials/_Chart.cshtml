@@ -1,0 +1,51 @@
+@model Atlas_Web.Pages.Profile.IndexModel
+{
+    "runs": "@Model.Runs",
+    "users": "@Model.Users",
+    "run_time":"@Model.RunTime",
+    "data": {
+        "labels": [@foreach (var g in Model.RunHistory){ <text>"@g.Date"</text> @if(g !=  @Model.RunHistory.Last()){<text>,</text>} }],
+        "datasets": [{
+                        "label": "Run Time",
+                        "borderColor":"rgba(38,128,235,0.2)",
+                        "backgroundColor": "transparent",
+                        "type": "line",
+                        "yAxisID": "2",
+                        "data": [
+                                    @foreach (var g in Model.RunHistory)
+                                    {
+                                        <text>@g.RunTime</text> @if(g != @Model.RunHistory.Last()){<text>,</text>}
+                                    }
+                                ]
+                    },
+                    {
+                        "label": "Runs",
+                        "backgroundColor":"rgba(38,128,235,0.3)",
+                        "borderColor":"rgba(38,128,235,0.4)",
+                        "borderWidth":1,
+                        "stack": "bar",
+                        "yAxisID": "1",
+                        "data": [
+                                    @foreach (var g in Model.RunHistory)
+                                    {
+                                        <text>@g.Runs</text> @if(g !=  @Model.RunHistory.Last()){<text>,</text>}
+                                    }
+                                ]
+                    },
+                    {
+                        "label": "Users",
+                        "backgroundColor":"rgba(38,128,235,0.5)",
+                        "borderColor":"rgba(38,128,235,0.6)",
+                        "borderWidth":1,
+                        "stack": "bar",
+                        "yAxisID": "1",
+                        "data": [
+                                    @foreach (var g in Model.RunHistory)
+                                    {
+                                        <text>@g.Users</text> @if(g != @Model.RunHistory.Last()){<text>,</text>}
+                                    }
+                                ]
+                    }]
+    }
+}
+

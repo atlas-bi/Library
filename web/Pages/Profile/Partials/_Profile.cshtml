@@ -1,34 +1,36 @@
-<nav class="breadcrumb">
-    <ul>
-        <li>
-            <a class="tab-lnk active" href="#runs-@ViewBag.ProfileType-@ViewBag.ProfileId">Run Details</a>
-        </li>
-        <li>
-            <a class="tab-lnk"  href="#stars-@ViewBag.ProfileType-@ViewBag.ProfileId">Stars</a>
-        </li>
-        @if(@ViewBag.ProfileType == "report")
-        {
+@if(ViewBag.ProfileId != -1){
+    <nav class="breadcrumb">
+        <ul>
             <li>
-                <a class="tab-lnk"  href="#subscriptions-@ViewBag.ProfileType-@ViewBag.ProfileId">Subscriptions</a>
+                <a class="tab-lnk active" href="#runs-@ViewBag.ProfileType-@ViewBag.ProfileId">Run Details</a>
             </li>
-        }
-    </ul>
-</nav>
+            <li>
+                <a class="tab-lnk"  href="#stars-@ViewBag.ProfileType-@ViewBag.ProfileId">Stars</a>
+            </li>
+            @if(@ViewBag.ProfileType == "report")
+            {
+                <li>
+                    <a class="tab-lnk"  href="#subscriptions-@ViewBag.ProfileType-@ViewBag.ProfileId">Subscriptions</a>
+                </li>
+            }
+        </ul>
+    </nav>
+}
 
 <section class="tab-cnt">
     <div class="tab-dta active" id="runs-@ViewBag.ProfileType-@ViewBag.ProfileId">
         <div class="is-flex mb-5 is-justify-content-space-between">
             <div class="is-flex">
                 <div class="is-flex mr-5 is-flex-direction-column">
-                    <h1 class="title is-2 mb-0 is-family-sans-serif"><span id="profile-@ViewBag.ProfileType-@ViewBag.ProfileId-runs">-</span></h1>
+                    <h1 class="title is-2 mb-0 is-family-sans-serif has-tooltip-arrow has-tooltip-right" data-tooltip="-"><span id="profile-@ViewBag.ProfileType-@ViewBag.ProfileId-runs">-</span></h1>
                     <span>Runs</span>
                 </div>
                 <div class="is-flex mx-5 is-flex-direction-column">
-                    <h1 class="title is-2 mb-0 is-family-sans-serif"><span id="profile-@ViewBag.ProfileType-@ViewBag.ProfileId-users">-</span></h1>
+                    <h1 class="title is-2 mb-0 is-family-sans-serif has-tooltip-arrow has-tooltip-right" data-tooltip="-"><span id="profile-@ViewBag.ProfileType-@ViewBag.ProfileId-users">-</span></h1>
                     <span>Users</span>
                 </div>
                 <div class="is-flex ml-5 is-flex-direction-column">
-                    <h1 class="title is-2 mb-0 is-family-sans-serif"><span id="profile-@ViewBag.ProfileType-@ViewBag.ProfileId-run-time">-</span>s</text></h1>
+                    <h1 class="title is-2 mb-0 is-family-sans-serif has-tooltip-arrow has-tooltip-right" data-tooltip="-"><span id="profile-@ViewBag.ProfileType-@ViewBag.ProfileId-run-time">-</span>s</text></h1>
                     <span>Run Time</span>
                 </div>
             </div>
@@ -84,7 +86,7 @@
         </div>
 
         <div class="chart-wrapper profile"  style="height:400px;">
-            <canvas id="profile-@ViewBag.ProfileType-@ViewBag.ProfileId" data-url="/Profile?type=@ViewBag.ProfileType&id=@ViewBag.ProfileId" width="400" height="400"></canvas>
+            <canvas id="profile-@ViewBag.ProfileType-@ViewBag.ProfileId" data-url="/Profile?handler=Chart&type=@ViewBag.ProfileType&id=@ViewBag.ProfileId" width="400" height="400"></canvas>
         </div>
 
 
@@ -102,14 +104,16 @@
             </div>
         </div>
     </div>
-    <div class="tab-dta" id="stars-@ViewBag.ProfileType-@ViewBag.ProfileId">
-        <div data-ajax="yes" data-url="/Profile" data-param="handler=Stars&type=@ViewBag.ProfileType&id=@ViewBag.ProfileId"></div>
-    </div>
-    @if(@ViewBag.ProfileType == "report")
-    {
-        <div class="tab-dta" id="subscriptions-@ViewBag.ProfileType-@ViewBag.ProfileId">
-            <div data-ajax="yes" data-url="/Profile" data-param="handler=Subscriptions&type=@ViewBag.ProfileType&id=@ViewBag.ProfileId"></div>
+    @if(ViewBag.ProfileId != -1){
+        <div class="tab-dta" id="stars-@ViewBag.ProfileType-@ViewBag.ProfileId">
+            <div data-ajax="yes" data-url="/Profile" data-param="handler=Stars&type=@ViewBag.ProfileType&id=@ViewBag.ProfileId"></div>
         </div>
+        @if(@ViewBag.ProfileType == "report")
+        {
+            <div class="tab-dta" id="subscriptions-@ViewBag.ProfileType-@ViewBag.ProfileId">
+                <div data-ajax="yes" data-url="/Profile" data-param="handler=Subscriptions&type=@ViewBag.ProfileType&id=@ViewBag.ProfileId"></div>
+            </div>
+        }
     }
 
 </section>

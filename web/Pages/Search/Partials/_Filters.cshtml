@@ -13,7 +13,7 @@
     {
         var advanced = @Model.SearchResults.Advanced == "Y" ? "N" : "Y";
 
-        <div class="srch-fltr">
+        <div class="m-2">
             <div class="field search-filter">
                 <input id="advanced"
                     type="checkbox"
@@ -28,7 +28,7 @@
     @if (Model.SearchResults.FilterFields.Count > 0)
     {
         <strong>Search Fields</strong>
-        <div class="srch-fltr">
+        <div class="m-2">
 
         @foreach (var field in Model.SearchResults.FilterFields)
         {
@@ -51,7 +51,7 @@
         @if ( Model.SearchResults.Advanced == "Y" && (ViewBag.Permissions.Contains(46) && field.FriendlyName == "Visible") || (field.FriendlyName != "Visible" && field.Values.Count > 1) || field.FriendlyName == "Type" || UrlHelpers.HasFacet(Model.SearchResults.Parameters, field.Key))
         {
             <strong>@field.FriendlyName</strong>
-            <div class="srch-fltr">
+            <div class="m-2">
 
                 @foreach (var value in field.Values)
                 {

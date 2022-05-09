@@ -15,20 +15,20 @@ yarn add @fontsource/source-code-pro // npm install @fontsource/source-code-pro
 Within your app entry file or site component, import it in.
 
 ```javascript
-import '@fontsource/source-code-pro'; // Defaults to weight 400.
+import "@fontsource/source-code-pro"; // Defaults to weight 400.
 ```
 
 Supported variables:
 
--   Weights: `[200,300,400,500,600,700,800,900]`
--   Styles: `[italic,normal]`
--   Supported subsets: `[cyrillic,cyrillic-ext,greek,greek-ext,latin,latin-ext,vietnamese]`
+- Weights: `[200,300,400,500,600,700,800,900]`
+- Styles: `[italic,normal]`
+- Supported subsets: `[cyrillic,cyrillic-ext,greek,greek-ext,latin,latin-ext,vietnamese]`
 
 Finally, you can reference the font name in a CSS stylesheet, CSS Module, or CSS-in-JS.
 
 ```css
 body {
-    font-family: 'Source Code Pro';
+  font-family: "Source Code Pro";
 }
 ```
 

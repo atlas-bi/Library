@@ -10,7 +10,21 @@
         (n = Math.round((n * d) / s) / d + 'kMGTPE'[i]);
     return n;
   }
-
+  function formatThousandsWithRounding(n, dp) {
+    //https://stackoverflow.com/a/20545587/10265880
+    var w = Number(n).toFixed(Number(dp)),
+      k = w | 0,
+      b = n < 0 ? 1 : 0,
+      u = Math.abs(w - k),
+      d = ('' + u.toFixed(Number(dp))).substr(2, Number(dp)),
+      s = '' + k,
+      i = s.length,
+      r = '';
+    while ((i -= 3) > b) {
+      r = ',' + s.substr(i, 3) + r;
+    }
+    return s.substr(0, i + 3) + r + (d ? '.' + d : '');
+  }
   const isInViewport = function (element) {
     const bounding = element.getBoundingClientRect();
     const padding = 600;
@@ -150,6 +164,7 @@
 
     loadChart();
     loadBoxes();
+    loadFilters();
 
     const {
       addHours,
@@ -278,8 +293,31 @@
           loadChart(dataset);
           loadBoxes(dataset);
           loadAjax(dataset);
+          loadFilters(dataset);
         }),
       );
+
+    document.addEventListener('click', (event) => {
+      if (event.target.closest('.profile-filter input[type=checkbox]')) {
+        const element = event.target.closest(
+          '.profile-filter input[type=checkbox]',
+        );
+        if (element.checked) {
+          loadChart((chart.dataset.parameters += `&${element.dataset.filter}`));
+        } else {
+          loadChart(
+            chart.dataset.parameters.replace(`&${element.dataset.filter}`, ''),
+          );
+        }
+
+        // get chart params, and update with new filter/remove filter
+        // get box params, and update with new filter/remove filter
+        console.log(element.dataset.filter);
+        console.log(element.checked);
+      }
+    });
+
+    function loadFilters(data) {}
 
     function buildDataTable(data) {
       if (data.length > 0) {
@@ -327,6 +365,7 @@
         ) || []
       ).forEach(($element) => {
         $element.style.opacity = '.5';
+        $element.setAttribute('data-parameters', parameters.replace('?', '&'));
         const aj = new XMLHttpRequest();
         aj.open(
           'get',
@@ -366,6 +405,7 @@
       if (chart.dataset.url.includes('?')) {
         parameters = parameters.replace('?', '&');
       }
+      chart.setAttribute('data-parameters', parameters);
 
       primaryChartAjax = new XMLHttpRequest();
       primaryChartAjax.open('get', chart.dataset.url + parameters, true);
@@ -381,14 +421,32 @@
 
         if (runs) {
           runs.textContent = bigNumber(rep.runs);
+          runs.parentElement.setAttribute(
+            'data-tooltip',
+            `${formatThousandsWithRounding(rep.runs, 0)} runs`,
+          );
+        } else {
+          runs.parentElement.removeAttribute('data-tooltip');
         }
 
         if (users) {
           users.textContent = bigNumber(rep.users);
+          users.parentElement.setAttribute(
+            'data-tooltip',
+            `${formatThousandsWithRounding(rep.users, 0)} users`,
+          );
+        } else {
+          users.parentElement.removeAttribute('data-tooltip');
         }
 
         if (runTime) {
           runTime.textContent = rep.run_time;
+          runTime.parentElement.setAttribute(
+            'data-tooltip',
+            `${formatThousandsWithRounding(rep.run_time, 2)} seconds`,
+          );
+        } else {
+          runTime.parentElement.removeAttribute('data-tooltip');
         }
 
         ChartJsChart.data = rep.data;

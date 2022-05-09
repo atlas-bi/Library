@@ -1,333 +1,54 @@
 @page
 @model Atlas_Web.Pages.Profile.IndexModel
 @{
-    Layout = null;
-}
+    ViewData["Title"] = "Library Profile";
+    ViewBag.ProfileType = "report";
+    ViewBag.ProfileId = -1;
 
-{
-    "runs": "@Model.Runs",
-    "users": "@Model.Users",
-    "run_time":"@Model.RunTime",
-    "data": {
-        "labels": [@foreach (var g in Model.RunHistory){ <text>"@g.Date"</text> @if(g !=  @Model.RunHistory.Last()){<text>,</text>} }],
-        "datasets": [{
-                        "label": "Run Time",
-                        "borderColor":"rgba(38,128,235,0.2)",
-                        "backgroundColor": "transparent",
-                        "type": "line",
-                        "yAxisID": "2",
-                        "data": [
-                                    @foreach (var g in Model.RunHistory)
-                                    {
-                                        <text>@g.RunTime</text> @if(g != @Model.RunHistory.Last()){<text>,</text>}
-                                    }
-                                ]
-                    },
-                    {
-                        "label": "Runs",
-                        "backgroundColor":"rgba(38,128,235,0.3)",
-                        "borderColor":"rgba(38,128,235,0.4)",
-                        "borderWidth":1,
-                        "stack": "bar",
-                        "yAxisID": "1",
-                        "data": [
-                                    @foreach (var g in Model.RunHistory)
-                                    {
-                                        <text>@g.Runs</text> @if(g !=  @Model.RunHistory.Last()){<text>,</text>}
-                                    }
-                                ]
-                    },
-                    {
-                        "label": "Users",
-                        "backgroundColor":"rgba(38,128,235,0.5)",
-                        "borderColor":"rgba(38,128,235,0.6)",
-                        "borderWidth":1,
-                        "stack": "bar",
-                        "yAxisID": "1",
-                        "data": [
-                                    @foreach (var g in Model.RunHistory)
-                                    {
-                                        <text>@g.Users</text> @if(g != @Model.RunHistory.Last()){<text>,</text>}
-                                    }
-                                ]
-                    }]
+
+    @if (HttpContext.Request.Headers["x-requested-with"] == "XMLHttpRequest")
+    {
+        Layout = null;
     }
 }
 
 
-@*
-
-@if (ViewBag.Permissions.Contains(39) && (TopUsers || RunHistory || FailedRuns || Subscriptions || Favorites))
-{
-    <div class="tab">
-        @if(TopUsers)
-        {
-            <a class="tab-lnk active" href="#top-users">Top Users</a>
-        }
-        @if(RunHistory){
-            <a class="tab-lnk @if(!TopUsers){<text>active</text>}" href="#run-history">Run History</a>
-        }
-        @if(FailedRuns){
-            <a class="tab-lnk @if(!TopUsers && !RunHistory){<text>active</text>}" href="#failed-runs">Failed Runs</a>
-        }
-        @if(Subscriptions){
-            <a class="tab-lnk @if(!TopUsers && !RunHistory && !FailedRuns){<text>active</text>}" href="#user-subscriptions">User Subscriptions</a>
-        }
-        @if(Favorites)
-        {
-            <a class="tab-lnk @if(!TopUsers && !RunHistory && !FailedRuns && !Subscriptions){<text>active</text>}" href="#user-favorites">User Favorites</a>
-        }
+<section class="section my-5 p-0 is-flex is-flex-direction-row is-align-items-center">
+    <div class="icon-text mr-5">
+        <span class="icon">
+            <i class="fas fa-filter"></i>
+        </span>
+        <strong>Filter Profile</strong>
     </div>
+   @* @if(clearFilters.Any()){
+        <div class="field is-grouped is-grouped-multiline">
+             @foreach (var field in clearFilters)
+            {
+                <div class="control">
+                    <div class="tags has-addons">
+                        @if(field.Key == "field"){
+                            <span class="tag is-light is-medium">Field</span>
+                            <span class="tag is-warning is-medium" >@Model.SearchResults.FilterFields.SingleOrDefault(x => x.Key == field.Value).FriendlyName<a class="delete is-small" href="@UrlHelpers.SetSearchFacetUrl(ViewContext.HttpContext, @field.Key, @field.Value)"></a></span>
+                        } else {
+                            <span class="tag is-light is-medium">@Model.SearchResults.FacetFields.SingleOrDefault(x => x.Key == field.Key).FriendlyName</span>
 
-    <div class="tab-cnt">
-        @if (TopUsers)
-        {
-            <div class="tab-dta active" id="top-users">
-                <h3>Top Users</h3>
-
-                <div class="tab">
-                    <a class="tab-lnk" href="#top-user-chart">Chart</a>
-                    <a class="tab-lnk active" href="#top-user-table">Table</a>
-                </div>
-
-                <div class="tab-cnt">
-                    <div class="tab-dta" id="top-user-chart">
-                        <div class="atlas-chart">
-                            <div class="ajaxLoader"><img class="ajaxLoader-img" src="/img/loader.gif" alt="loader" /></div>
-                            <script type="application/json">
-                                @{
-                                    var TopTen = Model.TopUsers.Take(10);
-                                    var last = TopTen.Last();
-                                    var hasRunTime = !TopTen.Sum(x => x.RunTime).Equals(0);
-                                }
-                                {
-                                    "axis": {
-                                        "0": {"title":"seconds"},
-                                        "1": {"title":"hits"}
-                                    },
-                                    "type": "bar",
-                                    "height":"400",
-                                    "title": "Top Report Users",
-                                    "data": [@if (hasRunTime) {<text>{
-                                        "title" : "Run Time (s)",
-                                        "axis":"0",
-                                        "type": "line",
-                                        "units": "(s)",
-                                        "data": [
-                                                @foreach (var g in TopTen)
-                                                {
-                                                    <text>{ "title": "@g.Username", "data": "@g.RunTime"}</text> @if (g != last) {<text>,</text>}
-                                                }
-                                            ]
-                                       }</text>},{
-                                        "title" : "Runs",
-                                        "type": "bar",
-                                        "axis": "1",
-                                        "data": [
-                                                @foreach (var g in TopTen)
-                                                {
-                                                    <text>{ "title": "@g.Username", "data": "@g.Hits"}</text> @if(g != last){<text>,</text>}
-                                                }
-                                            ]
-                                       }]
-                                    }
-                            </script>
-                        </div>
-                    </div>
-                    <div class="tab-dta active" id="top-user-table">
-                        <span class="has-text-grey">Data shown represents the last two years of usage.</span>
-                        <div class="table-responsive">
-                            <table class="table sort" aria-label="top users">
-                                <thead>
-                                    <tr>
-                                        <th>User</th>
-                                        <th>Total Hits</th>
-                                        <th>Average Run Time</th>
-                                        <th>Last Run</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach (var u in Model.TopUsers)
-                                    {
-                                        <tr>
-                                            <td><a href="@u.UserUrl">@u.Username</a></td>
-                                            <td>@u.Hits</td>
-                                            <td>@u.RunTime</td>
-                                            <td>@u.LastRun</td>
-                                        </tr>
-                                    }
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        }
-        @if(RunHistory)
-        {
-            <div class="tab-dta @if(!TopUsers){<text>active</text>} my-4" id="run-history">
-                <h3>Historical Run Time</h3>
-                <div class="tab">
-                    <a class="tab-lnk" href="#run-time-chart">Chart</a>
-                    <a class="tab-lnk active" href="#run-time-table">Table</a>
-                 </div>
-
-                <div class="tab-cnt">
-                    <div class="tab-dta" id="run-time-chart">
-                         <div class="atlas-chart">
-                            <div class="ajaxLoader"><img class="ajaxLoader-img" src="/img/loader.gif" alt="loader" /></div>
-                            <script type="application/json">
-                                @{
-                                    var runs = Model.RunTime.Take(25);
-                                    var last = runs.Last();
-                                }
-                                {
-                                    "axis": {
-                                        "0": {"title":"seconds"},
-                                        "1": {"title":"hits"}
-                                    },
-                                    "type": "bar",
-                                    "height":"400",
-                                    "title": "Report Run Time",
-                                    "data": [{
-                                        "title" : "Run Time (s)",
-                                        "axis":"0",
-                                        "type": "line",
-                                        "units": "(s)",
-                                        "data": [
-                                                @foreach (var g in runs)
-                                                {
-                                                    <text>{ "title": "@g.Date", "data": "@g.Avg"}</text> @if(g != last){<text>,</text>}
-                                                }
-                                            ]
-                                       },{
-                                        "title" : "Runs",
-                                        "type": "bar",
-                                        "axis": "1",
-                                        "data": [
-                                                @foreach (var g in runs)
-                                                {
-                                                    <text>{ "title": "@g.Date", "data": "@g.Cnt"}</text> @if(g != last){<text>,</text>}
-                                                }
-                                            ]
-                                       }]
-                                    }
-                            </script>
-                            <span class="has-text-grey">Data grouped into weekly buckets.</span>
-                        </div>
-                    </div>
-                    <div class="tab-dta active" id="run-time-table">
-                        <span class="has-text-grey">Data shown represents the last two years of usage.</span>
-                        <div class="table-responsive">
-                            <table class="table sort" aria-label="run time">
-                                <thead>
-                                    <tr>
-                                        <th>Week Starting At</th>
-                                        <th>Total Hits</th>
-                                        <th>Average Run Time</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach (var u in Model.RunTime.OrderBy(x => x.Date))
-                                    {
-                                        <tr>
-                                            <td>@u.Date</td>
-                                            <td>@u.Cnt</td>
-                                            <td>@u.Avg</td>
-                                        </tr>
-                                    }
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        }
-        @if(FailedRuns)
-        {
-            <div class="tab-dta @if(!TopUsers && !RunHistory){<text>active</text>} my-4" id="failed-runs">
-                <h3>Failed Runs</h3>
-                <div class="table-responsive">
-                    <table class="table sort" aria-label="failed runs">
-                        <thead>
-                            <tr>
-                                <th>Run Date</th>
-                                <th>Run By</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var run in Model.FailedRuns)
-                            {
-                                <tr>
-                                    <td>@run.Date</td>
-                                    <td>@run.RunUser</td>
-                                    <td>@run.RunStatus</td>
-                                </tr>
+                            @if(@Model.SearchResults.FacetFields.SingleOrDefault(x => x.Key == field.Key).Values.Any()){
+                                <span class="tag is-warning is-medium" >@Model.SearchResults.FacetFields.SingleOrDefault(x => x.Key == field.Key).Values.SingleOrDefault(x => x.Value == field.Value).FriendlyName<a class="delete is-small" href="@UrlHelpers.SetSearchFacetUrl(ViewContext.HttpContext, @field.Key, @field.Value)"></a></span>
+                            } else {
+                                <span class="tag is-warning is-medium" >@field.Value<a class="delete is-small" href="@UrlHelpers.SetSearchFacetUrl(ViewContext.HttpContext, @field.Key, @field.Value)"></a></span>
                             }
-                        </tbody>
-                    </table>
+                        }
+                    </div>
                 </div>
-            </div>
-        }
-        @if(Subscriptions)
-        {
-            <div class="tab-dta @if(!TopUsers && !RunHistory && !FailedRuns){<text>active</text>}" id="user-subscriptions">
-                <h3>Subscriptions</h3>
-                <div class="table-responsive">
-                    <table class="table sort" aria-label="user subscriptions">
-                        <thead>
-                            <tr>
-                                <th>Description</th>
-                                <th>Last Run</th>
-                                <th>Message</th>
-                                <th>User</th>
-                                <th>Subscribed As</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach(var s in Model.Subscriptions)
-                            {
-                                <tr>
-                                    <td>@s.Description</td>
-                                    <td>@s.LastRun</td>
-                                    <td>@s.LastStatus</td>
-                                    <td><a href="@s.UserUrl">@s.User</a></td>
-                                    <td>@s.Subscription</td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        }
-        @if(Favorites)
-        {
-            <div class="tab-dta @if(!TopUsers && !RunHistory && !FailedRuns && !Subscriptions){<text>active</text>}" id="user-favorites">
+            }
+        </div>
+    }*@
+</section>
 
-                <h3>User Favorites</h3>
-                <div class="table-responsive">
-                    <table class="table sort" aria-label="user favorites">
-                        <thead>
-                            <tr>
-                                <th>User</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach(var s in Model.ProfileFavorites)
-                            {
-                                <tr>
-                                    <td><a href="@s.UserUrl">@s.User</a></td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        }
+<div class="columns">
+    <div class="column is-one-quarter is-sticky is-align-self-flex-start" style="max-height:calc(100vh - 137px); overflow-Y:auto" id="profile-filters">
+        <div data-ajax="yes" class="no-loader" data-url="/Profile?handler=Filters"></div>
     </div>
-} else {
-    <h5>No activity to show</h5>
-    <h5>¯\_(ツ)_/¯</h5>
-} *@
-</div>
+    <div class="column" id="results">
+        <partial name="Partials/_Profile" />
+    </div>

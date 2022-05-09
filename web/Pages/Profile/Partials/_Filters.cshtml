@@ -1,0 +1,120 @@
+@model Atlas_Web.Pages.Profile.IndexModel
+@functions
+{
+    public string bigNumber(int num)
+    {
+        if(num <= 1000){
+            return num.ToString();
+        }
+        else if (num < 1000000){
+            return $"{Math.Round(decimal.Divide(num,1000),0).ToString()}k";
+        }
+        else if (num < 1000000000){
+            return $"{Math.Round(decimal.Divide(num,1000000),0).ToString()}M";
+        }
+        else if (num >= 1000000000){
+            return $"{Math.Round(decimal.Divide(num,1000000000),0).ToString()}B";
+        }
+        return num.ToString();
+    }
+}
+<div>
+    @if(Model.Filter_Server.Any()){
+        <strong>Server</strong>
+        <div class="m-2">
+            @foreach(var filter in Model.Filter_Server.OrderByDescending(x => x.Count)){
+                <div class="field profile-filter" >
+                    <input id="filter-@filter.Key.Replace(" ","")-@filter.Value.Replace(" ","")"
+                        type="checkbox"
+                        data-filter="@filter.Key=@filter.Value"
+                        class="is-checkradio is-info"/>
+                    <label for="filter-@filter.Key.Replace(" ","")-@filter.Value.Replace(" ","")" >@filter.FriendlyValue<span class="has-tooltip-arrow has-tooltip-right tag ml-3 is-info is-rounded is-light" data-tooltip="@String.Format(System.Threading.Thread.CurrentThread.CurrentCulture, "{0:0,0}", @filter.Count)">@bigNumber(filter.Count)</span></label>
+                </div>
+            }
+        </div>
+    }
+    @if(Model.Filter_Database.Any()){
+        <strong>Database</strong>
+        <div class="m-2">
+            @foreach(var filter in Model.Filter_Database.OrderByDescending(x => x.Count)){
+                <div class="field profile-filter" >
+                    <input id="filter-@filter.Key.Replace(" ","")-@filter.Value.Replace(" ","")"
+                        type="checkbox"
+                        data-filter="@filter.Key=@filter.Value"
+                        class="is-checkradio is-info"/>
+                    <label for="filter-@filter.Key.Replace(" ","")-@filter.Value.Replace(" ","")">@filter.FriendlyValue<span class="has-tooltip-arrow has-tooltip-right tag ml-3 is-info is-rounded is-light" data-tooltip="@String.Format(System.Threading.Thread.CurrentThread.CurrentCulture, "{0:0,0}", @filter.Count)">@bigNumber(filter.Count)</span></label>
+                </div>
+            }
+        </div>
+    }
+    @if(Model.Filter_MasterFile.Any()){
+        <strong>Master File</strong>
+        <div class="m-2">
+            @foreach(var filter in Model.Filter_MasterFile.OrderByDescending(x => x.Count)){
+                <div class="field profile-filter" >
+                    <input id="filter-@filter.Key.Replace(" ","")-@filter.Value.Replace(" ","")"
+                        type="checkbox"
+                        data-filter="@filter.Key=@filter.Value"
+                        class="is-checkradio is-info"/>
+                    <label for="filter-@filter.Key.Replace(" ","")-@filter.Value.Replace(" ","")">@filter.FriendlyValue<span class="has-tooltip-arrow has-tooltip-right tag ml-3 is-info is-rounded is-light" data-tooltip="@String.Format(System.Threading.Thread.CurrentThread.CurrentCulture, "{0:0,0}", @filter.Count)">@bigNumber(filter.Count)</span></label>
+                </div>
+            }
+        </div>
+    }
+    @if(Model.Filter_Visible.Any()){
+        <strong>Visible</strong>
+        <div class="m-2">
+            @foreach(var filter in Model.Filter_Visible.OrderByDescending(x => x.Count)){
+                <div class="field profile-filter" >
+                    <input id="filter-@filter.Key.Replace(" ","")-@filter.Value.Replace(" ","")"
+                        type="checkbox"
+                        data-filter="@filter.Key=@filter.Value"
+                        class="is-checkradio is-info"/>
+                    <label for="filter-@filter.Key.Replace(" ","")-@filter.Value.Replace(" ","")">@filter.FriendlyValue<span class="has-tooltip-arrow has-tooltip-right tag ml-3 is-info is-rounded is-light" data-tooltip="@String.Format(System.Threading.Thread.CurrentThread.CurrentCulture, "{0:0,0}", @filter.Count)">@bigNumber(filter.Count)</span></label>
+                </div>
+            }
+        </div>
+    }
+    @if(Model.Filter_Certification.Any()){
+        <strong>Certification Tag</strong>
+        <div class="m-2">
+            @foreach(var filter in Model.Filter_Certification.OrderByDescending(x => x.Count)){
+                <div class="field profile-filter" >
+                    <input id="filter-@filter.Key.Replace(" ","")-@filter.Value.Replace(" ","")"
+                        type="checkbox"
+                        data-filter="@filter.Key=@filter.Value"
+                        class="is-checkradio is-info"/>
+                    <label for="filter-@filter.Key.Replace(" ","")-@filter.Value.Replace(" ","")">@filter.FriendlyValue<span class="has-tooltip-arrow has-tooltip-right tag ml-3 is-info is-rounded is-light" data-tooltip="@String.Format(System.Threading.Thread.CurrentThread.CurrentCulture, "{0:0,0}", @filter.Count)">@bigNumber(filter.Count)</span></label>
+                </div>
+            }
+        </div>
+    }
+    @if(Model.Filter_Availabiltiy.Any()){
+        <strong>Availability</strong>
+        <div class="m-2">
+            @foreach(var filter in Model.Filter_Availabiltiy.OrderByDescending(x => x.Count)){
+                <div class="field profile-filter" >
+                    <input id="filter-@filter.Key.Replace(" ","")-@filter.Value.Replace(" ","")"
+                        type="checkbox"
+                        data-filter="@filter.Key=@filter.Value"
+                        class="is-checkradio is-info"/>
+                    <label for="filter-@filter.Key.Replace(" ","")-@filter.Value.Replace(" ","")">@filter.FriendlyValue<span class="has-tooltip-arrow has-tooltip-right tag ml-3 is-info is-rounded is-light" data-tooltip="@String.Format(System.Threading.Thread.CurrentThread.CurrentCulture, "{0:0,0}", @filter.Count)">@bigNumber(filter.Count)</span></label>
+                </div>
+            }
+        </div>
+    }
+    @if(Model.Filter_ReportType.Any()){
+        <strong>Report Type</strong>
+        <div class="m-2">
+            @foreach(var filter in Model.Filter_ReportType.OrderByDescending(x => x.Count)){
+                <div class="field profile-filter" >
+                    <input id="filter-@filter.Key.Replace(" ","")-@filter.Value.Replace(" ","")"
+                        type="checkbox"
+                        data-filter="@filter.Key=@filter.Value"
+                        class="is-checkradio is-info"/>
+                    <label for="filter-@filter.Key.Replace(" ","")-@filter.Value.Replace(" ","")">@filter.FriendlyValue<span class="has-tooltip-arrow has-tooltip-right tag ml-3 is-info is-rounded is-light" data-tooltip="@String.Format(System.Threading.Thread.CurrentThread.CurrentCulture, "{0:0,0}", @filter.Count)">@bigNumber(filter.Count)</span></label>
+                </div>
+            }
+        </div>
+    }
+</div>
