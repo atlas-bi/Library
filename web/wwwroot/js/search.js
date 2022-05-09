@@ -43,8 +43,6 @@
     ? '/'
     : w.location.href;
 
-  w.oldPopState = document.location.pathname;
-
   function replaceUrlParameter(url, parameterName, parameterValue) {
     if (parameterValue === null) {
       parameterValue = '';
@@ -135,7 +133,6 @@
 
       a.href = url || oldHref;
 
-      w.oldPopState = document.location.pathname;
       history.pushState(
         {
           state: 'ajax',
@@ -287,13 +284,4 @@
   function submit(l) {
     ajaxSearch(null, l);
   }
-
-  w.addEventListener('popstate', function () {
-    if (
-      document.location.pathname === '/Search' ||
-      w.oldPopState === '/Search'
-    ) {
-      w.location.href = document.location.href;
-    }
-  });
 })();

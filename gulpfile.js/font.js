@@ -16,6 +16,13 @@ gulp.task('font:rasa', () => {
     .pipe(gulp.dest('web/wwwroot/font/rasa'));
 });
 
+gulp.task('font:source', () => {
+  return gulp
+    .src('node_modules/@fontsource/source-code-pro/**/*')
+    .pipe(replace(/\.\/files\//g, '/font/source-code-pro/files/'))
+    .pipe(gulp.dest('web/wwwroot/font/source-code-pro'));
+});
+
 gulp.task('font:fontawesome', (done) => {
   fontawesomeSubset(
     {
@@ -105,5 +112,5 @@ gulp.task('font:fontawesome', (done) => {
 
 gulp.task(
   'fonts',
-  gulp.parallel('font:inter', 'font:rasa', 'font:fontawesome'),
+  gulp.parallel('font:inter', 'font:rasa', 'font:fontawesome', 'font:source'),
 );

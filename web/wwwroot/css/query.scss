@@ -17,6 +17,14 @@
     white-space: pre;
   }
 
+  code:not(.hljs) {
+    padding: 0.5em;
+    color: #d1d9e1;
+    overflow-x: auto;
+    display: block;
+    background: #474949;
+  }
+
   .hljs {
     padding-bottom: 1rem;
     padding-right: 130px;

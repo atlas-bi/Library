@@ -43,8 +43,19 @@
   $fontDir: '/font/rasa/files/'
 );
 
+@import '../../../node_modules/@fontsource/source-code-pro/scss/mixins';
+
+@include fontFace(
+  $fontName: 'Source Code Pro',
+  $weight: 400,
+  $display: swap,
+  $unicodeMap: latin,
+  $fontDir: '/font/source-code-pro/files/'
+);
+
 @import '../font/fontawesome/stylesheet';
 
+$family-monospace: 'Source Code Pro', monospace;
 $family-sans-serif: 'Inter', blinkmacsystemfont, -apple-system, 'Segoe UI',
   'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans',
   'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
@@ -82,6 +93,7 @@ pre,
   padding: 0;
   white-space: pre;
   word-wrap: normal;
+  font-family: $family-monospace;
 }
 
 $badge-height: 13px;

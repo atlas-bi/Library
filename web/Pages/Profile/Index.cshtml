@@ -1,17 +1,62 @@
 @page
 @model Atlas_Web.Pages.Profile.IndexModel
 @{
-    ViewData["Title"] = "Profile";
     Layout = null;
-    var TopUsers = Model.TopUsers.Count() > 0;
-    var RunHistory = Model.RunTime.Count() > 0;
-    var FailedRuns = Model.FailedRuns != null && Model.FailedRuns.Count() > 0;
-    var Subscriptions = Model.Subscriptions != null && Model.Subscriptions.Count() > 0;
-    var Favorites = Model.ProfileFavorites != null && Model.ProfileFavorites.Count() > 0;
+}
+
+{
+    "runs": "@Model.Runs",
+    "users": "@Model.Users",
+    "run_time":"@Model.RunTime",
+    "data": {
+        "labels": [@foreach (var g in Model.RunHistory){ <text>"@g.Date"</text> @if(g !=  @Model.RunHistory.Last()){<text>,</text>} }],
+        "datasets": [{
+                        "label": "Run Time",
+                        "borderColor":"rgba(38,128,235,0.2)",
+                        "backgroundColor": "transparent",
+                        "type": "line",
+                        "yAxisID": "2",
+                        "data": [
+                                    @foreach (var g in Model.RunHistory)
+                                    {
+                                        <text>@g.RunTime</text> @if(g != @Model.RunHistory.Last()){<text>,</text>}
+                                    }
+                                ]
+                    },
+                    {
+                        "label": "Runs",
+                        "backgroundColor":"rgba(38,128,235,0.3)",
+                        "borderColor":"rgba(38,128,235,0.4)",
+                        "borderWidth":1,
+                        "stack": "bar",
+                        "yAxisID": "1",
+                        "data": [
+                                    @foreach (var g in Model.RunHistory)
+                                    {
+                                        <text>@g.Runs</text> @if(g !=  @Model.RunHistory.Last()){<text>,</text>}
+                                    }
+                                ]
+                    },
+                    {
+                        "label": "Users",
+                        "backgroundColor":"rgba(38,128,235,0.5)",
+                        "borderColor":"rgba(38,128,235,0.6)",
+                        "borderWidth":1,
+                        "stack": "bar",
+                        "yAxisID": "1",
+                        "data": [
+                                    @foreach (var g in Model.RunHistory)
+                                    {
+                                        <text>@g.Users</text> @if(g != @Model.RunHistory.Last()){<text>,</text>}
+                                    }
+                                ]
+                    }]
+    }
 }
 
 
-<div>
+@*
+
 @if (ViewBag.Permissions.Contains(39) && (TopUsers || RunHistory || FailedRuns || Subscriptions || Favorites))
 {
     <div class="tab">
@@ -284,5 +329,5 @@
 } else {
     <h5>No activity to show</h5>
     <h5>¯\_(ツ)_/¯</h5>
-}
+} *@
 </div>

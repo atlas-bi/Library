@@ -243,7 +243,6 @@ namespace Atlas_Web.Pages.Search
                     filters.Add(new FilterFields("name", "Name"));
                     filters.Add(new FilterFields("description", "Description"));
                     filters.Add(new FilterFields("query", "Query"));
-                    filters.Add(new FilterFields("description", "Description"));
                     filters.Add(new FilterFields("epic_record_id", "Epic ID"));
                     filters.Add(new FilterFields("epic_template", "Epic Template ID"));
                 }

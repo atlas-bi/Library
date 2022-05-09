@@ -105,7 +105,6 @@ namespace Atlas_Web.Pages.Analytics
                     SessionId = b.SessionId,
                     SessionTime = TimeSpan.FromMilliseconds(sub.SessionTime).ToString(@"h\:mm\:ss"),
                     PageTime = TimeSpan.FromMilliseconds(b.PageTime ?? 0).ToString(@"h\:mm\:ss"),
-                    Title = b.Title,
                     Href = b.Href,
                     AccessDateTime = (b.AccessDateTime ?? DateTime.Now).ToString(
                         @"M/d/yy h\:mm\:ss tt"
@@ -172,11 +171,9 @@ namespace Atlas_Web.Pages.Analytics
                 view: session, time, url, referer
                 event: session, time, url, type, value
             */
-            NewAnalytic.Username = User.Identity.Name;
             NewAnalytic.UserId = MyUser.UserId;
             NewAnalytic.Language = package.Value<string>("language") ?? "";
             NewAnalytic.UserAgent = package.Value<string>("userAgent") ?? "";
-            NewAnalytic.Host = package.Value<string>("host") ?? "";
             NewAnalytic.Hostname = package.Value<string>("hostname") ?? ""; // keep
             NewAnalytic.Href = package.Value<string>("href") ?? "";
             NewAnalytic.Protocol = package.Value<string>("protocol") ?? "";
