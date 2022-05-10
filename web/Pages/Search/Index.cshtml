@@ -35,7 +35,7 @@
                         @if(field.Key == "field"){
                             <span class="tag is-light is-medium">Field</span>
                             <span class="tag is-warning is-medium" >@Model.SearchResults.FilterFields.SingleOrDefault(x => x.Key == field.Value).FriendlyName<a class="delete is-small" href="@UrlHelpers.SetSearchFacetUrl(ViewContext.HttpContext, @field.Key, @field.Value)"></a></span>
-                        } else {
+                        } else if (@Model.SearchResults.FacetFields.Any(x => x.Key == field.Key)) {
                             <span class="tag is-light is-medium">@Model.SearchResults.FacetFields.SingleOrDefault(x => x.Key == field.Key).FriendlyName</span>
                             @* if there are 0 results, the filters do not show or have values *@
                             @if(@Model.SearchResults.FacetFields.SingleOrDefault(x => x.Key == field.Key).Values.Count > 0){
