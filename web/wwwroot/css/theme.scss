@@ -576,3 +576,29 @@ button.is-ghost:not(.button) {
 .is-middle {
   vertical-align: middle !important;
 }
+
+input.css-collapse {
+  display: none;
+}
+
+.css-collapse ~ div {
+  display: none;
+}
+
+.css-collapse-label {
+  width: 100%;
+  height: calc($body-font-size * $body-line-height);
+}
+
+.css-collapse-label::before {
+  position: absolute;
+  content: 'show more';
+}
+
+.css-collapse:checked ~ div {
+  display: block;
+}
+
+.css-collapse:checked ~ div ~ .css-collapse-label::before {
+  content: 'show less';
+}

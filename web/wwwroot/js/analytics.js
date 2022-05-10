@@ -254,7 +254,7 @@
   function loadAjax(parameters = '') {
     (document.querySelectorAll('.analytics[data-url]') || []).forEach(
       ($element) => {
-        $element.setAttribute('data-params', parameters);
+        $element.setAttribute('data-parameters', parameters);
         $element.dispatchEvent(new CustomEvent('reload'));
       },
     );

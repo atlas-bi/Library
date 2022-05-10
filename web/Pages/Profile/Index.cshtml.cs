@@ -103,6 +103,7 @@ namespace Atlas_Web.Pages.Profile
             public string Value { get; set; }
             public string FriendlyValue { get; set; }
             public int Count { get; set; }
+            public bool Checked { get; set; }
         }
 
         public int Runs { get; set; }
@@ -132,64 +133,79 @@ namespace Atlas_Web.Pages.Profile
         public async Task<ActionResult> OnGetFiltersAsync(
             double start_at = -604800, // last 7 days
             double end_at = 0,
-            string server = "all",
-            string database = "all",
-            string masterFile = "all",
-            string visible = "all",
-            string certification = "all",
-            string availability = "all",
-            int reportType = -1
+            List<string> server = null,
+            List<string> database = null,
+            List<string> masterFile = null,
+            List<string> visible = null,
+            List<string> certification = null,
+            List<string> availability = null,
+            List<int> reportType = null
         )
         {
-            var reports = _context.ReportObjects.Where(
-                x =>
-                    _context.ReportObjectRunData.Any(
-                        r =>
-                            r.RunStartTime >= DateTime.Now.AddSeconds(start_at)
-                            && r.RunStartTime <= DateTime.Now.AddSeconds(end_at)
-                    )
+            var subquery = _context.ReportObjectRunData.Where(
+                r =>
+                    r.RunStartTime >= DateTime.Now.AddSeconds(start_at)
+                    && r.RunStartTime <= DateTime.Now.AddSeconds(end_at)
             );
 
-            if (server != "all")
+            if (server.Any())
             {
-                reports = reports.Where(x => x.SourceServer == server);
+                subquery = subquery.Where(x => server.Contains(x.ReportObject.SourceServer));
             }
 
-            if (database != "all")
+            if (database.Any())
             {
-                reports = reports.Where(x => x.SourceDb == database);
+                subquery = subquery.Where(x => database.Contains(x.ReportObject.SourceDb));
             }
 
-            if (masterFile != "all")
+            if (masterFile.Any())
             {
-                if (masterFile == "None")
-                {
-                    reports = reports.Where(x => string.IsNullOrEmpty(x.EpicMasterFile));
-                }
-                else
-                {
-                    reports = reports.Where(x => x.EpicMasterFile == masterFile);
-                }
+                subquery = subquery.Where(
+                    x =>
+                        masterFile.Contains(x.ReportObject.EpicMasterFile)
+                        || masterFile.Contains("None")
+                            && string.IsNullOrEmpty(x.ReportObject.EpicMasterFile)
+                );
+
+
             }
 
-            if (visible != "all")
+            if (visible.Any())
             {
-                reports = reports.Where(x => x.DefaultVisibilityYn == visible);
+                subquery = subquery.Where(
+                    x =>
+                        visible.Contains(x.ReportObject.DefaultVisibilityYn)
+                        || (
+                            visible.Contains("Y")
+                            && string.IsNullOrEmpty(x.ReportObject.DefaultVisibilityYn)
+                        )
+                );
             }
 
-            if (certification != "all")
+            if (certification.Any())
             {
-                reports = reports.Where(x => x.CertificationTag == certification);
+                subquery = subquery.Where(
+                    x => certification.Contains(x.ReportObject.CertificationTag)
+                );
             }
 
-            if (availability != "all")
+            if (availability.Any())
             {
-                reports = reports.Where(x => x.Availability == availability);
+                subquery = subquery.Where(
+                    x =>
+                        availability.Contains(x.ReportObject.Availability)
+                        || (
+                            availability.Contains("Public")
+                            && string.IsNullOrEmpty(x.ReportObject.Availability)
+                        )
+                );
             }
 
-            if (reportType != -1)
+            if (reportType.Any())
             {
-                reports = reports.Where(x => x.ReportObjectTypeId == reportType);
+                subquery = subquery.Where(
+                    x => reportType.Contains((int)x.ReportObject.ReportObjectTypeId)
+                );
             }
 
             Filter_Server = await _context.ReportObjects
@@ -201,7 +217,8 @@ namespace Atlas_Web.Pages.Profile
                             Key = "server",
                             Value = x.Key,
                             FriendlyValue = x.Key,
-                            Count = reports.Count(c => c.SourceServer == x.Key)
+                            Count = subquery.Count(c => c.ReportObject.SourceServer == x.Key),
+                            Checked = server.Contains(x.Key)
                         }
                 )
                 .ToListAsync();
@@ -215,7 +232,8 @@ namespace Atlas_Web.Pages.Profile
                             Key = "database",
                             Value = x.Key,
                             FriendlyValue = x.Key,
-                            Count = reports.Count(c => c.SourceDb == x.Key)
+                            Count = subquery.Count(c => c.ReportObject.SourceDb == x.Key),
+                            Checked = database.Contains(x.Key)
                         }
                 )
                 .ToListAsync();
@@ -229,9 +247,10 @@ namespace Atlas_Web.Pages.Profile
                             Key = "reportType",
                             Value = x.Key.ReportObjectTypeId.ToString(),
                             FriendlyValue = x.Key.Name,
-                            Count = reports.Count(
-                                c => c.ReportObjectTypeId == x.Key.ReportObjectTypeId
-                            )
+                            Count = subquery.Count(
+                                c => c.ReportObject.ReportObjectTypeId == x.Key.ReportObjectTypeId
+                            ),
+                            Checked = reportType.Contains((int)x.Key.ReportObjectTypeId)
                         }
                 )
                 .ToListAsync();
@@ -254,14 +273,15 @@ namespace Atlas_Web.Pages.Profile
                             Key = x.Key.Key,
                             Value = x.Key.Value,
                             FriendlyValue = x.Key.Value,
-                            Count = reports.Count(
+                            Count = subquery.Count(
                                 c =>
                                     (
-                                        string.IsNullOrEmpty(c.EpicMasterFile)
+                                        string.IsNullOrEmpty(c.ReportObject.EpicMasterFile)
                                           ? "None"
-                                          : c.EpicMasterFile
+                                          : c.ReportObject.EpicMasterFile
                                     ) == x.Key.Value
-                            )
+                            ),
+                            Checked = masterFile.Contains(x.Key.Value)
                         }
                 )
                 .ToListAsync();
@@ -283,14 +303,15 @@ namespace Atlas_Web.Pages.Profile
                             Key = x.Key.Key,
                             Value = x.Key.Value,
                             FriendlyValue = x.Key.FriendlyValue,
-                            Count = reports.Count(
+                            Count = subquery.Count(
                                 c =>
                                     (
-                                        string.IsNullOrEmpty(c.DefaultVisibilityYn)
+                                        string.IsNullOrEmpty(c.ReportObject.DefaultVisibilityYn)
                                           ? "Y"
-                                          : c.DefaultVisibilityYn
+                                          : c.ReportObject.DefaultVisibilityYn
                                     ) == x.Key.Value
-                            )
+                            ),
+                            Checked = visible.Contains(x.Key.Value)
                         }
                 )
                 .ToListAsync();
@@ -304,7 +325,8 @@ namespace Atlas_Web.Pages.Profile
                             Key = "certification",
                             Value = x.Key,
                             FriendlyValue = x.Key,
-                            Count = reports.Count(c => c.CertificationTag == x.Key)
+                            Count = subquery.Count(c => c.ReportObject.CertificationTag == x.Key),
+                            Checked = certification.Contains(x.Key)
                         }
                 )
                 .ToListAsync();
@@ -325,14 +347,15 @@ namespace Atlas_Web.Pages.Profile
                             Key = x.Key.Key,
                             Value = x.Key.Value,
                             FriendlyValue = x.Key.Value,
-                            Count = reports.Count(
+                            Count = subquery.Count(
                                 c =>
                                     (
-                                        string.IsNullOrEmpty(c.Availability)
+                                        string.IsNullOrEmpty(c.ReportObject.Availability)
                                           ? "Public"
-                                          : c.Availability
+                                          : c.ReportObject.Availability
                                     ) == x.Key.Value
-                            )
+                            ),
+                            Checked = availability.Contains(x.Key.Value)
                         }
                 )
                 .ToListAsync();
@@ -567,7 +590,14 @@ namespace Atlas_Web.Pages.Profile
             int id,
             string type,
             double start_at = -604800, // last 7 days
-            double end_at = 0
+            double end_at = 0,
+            List<string> server = null,
+            List<string> database = null,
+            List<string> masterFile = null,
+            List<string> visible = null,
+            List<string> certification = null,
+            List<string> availability = null,
+            List<int> reportType = null
         )
         {
             var subquery = _context.ReportObjectRunData.Where(
@@ -599,6 +629,66 @@ namespace Atlas_Web.Pages.Profile
                             .Select(c => c.ReportId)
                             .Contains(x.ReportObjectId)
                 );
+            }
+            else if (type == "report" && id == -1)
+            {
+                if (server.Any())
+                {
+                    subquery = subquery.Where(x => server.Contains(x.ReportObject.SourceServer));
+                }
+
+                if (database.Any())
+                {
+                    subquery = subquery.Where(x => database.Contains(x.ReportObject.SourceDb));
+                }
+
+                if (masterFile.Any())
+                {
+                    subquery = subquery.Where(
+                        x =>
+                            masterFile.Contains(x.ReportObject.EpicMasterFile)
+                            || masterFile.Contains("None")
+                                && string.IsNullOrEmpty(x.ReportObject.EpicMasterFile)
+                    );
+                }
+
+                if (visible.Any())
+                {
+                    subquery = subquery.Where(
+                        x =>
+                            visible.Contains(x.ReportObject.DefaultVisibilityYn)
+                            || (
+                                visible.Contains("Y")
+                                && string.IsNullOrEmpty(x.ReportObject.DefaultVisibilityYn)
+                            )
+                    );
+                }
+
+                if (certification.Any())
+                {
+                    subquery = subquery.Where(
+                        x => certification.Contains(x.ReportObject.CertificationTag)
+                    );
+                }
+
+                if (availability.Any())
+                {
+                    subquery = subquery.Where(
+                        x =>
+                            availability.Contains(x.ReportObject.Availability)
+                            || (
+                                availability.Contains("Public")
+                                && string.IsNullOrEmpty(x.ReportObject.Availability)
+                            )
+                    );
+                }
+
+                if (reportType.Any())
+                {
+                    subquery = subquery.Where(
+                        x => reportType.Contains((int)x.ReportObject.ReportObjectTypeId)
+                    );
+                }
             }
             else
             {
@@ -637,7 +727,14 @@ namespace Atlas_Web.Pages.Profile
             int id,
             string type,
             double start_at = -604800, // last 7 days
-            double end_at = 0
+            double end_at = 0,
+            List<string> server = null,
+            List<string> database = null,
+            List<string> masterFile = null,
+            List<string> visible = null,
+            List<string> certification = null,
+            List<string> availability = null,
+            List<int> reportType = null
         )
         {
             var subquery = _context.ReportObjectRunData.Where(
@@ -670,6 +767,66 @@ namespace Atlas_Web.Pages.Profile
                             .Select(c => c.ReportId)
                             .Contains(x.ReportObjectId)
                 );
+            }
+            else if (type == "report" && id == -1)
+            {
+                if (server.Any())
+                {
+                    subquery = subquery.Where(x => server.Contains(x.ReportObject.SourceServer));
+                }
+
+                if (database.Any())
+                {
+                    subquery = subquery.Where(x => database.Contains(x.ReportObject.SourceDb));
+                }
+
+                if (masterFile.Any())
+                {
+                    subquery = subquery.Where(
+                        x =>
+                            masterFile.Contains(x.ReportObject.EpicMasterFile)
+                            || masterFile.Contains("None")
+                                && string.IsNullOrEmpty(x.ReportObject.EpicMasterFile)
+                    );
+                }
+
+                if (visible.Any())
+                {
+                    subquery = subquery.Where(
+                        x =>
+                            visible.Contains(x.ReportObject.DefaultVisibilityYn)
+                            || (
+                                visible.Contains("Y")
+                                && string.IsNullOrEmpty(x.ReportObject.DefaultVisibilityYn)
+                            )
+                    );
+                }
+
+                if (certification.Any())
+                {
+                    subquery = subquery.Where(
+                        x => certification.Contains(x.ReportObject.CertificationTag)
+                    );
+                }
+
+                if (availability.Any())
+                {
+                    subquery = subquery.Where(
+                        x =>
+                            availability.Contains(x.ReportObject.Availability)
+                            || (
+                                availability.Contains("Public")
+                                && string.IsNullOrEmpty(x.ReportObject.Availability)
+                            )
+                    );
+                }
+
+                if (reportType.Any())
+                {
+                    subquery = subquery.Where(
+                        x => reportType.Contains((int)x.ReportObject.ReportObjectTypeId)
+                    );
+                }
             }
             else
             {
@@ -704,7 +861,14 @@ namespace Atlas_Web.Pages.Profile
             int id,
             string type,
             double start_at = -604800, // last 7 days
-            double end_at = 0
+            double end_at = 0,
+            List<string> server = null,
+            List<string> database = null,
+            List<string> masterFile = null,
+            List<string> visible = null,
+            List<string> certification = null,
+            List<string> availability = null,
+            List<int> reportType = null
         )
         {
             var subquery = _context.ReportObjectRunData.Where(
@@ -732,6 +896,66 @@ namespace Atlas_Web.Pages.Profile
                             .Select(c => c.ReportId)
                             .Contains(x.ReportObjectId)
                 );
+            }
+            else if (type == "report" && id == -1)
+            {
+                if (server.Any())
+                {
+                    subquery = subquery.Where(x => server.Contains(x.ReportObject.SourceServer));
+                }
+
+                if (database.Any())
+                {
+                    subquery = subquery.Where(x => database.Contains(x.ReportObject.SourceDb));
+                }
+
+                if (masterFile.Any())
+                {
+                    subquery = subquery.Where(
+                        x =>
+                            masterFile.Contains(x.ReportObject.EpicMasterFile)
+                            || masterFile.Contains("None")
+                                && string.IsNullOrEmpty(x.ReportObject.EpicMasterFile)
+                    );
+                }
+
+                if (visible.Any())
+                {
+                    subquery = subquery.Where(
+                        x =>
+                            visible.Contains(x.ReportObject.DefaultVisibilityYn)
+                            || (
+                                visible.Contains("Y")
+                                && string.IsNullOrEmpty(x.ReportObject.DefaultVisibilityYn)
+                            )
+                    );
+                }
+
+                if (certification.Any())
+                {
+                    subquery = subquery.Where(
+                        x => certification.Contains(x.ReportObject.CertificationTag)
+                    );
+                }
+
+                if (availability.Any())
+                {
+                    subquery = subquery.Where(
+                        x =>
+                            availability.Contains(x.ReportObject.Availability)
+                            || (
+                                availability.Contains("Public")
+                                && string.IsNullOrEmpty(x.ReportObject.Availability)
+                            )
+                    );
+                }
+
+                if (reportType.Any())
+                {
+                    subquery = subquery.Where(
+                        x => reportType.Contains((int)x.ReportObject.ReportObjectTypeId)
+                    );
+                }
             }
             else
             {

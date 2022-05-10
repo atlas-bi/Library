@@ -4,7 +4,7 @@
 //  2. get url
 //   data-url=?handler=la
 //  3. get any params
-//   data-param=d=1
+//   data-parameters=d=1
 //  4. if we need to refresh somteims
 //   data-refresh=5
 (function () {
@@ -26,7 +26,7 @@
 
   const sendAjax = function (element) {
     let u = element.getAttribute('data-url');
-    const p = element.getAttribute('data-param');
+    const p = element.getAttribute('data-parameters');
     const page = element.getAttribute('data-page');
     const l = element.getAttribute('data-loadtag');
 
@@ -34,18 +34,23 @@
       element.innerHTML =
         '<div class="ajaxLoader"><img class="ajaxLoader-img" src="/img/loader.gif" /></div>';
     }
+    if (element.classList.contains('ajax-fade')) {
+      element.style.opacity = '.5';
+      // eslint-disable-next-line no-unused-vars
+      const clear = element.clientHeight; // Clear js cache
+    }
 
     if (p !== null && p !== '') {
       u += u.includes('?') ? '&' : '?';
 
-      u += p;
+      u += p.replace(/^(&|\?)+/gm, '');
     }
 
     // For paginated ajax boxes
     if (page !== null && page !== '') {
       u += u.includes('?') ? '&' : '?';
 
-      u += page;
+      u += page.replace(/^(&|\?)+/gm, '');
     }
 
     const q = new XMLHttpRequest();
@@ -59,6 +64,9 @@
 
     q.addEventListener('load', function () {
       a(element, l, q.responseText);
+      if (element.classList.contains('ajax-fade')) {
+        element.style.opacity = '1';
+      }
     });
   };
 
@@ -142,7 +150,7 @@
       function (element) {
         if (isInViewport(element)) {
           let u = element.getAttribute('data-url');
-          const p = element.getAttribute('data-param');
+          const p = element.getAttribute('data-parameters');
           const l = element.getAttribute('data-loadtag');
 
           if (!element.classList.contains('no-loader')) {
@@ -153,7 +161,8 @@
           if (p !== null && p !== '') {
             u += u.includes('?') ? '&' : '?';
 
-            u += p;
+            u += p.replace(/^(&|\?)+/gm, '');
+            console.log(u);
           }
 
           element.style.visibility = 'hidden';

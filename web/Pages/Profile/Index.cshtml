@@ -12,7 +12,7 @@
     }
 }
 
-
+<h1 class="title is-1">Library Profile</h1>
 <section class="section my-5 p-0 is-flex is-flex-direction-row is-align-items-center">
     <div class="icon-text mr-5">
         <span class="icon">
@@ -45,10 +45,12 @@
     }*@
 </section>
 
+
 <div class="columns">
-    <div class="column is-one-quarter is-sticky is-align-self-flex-start" style="max-height:calc(100vh - 137px); overflow-Y:auto" id="profile-filters">
-        <div data-ajax="yes" class="no-loader" data-url="/Profile?handler=Filters"></div>
+    <div class="column is-narrow is-sticky is-align-self-flex-start" style="max-height:calc(100vh - 137px); overflow-Y:auto" id="profile-filters">
+        <div data-ajax="yes" class="no-loader ajax-fade filters" data-url="/Profile?handler=Filters"></div>
     </div>
     <div class="column" id="results">
         <partial name="Partials/_Profile" />
     </div>
+</div>

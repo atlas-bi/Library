@@ -164,7 +164,6 @@
 
     loadChart();
     loadBoxes();
-    loadFilters();
 
     const {
       addHours,
@@ -302,22 +301,23 @@
         const element = event.target.closest(
           '.profile-filter input[type=checkbox]',
         );
-        if (element.checked) {
-          loadChart((chart.dataset.parameters += `&${element.dataset.filter}`));
-        } else {
-          loadChart(
-            chart.dataset.parameters.replace(`&${element.dataset.filter}`, ''),
-          );
-        }
-
-        // get chart params, and update with new filter/remove filter
-        // get box params, and update with new filter/remove filter
-        console.log(element.dataset.filter);
-        console.log(element.checked);
+        const parameters = element.checked
+          ? chart.dataset.parameters + `&${element.dataset.filter}`
+          : chart.dataset.parameters.replace(`&${element.dataset.filter}`, '');
+        loadChart(parameters);
+        loadFilters(parameters);
+        loadBoxes(parameters);
       }
     });
 
-    function loadFilters(data) {}
+    function loadFilters(parameters = '') {
+      (document.querySelectorAll('.filters[data-url]') || []).forEach(
+        ($element) => {
+          $element.setAttribute('data-parameters', parameters);
+          $element.dispatchEvent(new CustomEvent('reload'));
+        },
+      );
+    }
 
     function buildDataTable(data) {
       if (data.length > 0) {
@@ -352,7 +352,7 @@
     function loadAjax(parameters = '') {
       (document.querySelectorAll('.profile[data-url]') || []).forEach(
         ($element) => {
-          $element.setAttribute('data-params', parameters);
+          $element.setAttribute('data-parameters', parameters);
           $element.dispatchEvent(new CustomEvent('reload'));
         },
       );

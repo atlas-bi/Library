@@ -117,7 +117,7 @@
 <h3 class="pageSection-title">No Reports With This Group</h3>}
     </div>
     <div class="tab-dta" id="activity">
-        <div data-ajax="yes" data-url="/Groups?handler=Activity" data-param="id=@Model.Group.Id"></div>
+        <div data-ajax="yes" data-url="/Groups?handler=Activity" data-parameters="id=@Model.Group.Id"></div>
     </div>
     @if (ViewBag.Permissions.Contains(36))
     {

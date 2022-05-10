@@ -22,25 +22,25 @@
 
 <section class="tab-cnt">
     <div class="tab-dta @if (@Model.UserId == @Model.MyId){ <text>active</text>}" id="favorites">
-        <div data-ajax="yes" data-url="/Users/Favorites" data-param="id=@Model.UserId"></div>
+        <div data-ajax="yes" data-url="/Users/Favorites" data-parameters="id=@Model.UserId"></div>
     </div>
    <!--  @if (@Model.UserId == @Model.MyId){
         <div class="tab-dta " id="mail">
-            <div data-ajax="yes" data-url="/Mail?handler=GetMailbox" data-param="id=@Model.UserId"></div>
+            <div data-ajax="yes" data-url="/Mail?handler=GetMailbox" data-parameters="id=@Model.UserId"></div>
         </div>
     } -->
 
     <div class="tab-dta" id="subscriptions">
-        <div data-ajax="yes" data-url="/Users?handler=Subscriptions" data-param="id=@Model.UserId"></div>
+        <div data-ajax="yes" data-url="/Users?handler=Subscriptions" data-parameters="id=@Model.UserId"></div>
     </div>
     <div class="tab-dta @if (@Model.UserId != @Model.MyId){ <text>active</text>}" id="activity">
-        <div data-ajax="yes" data-url="/Users?handler=Activity" data-param="id=@Model.UserId"></div>
+        <div data-ajax="yes" data-url="/Users?handler=Activity" data-parameters="id=@Model.UserId"></div>
     </div>
     <div class="tab-dta" id="atlas-history">
-        <div data-ajax="yes" data-url="/Users?handler=History" data-param="id=@Model.UserId"></div>
+        <div data-ajax="yes" data-url="/Users?handler=History" data-parameters="id=@Model.UserId"></div>
     </div>
     <div class="tab-dta" id="groups">
-        <div data-ajax="yes" data-url="/Users?handler=Groups" data-param="id=@Model.UserId"></div>
+        <div data-ajax="yes" data-url="/Users?handler=Groups" data-parameters="id=@Model.UserId"></div>
     </div>
     @if (ViewBag.Permissions.Contains(36))
     {
