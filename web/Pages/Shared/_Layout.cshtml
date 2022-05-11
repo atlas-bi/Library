@@ -101,7 +101,7 @@
                 <div class="navbar-end">
                     @{ var r = new Random();
                         var randomNumber = r.Next(); }
-                    <a class="navbar-item" href="/#mail">
+                    <a class="navbar-item" href="/#mail" aria-label="mail">
                         <span class="icon is-medium is-relative">
                             <i class="far fa-lg fa-envelope"></i>
                             <span title="mail count" class="badge" id="nav_unread_message_count">0</span>
@@ -136,7 +136,7 @@
                                 @if (ViewBag.Permissions.Contains(36))
                                 {
                                     <hr class="dropdown-divider">
-                                    <a class="navbar-item" href="/profile">Library Profile</a>
+                                    <a class="navbar-item" href="/profile">Report Activity</a>
                                 }
 
                             </div>

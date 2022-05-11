@@ -131,6 +131,8 @@ namespace Atlas_Web.Pages.Profile
         }
 
         public async Task<ActionResult> OnGetFiltersAsync(
+            int id = -1,
+            string type = "report",
             double start_at = -604800, // last 7 days
             double end_at = 0,
             List<string> server = null,
@@ -147,6 +149,11 @@ namespace Atlas_Web.Pages.Profile
                     r.RunStartTime >= DateTime.Now.AddSeconds(start_at)
                     && r.RunStartTime <= DateTime.Now.AddSeconds(end_at)
             );
+
+            if (type == "user" && _context.Users.Any(x => x.UserId == id))
+            {
+                subquery = subquery.Where(x => x.RunUserId == id);
+            }
 
             if (server.Any())
             {
@@ -415,8 +422,16 @@ namespace Atlas_Web.Pages.Profile
                             .Contains(x.ReportObjectId)
                 );
             }
-            else if (type == "report" && id == -1)
+            else if (
+                (type == "report" && id == -1)
+                || (type == "user" && _context.Users.Any(x => x.UserId == id))
+            )
             {
+                if (type == "user")
+                {
+                    subquery = subquery.Where(x => x.RunUserId == id);
+                }
+
                 if (server.Any())
                 {
                     subquery = subquery.Where(x => server.Contains(x.ReportObject.SourceServer));
@@ -630,8 +645,16 @@ namespace Atlas_Web.Pages.Profile
                             .Contains(x.ReportObjectId)
                 );
             }
-            else if (type == "report" && id == -1)
+            else if (
+                (type == "report" && id == -1)
+                || (type == "user" && _context.Users.Any(x => x.UserId == id))
+            )
             {
+                if (type == "user")
+                {
+                    subquery = subquery.Where(x => x.RunUserId == id);
+                }
+
                 if (server.Any())
                 {
                     subquery = subquery.Where(x => server.Contains(x.ReportObject.SourceServer));
@@ -768,8 +791,16 @@ namespace Atlas_Web.Pages.Profile
                             .Contains(x.ReportObjectId)
                 );
             }
-            else if (type == "report" && id == -1)
+            else if (
+                (type == "report" && id == -1)
+                || (type == "user" && _context.Users.Any(x => x.UserId == id))
+            )
             {
+                if (type == "user")
+                {
+                    subquery = subquery.Where(x => x.RunUserId == id);
+                }
+
                 if (server.Any())
                 {
                     subquery = subquery.Where(x => server.Contains(x.ReportObject.SourceServer));
@@ -897,8 +928,16 @@ namespace Atlas_Web.Pages.Profile
                             .Contains(x.ReportObjectId)
                 );
             }
-            else if (type == "report" && id == -1)
+            else if (
+                (type == "report" && id == -1)
+                || (type == "user" && _context.Users.Any(x => x.UserId == id))
+            )
             {
+                if (type == "user")
+                {
+                    subquery = subquery.Where(x => x.RunUserId == id);
+                }
+
                 if (server.Any())
                 {
                     subquery = subquery.Where(x => server.Contains(x.ReportObject.SourceServer));

@@ -1,4 +1,4 @@
-@if(ViewBag.ProfileId != -1){
+@if(ViewBag.ProfileType != "user" && ViewBag.ProfileId != -1){
     <nav class="breadcrumb">
         <ul>
             <li>
@@ -91,20 +91,22 @@
 
 
         <div class="columns pt-5 is-multiline">
-            <div class="column @if(ViewBag.ProfileType=="term" || ViewBag.ProfileType == "collection" || (ViewBag.ProfileType== "report" && ViewBag.ProfileId == -1)){<text>is-one-third-desktop is-half-tablet</text>}else{<text>is-half</text>}">
-                <div class="bar-data-wrapper" data-url="/Profile?handler=Users&type=@ViewBag.ProfileType&id=@ViewBag.ProfileId" data-target="profile-@ViewBag.ProfileType-@ViewBag.ProfileId"></div>
-            </div>
-            @if(ViewBag.ProfileType=="term" || ViewBag.ProfileType == "collection" || (ViewBag.ProfileType== "report" && ViewBag.ProfileId == -1)){
+            @if(ViewBag.ProfileType != "user"){
+                <div class="column @if(ViewBag.ProfileType=="term" || ViewBag.ProfileType == "collection" || (ViewBag.ProfileType== "report" && ViewBag.ProfileId == -1)){<text>is-one-third-desktop is-half-tablet</text>}else{<text>is-half</text>}">
+                    <div class="bar-data-wrapper" data-url="/Profile?handler=Users&type=@ViewBag.ProfileType&id=@ViewBag.ProfileId" data-target="profile-@ViewBag.ProfileType-@ViewBag.ProfileId"></div>
+                </div>
+            }
+            @if(ViewBag.ProfileType=="user" || ViewBag.ProfileType=="term" || ViewBag.ProfileType == "collection" || (ViewBag.ProfileType== "report" && ViewBag.ProfileId == -1)){
                 <div class="column is-one-third-desktop is-half-tablet">
                     <div class="bar-data-wrapper" data-url="/Profile?handler=Reports&type=@ViewBag.ProfileType&id=@ViewBag.ProfileId" data-target="profile-@ViewBag.ProfileType-@ViewBag.ProfileId"></div>
                 </div>
             }
-            <div class="column @if(ViewBag.ProfileType=="term" || ViewBag.ProfileType == "collection" || (ViewBag.ProfileType== "report" && ViewBag.ProfileId == -1)){<text>is-one-third-desktop is-half-tablet</text>}else{<text>is-half</text>}">
+            <div class="column @if(ViewBag.ProfileType=="user" || ViewBag.ProfileType=="term" || ViewBag.ProfileType == "collection" || (ViewBag.ProfileType== "report" && ViewBag.ProfileId == -1)){<text>is-one-third-desktop is-half-tablet</text>}else{<text>is-half</text>}">
                 <div class="bar-data-wrapper" data-url="/Profile?handler=Fails&type=@ViewBag.ProfileType&id=@ViewBag.ProfileId" data-target="profile-@ViewBag.ProfileType-@ViewBag.ProfileId"></div>
             </div>
         </div>
     </div>
-    @if(ViewBag.ProfileId != -1){
+    @if(ViewBag.ProfileType != "user" && ViewBag.ProfileId != -1){
         <div class="tab-dta" id="stars-@ViewBag.ProfileType-@ViewBag.ProfileId">
             <div data-ajax="yes" data-url="/Profile" data-parameters="handler=Stars&type=@ViewBag.ProfileType&id=@ViewBag.ProfileId"></div>
         </div>

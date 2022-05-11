@@ -1,16 +1,39 @@
 ﻿@inject IConfiguration Configuration
 @inject IMemoryCache Cache
+@using Newtonsoft.Json;
 <footer class="footer">
     <div class="container">
         <div class="columns">
-            <div class="column">
-                &copy; @DateTime.Now.Year - @Configuration["AppSettings:org_name"]
-                <br>
+            <div class="column is-one-third">
+                <img src="@Cache.Get("logo")" width="130" height="40" alt="site logo" />
+                <p class="mt-4 mb-2">
+                     @Configuration["footer:subtitle"]
+                </p>
+                <p class="has-text-grey mt-4">
+                &copy; @DateTime.Now.Year @Configuration["AppSettings:org_name"]
+
                 @if(!string.IsNullOrEmpty(Cache.Get<string>("version")))
                 {
-                    <text>Version: v</text>@Cache.Get("version")
+                    <text> | Release @Cache.Get("version")</text>
                 }
+                </p>
             </div>
+            <div class="column"></div>
+             @if(Configuration.GetSection("footer:links").GetChildren().Count() > 0){
+                @foreach(var l in Configuration.GetSection("footer:links").GetChildren()){
+                    <div class="column has-text-centered">
+                        <strong>@l.Key</strong>
+                        <ul>
+                            @foreach (var item in Configuration.GetSection(l.Path).GetChildren())
+                            {
+                                <li>
+                                    <a href="@item.Value" target="_blank">@item.Key</a>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                }
+            }
         </div>
     </div>
 </footer>

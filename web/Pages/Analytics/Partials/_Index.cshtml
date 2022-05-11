@@ -116,13 +116,12 @@
 
 <div class="columns">
     <div class="column is-one-third is-half-tablet">
-        @if(ViewBag.UserId != null)
-        {
-            <div class="bar-data-wrapper" data-url="/Analytics/Visits?handler=Users&userId=@ViewBag.UserId" ></div>
-        } else if(ViewBag.GroupId != null)
+        @if(ViewBag.GroupId != null)
         {
             <div class="bar-data-wrapper" data-url="/Analytics/Visits?handler=Users&groupId=@ViewBag.GroupId" ></div>
-        } else {
+
+        } else if(ViewBag.UserId == null) {
+            @ViewBag.UserId
             <div class="bar-data-wrapper" data-url="/Analytics/Visits?handler=Users" ></div>
         }
     </div>
