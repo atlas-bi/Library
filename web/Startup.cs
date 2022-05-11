@@ -62,14 +62,14 @@ namespace Atlas_Web
 
             var connection = Configuration.GetConnectionString("AtlasDatabase");
 
-            // for linq querys
+            // for linq queries
             services.AddDbContext<Atlas_WebContext>(
                 options =>
                     options.UseSqlServer(
                         connection,
                         o =>
                             o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)
-                                .CommandTimeout(60)
+                                .CommandTimeout(600)
                     )
             );
 

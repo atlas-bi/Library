@@ -139,7 +139,7 @@ namespace Atlas_Web.Helpers
         )
         {
             username ??= "default";
-            // master permision cache - so we can clear all when a perm changes.
+            // master permission cache - so we can clear all when a perm changes.
             var master = cache.GetOrCreate<List<string>>(
                 "MasterUserPermissions",
                 cacheEntry =>
@@ -413,6 +413,10 @@ namespace Atlas_Web.Helpers
                     + Domain
                     + "%3A443%2FReportServer";
             }
+            else if (EpicMasterFile == "HGR" && EpicRecordId != null && Epic)
+            {
+                Url = "EpicAct:AC_NEW_REPORT_ADMIN,INFONAME:HGRRECORDID,INFOVALUE:" + EpicRecordId;
+            }
             else if (EpicMasterFile == "IDM" && EpicRecordId != null && Epic)
             {
                 Url = "EpicAct:WM_DASHBOARD_EDITOR,INFONAME:IDMRECORDID,INFOVALUE:" + EpicRecordId;
@@ -547,6 +551,10 @@ namespace Atlas_Web.Helpers
                         + EpicReportTemplateId
                         + "|"
                         + EpicRecordId;
+                }
+                else if (EpicMasterFile == "HGR")
+                {
+                    NewUrl = "EpicAct:AC_RW_STATUS,RUNPARAMS:" + EpicRecordId;
                 }
                 else if (EpicMasterFile == "IDM")
                 {

@@ -10,82 +10,71 @@
     </p>
 
     <div class="panel-block is-collapsible is-block py-0" id="query-data">
-        @if (!ViewContext.HttpContext.Request.Headers["User-Agent"].ToString().Contains("Trident"))
+        @for (var q=0; q< Model.Report.ReportObjectQueries.Count; q++)
         {
-            @for (var q=0; q< Model.Report.ReportObjectQueries.Count; q++)
-            {
-                var t = Model.Report.ReportObjectQueries.ToList()[q];
+            var t = Model.Report.ReportObjectQueries.ToList()[q];
 
-                <div class="is-flex is-justify-content-space-between m-3 mb-0 mt-5">
-                    <h3 class="title is-3 mb-0">Query #@(q+1) | @t.Name</h3>
-                    <button class="button" onclick="copyQuery(event,@t.ReportObjectQueryId)">
-                        <span class="icon">
-                            <i class="far fa-copy"></i>
-                        </span>
-                        <span>Copy Query</span>
-                    </button>
+            <div class="is-flex is-justify-content-space-between m-3 mb-0 mt-5">
+                <h3 class="title is-3 mb-0">Query #@(q+1) | @t.Name</h3>
+                <button class="button" onclick="copyQuery(event,@t.ReportObjectQueryId)">
+                    <span class="icon">
+                        <i class="far fa-copy"></i>
+                    </span>
+                    <span>Copy Query</span>
+                </button>
+            </div>
+            <div class="query-box m-3">
+                <div class="query-box-inner light ss-preview" id='query-@t.ReportObjectQueryId' ss-container>
+                    <pre><code class="language-@t.Language.ToLower()" id="@t.ReportObjectQueryId">@t.Query</code></pre>
                 </div>
-                <div class="query-box m-3">
-                    <div class="query-box-inner light @if (!ViewContext.HttpContext.Request.Headers["User-Agent"].ToString().Contains("Trident"))
-                    {<text>ss-preview</text>}" id='query-@t.ReportObjectQueryId' @if (!ViewContext.HttpContext.Request.Headers["User-Agent"].ToString().Contains("Trident"))
-                {<text>ss-container</text>}>
-                        <pre><code class="@t.Language" id="@t.ReportObjectQueryId">@t.Query</code></pre>
-                    </div>
+            </div>
+        }
+
+        <!-- metric queries -->
+        @foreach (var t in Model.ComponentQueries)
+        {
+            <div class="is-flex is-justify-content-space-between m-3 mb-0 mt-5">
+                <h3 class="title is-3 mb-0"><a href="/Reports?id=@t.ReportObjectId">@t.Name (@t.ReportObject.EpicMasterFile @t.ReportObject.EpicRecordId)</a></h3>
+                <button class="button m-3 mb-0" onclick="copyQuery(event,query-@t.ReportObjectId)">
+                    <span class="icon">
+                        <i class="far fa-copy"></i>
+                    </span>
+                    <span>Copy Query</span>
+                </button>
+            </div>
+            <p>@t.ReportObject.Description</p>
+            <div class="query-box m-3">
+                <div class="query-box-inner light ss-preview" id='query-@t.ReportObjectId' ss-container>
+                    <pre><code class="language-sql" id="@t.ReportObjectId">@t.Query</code></pre>
                 </div>
+            </div>
+        }
+
+        <script>
+            if(document.readyState === 'complete') {
+            document.dispatchEvent(new CustomEvent("code-highlight"));
+            document.dispatchEvent(new CustomEvent('ss-load'));
             }
 
-            <!-- metric queries -->
-            @foreach (var t in Model.ComponentQueries)
-            {
-                <div class="is-flex is-justify-content-space-between m-3 mb-0 mt-5">
-                    <h3 class="title is-3 mb-0"><a href="/Reports?id=@t.ReportObjectId">@t.Name (@t.ReportObject.EpicMasterFile @t.ReportObject.EpicRecordId)</a></h3>
-                    <button class="button m-3 mb-0" onclick="copyQuery(event,query-@t.ReportObjectId)">
-                        <span class="icon">
-                            <i class="far fa-copy"></i>
-                        </span>
-                        <span>Copy Query</span>
-                    </button>
-                </div>
-                <p>@t.ReportObject.Description</p>
-                <div class="query-box m-3">
-                    <div class="query-box-inner light @if (!ViewContext.HttpContext.Request.Headers["User-Agent"].ToString().Contains("Trident"))
-                    {<text>ss-preview</text>}" id='query-@t.ReportObjectId' @if (!ViewContext.HttpContext.Request.Headers["User-Agent"].ToString().Contains("Trident"))
-                {<text>ss-container</text>}>
-                        <pre><code class="sql" id="@t.ReportObjectId">@t.Query</code></pre>
-                    </div>
-                </div>
-            }
+            var copyQuery = function (e, id) {
+                var code = document.getElementById(id).innerText;
+            var txt = document.createElement('textarea');
+            txt.value = code;
+            txt.setAttribute('readonly', '');
+            txt.style = {
+                position: 'absolute',
+                left: '-9999px'
+            };
+            document.body.appendChild(txt);
+            txt.select();
+            document.execCommand('copy');
+            document.body.removeChild(txt);
+            };
 
-            <script>
-              if(document.readyState === 'complete') {
-                document.dispatchEvent(new CustomEvent("code-highlight"));
-                document.dispatchEvent(new CustomEvent('ss-load'));
-              }
-
-                var copyQuery = function (e, id) {
-                    var code = document.getElementById(id).innerText;
-                var txt = document.createElement('textarea');
-                txt.value = code;
-                txt.setAttribute('readonly', '');
-                txt.style = {
-                  position: 'absolute',
-                  left: '-9999px'
-                };
-                document.body.appendChild(txt);
-                txt.select();
-                document.execCommand('copy');
-                document.body.removeChild(txt);
-              };
-
-              window.addEventListener('load',function(){
-                document.dispatchEvent(new CustomEvent('ss-load'));
-                document.dispatchEvent(new CustomEvent("code-highlight"));
-              });
-            </script>
-        }
-        else
-        {
-            <text>Open in chrome to view query.</text>
-        }
+            window.addEventListener('load',function(){
+            document.dispatchEvent(new CustomEvent('ss-load'));
+            document.dispatchEvent(new CustomEvent("code-highlight"));
+            });
+        </script>
     </div>
 </nav>

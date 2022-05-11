@@ -37,8 +37,11 @@
     <link rel="preload" href="@Helpers.UrlHelpers.FontHash("/font/fontawesome/webfonts/fa-regular-400.woff2", Cache)" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="@Helpers.UrlHelpers.FontHash("/font/fontawesome/webfonts/fa-solid-900.woff2", Cache)" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="@Helpers.UrlHelpers.FontHash("/font/rasa/files/rasa-latin-600-normal.woff2", Cache)" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="@Helpers.UrlHelpers.FontHash("/font/inter/files/inter-latin-400-normal.woff2", Cache)" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="@Helpers.UrlHelpers.FontHash("/font/inter/files/inter-latin-500-normal.woff2", Cache)" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="@Helpers.UrlHelpers.FontHash("/font/inter/files/inter-latin-600-normal.woff2", Cache)" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="@Helpers.UrlHelpers.FontHash("/font/inter/files/inter-latin-700-normal.woff2", Cache)" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="@Helpers.UrlHelpers.FontHash("/font/source-code-pro/files/source-code-pro-latin-400-normal.woff2", Cache)" as="font" type="font/woff2" crossorigin />
     <script src="/js/polyfill.min.js"></script>
     <script src="/js/purify.min.js"></script>
     <script>
@@ -98,7 +101,7 @@
                 <div class="navbar-end">
                     @{ var r = new Random();
                         var randomNumber = r.Next(); }
-                    <a class="navbar-item" href="/#mail">
+                    <a class="navbar-item" href="/#mail" aria-label="mail">
                         <span class="icon is-medium is-relative">
                             <i class="far fa-lg fa-envelope"></i>
                             <span title="mail count" class="badge" id="nav_unread_message_count">0</span>
@@ -108,24 +111,37 @@
 
                     @if (@ViewBag.Permissions.Contains(1) || ViewBag.Permissions.Contains(18) || ViewBag.Permissions.Contains(33) || ViewBag.Permissions.Contains(34))
                     {
-        <div class="navbar-item has-dropdown is-hoverable is-boxed">
-            <div class="navbar-link is-arrowless">
-                <span class="icon is-medium">
-                    <i class="fas fa-lg fa-wrench"></i>
-                </span>
-                <span class="hide-desktop">Administrative</span>
-            </div>
-            <div class="navbar-dropdown">
-                <hr class="hide-desktop dropdown-divider">
-                @if (ViewBag.Permissions.Contains(33) || ViewBag.Permissions.Contains(34) || ViewBag.Permissions.Contains(18) || ViewBag.Permissions.Contains(1))
-                {
-<a class="navbar-item" href="/settings">Settings</a>}
-                @if (ViewBag.Permissions.Contains(36))
-                {
-<a class="navbar-item" href="/analytics">Analytics</a>}
-                <a class="navbar-item" href="/tasks">Tasks</a>
-            </div>
-        </div>}
+                        <div class="navbar-item has-dropdown is-hoverable is-boxed">
+                            <div class="navbar-link is-arrowless">
+                                <span class="icon is-medium">
+                                    <i class="fas fa-lg fa-wrench"></i>
+                                </span>
+                                <span class="hide-desktop">Administrative</span>
+                            </div>
+                            <div class="navbar-dropdown">
+                                <hr class="hide-desktop dropdown-divider">
+
+                                @if (ViewBag.Permissions.Contains(33) || ViewBag.Permissions.Contains(34) || ViewBag.Permissions.Contains(18) || ViewBag.Permissions.Contains(1))
+                                {
+                                    <a class="navbar-item" href="/settings">Settings</a>
+                                }
+
+                                @if (ViewBag.Permissions.Contains(36))
+                                {
+                                    <a class="navbar-item" href="/analytics">Analytics</a>
+                                }
+
+                                <a class="navbar-item" href="/tasks">Tasks</a>
+
+                                @if (ViewBag.Permissions.Contains(36))
+                                {
+                                    <hr class="dropdown-divider">
+                                    <a class="navbar-item" href="/profile">Report Activity</a>
+                                }
+
+                            </div>
+                        </div>
+                    }
 
                     <!-- main report groups -->
                     <div class="navbar-item has-dropdown is-hoverable is-boxed">
@@ -150,32 +166,33 @@
                     </div>
                     @if (@Configuration["features:enable_user_profile"] == null || @Configuration["features:enable_user_profile"].ToString().ToLower() == "true")
                     {
-        <a class="navbar-item has-tooltip-arrow has-tooltip-bottom" href="/users" data-tooltip="Open Profile">
-            <span class="icon is-medium">
-                <i class="fas fa-lg fa-user"></i>
-            </span>
-            <span class="hide-desktop">Profile</span>
-        </a>}
+                        <a class="navbar-item has-tooltip-arrow has-tooltip-bottom" href="/users" data-tooltip="Open Profile">
+                            <span class="icon is-medium">
+                                <i class="fas fa-lg fa-user"></i>
+                            </span>
+                            <span class="hide-desktop">Profile</span>
+                        </a>
+                    }
 
                     @if (ViewBag.Permissions.Contains(44))
                     {
-        <div class="navbar-item has-dropdown is-hoverable is-boxed">
-            <div class="navbar-link">
-                @{ var ph = "";
-                    if (ViewBag.MyRole != null && ViewBag.MyRole.Name != null && ViewBag.MyRole.Name != "")
-                    {
-                        ph = ViewBag.MyRole.Name;
-                    }
-                    else
-                    {
-                        ph = "change role";
-                    } }
-                @ph
-            </div>
-            <div class="navbar-dropdown" id="role-change">
-                <hr class=" hide-desktop dropdown-divider">
-            </div>
-        </div>
+                        <div class="navbar-item has-dropdown is-hoverable is-boxed">
+                            <div class="navbar-link">
+                                @{ var ph = "";
+                                    if (ViewBag.MyRole != null && ViewBag.MyRole.Name != null && ViewBag.MyRole.Name != "")
+                                    {
+                                        ph = ViewBag.MyRole.Name;
+                                    }
+                                    else
+                                    {
+                                        ph = "change role";
+                                    } }
+                                @ph
+                            </div>
+                            <div class="navbar-dropdown" id="role-change">
+                                <hr class=" hide-desktop dropdown-divider">
+                            </div>
+                        </div>
 
                         <script>
                             var q = new XMLHttpRequest();
@@ -190,21 +207,23 @@
                                     el.innerHTML += "<a class='navbar-item' href='/Users?handler=ChangeRole&Id=" + data[x].ObjectId + "&Url=" + window.location.href.replace(window.location.origin, '') + "'>" + data[x].Name + "</a>";
                                 }
                             };
-                        </script>}
+                        </script>
+                    }
 
                     <!-- epic navigation -->
                     @if (Helpers.HtmlHelpers.IsEpic(ViewContext.HttpContext) == true)
                     {
-        <a class="navbar-item" onclick="history.back()">
-            <span class="icon is-medium">
-                <i class="fas fa-chevron-left"></i>
-            </span>
-        </a>
+                        <a class="navbar-item" onclick="history.back()">
+                            <span class="icon is-medium">
+                                <i class="fas fa-chevron-left"></i>
+                            </span>
+                        </a>
                         <a class="navbar-item" onclick="history.forward()">
                             <span class="icon is-medium">
                                 <i class="fas fa-chevron-right"></i>
                             </span>
-                        </a>}
+                        </a>
+                    }
                 </div>
             </div>
         </div>

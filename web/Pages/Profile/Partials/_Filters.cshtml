@@ -1,0 +1,271 @@
+@model Atlas_Web.Pages.Profile.IndexModel
+@functions
+{
+    public string bigNumber(int num)
+    {
+        if(num <= 1000){
+            return num.ToString();
+        }
+        else if (num < 1000000){
+            return $"{Math.Round(decimal.Divide(num,1000),0).ToString()}k";
+        }
+        else if (num < 1000000000){
+            return $"{Math.Round(decimal.Divide(num,1000000),0).ToString()}M";
+        }
+        else if (num >= 1000000000){
+            return $"{Math.Round(decimal.Divide(num,1000000000),0).ToString()}B";
+        }
+        return num.ToString();
+    }
+}
+<div>
+    @if(Model.Filter_Server.Any()){
+        <strong>Server</strong>
+        <div class="m-2">
+            @{
+                var FilterServer = Model.Filter_Server.OrderByDescending(x => x.Count).ToList();
+                bool collapsed = false;
+            }
+            @for(var x=0;x< FilterServer.Count;x++)
+            {
+                var filter = FilterServer[x];
+
+                @if(collapsed is false && (filter.Count == 0 || (x == 10 && FilterServer.Count > 10)))
+                {
+                    <input type="checkbox" id="server-filter-collapse" class="css-collapse" />
+
+                    @:<div class="mt-3">
+                    collapsed = true;
+                }
+
+                <div class="field profile-filter" >
+                    <input id="filter-@filter.Key.Replace(" ","")-@filter.Value.Replace(" ","")"
+                        type="checkbox"
+                        data-filter="@filter.Key=@filter.Value"
+                        class="is-checkradio is-info"
+                        checked="@filter.Checked" />
+                    <label for="filter-@filter.Key.Replace(" ","")-@filter.Value.Replace(" ","")" >@filter.FriendlyValue<span class="has-tooltip-arrow has-tooltip-right tag ml-3 is-info is-rounded is-light" data-tooltip="@String.Format(System.Threading.Thread.CurrentThread.CurrentCulture, "{0:#,##0}", @filter.Count) runs">@bigNumber(filter.Count)</span></label>
+                </div>
+
+                @if(x == FilterServer.Count-1 && collapsed is true)
+                {
+                    @:</div>
+                    <label for="server-filter-collapse" class="is-block css-collapse-label has-text-link is-relative is-clickable"></label>
+                }
+            }
+        </div>
+    }
+    @if(Model.Filter_Database.Any()){
+        <strong>Database</strong>
+        <div class="m-2">
+            @{
+                var FilterDatabase = Model.Filter_Database.OrderByDescending(x => x.Count).ToList();
+                bool collapsed = false;
+            }
+            @for(var x=0;x< FilterDatabase.Count;x++)
+            {
+                var filter = FilterDatabase[x];
+
+                @if(collapsed is false && (filter.Count == 0 || (x == 10 && FilterDatabase.Count > 10)))
+                {
+                    <input type="checkbox" id="database-filter-collapse" class="css-collapse" />
+
+                    @:<div class="mt-3">
+                    collapsed = true;
+                }
+
+
+                <div class="field profile-filter" >
+                    <input id="filter-@filter.Key.Replace(" ","")-@filter.Value.Replace(" ","")"
+                        type="checkbox"
+                        data-filter="@filter.Key=@filter.Value"
+                        class="is-checkradio is-info"
+                        checked="@filter.Checked" />
+                    <label for="filter-@filter.Key.Replace(" ","")-@filter.Value.Replace(" ","")">@filter.FriendlyValue<span class="has-tooltip-arrow has-tooltip-right tag ml-3 is-info is-rounded is-light" data-tooltip="@String.Format(System.Threading.Thread.CurrentThread.CurrentCulture, "{0:#,##0}", @filter.Count) runs">@bigNumber(filter.Count)</span></label>
+                </div>
+
+                @if(x == FilterDatabase.Count-1 && collapsed is true)
+                {
+                    @:</div>
+                    <label for="database-filter-collapse" class="is-block css-collapse-label has-text-link is-relative is-clickable"></label>
+                }
+            }
+        </div>
+    }
+    @if(Model.Filter_MasterFile.Any()){
+        <strong>Master File</strong>
+        <div class="m-2">
+            @{
+                var FilterMasterFile = Model.Filter_MasterFile.OrderByDescending(x => x.Count).ToList();
+                bool collapsed = false;
+            }
+            @for(var x=0;x< FilterMasterFile.Count;x++)
+            {
+                var filter = FilterMasterFile[x];
+
+                @if(collapsed is false && (filter.Count == 0 || (x == 10 && FilterMasterFile.Count > 10)))
+                {
+                    <input type="checkbox" id="master-file-filter-collapse" class="css-collapse" />
+                    @:<div class="mb-3">
+                    collapsed = true;
+                }
+
+                <div class="field profile-filter" >
+                    <input id="filter-@filter.Key.Replace(" ","")-@filter.Value.Replace(" ","")"
+                        type="checkbox"
+                        data-filter="@filter.Key=@filter.Value"
+                        class="is-checkradio is-info"
+                        checked="@filter.Checked" />
+                    <label for="filter-@filter.Key.Replace(" ","")-@filter.Value.Replace(" ","")">@filter.FriendlyValue<span class="has-tooltip-arrow has-tooltip-right tag ml-3 is-info is-rounded is-light" data-tooltip="@String.Format(System.Threading.Thread.CurrentThread.CurrentCulture, "{0:#,##0}", @filter.Count) runs">@bigNumber(filter.Count)</span></label>
+                </div>
+
+                @if(x == FilterMasterFile.Count-1 && collapsed is true)
+                {
+                    @:</div>
+                    <label for="master-file-filter-collapse" class="is-block css-collapse-label has-text-link is-relative is-clickable"></label>
+                }
+            }
+        </div>
+    }
+    @if(Model.Filter_Visible.Any()){
+        <strong>Visible</strong>
+        <div class="m-2">
+            @{
+                var FilterVisible = Model.Filter_Visible.OrderByDescending(x => x.Count).ToList();
+                bool collapsed = false;
+            }
+            @for(var x=0;x< FilterVisible.Count;x++)
+            {
+                var filter = FilterVisible[x];
+
+                @if(collapsed is false && (filter.Count == 0 || (x == 10 && FilterVisible.Count > 10)))
+                {
+                    <input type="checkbox" id="visible-filter-collapse" class="css-collapse" />
+
+                    @:<div class="mt-3">
+                    collapsed = true;
+                }
+
+                <div class="field profile-filter" >
+                    <input id="filter-@filter.Key.Replace(" ","")-@filter.Value.Replace(" ","")"
+                        type="checkbox"
+                        data-filter="@filter.Key=@filter.Value"
+                        class="is-checkradio is-info"
+                        checked="@filter.Checked" />
+                    <label for="filter-@filter.Key.Replace(" ","")-@filter.Value.Replace(" ","")">@filter.FriendlyValue<span class="has-tooltip-arrow has-tooltip-right tag ml-3 is-info is-rounded is-light" data-tooltip="@String.Format(System.Threading.Thread.CurrentThread.CurrentCulture, "{0:#,##0}", @filter.Count) runs">@bigNumber(filter.Count)</span></label>
+                </div>
+
+                 @if(x == FilterVisible.Count-1 && collapsed is true)
+                {
+                    @:</div>
+                    <label for="visible-filter-collapse" class="is-block css-collapse-label has-text-link is-relative is-clickable"></label>
+                }
+            }
+        </div>
+    }
+    @if(Model.Filter_Certification.Any()){
+        <strong>Certification Tag</strong>
+        <div class="m-2">
+            @{
+                var FilterCertification = Model.Filter_Certification.OrderByDescending(x => x.Count).ToList();
+                bool collapsed = false;
+            }
+            @for(var x=0;x< FilterCertification.Count;x++)
+            {
+                var filter = FilterCertification[x];
+
+                @if(collapsed is false && (filter.Count == 0 || (x == 10 && FilterCertification.Count > 10)))
+                {
+                    <input type="checkbox" id="certification-filter-collapse" class="css-collapse" />
+
+                    @:<div class="mt-3">
+                    collapsed = true;
+                }
+
+                <div class="field profile-filter" >
+                    <input id="filter-@filter.Key.Replace(" ","")-@filter.Value.Replace(" ","")"
+                        type="checkbox"
+                        data-filter="@filter.Key=@filter.Value"
+                        class="is-checkradio is-info"
+                        checked="@filter.Checked" />
+                    <label for="filter-@filter.Key.Replace(" ","")-@filter.Value.Replace(" ","")">@filter.FriendlyValue<span class="has-tooltip-arrow has-tooltip-right tag ml-3 is-info is-rounded is-light" data-tooltip="@String.Format(System.Threading.Thread.CurrentThread.CurrentCulture, "{0:#,##0}", @filter.Count) runs">@bigNumber(filter.Count)</span></label>
+                </div>
+                @if(x == FilterCertification.Count-1 && collapsed is true)
+                {
+                    @:</div>
+                    <label for="certification-filter-collapse" class="is-block css-collapse-label has-text-link is-relative is-clickable"></label>
+                }
+            }
+        </div>
+    }
+    @if(Model.Filter_Availabiltiy.Any()){
+        <strong>Availability</strong>
+        <div class="m-2">
+            @{
+                var FilterAvailability = Model.Filter_Availabiltiy.OrderByDescending(x => x.Count).ToList();
+                bool collapsed = false;
+            }
+            @for(var x=0;x< FilterAvailability.Count;x++)
+            {
+                var filter = FilterAvailability[x];
+
+                @if(collapsed is false && (filter.Count == 0 || (x == 10 && FilterAvailability.Count > 10)))
+                {
+                    <input type="checkbox" id="availability-filter-collapse" class="css-collapse" />
+
+                    @:<div class="mt-3">
+                    collapsed = true;
+                }
+
+                <div class="field profile-filter" >
+                    <input id="filter-@filter.Key.Replace(" ","")-@filter.Value.Replace(" ","")"
+                        type="checkbox"
+                        data-filter="@filter.Key=@filter.Value"
+                        class="is-checkradio is-info"
+                        checked="@filter.Checked" />
+                    <label for="filter-@filter.Key.Replace(" ","")-@filter.Value.Replace(" ","")">@filter.FriendlyValue<span class="has-tooltip-arrow has-tooltip-right tag ml-3 is-info is-rounded is-light" data-tooltip="@String.Format(System.Threading.Thread.CurrentThread.CurrentCulture, "{0:#,##0}", @filter.Count) runs">@bigNumber(filter.Count)</span></label>
+                </div>
+                @if(x == FilterAvailability.Count-1 && collapsed is true)
+                {
+                    @:</div>
+                    <label for="availability-filter-collapse" class="is-block css-collapse-label has-text-link is-relative is-clickable"></label>
+                }
+            }
+        </div>
+    }
+    @if(Model.Filter_ReportType.Any()){
+        <strong>Report Type</strong>
+        <div class="m-2">
+            @{
+                var FilterReportType = Model.Filter_ReportType.OrderByDescending(x => x.Count).ToList();
+                bool collapsed = false;
+            }
+            @for(var x=0;x< FilterReportType.Count;x++)
+            {
+                var filter = FilterReportType[x];
+
+                @if(collapsed is false && (filter.Count == 0 || (x == 10 && FilterReportType.Count > 10)))
+                {
+                    <input type="checkbox" id="report-type-filter-collapse" class="css-collapse" />
+
+                    @:<div class="mt-3">
+                    collapsed = true;
+                }
+
+                <div class="field profile-filter" >
+                    <input id="filter-@filter.Key.Replace(" ","")-@filter.Value.Replace(" ","")"
+                        type="checkbox"
+                        data-filter="@filter.Key=@filter.Value"
+                        class="is-checkradio is-info"
+                        checked="@filter.Checked" />
+                    <label for="filter-@filter.Key.Replace(" ","")-@filter.Value.Replace(" ","")">@filter.FriendlyValue<span class="has-tooltip-arrow has-tooltip-right tag ml-3 is-info is-rounded is-light" data-tooltip="@String.Format(System.Threading.Thread.CurrentThread.CurrentCulture, "{0:#,##0}", @filter.Count) runs">@bigNumber(filter.Count)</span></label>
+                </div>
+                @if(x == FilterReportType.Count-1 && collapsed is true)
+                {
+                    @:</div>
+                    <label for="report-type-filter-collapse" class="is-block css-collapse-label has-text-link is-relative is-clickable"></label>
+                }
+            }
+        </div>
+    }
+</div>

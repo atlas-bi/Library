@@ -43,8 +43,6 @@
     ? '/'
     : w.location.href;
 
-  w.oldPopState = document.location.pathname;
-
   function replaceUrlParameter(url, parameterName, parameterValue) {
     if (parameterValue === null) {
       parameterValue = '';
@@ -96,7 +94,9 @@
 
     // If we are on the search page already, keep filters.
     if (urlPath) {
-      value = value || getQueryStringParameters('Query', url);
+      value = encodeURIComponent(
+        value || getQueryStringParameters('Query', url),
+      );
       s =
         url ||
         replaceUrlParameter(
@@ -129,13 +129,11 @@
       typeof url !== 'undefined'
     ) {
       document.documentElement.scrollTop = document.body.scrollTop = 0;
-      // Hst.style.display = 'none';
 
       if (typeof atmr !== 'undefined') clearTimeout(atmr);
 
       a.href = url || oldHref;
 
-      w.oldPopState = document.location.pathname;
       history.pushState(
         {
           state: 'ajax',
@@ -145,9 +143,6 @@
         w.location.origin + '/Search?Query=' + encodeURI(decodeURI(u)),
       );
 
-      // If (cache.exists(s)) {
-      //   l(cache.get(s), a, m, d, atmr, s, u, value);
-      // } else {
       if (sAjx !== null) {
         sAjx.abort();
       }
@@ -163,17 +158,6 @@
 
       sAjx.addEventListener('load', function () {
         l(sAjx.responseText, a, m, d, atmr, s, u, value);
-        //   Var ccHeader =
-        //     sAjx.getResponseHeader('Cache-Control') != null
-        //       ? (sAjx.getResponseHeader('Cache-Control').match(/\d+/) || [
-        //           null,
-        //         ])[0]
-        //       : null;
-
-        //   if (ccHeader) {
-        //     cache.set(s, sAjx.responseText, ccHeader);
-        //   }
-        // };
       });
     } else {
       d.dispatchEvent(
@@ -287,13 +271,4 @@
   function submit(l) {
     ajaxSearch(null, l);
   }
-
-  w.addEventListener('popstate', function () {
-    if (
-      document.location.pathname === '/Search' ||
-      w.oldPopState === '/Search'
-    ) {
-      w.location.href = document.location.href;
-    }
-  });
 })();

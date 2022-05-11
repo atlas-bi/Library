@@ -16,7 +16,7 @@
 
                 @if (Model.ReportObjectAttachments.Count() > 0)
                 {
-                    <a class="is-flex mr-2 has-tooltip-arrow has-tooltip-right js-modal-trigger" data-target="report-run-@Model.ReportObjectId" data-tooltip="Run Report" data-runurl="@RunReportUrl">
+                    <a aria-label="run" class="is-flex mr-2 has-tooltip-arrow has-tooltip-right js-modal-trigger" data-target="report-run-@Model.ReportObjectId" data-tooltip="Run Report" data-runurl="@RunReportUrl">
                         <span class="icon is-large has-text-success">
                             <i class="far fa-2_3x fa-play-circle"></i>
                         </span>
@@ -24,7 +24,7 @@
                 }
                 else if (RunReportUrl != null)
                 {
-                    <a class="is-flex mr-2 has-tooltip-arrow has-tooltip-right" target="_blank" data-tooltip="Run Report" href="@RunReportUrl">
+                    <a aria-label="run" class="is-flex mr-2 has-tooltip-arrow has-tooltip-right" target="_blank" data-tooltip="Run Report" href="@RunReportUrl">
                         <span class="icon is-large has-text-success">
                             <i class="far fa-2_3x fa-play-circle"></i>
                         </span>
@@ -34,7 +34,7 @@
                 {
                     if (@Model.EpicMasterFile != null && @Model.EpicMasterFile.Equals("IDB"))
                     {
-                        <a class="is-flex mr-2 is-disabled has-tooltip-arrow has-tooltip-right" data-tooltip="Open a related dashboard that uses this.">
+                        <a aria-label="run" class="is-flex mr-2 is-disabled has-tooltip-arrow has-tooltip-right" data-tooltip="Open a related dashboard that uses this.">
                             <span class="icon is-large has-text-grey-light">
                                 <i class="far fa-2_3x fa-play-circle"></i>
                             </span>
@@ -42,7 +42,7 @@
                     }
                     else if (@EditReportUrl != null)
                     {
-                        <a class="is-flex mr-2 is-disabled has-tooltip-arrow has-tooltip-right" data-tooltip="Open in report library.">
+                        <a aria-label="run" class="is-flex mr-2 is-disabled has-tooltip-arrow has-tooltip-right" data-tooltip="Open in report library.">
                             <span class="icon is-large has-text-grey-light">
                                 <i class="far fa-2_3x fa-play-circle"></i>
                             </span>
@@ -50,7 +50,7 @@
                     }
                     else if (@Model.EpicMasterFile != null)
                     {
-                        <a class="is-flex mr-2 is-disabled has-tooltip-arrow has-tooltip-right" data-tooltip="Run from the Hyperspace report library.">
+                        <a aria-label="run" class="is-flex mr-2 is-disabled has-tooltip-arrow has-tooltip-right" data-tooltip="Run from the Hyperspace report library.">
                             <span class="icon is-large has-text-grey-light">
                                 <i class="far fa-2_3x fa-play-circle"></i>
                             </span>

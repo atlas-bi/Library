@@ -193,7 +193,7 @@ namespace Atlas_Web.Pages.Terms
             }
 
             // delete:
-            //  replys
+            //  replies
             //  report links
             //  initiative term annotations
 

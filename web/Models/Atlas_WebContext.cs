@@ -88,10 +88,30 @@ namespace Atlas_Web.Models
                     entity.ToTable("Analytics", "app");
 
                     entity.HasIndex(e => e.AccessDateTime, "accessdatetime");
-
+                    entity
+                        .HasIndex(
+                            e => new { e.UserId, e.AccessDateTime },
+                            "user_access_load_page_session"
+                        )
+                        .IncludeProperties(p => new { p.LoadTime, p.PageId, p.SessionId });
+                    entity
+                        .HasIndex(e => new { e.UserId, e.AccessDateTime }, "user_access_load")
+                        .IncludeProperties(p => p.LoadTime);
                     entity
                         .HasIndex(e => e.AccessDateTime, "accessdatetime_session")
                         .IncludeProperties(p => new { p.PageId, p.SessionId });
+
+                    entity
+                        .HasIndex(e => e.AccessDateTime, "accessdatetime_screen")
+                        .IncludeProperties(p => new { p.ScreenHeight, p.ScreenWidth });
+
+                    entity
+                        .HasIndex(e => e.AccessDateTime, "accessdatetime_useragent")
+                        .IncludeProperties(p => new { p.UserAgent });
+
+                    entity
+                        .HasIndex(e => e.AccessDateTime, "accessdatetime_sessionId")
+                        .IncludeProperties(p => new { p.SessionId });
 
                     entity
                         .HasIndex(e => new { e.AccessDateTime, e.UserId }, "accessdatetime_userid")
@@ -106,17 +126,7 @@ namespace Atlas_Web.Models
 
                     entity.Property(e => e.Active).HasColumnName("active");
 
-                    entity.Property(e => e.AppCodeName).HasColumnName("appCodeName");
-
-                    entity.Property(e => e.AppName).HasColumnName("appName");
-
-                    entity.Property(e => e.AppVersion).HasColumnName("appVersion");
-
-                    entity.Property(e => e.CookieEnabled).HasColumnName("cookieEnabled");
-
                     entity.Property(e => e.Hash).HasColumnName("hash");
-
-                    entity.Property(e => e.Host).HasColumnName("host");
 
                     entity.Property(e => e.Hostname).HasColumnName("hostname");
 
@@ -128,15 +138,11 @@ namespace Atlas_Web.Models
 
                     entity.Property(e => e.Origin).HasColumnName("origin");
 
-                    entity.Property(e => e.Oscpu).HasColumnName("oscpu");
-
                     entity.Property(e => e.PageId).HasColumnName("pageId");
 
                     entity.Property(e => e.PageTime).HasColumnName("pageTime");
 
                     entity.Property(e => e.Pathname).HasColumnName("pathname");
-
-                    entity.Property(e => e.Platform).HasColumnName("platform");
 
                     entity.Property(e => e.Protocol).HasColumnName("protocol");
 
@@ -149,10 +155,6 @@ namespace Atlas_Web.Models
                     entity.Property(e => e.Search).HasColumnName("search");
 
                     entity.Property(e => e.SessionId).HasColumnName("sessionId");
-
-                    entity.Property(e => e.SessionTime).HasColumnName("sessionTime");
-
-                    entity.Property(e => e.Title).HasColumnName("title");
 
                     entity
                         .Property(e => e.UpdateTime)
@@ -798,6 +800,64 @@ namespace Atlas_Web.Models
 
                     entity.HasIndex(e => e.ReportObjectTypeId, "typeid");
 
+                    entity
+                        .HasIndex(e => e.SourceServer, "sourceserver_report")
+                        .IncludeProperties(p => p.ReportObjectId);
+                    entity
+                        .HasIndex(e => e.SourceDb, "sourcedb_report")
+                        .IncludeProperties(p => p.ReportObjectId);
+                    entity
+                        .HasIndex(
+                            e => new { e.SourceServer, e.ReportObjectTypeId },
+                            "sourceserver_type_report"
+                        )
+                        .IncludeProperties(p => p.ReportObjectId);
+                    entity
+                        .HasIndex(e => e.DefaultVisibilityYn, "visibility_report_cert")
+                        .IncludeProperties(p => new { p.ReportObjectId, p.CertificationTag });
+                    entity
+                        .HasIndex(
+                            e => new { e.SourceDb, e.EpicMasterFile },
+                            "sourcedb_masterfile_report"
+                        )
+                        .IncludeProperties(p => p.ReportObjectId);
+                    entity
+                        .HasIndex(e => e.SourceServer, "sourceserver_report_masterfile")
+                        .IncludeProperties(p => new { p.ReportObjectId, p.EpicMasterFile });
+                    entity
+                        .HasIndex(e => e.SourceDb, "sourcedb_report_masterfile")
+                        .IncludeProperties(p => new { p.ReportObjectId, p.EpicMasterFile });
+                    entity
+                        .HasIndex(
+                            e => new { e.ReportObjectTypeId, e.EpicMasterFile },
+                            "type_report_cert"
+                        )
+                        .IncludeProperties(p => new { p.ReportObjectId, p.CertificationTag });
+                    entity
+                        .HasIndex(
+                            e => new { e.SourceServer, e.EpicMasterFile },
+                            "sourceserver_masterfile_report"
+                        )
+                        .IncludeProperties(p => p.ReportObjectId);
+                    entity
+                        .HasIndex(e => e.DefaultVisibilityYn, "visibility_report_masterfile")
+                        .IncludeProperties(p => new { p.ReportObjectId, p.EpicMasterFile });
+                    entity
+                        .HasIndex(e => e.ReportObjectTypeId, "type_report_masterfile")
+                        .IncludeProperties(p => new { p.ReportObjectId, p.EpicMasterFile });
+                    entity
+                        .HasIndex(e => e.EpicMasterFile, "masterfile_report_visiblity")
+                        .IncludeProperties(p => new { p.ReportObjectId, p.DefaultVisibilityYn });
+                    entity
+                        .HasIndex(
+                            e => new { e.EpicMasterFile, e.SourceServer, e.ReportObjectTypeId },
+                            "masterfile_sourceserver_type_report"
+                        )
+                        .IncludeProperties(p => p.ReportObjectId);
+                    entity
+                        .HasIndex(e => e.EpicMasterFile, "masterfile_report_type")
+                        .IncludeProperties(p => new { p.ReportObjectId, p.ReportObjectTypeId });
+
                     entity.HasIndex(
                         e =>
                             new
@@ -914,6 +974,32 @@ namespace Atlas_Web.Models
                     entity.HasKey(e => e.ReportObjectId).HasName("PK__ReportOb__B7A74135D2A44EFC");
 
                     entity.ToTable("ReportObject_doc", "app");
+
+                    entity
+                        .HasIndex(e => e.ExecutiveVisibilityYn, "execvis_reportid")
+                        .IncludeProperties(p => p.ReportObjectId);
+
+                    entity
+                        .HasIndex(e => e.MaintenanceScheduleId, "maintschedule_report_updated")
+                        .IncludeProperties(
+                            p => new { p.ReportObjectId, p.LastUpdateDateTime, p.UpdatedBy }
+                        );
+
+                    entity
+                        .HasIndex(
+                            e => e.MaintenanceScheduleId,
+                            "maintschedule_report_updated_created"
+                        )
+                        .IncludeProperties(
+                            p =>
+                                new
+                                {
+                                    p.ReportObjectId,
+                                    p.LastUpdateDateTime,
+                                    p.UpdatedBy,
+                                    p.CreatedDateTime
+                                }
+                        );
 
                     entity.HasIndex(e => e.CreatedBy, "createdby");
 
@@ -1232,7 +1318,50 @@ namespace Atlas_Web.Models
 
                     entity.HasIndex(e => e.ReportObjectId, "reportid");
 
-                    entity.HasIndex(e => e.RunUserId, "runuser + report");
+                    entity.HasIndex(e => e.RunUserId, "runuser");
+
+                    entity
+                        .HasIndex(
+                            e => new { e.ReportObjectId, e.RunStatus },
+                            "reportid_status_run_user"
+                        )
+                        .IncludeProperties(
+                            p => new { p.RunUserId, p.RunStartTime, p.RunDurationSeconds }
+                        );
+
+                    entity
+                        .HasIndex(
+                            e => new { e.ReportObjectId, e.RunStartTime },
+                            "reportid_starttime_user"
+                        )
+                        .IncludeProperties(p => new { p.RunUserId });
+
+                    entity.HasIndex(
+                        e => new { e.ReportObjectId, e.RunStartTime, e.RunStatus },
+                        "reportid_starttime_status"
+                    );
+
+                    entity.HasIndex(e => e.RunStartTime, "runstarttime");
+
+                    entity
+                        .HasIndex(e => e.RunStartTime, "runstart_status")
+                        .IncludeProperties(p => p.RunStatus);
+                    entity
+                        .HasIndex(e => e.RunStartTime, "runstart_user")
+                        .IncludeProperties(p => p.RunUserId);
+                    entity
+                        .HasIndex(e => e.RunStartTime, "runstart_duration")
+                        .IncludeProperties(p => p.RunDurationSeconds);
+                    entity
+                        .HasIndex(e => e.RunStartTime, "runstart_report_status")
+                        .IncludeProperties(p => new { p.ReportObjectId, p.RunStatus });
+                    entity
+                        .HasIndex(e => e.RunStartTime, "runstart_report_duration")
+                        .IncludeProperties(p => new { p.ReportObjectId, p.RunDurationSeconds });
+                    entity
+                        .HasIndex(e => e.RunStartTime, "runstart_report_user")
+                        .IncludeProperties(p => new { p.ReportObjectId, p.RunUserId });
+                    entity.HasIndex(e => new { e.ReportObjectId, e.RunStartTime });
 
                     entity.Property(e => e.ReportObjectId).HasColumnName("ReportObjectID");
 
