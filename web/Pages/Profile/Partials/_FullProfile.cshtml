@@ -1,0 +1,45 @@
+@if(ViewBag.ProfileType != "user" && ViewBag.ProfileId != -1)
+{
+    <h1 class="title is-1">Report Activity</h1>
+}
+<section class="section my-5 p-0 is-flex is-flex-direction-row is-align-items-center">
+    <div class="icon-text mr-5">
+        <span class="icon">
+            <i class="fas fa-filter"></i>
+        </span>
+        <strong>Filter Profile</strong>
+    </div>
+   @* @if(clearFilters.Any()){
+        <div class="field is-grouped is-grouped-multiline">
+             @foreach (var field in clearFilters)
+            {
+                <div class="control">
+                    <div class="tags has-addons">
+                        @if(field.Key == "field"){
+                            <span class="tag is-light is-medium">Field</span>
+                            <span class="tag is-warning is-medium" >@Model.SearchResults.FilterFields.SingleOrDefault(x => x.Key == field.Value).FriendlyName<a class="delete is-small" href="@UrlHelpers.SetSearchFacetUrl(ViewContext.HttpContext, @field.Key, @field.Value)"></a></span>
+                        } else {
+                            <span class="tag is-light is-medium">@Model.SearchResults.FacetFields.SingleOrDefault(x => x.Key == field.Key).FriendlyName</span>
+
+                            @if(@Model.SearchResults.FacetFields.SingleOrDefault(x => x.Key == field.Key).Values.Any()){
+                                <span class="tag is-warning is-medium" >@Model.SearchResults.FacetFields.SingleOrDefault(x => x.Key == field.Key).Values.SingleOrDefault(x => x.Value == field.Value).FriendlyName<a class="delete is-small" href="@UrlHelpers.SetSearchFacetUrl(ViewContext.HttpContext, @field.Key, @field.Value)"></a></span>
+                            } else {
+                                <span class="tag is-warning is-medium" >@field.Value<a class="delete is-small" href="@UrlHelpers.SetSearchFacetUrl(ViewContext.HttpContext, @field.Key, @field.Value)"></a></span>
+                            }
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    }*@
+</section>
+
+
+<div class="columns">
+    <div class="column is-one-quarter is-sticky is-align-self-flex-start" style="max-height:calc(100vh - 137px); overflow-Y:auto" id="profile-filters">
+        <div data-ajax="yes" class="no-loader ajax-fade filters" data-url="/Profile?handler=Filters&type=@ViewBag.ProfileType&id=@ViewBag.ProfileId"></div>
+    </div>
+    <div class="column" id="results">
+        <partial name="Profile/Partials/_Profile" />
+    </div>
+</div>

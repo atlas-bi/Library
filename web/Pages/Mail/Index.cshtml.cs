@@ -430,7 +430,7 @@ namespace Atlas_Web.Pages.Mail
 
             if (!Users.Any() && !GroupUsers.Any())
             {
-                return Content("no users specefied");
+                return Content("no users specified");
             }
 
             var MyUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);

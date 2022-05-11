@@ -1,0 +1,121 @@
+@if(ViewBag.ProfileType != "user" && ViewBag.ProfileId != -1){
+    <nav class="breadcrumb">
+        <ul>
+            <li>
+                <a class="tab-lnk active" href="#runs-@ViewBag.ProfileType-@ViewBag.ProfileId">Run Details</a>
+            </li>
+            <li>
+                <a class="tab-lnk"  href="#stars-@ViewBag.ProfileType-@ViewBag.ProfileId">Stars</a>
+            </li>
+            @if(@ViewBag.ProfileType == "report")
+            {
+                <li>
+                    <a class="tab-lnk"  href="#subscriptions-@ViewBag.ProfileType-@ViewBag.ProfileId">Subscriptions</a>
+                </li>
+            }
+        </ul>
+    </nav>
+}
+
+<section class="tab-cnt">
+    <div class="tab-dta active" id="runs-@ViewBag.ProfileType-@ViewBag.ProfileId">
+        <div class="is-flex mb-5 is-justify-content-space-between">
+            <div class="is-flex">
+                <div class="is-flex mr-5 is-flex-direction-column">
+                    <h1 class="title is-2 mb-0 is-family-sans-serif has-tooltip-arrow has-tooltip-right" data-tooltip="-"><span id="profile-@ViewBag.ProfileType-@ViewBag.ProfileId-runs">-</span></h1>
+                    <span>Runs</span>
+                </div>
+                <div class="is-flex mx-5 is-flex-direction-column">
+                    <h1 class="title is-2 mb-0 is-family-sans-serif has-tooltip-arrow has-tooltip-right" data-tooltip="-"><span id="profile-@ViewBag.ProfileType-@ViewBag.ProfileId-users">-</span></h1>
+                    <span>Users</span>
+                </div>
+                <div class="is-flex ml-5 is-flex-direction-column">
+                    <h1 class="title is-2 mb-0 is-family-sans-serif has-tooltip-arrow has-tooltip-right" data-tooltip="-"><span id="profile-@ViewBag.ProfileType-@ViewBag.ProfileId-run-time">-</span>s</text></h1>
+                    <span>Run Time</span>
+                </div>
+            </div>
+            <div class="dropdown mb-5 is-select is-right"  data-target="profile-@ViewBag.ProfileType-@ViewBag.ProfileId" >
+                <div class="dropdown-trigger ">
+                    <button class="button" aria-haspopup="true" aria-controls="views-chart-dropdown">
+                    <span class="select-value">Last 7 Days</span>
+                    <span class="icon is-small">
+                        <i class="fas fa-angle-down" aria-hidden="true"></i>
+                    </span>
+                    </button>
+                </div>
+                <div class="dropdown-menu" id="profile-@ViewBag.ProfileType-@ViewBag.ProfileId"role="menu">
+                    <div class="dropdown-content">
+                    <a href="#" class="dropdown-item" data-range="1">
+                        Yesterday
+                    </a>
+                    <hr class="dropdown-divider">
+                    <a href="#" class="dropdown-item" data-range="3">
+                        This week
+                    </a>
+                    <a href="#" class="dropdown-item" data-range="4">
+                        Last 7 days
+                    </a>
+                    <hr class="dropdown-divider">
+                    <a href="#" class="dropdown-item" data-range="5">
+                    This month
+                    </a>
+                    <a href="#" class="dropdown-item" data-range="6">
+                    Last 30 days
+                    </a>
+                    <a href="#" class="dropdown-item" data-range="7">
+                    Last 90 days
+                    </a>
+                    <hr class="dropdown-divider">
+                    <a href="#" class="dropdown-item" data-range="8">
+                    This year
+                    </a>
+                    <a href="#" class="dropdown-item" data-range="11">
+                    Last 12 months
+                    </a>
+                    <hr class="dropdown-divider">
+                    <a href="#" class="dropdown-item" data-range="9">
+                        All time
+                    </a>
+                    @* <hr class="dropdown-divider">
+                    <a href="#" class="dropdown-item" data-range="10">
+                        Custom range
+                    </a> *@
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="chart-wrapper profile"  style="height:400px;">
+            <canvas id="profile-@ViewBag.ProfileType-@ViewBag.ProfileId" data-url="/Profile?handler=Chart&type=@ViewBag.ProfileType&id=@ViewBag.ProfileId" width="400" height="400"></canvas>
+        </div>
+
+
+        <div class="columns pt-5 is-multiline">
+            @if(ViewBag.ProfileType != "user"){
+                <div class="column @if(ViewBag.ProfileType=="term" || ViewBag.ProfileType == "collection" || (ViewBag.ProfileType== "report" && ViewBag.ProfileId == -1)){<text>is-one-third-desktop is-half-tablet</text>}else{<text>is-half</text>}">
+                    <div class="bar-data-wrapper" data-url="/Profile?handler=Users&type=@ViewBag.ProfileType&id=@ViewBag.ProfileId" data-target="profile-@ViewBag.ProfileType-@ViewBag.ProfileId"></div>
+                </div>
+            }
+            @if(ViewBag.ProfileType=="user" || ViewBag.ProfileType=="term" || ViewBag.ProfileType == "collection" || (ViewBag.ProfileType== "report" && ViewBag.ProfileId == -1)){
+                <div class="column is-one-third-desktop is-half-tablet">
+                    <div class="bar-data-wrapper" data-url="/Profile?handler=Reports&type=@ViewBag.ProfileType&id=@ViewBag.ProfileId" data-target="profile-@ViewBag.ProfileType-@ViewBag.ProfileId"></div>
+                </div>
+            }
+            <div class="column @if(ViewBag.ProfileType=="user" || ViewBag.ProfileType=="term" || ViewBag.ProfileType == "collection" || (ViewBag.ProfileType== "report" && ViewBag.ProfileId == -1)){<text>is-one-third-desktop is-half-tablet</text>}else{<text>is-half</text>}">
+                <div class="bar-data-wrapper" data-url="/Profile?handler=Fails&type=@ViewBag.ProfileType&id=@ViewBag.ProfileId" data-target="profile-@ViewBag.ProfileType-@ViewBag.ProfileId"></div>
+            </div>
+        </div>
+    </div>
+    @if(ViewBag.ProfileType != "user" && ViewBag.ProfileId != -1){
+        <div class="tab-dta" id="stars-@ViewBag.ProfileType-@ViewBag.ProfileId">
+            <div data-ajax="yes" data-url="/Profile" data-parameters="handler=Stars&type=@ViewBag.ProfileType&id=@ViewBag.ProfileId"></div>
+        </div>
+        @if(@ViewBag.ProfileType == "report")
+        {
+            <div class="tab-dta" id="subscriptions-@ViewBag.ProfileType-@ViewBag.ProfileId">
+                <div data-ajax="yes" data-url="/Profile" data-parameters="handler=Subscriptions&type=@ViewBag.ProfileType&id=@ViewBag.ProfileId"></div>
+            </div>
+        }
+    }
+
+</section>

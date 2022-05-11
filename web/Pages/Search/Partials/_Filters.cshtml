@@ -1,53 +1,76 @@
-<strong>Filters</strong>
 
 <form id="searchForm">
-    @if (ViewBag.Permissions.Contains(46)){
-    var advanced = @Model.SearchResults.Advanced == "Y" ? "N" : "Y";
-    <div class="srch-fltr">
+    @if(ViewBag.AppliedFilters > 0){
+        <a class="button is-warning is-fullwidth is-outlined has-text-dark" href="/search?query=@ViewBag.Query">
+            <span class="icon">
+                <i class="fas fa-times"></i>
+            </span>
+            <span>Clear All Filters</span>
+        </a>
+    }
 
-        <div class='form-check search-filter'>
-            <input type="checkbox"
+    @if (ViewBag.Permissions.Contains(46))
+    {
+        var advanced = @Model.SearchResults.Advanced == "Y" ? "N" : "Y";
+
+        <div class="m-2">
+            <div class="field search-filter">
+                <input id="advanced"
+                    type="checkbox"
+                    class="switch is-rounded is-info"
                     value="@UrlHelpers.SetSearchFacetUrl(ViewContext.HttpContext, "advanced", @advanced)"
                     checked="@UrlHelpers.SetSearchFacetChecked(Model.SearchResults.Parameters, "advanced",  "Y")" />
-            <input type="hidden" />
-            <label>Show Advanced Filters</label>
+                <label for="advanced">Advanced Filters</label>
+            </div>
         </div>
-    </div>}
+    }
+
     @if (Model.SearchResults.FilterFields.Count > 0)
     {
-    <h5 class="fav-col-sub-title">Search Fields</h5>
-    <div class="srch-fltr">
+        <strong>Search Fields</strong>
+        <div class="m-2">
+
         @foreach (var field in Model.SearchResults.FilterFields)
-    {
-        <div class='form-check search-filter'>
-            <input type="checkbox"
-                    value="@UrlHelpers.SetSearchFacetUrl(ViewContext.HttpContext, "field", @field.Key)"
-                    checked="@UrlHelpers.SetSearchFacetChecked(Model.SearchResults.Parameters, "field", field.Key)" />
-            <input type="hidden" />
-            <label>@field.FriendlyName</label>
-        </div>}
-    </div>}
+        {
+            <div class="field search-filter">
+                <input class="is-checkradio is-info"
+                      id="field-@field.Key"
+                      type="checkbox"
+                      value="@UrlHelpers.SetSearchFacetUrl(ViewContext.HttpContext, "field", @field.Key)"
+                      checked="@UrlHelpers.SetSearchFacetChecked(Model.SearchResults.Parameters, "field", field.Key)" />
+                <label for="field-@field.Key">@field.FriendlyName</label>
+            </div>
+        }
+        </div>
+    }
 
     @foreach (var field in Model.SearchResults.FacetFields)
-                    {@* if there is only one value, do not show.*@
+    {
+        @* if there is only one value, do not show.*@
 
-                    @if ( Model.SearchResults.Advanced == "Y" && (ViewBag.Permissions.Contains(46) && field.FriendlyName == "Visible") || (field.FriendlyName != "Visible" && field.Values.Count > 1) || field.FriendlyName == "Type" || UrlHelpers.HasFacet(Model.SearchResults.Parameters, field.Key))
-                                        {
-                    <strong class="fav-col-sub-title">@field.FriendlyName</strong>
-                    <div class="srch-fltr">
+        @if ( Model.SearchResults.Advanced == "Y" && (ViewBag.Permissions.Contains(46) && field.FriendlyName == "Visible") || (field.FriendlyName != "Visible" && field.Values.Count > 1) || field.FriendlyName == "Type" || UrlHelpers.HasFacet(Model.SearchResults.Parameters, field.Key))
+        {
+            <strong>@field.FriendlyName</strong>
+            <div class="m-2">
 
+                @foreach (var value in field.Values)
+                {
+                    @* hide filters with 0 matches, or show advanced search *@
 
-                        @foreach (var value in field.Values)
-                                                {@* hide filters with 0 matches, or show advanced search *@
+                    @if ((ViewBag.Permissions.Contains(46) && field.FriendlyName == "Visible") || (field.FriendlyName != "Visible" && (@value.Count > 0 || field.FriendlyName == "Visible" || field.FriendlyName == "Type" || UrlHelpers.SetSearchFacetChecked(Model.SearchResults.Parameters, field.Key, value.Value))))
+                    {
+                        <div class="field search-filter">
+                            <input class="is-checkradio is-info"
+                                id="@field.Key-@value.Value"
+                                type="checkbox"
+                                value="@UrlHelpers.SetSearchFacetUrl(ViewContext.HttpContext, @field.Key, @value.Value)"
+                                   checked="@UrlHelpers.SetSearchFacetChecked(Model.SearchResults.Parameters, @field.Key, @value.Value)" />
+                            <label for="@field.Key-@value.Value">@value.FriendlyName<span class="search-badge tag ml-3 is-info is-rounded is-light">@value.Count</span></label>
+                        </div>
+                    }
+                }
 
-    @if ((ViewBag.Permissions.Contains(46) && field.FriendlyName == "Visible") || (field.FriendlyName != "Visible" && (@value.Count > 0 || field.FriendlyName == "Visible" || field.FriendlyName == "Type" || UrlHelpers.SetSearchFacetChecked(Model.SearchResults.Parameters, field.Key, value.Value))))
-                                                                            {
-    <div class='form-check search-filter'>
-        <input type="checkbox" value="@UrlHelpers.SetSearchFacetUrl(ViewContext.HttpContext, @field.Key, @value.Value)" checked="@UrlHelpers.SetSearchFacetChecked(Model.SearchResults.Parameters, @field.Key, @value.Value)" />
-        <input type="hidden" />
-        <label>@value.FriendlyName<span class="search-badge tag ml-3 is-info is-rounded is-light">@value.Count</span></label>
-    </div>}}
-
-    </div>}}
-
+            </div>
+        }
+    }
 </form>

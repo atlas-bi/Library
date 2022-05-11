@@ -108,7 +108,7 @@ namespace Atlas_Web.Pages.Settings
                 _cache.Remove(oldPerm[x]);
             }
 
-            return RedirectToPage("/UserRoles/Index");
+            return RedirectToPage("/Settings/Index");
         }
 
         public ActionResult OnPostAddUserPermission()
@@ -143,7 +143,7 @@ namespace Atlas_Web.Pages.Settings
                 _cache.Remove(oldPerm[x]);
             }
 
-            return RedirectToPage("/UserRoles/Index");
+            return RedirectToPage("/Settings/Index");
         }
     }
 }
