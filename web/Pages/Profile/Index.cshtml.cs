@@ -133,7 +133,7 @@ namespace Atlas_Web.Pages.Profile
         public async Task<ActionResult> OnGetFiltersAsync(
             int id = -1,
             string type = "report",
-            double start_at = -604800, // last 7 days
+            double start_at = -31536000, // last 12 months
             double end_at = 0,
             List<string> server = null,
             List<string> database = null,
@@ -372,7 +372,7 @@ namespace Atlas_Web.Pages.Profile
         public async Task<ActionResult> OnGetChartAsync(
             int id,
             string type,
-            double start_at = -604800, // last 7 days
+            double start_at = -31536000, // last 12 months
             double end_at = 0,
             List<string> server = null,
             List<string> database = null,
@@ -604,7 +604,7 @@ namespace Atlas_Web.Pages.Profile
         public async Task<ActionResult> OnGetUsersAsync(
             int id,
             string type,
-            double start_at = -604800, // last 7 days
+            double start_at = -31536000, // last 12 months
             double end_at = 0,
             List<string> server = null,
             List<string> database = null,
@@ -749,7 +749,7 @@ namespace Atlas_Web.Pages.Profile
         public async Task<ActionResult> OnGetFailsAsync(
             int id,
             string type,
-            double start_at = -604800, // last 7 days
+            double start_at = -31536000, // last 12 months
             double end_at = 0,
             List<string> server = null,
             List<string> database = null,
@@ -891,7 +891,7 @@ namespace Atlas_Web.Pages.Profile
         public async Task<ActionResult> OnGetReportsAsync(
             int id,
             string type,
-            double start_at = -604800, // last 7 days
+            double start_at = -31536000, // last 12 months
             double end_at = 0,
             List<string> server = null,
             List<string> database = null,
