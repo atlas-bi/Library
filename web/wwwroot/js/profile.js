@@ -267,6 +267,7 @@
                 '&end_at=0';
               break;
             case '11':
+            default:
               // Last 12 months
               dataset =
                 '?start_at=' +
@@ -278,7 +279,6 @@
 
               break;
             case '1':
-            default:
               // Yesterday
               dataset =
                 '?start_at=' +
