@@ -37,7 +37,11 @@
                     <p>
                         @if (!string.IsNullOrEmpty(Model.Description))
                         {
-                            @(Model.Description.Substring(0,Math.Min(160,Model.Description.Length)) + "... ")
+                            var contents =@Helpers.HtmlHelpers.MarkdownToText(Model.Description);
+
+                            var built = contents.Substring(0,Math.Min(160,contents.Length)) + "... ";
+
+                            <text>@built</text>
                             <span class="has-text-link">read more</span>
                         }else if (!string.IsNullOrEmpty(Model.Purpose))
                         {
