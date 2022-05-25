@@ -292,27 +292,6 @@
       }
     });
 
-    // Add event to remove mini tags that were preloaded.
-    (
-      document.querySelectorAll('.mini-tags a.is-delete[value]:not(.loaded)') ||
-      []
-    ).forEach(($delete) => {
-      $delete.classList.add('loaded');
-      $delete.addEventListener('click', function () {
-        const $hidden = $delete
-          .closest('.field:not(.mini-tags)')
-          .querySelector('select.is-hidden');
-        const $control = $delete.closest('.control');
-
-        $hidden
-          .querySelector(
-            'option[value="' + $delete.getAttribute('value') + '"]',
-          )
-          .remove();
-        $control.remove();
-      });
-    });
-
     // On reorder events, update id
     (
       document.querySelectorAll('.mini-tags.reorder:not(.loaded)') || []
