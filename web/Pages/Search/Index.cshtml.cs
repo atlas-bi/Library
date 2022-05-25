@@ -14,6 +14,7 @@ using SolrNet.Commands.Parameters;
 using System.Text.RegularExpressions;
 using System.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using System.Web;
 
 namespace Atlas_Web.Pages.Search
 {
@@ -107,10 +108,17 @@ namespace Atlas_Web.Pages.Search
                 ":",
                 "/",
             };
-            search_string = String.Join(
-                "",
-                search_string.Split(illegal_chars, StringSplitOptions.RemoveEmptyEntries)
-            );
+
+            for (var x = 0; x < illegal_chars.Length; x++)
+            {
+                string current = illegal_chars[x];
+                search_string = search_string.Replace(current, "\\" + current);
+            }
+
+            // search_string = String.Join(
+            //     "",
+            //     search_string.Split(illegal_chars, StringSplitOptions.RemoveEmptyEntries)
+            // );
 
             // make all caps lower for OR AND NOT
             search_string = Regex.Replace(
@@ -142,10 +150,7 @@ namespace Atlas_Web.Pages.Search
             }
 
             // clean double quote from search string
-            search_string = String.Join(
-                "",
-                search_string.Split("\"", StringSplitOptions.RemoveEmptyEntries)
-            );
+            search_string = search_string.Replace("\"", "\\\"");
 
             static string BuildFuzzy(string substr)
             {
@@ -214,6 +219,9 @@ namespace Atlas_Web.Pages.Search
             {
                 return RedirectToPage("/Index/Index");
             }
+
+            Query = HttpUtility.UrlDecode(Query);
+
             int PageIndex = Int32.Parse(Request.Query["PageIndex"].FirstOrDefault() ?? "1");
             string Type = Request.Query["type"].FirstOrDefault() ?? "query";
 
