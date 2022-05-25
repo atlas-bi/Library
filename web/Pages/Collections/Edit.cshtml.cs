@@ -92,6 +92,7 @@ namespace Atlas_Web.Pages.Collections
             NewCollection.LastUpdateDate = DateTime.Now;
             NewCollection.Name = Collection.Name;
             NewCollection.Description = Collection.Description;
+            NewCollection.Purpose = Collection.Purpose;
 
             _context.Attach(NewCollection).State = EntityState.Modified;
             _context.SaveChanges();
