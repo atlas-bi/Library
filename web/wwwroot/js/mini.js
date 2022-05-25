@@ -2,6 +2,10 @@
 (function () {
   function openMini($element) {
     $element.classList.add('is-active');
+    const $danger = $element.parentElement.querySelector('input.is-danger');
+    if ($danger) {
+      $danger.classList.remove('is-danger');
+    }
   }
 
   function closeMini($element) {
@@ -14,10 +18,23 @@
     if ($input && $input.value) {
       $input.classList.add('is-danger');
     }
+
+    // Or if there is a hidden input, not populated
+    const $hiddenInput = $element.parentElement.querySelector(
+      'input[type="hidden"]',
+    );
+    if ($hiddenInput && $hiddenInput.value === '') {
+      const $visInput = $element.parentElement.querySelector(
+        'input.input-mini:not(.multiselect)',
+      );
+      if ($visInput) {
+        $visInput.classList.add('is-danger');
+      }
+    }
   }
 
   function closeAllMinis() {
-    (document.querySelectorAll('.mini') || []).forEach(($mini) => {
+    (document.querySelectorAll('.mini.is-active') || []).forEach(($mini) => {
       closeMini($mini);
     });
   }
@@ -220,10 +237,89 @@
           closeAllMinis();
           openMini($mini);
         });
+        $input.addEventListener('focus', () => {
+          if ($input.value !== '') {
+            closeAllMinis();
+            openMini($mini);
+            // Reload search
+            $mini.dispatchEvent(new CustomEvent('input'));
+          }
+        });
 
         // Open when typing in the related input
         if ($input.hasAttribute('search-area')) {
+          $input.addEventListener('keydown', (event) => {
+            if (Number(event.keyCode) === 13 || Number(event.keyCode) === 3) {
+              event.preventDefault();
+              console.log($mini);
+              const active = $mini.querySelector('.mini-item.is-active');
+
+              if (active) {
+                active.dispatchEvent(new CustomEvent('click'));
+              }
+            } else if (Number(event.keyCode) === 40) {
+              // Down arrow
+              const active = $mini.querySelector('.mini-item.is-active');
+
+              if (active) {
+                if (active.nextElementSibling) {
+                  active.nextElementSibling.classList.add('is-active');
+                } else {
+                  const next = $mini.querySelector('.mini-item');
+                  if (next) {
+                    next.classList.add('is-active');
+                  }
+                }
+
+                active.classList.remove('is-active');
+              } else {
+                const next = $mini.querySelector('.mini-item');
+                if (next) {
+                  next.classList.add('is-active');
+                }
+              }
+
+              event.preventDefault();
+              // Find the active element
+              console.log($mini);
+            } else if (Number(event.keyCode) === 38) {
+              // Up arrow
+              event.preventDefault();
+              // Find the active element
+              const active = $mini.querySelector('.mini-item.is-active');
+
+              if (active) {
+                if (active.previousElementSibling) {
+                  active.previousElementSibling.classList.add('is-active');
+                } else {
+                  const next = $mini.querySelector('.mini-item:last-child');
+                  if (next) {
+                    next.classList.add('is-active');
+                  }
+                }
+
+                active.classList.remove('is-active');
+              } else {
+                const next = $mini.querySelector('.mini-item:last-child');
+                if (next) {
+                  next.classList.add('is-active');
+                }
+              }
+            } else if (Number(event.keyCode) === 9) {
+              // Tab
+              closeAllMinis();
+            }
+          });
           $input.addEventListener('input', () => {
+            if (!$mini.classList.contains('is-active')) {
+              openMini($mini);
+            }
+
+            // Clear input
+            if ($hidden) {
+              $hidden.value = '';
+            }
+
             window.clearTimeout(searchTimerId);
             $input.classList.remove('is-danger');
             searchTimerId = window.setTimeout(function () {

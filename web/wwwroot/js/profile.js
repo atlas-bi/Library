@@ -10,21 +10,24 @@
         (n = Math.round((n * d) / s) / d + 'kMGTPE'[i]);
     return n;
   }
+
   function formatThousandsWithRounding(n, dp) {
-    //https://stackoverflow.com/a/20545587/10265880
-    var w = Number(n).toFixed(Number(dp)),
-      k = w | 0,
-      b = n < 0 ? 1 : 0,
-      u = Math.abs(w - k),
-      d = ('' + u.toFixed(Number(dp))).substr(2, Number(dp)),
-      s = '' + k,
-      i = s.length,
-      r = '';
+    // https://stackoverflow.com/a/20545587/10265880
+    const w = Number(n).toFixed(Number(dp));
+    const k = w | 0;
+    const b = n < 0 ? 1 : 0;
+    const u = Math.abs(w - k);
+    const d = String(u.toFixed(Number(dp))).slice(2, 2 + Number(dp));
+    const s = String(k);
+    let i = s.length;
+    let r = '';
     while ((i -= 3) > b) {
       r = ',' + s.substr(i, 3) + r;
     }
-    return s.substr(0, i + 3) + r + (d ? '.' + d : '');
+
+    return s.slice(0, Math.max(0, i + 3)) + r + (d ? '.' + d : '');
   }
+
   const isInViewport = function (element) {
     const bounding = element.getBoundingClientRect();
     const padding = 600;
@@ -266,14 +269,6 @@
                 differenceInSeconds(addYears(now, -10), now) +
                 '&end_at=0';
               break;
-            case '11':
-            default:
-              // Last 12 months
-              dataset =
-                '?start_at=' +
-                differenceInSeconds(addYears(now, -1), now) +
-                '&end_at=0';
-              break;
             case '10':
               // Custom range
 
@@ -286,6 +281,14 @@
                 '&end_at=' +
                 differenceInSeconds(endOfDay(addHours(now, -24)), now);
 
+              break;
+            case '11':
+            default:
+              // Last 12 months
+              dataset =
+                '?start_at=' +
+                differenceInSeconds(addYears(now, -1), now) +
+                '&end_at=0';
               break;
           }
 
@@ -405,6 +408,7 @@
       if (chart.dataset.url.includes('?')) {
         parameters = parameters.replace('?', '&');
       }
+
       chart.setAttribute('data-parameters', parameters);
 
       primaryChartAjax = new XMLHttpRequest();
