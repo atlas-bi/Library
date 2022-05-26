@@ -368,11 +368,11 @@
   <query>
 
     <!-- Maximum number of clauses allowed when parsing a boolean query string.
-         
+
          This limit only impacts boolean queries specified by a user as part of a query string,
          and provides per-collection controls on how complex user specified boolean queries can
          be.  Query strings that specify more clauses then this will result in an error.
-         
+
          If this per-collection limit is greater then the global `maxBooleanClauses` limit
          specified in `solr.xml`, it will have no effect, as that setting also limits the size
          of user specified boolean queries.
@@ -382,7 +382,7 @@
     <!-- Solr Internal Query Caches
 
          There are four implementations of cache available for Solr:
-         LRUCache, based on a synchronized LinkedHashMap, 
+         LRUCache, based on a synchronized LinkedHashMap,
          LFUCache and FastLRUCache, based on a ConcurrentHashMap, and CaffeineCache -
          a modern and robust cache implementation. Note that in Solr 9.0
          only CaffeineCache will be available, other implementations are now
@@ -632,9 +632,9 @@
      in logs and the corresponding error message should tell you what transpired (if the failure
      was caused by tripped circuit breakers).
     -->
-    
+
     <memBreaker enabled="true" threshold="75"/>
-    
+
 
       <!-- CPU Circuit Breaker Configuration
 
@@ -647,7 +647,7 @@
     -->
 
      <cpuBreaker enabled="true" threshold="75"/>
-    
+
   </circuitBreakers>
 
 
@@ -775,10 +775,10 @@
       <str name="echoParams">explicit</str>
       <int name="rows">10</int>
       <!-- Default search field
-         <str name="df">text</str> 
+         <str name="df">text</str>
         -->
       <!-- Change from JSON to XML format (the default prior to Solr 7.0)
-         <str name="wt">xml</str> 
+         <str name="wt">xml</str>
         -->
     </lst>
     <!-- In addition to defaults, "appends" params can be specified
@@ -877,7 +877,7 @@
 	  <str name="f.report_type_text.facet.limit">-1</str>
 	  <str name="facet.field">{!ex=visible_text}visible_text</str>
 	  <str name="f.visible_text.facet.mincount">0</str>
-      <str name="facet.field">{!ex=certification_text}certification_text</str>  
+      <str name="facet.field">{!ex=certification_text}certification_text</str>
       <str name="facet.field">{!ex=documented}documented</str>
 	  <str name="facet.range">created</str>
       <str name="facet.field">{!ex=source_server_text}source_server_text</str>
@@ -922,7 +922,6 @@
       <str name="facet.field">{!ex=approved_text}approved_text</str>
       <str name="facet.field">{!ex=related_reports_text}related_reports_text</str>
       <str name="facet.range">approval_date</str>
-      <str name="facet.field">{!ex=has_external_standard_text}has_external_standard_text</str>
       <str name="facet.range">valid_from</str>
       <str name="facet.range">valid_to</str>
       <str name="facet.field">{!ex=updated_by_text}updated_by_text</str>

@@ -137,12 +137,38 @@ namespace Atlas_Web.Pages.Search
                 {
                     if (query.Keys.Contains("field"))
                     {
-                        ExactMatches.Add($"{query["field"]}:({literal.Groups[2].Value})");
+                        ExactMatches.Add($"{query["field"]}:\"{literal.Groups[2].Value}\"");
                     }
                     else
                     {
                         ExactMatches.Add(
-                            $"name:({literal.Groups[2].Value})^8 OR ({literal.Groups[2].Value})^5"
+                            String.Join(
+                                " ",
+                                $"name:\"{literal.Groups[2].Value}\"^8 OR",
+                                $"description: \"{literal.Groups[2].Value}\"^5 OR",
+                                $"email: \"{literal.Groups[2].Value}\" OR",
+                                $"external_url: \"{literal.Groups[2].Value}\" OR",
+                                $"financial_impact: \"{literal.Groups[2].Value}\" OR",
+                                $"fragility_tags: \"{literal.Groups[2].Value}\" OR",
+                                $"group_type: \"{literal.Groups[2].Value}\" OR",
+                                $"linked_description: \"{literal.Groups[2].Value}\" OR",
+                                $"maintenance_schedule: \"{literal.Groups[2].Value}\" OR",
+                                $"operations_owner: \"{literal.Groups[2].Value}\" OR",
+                                $"organizational_value: \"{literal.Groups[2].Value}\" OR",
+                                $"related_collections: \"{literal.Groups[2].Value}\" OR",
+                                $"related_initiatives: \"{literal.Groups[2].Value}\" OR",
+                                $"related_reports: \"{literal.Groups[2].Value}\" OR",
+                                $"related_terms: \"{literal.Groups[2].Value}\" OR",
+                                $"report_last_updated_by: \"{literal.Groups[2].Value}\" OR",
+                                $"report_type: \"{literal.Groups[2].Value}\" OR",
+                                $"requester: \"{literal.Groups[2].Value}\" OR",
+                                $"source_database: \"{literal.Groups[2].Value}\" OR",
+                                $"strategic_importance: \"{literal.Groups[2].Value}\" OR",
+                                $"updated_by: \"{literal.Groups[2].Value}\" OR",
+                                $"user_groups: \"{literal.Groups[2].Value}\" OR",
+                                $"user_roles: \"{literal.Groups[2].Value}\" OR",
+                                $"source_database: \"{literal.Groups[2].Value}\""
+                            )
                         );
                     }
                 }
@@ -150,20 +176,7 @@ namespace Atlas_Web.Pages.Search
             }
 
             // clean double quote from search string
-            search_string = search_string.Replace("\"", "\\\"");
-
-            static string BuildFuzzy(string substr)
-            {
-                if (substr.Length > 2)
-                {
-                    return substr + "~" + Math.Max(substr.Length / 3, 1).ToString();
-                }
-                else if (substr.Length == 2)
-                {
-                    return substr;
-                }
-                return substr;
-            }
+            search_string = search_string.Replace("\"", "\\\"").Trim();
 
             static string BuildExact(string wild, List<string> exact)
             {
@@ -180,18 +193,6 @@ namespace Atlas_Web.Pages.Search
 
                 return $"{exact_string} AND ({wild})";
             }
-            string Fuzzy = String.Join(
-                " ",
-                search_string
-                    .Split(' ')
-                    .Where(s => !String.IsNullOrEmpty(s))
-                    .Select(x => BuildFuzzy(x))
-            );
-
-            string Wild = String.Join(
-                " ",
-                search_string.Split(' ').Where(s => !String.IsNullOrEmpty(s)).Select(x => x + "*")
-            );
 
             if (search_string == "")
             {
@@ -201,14 +202,11 @@ namespace Atlas_Web.Pages.Search
             if (query.Keys.Contains("field"))
             {
                 string field = query["field"];
-                return BuildExact(
-                    $"{field}:({search_string})^60 OR {field}:({Fuzzy})^3",
-                    ExactMatches
-                );
+                return BuildExact($"{field}:({search_string})^60", ExactMatches);
             }
 
             return BuildExact(
-                $"name:({search_string})^12 OR name:({Fuzzy})^7 OR name:({Wild})^6 OR description:({search_string})^5 OR description:({Fuzzy})^4 OR description:({Wild})^3 OR ({search_string})^2 OR ({Fuzzy}) OR ({Wild})",
+                $"name:({search_string})^12 OR name_split:({search_string})^6 OR description:({search_string})^5 OR description_split:({search_string})^3 OR ({search_string})",
                 ExactMatches
             );
         }
@@ -220,7 +218,7 @@ namespace Atlas_Web.Pages.Search
                 return RedirectToPage("/Index/Index");
             }
 
-            Query = HttpUtility.UrlDecode(Query);
+            Query = HttpUtility.UrlDecode(Query).Trim();
 
             int PageIndex = Int32.Parse(Request.Query["PageIndex"].FirstOrDefault() ?? "1");
             string Type = Request.Query["type"].FirstOrDefault() ?? "query";
@@ -384,7 +382,7 @@ namespace Atlas_Web.Pages.Search
                             { "rq", "{!rerank reRankQuery=$rqq reRankDocs=1000 reRankWeight=5}" },
                             {
                                 "rqq",
-                                "(type:collections^2.8 OR type:reports^2 OR documented:Y^0.1 OR executive_visibility_text:Y^0.2  OR certification_text:\"Analytics Certified\"^0.4 OR certification_text:\"Analytics Reviewed\"^0.4)"
+                                "(type:collections^2.8 OR type:reports^2 OR documented:Y^0.1 OR executive_visibility:Y^0.2  OR certification:\"Analytics Certified\"^0.4 OR certification:\"Analytics Reviewed\"^0.4)"
                             },
                             { "hl.fl", hl },
                             { "hl.requireFieldMatch", hl_match }
@@ -418,16 +416,16 @@ namespace Atlas_Web.Pages.Search
 
                 SearchResults = new SolrAtlasResults(
                     results
-                        .OrderBy(x => x.Type.First() == "collections" ? 0 : 1)
+                        .OrderBy(x => x.Type == "collections" ? 0 : 1)
                         .Select(
                             x =>
                                 new ResultModel
                                 {
                                     Id = x.Id,
                                     report =
-                                        x.Type.First() == "reports"
+                                        x.Type == "reports"
                                             ? _cache.GetOrCreate<ReportObject>(
-                                                  "search-report-" + x.AtlasId.First(),
+                                                  "search-report-" + x.AtlasId,
                                                   cacheEntry =>
                                                   {
                                                       cacheEntry.AbsoluteExpirationRelativeToNow =
@@ -439,17 +437,15 @@ namespace Atlas_Web.Pages.Search
                                                           .Include(x => x.ReportObjectType)
                                                           .AsSingleQuery()
                                                           .SingleOrDefault(
-                                                              y =>
-                                                                  y.ReportObjectId
-                                                                  == x.AtlasId.First()
+                                                              y => y.ReportObjectId == x.AtlasId
                                                           );
                                                   }
                                               )
                                             : null,
                                     collection =
-                                        x.Type.First() == "collections"
+                                        x.Type == "collections"
                                             ? _cache.GetOrCreate<Collection>(
-                                                  "search-collection-" + x.AtlasId.First(),
+                                                  "search-collection-" + x.AtlasId,
                                                   cacheEntry =>
                                                   {
                                                       cacheEntry.AbsoluteExpirationRelativeToNow =
@@ -458,17 +454,15 @@ namespace Atlas_Web.Pages.Search
                                                           .Include(x => x.StarredCollections)
                                                           .AsSingleQuery()
                                                           .SingleOrDefault(
-                                                              y =>
-                                                                  y.DataProjectId
-                                                                  == x.AtlasId.First()
+                                                              y => y.DataProjectId == x.AtlasId
                                                           );
                                                   }
                                               )
                                             : null,
                                     term =
-                                        x.Type.First() == "terms"
+                                        x.Type == "terms"
                                             ? _cache.GetOrCreate<Term>(
-                                                  "search-term-" + x.AtlasId.First(),
+                                                  "search-term-" + x.AtlasId,
                                                   cacheEntry =>
                                                   {
                                                       cacheEntry.AbsoluteExpirationRelativeToNow =
@@ -477,15 +471,15 @@ namespace Atlas_Web.Pages.Search
                                                           .Include(x => x.StarredTerms)
                                                           .AsSingleQuery()
                                                           .SingleOrDefault(
-                                                              y => y.TermId == x.AtlasId.First()
+                                                              y => y.TermId == x.AtlasId
                                                           );
                                                   }
                                               )
                                             : null,
                                     initiative =
-                                        x.Type.First() == "initiatives"
+                                        x.Type == "initiatives"
                                             ? _cache.GetOrCreate<Initiative>(
-                                                  "search-initaitive-" + x.AtlasId.First(),
+                                                  "search-initaitive-" + x.AtlasId,
                                                   cacheEntry =>
                                                   {
                                                       cacheEntry.AbsoluteExpirationRelativeToNow =
@@ -494,17 +488,15 @@ namespace Atlas_Web.Pages.Search
                                                           .Include(x => x.StarredInitiatives)
                                                           .AsSingleQuery()
                                                           .SingleOrDefault(
-                                                              y =>
-                                                                  y.DataInitiativeId
-                                                                  == x.AtlasId.First()
+                                                              y => y.DataInitiativeId == x.AtlasId
                                                           );
                                                   }
                                               )
                                             : null,
                                     user =
-                                        x.Type.First() == "users"
+                                        x.Type == "users"
                                             ? _cache.GetOrCreate<User>(
-                                                  "search-user-" + x.AtlasId.First(),
+                                                  "search-user-" + x.AtlasId,
                                                   cacheEntry =>
                                                   {
                                                       cacheEntry.AbsoluteExpirationRelativeToNow =
@@ -512,15 +504,15 @@ namespace Atlas_Web.Pages.Search
                                                       return _context.Users
                                                           .AsSingleQuery()
                                                           .SingleOrDefault(
-                                                              y => y.UserId == x.AtlasId.First()
+                                                              y => y.UserId == x.AtlasId
                                                           );
                                                   }
                                               )
                                             : null,
                                     group =
-                                        x.Type.First() == "groups"
+                                        x.Type == "groups"
                                             ? _cache.GetOrCreate<UserGroup>(
-                                                  "search-group-" + x.AtlasId.First(),
+                                                  "search-group-" + x.AtlasId,
                                                   cacheEntry =>
                                                   {
                                                       cacheEntry.AbsoluteExpirationRelativeToNow =
@@ -528,7 +520,7 @@ namespace Atlas_Web.Pages.Search
                                                       return _context.UserGroups
                                                           .AsSingleQuery()
                                                           .SingleOrDefault(
-                                                              y => y.GroupId == x.AtlasId.First()
+                                                              y => y.GroupId == x.AtlasId
                                                           );
                                                   }
                                               )
@@ -571,7 +563,7 @@ namespace Atlas_Web.Pages.Search
                     x =>
                         new ObjectSearch
                         {
-                            ObjectId = x.AtlasId.First(),
+                            ObjectId = x.AtlasId,
                             Name = x.Name,
                             Description =
                                 x.Description != null ? x.Description.FirstOrDefault() : ""
@@ -603,7 +595,7 @@ namespace Atlas_Web.Pages.Search
                     x =>
                         new ObjectSearch
                         {
-                            ObjectId = x.AtlasId.First(),
+                            ObjectId = x.AtlasId,
                             Name = x.Name,
                             Description =
                                 x.Description != null ? x.Description.FirstOrDefault() : ""
@@ -636,7 +628,7 @@ namespace Atlas_Web.Pages.Search
                     x =>
                         new ObjectSearch
                         {
-                            ObjectId = x.AtlasId.First(),
+                            ObjectId = x.AtlasId,
                             Name = x.Name,
                             Description =
                                 x.Description != null ? x.Description.FirstOrDefault() : ""
@@ -670,7 +662,7 @@ namespace Atlas_Web.Pages.Search
                     x =>
                         new ObjectSearch
                         {
-                            ObjectId = x.AtlasId.First(),
+                            ObjectId = x.AtlasId,
                             Name = x.Name,
                             Type = "u"
                         }
@@ -703,7 +695,7 @@ namespace Atlas_Web.Pages.Search
                     x =>
                         new ObjectSearch
                         {
-                            ObjectId = x.AtlasId.First(),
+                            ObjectId = x.AtlasId,
                             Name = x.Name,
                             Type = "u"
                         }

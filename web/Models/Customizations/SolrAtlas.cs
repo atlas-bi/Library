@@ -14,7 +14,7 @@ namespace Atlas_Web.Models
         public string Name { get; set; }
 
         [SolrField("type")]
-        public ICollection<string> Type { get; set; }
+        public string Type { get; set; }
 
         [SolrField("description")]
         public ICollection<string> Description { get; set; }
@@ -23,7 +23,7 @@ namespace Atlas_Web.Models
         public string ReportType { get; set; }
 
         [SolrField("report_type_id")]
-        public ICollection<int> ReportTypeId { get; set; }
+        public int ReportTypeId { get; set; }
 
         [SolrField("email")]
         public string Email { get; set; }
@@ -32,10 +32,10 @@ namespace Atlas_Web.Models
         public string Documented { get; set; }
 
         [SolrField("atlas_id")]
-        public ICollection<int> AtlasId { get; set; }
+        public int AtlasId { get; set; }
 
         [SolrField("certification")]
-        public ICollection<string> Certification { get; set; }
+        public string Certification { get; set; }
 
         [SolrField("epic_master_file")]
         public string EpicMasterFile { get; set; }
@@ -62,6 +62,6 @@ namespace Atlas_Web.Models
         public string EnabledForHyperspace { get; set; }
 
         [SolrField("group_type")]
-        public ICollection<string> GroupType { get; set; }
+        public string GroupType { get; set; }
     }
 }

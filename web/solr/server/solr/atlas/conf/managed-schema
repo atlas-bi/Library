@@ -49,7 +49,10 @@
       <filter class="solr.LowerCaseFilterFactory"/>
     </analyzer>
   </fieldType>
-  <fieldType name="non_split_text" class="solr.TextField" multiValued="true"/>
+  <!-- nonsplit text used for exact matches.
+       tokenize on whitespace, and lowercase
+  -->
+  <fieldType name="non_split_text" class="solr.TextField" indexed="true" stored="false" />
   <fieldType name="pdate" class="solr.DatePointField" docValues="true"/>
   <fieldType name="pdates" class="solr.DatePointField" docValues="true" multiValued="true"/>
   <fieldType name="pdouble" class="solr.DoublePointField" docValues="true"/>
@@ -73,7 +76,7 @@
   <fieldType name="strings" class="solr.StrField" sortMissingLast="true" docValues="true" multiValued="true"/>
   <fieldType name="text_en" class="solr.TextField" positionIncrementGap="100">
     <analyzer type="index">
-      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <tokenizer class="solr.WhitespaceTokenizerFactory"/>
       <filter class="solr.StopFilterFactory" words="lang/stopwords_en.txt" ignoreCase="true"/>
       <filter class="solr.LowerCaseFilterFactory"/>
       <filter class="solr.EnglishPossessiveFilterFactory"/>
@@ -81,7 +84,7 @@
       <filter class="solr.PorterStemFilterFactory"/>
     </analyzer>
     <analyzer type="query">
-      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <tokenizer class="solr.WhitespaceTokenizerFactory"/>
       <filter class="solr.SynonymGraphFilterFactory" expand="true" ignoreCase="true" synonyms="synonyms.txt"/>
       <filter class="solr.StopFilterFactory" words="lang/stopwords_en.txt" ignoreCase="true"/>
       <filter class="solr.LowerCaseFilterFactory"/>
@@ -90,13 +93,14 @@
       <filter class="solr.PorterStemFilterFactory"/>
     </analyzer>
   </fieldType>
-  <fieldType name="text_en_splitting" class="solr.TextField" autoGeneratePhraseQueries="true" positionIncrementGap="100">
+  <fieldType name="text_en_splitting" class="solr.TextField" autoGeneratePhraseQueries="true" positionIncrementGap="100" indexed="true" stored="false" multiValued="true">
     <analyzer type="index">
       <tokenizer class="solr.WhitespaceTokenizerFactory"/>
       <filter class="solr.StopFilterFactory" words="lang/stopwords_en.txt" ignoreCase="true"/>
       <filter class="solr.WordDelimiterGraphFilterFactory" catenateNumbers="1" generateNumberParts="1" splitOnCaseChange="1" generateWordParts="1" catenateAll="0" catenateWords="1"/>
       <filter class="solr.LowerCaseFilterFactory"/>
       <filter class="solr.KeywordMarkerFilterFactory" protected="protwords.txt"/>
+      <filter class="solr.NGramFilterFactory" minGramSize="3" maxGramSize="15"/>
       <filter class="solr.PorterStemFilterFactory"/>
       <filter class="solr.FlattenGraphFilterFactory"/>
     </analyzer>
@@ -107,6 +111,7 @@
       <filter class="solr.WordDelimiterGraphFilterFactory" catenateNumbers="0" generateNumberParts="1" splitOnCaseChange="1" generateWordParts="1" catenateAll="0" catenateWords="0"/>
       <filter class="solr.LowerCaseFilterFactory"/>
       <filter class="solr.KeywordMarkerFilterFactory" protected="protwords.txt"/>
+      <filter class="solr.NGramFilterFactory" minGramSize="3" maxGramSize="15"/>
       <filter class="solr.PorterStemFilterFactory"/>
     </analyzer>
   </fieldType>
@@ -202,124 +207,117 @@
   <field name="_root_" type="string" docValues="false" indexed="true" stored="false"/>
   <field name="_text_" type="text_general" multiValued="true" indexed="true" stored="false"/>
   <field name="_version_" type="plong" indexed="false" stored="false"/>
-  <field name="all_text" type="text_en" uninvertible="true" multiValued="true" indexed="true" stored="false"/>
-  <field name="analytics_owner" type="text_general"/>
-  <field name="analytics_owner_text" type="non_split_text" multiValued="true" indexed="true" stored="false"/>
+  <field name="all_text" type="text_en_splitting" uninvertible="true" multiValued="true" indexed="true" stored="false"/>
+
+  <!-- etl fields -->
+  <field name="analytics_owner" type="text_general" multiValued="false"/>
   <field name="approval_date" type="pdate"/>
   <field name="approved" type="text_en"/>
   <field name="approved_by" type="text_en"/>
-  <field name="approved_by_text" type="non_split_text" multiValued="true" indexed="true" stored="false"/>
-  <field name="approved_text" type="non_split_text" multiValued="true" indexed="true" stored="false"/>
-  <field name="atlas_id" type="plongs"/>
+  <field name="atlas_id" type="plong"/>
   <field name="author" type="text_en"/>
-  <field name="author_text" type="non_split_text" multiValued="true" indexed="true" stored="false"/>
-  <field name="certification" type="text_general" indexed="true" stored="true"/>
-  <field name="certification_text" type="non_split_text" multiValued="false" indexed="true" stored="false"/>
+  <field name="certification" type="text_general" indexed="true" stored="true" multiValued="false"/>
   <field name="created" type="pdate"/>
   <field name="created_by" type="text_en"/>
   <field name="created_by_id" type="plong"/>
-  <field name="created_by_text" type="non_split_text" multiValued="true" indexed="true" stored="false"/>
   <field name="data_owner" type="text_en"/>
-  <field name="data_owner_text" type="non_split_text" multiValued="true" indexed="true" stored="false"/>
   <field name="description" type="text_en" multiValued="true" indexed="true" stored="true"/>
-  <field name="description_split" type="text_en_splitting" multiValued="true" indexed="true" stored="true"/>
   <field name="do_not_purge" type="text_en"/>
-  <field name="do_not_purge_text" type="non_split_text" multiValued="true" indexed="true" stored="false"/>
   <field name="documented" type="text_en"/>
-  <field name="documented_text" type="non_split_text" multiValued="true" indexed="true" stored="false"/>
   <field name="email" type="text_en"/>
   <field name="employee_id" type="text_en"/>
   <field name="enabled_for_hyperspace" type="text_en"/>
-  <field name="enabled_for_hyperspace_text" type="non_split_text" multiValued="true" indexed="true" stored="false"/>
   <field name="epic_master_file" type="text_en"/>
-  <field name="epic_master_file_text" type="non_split_text" multiValued="true" indexed="true" stored="false"/>
   <field name="epic_record_id" type="text_en"/>
   <field name="epic_template" type="text_en"/>
-  <field name="epic_template_text" type="non_split_text" multiValued="true" indexed="true" stored="false"/>
   <field name="estimated_run_frequency" type="text_en"/>
-  <field name="estimated_run_frequency_text" type="non_split_text" multiValued="true" indexed="true" stored="false"/>
   <field name="executive_owner" type="text_en"/>
-  <field name="executive_owner_text" type="non_split_text" multiValued="true" indexed="true" stored="false"/>
   <field name="executive_visibility" type="text_en"/>
-  <field name="executive_visibility_text" type="non_split_text" multiValued="true" indexed="true" stored="false"/>
   <field name="external_url" type="text_en"/>
-  <field name="external_url_text" type="text_en_url" multiValued="true" indexed="true" stored="false"/>
   <field name="financial_impact" type="text_en"/>
-  <field name="financial_impact_text" type="non_split_text" multiValued="true" indexed="true" stored="false"/>
   <field name="fragility" type="text_en"/>
   <field name="fragility_tags" type="text_en" multiValued="true"/>
-  <field name="fragility_tags_text" type="non_split_text" multiValued="true" indexed="true" stored="false"/>
-  <field name="fragility_text" type="non_split_text" multiValued="true" indexed="true" stored="false"/>
-  <field name="group_source" type="text_general"/>
-  <field name="group_type" type="text_general"/>
-  <field name="group_type_text" type="non_split_text" indexed="true" stored="false"/>
-  <field name="has_external_standard" type="text_en"/>
-  <field name="has_external_standard_text" type="non_split_text" multiValued="true" indexed="true" stored="false"/>
+  <field name="group_source" type="text_general" multiValued="false"/>
+  <field name="group_type" type="text_general" multiValued="false"/>
   <field name="id" type="string" multiValued="false" indexed="true" required="true" stored="true"/>
   <field name="last_load_date" type="pdate"/>
   <field name="last_updated" type="pdate"/>
   <field name="linked_description" type="text_en" multiValued="true"/>
-  <field name="linked_description_split" type="text_en_splitting" multiValued="true"/>
   <field name="linked_name" type="text_en" multiValued="true"/>
-  <field name="linked_name_split" type="text_en_splitting" multiValued="true"/>
   <field name="maintenance_schedule" type="text_en"/>
-  <field name="maintenance_schedule_text" type="non_split_text" multiValued="true" indexed="true" stored="false"/>
   <field name="name" type="text_en" indexed="true"/>
-  <field name="name_text" type="non_split_text" indexed="true"/>
-  <field name="name_split" type="text_en_splitting" indexed="true"/>
   <field name="operations_owner" type="text_en"/>
-  <field name="operations_owner_text" type="non_split_text" multiValued="true" indexed="true" stored="false"/>
   <field name="organizational_value" type="text_en"/>
-  <field name="organizational_value_text" type="non_split_text" multiValued="true" indexed="true" stored="false"/>
   <field name="orphan" type="text_en"/>
-  <field name="orphan_text" type="non_split_text" multiValued="true" indexed="true" stored="false"/>
   <field name="query" type="text_en" multiValued="true"/>
-  <field name="query_split" type="text_en_splitting" multiValued="true"/>
   <field name="related_collections" type="text_en" multiValued="true"/>
-  <field name="related_collections_text" type="non_split_text" multiValued="true" indexed="true" stored="false"/>
-  <field name="related_collections_split" type="text_en_splitting" multiValued="true" indexed="true" stored="false"/>
   <field name="related_initiatives" type="text_en" multiValued="true"/>
-  <field name="related_initiatives_text" type="non_split_text" multiValued="true" indexed="true" stored="false"/>
-  <field name="related_initiatives_split" type="text_en_splitting" multiValued="true" indexed="true" stored="false"/>
   <field name="related_reports" type="text_en" multiValued="true"/>
-  <field name="related_reports_text" type="non_split_text" multiValued="true" indexed="true" stored="false"/>
-  <field name="related_reports_split" type="text_en_splitting" multiValued="true" indexed="true" stored="false"/>
   <field name="related_terms" type="text_en" multiValued="true"/>
-  <field name="related_terms_text" type="non_split_text" multiValued="true" indexed="true" stored="false"/>
-  <field name="related_terms_split" type="text_en_splitting" multiValued="true" indexed="true" stored="false"/>
   <field name="report_last_updated" type="pdate"/>
   <field name="report_last_updated_by" type="text_en"/>
-  <field name="report_last_updated_by_text" type="non_split_text" multiValued="true" indexed="true" stored="false"/>
   <field name="report_type" type="text_en"/>
-  <field name="report_type_text" type="non_split_text" multiValued="true" indexed="true" stored="false"/>
-  <field name="report_type_id" type="plongs" indexed="true" stored="true"/>
+  <field name="report_type_id" type="plong" indexed="true" stored="true"/>
   <field name="requester" type="text_en"/>
-  <field name="requester_text" type="non_split_text" multiValued="true" indexed="true" stored="false"/>
-  <field name="run_user" type="text_en"/>
-  <field name="run_user_id" type="plongs" indexed="true" stored="true"/>
-  <field name="run_user_id_text" type="non_split_text" multiValued="true" indexed="true" stored="false"/>
-  <field name="run_user_text" type="non_split_text" multiValued="true" indexed="true" stored="false"/>
   <field name="runs" type="pfloat" indexed="true" stored="true"/>
   <field name="source_database" type="text_en"/>
-  <field name="source_database_text" type="non_split_text" multiValued="true" indexed="true" stored="false"/>
   <field name="source_server" type="text_en"/>
   <field name="server_path" type="text_en"/>
   <field name="run_url" type="text_en"/>
-  <field name="source_server_text" type="non_split_text" multiValued="true" indexed="true" stored="false"/>
   <field name="strategic_importance" type="text_en"/>
-  <field name="strategic_importance_text" type="non_split_text" multiValued="true" indexed="true" stored="false"/>
-  <field name="type" type="text_general"/>
+  <field name="type" type="text_general" stored="true" multiValued="false"/>
   <field name="updated_by" type="text_en"/>
-  <field name="updated_by_text" type="non_split_text" multiValued="true" indexed="true" stored="false"/>
   <field name="user_groups" type="text_en"  multiValued="true"/>
-  <field name="user_groups_text" type="non_split_text" multiValued="true" indexed="true" stored="true"/>
   <field name="user_roles" type="text_en" multiValued="true" />
-  <field name="user_roles_text" type="non_split_text" multiValued="true" indexed="true" stored="true"/>
-  <field name="user_runs" type="_nest_path_"/>
   <field name="valid_from" type="pdate"/>
   <field name="valid_to" type="pdate"/>
-  <field name="visible_text" type="non_split_text" multiValued="true" indexed="true" stored="false"/>
   <field name="visible" type="text_en"/>
+
+  <!--
+    general search fields
+
+    These use text_en_splitting, full ngram messy match
+    to acomidate speling erors.
+  -->
+  <field name="description_split" type="text_en_splitting"/>
+  <field name="linked_description_split" type="text_en_splitting"/>
+  <field name="linked_name_split" type="text_en_splitting"/>
+  <field name="name_split" type="text_en_splitting"/>
+  <field name="query_split" type="text_en_splitting"/>
+  <field name="related_collections_split" type="text_en_splitting"/>
+  <field name="related_initiatives_split" type="text_en_splitting"/>
+  <field name="related_reports_split" type="text_en_splitting"/>
+  <field name="related_terms_split" type="text_en_splitting"/>
+
+
+  <!-- facets fields are the original text -->
+  <field name="approved_text" type="non_split_text" />
+  <field name="certification_text" type="non_split_text" />
+  <field name="created_by_text" type="non_split_text" />
+  <field name="do_not_purge_text" type="non_split_text" />
+  <field name="epic_master_file_text" type="non_split_text" />
+  <field name="enabled_for_hyperspace_text" type="non_split_text" />
+  <field name="estimated_run_frequency_text" type="non_split_text" />
+  <field name="executive_owner_text" type="non_split_text" />
+  <field name="executive_visibility_text" type="non_split_text" />
+  <field name="financial_impact_text" type="non_split_text" />
+  <field name="fragility_text" type="non_split_text" />
+  <field name="group_type_text" type="non_split_text" />
+  <field name="maintenance_schedule_text" type="non_split_text" />
+  <field name="operations_owner_text" type="non_split_text" />
+  <field name="organizational_value_text" type="non_split_text" />
+  <field name="report_last_updated_by_text" type="non_split_text" />
+  <field name="related_reports_text" type="non_split_text" multiValued="true" />
+  <field name="report_type_text" type="non_split_text" />
+  <field name="requester_text" type="non_split_text" />
+  <field name="source_database_text" type="non_split_text" />
+  <field name="source_server_text" type="non_split_text" />
+  <field name="strategic_importance_text" type="non_split_text" />
+  <field name="updated_by_text" type="non_split_text" />
+  <field name="user_groups_text" type="non_split_text" multiValued="true" />
+  <field name="user_roles_text" type="non_split_text" multiValued="true" />
+  <field name="visible_text" type="non_split_text" />
+
   <dynamicField name="*_txt_en_split_tight" type="text_en_splitting_tight" indexed="true" stored="true"/>
   <dynamicField name="*_descendent_path" type="descendent_path" indexed="true" stored="true"/>
   <dynamicField name="*_ancestor_path" type="ancestor_path" indexed="true" stored="true"/>
@@ -356,92 +354,52 @@
   <dynamicField name="*_f" type="pfloat" indexed="true" stored="true"/>
   <dynamicField name="*_d" type="pdouble" indexed="true" stored="true"/>
   <dynamicField name="*_p" type="location" indexed="true" stored="true"/>
-  <copyField source="analytics_owner" dest="all_text"/>
-  <copyField source="analytics_owner" dest="analytics_owner_text"/>
-  <copyField source="approved" dest="approved_text"/>
-  <copyField source="approved_by" dest="all_text"/>
-  <copyField source="approved_by" dest="approved_by_text"/>
-  <copyField source="author" dest="all_text"/>
-  <copyField source="author" dest="author_text"/>
-  <copyField source="certification" dest="all_text"/>
-  <copyField source="certification" dest="certification_text"/>
-  <copyField source="created_by" dest="all_text"/>
-  <copyField source="created_by" dest="created_by_text"/>
-  <copyField source="data_owner" dest="all_text"/>
-  <copyField source="data_owner" dest="data_owner_text"/>
-  <copyField source="description" dest="all_text"/>
+
+  <!-- copy in facet fields-->
+  <copyfield source="approved" dest="approved_text" />
+  <copyfield source="certification" dest="certification_text" />
+  <copyfield source="created_by" dest="created_by_text" />
+  <copyfield source="do_not_purge" dest="do_not_purge_text" />
+  <copyfield source="epic_master_file" dest="epic_master_file_text" />
+  <copyfield source="enabled_for_hyperspace" dest="enabled_for_hyperspace_text" />
+  <copyfield source="estimated_run_frequency" dest="estimated_run_frequency_text" />
+  <copyfield source="executive_owner" dest="executive_owner_text" />
+  <copyfield source="executive_visibility" dest="executive_visibility_text" />
+  <copyfield source="financial_impact" dest="financial_impact_text" />
+  <copyfield source="fragility" dest="fragility_text" />
+  <copyfield source="group_type" dest="group_type_text" />
+  <copyfield source="maintenance_schedule" dest="maintenance_schedule_text" />
+  <copyfield source="operations_owner" dest="operations_owner_text" />
+  <copyfield source="organizational_value" dest="organizational_value_text" />
+  <copyField source="report_last_updated_by" dest="report_last_updated_by_text" />
+  <copyfield source="related_reports" dest="related_reports_text" />
+  <copyfield source="report_type" dest="report_type_text" />
+  <copyfield source="requester" dest="requester_text" />
+  <copyfield source="source_database" dest="source_database_text" />
+  <copyfield source="source_server" dest="source_server_text" />
+  <copyfield source="strategic_importance" dest="strategic_importance_text" />
+  <copyfield source="updated_by" dest="updated_by_text" />
+  <copyfield source="user_groups" dest="user_groups_text" />
+  <copyfield source="user_roles" dest="user_roles_text" />
+  <copyfield source="visible" dest="visible_text" />
+
+  <!-- copy in fuzy fields-->
   <copyField source="description" dest="description_split"/>
-  <copyField source="do_not_purge" dest="do_not_purge_text"/>
-  <copyField source="documented" dest="documented_text"/>
-  <copyField source="email" dest="all_text"/>
-  <copyField source="employee_id" dest="all_text"/>
-  <copyField source="enabled_for_hyperspace" dest="enabled_for_hyperspace_text"/>
-  <copyField source="epic_master_file" dest="all_text"/>
-  <copyField source="epic_master_file" dest="epic_master_file_text"/>
-  <copyField source="epic_record_id" dest="all_text"/>
-  <copyField source="epic_template" dest="all_text"/>
-  <copyField source="epic_template" dest="epic_template_text"/>
-  <copyField source="estimated_run_frequency" dest="all_text"/>
-  <copyField source="external_url" dest="all_text"/>
-  <copyField source="external_url" dest="external_url_text"/>
-  <copyField source="estimated_run_frequency" dest="estimated_run_frequency_text"/>
-  <copyField source="executive_owner" dest="all_text"/>
-  <copyField source="executive_owner" dest="executive_owner_text"/>
-  <copyField source="executive_visibility" dest="executive_visibility_text"/>
-  <copyField source="financial_impact" dest="all_text"/>
-  <copyField source="financial_impact" dest="financial_impact_text"/>
-  <copyField source="fragility" dest="all_text"/>
-  <copyField source="group_type" dest="all_text"/>
-  <copyField source="group_type" dest="group_type_text"/>
-  <copyField source="fragility" dest="fragility_text"/>
-  <copyField source="fragility_tags" dest="fragility_tags_text"/>
-  <copyField source="has_external_standard" dest="has_external_standard_text"/>
-  <copyField source="linked_description" dest="all_text"/>
   <copyField source="linked_description" dest="linked_description_split"/>
-  <copyField source="linked_name" dest="all_text"/>
   <copyField source="linked_name" dest="linked_name_split"/>
-  <copyField source="maintenance_schedule" dest="all_text"/>
-  <copyField source="maintenance_schedule" dest="maintenance_schedule_text"/>
-  <copyField source="name" dest="all_text"/>
-  <copyField source="name" dest="name_text"/>
   <copyField source="name" dest="name_split"/>
-  <copyField source="operations_owner" dest="all_text"/>
-  <copyField source="operations_owner" dest="operations_owner_text"/>
-  <copyField source="organizational_value" dest="organizational_value_text"/>
-  <copyField source="orphan" dest="orphan_text"/>
-  <copyField source="query" dest="all_text"/>
   <copyField source="query" dest="query_split"/>
-  <copyField source="related_collections" dest="all_text"/>
-  <copyField source="related_collections" dest="related_collections_text"/>
   <copyField source="related_collections" dest="related_collections_split"/>
-  <copyField source="related_initiatives" dest="all_text"/>
-  <copyField source="related_initiatives" dest="related_initiatives_text"/>
   <copyField source="related_initiatives" dest="related_initiatives_split"/>
-  <copyField source="related_reports" dest="all_text"/>
-  <copyField source="related_reports" dest="related_reports_text"/>
   <copyField source="related_reports" dest="related_reports_split"/>
-  <copyField source="related_terms" dest="all_text"/>
-  <copyField source="related_terms" dest="related_terms_text"/>
-  <copyField source="report_last_updated_by" dest="all_text"/>
-  <copyField source="report_last_updated_by" dest="report_last_updated_by_text"/>
-  <copyField source="report_type" dest="all_text"/>
-  <copyField source="report_type" dest="report_type_text"/>
-  <copyField source="requester" dest="requester_text"/>
-  <copyField source="run_user" dest="run_user_text"/>
-  <copyField source="run_user_id" dest="run_user_id_text"/>
-  <copyField source="source_database" dest="source_database_text"/>
-  <copyField source="source_server" dest="source_server_text"/>
-  <copyField source="strategic_importance" dest="all_text"/>
-  <copyField source="strategic_importance" dest="strategic_importance_text"/>
-  <copyField source="type" dest="all_text"/>
-  <copyField source="updated_by" dest="all_text"/>
-  <copyField source="updated_by" dest="updated_by_text"/>
-  <copyField source="user_roles" dest="all_text"/>
-  <copyField source="user_roles" dest="user_roles_text"/>
-  <copyField source="user_groups" dest="all_text"/>
-  <copyField source="user_groups" dest="user_groups_text"/>
-  <copyField source="visible" dest="visible_text"/>
-  <copyField source="related_reports" dest="related_Reports_str" maxChars="256"/>
+  <copyField source="related_terms" dest="related_terms_split"/>
+
+  <!-- copy  to all text-->
+  <copyField source="analytics_owner" dest="all_text"/>
+
+
+  <!-- string representation -->
+  <!-- <copyField source="related_reports" dest="related_Reports_str" maxChars="256"/>
   <copyField source="related_terms" dest="related_Terms_str" maxChars="256"/>
   <copyField source="description" dest="description_str" maxChars="256"/>
   <copyField source="user_roles" dest="user_roles_str" maxChars="256"/>
@@ -463,17 +421,15 @@
   <copyField source="source_server" dest="source_server_str" maxChars="256"/>
   <copyField source="visible" dest="visible_str" maxChars="256"/>
   <copyField source="created_by" dest="created_by_str" maxChars="256"/>
-  <copyField source="run_user" dest="run_user_str" maxChars="256"/>
   <copyField source="report_type" dest="report_type_str" maxChars="256"/>
   <copyField source="requester" dest="requester_str" maxChars="256"/>
   <copyField source="orphan" dest="orphan_str" maxChars="256"/>
   <copyField source="name" dest="name_str" maxChars="256"/>
   <copyField source="approved" dest="approved_str" maxChars="256"/>
   <copyField source="approved_by" dest="approved_by_str" maxChars="256"/>
-  <copyField source="has_external_standard" dest="has_external_standard_str" maxChars="256"/>
   <copyField source="related_collections" dest="related_collections_str" maxChars="256"/>
   <copyField source="external_url" dest="external_url_str" maxChars="256"/>
   <copyField source="group_source" dest="group_source_str" maxChars="256"/>
   <copyField source="group_type" dest="group_type_str" maxChars="256"/>
-  <copyField source="user_groups" dest="user_groups_str" maxChars="256"/>
+  <copyField source="user_groups" dest="user_groups_str" maxChars="256"/> -->
 </schema>
