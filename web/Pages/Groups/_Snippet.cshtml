@@ -17,7 +17,7 @@
         </div>
     </div>
     <div class="card-content pt-3 pb-2">
-        <div class="media">
+        <a class="media" href="/Groups?id=@Model.GroupId">
             <div class="media-left">
                 <figure class="image is-128x128">
                     <picture>
@@ -27,17 +27,8 @@
                 </figure>
             </div>
             <div class="media-content is-min-h-96 is-flex is-justify-content-space-between is-flex-direction-column">
+                View group profile.
             </div>
-        </div>
-    </div>
-    <footer class="card-footer">
-        <a href="/Groups?id=@Model.GroupId" class="card-footer-item">
-            <span class="icon-text">
-                <span class="icon">
-                    <i class="fas fa-book-open"></i>
-                </span>
-                <span>Open Group</span>
-            </span>
         </a>
-    </footer>
+    </div>
 </div>

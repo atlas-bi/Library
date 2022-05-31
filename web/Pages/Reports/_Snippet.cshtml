@@ -210,21 +210,15 @@
             }
             @if (@Configuration["features:enable_request_access"] == null || @Configuration["features:enable_request_access"].ToString().ToLower() == "true")
             {
-                <a class="is-block has-tooltip-arrow has-tooltip-top js-modal-trigger ml-2" data-tooltip="Request Access" data-target="request-access-@Model.ReportObjectId">
-                    <span class="icon has-text-grey">
-                        <i class="fas fa-universal-access"></i>
-                    </span>
-                </a>
+                 @if (Model.ReportObjectAttachments.Count() > 0 || RunReportUrl != null)
+                {
+                    <a class="is-block has-tooltip-arrow has-tooltip-top js-modal-trigger ml-2" data-tooltip="Request Access" data-target="request-access-@Model.ReportObjectId">
+                        <span class="icon has-text-grey">
+                            <i class="fas fa-universal-access"></i>
+                        </span>
+                    </a>
+                }
             }
-            @*
-            @if (@Configuration["features:enable_feedback"] == null || @Configuration["features:enable_feedback"].ToString().ToLower() == "true")
-            {
-                <a class="is-block has-tooltip-arrow has-tooltip-top js-modal-trigger" data-tooltip="Share Feedback" data-target="report-share-feedback-@Model.ReportObjectId">
-                    <span class="icon has-text-grey">
-                        <i class="far fa-thumbs-up"></i>
-                    </span>
-                </a>
-            }*@
         </div>
     </footer>
 </div>

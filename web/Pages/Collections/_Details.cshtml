@@ -8,7 +8,7 @@
 {
     <h2 class="title is-2" id="reports">Reports</h2>
     <div class="columns is-multiline">
-        @foreach (var t in Model.Collection.CollectionReports)
+        @foreach (var t in Model.Collection.CollectionReports.OrderBy(x => x.Rank))
         {
             <div class="column is-half ">
                 <partial name="Reports/_Snippet" model="t.Report" />
@@ -23,7 +23,7 @@
     {
         <h2 class="title is-2" id="terms">Terms</h2>
         <div class="columns is-multiline">
-            @foreach (var t in Model.Collection.CollectionTerms)
+            @foreach (var t in Model.Collection.CollectionTerms.OrderBy(x => x.Rank))
             {
                 <div class="column is-half ">
                     <partial name="Terms/_Snippet" model="t.Term" />
@@ -34,6 +34,7 @@
 }
 
 <h2 class="title is-2" id="details">Details</h2>
+<div class="content">
 @if(Model.Collection.Description != null)
 {
     <h3 class="title is-3">Description</h3>
@@ -49,6 +50,7 @@
         @Html.Raw(@Helpers.HtmlHelpers.MarkdownToHtml(Model.Collection.Purpose))
     </div>
 }
+</div>
 
 <div class="table-container mt-5">
     <table class="table is-narrow" aria-label="details">

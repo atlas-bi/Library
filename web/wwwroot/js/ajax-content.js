@@ -34,6 +34,7 @@
       element.innerHTML =
         '<div class="ajaxLoader"><img class="ajaxLoader-img" src="/img/loader.gif" /></div>';
     }
+
     if (element.classList.contains('ajax-fade')) {
       element.style.opacity = '.5';
       // eslint-disable-next-line no-unused-vars
