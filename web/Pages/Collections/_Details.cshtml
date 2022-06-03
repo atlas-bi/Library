@@ -4,6 +4,17 @@
 <h1 class="title is-1">@Model.Collection.Name</h1>
 <partial name="_Links" />
 
+@if(@Model.Collection.Initiative != null)
+{
+    <h2 class="title is-2" id="reports">Owning Initiative</h2>
+    <div class="columns is-multiline">
+        <div class="column is-half ">
+            <partial name="Initiatives/_Snippet" model="@Model.Collection.Initiative" />
+        </div>
+    </div>
+}
+
+
 @if (Model.Collection.CollectionReports.Any())
 {
     <h2 class="title is-2" id="reports">Reports</h2>

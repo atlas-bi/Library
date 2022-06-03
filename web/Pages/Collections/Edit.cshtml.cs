@@ -98,6 +98,7 @@ namespace Atlas_Web.Pages.Collections
             _context.SaveChanges();
 
             // updated any linked terms that were added and remove any that were delinked.
+            _cache.Remove("terms");
             foreach (var term in Terms.Distinct())
             {
                 term.DataProjectId = NewCollection.DataProjectId;
@@ -108,22 +109,32 @@ namespace Atlas_Web.Pages.Collections
                     )
                 )
                 {
+                    // clear term cache
+                    _cache.Remove("term-" + term.TermId);
                     _context.Add(term);
                 }
             }
             _context.SaveChanges();
 
-            _context.RemoveRange(
-                _context.CollectionTerms
-                    .Where(d => d.DataProjectId == NewCollection.DataProjectId)
-                    .Where(d => !Terms.Select(x => x.TermId).Contains((int)d.TermId))
-            );
+            var RemovedTerms = _context.CollectionTerms
+                .Where(d => d.DataProjectId == NewCollection.DataProjectId)
+                .Where(d => !Terms.Select(x => x.TermId).Contains((int)d.TermId));
+
+            foreach (var term in RemovedTerms)
+            {
+                _cache.Remove("term-" + term.TermId);
+            }
+
+            _context.RemoveRange(RemovedTerms);
             _context.SaveChanges();
 
             // update linked reports
             for (int i = 0; i < Reports.Count; i++)
             {
                 CollectionReport report = Reports[i];
+
+                // clear report cache
+                _cache.Remove("report-" + report.ReportId);
 
                 report.DataProjectId = NewCollection.DataProjectId;
                 report.Rank = i;
@@ -147,11 +158,16 @@ namespace Atlas_Web.Pages.Collections
                 _context.SaveChanges();
             }
 
-            _context.RemoveRange(
-                _context.CollectionReports
-                    .Where(d => d.DataProjectId == NewCollection.DataProjectId)
-                    .Where(d => !Reports.Select(x => x.ReportId).Contains((int)d.ReportId))
-            );
+            var RemovedReports = _context.CollectionReports
+                .Where(d => d.DataProjectId == NewCollection.DataProjectId)
+                .Where(d => !Reports.Select(x => x.ReportId).Contains((int)d.ReportId));
+
+            foreach (var report in RemovedReports)
+            {
+                _cache.Remove("report-" + report.ReportId);
+            }
+
+            _context.RemoveRange(RemovedReports);
             _context.SaveChanges();
 
             _cache.Remove("collection-" + NewCollection.DataProjectId);

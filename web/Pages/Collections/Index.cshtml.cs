@@ -60,6 +60,7 @@ namespace Atlas_Web.Pages.Collections
                             .ThenInclude(x => x.Report)
                             .ThenInclude(x => x.StarredReports)
                             .Include(x => x.StarredCollections)
+                            .Include(x => x.Initiative)
                             .SingleAsync(x => x.DataProjectId == id);
                     }
                 );
