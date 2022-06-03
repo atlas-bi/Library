@@ -52,7 +52,7 @@
   <!-- nonsplit text used for exact matches.
        tokenize on whitespace, and lowercase
   -->
-  <fieldType name="non_split_text" class="solr.TextField" indexed="true" stored="false" />
+  <fieldType name="non_split_text" class="solr.TextField" indexed="true" stored="true" />
   <fieldType name="pdate" class="solr.DatePointField" docValues="true"/>
   <fieldType name="pdates" class="solr.DatePointField" docValues="true" multiValued="true"/>
   <fieldType name="pdouble" class="solr.DoublePointField" docValues="true"/>
@@ -356,32 +356,32 @@
   <dynamicField name="*_p" type="location" indexed="true" stored="true"/>
 
   <!-- copy in facet fields-->
-  <copyfield source="approved" dest="approved_text" />
-  <copyfield source="certification" dest="certification_text" />
-  <copyfield source="created_by" dest="created_by_text" />
-  <copyfield source="do_not_purge" dest="do_not_purge_text" />
-  <copyfield source="epic_master_file" dest="epic_master_file_text" />
-  <copyfield source="enabled_for_hyperspace" dest="enabled_for_hyperspace_text" />
-  <copyfield source="estimated_run_frequency" dest="estimated_run_frequency_text" />
-  <copyfield source="executive_owner" dest="executive_owner_text" />
-  <copyfield source="executive_visibility" dest="executive_visibility_text" />
-  <copyfield source="financial_impact" dest="financial_impact_text" />
-  <copyfield source="fragility" dest="fragility_text" />
-  <copyfield source="group_type" dest="group_type_text" />
-  <copyfield source="maintenance_schedule" dest="maintenance_schedule_text" />
-  <copyfield source="operations_owner" dest="operations_owner_text" />
-  <copyfield source="organizational_value" dest="organizational_value_text" />
+  <copyField source="approved" dest="approved_text" />
+  <copyField source="certification" dest="certification_text" />
+  <copyField source="created_by" dest="created_by_text" />
+  <copyField source="do_not_purge" dest="do_not_purge_text" />
+  <copyField source="epic_master_file" dest="epic_master_file_text" />
+  <copyField source="enabled_for_hyperspace" dest="enabled_for_hyperspace_text" />
+  <copyField source="estimated_run_frequency" dest="estimated_run_frequency_text" />
+  <copyField source="executive_owner" dest="executive_owner_text" />
+  <copyField source="executive_visibility" dest="executive_visibility_text" />
+  <copyField source="financial_impact" dest="financial_impact_text" />
+  <copyField source="fragility" dest="fragility_text" />
+  <copyField source="group_type" dest="group_type_text" />
+  <copyField source="maintenance_schedule" dest="maintenance_schedule_text" />
+  <copyField source="operations_owner" dest="operations_owner_text" />
+  <copyField source="organizational_value" dest="organizational_value_text" />
   <copyField source="report_last_updated_by" dest="report_last_updated_by_text" />
-  <copyfield source="related_reports" dest="related_reports_text" />
-  <copyfield source="report_type" dest="report_type_text" />
-  <copyfield source="requester" dest="requester_text" />
-  <copyfield source="source_database" dest="source_database_text" />
-  <copyfield source="source_server" dest="source_server_text" />
-  <copyfield source="strategic_importance" dest="strategic_importance_text" />
-  <copyfield source="updated_by" dest="updated_by_text" />
-  <copyfield source="user_groups" dest="user_groups_text" />
-  <copyfield source="user_roles" dest="user_roles_text" />
-  <copyfield source="visible" dest="visible_text" />
+  <copyField source="related_reports" dest="related_reports_text" />
+  <copyField source="report_type" dest="report_type_text" />
+  <copyField source="requester" dest="requester_text" />
+  <copyField source="source_database" dest="source_database_text" />
+  <copyField source="source_server" dest="source_server_text" />
+  <copyField source="strategic_importance" dest="strategic_importance_text" />
+  <copyField source="updated_by" dest="updated_by_text" />
+  <copyField source="user_groups" dest="user_groups_text" />
+  <copyField source="user_roles" dest="user_roles_text" />
+  <copyField source="visible" dest="visible_text" />
 
   <!-- copy in fuzy fields-->
   <copyField source="description" dest="description_split"/>
@@ -396,40 +396,4 @@
 
   <!-- copy  to all text-->
   <copyField source="analytics_owner" dest="all_text"/>
-
-
-  <!-- string representation -->
-  <!-- <copyField source="related_reports" dest="related_Reports_str" maxChars="256"/>
-  <copyField source="related_terms" dest="related_Terms_str" maxChars="256"/>
-  <copyField source="description" dest="description_str" maxChars="256"/>
-  <copyField source="user_roles" dest="user_roles_str" maxChars="256"/>
-  <copyField source="id" dest="id_str" maxChars="256"/>
-  <copyField source="type" dest="type_str" maxChars="256"/>
-  <copyField source="certification" dest="certification_str" maxChars="256"/>
-  <copyField source="linked_name" dest="linked_name_str" maxChars="256"/>
-  <copyField source="related_initiatives" dest="related_initiatives_str" maxChars="256"/>
-  <copyField source="linked_description" dest="linked_description_str" maxChars="256"/>
-  <copyField source="updated_by" dest="updated_by_str" maxChars="256"/>
-  <copyField source="operations_owner" dest="operations_owner_str" maxChars="256"/>
-  <copyField source="analytics_owner" dest="analytics_owner_str" maxChars="256"/>
-  <copyField source="executive_owner" dest="executive_owner_str" maxChars="256"/>
-  <copyField source="financial_impact" dest="financial_impact_str" maxChars="256"/>
-  <copyField source="data_owner" dest="data_owner_str" maxChars="256"/>
-  <copyField source="strategic_importance" dest="strategic_importance_str" maxChars="256"/>
-  <copyField source="source_database" dest="source_database_str" maxChars="256"/>
-  <copyField source="epic_master_file" dest="epic_master_file_str" maxChars="256"/>
-  <copyField source="source_server" dest="source_server_str" maxChars="256"/>
-  <copyField source="visible" dest="visible_str" maxChars="256"/>
-  <copyField source="created_by" dest="created_by_str" maxChars="256"/>
-  <copyField source="report_type" dest="report_type_str" maxChars="256"/>
-  <copyField source="requester" dest="requester_str" maxChars="256"/>
-  <copyField source="orphan" dest="orphan_str" maxChars="256"/>
-  <copyField source="name" dest="name_str" maxChars="256"/>
-  <copyField source="approved" dest="approved_str" maxChars="256"/>
-  <copyField source="approved_by" dest="approved_by_str" maxChars="256"/>
-  <copyField source="related_collections" dest="related_collections_str" maxChars="256"/>
-  <copyField source="external_url" dest="external_url_str" maxChars="256"/>
-  <copyField source="group_source" dest="group_source_str" maxChars="256"/>
-  <copyField source="group_type" dest="group_type_str" maxChars="256"/>
-  <copyField source="user_groups" dest="user_groups_str" maxChars="256"/> -->
 </schema>
