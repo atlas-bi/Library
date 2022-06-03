@@ -93,7 +93,7 @@ namespace Atlas_Web.Pages.Collections
             NewCollection.Name = Collection.Name;
             NewCollection.Description = Collection.Description;
             NewCollection.Purpose = Collection.Purpose;
-
+            NewCollection.Hidden = Collection.Hidden;
             _context.Attach(NewCollection).State = EntityState.Modified;
             _context.SaveChanges();
 
