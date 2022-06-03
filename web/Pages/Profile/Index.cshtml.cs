@@ -1021,10 +1021,14 @@ namespace Atlas_Web.Pages.Profile
                 } into grp
                 select new BarData
                 {
-                    Key = grp.Key.name,
+                    Key =
+                        grp.Key.name
+                        + " ("
+                        + ModelHelpers.RelativeDate(grp.Max(x => x.RunStartTime))
+                        + ")",
                     Count = grp.Count(),
                     Percent = (double)grp.Count() / total,
-                    TitleOne = "Top Reports",
+                    TitleOne = "Top Reports (Last Run)",
                     TitleTwo = "Runs",
                     Href = "/reports?id=" + grp.Key.ReportObjectId
                 }
