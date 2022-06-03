@@ -365,6 +365,19 @@
             <label for="switch-hidden">Hide Report?</label>
         </div>
 
+        @* SSRS reports only *@
+        @if(@Model.Report.ReportObject.ReportObjectType.Name == "SSRS Report")
+        {
+            <div class="field toggle">
+                <input type="hidden" asp-for="Report.EnabledForHyperspace" value="@Model.Report.EnabledForHyperspace">
+                <input id="switch-hyperspace" type="checkbox" name="switch-hyperspace" class="switch is-rounded is-info"
+                @if(Model.Report.EnabledForHyperspace == "Y"){
+                    <text>checked="checked"</text>
+                } >
+                <label for="switch-hyperspace">Enabled for Hyperspace?</label>
+            </div>
+        }
+
     </div>
     <div class="step-tab-data" id="images">
         <div class="is-flex images reorder is-flex-wrap-wrap">

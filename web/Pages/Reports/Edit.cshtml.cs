@@ -82,6 +82,8 @@ namespace Atlas_Web.Pages.Reports
             }
 
             Report = await _context.ReportObjectDocs
+                .Include(x => x.ReportObject)
+                .ThenInclude(x => x.ReportObjectType)
                 /* images */
                 .Include(x => x.ReportObject)
                 .ThenInclude(x => x.ReportObjectImagesDocs)
@@ -156,6 +158,7 @@ namespace Atlas_Web.Pages.Reports
             OldReport.DoNotPurge = Report.DoNotPurge;
             OldReport.Hidden = Report.Hidden;
             OldReport.LastUpdateDateTime = DateTime.Now;
+            OldReport.EnabledForHyperspace = Report.EnabledForHyperspace;
             OldReport.UpdatedBy = UserHelpers.GetUser(_cache, _context, User.Identity.Name).UserId;
 
             _context.SaveChanges();
