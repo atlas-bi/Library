@@ -37,7 +37,11 @@
                     <p>
                         @if (!string.IsNullOrEmpty(Model.Description))
                         {
-                            @(Model.Description.Substring(0,Math.Min(160,Model.Description.Length)) + "... ")
+                            var contents =@Helpers.HtmlHelpers.MarkdownToText(Model.Description);
+
+                            var built = contents.Substring(0,Math.Min(160,contents.Length)) + "... ";
+
+                            <text>@built</text>
                             <span class="has-text-link">read more</span>
                         }else if (!string.IsNullOrEmpty(Model.Purpose))
                         {
@@ -84,15 +88,6 @@
                     </span>
                 </a>
             }
-            @*
-            @if (@Configuration["features:enable_feedback"] == null || @Configuration["features:enable_feedback"].ToString().ToLower() == "true")
-            {
-                <a class="is-block has-tooltip-arrow has-tooltip-right js-modal-trigger ml-2" data-tooltip="Share Feedback" data-target="collection-share-feedback-@Model.DataProjectId" data-name="@Model.Name">
-                    <span class="icon has-text-grey">
-                        <i class="far fa-thumbs-up"></i>
-                    </span>
-                </a>
-            }*@
         </div>
     </footer>
 </div>

@@ -54,9 +54,9 @@
     "rollup-stream-gulp": "0.0.3",
     "sass": "1.50.0",
     "semantic-release": "19.0.2",
-    "stylelint": "14.8.3",
+    "stylelint": "14.8.5",
     "stylelint-config-prettier-scss": "0.0.1",
-    "stylelint-config-standard-scss": "3.0.0",
+    "stylelint-config-standard-scss": "4.0.0",
     "stylelint-scss": "4.2.0",
     "xo": "0.48.0"
   },
@@ -152,5 +152,5 @@
       "unicorn/prefer-keyboard-event-key": "off"
     }
   },
-  "version": "3.3.0-alpha.1"
+  "version": "3.2.3"
 }

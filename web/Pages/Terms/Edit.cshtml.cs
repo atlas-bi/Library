@@ -122,7 +122,7 @@ namespace Atlas_Web.Pages.Terms
 
             _cache.Remove("terms");
             _cache.Remove("term-" + NewTerm.TermId);
-            _cache.Remove("term_reports-" + NewTerm.TermId);
+            _cache.Remove("term-reports-" + NewTerm.TermId);
 
             return RedirectToPage("/Terms/Index", new { id, success = "Changes saved." });
         }

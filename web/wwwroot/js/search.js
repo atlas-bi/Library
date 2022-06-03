@@ -250,6 +250,12 @@
     }, searchTimeout);
   });
 
+  i.addEventListener('keydown', (event) => {
+    if (Number(event.keyCode) === 13 && i.value.trim() !== '') {
+      ajaxSearch(i.value, null);
+    }
+  });
+
   d.addEventListener('click', function (event) {
     // Hst.style.display = 'none';
 
