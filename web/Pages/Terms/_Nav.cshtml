@@ -62,7 +62,7 @@
         </li>
     }
 
-    @if ((ViewBag.Permissions.Contains(13) && Model.Term.ApprovedYn == "N") || (ViewBag.Permissions.Contains(11) && Model.Term.ApprovedYn == "Y"))
+    @if ((ViewBag.Permissions.Contains(13) && Model.Term.ApprovedYn != "Y") || (ViewBag.Permissions.Contains(11) && Model.Term.ApprovedYn == "Y"))
     {
         <li>
             <a class="is-block has-tooltip-arrow has-tooltip-right" href="/Terms/Edit/?id=@Model.Term.TermId" data-tooltip="Open Atlas Editor">
@@ -73,7 +73,7 @@
         </li>
     }
 
-    @if ((ViewBag.Permissions.Contains(9) && Model.Term.ApprovedYn == "N") || (ViewBag.Permissions.Contains(8) && Model.Term.ApprovedYn == "Y"))
+    @if ((ViewBag.Permissions.Contains(9) && Model.Term.ApprovedYn != "Y") || (ViewBag.Permissions.Contains(8) && Model.Term.ApprovedYn == "Y"))
     {
         <li>
             <a class="is-block has-tooltip-arrow has-tooltip-right" data-tooltip="Delete this Term" href="/terms?Handler=DeleteTerm&id=@Model.Term.TermId" onclick="return confirm('Are you sure you want to remove this?');">
