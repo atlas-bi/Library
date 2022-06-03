@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Atlas_Web.Models;
+using Atlas_Web.Helpers;
 using System.Collections.Generic;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
@@ -727,10 +728,14 @@ namespace Atlas_Web.Pages.Profile
                 group a by new { a.RunUserId, a.RunUser.FullnameCalc } into grp
                 select new BarData
                 {
-                    Key = grp.Key.FullnameCalc,
+                    Key =
+                        grp.Key.FullnameCalc
+                        + " ("
+                        + ModelHelpers.RelativeDate(grp.Max(x => x.RunStartTime))
+                        + ")",
                     Count = grp.Count(),
                     Percent = (double)grp.Count() / total,
-                    TitleOne = "Top Users",
+                    TitleOne = "Top Users (Last Run)",
                     TitleTwo = "Runs",
                     Href =
                         (
