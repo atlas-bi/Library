@@ -45,7 +45,7 @@
     "gulp-uglify": "3.0.2",
     "husky": "8.0.1",
     "jsnlog": "2.30.0",
-    "lint-staged": "12.3.8",
+    "lint-staged": "13.0.0",
     "open": "8.4.0",
     "postcss": "8.4.12",
     "prettier": "2.6.2",
