@@ -69,7 +69,7 @@ namespace Atlas_Web
                         connection,
                         o =>
                             o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)
-                                .CommandTimeout(600)
+                                .CommandTimeout(60000)
                     )
             );
 

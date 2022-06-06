@@ -47,6 +47,15 @@
         <div class="editor" data-inputName="Collection.Description" data-inputId="Collection_Description"><textarea class="textarea">@Html.Raw(Model.Collection.Description)</textarea></div>
     </div>
 
+    <div class="field toggle">
+        <input type="hidden" asp-for="Collection.Hidden" value="@Model.Collection.Hidden">
+        <input id="switch-hidden" type="checkbox" name="switch-hidden" class="switch is-rounded is-info"
+        @if(Model.Collection.Hidden == "Y"){
+            <text>checked="checked"</text>
+        } >
+        <label for="switch-hidden">Hide Collection?</label>
+    </div>
+
     <div class="field">
         <label class="label">Linked Terms</label>
         <div class="mini-tags field is-grouped is-grouped-multiline">

@@ -82,6 +82,8 @@ namespace Atlas_Web.Pages.Reports
             }
 
             Report = await _context.ReportObjectDocs
+                .Include(x => x.ReportObject)
+                .ThenInclude(x => x.ReportObjectType)
                 /* images */
                 .Include(x => x.ReportObject)
                 .ThenInclude(x => x.ReportObjectImagesDocs)
@@ -156,13 +158,16 @@ namespace Atlas_Web.Pages.Reports
             OldReport.DoNotPurge = Report.DoNotPurge;
             OldReport.Hidden = Report.Hidden;
             OldReport.LastUpdateDateTime = DateTime.Now;
+            OldReport.EnabledForHyperspace = Report.EnabledForHyperspace;
             OldReport.UpdatedBy = UserHelpers.GetUser(_cache, _context, User.Identity.Name).UserId;
 
             _context.SaveChanges();
 
             // updated any linked terms that were added and remove any that were delinked.
+            _cache.Remove("terms");
             foreach (var term in Terms.Distinct())
             {
+                _cache.Remove("term-" + term.TermId);
                 term.ReportObjectId = id;
 
                 if (
@@ -176,18 +181,25 @@ namespace Atlas_Web.Pages.Reports
             }
             _context.SaveChanges();
 
-            _context.RemoveRange(
-                _context.ReportObjectDocTerms
-                    .Where(d => d.ReportObjectId == id)
-                    .Where(d => !Terms.Select(x => x.TermId).Contains(d.TermId))
-            );
+            var RemovedTerms = _context.ReportObjectDocTerms
+                .Where(d => d.ReportObjectId == id)
+                .Where(d => !Terms.Select(x => x.TermId).Contains(d.TermId));
+
+            foreach (var term in RemovedTerms)
+            {
+                _cache.Remove("term-" + term.TermId);
+            }
+
+            _context.RemoveRange(RemovedTerms);
             _context.SaveChanges();
 
             // update linked collections
+            _cache.Remove("collections");
             for (int i = 0; i < Collections.Count; i++)
             {
                 CollectionReport collection = Collections[i];
 
+                _cache.Remove("collection-" + collection.DataProjectId);
                 collection.ReportId = id;
                 collection.Rank = i;
 
@@ -202,6 +214,7 @@ namespace Atlas_Web.Pages.Reports
                 if (oldCollection != null)
                 {
                     oldCollection.Rank = i;
+                    _cache.Remove("collection-" + oldCollection.DataProjectId);
                 }
                 else
                 {
@@ -211,14 +224,18 @@ namespace Atlas_Web.Pages.Reports
                 _context.SaveChanges();
             }
 
-            _context.RemoveRange(
-                _context.CollectionReports
-                    .Where(d => d.ReportId == id)
-                    .Where(
-                        d =>
-                            !Collections.Select(x => x.DataProjectId).Contains((int)d.DataProjectId)
-                    )
-            );
+            var RemovedCollections = _context.CollectionReports
+                .Where(d => d.ReportId == id)
+                .Where(
+                    d => !Collections.Select(x => x.DataProjectId).Contains((int)d.DataProjectId)
+                );
+
+            foreach (var collection in RemovedCollections)
+            {
+                _cache.Remove("collection-" + collection.DataProjectId);
+            }
+
+            _context.RemoveRange(RemovedCollections);
             _context.SaveChanges();
 
             // update fragility tags

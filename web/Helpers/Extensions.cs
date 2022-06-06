@@ -346,6 +346,24 @@ namespace Atlas_Web.Helpers
             return Markdown.ToHtml(text, pipeline);
         }
 
+        public static string MarkdownToText(string text)
+        {
+            if (text is null)
+            {
+                return "";
+            }
+            var pipeline = new MarkdownPipelineBuilder()
+                .UseAdvancedExtensions()
+                .UseAutoLinks()
+                .UseSoftlineBreakAsHardlineBreak()
+                .UseEmojiAndSmiley()
+                .UseSmartyPants()
+                .UseDiagrams()
+                .UseFootnotes()
+                .Build();
+            return Markdown.ToPlainText(text, pipeline);
+        }
+
         public static Boolean IsEpic(HttpContext Context)
         {
             if (Context.Request.Cookies["EPIC"] == "1" || Context.Request.Query["EPIC"] == "1")

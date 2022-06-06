@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Atlas_Web.Models;
+using Atlas_Web.Helpers;
 using System.Collections.Generic;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
@@ -133,7 +134,7 @@ namespace Atlas_Web.Pages.Profile
         public async Task<ActionResult> OnGetFiltersAsync(
             int id = -1,
             string type = "report",
-            double start_at = -604800, // last 7 days
+            double start_at = -31536000, // last 12 months
             double end_at = 0,
             List<string> server = null,
             List<string> database = null,
@@ -372,7 +373,7 @@ namespace Atlas_Web.Pages.Profile
         public async Task<ActionResult> OnGetChartAsync(
             int id,
             string type,
-            double start_at = -604800, // last 7 days
+            double start_at = -31536000, // last 12 months
             double end_at = 0,
             List<string> server = null,
             List<string> database = null,
@@ -604,7 +605,7 @@ namespace Atlas_Web.Pages.Profile
         public async Task<ActionResult> OnGetUsersAsync(
             int id,
             string type,
-            double start_at = -604800, // last 7 days
+            double start_at = -31536000, // last 12 months
             double end_at = 0,
             List<string> server = null,
             List<string> database = null,
@@ -727,10 +728,14 @@ namespace Atlas_Web.Pages.Profile
                 group a by new { a.RunUserId, a.RunUser.FullnameCalc } into grp
                 select new BarData
                 {
-                    Key = grp.Key.FullnameCalc,
+                    Key =
+                        grp.Key.FullnameCalc
+                        + " ("
+                        + ModelHelpers.RelativeDate(grp.Max(x => x.RunStartTime))
+                        + ")",
                     Count = grp.Count(),
                     Percent = (double)grp.Count() / total,
-                    TitleOne = "Top Users",
+                    TitleOne = "Top Users (Last Run)",
                     TitleTwo = "Runs",
                     Href =
                         (
@@ -749,7 +754,7 @@ namespace Atlas_Web.Pages.Profile
         public async Task<ActionResult> OnGetFailsAsync(
             int id,
             string type,
-            double start_at = -604800, // last 7 days
+            double start_at = -31536000, // last 12 months
             double end_at = 0,
             List<string> server = null,
             List<string> database = null,
@@ -891,7 +896,7 @@ namespace Atlas_Web.Pages.Profile
         public async Task<ActionResult> OnGetReportsAsync(
             int id,
             string type,
-            double start_at = -604800, // last 7 days
+            double start_at = -31536000, // last 12 months
             double end_at = 0,
             List<string> server = null,
             List<string> database = null,
@@ -1016,10 +1021,14 @@ namespace Atlas_Web.Pages.Profile
                 } into grp
                 select new BarData
                 {
-                    Key = grp.Key.name,
+                    Key =
+                        grp.Key.name
+                        + " ("
+                        + ModelHelpers.RelativeDate(grp.Max(x => x.RunStartTime))
+                        + ")",
                     Count = grp.Count(),
                     Percent = (double)grp.Count() / total,
-                    TitleOne = "Top Reports",
+                    TitleOne = "Top Reports (Last Run)",
                     TitleTwo = "Runs",
                     Href = "/reports?id=" + grp.Key.ReportObjectId
                 }

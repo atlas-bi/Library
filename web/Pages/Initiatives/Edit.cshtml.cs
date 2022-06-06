@@ -102,20 +102,30 @@ namespace Atlas_Web.Pages.Initiatives
             _context.SaveChanges();
 
             // updated any linked data projects that were added and remove any that were delinked.
-            _context.Collections
+            var AddedCollections = _context.Collections
                 .Where(d => Collections.Select(x => x.DataProjectId).Contains(d.DataProjectId))
-                .ToList()
-                .ForEach(x => x.DataInitiativeId = Initiative.DataInitiativeId);
+                .ToList();
 
-            _context.SaveChanges();
+            _cache.Remove("collections");
+            foreach (var collection in AddedCollections)
+            {
+                _cache.Remove("collection-" + collection.DataProjectId);
 
-            _context.Collections
+                collection.DataInitiativeId = Initiative.DataInitiativeId;
+                _context.SaveChanges();
+            }
+
+            var RemovedCollections = _context.Collections
                 .Where(d => d.DataInitiativeId == Initiative.DataInitiativeId)
                 .Where(d => !Collections.Select(x => x.DataProjectId).Contains(d.DataProjectId))
-                .ToList()
-                .ForEach(x => x.DataInitiativeId = null);
+                .ToList();
 
-            _context.SaveChanges();
+            foreach (var collection in RemovedCollections)
+            {
+                _cache.Remove("collection-" + collection.DataProjectId);
+                collection.DataInitiativeId = null;
+                _context.SaveChanges();
+            }
 
             _cache.Remove("initiative-" + Initiative.DataInitiativeId);
             _cache.Remove("initatives");
