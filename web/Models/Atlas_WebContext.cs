@@ -88,31 +88,16 @@ namespace Atlas_Web.Models
                     entity
                         .HasIndex(
                             e => new { e.UserId, e.AccessDateTime },
-                            "user_access_load_page_session"
+                            "user_access_load_page_session_path"
                         )
-                        .IncludeProperties(p => new { p.LoadTime, p.PageId, p.SessionId });
+                        .IncludeProperties(
+                            p => new { p.LoadTime, p.PageId, p.SessionId, p.Pathname }
+                        );
                     entity
-                        .HasIndex(e => new { e.UserId, e.AccessDateTime }, "user_access_load")
-                        .IncludeProperties(p => p.LoadTime);
-                    entity
-                        .HasIndex(e => e.AccessDateTime, "accessdatetime_session")
-                        .IncludeProperties(p => new { p.PageId, p.SessionId });
-
-                    entity
-                        .HasIndex(e => e.AccessDateTime, "accessdatetime_screen")
-                        .IncludeProperties(p => new { p.ScreenHeight, p.ScreenWidth });
-
-                    entity
-                        .HasIndex(e => e.AccessDateTime, "accessdatetime_useragent")
-                        .IncludeProperties(p => new { p.UserAgent });
-
-                    entity
-                        .HasIndex(e => e.AccessDateTime, "accessdatetime_sessionId")
-                        .IncludeProperties(p => new { p.SessionId });
-
-                    entity
-                        .HasIndex(e => new { e.AccessDateTime, e.UserId }, "accessdatetime_userid")
-                        .IncludeProperties(p => new { p.Pathname, p.LoadTime });
+                        .HasIndex(e => e.AccessDateTime, "accessdatetime_session_width_agent")
+                        .IncludeProperties(
+                            p => new { p.PageId, p.SessionId, p.ScreenWidth, p.UserAgent }
+                        );
 
                     entity.HasIndex(e => e.UserId, "userid");
 
@@ -785,24 +770,10 @@ namespace Atlas_Web.Models
 
                     entity.HasIndex(e => e.CertificationTagId, "certid");
 
-                    entity.HasIndex(e => e.DefaultVisibilityYn, "defaultvisiblity");
-
-                    entity.HasIndex(e => e.EpicMasterFile, "epicmasterfile");
-
-                    entity.HasIndex(e => e.EpicMasterFile, "epicmasterfile + reportid");
-
                     entity.HasIndex(e => e.LastModifiedByUserId, "modifiedby");
 
                     entity.HasIndex(e => e.ReportObjectId, "reportid").IsUnique();
 
-                    entity.HasIndex(e => e.ReportObjectTypeId, "typeid");
-
-                    entity
-                        .HasIndex(e => e.SourceServer, "sourceserver_report")
-                        .IncludeProperties(p => p.ReportObjectId);
-                    entity
-                        .HasIndex(e => e.SourceDb, "sourcedb_report")
-                        .IncludeProperties(p => p.ReportObjectId);
                     entity
                         .HasIndex(
                             e => new { e.SourceServer, e.ReportObjectTypeId },
@@ -810,8 +781,10 @@ namespace Atlas_Web.Models
                         )
                         .IncludeProperties(p => p.ReportObjectId);
                     entity
-                        .HasIndex(e => e.DefaultVisibilityYn, "visibility_report_cert")
-                        .IncludeProperties(p => new { p.ReportObjectId, p.CertificationTag });
+                        .HasIndex(e => e.DefaultVisibilityYn, "visibility_report_cert_masterfile")
+                        .IncludeProperties(
+                            p => new { p.ReportObjectId, p.CertificationTag, p.EpicMasterFile }
+                        );
                     entity
                         .HasIndex(
                             e => new { e.SourceDb, e.EpicMasterFile },
@@ -837,23 +810,27 @@ namespace Atlas_Web.Models
                         )
                         .IncludeProperties(p => p.ReportObjectId);
                     entity
-                        .HasIndex(e => e.DefaultVisibilityYn, "visibility_report_masterfile")
-                        .IncludeProperties(p => new { p.ReportObjectId, p.EpicMasterFile });
-                    entity
                         .HasIndex(e => e.ReportObjectTypeId, "type_report_masterfile")
-                        .IncludeProperties(p => new { p.ReportObjectId, p.EpicMasterFile });
+                        .IncludeProperties(
+                            p => new { p.ReportObjectId, p.EpicMasterFile, p.Name, p.DisplayTitle }
+                        );
                     entity
-                        .HasIndex(e => e.EpicMasterFile, "masterfile_report_visiblity")
-                        .IncludeProperties(p => new { p.ReportObjectId, p.DefaultVisibilityYn });
+                        .HasIndex(e => e.EpicMasterFile, "masterfile_report_visiblity_type")
+                        .IncludeProperties(
+                            p =>
+                                new
+                                {
+                                    p.ReportObjectId,
+                                    p.DefaultVisibilityYn,
+                                    p.ReportObjectTypeId
+                                }
+                        );
                     entity
                         .HasIndex(
                             e => new { e.EpicMasterFile, e.SourceServer, e.ReportObjectTypeId },
                             "masterfile_sourceserver_type_report"
                         )
                         .IncludeProperties(p => p.ReportObjectId);
-                    entity
-                        .HasIndex(e => e.EpicMasterFile, "masterfile_report_type")
-                        .IncludeProperties(p => new { p.ReportObjectId, p.ReportObjectTypeId });
 
                     entity.HasIndex(
                         e =>
