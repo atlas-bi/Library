@@ -16,12 +16,10 @@ namespace Atlas_Web.Models
             ReportObjectImagesDocs = new HashSet<ReportObjectImagesDoc>();
             ReportObjectParameters = new HashSet<ReportObjectParameter>();
             ReportObjectQueries = new HashSet<ReportObjectQuery>();
-            ReportObjectReportRunTimes = new HashSet<ReportObjectReportRunTime>();
-            ReportObjectRunData = new HashSet<ReportObjectRunDatum>();
             ReportObjectSubscriptions = new HashSet<ReportObjectSubscription>();
             ReportObjectTagMemberships = new HashSet<ReportObjectTagMembership>();
-            ReportObjectTopRuns = new HashSet<ReportObjectTopRun>();
             StarredReports = new HashSet<StarredReport>();
+            ReportObjectRunDataBridges = new HashSet<ReportObjectRunDataBridge>();
         }
 
         public int ReportObjectId { get; set; }
@@ -66,11 +64,9 @@ namespace Atlas_Web.Models
         public virtual ICollection<ReportObjectImagesDoc> ReportObjectImagesDocs { get; set; }
         public virtual ICollection<ReportObjectParameter> ReportObjectParameters { get; set; }
         public virtual ICollection<ReportObjectQuery> ReportObjectQueries { get; set; }
-        public virtual ICollection<ReportObjectReportRunTime> ReportObjectReportRunTimes { get; set; }
-        public virtual ICollection<ReportObjectRunDatum> ReportObjectRunData { get; set; }
         public virtual ICollection<ReportObjectSubscription> ReportObjectSubscriptions { get; set; }
         public virtual ICollection<ReportObjectTagMembership> ReportObjectTagMemberships { get; set; }
-        public virtual ICollection<ReportObjectTopRun> ReportObjectTopRuns { get; set; }
         public virtual ICollection<StarredReport> StarredReports { get; set; }
+        public virtual ICollection<ReportObjectRunDataBridge> ReportObjectRunDataBridges { get; set; }
     }
 }

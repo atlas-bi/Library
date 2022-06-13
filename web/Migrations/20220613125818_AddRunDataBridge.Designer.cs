@@ -4,6 +4,7 @@ using Atlas_Web.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Atlas_Web.Migrations
 {
     [DbContext(typeof(Atlas_WebContext))]
-    partial class Atlas_WebContextModelSnapshot : ModelSnapshot
+    [Migration("20220613125818_AddRunDataBridge")]
+    partial class AddRunDataBridge
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1556,45 +1558,27 @@ namespace Atlas_Web.Migrations
 
                     b.HasKey("RunId");
 
-                    b.HasIndex(new[] { "RunStatus", "RunStartTime" }, "runstart_status_duration_user");
+                    b.HasIndex("RunUserId");
 
-                    SqlServerIndexBuilderExtensions.IncludeProperties(b.HasIndex(new[] { "RunStatus", "RunStartTime" }, "runstart_status_duration_user"), new[] { "RunDataId", "RunDurationSeconds", "RunUserId" });
+                    b.HasIndex(new[] { "RunDataId", "RunStartTime" }, "runstart_user_duration_status");
 
-                    b.HasIndex(new[] { "RunUserId", "RunStartTime" }, "runstart_user_duration_status");
+                    SqlServerIndexBuilderExtensions.IncludeProperties(b.HasIndex(new[] { "RunDataId", "RunStartTime" }, "runstart_user_duration_status"), new[] { "RunUserId", "RunDurationSeconds", "RunStatus" });
 
-                    SqlServerIndexBuilderExtensions.IncludeProperties(b.HasIndex(new[] { "RunUserId", "RunStartTime" }, "runstart_user_duration_status"), new[] { "RunDataId", "RunDurationSeconds", "RunStatus" });
+                    b.HasIndex(new[] { "RunDataId", "RunStartTime_Day" }, "runstartday_user_duration_status");
 
-                    b.HasIndex(new[] { "RunStatus", "RunStartTime_Day" }, "runstartday_status_duration_user");
+                    SqlServerIndexBuilderExtensions.IncludeProperties(b.HasIndex(new[] { "RunDataId", "RunStartTime_Day" }, "runstartday_user_duration_status"), new[] { "RunUserId", "RunDurationSeconds", "RunStatus" });
 
-                    SqlServerIndexBuilderExtensions.IncludeProperties(b.HasIndex(new[] { "RunStatus", "RunStartTime_Day" }, "runstartday_status_duration_user"), new[] { "RunDataId", "RunDurationSeconds", "RunUserId" });
+                    b.HasIndex(new[] { "RunDataId", "RunStartTime_Hour" }, "runstarthour_user_duration_status");
 
-                    b.HasIndex(new[] { "RunUserId", "RunStartTime_Day" }, "runstartday_user_duration_status");
+                    SqlServerIndexBuilderExtensions.IncludeProperties(b.HasIndex(new[] { "RunDataId", "RunStartTime_Hour" }, "runstarthour_user_duration_status"), new[] { "RunUserId", "RunDurationSeconds", "RunStatus" });
 
-                    SqlServerIndexBuilderExtensions.IncludeProperties(b.HasIndex(new[] { "RunUserId", "RunStartTime_Day" }, "runstartday_user_duration_status"), new[] { "RunDataId", "RunDurationSeconds", "RunStatus" });
+                    b.HasIndex(new[] { "RunDataId", "RunStartTime_Month" }, "runstartmonth_user_duration_status");
 
-                    b.HasIndex(new[] { "RunStatus", "RunStartTime_Hour" }, "runstarthour_status_duration_user");
+                    SqlServerIndexBuilderExtensions.IncludeProperties(b.HasIndex(new[] { "RunDataId", "RunStartTime_Month" }, "runstartmonth_user_duration_status"), new[] { "RunUserId", "RunDurationSeconds", "RunStatus" });
 
-                    SqlServerIndexBuilderExtensions.IncludeProperties(b.HasIndex(new[] { "RunStatus", "RunStartTime_Hour" }, "runstarthour_status_duration_user"), new[] { "RunDataId", "RunDurationSeconds", "RunUserId" });
+                    b.HasIndex(new[] { "RunDataId", "RunStartTime_Year" }, "runstartyear_user_duration_status");
 
-                    b.HasIndex(new[] { "RunUserId", "RunStartTime_Hour" }, "runstarthour_user_duration_status");
-
-                    SqlServerIndexBuilderExtensions.IncludeProperties(b.HasIndex(new[] { "RunUserId", "RunStartTime_Hour" }, "runstarthour_user_duration_status"), new[] { "RunDataId", "RunDurationSeconds", "RunStatus" });
-
-                    b.HasIndex(new[] { "RunStatus", "RunStartTime_Month" }, "runstartmonth_status_duration_user");
-
-                    SqlServerIndexBuilderExtensions.IncludeProperties(b.HasIndex(new[] { "RunStatus", "RunStartTime_Month" }, "runstartmonth_status_duration_user"), new[] { "RunDataId", "RunDurationSeconds", "RunUserId" });
-
-                    b.HasIndex(new[] { "RunUserId", "RunStartTime_Month" }, "runstartmonth_user_duration_status");
-
-                    SqlServerIndexBuilderExtensions.IncludeProperties(b.HasIndex(new[] { "RunUserId", "RunStartTime_Month" }, "runstartmonth_user_duration_status"), new[] { "RunDataId", "RunDurationSeconds", "RunStatus" });
-
-                    b.HasIndex(new[] { "RunStatus", "RunStartTime_Year" }, "runstartyear_status_duration_user");
-
-                    SqlServerIndexBuilderExtensions.IncludeProperties(b.HasIndex(new[] { "RunStatus", "RunStartTime_Year" }, "runstartyear_status_duration_user"), new[] { "RunDataId", "RunDurationSeconds", "RunUserId" });
-
-                    b.HasIndex(new[] { "RunUserId", "RunStartTime_Year" }, "runstartyear_user_duration_status");
-
-                    SqlServerIndexBuilderExtensions.IncludeProperties(b.HasIndex(new[] { "RunUserId", "RunStartTime_Year" }, "runstartyear_user_duration_status"), new[] { "RunDataId", "RunDurationSeconds", "RunStatus" });
+                    SqlServerIndexBuilderExtensions.IncludeProperties(b.HasIndex(new[] { "RunDataId", "RunStartTime_Year" }, "runstartyear_user_duration_status"), new[] { "RunUserId", "RunDurationSeconds", "RunStatus" });
 
                     b.ToTable("ReportObjectRunData", "dbo");
                 });

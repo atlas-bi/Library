@@ -46,15 +46,12 @@ namespace Atlas_Web.Models
         public virtual DbSet<ReportObjectImagesDoc> ReportObjectImagesDocs { get; set; }
         public virtual DbSet<ReportObjectParameter> ReportObjectParameters { get; set; }
         public virtual DbSet<ReportObjectQuery> ReportObjectQueries { get; set; }
-        public virtual DbSet<ReportObjectReportRunTime> ReportObjectReportRunTimes { get; set; }
-        public virtual DbSet<ReportObjectRunDatum> ReportObjectRunData { get; set; }
-        public virtual DbSet<ReportObjectRunTime> ReportObjectRunTimes { get; set; }
+        public virtual DbSet<ReportObjectRunData> ReportObjectRunDatas { get; set; }
+        public virtual DbSet<ReportObjectRunDataBridge> ReportObjectRunDataBridges { get; set; }
         public virtual DbSet<ReportObjectSubscription> ReportObjectSubscriptions { get; set; }
         public virtual DbSet<ReportObjectTag> ReportObjectTags { get; set; }
         public virtual DbSet<ReportObjectTagMembership> ReportObjectTagMemberships { get; set; }
-        public virtual DbSet<ReportObjectTopRun> ReportObjectTopRuns { get; set; }
         public virtual DbSet<ReportObjectType> ReportObjectTypes { get; set; }
-        public virtual DbSet<ReportObjectWeightedRunRank> ReportObjectWeightedRunRanks { get; set; }
         public virtual DbSet<RolePermission> RolePermissions { get; set; }
         public virtual DbSet<RolePermissionLink> RolePermissionLinks { get; set; }
         public virtual DbSet<SharedItem> SharedItems { get; set; }
@@ -943,6 +940,8 @@ namespace Atlas_Web.Models
                         .HasForeignKey(d => d.ReportObjectTypeId)
                         .OnDelete(DeleteBehavior.SetNull)
                         .HasConstraintName("FK__ReportObj__Repor__3750728B");
+
+
                 }
             );
 
@@ -1294,78 +1293,120 @@ namespace Atlas_Web.Models
                 }
             );
 
-            modelBuilder.Entity<ReportObjectReportRunTime>(
+            modelBuilder.Entity<ReportObjectRunDataBridge>(
                 entity =>
                 {
-                    entity.ToTable("ReportObjectReportRunTime", "app");
+                    entity.HasKey(e => e.BridgeId).HasName("PK__ReportOb__2D122135AFCD5E790");
 
-                    entity.HasIndex(e => e.ReportObjectId, "reportid");
+                    entity.ToTable("ReportObjectRunDataBridge", "dbo");
 
-                    entity.Property(e => e.RunWeek).HasColumnType("datetime");
+                    entity
+                        .HasIndex(e => e.ReportObjectId, "reportid_runid_runs")
+                        .IncludeProperties(p => new { p.RunId, p.Runs });
 
                     entity
                         .HasOne(d => d.ReportObject)
-                        .WithMany(p => p.ReportObjectReportRunTimes)
+                        .WithMany(p => p.ReportObjectRunDataBridges)
                         .HasForeignKey(d => d.ReportObjectId)
-                        .HasConstraintName("fk_reportruntime");
+                        .HasPrincipalKey(k => k.ReportObjectId)
+                        .OnDelete(DeleteBehavior.ClientSetNull)
+                        .HasConstraintName("FK__ReportObj__Repor__7B2284FD");
+
+                    entity
+                        .HasOne(d => d.RunData)
+                        .WithMany(p => p.ReportObjectRunDataBridges)
+                        .HasForeignKey(d => d.RunId)
+                        .HasPrincipalKey(k => k.RunDataId)
+                        .HasConstraintName("FK__ReportObj__Run__6A4E9564");
                 }
             );
 
-            modelBuilder.Entity<ReportObjectRunDatum>(
+            modelBuilder.Entity<ReportObjectRunData>(
                 entity =>
                 {
-                    entity.HasKey(e => new { e.ReportObjectId, e.RunId });
-
-                    entity.HasIndex(e => e.ReportObjectId, "reportid");
-
-                    entity.HasIndex(e => e.RunUserId, "runuser");
-
+                    entity.ToTable("ReportObjectRunData", "dbo");
+                    entity.HasKey(e => new { e.RunId });
                     entity
                         .HasIndex(
-                            e => new { e.ReportObjectId, e.RunStatus },
-                            "reportid_status_run_user"
+                            e => new { e.RunUserId, e.RunStartTime },
+                            "runstart_user_duration_status"
                         )
                         .IncludeProperties(
-                            p => new { p.RunUserId, p.RunStartTime, p.RunDurationSeconds }
+                            p => new { p.RunDataId, p.RunDurationSeconds, p.RunStatus }
+                        );
+                    entity
+                        .HasIndex(
+                            e => new { e.RunUserId, e.RunStartTime_Year },
+                            "runstartyear_user_duration_status"
+                        )
+                        .IncludeProperties(
+                            p => new { p.RunDataId, p.RunDurationSeconds, p.RunStatus }
+                        );
+                    entity
+                        .HasIndex(
+                            e => new { e.RunUserId, e.RunStartTime_Month },
+                            "runstartmonth_user_duration_status"
+                        )
+                        .IncludeProperties(
+                            p => new { p.RunDataId, p.RunDurationSeconds, p.RunStatus }
+                        );
+                    entity
+                        .HasIndex(
+                            e => new { e.RunUserId, e.RunStartTime_Day },
+                            "runstartday_user_duration_status"
+                        )
+                        .IncludeProperties(
+                            p => new { p.RunDataId, p.RunDurationSeconds, p.RunStatus }
+                        );
+                    entity
+                        .HasIndex(
+                            e => new { e.RunUserId, e.RunStartTime_Hour },
+                            "runstarthour_user_duration_status"
+                        )
+                        .IncludeProperties(
+                            p => new { p.RunDataId, p.RunDurationSeconds, p.RunStatus }
                         );
 
                     entity
                         .HasIndex(
-                            e => new { e.ReportObjectId, e.RunStartTime },
-                            "reportid_starttime_user"
+                            e => new { e.RunStatus, e.RunStartTime },
+                            "runstart_status_duration_user"
                         )
-                        .IncludeProperties(p => new { p.RunUserId });
-
-                    entity.HasIndex(
-                        e => new { e.ReportObjectId, e.RunStartTime, e.RunStatus },
-                        "reportid_starttime_status"
-                    );
-
-                    entity.HasIndex(e => e.RunStartTime, "runstarttime");
-
+                        .IncludeProperties(
+                            p => new { p.RunDataId, p.RunDurationSeconds, p.RunUserId }
+                        );
                     entity
-                        .HasIndex(e => e.RunStartTime, "runstart_status")
-                        .IncludeProperties(p => p.RunStatus);
+                        .HasIndex(
+                            e => new { e.RunStatus, e.RunStartTime_Year },
+                            "runstartyear_status_duration_user"
+                        )
+                        .IncludeProperties(
+                            p => new { p.RunDataId, p.RunDurationSeconds, p.RunUserId }
+                        );
                     entity
-                        .HasIndex(e => e.RunStartTime, "runstart_user")
-                        .IncludeProperties(p => p.RunUserId);
+                        .HasIndex(
+                            e => new { e.RunStatus, e.RunStartTime_Month },
+                            "runstartmonth_status_duration_user"
+                        )
+                        .IncludeProperties(
+                            p => new { p.RunDataId, p.RunDurationSeconds, p.RunUserId }
+                        );
                     entity
-                        .HasIndex(e => e.RunStartTime, "runstart_duration")
-                        .IncludeProperties(p => p.RunDurationSeconds);
+                        .HasIndex(
+                            e => new { e.RunStatus, e.RunStartTime_Day },
+                            "runstartday_status_duration_user"
+                        )
+                        .IncludeProperties(
+                            p => new { p.RunDataId, p.RunDurationSeconds, p.RunUserId }
+                        );
                     entity
-                        .HasIndex(e => e.RunStartTime, "runstart_report_status")
-                        .IncludeProperties(p => new { p.ReportObjectId, p.RunStatus });
-                    entity
-                        .HasIndex(e => e.RunStartTime, "runstart_report_duration")
-                        .IncludeProperties(p => new { p.ReportObjectId, p.RunDurationSeconds });
-                    entity
-                        .HasIndex(e => e.RunStartTime, "runstart_report_user")
-                        .IncludeProperties(p => new { p.ReportObjectId, p.RunUserId });
-                    entity.HasIndex(e => new { e.ReportObjectId, e.RunStartTime });
-
-                    entity.Property(e => e.ReportObjectId).HasColumnName("ReportObjectID");
-
-                    entity.Property(e => e.RunId).HasColumnName("RunID");
+                        .HasIndex(
+                            e => new { e.RunStatus, e.RunStartTime_Hour },
+                            "runstarthour_status_duration_user"
+                        )
+                        .IncludeProperties(
+                            p => new { p.RunDataId, p.RunDurationSeconds, p.RunUserId }
+                        );
 
                     entity.Property(e => e.LastLoadDate).HasColumnType("datetime");
 
@@ -1376,36 +1417,10 @@ namespace Atlas_Web.Models
                     entity.Property(e => e.RunUserId).HasColumnName("RunUserID");
 
                     entity
-                        .HasOne(d => d.ReportObject)
-                        .WithMany(p => p.ReportObjectRunData)
-                        .HasForeignKey(d => d.ReportObjectId)
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK__ReportObj__Repor__7B2284FD");
-
-                    entity
                         .HasOne(d => d.RunUser)
-                        .WithMany(p => p.ReportObjectRunData)
+                        .WithMany(p => p.ReportObjectRunDatas)
                         .HasForeignKey(d => d.RunUserId)
                         .HasConstraintName("FK__ReportObj__RunUs__7C16A936");
-                }
-            );
-
-            modelBuilder.Entity<ReportObjectRunTime>(
-                entity =>
-                {
-                    entity.ToTable("ReportObjectRunTime", "app");
-
-                    entity.HasIndex(e => e.RunUserId, "userid");
-
-                    entity.Property(e => e.RunTime).HasColumnType("decimal(10, 2)");
-
-                    entity.Property(e => e.RunWeek).HasColumnType("datetime");
-
-                    entity
-                        .HasOne(d => d.RunUser)
-                        .WithMany(p => p.ReportObjectRunTimes)
-                        .HasForeignKey(d => d.RunUserId)
-                        .HasConstraintName("fk_userruntime");
                 }
             );
 
@@ -1483,33 +1498,6 @@ namespace Atlas_Web.Models
                 }
             );
 
-            modelBuilder.Entity<ReportObjectTopRun>(
-                entity =>
-                {
-                    entity.ToTable("ReportObjectTopRuns", "app");
-
-                    entity.HasIndex(e => e.ReportObjectId, "report+user+type");
-
-                    entity.HasIndex(e => e.ReportObjectId, "reportid + columns");
-
-                    entity.HasIndex(e => e.RunUserId, "userid + columns");
-
-                    entity.Property(e => e.RunTime).HasColumnType("decimal(10, 2)");
-
-                    entity
-                        .HasOne(d => d.ReportObject)
-                        .WithMany(p => p.ReportObjectTopRuns)
-                        .HasForeignKey(d => d.ReportObjectId)
-                        .HasConstraintName("FK_ReportObjectTopRuns_ReportObject");
-
-                    entity
-                        .HasOne(d => d.RunUser)
-                        .WithMany(p => p.ReportObjectTopRuns)
-                        .HasForeignKey(d => d.RunUserId)
-                        .HasConstraintName("fk_user");
-                }
-            );
-
             modelBuilder.Entity<ReportObjectType>(
                 entity =>
                 {
@@ -1526,29 +1514,6 @@ namespace Atlas_Web.Models
                     entity.Property(e => e.Name).IsRequired();
 
                     entity.Property(e => e.Visible).HasMaxLength(1);
-                }
-            );
-
-            modelBuilder.Entity<ReportObjectWeightedRunRank>(
-                entity =>
-                {
-                    entity.HasNoKey();
-
-                    entity.ToTable("ReportObjectWeightedRunRank", "app");
-
-                    entity.Property(e => e.Reportobjectid).HasColumnName("reportobjectid");
-
-                    entity
-                        .Property(e => e.WeightedRunRank)
-                        .HasColumnType("numeric(12, 4)")
-                        .HasColumnName("weighted_run_rank");
-
-                    entity
-                        .HasOne(d => d.Reportobject)
-                        .WithMany()
-                        .HasForeignKey(d => d.Reportobjectid)
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK_ReportObjectWeightedRunRank_ReportObject");
                 }
             );
 

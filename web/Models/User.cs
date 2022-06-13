@@ -29,10 +29,8 @@ namespace Atlas_Web.Models
             ReportObjectDocRequesterNavigations = new HashSet<ReportObjectDoc>();
             ReportObjectDocUpdatedByNavigations = new HashSet<ReportObjectDoc>();
             ReportObjectLastModifiedByUsers = new HashSet<ReportObject>();
-            ReportObjectRunData = new HashSet<ReportObjectRunDatum>();
-            ReportObjectRunTimes = new HashSet<ReportObjectRunTime>();
+            ReportObjectRunDatas = new HashSet<ReportObjectRunData>();
             ReportObjectSubscriptions = new HashSet<ReportObjectSubscription>();
-            ReportObjectTopRuns = new HashSet<ReportObjectTopRun>();
             SharedItemSharedFromUsers = new HashSet<SharedItem>();
             SharedItemSharedToUsers = new HashSet<SharedItem>();
             StarredCollections = new HashSet<StarredCollection>();
@@ -90,10 +88,8 @@ namespace Atlas_Web.Models
         public virtual ICollection<ReportObjectDoc> ReportObjectDocRequesterNavigations { get; set; }
         public virtual ICollection<ReportObjectDoc> ReportObjectDocUpdatedByNavigations { get; set; }
         public virtual ICollection<ReportObject> ReportObjectLastModifiedByUsers { get; set; }
-        public virtual ICollection<ReportObjectRunDatum> ReportObjectRunData { get; set; }
-        public virtual ICollection<ReportObjectRunTime> ReportObjectRunTimes { get; set; }
+        public virtual ICollection<ReportObjectRunData> ReportObjectRunDatas { get; set; }
         public virtual ICollection<ReportObjectSubscription> ReportObjectSubscriptions { get; set; }
-        public virtual ICollection<ReportObjectTopRun> ReportObjectTopRuns { get; set; }
         public virtual ICollection<SharedItem> SharedItemSharedFromUsers { get; set; }
         public virtual ICollection<SharedItem> SharedItemSharedToUsers { get; set; }
         public virtual ICollection<StarredCollection> StarredCollections { get; set; }

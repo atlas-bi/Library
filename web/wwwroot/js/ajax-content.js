@@ -54,17 +54,21 @@
       u += page.replace(/^(&|\?)+/gm, '');
     }
 
-    const q = new XMLHttpRequest();
-    q.open('get', u, true);
-    q.setRequestHeader(
+    if (element.q !== undefined && element.q !== null) {
+      element.q.abort();
+    }
+
+    element.q = new XMLHttpRequest();
+    element.q.open('get', u, true);
+    element.q.setRequestHeader(
       'Content-Type',
       'application/x-www-form-urlencoded; charset=UTF-8',
     );
-    q.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-    q.send();
+    element.q.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+    element.q.send();
 
-    q.addEventListener('load', function () {
-      a(element, l, q.responseText);
+    element.q.addEventListener('load', function () {
+      a(element, l, element.q.responseText);
       if (element.classList.contains('ajax-fade')) {
         element.style.opacity = '1';
       }

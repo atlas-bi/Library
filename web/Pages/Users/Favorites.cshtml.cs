@@ -132,34 +132,34 @@ namespace Atlas_Web.Pages.Users
             };
             ViewData["AdLists"] = AdLists;
 
-            if (
-                Reports.Count
-                    + Collections.Count
-                    + Initiatives.Count
-                    + Terms.Count
-                    + Users.Count
-                    + Searches.Count
-                    + Groups.Count
-                == 0
-            )
-            {
-                RunReports = await _context.ReportObjects
-                    .Where(
-                        x =>
-                            x.ReportObjectTopRuns.Any(y => y.RunUserId == UserId)
-                            && x.ReportObjectType.Visible == "Y"
-                    )
-                    .Include(x => x.ReportObjectDoc)
-                    .Include(x => x.ReportObjectType)
-                    .Include(x => x.ReportObjectAttachments)
-                    .Include(x => x.StarredReports)
-                    .OrderByDescending(
-                        x =>
-                            x.ReportObjectTopRuns.Where(y => y.RunUserId == UserId).Sum(x => x.Runs)
-                    )
-                    .Take(30)
-                    .ToListAsync();
-            }
+            // if (
+            //     Reports.Count
+            //         + Collections.Count
+            //         + Initiatives.Count
+            //         + Terms.Count
+            //         + Users.Count
+            //         + Searches.Count
+            //         + Groups.Count
+            //     == 0
+            // )
+            // {
+            //     RunReports = await _context.ReportObjects
+            //         .Where(
+            //             x =>
+            //                 x.ReportObjectTopRuns.Any(y => y.RunUserId == UserId)
+            //                 && x.ReportObjectType.Visible == "Y"
+            //         )
+            //         .Include(x => x.ReportObjectDoc)
+            //         .Include(x => x.ReportObjectType)
+            //         .Include(x => x.ReportObjectAttachments)
+            //         .Include(x => x.StarredReports)
+            //         .OrderByDescending(
+            //             x =>
+            //                 x.ReportObjectTopRuns.Where(y => y.RunUserId == UserId).Sum(x => x.Runs)
+            //         )
+            //         .Take(30)
+            //         .ToListAsync();
+            // }
 
             return Page();
         }
