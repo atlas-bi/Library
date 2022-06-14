@@ -167,42 +167,44 @@ namespace Atlas_Web.Pages.Tasks
 
         public async Task<IActionResult> OnGetUnused()
         {
-            // ViewData["Dead"] = await (
-            //     from r in _context.ReportObjects.Where(
-            //         x =>
-            //             (
-            //                 x.ReportObjectTypeId == 3
-            //                 || x.ReportObjectTypeId == 17
-            //                 || x.ReportObjectTypeId == 20
-            //                 || x.ReportObjectTypeId == 28
-            //             )
-            //             && x.DefaultVisibilityYn == "Y"
-            //             && x.OrphanedReportObjectYn == "N"
-            //     )
-            //     join d in _context.ReportObjectRunData
-            //         on r.ReportObjectId equals d.ReportObjectId
-            //         into dta
-            //     from l in dta.DefaultIfEmpty()
-            //     where l.ReportObjectId == null
-            //     join doc in _context.ReportObjectDocs
-            //         on r.ReportObjectId equals doc.ReportObjectId
-            //         into doc_dta
-            //     from bla in doc_dta.DefaultIfEmpty()
-            //     where (bla.Hidden ?? "N") == "N" || bla.Hidden == null
-            //     where r.LastModifiedDate < DateTime.Now.AddMonths(-2) || r.LastModifiedDate == null
-            //     orderby r.LastModifiedDate ascending
-            //     select new DeadData
-            //     {
-            //         ReportUrl = "\\Reports?id=" + r.ReportObjectId,
-            //         Name = r.DisplayName,
-            //         Type = r.ReportObjectType.Name,
-            //         ModifiedBy = r.LastModifiedByUser.FullnameCalc,
-            //         LastMod = r.LastUpdatedDateDisplayString,
-            //         Server = r.SourceServer,
-            //         MasterFile = r.EpicMasterFile,
-            //         EpicId = r.EpicRecordId.ToString()
-            //     }
-            // ).Take(30).ToListAsync();
+            ViewData["Dead"] = await (
+                from r in _context.ReportObjects.Where(
+                    x =>
+                        (
+                            x.ReportObjectTypeId == 3
+                            || x.ReportObjectTypeId == 17
+                            || x.ReportObjectTypeId == 20
+                            || x.ReportObjectTypeId == 28
+                        )
+                        && x.DefaultVisibilityYn == "Y"
+                        && x.OrphanedReportObjectYn == "N"
+                )
+                join d in _context.ReportObjectRunDataBridges
+                    on r.ReportObjectId equals d.ReportObjectId
+                    into dta
+                from l in dta.DefaultIfEmpty()
+#pragma warning disable CS0472
+                where l.ReportObjectId == null
+#pragma warning restore CS0472
+                join doc in _context.ReportObjectDocs
+                    on r.ReportObjectId equals doc.ReportObjectId
+                    into doc_dta
+                from bla in doc_dta.DefaultIfEmpty()
+                where (bla.Hidden ?? "N") == "N" || bla.Hidden == null
+                where r.LastModifiedDate < DateTime.Now.AddMonths(-2) || r.LastModifiedDate == null
+                orderby r.LastModifiedDate ascending
+                select new DeadData
+                {
+                    ReportUrl = "\\Reports?id=" + r.ReportObjectId,
+                    Name = r.DisplayName,
+                    Type = r.ReportObjectType.Name,
+                    ModifiedBy = r.LastModifiedByUser.FullnameCalc,
+                    LastMod = r.LastUpdatedDateDisplayString,
+                    Server = r.SourceServer,
+                    MasterFile = r.EpicMasterFile,
+                    EpicId = r.EpicRecordId.ToString()
+                }
+            ).Take(30).ToListAsync();
 
             return new PartialViewResult { ViewName = "Partials/_Unused", ViewData = ViewData };
         }
@@ -416,60 +418,60 @@ namespace Atlas_Web.Pages.Tasks
 
         public async Task<IActionResult> OnGetNotAnalytics()
         {
-            // ViewData["EditedOutsideAnalytics"] = await (
-            //     from r in _context.ReportObjects
-            //     where
-            //         r.LastModifiedDate > DateTime.Today.AddMonths(-6)
-            //         && r.DefaultVisibilityYn == "Y"
-            //         && r.OrphanedReportObjectYn == "N"
-            //         && (r.ReportObjectTypeId == 17 || r.ReportObjectTypeId == 3)
-            //     join l in _context.UserRoleLinks on r.LastModifiedByUserId equals l.UserId into tmp
-            //     from t in tmp.DefaultIfEmpty()
-            //     where (t.UserRolesId ?? 2) != 1
-            //     join l in _context.UserRoleLinks on r.AuthorUserId equals l.UserId into tmptwo
-            //     from ttwp in tmptwo.DefaultIfEmpty()
-            //     where (ttwp.UserRolesId ?? 2) != 1
-            //     join f in (
-            //         from tr in _context.ReportObjectTopRuns
-            //         group tr by tr.ReportObjectId into g
-            //         select new { ReportObjectId = g.Key, Cnt = g.Count() }
-            //     )
-            //         on r.ReportObjectId equals f.ReportObjectId
-            //     orderby r.ReportObjectId
-            //     select new EditedOutsideAnalyticsData
-            //     {
-            //         ReportUrl = "\\Reports?id=" + r.ReportObjectId.ToString(),
-            //         LastMod = r.LastUpdatedDateDisplayString,
-            //         Author = r.AuthorUser.FullnameCalc,
-            //         ModifiedBy = r.LastModifiedByUser.FullnameCalc,
-            //         Name = r.DisplayName,
-            //         ReportType = r.ReportObjectType.Name,
-            //         Epic = r.EpicMasterFile + " " + r.EpicRecordId.ToString(),
-            //         RunReportUrl = Helpers.HtmlHelpers.ReportUrlFromParams(
-            //             HttpContext,
-            //             r,
-            //             _context,
-            //             User.Identity.Name
-            //         ),
-            //         EditReportUrl = Helpers.HtmlHelpers.EditReportFromParams(
-            //             _config["AppSettings:org_domain"],
-            //             HttpContext,
-            //             r.ReportServerPath,
-            //             r.SourceServer,
-            //             r.EpicMasterFile,
-            //             r.EpicReportTemplateId.ToString(),
-            //             r.EpicRecordId.ToString(),
-            //             r.OrphanedReportObjectYn
-            //         ),
-            //         RecordViewerUrl = Helpers.HtmlHelpers.RecordViewerLink(
-            //             HttpContext,
-            //             r.EpicMasterFile,
-            //             r.EpicRecordId.ToString(),
-            //             r.OrphanedReportObjectYn
-            //         ),
-            //         Runs = ((int?)f.Cnt ?? 0)
-            //     }
-            // ).ToListAsync();
+            ViewData["EditedOutsideAnalytics"] = await (
+                from r in _context.ReportObjects
+                where
+                    r.LastModifiedDate > DateTime.Today.AddMonths(-6)
+                    && r.DefaultVisibilityYn == "Y"
+                    && r.OrphanedReportObjectYn == "N"
+                    && (r.ReportObjectTypeId == 17 || r.ReportObjectTypeId == 3)
+                join l in _context.UserRoleLinks on r.LastModifiedByUserId equals l.UserId into tmp
+                from t in tmp.DefaultIfEmpty()
+                where (t.UserRolesId ?? 2) != 1
+                join l in _context.UserRoleLinks on r.AuthorUserId equals l.UserId into tmptwo
+                from ttwp in tmptwo.DefaultIfEmpty()
+                where (ttwp.UserRolesId ?? 2) != 1
+                join f in (
+                    from tr in _context.ReportObjectRunDataBridges
+                    group tr by tr.ReportObjectId into g
+                    select new { ReportObjectId = g.Key, Cnt = g.Sum(y => y.Runs) }
+                )
+                    on r.ReportObjectId equals f.ReportObjectId
+                orderby r.ReportObjectId
+                select new EditedOutsideAnalyticsData
+                {
+                    ReportUrl = "\\Reports?id=" + r.ReportObjectId.ToString(),
+                    LastMod = r.LastUpdatedDateDisplayString,
+                    Author = r.AuthorUser.FullnameCalc,
+                    ModifiedBy = r.LastModifiedByUser.FullnameCalc,
+                    Name = r.DisplayName,
+                    ReportType = r.ReportObjectType.Name,
+                    Epic = r.EpicMasterFile + " " + r.EpicRecordId.ToString(),
+                    RunReportUrl = Helpers.HtmlHelpers.ReportUrlFromParams(
+                        HttpContext,
+                        r,
+                        _context,
+                        User.Identity.Name
+                    ),
+                    EditReportUrl = Helpers.HtmlHelpers.EditReportFromParams(
+                        _config["AppSettings:org_domain"],
+                        HttpContext,
+                        r.ReportServerPath,
+                        r.SourceServer,
+                        r.EpicMasterFile,
+                        r.EpicReportTemplateId.ToString(),
+                        r.EpicRecordId.ToString(),
+                        r.OrphanedReportObjectYn
+                    ),
+                    RecordViewerUrl = Helpers.HtmlHelpers.RecordViewerLink(
+                        HttpContext,
+                        r.EpicMasterFile,
+                        r.EpicRecordId.ToString(),
+                        r.OrphanedReportObjectYn
+                    ),
+                    Runs = ((int?)f.Cnt ?? 0)
+                }
+            ).ToListAsync();
 
             return new PartialViewResult
             {
@@ -504,10 +506,10 @@ namespace Atlas_Web.Pages.Tasks
                                     ? "Crystal"
                                     : "SSRS"
                     ),
-                    //  Runs = r.ReportObjectRunData.Count,
+                    Runs = r.ReportObjectRunDataBridges.Sum(y => y.Runs),
                     LastMaintained = (r.LastModifiedDate ?? DateTime.Today.AddYears(-1)),
-                    // LastRun = (r.ReportObjectRunData.Max(x => x.RunStartTime) ?? DateTime.Now),
-                    Favs = 999999
+                    LastRun = r.ReportObjectRunDataBridges.Max(x => x.RunData.RunStartTime_Day),
+                    Favs = r.StarredReports.Count
                 } into tmp
                 join o in _context.ReportObjectDocs
                     on tmp.ReportObjectId equals o.ReportObjectId
@@ -521,10 +523,10 @@ namespace Atlas_Web.Pages.Tasks
                     ModifiedBy = tmp.ModifiedBy,
                     Name = tmp.Name,
                     ReportType = tmp.ReportType,
-                    // Runs = tmp.Runs,
-                    Favorite = tmp.Favs == null ? "" : "Yes",
+                    Runs = tmp.Runs,
+                    Favorite = tmp.Favs > 0 ? "Yes" : "",
                     LastMaintained = tmp.LastMaintained.ToString("MM/dd/yyyy"),
-                    //  LastRun = tmp.LastRun.ToString("MM/dd/yyyy")
+                    LastRun = tmp.LastRun.ToString("MM/dd/yyyy")
                 }
             ).Take(60).ToList();
 
@@ -564,10 +566,10 @@ namespace Atlas_Web.Pages.Tasks
                                     ? "Crystal"
                                     : "SSRS"
                     ),
-                    // Runs = r.ReportObjectRunData.Count,
+                    Runs = r.ReportObjectRunDataBridges.Sum(y => y.Runs),
                     LastMaintained = (r.LastModifiedDate ?? DateTime.Today.AddYears(-1)),
-                    //  LastRun = (r.ReportObjectRunData.Max(x => x.RunStartTime) ?? DateTime.Now),
-                    Favs = 999999
+                    LastRun = r.ReportObjectRunDataBridges.Max(x => x.RunData.RunStartTime_Day),
+                    Favs = r.StarredReports.Count
                 } into tmp
                 join o in _context.ReportObjectDocs
                     on tmp.ReportObjectId equals o.ReportObjectId
@@ -581,10 +583,10 @@ namespace Atlas_Web.Pages.Tasks
                     ModifiedBy = tmp.ModifiedBy,
                     Name = tmp.Name,
                     ReportType = tmp.ReportType,
-                    // Runs = tmp.Runs,
-                    Favorite = tmp.Favs == null ? "" : "Yes",
+                    Runs = tmp.Runs,
+                    Favorite = tmp.Favs > 0 ? "Yes" : "",
                     LastMaintained = tmp.LastMaintained.ToString("MM/dd/yyyy"),
-                    // LastRun = tmp.LastRun.ToString("MM/dd/yyyy")
+                    LastRun = tmp.LastRun.ToString("MM/dd/yyyy")
                 }
             ).Take(60).ToList();
 

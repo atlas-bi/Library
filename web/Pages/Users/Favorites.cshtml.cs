@@ -132,6 +132,7 @@ namespace Atlas_Web.Pages.Users
             };
             ViewData["AdLists"] = AdLists;
 
+#pragma warning disable S125
             // if (
             //     Reports.Count
             //         + Collections.Count
@@ -160,6 +161,7 @@ namespace Atlas_Web.Pages.Users
             //         .Take(30)
             //         .ToListAsync();
             // }
+#pragma warning restore S125
 
             return Page();
         }

@@ -72,7 +72,7 @@ namespace Atlas_Web.Models
         [NotMapped]
         public virtual string SmallSubject
         {
-            get { return string.Join(" ", Subject.Split(' ').ToList().Take(5)); }
+            get { return string.Join(" ", Subject.Split(' ').Take(5)); }
         }
 
         [NotMapped]
@@ -85,7 +85,7 @@ namespace Atlas_Web.Models
                     return "";
                 }
 
-                return string.Join(" ", MessagePlainText.Split(' ').ToList().Take(10));
+                return string.Join(" ", MessagePlainText.Split(' ').Take(10));
             }
         }
     }

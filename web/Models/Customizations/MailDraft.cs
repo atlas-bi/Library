@@ -45,7 +45,7 @@ namespace Atlas_Web.Models
                 {
                     return "";
                 }
-                return string.Join(" ", Subject.Split(' ').ToList().Take(5));
+                return string.Join(" ", Subject.Split(' ').Take(5));
             }
         }
 
@@ -59,7 +59,7 @@ namespace Atlas_Web.Models
                     return "";
                 }
 
-                return string.Join(" ", MessagePlainText.Split(' ').ToList().Take(10));
+                return string.Join(" ", MessagePlainText.Split(' ').Take(10));
             }
         }
     }

@@ -101,7 +101,6 @@ namespace Atlas_Web.Pages.Search
                 "[",
                 "]",
                 "^",
-                // "\"",
                 "~",
                 "*",
                 "?",
@@ -114,11 +113,6 @@ namespace Atlas_Web.Pages.Search
                 string current = illegal_chars[x];
                 search_string = search_string.Replace(current, "\\" + current);
             }
-
-            // search_string = String.Join(
-            //     "",
-            //     search_string.Split(illegal_chars, StringSplitOptions.RemoveEmptyEntries)
-            // );
 
             // make all caps lower for OR AND NOT
             search_string = Regex.Replace(
@@ -133,8 +127,10 @@ namespace Atlas_Web.Pages.Search
             var literals = Regex.Matches(search_string, @"("")(.+?)("")");
             if (literals.Count > 0)
             {
+#pragma warning disable S3267
                 foreach (Match literal in literals)
                 {
+#pragma warning restore S3267
                     if (query.Keys.Contains("field"))
                     {
                         ExactMatches.Add($"{query["field"]}:\"{literal.Groups[2].Value}\"");
@@ -372,7 +368,9 @@ namespace Atlas_Web.Pages.Search
                     new QueryOptions
                     {
                         RequestHandler = new RequestHandlerParameters(
+#pragma warning disable S1075
                             "/" + Type.Replace("terms", "aterms")
+#pragma warning restore S1075
                         ),
                         StartOrCursor = new StartOrCursor.Start((PageIndex - 1) * 20),
                         Rows = 20,

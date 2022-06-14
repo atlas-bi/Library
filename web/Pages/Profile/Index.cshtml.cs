@@ -113,8 +113,8 @@ namespace Atlas_Web.Pages.Profile
             var end = DateTime.Now.AddSeconds(end_at);
 
             // start building two subqueries
-            var subquery_rundata = _context.ReportObjectRunDatas.Where(x => 1 == 1);
-            var subquery_reports = _context.ReportObjects.Where(x => 1 == 1);
+            var subquery_rundata = _context.ReportObjectRunDatas.AsQueryable();
+            var subquery_reports = _context.ReportObjects.AsQueryable();
 
             if (type == "report" && _context.ReportObjects.Any(x => x.ReportObjectId == id))
             {
@@ -215,18 +215,14 @@ namespace Atlas_Web.Pages.Profile
             }
             else
             {
+#pragma warning disable S112
                 throw new Exception(
                     "Wrong parameter value supplied. Type: " + type + " with Id: " + id
                 );
+#pragma warning restore S112
             }
 
-            // if (groupId > 0 && _context.UserGroups.Any(x => x.GroupId == groupId))
-            // {
-            //     subquery = subquery.Where(
-            //         x => x.RunData.RunUser.UserGroupsMemberships.Any(y => y.GroupId == groupId)
-            //     );
-            // }
-            var date_format = "h tt";
+            string date_format = "h tt";
             var subquery =
                 from d in subquery_rundata.Where(
                     x => x.RunStartTime_Hour >= start && x.RunStartTime_Hour <= end
@@ -254,7 +250,6 @@ namespace Atlas_Web.Pages.Profile
             {
                 // for < 2 days
                 // 1 AM, 2 AM etc..
-                default:
                 case < 172800:
                     date_format = "h tt";
                     subquery =
@@ -802,9 +797,11 @@ namespace Atlas_Web.Pages.Profile
             }
             else
             {
+#pragma warning disable S112
                 throw new Exception(
                     "Wrong parameter value supplied. Type: " + type + " with Id: " + id
                 );
+#pragma warning restore S112
             }
 
             return new PartialViewResult { ViewName = "Partials/_Stars", ViewData = ViewData };
@@ -820,9 +817,11 @@ namespace Atlas_Web.Pages.Profile
             }
             else
             {
+#pragma warning disable S112
                 throw new Exception(
                     "Wrong parameter value supplied. Type: " + type + " with Id: " + id
                 );
+#pragma warning restore S112
             }
 
             return new PartialViewResult
