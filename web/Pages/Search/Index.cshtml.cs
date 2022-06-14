@@ -663,7 +663,9 @@ namespace Atlas_Web.Pages.Search
                         new ObjectSearch
                         {
                             ObjectId = x.AtlasId,
-                            Name = x.Name,
+                            Name =
+                                x.Name
+                                + (!string.IsNullOrEmpty(x.Email) ? " (" + x.Email + ")" : ""),
                             Type = "u"
                         }
                 )
