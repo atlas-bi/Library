@@ -429,9 +429,9 @@
     <div class="step-tab-data" id="maintenance">
         <h3 class="title is-3">Service Requests</h3>
         <div class="mini-tags field is-grouped is-grouped-multiline">
-            @for (var x = 0; x < Model.Report.ReportObject.ReportManageEngineTickets.Count; x++)
+            @for (var x = 0; x < Model.Report.ReportManageEngineTickets.Count; x++)
             {
-                var ticket = Model.Report.ReportObject.ReportManageEngineTickets.ToList()[x];
+                var ticket = Model.Report.ReportManageEngineTickets.ToList()[x];
                 <div class="control">
                     <div class="tags has-addons">
                         <span class="tag is-link">@ticket.TicketNumber</span>

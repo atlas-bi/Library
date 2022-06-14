@@ -106,6 +106,7 @@ namespace Atlas_Web.Pages.Reports
                 .Include(x => x.OperationalOwnerUser)
                 /* me tickets */
                 .Include(x => x.ReportObject)
+                .ThenInclude(x => x.ReportObjectDoc)
                 .ThenInclude(x => x.ReportManageEngineTickets)
                 /* collections */
                 .Include(x => x.ReportObject)

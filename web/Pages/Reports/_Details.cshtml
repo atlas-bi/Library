@@ -303,13 +303,13 @@
     </table>
 </div>
 
-@if (Model.Report.ReportManageEngineTickets.Any())
+@if (@Model.Report.ReportObjectDoc != null && Model.Report.ReportObjectDoc.ReportManageEngineTickets.Any())
 {
     <nav id="maintenance" class="panel">
         <div class="panel-heading">
             Service Requests
         </div>
-        @foreach (var ticket in Model.Report.ReportManageEngineTickets)
+        @foreach (var ticket in Model.Report.ReportObjectDoc.ReportManageEngineTickets)
         {
             <div class="panel-block">
                 @if (!string.IsNullOrEmpty(ticket.TicketUrl))

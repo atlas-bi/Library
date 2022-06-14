@@ -9,7 +9,6 @@ namespace Atlas_Web.Models
         {
             CollectionReports = new HashSet<CollectionReport>();
             ReportGroupsMemberships = new HashSet<ReportGroupsMembership>();
-            ReportManageEngineTickets = new HashSet<ReportManageEngineTicket>();
             ReportObjectAttachments = new HashSet<ReportObjectAttachment>();
             ReportObjectHierarchyChildReportObjects = new HashSet<ReportObjectHierarchy>();
             ReportObjectHierarchyParentReportObjects = new HashSet<ReportObjectHierarchy>();
@@ -57,7 +56,7 @@ namespace Atlas_Web.Models
         public virtual ReportObjectDoc ReportObjectDoc { get; set; }
         public virtual ICollection<CollectionReport> CollectionReports { get; set; }
         public virtual ICollection<ReportGroupsMembership> ReportGroupsMemberships { get; set; }
-        public virtual ICollection<ReportManageEngineTicket> ReportManageEngineTickets { get; set; }
+
         public virtual ICollection<ReportObjectAttachment> ReportObjectAttachments { get; set; }
         public virtual ICollection<ReportObjectHierarchy> ReportObjectHierarchyChildReportObjects { get; set; }
         public virtual ICollection<ReportObjectHierarchy> ReportObjectHierarchyParentReportObjects { get; set; }

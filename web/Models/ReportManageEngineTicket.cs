@@ -11,6 +11,6 @@ namespace Atlas_Web.Models
         public int? ReportObjectId { get; set; }
         public string TicketUrl { get; set; }
 
-        public virtual ReportObject ReportObject { get; set; }
+        public virtual ReportObjectDoc ReportObject { get; set; }
     }
 }
