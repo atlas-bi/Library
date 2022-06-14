@@ -126,6 +126,22 @@
                     <td>@Model.Report.Availability</td>
                 </tr>
             }
+            <tr>
+                <td>Visible in Search</td>
+                <td>
+                    @if((Model.Report.OrphanedReportObjectYn ?? "N") == "N" &&
+                         Model.Report.ReportObjectType != null &&
+                         Model.Report.ReportObjectType.Visible == "Y" &&
+                         Model.Report.DefaultVisibilityYn == "Y" &&
+                         (Model.Report.ReportObjectDoc == null || (Model.Report.ReportObjectDoc.Hidden ?? "N") == "N")
+                        ){
+                        @:Yes
+                    } else {
+                        @:No
+                    }
+                </td>
+            </tr>
+
             @if (@Model.Report.ReportObjectDoc != null && !string.IsNullOrEmpty(@Model.Report.ReportObjectDoc.GitLabProjectUrl))
             {
                 <tr>
