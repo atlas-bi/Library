@@ -143,18 +143,17 @@ namespace Atlas_Web.Pages.Tasks
         public async Task<IActionResult> OnGetRecommendRetire()
         {
             ViewData["RecommendRetire"] = await (
-                from l in _context.ReportObjectDocMaintenanceLogs
-                join m in _context.MaintenanceLogs on l.MaintenanceLogId equals m.MaintenanceLogId
+                from m in _context.MaintenanceLogs
                 where
                     m.MaintenanceLogStatus.MaintenanceLogStatusName == "Recommend Retire"
-                    && l.ReportObject.ExecutiveVisibilityYn == "Y"
+                    && m.ReportObjectDoc.ExecutiveVisibilityYn == "Y"
                 select new RecommendRetireReports
                 {
                     FullName = m.Maintainer.FullnameCalc,
-                    Name = l.ReportObject.ReportObject.DisplayName,
+                    Name = m.ReportObjectDoc.ReportObject.DisplayName,
                     MaintenanceDate = m.MaintenanceDate,
                     MaintenanceDateString = m.MaintenanceDateDisplayString,
-                    ReportId = l.ReportObjectId,
+                    ReportId = (int)m.ReportObjectId,
                     Comment = m.Comment
                 }
             ).ToListAsync();
@@ -221,9 +220,7 @@ namespace Atlas_Web.Pages.Tasks
                         && d.ReportObject.OrphanedReportObjectYn == "N"
                     join l in (
                         from l in _context.MaintenanceLogs
-                        join m in _context.ReportObjectDocMaintenanceLogs
-                            on l.MaintenanceLogId equals m.MaintenanceLogId
-                        group m by m.ReportObjectId into grp
+                        group l by l.ReportObjectId into grp
                         select new
                         {
                             ReportObjectId = grp.Key,
@@ -302,9 +299,7 @@ namespace Atlas_Web.Pages.Tasks
                         && d.ReportObject.OrphanedReportObjectYn == "N"
                     join l in (
                         from l in _context.MaintenanceLogs
-                        join m in _context.ReportObjectDocMaintenanceLogs
-                            on l.MaintenanceLogId equals m.MaintenanceLogId
-                        group m by m.ReportObjectId into grp
+                        group l by l.ReportObjectId into grp
                         select new
                         {
                             ReportObjectId = grp.Key,
@@ -379,9 +374,7 @@ namespace Atlas_Web.Pages.Tasks
                         && d.ReportObject.OrphanedReportObjectYn == "N"
                     join l in (
                         from l in _context.MaintenanceLogs
-                        join m in _context.ReportObjectDocMaintenanceLogs
-                            on l.MaintenanceLogId equals m.MaintenanceLogId
-                        group m by m.ReportObjectId into grp
+                        group l by l.ReportObjectId into grp
                         select new
                         {
                             ReportObjectId = grp.Key,

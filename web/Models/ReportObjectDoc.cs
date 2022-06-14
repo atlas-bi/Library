@@ -8,7 +8,7 @@ namespace Atlas_Web.Models
         public ReportObjectDoc()
         {
             ReportObjectDocFragilityTags = new HashSet<ReportObjectDocFragilityTag>();
-            ReportObjectDocMaintenanceLogs = new HashSet<ReportObjectDocMaintenanceLog>();
+            MaintenanceLogs = new HashSet<MaintenanceLog>();
             ReportObjectDocTerms = new HashSet<ReportObjectDocTerm>();
             ReportManageEngineTickets = new HashSet<ReportManageEngineTicket>();
         }
@@ -44,7 +44,7 @@ namespace Atlas_Web.Models
         public virtual User RequesterNavigation { get; set; }
         public virtual User UpdatedByNavigation { get; set; }
         public virtual ICollection<ReportObjectDocFragilityTag> ReportObjectDocFragilityTags { get; set; }
-        public virtual ICollection<ReportObjectDocMaintenanceLog> ReportObjectDocMaintenanceLogs { get; set; }
+        public virtual ICollection<MaintenanceLog> MaintenanceLogs { get; set; }
         public virtual ICollection<ReportObjectDocTerm> ReportObjectDocTerms { get; set; }
         public virtual ICollection<ReportManageEngineTicket> ReportManageEngineTickets { get; set; }
     }

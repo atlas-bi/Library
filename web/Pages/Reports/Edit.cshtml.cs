@@ -88,11 +88,9 @@ namespace Atlas_Web.Pages.Reports
                 .Include(x => x.ReportObject)
                 .ThenInclude(x => x.ReportObjectImagesDocs)
                 /* maintenance logs */
-                .Include(x => x.ReportObjectDocMaintenanceLogs)
-                .ThenInclude(x => x.MaintenanceLog)
+                .Include(x => x.MaintenanceLogs)
                 .ThenInclude(x => x.Maintainer)
-                .Include(x => x.ReportObjectDocMaintenanceLogs)
-                .ThenInclude(x => x.MaintenanceLog)
+                .Include(x => x.MaintenanceLogs)
                 .ThenInclude(x => x.MaintenanceLogStatus)
                 /* meta */
                 .Include(x => x.EstimatedRunFrequency)
@@ -291,18 +289,10 @@ namespace Atlas_Web.Pages.Reports
             if (MaintenanceLog.MaintenanceLogStatusId != null)
             {
                 MaintenanceLog.MaintenanceDate = DateTime.Now;
+                MaintenanceLog.ReportObjectId = id;
                 MaintenanceLog.MaintainerId =
                     UserHelpers.GetUser(_cache, _context, User.Identity.Name).UserId;
                 _context.Add(MaintenanceLog);
-                _context.SaveChanges();
-
-                _context.Add(
-                    new ReportObjectDocMaintenanceLog
-                    {
-                        MaintenanceLogId = MaintenanceLog.MaintenanceLogId,
-                        ReportObjectId = id
-                    }
-                );
                 _context.SaveChanges();
             }
 

@@ -45,12 +45,10 @@ namespace Atlas_Web.Pages.Reports
                         .Include(x => x.ReportObjectImagesDocs)
                         /* maintenance logs */
                         .Include(x => x.ReportObjectDoc)
-                        .ThenInclude(x => x.ReportObjectDocMaintenanceLogs)
-                        .ThenInclude(x => x.MaintenanceLog)
+                        .ThenInclude(x => x.MaintenanceLogs)
                         .ThenInclude(x => x.Maintainer)
                         .Include(x => x.ReportObjectDoc)
-                        .ThenInclude(x => x.ReportObjectDocMaintenanceLogs)
-                        .ThenInclude(x => x.MaintenanceLog)
+                        .ThenInclude(x => x.MaintenanceLogs)
                         .ThenInclude(x => x.MaintenanceLogStatus)
                         .Include(x => x.ReportObjectDoc)
                         .ThenInclude(x => x.EstimatedRunFrequency)
@@ -309,9 +307,9 @@ namespace Atlas_Web.Pages.Reports
                             sch = x.MaintenanceScheduleId,
                             thiss = _context.MaintenanceLogs
                                 .Where(
-                                    l =>
-                                        l.MaintenanceLogId
-                                        == x.ReportObjectDocMaintenanceLogs
+                                    x =>
+                                        x.MaintainerId
+                                        == _context.MaintenanceLogs
                                             .Select(x => x.MaintenanceLogId)
                                             .Max()
                                 )

@@ -40,7 +40,6 @@ namespace Atlas_Web.Models
         public virtual DbSet<ReportObjectAttachment> ReportObjectAttachments { get; set; }
         public virtual DbSet<ReportObjectDoc> ReportObjectDocs { get; set; }
         public virtual DbSet<ReportObjectDocFragilityTag> ReportObjectDocFragilityTags { get; set; }
-        public virtual DbSet<ReportObjectDocMaintenanceLog> ReportObjectDocMaintenanceLogs { get; set; }
         public virtual DbSet<ReportObjectDocTerm> ReportObjectDocTerms { get; set; }
         public virtual DbSet<ReportObjectHierarchy> ReportObjectHierarchies { get; set; }
         public virtual DbSet<ReportObjectImagesDoc> ReportObjectImagesDocs { get; set; }
@@ -658,6 +657,12 @@ namespace Atlas_Web.Models
                         .HasForeignKey(d => d.MaintenanceLogStatusId)
                         .OnDelete(DeleteBehavior.Cascade)
                         .HasConstraintName("FK__Maintenan__Maint__251C81ED");
+
+                    entity
+                        .HasOne(d => d.ReportObjectDoc)
+                        .WithMany(p => p.MaintenanceLogs)
+                        .HasForeignKey(d => d.ReportObjectId)
+                        .HasConstraintName("FK__ReportObj__Repor__72E3DB65");
                 }
             );
 
@@ -1113,31 +1118,6 @@ namespace Atlas_Web.Models
                         .WithMany(p => p.ReportObjectDocFragilityTags)
                         .HasForeignKey(d => d.ReportObjectId)
                         .HasConstraintName("FK__ReportObj__Repor__72E3DB65");
-                }
-            );
-
-            modelBuilder.Entity<ReportObjectDocMaintenanceLog>(
-                entity =>
-                {
-                    entity.HasKey(e => e.LinkId).HasName("PK__ReportOb__2D1221350C7530C5");
-
-                    entity.ToTable("ReportObjectDocMaintenanceLogs", "app");
-
-                    entity.Property(e => e.MaintenanceLogId).HasColumnName("MaintenanceLogID");
-
-                    entity.Property(e => e.ReportObjectId).HasColumnName("ReportObjectID");
-
-                    entity
-                        .HasOne(d => d.MaintenanceLog)
-                        .WithMany(p => p.ReportObjectDocMaintenanceLogs)
-                        .HasForeignKey(d => d.MaintenanceLogId)
-                        .HasConstraintName("FK__ReportObj__Maint__6E1F2648");
-
-                    entity
-                        .HasOne(d => d.ReportObject)
-                        .WithMany(p => p.ReportObjectDocMaintenanceLogs)
-                        .HasForeignKey(d => d.ReportObjectId)
-                        .HasConstraintName("FK__ReportObj__Repor__6F134A81");
                 }
             );
 
