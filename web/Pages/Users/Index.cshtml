@@ -34,7 +34,6 @@
         <div data-ajax="yes" data-url="/Users?handler=Subscriptions" data-parameters="id=@Model.UserId"></div>
     </div>
     <div class="tab-dta @if (@Model.UserId != @Model.MyId){ <text>active</text>}" id="activity">
-        @* <div data-ajax="yes" data-url="/Users?handler=Activity" data-parameters="id=@Model.UserId"></div> *@
         @{
             ViewBag.ProfileType = "user";
             ViewBag.ProfileId = Model.UserId;

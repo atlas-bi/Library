@@ -8,16 +8,15 @@ namespace Atlas_Web.Models
         public ReportObjectDoc()
         {
             ReportObjectDocFragilityTags = new HashSet<ReportObjectDocFragilityTag>();
-            ReportObjectDocMaintenanceLogs = new HashSet<ReportObjectDocMaintenanceLog>();
+            MaintenanceLogs = new HashSet<MaintenanceLog>();
             ReportObjectDocTerms = new HashSet<ReportObjectDocTerm>();
+            ReportManageEngineTickets = new HashSet<ReportManageEngineTicket>();
         }
 
         public int ReportObjectId { get; set; }
         public int? OperationalOwnerUserId { get; set; }
         public int? Requester { get; set; }
         public string GitLabProjectUrl { get; set; }
-        public string GitLabTreeUrl { get; set; }
-        public string GitLabBlobUrl { get; set; }
         public string DeveloperDescription { get; set; }
         public string KeyAssumptions { get; set; }
         public int? OrganizationalValueId { get; set; }
@@ -43,7 +42,8 @@ namespace Atlas_Web.Models
         public virtual User RequesterNavigation { get; set; }
         public virtual User UpdatedByNavigation { get; set; }
         public virtual ICollection<ReportObjectDocFragilityTag> ReportObjectDocFragilityTags { get; set; }
-        public virtual ICollection<ReportObjectDocMaintenanceLog> ReportObjectDocMaintenanceLogs { get; set; }
+        public virtual ICollection<MaintenanceLog> MaintenanceLogs { get; set; }
         public virtual ICollection<ReportObjectDocTerm> ReportObjectDocTerms { get; set; }
+        public virtual ICollection<ReportManageEngineTicket> ReportManageEngineTickets { get; set; }
     }
 }

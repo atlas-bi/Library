@@ -4,25 +4,25 @@
     <div class="panel-heading">
         Maintenance Logs
     </div>
-    @foreach (var log in Model.Report.ReportObjectDoc.ReportObjectDocMaintenanceLogs)
+    @foreach (var log in Model.Report.ReportObjectDoc.MaintenanceLogs)
     {
         <div class="panel-block">
             @if (Configuration["features:enable_user_profile"] == null || Configuration["features:enable_user_profile"].ToString().ToLower() == "true")
             {
-                <a href="/users?id=@log.MaintenanceLog.MaintainerId">@log.MaintenanceLog.Maintainer.FullnameCalc</a>
+                <a href="/users?id=@log.MaintainerId">@log.Maintainer.FullnameCalc</a>
             } else
             {
-                @log.MaintenanceLog.Maintainer.FullnameCalc
+                @log.Maintainer.FullnameCalc
             }
-            <span class="text-muted">&nbsp;·&nbsp;@log.MaintenanceLog.MaintenanceDateDisplayString&nbsp;</span>
-            @if (log.MaintenanceLog.MaintenanceLogStatus != null)
+            <span class="text-muted">&nbsp;·&nbsp;@log.MaintenanceDateDisplayString&nbsp;</span>
+            @if (log.MaintenanceLogStatus != null)
             {
-                    @log.MaintenanceLog.MaintenanceLogStatus.MaintenanceLogStatusName<text>&nbsp;</text>
+                    @log.MaintenanceLogStatus.MaintenanceLogStatusName<text>&nbsp;</text>
             }
-            @if (!string.IsNullOrEmpty(log.MaintenanceLog.Comment))
+            @if (!string.IsNullOrEmpty(log.Comment))
             {
                 <div class="markdown">
-                    @Html.Raw(@Helpers.HtmlHelpers.MarkdownToHtml(log.MaintenanceLog.Comment))
+                    @Html.Raw(@Helpers.HtmlHelpers.MarkdownToHtml(log.Comment))
                 </div>
             }
         </div>

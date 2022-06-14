@@ -52,8 +52,10 @@ namespace Atlas_Web.Helpers
             // if we are changing type, we should remove all other filters.
             if (parameters.ContainsKey("type"))
             {
+#pragma warning disable S3267
                 foreach (var p in qs)
                 {
+#pragma warning restore S3267
                     if (
                         p.Key != "type"
                         && p.Key != "Query"

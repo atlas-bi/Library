@@ -514,14 +514,6 @@ namespace Atlas_Web.Pages.Settings
             if (ModelState.IsValid && MaintenanceLogStatus.MaintenanceLogStatusId > 0 && checkpoint)
             {
                 _context.RemoveRange(
-                    _context.ReportObjectDocMaintenanceLogs.Where(
-                        x =>
-                            x.MaintenanceLog.MaintenanceLogStatusId.Equals(
-                                MaintenanceLogStatus.MaintenanceLogStatusId
-                            )
-                    )
-                );
-                _context.RemoveRange(
                     _context.MaintenanceLogs.Where(
                         x =>
                             x.MaintenanceLogStatusId.Equals(

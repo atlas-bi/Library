@@ -18,9 +18,10 @@ namespace Atlas_Web.Models
         public int EffectivePageIndex => PageIndex ?? 1;
         public int Start => (EffectivePageIndex - 1) * PageSize;
 
+#pragma warning disable S2365
         public IReadOnlyList<string> FilteredFields =>
             Filters?.Select(f => f.Key).ToArray() ?? Array.Empty<string>();
-
+#pragma warning restore S2365
         public override string ToString() =>
             $"{nameof(Query)}: {Query}, "
             + $"{nameof(PageIndex)}: {PageIndex}, "

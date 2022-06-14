@@ -5,6 +5,7 @@
     ViewBag.ProfileType = "report";
     ViewBag.ProfileId = -1;
 
+
     @if (HttpContext.Request.Headers["x-requested-with"] == "XMLHttpRequest")
     {
         Layout = null;
