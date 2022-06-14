@@ -39,7 +39,8 @@ namespace Atlas_Web.Pages.Profile
             public string Href { get; set; }
             public string TitleOne { get; set; }
             public string TitleTwo { get; set; }
-
+            public string Date { get; set; }
+            public string DateTitle { get; set; }
             public double Count { get; set; }
             public double? Percent { get; set; }
         }
@@ -654,14 +655,12 @@ namespace Atlas_Web.Pages.Profile
                 group a by new { a.d.RunUserId, a.d.RunUser.FullnameCalc } into grp
                 select new BarData
                 {
-                    Key =
-                        grp.Key.FullnameCalc
-                        + " ("
-                        + ModelHelpers.RelativeDate(grp.Max(x => x.d.RunStartTime))
-                        + ")",
+                    Key = grp.Key.FullnameCalc,
                     Count = grp.Sum(x => x.b.Runs),
                     Percent = (double)grp.Sum(x => x.b.Runs) / total,
-                    TitleOne = "Top Users (Last Run)",
+                    TitleOne = "Top Users",
+                    Date = grp.Max(x => x.d.RunStartTime).ToShortDateString(),
+                    DateTitle = "Last Run",
                     TitleTwo = "Runs",
                     Href =
                         (
@@ -767,14 +766,12 @@ namespace Atlas_Web.Pages.Profile
                 } into grp
                 select new BarData
                 {
-                    Key =
-                        grp.Key.name
-                        + " ("
-                        + ModelHelpers.RelativeDate(grp.Max(x => x.d.RunStartTime))
-                        + ")",
+                    Key = grp.Key.name,
                     Count = grp.Sum(x => x.b.Runs),
                     Percent = (double)grp.Sum(x => x.b.Runs) / total,
-                    TitleOne = "Top Reports (Last Run)",
+                    TitleOne = "Top Reports",
+                    Date = grp.Max(x => x.d.RunStartTime).ToShortDateString(),
+                    DateTitle = "Last Run",
                     TitleTwo = "Runs",
                     Href = "/reports?id=" + grp.Key.ReportObjectId
                 }

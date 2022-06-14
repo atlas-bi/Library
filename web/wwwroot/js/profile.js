@@ -325,14 +325,35 @@
     function buildDataTable(data) {
       if (data.length > 0) {
         const table = document.createElement('table');
-        table.classList.add('table', 'is-no-border', 'is-fullwidth', 'bar');
+        table.classList.add(
+          'table',
+          'is-no-border',
+          'is-fullwidth',
+          'bar',
+          'sort',
+        );
         const header = document.createElement('tr');
-        header.innerHTML = `<tr><th>${data[0].title_one}</th><th class="is-narrow">${data[0].title_two}</th></tr>`;
+        const dateHeader =
+          'date_title' in data[0] ? `<th>${data[0].date_title}</th>` : '';
+        header.innerHTML = `<tr><th>${data[0].title_one}</th>${dateHeader}<th class="is-narrow">${data[0].title_two}</th></tr>`;
         table.append(header);
+
+        // Check for date column
+
+        if ('date' in data[0]) {
+          console.log('has date');
+        }
+
         data.forEach(($r) => {
           const row = document.createElement('tr');
           const $link = $r.href ? `<a href="${$r.href}">${$r.key}</a>` : $r.key;
-          row.innerHTML = `<td class="is-middle">${$link}</td><td class="is-narrow has-text-right"><strong class="mr-2">${bigNumber(
+          const dateValue =
+            'date_title' in data[0]
+              ? 'date' in $r
+                ? `<td>${$r.date}</td>`
+                : '<td></td>'
+              : '';
+          row.innerHTML = `<td class="is-middle">${$link}</td>${dateValue}<td class="is-narrow has-text-right"><strong class="mr-2">${bigNumber(
             $r.count,
           )}</strong>`;
           if ($r.percent) {
@@ -387,6 +408,7 @@
           $element.append(buildDataTable(JSON.parse(aj.responseText)));
           $element.style.visibility = 'visible';
           $element.style.opacity = '1';
+          document.dispatchEvent(new CustomEvent('ajax'));
         });
       });
     }
