@@ -1023,11 +1023,7 @@ namespace Atlas_Web.Models
 
                     entity.Property(e => e.FragilityId).HasColumnName("FragilityID");
 
-                    entity.Property(e => e.GitLabBlobUrl).HasColumnName("GitLabBlobURL");
-
                     entity.Property(e => e.GitLabProjectUrl).HasColumnName("GitLabProjectURL");
-
-                    entity.Property(e => e.GitLabTreeUrl).HasColumnName("GitLabTreeURL");
 
                     entity.Property(e => e.Hidden).HasMaxLength(1).IsFixedLength();
 

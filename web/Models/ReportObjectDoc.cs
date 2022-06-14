@@ -17,8 +17,6 @@ namespace Atlas_Web.Models
         public int? OperationalOwnerUserId { get; set; }
         public int? Requester { get; set; }
         public string GitLabProjectUrl { get; set; }
-        public string GitLabTreeUrl { get; set; }
-        public string GitLabBlobUrl { get; set; }
         public string DeveloperDescription { get; set; }
         public string KeyAssumptions { get; set; }
         public int? OrganizationalValueId { get; set; }
