@@ -4,6 +4,7 @@ using Atlas_Web.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Atlas_Web.Migrations
 {
     [DbContext(typeof(Atlas_WebContext))]
-    partial class Atlas_WebContextModelSnapshot : ModelSnapshot
+    [Migration("20220613194642_ConsolidateDupIndex")]
+    partial class ConsolidateDupIndex
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -781,12 +783,7 @@ namespace Atlas_Web.Migrations
                         .HasColumnType("int")
                         .HasColumnName("MaintenanceLogStatusID");
 
-                    b.Property<int?>("ReportObjectId")
-                        .HasColumnType("int");
-
                     b.HasKey("MaintenanceLogId");
-
-                    b.HasIndex("ReportObjectId");
 
                     b.HasIndex(new[] { "MaintenanceLogId" }, "logid");
 
@@ -922,8 +919,8 @@ namespace Atlas_Web.Migrations
                     b.Property<int?>("ReportObjectId")
                         .HasColumnType("int");
 
-                    b.Property<string>("TicketNumber")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int?>("TicketNumber")
+                        .HasColumnType("int");
 
                     b.Property<string>("TicketUrl")
                         .HasColumnType("nvarchar(max)");
@@ -1189,9 +1186,17 @@ namespace Atlas_Web.Migrations
                         .HasColumnType("int")
                         .HasColumnName("FragilityID");
 
+                    b.Property<string>("GitLabBlobUrl")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("GitLabBlobURL");
+
                     b.Property<string>("GitLabProjectUrl")
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("GitLabProjectURL");
+
+                    b.Property<string>("GitLabTreeUrl")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("GitLabTreeURL");
 
                     b.Property<string>("Hidden")
                         .HasMaxLength(1)
@@ -1287,6 +1292,32 @@ namespace Atlas_Web.Migrations
                     b.HasIndex("ReportObjectId");
 
                     b.ToTable("ReportObjectDocFragilityTags", "app");
+                });
+
+            modelBuilder.Entity("Atlas_Web.Models.ReportObjectDocMaintenanceLog", b =>
+                {
+                    b.Property<int>("LinkId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("LinkId"), 1L, 1);
+
+                    b.Property<int>("MaintenanceLogId")
+                        .HasColumnType("int")
+                        .HasColumnName("MaintenanceLogID");
+
+                    b.Property<int>("ReportObjectId")
+                        .HasColumnType("int")
+                        .HasColumnName("ReportObjectID");
+
+                    b.HasKey("LinkId")
+                        .HasName("PK__ReportOb__2D1221350C7530C5");
+
+                    b.HasIndex("MaintenanceLogId");
+
+                    b.HasIndex("ReportObjectId");
+
+                    b.ToTable("ReportObjectDocMaintenanceLogs", "app");
                 });
 
             modelBuilder.Entity("Atlas_Web.Models.ReportObjectDocTerm", b =>
@@ -2655,16 +2686,9 @@ namespace Atlas_Web.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .HasConstraintName("FK__Maintenan__Maint__251C81ED");
 
-                    b.HasOne("Atlas_Web.Models.ReportObjectDoc", "ReportObjectDoc")
-                        .WithMany("MaintenanceLogs")
-                        .HasForeignKey("ReportObjectId")
-                        .HasConstraintName("FK__ReportObj__Repor__72E3DB65");
-
                     b.Navigation("Maintainer");
 
                     b.Navigation("MaintenanceLogStatus");
-
-                    b.Navigation("ReportObjectDoc");
                 });
 
             modelBuilder.Entity("Atlas_Web.Models.ReportGroupsMembership", b =>
@@ -2688,7 +2712,7 @@ namespace Atlas_Web.Migrations
 
             modelBuilder.Entity("Atlas_Web.Models.ReportManageEngineTicket", b =>
                 {
-                    b.HasOne("Atlas_Web.Models.ReportObjectDoc", "ReportObject")
+                    b.HasOne("Atlas_Web.Models.ReportObject", "ReportObject")
                         .WithMany("ReportManageEngineTickets")
                         .HasForeignKey("ReportObjectId")
                         .HasConstraintName("FK_ReportManageEngineTickets_ReportObject");
@@ -2809,6 +2833,27 @@ namespace Atlas_Web.Migrations
                         .HasConstraintName("FK__ReportObj__Repor__72E3DB65");
 
                     b.Navigation("FragilityTag");
+
+                    b.Navigation("ReportObject");
+                });
+
+            modelBuilder.Entity("Atlas_Web.Models.ReportObjectDocMaintenanceLog", b =>
+                {
+                    b.HasOne("Atlas_Web.Models.MaintenanceLog", "MaintenanceLog")
+                        .WithMany("ReportObjectDocMaintenanceLogs")
+                        .HasForeignKey("MaintenanceLogId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("FK__ReportObj__Maint__6E1F2648");
+
+                    b.HasOne("Atlas_Web.Models.ReportObjectDoc", "ReportObject")
+                        .WithMany("ReportObjectDocMaintenanceLogs")
+                        .HasForeignKey("ReportObjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("FK__ReportObj__Repor__6F134A81");
+
+                    b.Navigation("MaintenanceLog");
 
                     b.Navigation("ReportObject");
                 });
@@ -3262,6 +3307,11 @@ namespace Atlas_Web.Migrations
                     b.Navigation("MailMessages");
                 });
 
+            modelBuilder.Entity("Atlas_Web.Models.MaintenanceLog", b =>
+                {
+                    b.Navigation("ReportObjectDocMaintenanceLogs");
+                });
+
             modelBuilder.Entity("Atlas_Web.Models.MaintenanceLogStatus", b =>
                 {
                     b.Navigation("MaintenanceLogs");
@@ -3282,6 +3332,8 @@ namespace Atlas_Web.Migrations
                     b.Navigation("CollectionReports");
 
                     b.Navigation("ReportGroupsMemberships");
+
+                    b.Navigation("ReportManageEngineTickets");
 
                     b.Navigation("ReportObjectAttachments");
 
@@ -3308,11 +3360,9 @@ namespace Atlas_Web.Migrations
 
             modelBuilder.Entity("Atlas_Web.Models.ReportObjectDoc", b =>
                 {
-                    b.Navigation("MaintenanceLogs");
-
-                    b.Navigation("ReportManageEngineTickets");
-
                     b.Navigation("ReportObjectDocFragilityTags");
+
+                    b.Navigation("ReportObjectDocMaintenanceLogs");
 
                     b.Navigation("ReportObjectDocTerms");
                 });

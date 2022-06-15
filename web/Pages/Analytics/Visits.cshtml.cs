@@ -93,7 +93,6 @@ namespace Atlas_Web.Pages.Analytics
             {
                 // for < 2 days
                 // 1 AM, 2 AM etc..
-                default:
                 case < 172800:
                     AccessHistory = await (
                         from a in subquery

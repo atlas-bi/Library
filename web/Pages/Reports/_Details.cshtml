@@ -126,6 +126,22 @@
                     <td>@Model.Report.Availability</td>
                 </tr>
             }
+            <tr>
+                <td>Visible in Search</td>
+                <td>
+                    @if((Model.Report.OrphanedReportObjectYn ?? "N") == "N" &&
+                         Model.Report.ReportObjectType != null &&
+                         Model.Report.ReportObjectType.Visible == "Y" &&
+                         Model.Report.DefaultVisibilityYn == "Y" &&
+                         (Model.Report.ReportObjectDoc == null || (Model.Report.ReportObjectDoc.Hidden ?? "N") == "N")
+                        ){
+                        @:Yes
+                    } else {
+                        @:No
+                    }
+                </td>
+            </tr>
+
             @if (@Model.Report.ReportObjectDoc != null && !string.IsNullOrEmpty(@Model.Report.ReportObjectDoc.GitLabProjectUrl))
             {
                 <tr>
@@ -146,7 +162,7 @@
                     <td>Epic Identifier</td>
                     <td>@if (RecordViewerUrl != null)
                     {
-                    @:<a href="RecordViewerUrl">
+                    @:<a href="@RecordViewerUrl">
                     }
 
                     <span id="epic-ini">@Model.Report.EpicMasterFile&nbsp;</span>
@@ -287,13 +303,13 @@
     </table>
 </div>
 
-@if (Model.Report.ReportManageEngineTickets.Any())
+@if (@Model.Report.ReportObjectDoc != null && Model.Report.ReportObjectDoc.ReportManageEngineTickets.Any())
 {
     <nav id="maintenance" class="panel">
         <div class="panel-heading">
             Service Requests
         </div>
-        @foreach (var ticket in Model.Report.ReportManageEngineTickets)
+        @foreach (var ticket in Model.Report.ReportObjectDoc.ReportManageEngineTickets)
         {
             <div class="panel-block">
                 @if (!string.IsNullOrEmpty(ticket.TicketUrl))

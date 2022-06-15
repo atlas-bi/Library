@@ -4,6 +4,7 @@ using Atlas_Web.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Atlas_Web.Migrations
 {
     [DbContext(typeof(Atlas_WebContext))]
-    partial class Atlas_WebContextModelSnapshot : ModelSnapshot
+    [Migration("20220613181942_AddRunDataIndex")]
+    partial class AddRunDataIndex
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -119,13 +121,33 @@ namespace Atlas_Web.Migrations
 
                     b.HasIndex(new[] { "AccessDateTime" }, "accessdatetime");
 
-                    b.HasIndex(new[] { "AccessDateTime" }, "accessdatetime_session_width_agent");
+                    b.HasIndex(new[] { "AccessDateTime" }, "accessdatetime_screen");
 
-                    SqlServerIndexBuilderExtensions.IncludeProperties(b.HasIndex(new[] { "AccessDateTime" }, "accessdatetime_session_width_agent"), new[] { "PageId", "SessionId", "ScreenWidth", "UserAgent" });
+                    SqlServerIndexBuilderExtensions.IncludeProperties(b.HasIndex(new[] { "AccessDateTime" }, "accessdatetime_screen"), new[] { "ScreenHeight", "ScreenWidth" });
 
-                    b.HasIndex(new[] { "UserId", "AccessDateTime" }, "user_access_load_page_session_path");
+                    b.HasIndex(new[] { "AccessDateTime" }, "accessdatetime_session");
 
-                    SqlServerIndexBuilderExtensions.IncludeProperties(b.HasIndex(new[] { "UserId", "AccessDateTime" }, "user_access_load_page_session_path"), new[] { "LoadTime", "PageId", "SessionId", "Pathname" });
+                    SqlServerIndexBuilderExtensions.IncludeProperties(b.HasIndex(new[] { "AccessDateTime" }, "accessdatetime_session"), new[] { "PageId", "SessionId" });
+
+                    b.HasIndex(new[] { "AccessDateTime" }, "accessdatetime_sessionId");
+
+                    SqlServerIndexBuilderExtensions.IncludeProperties(b.HasIndex(new[] { "AccessDateTime" }, "accessdatetime_sessionId"), new[] { "SessionId" });
+
+                    b.HasIndex(new[] { "AccessDateTime" }, "accessdatetime_useragent");
+
+                    SqlServerIndexBuilderExtensions.IncludeProperties(b.HasIndex(new[] { "AccessDateTime" }, "accessdatetime_useragent"), new[] { "UserAgent" });
+
+                    b.HasIndex(new[] { "AccessDateTime", "UserId" }, "accessdatetime_userid");
+
+                    SqlServerIndexBuilderExtensions.IncludeProperties(b.HasIndex(new[] { "AccessDateTime", "UserId" }, "accessdatetime_userid"), new[] { "Pathname", "LoadTime" });
+
+                    b.HasIndex(new[] { "UserId", "AccessDateTime" }, "user_access_load");
+
+                    SqlServerIndexBuilderExtensions.IncludeProperties(b.HasIndex(new[] { "UserId", "AccessDateTime" }, "user_access_load"), new[] { "LoadTime" });
+
+                    b.HasIndex(new[] { "UserId", "AccessDateTime" }, "user_access_load_page_session");
+
+                    SqlServerIndexBuilderExtensions.IncludeProperties(b.HasIndex(new[] { "UserId", "AccessDateTime" }, "user_access_load_page_session"), new[] { "LoadTime", "PageId", "SessionId" });
 
                     b.HasIndex(new[] { "UserId" }, "userid");
 
@@ -781,12 +803,7 @@ namespace Atlas_Web.Migrations
                         .HasColumnType("int")
                         .HasColumnName("MaintenanceLogStatusID");
 
-                    b.Property<int?>("ReportObjectId")
-                        .HasColumnType("int");
-
                     b.HasKey("MaintenanceLogId");
-
-                    b.HasIndex("ReportObjectId");
 
                     b.HasIndex(new[] { "MaintenanceLogId" }, "logid");
 
@@ -922,8 +939,8 @@ namespace Atlas_Web.Migrations
                     b.Property<int?>("ReportObjectId")
                         .HasColumnType("int");
 
-                    b.Property<string>("TicketNumber")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int?>("TicketNumber")
+                        .HasColumnType("int");
 
                     b.Property<string>("TicketUrl")
                         .HasColumnType("nvarchar(max)");
@@ -1057,9 +1074,19 @@ namespace Atlas_Web.Migrations
                     b.HasIndex(new[] { "CertificationTagId" }, "certid")
                         .HasDatabaseName("certid1");
 
-                    b.HasIndex(new[] { "EpicMasterFile" }, "masterfile_report_visiblity_type");
+                    b.HasIndex(new[] { "DefaultVisibilityYn" }, "defaultvisiblity");
 
-                    SqlServerIndexBuilderExtensions.IncludeProperties(b.HasIndex(new[] { "EpicMasterFile" }, "masterfile_report_visiblity_type"), new[] { "ReportObjectId", "DefaultVisibilityYn", "ReportObjectTypeId" });
+                    b.HasIndex(new[] { "EpicMasterFile" }, "epicmasterfile");
+
+                    b.HasIndex(new[] { "EpicMasterFile" }, "epicmasterfile + reportid");
+
+                    b.HasIndex(new[] { "EpicMasterFile" }, "masterfile_report_type");
+
+                    SqlServerIndexBuilderExtensions.IncludeProperties(b.HasIndex(new[] { "EpicMasterFile" }, "masterfile_report_type"), new[] { "ReportObjectId", "ReportObjectTypeId" });
+
+                    b.HasIndex(new[] { "EpicMasterFile" }, "masterfile_report_visiblity");
+
+                    SqlServerIndexBuilderExtensions.IncludeProperties(b.HasIndex(new[] { "EpicMasterFile" }, "masterfile_report_visiblity"), new[] { "ReportObjectId", "DefaultVisibilityYn" });
 
                     b.HasIndex(new[] { "EpicMasterFile", "SourceServer", "ReportObjectTypeId" }, "masterfile_sourceserver_type_report");
 
@@ -1075,6 +1102,10 @@ namespace Atlas_Web.Migrations
 
                     SqlServerIndexBuilderExtensions.IncludeProperties(b.HasIndex(new[] { "SourceDb", "EpicMasterFile" }, "sourcedb_masterfile_report"), new[] { "ReportObjectId" });
 
+                    b.HasIndex(new[] { "SourceDb" }, "sourcedb_report");
+
+                    SqlServerIndexBuilderExtensions.IncludeProperties(b.HasIndex(new[] { "SourceDb" }, "sourcedb_report"), new[] { "ReportObjectId" });
+
                     b.HasIndex(new[] { "SourceDb" }, "sourcedb_report_masterfile");
 
                     SqlServerIndexBuilderExtensions.IncludeProperties(b.HasIndex(new[] { "SourceDb" }, "sourcedb_report_masterfile"), new[] { "ReportObjectId", "EpicMasterFile" });
@@ -1082,6 +1113,10 @@ namespace Atlas_Web.Migrations
                     b.HasIndex(new[] { "SourceServer", "EpicMasterFile" }, "sourceserver_masterfile_report");
 
                     SqlServerIndexBuilderExtensions.IncludeProperties(b.HasIndex(new[] { "SourceServer", "EpicMasterFile" }, "sourceserver_masterfile_report"), new[] { "ReportObjectId" });
+
+                    b.HasIndex(new[] { "SourceServer" }, "sourceserver_report");
+
+                    SqlServerIndexBuilderExtensions.IncludeProperties(b.HasIndex(new[] { "SourceServer" }, "sourceserver_report"), new[] { "ReportObjectId" });
 
                     b.HasIndex(new[] { "SourceServer" }, "sourceserver_report_masterfile");
 
@@ -1097,13 +1132,19 @@ namespace Atlas_Web.Migrations
 
                     b.HasIndex(new[] { "ReportObjectTypeId" }, "type_report_masterfile");
 
-                    SqlServerIndexBuilderExtensions.IncludeProperties(b.HasIndex(new[] { "ReportObjectTypeId" }, "type_report_masterfile"), new[] { "ReportObjectId", "EpicMasterFile", "Name", "DisplayTitle" });
+                    SqlServerIndexBuilderExtensions.IncludeProperties(b.HasIndex(new[] { "ReportObjectTypeId" }, "type_report_masterfile"), new[] { "ReportObjectId", "EpicMasterFile" });
+
+                    b.HasIndex(new[] { "ReportObjectTypeId" }, "typeid");
 
                     b.HasIndex(new[] { "DefaultVisibilityYn", "OrphanedReportObjectYn", "ReportObjectTypeId" }, "visibility + orphan + type");
 
-                    b.HasIndex(new[] { "DefaultVisibilityYn" }, "visibility_report_cert_masterfile");
+                    b.HasIndex(new[] { "DefaultVisibilityYn" }, "visibility_report_cert");
 
-                    SqlServerIndexBuilderExtensions.IncludeProperties(b.HasIndex(new[] { "DefaultVisibilityYn" }, "visibility_report_cert_masterfile"), new[] { "ReportObjectId", "CertificationTag", "EpicMasterFile" });
+                    SqlServerIndexBuilderExtensions.IncludeProperties(b.HasIndex(new[] { "DefaultVisibilityYn" }, "visibility_report_cert"), new[] { "ReportObjectId", "CertificationTag" });
+
+                    b.HasIndex(new[] { "DefaultVisibilityYn" }, "visibility_report_masterfile");
+
+                    SqlServerIndexBuilderExtensions.IncludeProperties(b.HasIndex(new[] { "DefaultVisibilityYn" }, "visibility_report_masterfile"), new[] { "ReportObjectId", "EpicMasterFile" });
 
                     b.ToTable("ReportObject", (string)null);
                 });
@@ -1189,9 +1230,17 @@ namespace Atlas_Web.Migrations
                         .HasColumnType("int")
                         .HasColumnName("FragilityID");
 
+                    b.Property<string>("GitLabBlobUrl")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("GitLabBlobURL");
+
                     b.Property<string>("GitLabProjectUrl")
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("GitLabProjectURL");
+
+                    b.Property<string>("GitLabTreeUrl")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("GitLabTreeURL");
 
                     b.Property<string>("Hidden")
                         .HasMaxLength(1)
@@ -1287,6 +1336,32 @@ namespace Atlas_Web.Migrations
                     b.HasIndex("ReportObjectId");
 
                     b.ToTable("ReportObjectDocFragilityTags", "app");
+                });
+
+            modelBuilder.Entity("Atlas_Web.Models.ReportObjectDocMaintenanceLog", b =>
+                {
+                    b.Property<int>("LinkId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("LinkId"), 1L, 1);
+
+                    b.Property<int>("MaintenanceLogId")
+                        .HasColumnType("int")
+                        .HasColumnName("MaintenanceLogID");
+
+                    b.Property<int>("ReportObjectId")
+                        .HasColumnType("int")
+                        .HasColumnName("ReportObjectID");
+
+                    b.HasKey("LinkId")
+                        .HasName("PK__ReportOb__2D1221350C7530C5");
+
+                    b.HasIndex("MaintenanceLogId");
+
+                    b.HasIndex("ReportObjectId");
+
+                    b.ToTable("ReportObjectDocMaintenanceLogs", "app");
                 });
 
             modelBuilder.Entity("Atlas_Web.Models.ReportObjectDocTerm", b =>
@@ -1686,7 +1761,8 @@ namespace Atlas_Web.Migrations
 
                     b.HasKey("ReportObjectTypeId");
 
-                    b.HasIndex(new[] { "ReportObjectTypeId" }, "typeid");
+                    b.HasIndex(new[] { "ReportObjectTypeId" }, "typeid")
+                        .HasDatabaseName("typeid1");
 
                     b.ToTable("ReportObjectType", (string)null);
                 });
@@ -2655,16 +2731,9 @@ namespace Atlas_Web.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .HasConstraintName("FK__Maintenan__Maint__251C81ED");
 
-                    b.HasOne("Atlas_Web.Models.ReportObjectDoc", "ReportObjectDoc")
-                        .WithMany("MaintenanceLogs")
-                        .HasForeignKey("ReportObjectId")
-                        .HasConstraintName("FK__ReportObj__Repor__72E3DB65");
-
                     b.Navigation("Maintainer");
 
                     b.Navigation("MaintenanceLogStatus");
-
-                    b.Navigation("ReportObjectDoc");
                 });
 
             modelBuilder.Entity("Atlas_Web.Models.ReportGroupsMembership", b =>
@@ -2688,7 +2757,7 @@ namespace Atlas_Web.Migrations
 
             modelBuilder.Entity("Atlas_Web.Models.ReportManageEngineTicket", b =>
                 {
-                    b.HasOne("Atlas_Web.Models.ReportObjectDoc", "ReportObject")
+                    b.HasOne("Atlas_Web.Models.ReportObject", "ReportObject")
                         .WithMany("ReportManageEngineTickets")
                         .HasForeignKey("ReportObjectId")
                         .HasConstraintName("FK_ReportManageEngineTickets_ReportObject");
@@ -2809,6 +2878,27 @@ namespace Atlas_Web.Migrations
                         .HasConstraintName("FK__ReportObj__Repor__72E3DB65");
 
                     b.Navigation("FragilityTag");
+
+                    b.Navigation("ReportObject");
+                });
+
+            modelBuilder.Entity("Atlas_Web.Models.ReportObjectDocMaintenanceLog", b =>
+                {
+                    b.HasOne("Atlas_Web.Models.MaintenanceLog", "MaintenanceLog")
+                        .WithMany("ReportObjectDocMaintenanceLogs")
+                        .HasForeignKey("MaintenanceLogId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("FK__ReportObj__Maint__6E1F2648");
+
+                    b.HasOne("Atlas_Web.Models.ReportObjectDoc", "ReportObject")
+                        .WithMany("ReportObjectDocMaintenanceLogs")
+                        .HasForeignKey("ReportObjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("FK__ReportObj__Repor__6F134A81");
+
+                    b.Navigation("MaintenanceLog");
 
                     b.Navigation("ReportObject");
                 });
@@ -3262,6 +3352,11 @@ namespace Atlas_Web.Migrations
                     b.Navigation("MailMessages");
                 });
 
+            modelBuilder.Entity("Atlas_Web.Models.MaintenanceLog", b =>
+                {
+                    b.Navigation("ReportObjectDocMaintenanceLogs");
+                });
+
             modelBuilder.Entity("Atlas_Web.Models.MaintenanceLogStatus", b =>
                 {
                     b.Navigation("MaintenanceLogs");
@@ -3282,6 +3377,8 @@ namespace Atlas_Web.Migrations
                     b.Navigation("CollectionReports");
 
                     b.Navigation("ReportGroupsMemberships");
+
+                    b.Navigation("ReportManageEngineTickets");
 
                     b.Navigation("ReportObjectAttachments");
 
@@ -3308,11 +3405,9 @@ namespace Atlas_Web.Migrations
 
             modelBuilder.Entity("Atlas_Web.Models.ReportObjectDoc", b =>
                 {
-                    b.Navigation("MaintenanceLogs");
-
-                    b.Navigation("ReportManageEngineTickets");
-
                     b.Navigation("ReportObjectDocFragilityTags");
+
+                    b.Navigation("ReportObjectDocMaintenanceLogs");
 
                     b.Navigation("ReportObjectDocTerms");
                 });

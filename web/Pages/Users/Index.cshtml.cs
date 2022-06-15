@@ -170,7 +170,7 @@ namespace Atlas_Web.Pages.Users
         [BindProperty]
         public MyRole AsAdmin { get; set; }
 
-        public ActionResult OnGet(int? id)
+        public async Task<ActionResult> OnGetAsync(int? id)
         {
             UserDetails = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
 
@@ -190,6 +190,11 @@ namespace Atlas_Web.Pages.Users
                 UserId = id ?? MyId;
                 UserDetails = _context.Users.Where(x => x.UserId == UserId).FirstOrDefault();
             }
+
+            ViewData["DefaultReportTypes"] = await _context.ReportObjectTypes
+                .Where(v => v.Visible == "Y")
+                .Select(x => x.ReportObjectTypeId)
+                .ToListAsync();
 
             return Page();
         }
@@ -339,45 +344,49 @@ namespace Atlas_Web.Pages.Users
                     {
                         cacheEntry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20);
                         return (
-                            from d in _context.ReportObjectTopRuns
-                            where d.RunUserId == UserId
-                            orderby d.LastRun descending
+                            from d in _context.ReportObjectRunDatas
+                            join b in _context.ReportObjectRunDataBridges
+                                on d.RunDataId equals b.RunId
+                            where
+                                d.RunUserId == UserId
+                                && d.RunStartTime_Month > DateTime.Now.AddMonths(-1)
+                            group new { d, b } by b.ReportObject into grp
+                            orderby grp.Sum(x => x.b.Runs) descending
                             select new FavData
                             {
                                 FavoriteId = 0,
-                                Name = d.ReportObject.DisplayName,
-                                ItemId = (int)d.ReportObjectId,
-                                EpicReportTemplateId =
-                                    d.ReportObject.EpicReportTemplateId.ToString(),
+                                Name = grp.Key.DisplayName,
+                                ItemId = grp.Key.ReportObjectId,
+                                EpicReportTemplateId = grp.Key.EpicReportTemplateId.ToString(),
                                 FolderId = 0,
                                 FolderName = "",
                                 ItemRank = 0,
                                 FolderRank = 0,
                                 Description = (
-                                    d.ReportObject.ReportObjectDoc.DeveloperDescription
-                                    ?? d.ReportObject.Description
-                                    ?? d.ReportObject.DetailedDescription
-                                    ?? d.ReportObject.ReportObjectDoc.KeyAssumptions
+                                    grp.Key.ReportObjectDoc.DeveloperDescription
+                                    ?? grp.Key.Description
+                                    ?? grp.Key.DetailedDescription
+                                    ?? grp.Key.ReportObjectDoc.KeyAssumptions
                                 ),
-                                EpicRecordId = d.ReportObject.EpicRecordId.ToString(),
-                                EpicMasterFile = d.ReportObject.EpicMasterFile,
-                                ReportServerPath = d.ReportObject.ReportServerPath,
-                                SourceServer = d.ReportObject.SourceServer,
+                                EpicRecordId = grp.Key.EpicRecordId.ToString(),
+                                EpicMasterFile = grp.Key.EpicMasterFile,
+                                ReportServerPath = grp.Key.ReportServerPath,
+                                SourceServer = grp.Key.SourceServer,
                                 ReportUrl = Helpers.HtmlHelpers.ReportUrlFromParams(
                                     HttpContext,
-                                    d.ReportObject,
+                                    grp.Key,
                                     _context,
                                     User.Identity.Name
                                 ),
                                 EditReportUrl = HtmlHelpers.EditReportFromParams(
                                     _config["AppSettings:org_domain"],
                                     HttpContext,
-                                    d.ReportObject.ReportServerPath,
-                                    d.ReportObject.SourceServer,
-                                    d.ReportObject.EpicMasterFile,
-                                    d.ReportObject.EpicReportTemplateId.ToString(),
-                                    d.ReportObject.EpicRecordId.ToString(),
-                                    d.ReportObject.OrphanedReportObjectYn
+                                    grp.Key.ReportServerPath,
+                                    grp.Key.SourceServer,
+                                    grp.Key.EpicMasterFile,
+                                    grp.Key.EpicReportTemplateId.ToString(),
+                                    grp.Key.EpicRecordId.ToString(),
+                                    grp.Key.OrphanedReportObjectYn
                                 ),
                             }
                         ).Take(10).ToListAsync();
@@ -776,102 +785,6 @@ namespace Atlas_Web.Pages.Users
             );
 
             return new PartialViewResult { ViewName = "Sections/_Atlas", ViewData = ViewData };
-        }
-
-        public async Task<ActionResult> OnGetActivity(int? id)
-        {
-            MyId = UserHelpers.GetUser(_cache, _context, User.Identity.Name).UserId;
-
-            // can user view others?
-            var checkpoint = UserHelpers.CheckUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name,
-                37
-            );
-            if (checkpoint)
-            {
-                UserId = id ?? MyId;
-            }
-            else
-            {
-                UserId = MyId;
-            }
-            ViewData["Permissions"] = UserHelpers.GetUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name
-            );
-            ViewData["MyId"] = MyId;
-            ViewData["UserId"] = UserId;
-
-            ViewData["ReportRunTime"] = await _cache.GetOrCreateAsync<List<ReportRunTimeData>>(
-                "ReportRunTime-" + UserId,
-                cacheEntry =>
-                {
-                    cacheEntry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20);
-                    return (
-                        from d in _context.ReportObjectRunTimes
-                        where d.RunUserId == UserId
-                        orderby d.RunWeek descending
-                        select new ReportRunTimeData
-                        {
-                            Date = d.RunWeekString,
-                            Cnt = d.Runs ?? 0,
-                            Avg = (double)(d.RunTime ?? 0)
-                        }
-                    ).ToListAsync();
-                }
-            );
-
-            ViewData["TopRunReports"] = await _cache.GetOrCreateAsync<List<ReportRunData>>(
-                "TopRunReports-" + UserId,
-                cacheEntry =>
-                {
-                    cacheEntry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20);
-                    return (
-                        from d in _context.ReportObjectTopRuns
-                        where
-                            d.RunUserId == UserId && d.ReportObject.ReportObjectType.Visible == "Y"
-                        orderby d.Runs descending
-                        select new ReportRunData
-                        {
-                            Name = d.Name,
-                            Type = d.ReportObject.ReportObjectType.Name,
-                            Url = "\\reports?id=" + d.ReportObjectId,
-                            Hits = d.Runs ?? 0,
-                            RunTime = d.RunTime ?? 0,
-                            LastRun = d.LastRun
-                        }
-                    ).ToListAsync();
-                }
-            );
-
-            ViewData["FailedRuns"] = await _cache.GetOrCreateAsync<List<FailedRunsData>>(
-                "FailedRuns-" + UserId,
-                cacheEntry =>
-                {
-                    cacheEntry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20);
-
-                    return (
-                        from d in _context.ReportObjectRunData
-                        where
-                            d.RunUserId == UserId
-                            && d.RunStatus != "Success"
-                            && d.ReportObject.ReportObjectType.Visible == "Y"
-                        orderby d.RunStartTime descending
-                        select new FailedRunsData
-                        {
-                            Date = d.RunStartTimeDisplayString,
-                            Url = "\\reports?id=" + d.ReportObjectId,
-                            Name = d.ReportObject.DisplayName,
-                            RunStatus = d.RunStatus
-                        }
-                    ).ToListAsync();
-                }
-            );
-
-            return new PartialViewResult { ViewName = "Sections/_Activity", ViewData = ViewData };
         }
     }
 }

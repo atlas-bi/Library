@@ -563,6 +563,10 @@ button.is-ghost:not(.button) {
   border-left: 1px solid $grey-light;
 }
 
+.table.bar.sort tr th {
+  cursor: pointer;
+}
+
 .bar-percent span strong {
   color: $grey-light;
 }

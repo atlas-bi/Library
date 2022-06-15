@@ -48,8 +48,10 @@ namespace Atlas_Web.Pages.Mail
 
         private sealed class MailRecipientJsonData
         {
+#pragma warning disable S3459
             public int UserId { get; set; }
             public string Type { get; set; }
+#pragma warning restore S3459
         }
 
         public class AllMailData

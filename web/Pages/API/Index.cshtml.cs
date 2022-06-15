@@ -37,13 +37,18 @@ namespace Atlas_Web.Pages.API
 
         private sealed class MailRecipientJsonData
         {
+#pragma warning disable S3459
             public int UserId { get; set; }
             public string Type { get; set; }
+#pragma warning restore S3459
         }
 
         public List<AdList> AdLists { get; set; }
 
-        public void OnGet() { }
+        public void OnGet()
+        {
+            // placeholder to initialize.
+        }
 
         public async Task<ActionResult> OnPostShareObject(string to, string url, string name)
         {
@@ -96,6 +101,7 @@ namespace Atlas_Web.Pages.API
             );
             await _context.SaveChangesAsync();
 
+#pragma warning disable S125
             /*var toUser = _context.User.Where(x => x.UserId == id).FirstOrDefault();
 
             var ToUserFirstname = toUser.FirstnameCalc;
@@ -172,6 +178,7 @@ namespace Atlas_Web.Pages.API
                 await smtp.SendMailAsync(thismessage);
 
             }*/
+#pragma warning restore S125
             return Content("shared");
         }
 

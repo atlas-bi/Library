@@ -4,6 +4,7 @@ using Atlas_Web.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Atlas_Web.Migrations
 {
     [DbContext(typeof(Atlas_WebContext))]
-    partial class Atlas_WebContextModelSnapshot : ModelSnapshot
+    [Migration("20220614173116_RemovedRedundantBridgeTable")]
+    partial class RemovedRedundantBridgeTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -922,8 +924,8 @@ namespace Atlas_Web.Migrations
                     b.Property<int?>("ReportObjectId")
                         .HasColumnType("int");
 
-                    b.Property<string>("TicketNumber")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int?>("TicketNumber")
+                        .HasColumnType("int");
 
                     b.Property<string>("TicketUrl")
                         .HasColumnType("nvarchar(max)");
@@ -1189,9 +1191,17 @@ namespace Atlas_Web.Migrations
                         .HasColumnType("int")
                         .HasColumnName("FragilityID");
 
+                    b.Property<string>("GitLabBlobUrl")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("GitLabBlobURL");
+
                     b.Property<string>("GitLabProjectUrl")
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("GitLabProjectURL");
+
+                    b.Property<string>("GitLabTreeUrl")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("GitLabTreeURL");
 
                     b.Property<string>("Hidden")
                         .HasMaxLength(1)

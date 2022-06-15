@@ -1,3 +1,12 @@
+@{
+    ViewBag.DefaultFilters = "";
+
+    @if(ViewBag.DefaultReportTypes.Count > 0){
+        @foreach (var item in ViewBag.DefaultReportTypes){
+            ViewBag.DefaultFilters += "&reportType=" + @item;
+        }
+    }
+}
 @if(ViewBag.ProfileType != "user" && ViewBag.ProfileId != -1)
 {
     <h1 class="title is-1">Report Activity</h1>
@@ -37,7 +46,7 @@
 
 <div class="columns">
     <div class="column is-one-quarter is-sticky is-align-self-flex-start" style="max-height:calc(100vh - 137px); overflow-Y:auto" id="profile-filters">
-        <div data-ajax="yes" class="no-loader ajax-fade filters" data-url="/Profile?handler=Filters&type=@ViewBag.ProfileType&id=@ViewBag.ProfileId"></div>
+        <div data-ajax="yes" class="no-loader ajax-fade filters" data-url="/Profile?handler=Filters&type=@ViewBag.ProfileType&id=@ViewBag.ProfileId@ViewBag.DefaultFilters"></div>
     </div>
     <div class="column" id="results">
         <partial name="Profile/Partials/_Profile" />
