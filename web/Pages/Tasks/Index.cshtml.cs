@@ -143,18 +143,17 @@ namespace Atlas_Web.Pages.Tasks
         public async Task<IActionResult> OnGetRecommendRetire()
         {
             ViewData["RecommendRetire"] = await (
-                from l in _context.ReportObjectDocMaintenanceLogs
-                join m in _context.MaintenanceLogs on l.MaintenanceLogId equals m.MaintenanceLogId
+                from m in _context.MaintenanceLogs
                 where
                     m.MaintenanceLogStatus.MaintenanceLogStatusName == "Recommend Retire"
-                    && l.ReportObject.ExecutiveVisibilityYn == "Y"
+                    && m.ReportObjectDoc.ExecutiveVisibilityYn == "Y"
                 select new RecommendRetireReports
                 {
                     FullName = m.Maintainer.FullnameCalc,
-                    Name = l.ReportObject.ReportObject.DisplayName,
+                    Name = m.ReportObjectDoc.ReportObject.DisplayName,
                     MaintenanceDate = m.MaintenanceDate,
                     MaintenanceDateString = m.MaintenanceDateDisplayString,
-                    ReportId = l.ReportObjectId,
+                    ReportId = (int)m.ReportObjectId,
                     Comment = m.Comment
                 }
             ).ToListAsync();
@@ -180,11 +179,13 @@ namespace Atlas_Web.Pages.Tasks
                         && x.DefaultVisibilityYn == "Y"
                         && x.OrphanedReportObjectYn == "N"
                 )
-                join d in _context.ReportObjectRunData
+                join d in _context.ReportObjectRunDataBridges
                     on r.ReportObjectId equals d.ReportObjectId
                     into dta
                 from l in dta.DefaultIfEmpty()
+#pragma warning disable CS0472
                 where l.ReportObjectId == null
+#pragma warning restore CS0472
                 join doc in _context.ReportObjectDocs
                     on r.ReportObjectId equals doc.ReportObjectId
                     into doc_dta
@@ -221,9 +222,7 @@ namespace Atlas_Web.Pages.Tasks
                         && d.ReportObject.OrphanedReportObjectYn == "N"
                     join l in (
                         from l in _context.MaintenanceLogs
-                        join m in _context.ReportObjectDocMaintenanceLogs
-                            on l.MaintenanceLogId equals m.MaintenanceLogId
-                        group m by m.ReportObjectId into grp
+                        group l by l.ReportObjectId into grp
                         select new
                         {
                             ReportObjectId = grp.Key,
@@ -302,9 +301,7 @@ namespace Atlas_Web.Pages.Tasks
                         && d.ReportObject.OrphanedReportObjectYn == "N"
                     join l in (
                         from l in _context.MaintenanceLogs
-                        join m in _context.ReportObjectDocMaintenanceLogs
-                            on l.MaintenanceLogId equals m.MaintenanceLogId
-                        group m by m.ReportObjectId into grp
+                        group l by l.ReportObjectId into grp
                         select new
                         {
                             ReportObjectId = grp.Key,
@@ -379,9 +376,7 @@ namespace Atlas_Web.Pages.Tasks
                         && d.ReportObject.OrphanedReportObjectYn == "N"
                     join l in (
                         from l in _context.MaintenanceLogs
-                        join m in _context.ReportObjectDocMaintenanceLogs
-                            on l.MaintenanceLogId equals m.MaintenanceLogId
-                        group m by m.ReportObjectId into grp
+                        group l by l.ReportObjectId into grp
                         select new
                         {
                             ReportObjectId = grp.Key,
@@ -437,9 +432,9 @@ namespace Atlas_Web.Pages.Tasks
                 from ttwp in tmptwo.DefaultIfEmpty()
                 where (ttwp.UserRolesId ?? 2) != 1
                 join f in (
-                    from tr in _context.ReportObjectTopRuns
+                    from tr in _context.ReportObjectRunDataBridges
                     group tr by tr.ReportObjectId into g
-                    select new { ReportObjectId = g.Key, Cnt = g.Count() }
+                    select new { ReportObjectId = g.Key, Cnt = g.Sum(y => y.Runs) }
                 )
                     on r.ReportObjectId equals f.ReportObjectId
                 orderby r.ReportObjectId
@@ -511,17 +506,17 @@ namespace Atlas_Web.Pages.Tasks
                                     ? "Crystal"
                                     : "SSRS"
                     ),
-                    Runs = r.ReportObjectRunData.Count,
+                    Runs = r.ReportObjectRunDataBridges.Sum(y => y.Runs),
                     LastMaintained = (r.LastModifiedDate ?? DateTime.Today.AddYears(-1)),
-                    LastRun = (r.ReportObjectRunData.Max(x => x.RunStartTime) ?? DateTime.Now),
-                    Favs = 999999
+                    LastRun = r.ReportObjectRunDataBridges.Max(x => x.RunData.RunStartTime_Day),
+                    Favs = r.StarredReports.Count
                 } into tmp
                 join o in _context.ReportObjectDocs
                     on tmp.ReportObjectId equals o.ReportObjectId
                     into rs
                 from p in rs.DefaultIfEmpty()
                 where p.DeveloperDescription == null
-                orderby tmp.Runs descending
+                // orderby tmp.Runs descending
                 select new UndocumentedReports
                 {
                     ReportObjectId = tmp.ReportObjectId,
@@ -529,7 +524,7 @@ namespace Atlas_Web.Pages.Tasks
                     Name = tmp.Name,
                     ReportType = tmp.ReportType,
                     Runs = tmp.Runs,
-                    Favorite = tmp.Favs == null ? "" : "Yes",
+                    Favorite = tmp.Favs > 0 ? "Yes" : "",
                     LastMaintained = tmp.LastMaintained.ToString("MM/dd/yyyy"),
                     LastRun = tmp.LastRun.ToString("MM/dd/yyyy")
                 }
@@ -571,17 +566,17 @@ namespace Atlas_Web.Pages.Tasks
                                     ? "Crystal"
                                     : "SSRS"
                     ),
-                    Runs = r.ReportObjectRunData.Count,
+                    Runs = r.ReportObjectRunDataBridges.Sum(y => y.Runs),
                     LastMaintained = (r.LastModifiedDate ?? DateTime.Today.AddYears(-1)),
-                    LastRun = (r.ReportObjectRunData.Max(x => x.RunStartTime) ?? DateTime.Now),
-                    Favs = 999999
+                    LastRun = r.ReportObjectRunDataBridges.Max(x => x.RunData.RunStartTime_Day),
+                    Favs = r.StarredReports.Count
                 } into tmp
                 join o in _context.ReportObjectDocs
                     on tmp.ReportObjectId equals o.ReportObjectId
                     into rs
                 from p in rs.DefaultIfEmpty()
                 where p.DeveloperDescription == null
-                orderby tmp.Runs descending
+                // orderby tmp.Runs descending
                 select new UndocumentedReports
                 {
                     ReportObjectId = tmp.ReportObjectId,
@@ -589,7 +584,7 @@ namespace Atlas_Web.Pages.Tasks
                     Name = tmp.Name,
                     ReportType = tmp.ReportType,
                     Runs = tmp.Runs,
-                    Favorite = tmp.Favs == null ? "" : "Yes",
+                    Favorite = tmp.Favs > 0 ? "Yes" : "",
                     LastMaintained = tmp.LastMaintained.ToString("MM/dd/yyyy"),
                     LastRun = tmp.LastRun.ToString("MM/dd/yyyy")
                 }

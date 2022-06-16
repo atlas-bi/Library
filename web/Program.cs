@@ -4,8 +4,10 @@ using Microsoft.Extensions.Configuration;
 
 namespace Atlas_Web
 {
+#pragma warning disable S1118
     public class Program
     {
+#pragma warning restore S1118
         public static void Main(string[] args)
         {
             CreateHostBuilder(args).Build().Run();

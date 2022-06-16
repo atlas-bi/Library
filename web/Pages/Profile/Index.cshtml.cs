@@ -26,57 +26,12 @@ namespace Atlas_Web.Pages.Profile
             _config = config;
         }
 
-        public class TopUsersData
+        public class SubqueryData
         {
-            public string Username { get; set; }
-            public string UserUrl { get; set; }
-            public int Hits { get; set; }
-            public double RunTime { get; set; }
-            public string LastRun { get; set; }
+            public ReportObject r { get; set; }
+            public ReportObjectRunData d { get; set; }
+            public ReportObjectRunDataBridge b { get; set; }
         }
-
-        public class RunTimeData
-        {
-            public string Date { get; set; }
-            public double Avg { get; set; }
-            public int Cnt { get; set; }
-        }
-
-        public class FailedRunsData
-        {
-            public string Date { get; set; }
-            public string RunUser { get; set; }
-            public string UserUrl { get; set; }
-            public string RunStatus { get; set; }
-        }
-
-        public class SubscriptionData
-        {
-            public string UserUrl { get; set; }
-            public string User { get; set; }
-            public string Subscription { get; set; }
-            public string InactiveFlags { get; set; }
-            public string EmailList { get; set; }
-            public string Description { get; set; }
-            public string LastStatus { get; set; }
-            public string LastRun { get; set; }
-        }
-
-        public class FavoritesData
-        {
-            public string UserUrl { get; set; }
-            public string User { get; set; }
-        }
-
-        public IEnumerable<TopUsersData> TopUsers { get; set; }
-
-        //public IEnumerable<RunTimeData> RunTime { get; set; }
-        public IEnumerable<FailedRunsData> FailedRuns { get; set; }
-        public IEnumerable<SubscriptionData> Subscriptions { get; set; }
-        public IEnumerable<FavoritesData> ProfileFavorites { get; set; }
-
-        public int ProfileId { get; set; }
-        public string ProfileType { get; set; }
 
         public class BarData
         {
@@ -84,7 +39,8 @@ namespace Atlas_Web.Pages.Profile
             public string Href { get; set; }
             public string TitleOne { get; set; }
             public string TitleTwo { get; set; }
-
+            public string Date { get; set; }
+            public string DateTitle { get; set; }
             public double Count { get; set; }
             public double? Percent { get; set; }
         }
@@ -128,7 +84,284 @@ namespace Atlas_Web.Pages.Profile
 
         public async Task<ActionResult> OnGetAsync()
         {
+            ViewData["DefaultReportTypes"] = await _context.ReportObjectTypes
+                .Where(v => v.Visible == "Y")
+                .Select(x => x.ReportObjectTypeId)
+                .ToListAsync();
             return Page();
+        }
+
+        public Tuple<
+            IQueryable<SubqueryData>,
+            IQueryable<IGrouping<DateTime, SubqueryData>>,
+            string
+        > BuildSubqueries(
+            int id = -1,
+            string type = "report",
+            double start_at = -31536000, // last 12 months
+            double end_at = 0,
+            List<string> server = null,
+            List<string> database = null,
+            List<string> masterFile = null,
+            List<string> visible = null,
+            List<string> certification = null,
+            List<string> availability = null,
+            List<int> reportType = null
+        )
+        {
+            var start = DateTime.Now.AddSeconds(start_at);
+            var end = DateTime.Now.AddSeconds(end_at);
+
+            // start building two subqueries
+            var subquery_rundata = _context.ReportObjectRunDatas.AsQueryable();
+            var subquery_reports = _context.ReportObjects.AsQueryable();
+
+            if (type == "report" && _context.ReportObjects.Any(x => x.ReportObjectId == id))
+            {
+                subquery_reports = subquery_reports.Where(x => x.ReportObjectId == id);
+            }
+            else if (type == "term" && _context.Terms.Any(x => x.TermId == id))
+            {
+                subquery_reports = subquery_reports.Where(
+                    x =>
+                        _context.ReportObjectDocTerms
+                            .Where(t => t.TermId == id)
+                            .Select(t => t.ReportObjectId)
+                            .Contains(x.ReportObjectId)
+                );
+            }
+            else if (type == "collection" && _context.Collections.Any(x => x.DataProjectId == id))
+            {
+                subquery_reports = subquery_reports.Where(
+                    x =>
+                        _context.CollectionReports
+                            .Where(c => c.DataProjectId == id)
+                            .Select(c => c.ReportId)
+                            .Contains(x.ReportObjectId)
+                );
+            }
+            else if (
+                (type == "report" && id == -1)
+                || (type == "user" && _context.Users.Any(x => x.UserId == id))
+                || (type == "group" && _context.UserGroups.Any(x => x.GroupId == id))
+            )
+            {
+                if (type == "user")
+                {
+                    subquery_rundata = subquery_rundata.Where(x => x.RunUserId == id);
+                }
+                else if (type == "group")
+                {
+                    subquery_rundata = subquery_rundata.Where(
+                        x => x.RunUser.UserGroupsMemberships.Any(g => g.GroupId == id)
+                    );
+                }
+
+                if (server.Any())
+                {
+                    subquery_reports = subquery_reports.Where(x => server.Contains(x.SourceServer));
+                }
+
+                if (database.Any())
+                {
+                    subquery_reports = subquery_reports.Where(x => database.Contains(x.SourceDb));
+                }
+
+                if (masterFile.Any())
+                {
+                    subquery_reports = subquery_reports.Where(
+                        x =>
+                            masterFile.Contains(x.EpicMasterFile)
+                            || masterFile.Contains("None") && string.IsNullOrEmpty(x.EpicMasterFile)
+                    );
+                }
+
+                if (visible.Any())
+                {
+                    subquery_reports = subquery_reports.Where(
+                        x =>
+                            visible.Contains(x.DefaultVisibilityYn)
+                            || (
+                                visible.Contains("Y") && string.IsNullOrEmpty(x.DefaultVisibilityYn)
+                            )
+                    );
+                }
+
+                if (certification.Any())
+                {
+                    subquery_reports = subquery_reports.Where(
+                        x => certification.Contains(x.CertificationTag)
+                    );
+                }
+
+                if (availability.Any())
+                {
+                    subquery_reports = subquery_reports.Where(
+                        x =>
+                            availability.Contains(x.Availability)
+                            || (
+                                availability.Contains("Public")
+                                && string.IsNullOrEmpty(x.Availability)
+                            )
+                    );
+                }
+
+                if (reportType.Any())
+                {
+                    subquery_reports = subquery_reports.Where(
+                        x => reportType.Contains((int)x.ReportObjectTypeId)
+                    );
+                }
+            }
+            else
+            {
+#pragma warning disable S112
+                throw new Exception(
+                    "Wrong parameter value supplied. Type: " + type + " with Id: " + id
+                );
+#pragma warning restore S112
+            }
+
+            string date_format = "h tt";
+            var subquery =
+                from d in subquery_rundata.Where(
+                    x => x.RunStartTime_Hour >= start && x.RunStartTime_Hour <= end
+                )
+                join b in _context.ReportObjectRunDataBridges on d.RunDataId equals b.RunId
+                join r in subquery_reports on b.ReportObjectId equals r.ReportObjectId
+                select new SubqueryData
+                {
+                    d = d,
+                    b = b,
+                    r = r
+                };
+
+            var subquery_group = (
+                from x in subquery
+                group new SubqueryData
+                {
+                    d = x.d,
+                    b = x.b,
+                    r = x.r
+                } by x.d.RunStartTime_Hour
+            );
+
+            switch (end_at - start_at)
+            {
+                // for < 2 days
+                // 1 AM, 2 AM etc..
+                case < 172800:
+                    date_format = "h tt";
+                    subquery =
+                        from d in subquery_rundata.Where(
+                            x => x.RunStartTime_Hour >= start && x.RunStartTime_Hour <= end
+                        )
+                        join b in _context.ReportObjectRunDataBridges on d.RunDataId equals b.RunId
+                        join r in subquery_reports on b.ReportObjectId equals r.ReportObjectId
+                        select new SubqueryData
+                        {
+                            d = d,
+                            b = b,
+                            r = r
+                        };
+
+                    subquery_group = (
+                        from x in subquery
+                        group new SubqueryData
+                        {
+                            d = x.d,
+                            b = x.b,
+                            r = x.r
+                        } by x.d.RunStartTime_Hour
+                    );
+
+                    break;
+                // for < 8 days
+                //  Sun 3/20, Mon 3/21...
+                case < 691200:
+                    date_format = "ddd M/d";
+                    subquery =
+                        from d in subquery_rundata.Where(
+                            x => x.RunStartTime_Day >= start && x.RunStartTime_Day <= end
+                        )
+                        join b in _context.ReportObjectRunDataBridges on d.RunDataId equals b.RunId
+                        join r in subquery_reports on b.ReportObjectId equals r.ReportObjectId
+                        select new SubqueryData
+                        {
+                            d = d,
+                            b = b,
+                            r = r
+                        };
+
+                    subquery_group = (
+                        from x in subquery
+                        group new SubqueryData
+                        {
+                            d = x.d,
+                            b = x.b,
+                            r = x.r
+                        } by x.d.RunStartTime_Day
+                    );
+                    break;
+                // for < 365 days
+                // Mar 1, Mar 2
+                case < 31536000:
+                    date_format = "MMM d";
+                    subquery =
+                        from d in subquery_rundata.Where(
+                            x => x.RunStartTime_Day >= start && x.RunStartTime_Day <= end
+                        )
+                        join b in _context.ReportObjectRunDataBridges on d.RunDataId equals b.RunId
+                        join r in subquery_reports on b.ReportObjectId equals r.ReportObjectId
+                        select new SubqueryData
+                        {
+                            d = d,
+                            b = b,
+                            r = r
+                        };
+
+                    subquery_group = (
+                        from x in subquery
+                        group new SubqueryData
+                        {
+                            d = x.d,
+                            b = x.b,
+                            r = x.r
+                        } by x.d.RunStartTime_Day
+                    );
+                    break;
+                case >= 31536000:
+                    date_format = "MMM yy";
+                    subquery =
+                        from d in subquery_rundata.Where(
+                            x => x.RunStartTime_Month >= start && x.RunStartTime_Month <= end
+                        )
+                        join b in _context.ReportObjectRunDataBridges on d.RunDataId equals b.RunId
+                        join r in subquery_reports on b.ReportObjectId equals r.ReportObjectId
+                        select new SubqueryData
+                        {
+                            d = d,
+                            b = b,
+                            r = r
+                        };
+
+                    subquery_group = (
+                        from x in subquery
+                        group new SubqueryData
+                        {
+                            d = x.d,
+                            b = x.b,
+                            r = x.r
+                        } by x.d.RunStartTime_Month
+                    );
+
+                    break;
+            }
+            return new Tuple<
+                IQueryable<SubqueryData>,
+                IQueryable<IGrouping<DateTime, SubqueryData>>,
+                string
+            >(subquery, subquery_group, date_format);
         }
 
         public async Task<ActionResult> OnGetFiltersAsync(
@@ -145,76 +378,19 @@ namespace Atlas_Web.Pages.Profile
             List<int> reportType = null
         )
         {
-            var subquery = _context.ReportObjectRunData.Where(
-                r =>
-                    r.RunStartTime >= DateTime.Now.AddSeconds(start_at)
-                    && r.RunStartTime <= DateTime.Now.AddSeconds(end_at)
+            (var subquery, var subquery_group, string date_format) = BuildSubqueries(
+                id,
+                type,
+                start_at,
+                end_at,
+                server,
+                database,
+                masterFile,
+                visible,
+                certification,
+                availability,
+                reportType
             );
-
-            if (type == "user" && _context.Users.Any(x => x.UserId == id))
-            {
-                subquery = subquery.Where(x => x.RunUserId == id);
-            }
-
-            if (server.Any())
-            {
-                subquery = subquery.Where(x => server.Contains(x.ReportObject.SourceServer));
-            }
-
-            if (database.Any())
-            {
-                subquery = subquery.Where(x => database.Contains(x.ReportObject.SourceDb));
-            }
-
-            if (masterFile.Any())
-            {
-                subquery = subquery.Where(
-                    x =>
-                        masterFile.Contains(x.ReportObject.EpicMasterFile)
-                        || masterFile.Contains("None")
-                            && string.IsNullOrEmpty(x.ReportObject.EpicMasterFile)
-                );
-
-
-            }
-
-            if (visible.Any())
-            {
-                subquery = subquery.Where(
-                    x =>
-                        visible.Contains(x.ReportObject.DefaultVisibilityYn)
-                        || (
-                            visible.Contains("Y")
-                            && string.IsNullOrEmpty(x.ReportObject.DefaultVisibilityYn)
-                        )
-                );
-            }
-
-            if (certification.Any())
-            {
-                subquery = subquery.Where(
-                    x => certification.Contains(x.ReportObject.CertificationTag)
-                );
-            }
-
-            if (availability.Any())
-            {
-                subquery = subquery.Where(
-                    x =>
-                        availability.Contains(x.ReportObject.Availability)
-                        || (
-                            availability.Contains("Public")
-                            && string.IsNullOrEmpty(x.ReportObject.Availability)
-                        )
-                );
-            }
-
-            if (reportType.Any())
-            {
-                subquery = subquery.Where(
-                    x => reportType.Contains((int)x.ReportObject.ReportObjectTypeId)
-                );
-            }
 
             Filter_Server = await _context.ReportObjects
                 .GroupBy(x => x.SourceServer)
@@ -225,7 +401,9 @@ namespace Atlas_Web.Pages.Profile
                             Key = "server",
                             Value = x.Key,
                             FriendlyValue = x.Key,
-                            Count = subquery.Count(c => c.ReportObject.SourceServer == x.Key),
+                            Count = subquery
+                                .Where(b => b.r.SourceServer == x.Key)
+                                .Sum(y => y.b.Runs),
                             Checked = server.Contains(x.Key)
                         }
                 )
@@ -240,7 +418,7 @@ namespace Atlas_Web.Pages.Profile
                             Key = "database",
                             Value = x.Key,
                             FriendlyValue = x.Key,
-                            Count = subquery.Count(c => c.ReportObject.SourceDb == x.Key),
+                            Count = subquery.Where(c => c.r.SourceDb == x.Key).Sum(y => y.b.Runs),
                             Checked = database.Contains(x.Key)
                         }
                 )
@@ -255,9 +433,9 @@ namespace Atlas_Web.Pages.Profile
                             Key = "reportType",
                             Value = x.Key.ReportObjectTypeId.ToString(),
                             FriendlyValue = x.Key.Name,
-                            Count = subquery.Count(
-                                c => c.ReportObject.ReportObjectTypeId == x.Key.ReportObjectTypeId
-                            ),
+                            Count = subquery
+                                .Where(c => c.r.ReportObjectTypeId == x.Key.ReportObjectTypeId)
+                                .Sum(y => y.b.Runs),
                             Checked = reportType.Contains((int)x.Key.ReportObjectTypeId)
                         }
                 )
@@ -281,14 +459,16 @@ namespace Atlas_Web.Pages.Profile
                             Key = x.Key.Key,
                             Value = x.Key.Value,
                             FriendlyValue = x.Key.Value,
-                            Count = subquery.Count(
-                                c =>
-                                    (
-                                        string.IsNullOrEmpty(c.ReportObject.EpicMasterFile)
-                                          ? "None"
-                                          : c.ReportObject.EpicMasterFile
-                                    ) == x.Key.Value
-                            ),
+                            Count = subquery
+                                .Where(
+                                    c =>
+                                        (
+                                            string.IsNullOrEmpty(c.r.EpicMasterFile)
+                                              ? "None"
+                                              : c.r.EpicMasterFile
+                                        ) == x.Key.Value
+                                )
+                                .Sum(y => y.b.Runs),
                             Checked = masterFile.Contains(x.Key.Value)
                         }
                 )
@@ -311,14 +491,16 @@ namespace Atlas_Web.Pages.Profile
                             Key = x.Key.Key,
                             Value = x.Key.Value,
                             FriendlyValue = x.Key.FriendlyValue,
-                            Count = subquery.Count(
-                                c =>
-                                    (
-                                        string.IsNullOrEmpty(c.ReportObject.DefaultVisibilityYn)
-                                          ? "Y"
-                                          : c.ReportObject.DefaultVisibilityYn
-                                    ) == x.Key.Value
-                            ),
+                            Count = subquery
+                                .Where(
+                                    c =>
+                                        (
+                                            string.IsNullOrEmpty(c.r.DefaultVisibilityYn)
+                                              ? "Y"
+                                              : c.r.DefaultVisibilityYn
+                                        ) == x.Key.Value
+                                )
+                                .Sum(y => y.b.Runs),
                             Checked = visible.Contains(x.Key.Value)
                         }
                 )
@@ -333,7 +515,9 @@ namespace Atlas_Web.Pages.Profile
                             Key = "certification",
                             Value = x.Key,
                             FriendlyValue = x.Key,
-                            Count = subquery.Count(c => c.ReportObject.CertificationTag == x.Key),
+                            Count = subquery
+                                .Where(c => c.r.CertificationTag == x.Key)
+                                .Sum(y => y.b.Runs),
                             Checked = certification.Contains(x.Key)
                         }
                 )
@@ -355,14 +539,16 @@ namespace Atlas_Web.Pages.Profile
                             Key = x.Key.Key,
                             Value = x.Key.Value,
                             FriendlyValue = x.Key.Value,
-                            Count = subquery.Count(
-                                c =>
-                                    (
-                                        string.IsNullOrEmpty(c.ReportObject.Availability)
-                                          ? "Public"
-                                          : c.ReportObject.Availability
-                                    ) == x.Key.Value
-                            ),
+                            Count = subquery
+                                .Where(
+                                    c =>
+                                        (
+                                            string.IsNullOrEmpty(c.r.Availability)
+                                              ? "Public"
+                                              : c.r.Availability
+                                        ) == x.Key.Value
+                                )
+                                .Sum(y => y.b.Runs),
                             Checked = availability.Contains(x.Key.Value)
                         }
                 )
@@ -384,215 +570,42 @@ namespace Atlas_Web.Pages.Profile
             List<int> reportType = null
         )
         {
-            /*
-            when start - end < 2days, use 1 AM, 2 AM...
-            when start - end < 8 days use  Sun 3/20, Mon 3/21...
-            when start - end < 365 days use Mar 1, Mar 2 ...
-            when start - end > 365 days use Jan, Feb ...
-
-            when using all time, get first day and last day and use the above rules
-            */
-            DateTime MinDate = new DateTime(1900, 01, 01, 00, 00, 00);
-            var subquery = _context.ReportObjectRunData.Where(
-                x =>
-                    x.RunStartTime >= DateTime.Now.AddSeconds(start_at)
-                    && x.RunStartTime <= DateTime.Now.AddSeconds(end_at)
+            (var subquery, var subquery_group, string date_format) = BuildSubqueries(
+                id,
+                type,
+                start_at,
+                end_at,
+                server,
+                database,
+                masterFile,
+                visible,
+                certification,
+                availability,
+                reportType
             );
 
-            if (type == "report" && _context.ReportObjects.Any(x => x.ReportObjectId == id))
-            {
-                subquery = subquery.Where(x => x.ReportObjectId == id);
-            }
-            else if (type == "term" && _context.Terms.Any(x => x.TermId == id))
-            {
-                subquery = subquery.Where(
-                    x =>
-                        _context.ReportObjectDocTerms
-                            .Where(t => t.TermId == id)
-                            .Select(t => t.ReportObjectId)
-                            .Contains(x.ReportObjectId)
-                );
-            }
-            else if (type == "collection" && _context.Collections.Any(x => x.DataProjectId == id))
-            {
-                subquery = subquery.Where(
-                    x =>
-                        _context.CollectionReports
-                            .Where(c => c.DataProjectId == id)
-                            .Select(c => c.ReportId)
-                            .Contains(x.ReportObjectId)
-                );
-            }
-            else if (
-                (type == "report" && id == -1)
-                || (type == "user" && _context.Users.Any(x => x.UserId == id))
-            )
-            {
-                if (type == "user")
+            RunHistory = await (
+                from grp in subquery_group
+                orderby grp.Key
+                select new RunHistoryData
                 {
-                    subquery = subquery.Where(x => x.RunUserId == id);
+                    Date = grp.Key.ToString(date_format),
+                    Users = grp.Select(x => x.d.RunUserId).Distinct().Count(),
+                    Runs = grp.Sum(x => x.b.Runs),
+                    RunTime = Math.Round(grp.Average(x => (int)x.d.RunDurationSeconds), 1)
                 }
+            ).ToListAsync();
 
-                if (server.Any())
-                {
-                    subquery = subquery.Where(x => server.Contains(x.ReportObject.SourceServer));
-                }
+            Runs = RunHistory.Sum(x => x.Runs);
 
-                if (database.Any())
-                {
-                    subquery = subquery.Where(x => database.Contains(x.ReportObject.SourceDb));
-                }
-
-                if (masterFile.Any())
-                {
-                    subquery = subquery.Where(
-                        x =>
-                            masterFile.Contains(x.ReportObject.EpicMasterFile)
-                            || masterFile.Contains("None")
-                                && string.IsNullOrEmpty(x.ReportObject.EpicMasterFile)
-                    );
-                }
-
-                if (visible.Any())
-                {
-                    subquery = subquery.Where(
-                        x =>
-                            visible.Contains(x.ReportObject.DefaultVisibilityYn)
-                            || (
-                                visible.Contains("Y")
-                                && string.IsNullOrEmpty(x.ReportObject.DefaultVisibilityYn)
-                            )
-                    );
-                }
-
-                if (certification.Any())
-                {
-                    subquery = subquery.Where(
-                        x => certification.Contains(x.ReportObject.CertificationTag)
-                    );
-                }
-
-                if (availability.Any())
-                {
-                    subquery = subquery.Where(
-                        x =>
-                            availability.Contains(x.ReportObject.Availability)
-                            || (
-                                availability.Contains("Public")
-                                && string.IsNullOrEmpty(x.ReportObject.Availability)
-                            )
-                    );
-                }
-
-                if (reportType.Any())
-                {
-                    subquery = subquery.Where(
-                        x => reportType.Contains((int)x.ReportObject.ReportObjectTypeId)
-                    );
-                }
-            }
-            else
-            {
-                throw new Exception(
-                    "Wrong parameter value supplied. Type: " + type + " with Id: " + id
-                );
-            }
-
-            // if (groupId > 0 && _context.UserGroups.Any(x => x.GroupId == groupId))
-            // {
-            //     subquery = subquery.Where(
-            //         x => x.User.UserGroupsMemberships.Any(y => y.GroupId == groupId)
-            //     );
-            // }
-
-            switch (end_at - start_at)
-            {
-                // for < 2 days
-                // 1 AM, 2 AM etc..
-                default:
-                case < 172800:
-                    RunHistory = await (
-                        from a in subquery
-                        // in linqpad, use SqlMethods.DateDiffHour instead of EF.Functions.DateDiffHour
-                        group a by MinDate.AddHours(
-                            EF.Functions.DateDiffHour(MinDate, (a.RunStartTime ?? DateTime.Now))
-                        ) into grp
-                        orderby grp.Key
-                        select new RunHistoryData
-                        {
-                            Date = grp.Key.ToString("h tt"),
-                            Users = grp.Select(x => x.RunUserId).Distinct().Count(),
-                            Runs = grp.Count(),
-                            FailedRuns = grp.Count(x => x.RunStatus != "Success"),
-                            RunTime = Math.Round(grp.Average(x => (int)x.RunDurationSeconds), 1)
-                        }
-                    ).ToListAsync();
-
-                    break;
-                // for < 8 days
-                //  Sun 3/20, Mon 3/21...
-                case < 691200:
-                    RunHistory = await (
-                        from a in subquery
-                        group a by MinDate.AddDays(
-                            EF.Functions.DateDiffDay(MinDate, (a.RunStartTime ?? DateTime.Now))
-                        ) into grp
-                        orderby grp.Key
-                        select new RunHistoryData
-                        {
-                            Date = grp.Key.ToString("ddd M/d"),
-                            Users = grp.Select(x => x.RunUserId).Distinct().Count(),
-                            Runs = grp.Count(),
-                            FailedRuns = grp.Count(x => x.RunStatus != "Success"),
-                            RunTime = Math.Round(grp.Average(x => (int)x.RunDurationSeconds), 1)
-                        }
-                    ).ToListAsync();
-                    break;
-                // for < 365 days
-                // Mar 1, Mar 2
-                case < 31536000:
-                    RunHistory = await (
-                        from a in subquery
-                        group a by MinDate.AddDays(
-                            EF.Functions.DateDiffDay(MinDate, (a.RunStartTime ?? DateTime.Now))
-                        ) into grp
-                        orderby grp.Key
-                        select new RunHistoryData
-                        {
-                            Date = grp.Key.ToString("MMM d"),
-                            Users = grp.Select(x => x.RunUserId).Distinct().Count(),
-                            Runs = grp.Count(),
-                            FailedRuns = grp.Count(x => x.RunStatus != "Success"),
-                            RunTime = Math.Round(grp.Average(x => (int)x.RunDurationSeconds), 1)
-                        }
-                    ).ToListAsync();
-                    break;
-                case >= 31536000:
-                    RunHistory = await (
-                        from a in subquery
-                        group a by MinDate.AddMonths(
-                            EF.Functions.DateDiffMonth(MinDate, (a.RunStartTime ?? DateTime.Now))
-                        ) into grp
-                        orderby grp.Key
-                        select new RunHistoryData
-                        {
-                            Date = grp.Key.ToString("MMM yy"),
-                            Users = grp.Select(x => x.RunUserId).Distinct().Count(),
-                            Runs = grp.Count(),
-                            FailedRuns = grp.Count(x => x.RunStatus != "Success"),
-                            RunTime = Math.Round(grp.Average(x => (int)x.RunDurationSeconds), 1)
-                        }
-                    ).ToListAsync();
-                    break;
-            }
-
-            Runs = subquery.Count();
-
-            Users = subquery.Select(x => x.RunUserId).Distinct().Count();
+            Users = await subquery.Select(x => x.d.RunUserId).Distinct().CountAsync();
 
             if (Runs > 0)
             {
-                RunTime = Math.Round(subquery.Average(x => (int)x.RunDurationSeconds), 2);
+                RunTime = Math.Round(
+                    await subquery.AverageAsync(x => (int)x.d.RunDurationSeconds),
+                    2
+                );
             }
             else
             {
@@ -616,126 +629,33 @@ namespace Atlas_Web.Pages.Profile
             List<int> reportType = null
         )
         {
-            var subquery = _context.ReportObjectRunData.Where(
-                x =>
-                    x.RunStartTime >= DateTime.Now.AddSeconds(start_at)
-                    && x.RunStartTime <= DateTime.Now.AddSeconds(end_at)
+            (var subquery, var subquery_group, string date_format) = BuildSubqueries(
+                id,
+                type,
+                start_at,
+                end_at,
+                server,
+                database,
+                masterFile,
+                visible,
+                certification,
+                availability,
+                reportType
             );
 
-            if (type == "report" && _context.ReportObjects.Any(x => x.ReportObjectId == id))
-            {
-                subquery = subquery.Where(x => x.ReportObjectId == id);
-            }
-            else if (type == "term" && _context.Terms.Any(x => x.TermId == id))
-            {
-                subquery = subquery.Where(
-                    x =>
-                        _context.ReportObjectDocTerms
-                            .Where(t => t.TermId == id)
-                            .Select(t => t.ReportObjectId)
-                            .Contains(x.ReportObjectId)
-                );
-            }
-            else if (type == "collection" && _context.Collections.Any(x => x.DataProjectId == id))
-            {
-                subquery = subquery.Where(
-                    x =>
-                        _context.CollectionReports
-                            .Where(c => c.DataProjectId == id)
-                            .Select(c => c.ReportId)
-                            .Contains(x.ReportObjectId)
-                );
-            }
-            else if (
-                (type == "report" && id == -1)
-                || (type == "user" && _context.Users.Any(x => x.UserId == id))
-            )
-            {
-                if (type == "user")
-                {
-                    subquery = subquery.Where(x => x.RunUserId == id);
-                }
-
-                if (server.Any())
-                {
-                    subquery = subquery.Where(x => server.Contains(x.ReportObject.SourceServer));
-                }
-
-                if (database.Any())
-                {
-                    subquery = subquery.Where(x => database.Contains(x.ReportObject.SourceDb));
-                }
-
-                if (masterFile.Any())
-                {
-                    subquery = subquery.Where(
-                        x =>
-                            masterFile.Contains(x.ReportObject.EpicMasterFile)
-                            || masterFile.Contains("None")
-                                && string.IsNullOrEmpty(x.ReportObject.EpicMasterFile)
-                    );
-                }
-
-                if (visible.Any())
-                {
-                    subquery = subquery.Where(
-                        x =>
-                            visible.Contains(x.ReportObject.DefaultVisibilityYn)
-                            || (
-                                visible.Contains("Y")
-                                && string.IsNullOrEmpty(x.ReportObject.DefaultVisibilityYn)
-                            )
-                    );
-                }
-
-                if (certification.Any())
-                {
-                    subquery = subquery.Where(
-                        x => certification.Contains(x.ReportObject.CertificationTag)
-                    );
-                }
-
-                if (availability.Any())
-                {
-                    subquery = subquery.Where(
-                        x =>
-                            availability.Contains(x.ReportObject.Availability)
-                            || (
-                                availability.Contains("Public")
-                                && string.IsNullOrEmpty(x.ReportObject.Availability)
-                            )
-                    );
-                }
-
-                if (reportType.Any())
-                {
-                    subquery = subquery.Where(
-                        x => reportType.Contains((int)x.ReportObject.ReportObjectTypeId)
-                    );
-                }
-            }
-            else
-            {
-                throw new Exception(
-                    "Wrong parameter value supplied. Type: " + type + " with Id: " + id
-                );
-            }
-
-            double total = subquery.Count();
+            double total = subquery.Sum(x => x.b.Runs);
 
             BarDataSet = await (
                 from a in subquery
-                group a by new { a.RunUserId, a.RunUser.FullnameCalc } into grp
+                group a by new { a.d.RunUserId, a.d.RunUser.FullnameCalc } into grp
                 select new BarData
                 {
-                    Key =
-                        grp.Key.FullnameCalc
-                        + " ("
-                        + ModelHelpers.RelativeDate(grp.Max(x => x.RunStartTime))
-                        + ")",
-                    Count = grp.Count(),
-                    Percent = (double)grp.Count() / total,
-                    TitleOne = "Top Users (Last Run)",
+                    Key = grp.Key.FullnameCalc,
+                    Count = grp.Sum(x => x.b.Runs),
+                    Percent = (double)grp.Sum(x => x.b.Runs) / total,
+                    TitleOne = "Top Users",
+                    Date = grp.Max(x => x.d.RunStartTime).ToShortDateString(),
+                    DateTitle = "Last Run",
                     TitleTwo = "Runs",
                     Href =
                         (
@@ -765,117 +685,26 @@ namespace Atlas_Web.Pages.Profile
             List<int> reportType = null
         )
         {
-            var subquery = _context.ReportObjectRunData.Where(
-                x =>
-                    x.RunStartTime >= DateTime.Now.AddSeconds(start_at)
-                    && x.RunStartTime <= DateTime.Now.AddSeconds(end_at)
-                    && x.RunStatus != "Success"
+            (var subquery, var subquery_group, string date_format) = BuildSubqueries(
+                id,
+                type,
+                start_at,
+                end_at,
+                server,
+                database,
+                masterFile,
+                visible,
+                certification,
+                availability,
+                reportType
             );
 
-            if (type == "report" && _context.ReportObjects.Any(x => x.ReportObjectId == id))
-            {
-                subquery = subquery.Where(x => x.ReportObjectId == id);
-            }
-            else if (type == "term" && _context.Terms.Any(x => x.TermId == id))
-            {
-                subquery = subquery.Where(
-                    x =>
-                        _context.ReportObjectDocTerms
-                            .Where(t => t.TermId == id)
-                            .Select(t => t.ReportObjectId)
-                            .Contains(x.ReportObjectId)
-                );
-            }
-            else if (type == "collection" && _context.Collections.Any(x => x.DataProjectId == id))
-            {
-                subquery = subquery.Where(
-                    x =>
-                        _context.CollectionReports
-                            .Where(c => c.DataProjectId == id)
-                            .Select(c => c.ReportId)
-                            .Contains(x.ReportObjectId)
-                );
-            }
-            else if (
-                (type == "report" && id == -1)
-                || (type == "user" && _context.Users.Any(x => x.UserId == id))
-            )
-            {
-                if (type == "user")
-                {
-                    subquery = subquery.Where(x => x.RunUserId == id);
-                }
-
-                if (server.Any())
-                {
-                    subquery = subquery.Where(x => server.Contains(x.ReportObject.SourceServer));
-                }
-
-                if (database.Any())
-                {
-                    subquery = subquery.Where(x => database.Contains(x.ReportObject.SourceDb));
-                }
-
-                if (masterFile.Any())
-                {
-                    subquery = subquery.Where(
-                        x =>
-                            masterFile.Contains(x.ReportObject.EpicMasterFile)
-                            || masterFile.Contains("None")
-                                && string.IsNullOrEmpty(x.ReportObject.EpicMasterFile)
-                    );
-                }
-
-                if (visible.Any())
-                {
-                    subquery = subquery.Where(
-                        x =>
-                            visible.Contains(x.ReportObject.DefaultVisibilityYn)
-                            || (
-                                visible.Contains("Y")
-                                && string.IsNullOrEmpty(x.ReportObject.DefaultVisibilityYn)
-                            )
-                    );
-                }
-
-                if (certification.Any())
-                {
-                    subquery = subquery.Where(
-                        x => certification.Contains(x.ReportObject.CertificationTag)
-                    );
-                }
-
-                if (availability.Any())
-                {
-                    subquery = subquery.Where(
-                        x =>
-                            availability.Contains(x.ReportObject.Availability)
-                            || (
-                                availability.Contains("Public")
-                                && string.IsNullOrEmpty(x.ReportObject.Availability)
-                            )
-                    );
-                }
-
-                if (reportType.Any())
-                {
-                    subquery = subquery.Where(
-                        x => reportType.Contains((int)x.ReportObject.ReportObjectTypeId)
-                    );
-                }
-            }
-            else
-            {
-                throw new Exception(
-                    "Wrong parameter value supplied. Type: " + type + " with Id: " + id
-                );
-            }
-
-            double total = subquery.Count();
+            double total = subquery.Sum(x => x.b.Runs);
 
             BarDataSet = await (
                 from a in subquery
-                group a by a.RunStatus into grp
+                where a.d.RunStatus != "Success"
+                group a by a.d.RunStatus into grp
                 select new BarData
                 {
                     Key = Regex.Replace(
@@ -883,8 +712,8 @@ namespace Atlas_Web.Pages.Profile
                         @"(?<=[a-z])([A-Z])",
                         " $1"
                     ),
-                    Count = grp.Count(),
-                    Percent = (double)grp.Count() / total,
+                    Count = grp.Sum(x => x.b.Runs),
+                    Percent = (double)grp.Sum(x => x.b.Runs) / total,
                     TitleOne = "Failed Runs",
                     TitleTwo = "Fails"
                 }
@@ -907,128 +736,37 @@ namespace Atlas_Web.Pages.Profile
             List<int> reportType = null
         )
         {
-            var subquery = _context.ReportObjectRunData.Where(
-                x =>
-                    x.RunStartTime >= DateTime.Now.AddSeconds(start_at)
-                    && x.RunStartTime <= DateTime.Now.AddSeconds(end_at)
+            (var subquery, var subquery_group, string date_format) = BuildSubqueries(
+                id,
+                type,
+                start_at,
+                end_at,
+                server,
+                database,
+                masterFile,
+                visible,
+                certification,
+                availability,
+                reportType
             );
 
-            if (type == "term" && _context.Terms.Any(x => x.TermId == id))
-            {
-                subquery = subquery.Where(
-                    x =>
-                        _context.ReportObjectDocTerms
-                            .Where(t => t.TermId == id)
-                            .Select(t => t.ReportObjectId)
-                            .Contains(x.ReportObjectId)
-                );
-            }
-            else if (type == "collection" && _context.Collections.Any(x => x.DataProjectId == id))
-            {
-                subquery = subquery.Where(
-                    x =>
-                        _context.CollectionReports
-                            .Where(c => c.DataProjectId == id)
-                            .Select(c => c.ReportId)
-                            .Contains(x.ReportObjectId)
-                );
-            }
-            else if (
-                (type == "report" && id == -1)
-                || (type == "user" && _context.Users.Any(x => x.UserId == id))
-            )
-            {
-                if (type == "user")
-                {
-                    subquery = subquery.Where(x => x.RunUserId == id);
-                }
-
-                if (server.Any())
-                {
-                    subquery = subquery.Where(x => server.Contains(x.ReportObject.SourceServer));
-                }
-
-                if (database.Any())
-                {
-                    subquery = subquery.Where(x => database.Contains(x.ReportObject.SourceDb));
-                }
-
-                if (masterFile.Any())
-                {
-                    subquery = subquery.Where(
-                        x =>
-                            masterFile.Contains(x.ReportObject.EpicMasterFile)
-                            || masterFile.Contains("None")
-                                && string.IsNullOrEmpty(x.ReportObject.EpicMasterFile)
-                    );
-                }
-
-                if (visible.Any())
-                {
-                    subquery = subquery.Where(
-                        x =>
-                            visible.Contains(x.ReportObject.DefaultVisibilityYn)
-                            || (
-                                visible.Contains("Y")
-                                && string.IsNullOrEmpty(x.ReportObject.DefaultVisibilityYn)
-                            )
-                    );
-                }
-
-                if (certification.Any())
-                {
-                    subquery = subquery.Where(
-                        x => certification.Contains(x.ReportObject.CertificationTag)
-                    );
-                }
-
-                if (availability.Any())
-                {
-                    subquery = subquery.Where(
-                        x =>
-                            availability.Contains(x.ReportObject.Availability)
-                            || (
-                                availability.Contains("Public")
-                                && string.IsNullOrEmpty(x.ReportObject.Availability)
-                            )
-                    );
-                }
-
-                if (reportType.Any())
-                {
-                    subquery = subquery.Where(
-                        x => reportType.Contains((int)x.ReportObject.ReportObjectTypeId)
-                    );
-                }
-            }
-            else
-            {
-                throw new Exception(
-                    "Wrong parameter value supplied. Type: " + type + " with Id: " + id
-                );
-            }
-
-            double total = subquery.Count();
+            double total = subquery.Sum(x => x.b.Runs);
 
             BarDataSet = await (
                 from a in subquery
                 group a by new
                 {
-                    a.ReportObjectId,
-                    name = string.IsNullOrEmpty(a.ReportObject.DisplayTitle)
-                      ? a.ReportObject.Name
-                      : a.ReportObject.DisplayTitle
+                    a.r.ReportObjectId,
+                    name = string.IsNullOrEmpty(a.r.DisplayTitle) ? a.r.Name : a.r.DisplayTitle
                 } into grp
                 select new BarData
                 {
-                    Key =
-                        grp.Key.name
-                        + " ("
-                        + ModelHelpers.RelativeDate(grp.Max(x => x.RunStartTime))
-                        + ")",
-                    Count = grp.Count(),
-                    Percent = (double)grp.Count() / total,
-                    TitleOne = "Top Reports (Last Run)",
+                    Key = grp.Key.name,
+                    Count = grp.Sum(x => x.b.Runs),
+                    Percent = (double)grp.Sum(x => x.b.Runs) / total,
+                    TitleOne = "Top Reports",
+                    Date = grp.Max(x => x.d.RunStartTime).ToShortDateString(),
+                    DateTitle = "Last Run",
                     TitleTwo = "Runs",
                     Href = "/reports?id=" + grp.Key.ReportObjectId
                 }
@@ -1059,9 +797,11 @@ namespace Atlas_Web.Pages.Profile
             }
             else
             {
+#pragma warning disable S112
                 throw new Exception(
                     "Wrong parameter value supplied. Type: " + type + " with Id: " + id
                 );
+#pragma warning restore S112
             }
 
             return new PartialViewResult { ViewName = "Partials/_Stars", ViewData = ViewData };
@@ -1077,9 +817,11 @@ namespace Atlas_Web.Pages.Profile
             }
             else
             {
+#pragma warning disable S112
                 throw new Exception(
                     "Wrong parameter value supplied. Type: " + type + " with Id: " + id
                 );
+#pragma warning restore S112
             }
 
             return new PartialViewResult

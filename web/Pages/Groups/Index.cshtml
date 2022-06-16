@@ -7,7 +7,6 @@
     ViewBag.GroupId = @Model.Group.Id;
 }
 
-
 <h1 class="title is-1">@Model.Group.Name</h1>
 
 <partial name="_Links" />
@@ -49,75 +48,85 @@
     <div class="tab-dta" id="users">
         @if (Model.GroupUsers.Count() > 0)
         {
-<h3>Users With This Group</h3>
-                <div class="table-responsive">
-                    <table class="table sort" aria-label="users with this group">
-                        <thead>
+            <h3>Users With This Group</h3>
+            <div class="table-responsive">
+                <table class="table sort" aria-label="users with this group">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Epic Id</th>
+                            <th>Employee Id</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var s in Model.GroupUsers)
+                        {
                             <tr>
-                                <th>Name</th>
-                                <th>Email</th>
-                                <th>Phone</th>
-                                <th>Epic Id</th>
-                                <th>Employee Id</th>
+                                <td>@if (@Configuration["features:enable_user_profile"] == null || @Configuration["features:enable_user_profile"].ToString().ToLower() == "true")
+                                    {<a href="\Users?id=@s.Id">@s.Name</a>} else {@s.Name}</td>
+                                <td>
+                                    @if (s.Email != "")
+                                    {
+                                        <a href="mailto:@s.Email">@s.Email</a>
+                                    }
+                                </td>
+                                <td>@s.Phone</td>
+                                <td>@s.EpicId</td>
+                                <td>@s.EmployeeId</td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var s in Model.GroupUsers)
-                            {
-            <tr>
-                <td>@if (@Configuration["features:enable_user_profile"] == null || @Configuration["features:enable_user_profile"].ToString().ToLower() == "true")
-                    {<a href="\Users?id=@s.Id">@s.Name</a>} else {@s.Name}</td>
-                <td>
-                    @if (s.Email != "")
-                    {<a href="mailto:@s.Email">@s.Email</a>}
-            </td>
-            <td>@s.Phone</td>
-            <td>@s.EpicId</td>
-            <td>@s.EmployeeId</td>
-        </tr>}
-                        </tbody>
-                    </table>
-                </div> }
-            else
-            {
-<h3>No Users With This Group</h3>}
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <h3>No Users With This Group</h3>
+        }
     </div>
-
     <div class="tab-dta" id="reports">
         @if (Model.GroupReports.Count() > 0)
         {
-<h3>Reports With This Group</h3>
-                <div class="table-responsive">
-                    <table class="table sort" aria-label="reports with this group">
-                        <thead>
+            <h3>Reports With This Group</h3>
+            <div class="table-responsive">
+                <table class="table sort" aria-label="reports with this group">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Last Updated</th>
+                            <th># Subscriptions</th>
+                            <th># Favorites</th>
+                            <th># Runs (2yrs)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var s in Model.GroupReports)
+                        {
                             <tr>
-                                <th>Name</th>
-                                <th>Last Updated</th>
-                                <th># Subscriptions</th>
-                                <th># Favorites</th>
-                                <th># Runs (2yrs)</th>
+                                <td><a href="\Reports?id=@s.Id">@s.Name</a></td>
+                                <td>@s.LastUpdated</td>
+                                <td>@s.Subscriptions</td>
+                                <td>@s.Favs</td>
+                                <td>@s.Runs</td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var s in Model.GroupReports)
-                            {
-            <tr>
-                <td><a href="\Reports?id=@s.Id">@s.Name</a></td>
-                <td>@s.LastUpdated</td>
-                <td>@s.Subscriptions</td>
-                <td>@s.Favs</td>
-                <td>@s.Runs</td>
-            </tr>
-}
-                        </tbody>
-                    </table>
-                </div> }
-            else
-            {
-<h3 class="pageSection-title">No Reports With This Group</h3>}
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <h3 class="pageSection-title">No Reports With This Group</h3>
+        }
     </div>
     <div class="tab-dta" id="activity">
-        <div data-ajax="yes" data-url="/Groups?handler=Activity" data-parameters="id=@Model.Group.Id"></div>
+        @{
+            ViewBag.ProfileType = "group";
+            ViewBag.ProfileId = ViewBag.GroupId;
+        }
+        <partial name="Profile/Partials/_FullProfile" />
     </div>
     @if (ViewBag.Permissions.Contains(36))
     {
