@@ -38,7 +38,7 @@ no
 not
 of
 on
-or
+# or >> this is used for operating room, etc
 such
 that
 the
