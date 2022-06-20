@@ -171,15 +171,12 @@
         .closest('.modal')
         .querySelector('.director-name');
 
-      console.log(director.value);
-
       if (director.value === null || director.value === '') {
-        console.log('blank');
         const label = director.closest('.field.pt-5').querySelector('label');
         if (label) {
           label.insertAdjacentHTML(
             'afterend',
-            '<p class="help is-danger">Recipients are required.</p>',
+            '<p class="help is-danger">Director is required.</p>',
           );
         }
 
