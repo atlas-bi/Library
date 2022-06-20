@@ -2,9 +2,8 @@ name: Release
 
 on:
   push:
-    branches:
-      - master
-      - alpha
+    branches-ignore:
+      - dev
 
 jobs:
   release:

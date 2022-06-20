@@ -91,7 +91,6 @@ authorization,pre-auth,no-auth,auth,financial clearance
 transaction,treatment
 BPA, Best Practice Advisory, Best Practice Advisories, BestPractice Advisory, BestPractice Advisories
 
-
 # Names
 chris,christopher
 dan,daniel

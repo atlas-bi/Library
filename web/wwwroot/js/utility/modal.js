@@ -166,10 +166,26 @@
     // Request access
     else if ($trigger.closest('.modal button.request-access')) {
       $target = $trigger.closest('.modal button.request-access');
+
+      const director = $target
+        .closest('.modal')
+        .querySelector('.director-name');
+
+      if (director.value === null || director.value === '') {
+        const label = director.closest('.field.pt-5').querySelector('label');
+        if (label) {
+          label.insertAdjacentHTML(
+            'afterend',
+            '<p class="help is-danger">Director is required.</p>',
+          );
+        }
+
+        return false;
+      }
+
       data = {
         reportName: $target.getAttribute('report-name'),
-        directorName: $target.closest('.modal').querySelector('.director-name')
-          .value,
+        directorName: director.value,
         reportUrl: window.location.href,
       };
       url = Object.keys(data)

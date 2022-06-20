@@ -713,15 +713,16 @@ namespace Atlas_Web.Pages.Search
             {
                 SearchString = s;
             }
+            var x = BuildSearchString(SearchString, Request.Query);
+            var FilterQuery = new List<SolrQuery>();
+            FilterQuery.Add(new SolrQuery("user_roles_text:(Director)"));
 
             UserSearch = _solr
                 .Query(
-                    new SolrQuery(
-                        BuildSearchString(SearchString, Request.Query)
-                            + " AND user_roles:(Director)"
-                    ),
+                    new SolrQuery(BuildSearchString(SearchString, Request.Query)),
                     new QueryOptions
                     {
+                        FilterQueries = FilterQuery.ToArray(),
                         RequestHandler = new RequestHandlerParameters("/users"),
                         StartOrCursor = new StartOrCursor.Start(0),
                         Rows = 20,
