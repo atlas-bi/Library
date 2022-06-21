@@ -572,7 +572,7 @@ namespace Atlas_Web.Helpers
                 }
                 else if (EpicMasterFile == "HGR")
                 {
-                    NewUrl = "EpicAct:AC_RW_STATUS,RUNPARAMS:" + EpicRecordId;
+                    NewUrl = "EpicAct:AC_RW_STATUS,RUNPARAMS:" + EpicReportTemplateId;
                 }
                 else if (EpicMasterFile == "IDM")
                 {
