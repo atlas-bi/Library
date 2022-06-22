@@ -92,16 +92,16 @@
         <div class="columns pt-5 is-multiline">
             @if(ViewBag.ProfileType != "user"){
                 <div class="column @if(ViewBag.ProfileType=="term" || ViewBag.ProfileType == "collection" || (ViewBag.ProfileType== "report" && ViewBag.ProfileId == -1)){<text>is-one-third-desktop is-half-tablet</text>}else{<text>is-half</text>}">
-                    <div class="bar-data-wrapper" data-url="/Profile?handler=Users&type=@ViewBag.ProfileType&id=@ViewBag.ProfileId@ViewBag.DefaultFilters" data-target="profile-@ViewBag.ProfileType-@ViewBag.ProfileId"></div>
+                    <div class="bar-data-wrapper profile" data-url="/Profile?handler=Users&type=@ViewBag.ProfileType&id=@ViewBag.ProfileId@ViewBag.DefaultFilters" data-target="profile-@ViewBag.ProfileType-@ViewBag.ProfileId"></div>
                 </div>
             }
             @if(ViewBag.ProfileType=="user" || ViewBag.ProfileType=="term" || ViewBag.ProfileType == "collection" || (ViewBag.ProfileType== "report" && ViewBag.ProfileId == -1)){
                 <div class="column @if(ViewBag.ProfileType=="user"){<text>is-half</text>}else{<text>is-one-third-desktop is-half-tablet</text>}">
-                    <div class="bar-data-wrapper" data-url="/Profile?handler=Reports&type=@ViewBag.ProfileType&id=@ViewBag.ProfileId@ViewBag.DefaultFilters" data-target="profile-@ViewBag.ProfileType-@ViewBag.ProfileId"></div>
+                    <div class="bar-data-wrapper profile" data-url="/Profile?handler=Reports&type=@ViewBag.ProfileType&id=@ViewBag.ProfileId@ViewBag.DefaultFilters" data-target="profile-@ViewBag.ProfileType-@ViewBag.ProfileId"></div>
                 </div>
             }
             <div class="column @if(ViewBag.ProfileType=="term" || ViewBag.ProfileType == "collection" || (ViewBag.ProfileType== "report" && ViewBag.ProfileId == -1)){<text>is-one-third-desktop is-half-tablet</text>}else{<text>is-half</text>}">
-                <div class="bar-data-wrapper" data-url="/Profile?handler=Fails&type=@ViewBag.ProfileType&id=@ViewBag.ProfileId@ViewBag.DefaultFilters" data-target="profile-@ViewBag.ProfileType-@ViewBag.ProfileId"></div>
+                <div class="bar-data-wrapper profile" data-url="/Profile?handler=Fails&type=@ViewBag.ProfileType&id=@ViewBag.ProfileId@ViewBag.DefaultFilters" data-target="profile-@ViewBag.ProfileType-@ViewBag.ProfileId"></div>
             </div>
         </div>
     </div>
