@@ -81,34 +81,34 @@
     <div class="column is-one-third is-half-tablet">
         @if(ViewBag.UserId != null)
         {
-            <div class="bar-data-wrapper" data-url="/Analytics/Visits?handler=Browsers&userId=@ViewBag.UserId" data-callback="browser"></div>
+            <div class="bar-data-wrapper analytics" data-url="/Analytics/Visits?handler=Browsers&userId=@ViewBag.UserId" data-callback="browser"></div>
         } else if(ViewBag.GroupId != null)
         {
-            <div class="bar-data-wrapper" data-url="/Analytics/Visits?handler=Browsers&groupId=@ViewBag.GroupId" data-callback="browser"></div>
+            <div class="bar-data-wrapper analytics" data-url="/Analytics/Visits?handler=Browsers&groupId=@ViewBag.GroupId" data-callback="browser"></div>
         } else {
-            <div class="bar-data-wrapper" data-url="/Analytics/Visits?handler=Browsers" data-callback="browser"></div>
+            <div class="bar-data-wrapper analytics" data-url="/Analytics/Visits?handler=Browsers" data-callback="browser"></div>
         }
     </div>
     <div class="column is-one-third is-half-tablet">
         @if(ViewBag.UserId != null)
         {
-            <div class="bar-data-wrapper" data-url="/Analytics/Visits?handler=Os&userId=@ViewBag.UserId" data-callback="os"></div>
+            <div class="bar-data-wrapper analytics" data-url="/Analytics/Visits?handler=Os&userId=@ViewBag.UserId" data-callback="os"></div>
         } else if(ViewBag.GroupId != null)
         {
-            <div class="bar-data-wrapper" data-url="/Analytics/Visits?handler=Os&groupId=@ViewBag.GroupId" data-callback="os"></div>
+            <div class="bar-data-wrapper analytics" data-url="/Analytics/Visits?handler=Os&groupId=@ViewBag.GroupId" data-callback="os"></div>
         } else {
-            <div class="bar-data-wrapper" data-url="/Analytics/Visits?handler=Os" data-callback="os"></div>
+            <div class="bar-data-wrapper analytics" data-url="/Analytics/Visits?handler=Os" data-callback="os"></div>
         }
     </div>
     <div class="column is-one-third is-half-tablet">
         @if(ViewBag.UserId != null)
         {
-            <div class="bar-data-wrapper" data-url="/Analytics/Visits?handler=Resolution&userId=@ViewBag.UserId" ></div>
+            <div class="bar-data-wrapper analytics" data-url="/Analytics/Visits?handler=Resolution&userId=@ViewBag.UserId" ></div>
         } else if(ViewBag.GroupId != null)
         {
-            <div class="bar-data-wrapper" data-url="/Analytics/Visits?handler=Resolution&groupId=@ViewBag.GroupId" ></div>
+            <div class="bar-data-wrapper analytics" data-url="/Analytics/Visits?handler=Resolution&groupId=@ViewBag.GroupId" ></div>
         } else {
-            <div class="bar-data-wrapper" data-url="/Analytics/Visits?handler=Resolution" ></div>
+            <div class="bar-data-wrapper analytics" data-url="/Analytics/Visits?handler=Resolution" ></div>
         }
     </div>
 </div>
@@ -118,34 +118,34 @@
     <div class="column is-one-third is-half-tablet">
         @if(ViewBag.GroupId != null)
         {
-            <div class="bar-data-wrapper" data-url="/Analytics/Visits?handler=Users&groupId=@ViewBag.GroupId" ></div>
+            <div class="bar-data-wrapper analytics" data-url="/Analytics/Visits?handler=Users&groupId=@ViewBag.GroupId" ></div>
 
         } else if(ViewBag.UserId == null) {
             @ViewBag.UserId
-            <div class="bar-data-wrapper" data-url="/Analytics/Visits?handler=Users" ></div>
+            <div class="bar-data-wrapper analytics" data-url="/Analytics/Visits?handler=Users" ></div>
         }
     </div>
     <div class="column is-one-third is-half-tablet">
         @if(ViewBag.UserId != null)
         {
-            <div class="bar-data-wrapper" data-url="/Analytics/Visits?handler=LoadTimes&userId=@ViewBag.UserId" ></div>
+            <div class="bar-data-wrapper analytics" data-url="/Analytics/Visits?handler=LoadTimes&userId=@ViewBag.UserId" ></div>
         } else if(ViewBag.GroupId != null)
         {
-            <div class="bar-data-wrapper" data-url="/Analytics/Visits?handler=LoadTimes&groupId=@ViewBag.GroupId" ></div>
+            <div class="bar-data-wrapper analytics" data-url="/Analytics/Visits?handler=LoadTimes&groupId=@ViewBag.GroupId" ></div>
         } else {
-            <div class="bar-data-wrapper" data-url="/Analytics/Visits?handler=LoadTimes" ></div>
+            <div class="bar-data-wrapper analytics" data-url="/Analytics/Visits?handler=LoadTimes" ></div>
         }
     </div>
     @* <div class="column is-one-third is-half-tablet">
-        <div class="bar-data-wrapper" data-url="/Analytics/Visits?handler=Reports" ></div>
+        <div class="bar-data-wrapper analytics" data-url="/Analytics/Visits?handler=Reports" ></div>
     </div> *@
     @* <div class="column">
-        <div class="bar-data-wrapper" data-url="/Analytics/Visits?handler=Reports">
+        <div class="bar-data-wrapper analytics" data-url="/Analytics/Visits?handler=Reports">
             <h3 class="title is-3 is-family-sans-serif">Top Reports</h3>
         </div>
     </div>
     <div class="column">
-        <div class="bar-data-wrapper" data-url="/Analytics/Visits?handler=Terms">
+        <div class="bar-data-wrapper analytics" data-url="/Analytics/Visits?handler=Terms">
             <h3 class="title is-3 is-family-sans-serif">Top Terms</h3>
         </div>
     </div> *@
@@ -171,12 +171,12 @@
 @*
 <div class="columns">
     <div class="column">
-        <div class="bar-data-wrapper" data-url="/Analytics/Visits?handler=Collections">
+        <div class="bar-data-wrapper analytics" data-url="/Analytics/Visits?handler=Collections">
             <h3 class="title is-3 is-family-sans-serif">Top Collections</h3>
         </div>
     </div>
     <div class="column">
-        <div class="bar-data-wrapper" data-url="/Analytics/Visits?handler=Initiatives">
+        <div class="bar-data-wrapper analytics" data-url="/Analytics/Visits?handler=Initiatives">
             <h3 class="title is-3 is-family-sans-serif">Top Initiatives</h3>
         </div>
     </div>

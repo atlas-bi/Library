@@ -340,10 +340,6 @@
 
         // Check for date column
 
-        if ('date' in data[0]) {
-          console.log('has date');
-        }
-
         data.forEach(($r) => {
           const row = document.createElement('tr');
           const $link = $r.href ? `<a href="${$r.href}">${$r.key}</a>` : $r.key;
@@ -385,7 +381,7 @@
     function loadBoxes(parameters = '') {
       (
         document.querySelectorAll(
-          `.bar-data-wrapper[data-url][data-target="${chart.id}"]`,
+          `.bar-data-wrapper.profile[data-url][data-target="${chart.id}"]`,
         ) || []
       ).forEach(($element) => {
         $element.style.opacity = '.5';
