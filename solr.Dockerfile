@@ -20,7 +20,7 @@ COPY ["./web/solr", "./"]
 
 # startup search and load data
 RUN apk add --no-cache openjdk11 bash lsof python3-dev curl gcc git py3-pip gcc libc-dev g++ libffi-dev libxml2 unixodbc-dev && \
-    pip3 install pyodbc pysolr pytz
+    pip3 install pyodbc pysolr pytz python-dotenv
 
 # install sql server driver
 RUN curl -O https://download.microsoft.com/download/e/4/e/e4e67866-dffd-428c-aac7-8d28ddafb39b/msodbcsql17_17.8.1.1-1_amd64.apk && \
