@@ -261,30 +261,26 @@
   }
 
   function loadBoxes(parameters = '') {
-    (document.querySelectorAll('.bar-data-wrapper[data-url]') || []).forEach(
-      ($element) => {
-        $element.style.opacity = '.5';
-        const aj = new XMLHttpRequest();
-        aj.open(
-          'get',
-          $element.dataset.url + parameters.replace('?', '&'),
-          true,
-        );
-        aj.setRequestHeader(
-          'Content-Type',
-          'application/x-www-form-urlencoded; charset=UTF-8',
-        );
-        aj.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-        aj.send();
+    (
+      document.querySelectorAll('.bar-data-wrapper.analytics[data-url]') || []
+    ).forEach(($element) => {
+      $element.style.opacity = '.5';
+      const aj = new XMLHttpRequest();
+      aj.open('get', $element.dataset.url + parameters.replace('?', '&'), true);
+      aj.setRequestHeader(
+        'Content-Type',
+        'application/x-www-form-urlencoded; charset=UTF-8',
+      );
+      aj.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+      aj.send();
 
-        aj.addEventListener('load', function () {
-          $element.innerHTML = '';
-          $element.append(buildDataTable(JSON.parse(aj.responseText)));
-          $element.style.visibility = 'visible';
-          $element.style.opacity = '1';
-        });
-      },
-    );
+      aj.addEventListener('load', function () {
+        $element.innerHTML = '';
+        $element.append(buildDataTable(JSON.parse(aj.responseText)));
+        $element.style.visibility = 'visible';
+        $element.style.opacity = '1';
+      });
+    });
   }
 
   function loadChart(parameters = '') {
