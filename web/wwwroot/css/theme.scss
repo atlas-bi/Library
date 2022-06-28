@@ -194,12 +194,6 @@ $card-colors: (
 }
 
 /* load image */
-img[data-src='/img/loader.gif'],
-source[data-srcset='/img/loader.webp'] {
-  width: 25px !important;
-  height: 25px !important;
-  margin: auto;
-}
 
 .modal-image img,
 .modal-image source {
@@ -223,45 +217,6 @@ source[data-srcset='/img/loader.webp'] {
 }
 
 /* search */
-
-#search-results {
-  position: absolute;
-  top: 50px;
-  left: 0;
-  right: 0;
-  display: none;
-  border-radius: $radius;
-  max-height: 90vh;
-  overflow: scroll;
-}
-
-#search-results:empty {
-  display: none !important;
-}
-
-#search-results:active {
-  display: block;
-  box-shadow: $shadow;
-  border: 1px solid $border;
-}
-
-.search-wrap:active .search-results-wrap,
-#search-form:focus-within #search-results {
-  display: block;
-  box-shadow: $shadow;
-  border: 1px solid $border;
-}
-
-#search-results .panel-block:first-of-type {
-  border-top-left-radius: inherit;
-  border-top-right-radius: inherit;
-}
-
-#search-results em {
-  background-color: $info-light;
-  color: $info;
-}
-
 #search-form .button:hover {
   color: $grey-darker !important;
 }
@@ -428,11 +383,6 @@ nav.is-sticky {
 
 .is-wordbreak {
   word-break: break-word;
-}
-
-.img-modal-lg {
-  max-height: 80% !important;
-  max-width: 80% !important;
 }
 
 code {
