@@ -22,7 +22,7 @@ namespace Atlas_Web.Pages.Data
 
         public async Task<ActionResult> OnGetCube(int id)
         {
-            string text = System.IO.File.ReadAllText("wwwroot/Cube.xml");
+            string text = System.IO.File.ReadAllText("wwwroot/defaults/Cube.xml");
             var cube = await _context.ReportObjects.Where(x => x.ReportObjectId == id).FirstAsync();
             text = text.Replace("server", cube.SourceServer);
             text = text.Replace("Catalog_Name", cube.Name);

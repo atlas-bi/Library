@@ -4,6 +4,7 @@ using Atlas_Web.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Atlas_Web.Migrations
 {
     [DbContext(typeof(Atlas_WebContext))]
-    partial class Atlas_WebContextModelSnapshot : ModelSnapshot
+    [Migration("20220622190117_AddTagsBridge")]
+    partial class AddTagsBridge
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -930,6 +932,13 @@ namespace Atlas_Web.Migrations
                     b.Property<string>("Availability")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("CertificationTag")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("CertificationTagId")
+                        .HasColumnType("int")
+                        .HasColumnName("CertificationTagID");
+
                     b.Property<string>("DefaultVisibilityYn")
                         .HasMaxLength(1)
                         .HasColumnType("nvarchar(1)")
@@ -1025,6 +1034,8 @@ namespace Atlas_Web.Migrations
 
                     b.HasIndex(new[] { "AuthorUserId" }, "authorid");
 
+                    b.HasIndex(new[] { "CertificationTagId" }, "certid");
+
                     b.HasIndex(new[] { "EpicMasterFile" }, "masterfile_report_visiblity_type");
 
                     SqlServerIndexBuilderExtensions.IncludeProperties(b.HasIndex(new[] { "EpicMasterFile" }, "masterfile_report_visiblity_type"), new[] { "ReportObjectId", "DefaultVisibilityYn", "ReportObjectTypeId" });
@@ -1059,9 +1070,9 @@ namespace Atlas_Web.Migrations
 
                     SqlServerIndexBuilderExtensions.IncludeProperties(b.HasIndex(new[] { "SourceServer", "ReportObjectTypeId" }, "sourceserver_type_report"), new[] { "ReportObjectId" });
 
-                    b.HasIndex(new[] { "ReportObjectTypeId", "EpicMasterFile" }, "type_report");
+                    b.HasIndex(new[] { "ReportObjectTypeId", "EpicMasterFile" }, "type_report_cert");
 
-                    SqlServerIndexBuilderExtensions.IncludeProperties(b.HasIndex(new[] { "ReportObjectTypeId", "EpicMasterFile" }, "type_report"), new[] { "ReportObjectId" });
+                    SqlServerIndexBuilderExtensions.IncludeProperties(b.HasIndex(new[] { "ReportObjectTypeId", "EpicMasterFile" }, "type_report_cert"), new[] { "ReportObjectId", "CertificationTag" });
 
                     b.HasIndex(new[] { "ReportObjectTypeId" }, "type_report_masterfile");
 
@@ -1069,9 +1080,9 @@ namespace Atlas_Web.Migrations
 
                     b.HasIndex(new[] { "DefaultVisibilityYn", "OrphanedReportObjectYn", "ReportObjectTypeId" }, "visibility + orphan + type");
 
-                    b.HasIndex(new[] { "DefaultVisibilityYn" }, "visibility_report_masterfile");
+                    b.HasIndex(new[] { "DefaultVisibilityYn" }, "visibility_report_cert_masterfile");
 
-                    SqlServerIndexBuilderExtensions.IncludeProperties(b.HasIndex(new[] { "DefaultVisibilityYn" }, "visibility_report_masterfile"), new[] { "ReportObjectId", "EpicMasterFile" });
+                    SqlServerIndexBuilderExtensions.IncludeProperties(b.HasIndex(new[] { "DefaultVisibilityYn" }, "visibility_report_cert_masterfile"), new[] { "ReportObjectId", "CertificationTag", "EpicMasterFile" });
 
                     b.ToTable("ReportObject", (string)null);
                 });

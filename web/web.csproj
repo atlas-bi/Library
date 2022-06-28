@@ -39,6 +39,7 @@
     </PackageReference>
     <PackageReference Include="NUglify" Version="1.20.0" />
     <PackageReference Include="SixLabors.ImageSharp" Version="2.1.0" />
+    <PackageReference Include="Slugify.Core" Version="3.0.0" />
     <PackageReference Include="SolrNet" Version="1.0.19" />
     <PackageReference Include="SolrNet.Core" Version="1.0.19" />
     <PackageReference Include="SolrNet.Microsoft.DependencyInjection" Version="1.0.19" />

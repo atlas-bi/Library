@@ -33,7 +33,8 @@ namespace Atlas_Web.Models
         public virtual DbSet<MaintenanceLogStatus> MaintenanceLogStatuses { get; set; }
         public virtual DbSet<MaintenanceSchedule> MaintenanceSchedules { get; set; }
         public virtual DbSet<OrganizationalValue> OrganizationalValues { get; set; }
-        public virtual DbSet<ReportCertificationTag> ReportCertificationTags { get; set; }
+        public virtual DbSet<Tag> Tags { get; set; }
+        public virtual DbSet<ReportTagLink> ReportTagLinks { get; set; }
         public virtual DbSet<ReportGroupsMembership> ReportGroupsMemberships { get; set; }
         public virtual DbSet<ReportManageEngineTicket> ReportManageEngineTickets { get; set; }
         public virtual DbSet<ReportObject> ReportObjects { get; set; }
@@ -709,14 +710,29 @@ namespace Atlas_Web.Models
                 }
             );
 
-            modelBuilder.Entity<ReportCertificationTag>(
+            modelBuilder.Entity<Tag>(
                 entity =>
                 {
-                    entity.HasKey(e => e.CertId);
+                    entity.HasKey(e => e.TagId);
 
-                    entity.HasIndex(e => e.CertId, "certid");
+                    entity.HasIndex(e => e.TagId, "tagid");
+                    entity.HasIndex(e => e.Name, "tagname");
+                }
+            );
 
-                    entity.Property(e => e.CertId).ValueGeneratedNever().HasColumnName("Cert_ID");
+            modelBuilder.Entity<ReportTagLink>(
+                entity =>
+                {
+                    entity.HasKey(e => e.ReportTagLinkId);
+                    entity.HasIndex(e => new { e.ReportId, e.TagId }, "report_tag");
+                    entity
+                        .HasOne(d => d.Report)
+                        .WithMany(p => p.ReportTagLinks)
+                        .HasForeignKey(d => d.ReportId);
+                    entity
+                        .HasOne(d => d.Tag)
+                        .WithMany(p => p.ReportTagLinks)
+                        .HasForeignKey(d => d.TagId);
                 }
             );
 
@@ -773,8 +789,6 @@ namespace Atlas_Web.Models
 
                     entity.HasIndex(e => e.AuthorUserId, "authorid");
 
-                    entity.HasIndex(e => e.CertificationTagId, "certid");
-
                     entity.HasIndex(e => e.LastModifiedByUserId, "modifiedby");
 
                     entity.HasIndex(e => e.ReportObjectId, "reportid").IsUnique();
@@ -786,10 +800,8 @@ namespace Atlas_Web.Models
                         )
                         .IncludeProperties(p => p.ReportObjectId);
                     entity
-                        .HasIndex(e => e.DefaultVisibilityYn, "visibility_report_cert_masterfile")
-                        .IncludeProperties(
-                            p => new { p.ReportObjectId, p.CertificationTag, p.EpicMasterFile }
-                        );
+                        .HasIndex(e => e.DefaultVisibilityYn, "visibility_report_masterfile")
+                        .IncludeProperties(p => new { p.ReportObjectId, p.EpicMasterFile });
                     entity
                         .HasIndex(
                             e => new { e.SourceDb, e.EpicMasterFile },
@@ -805,9 +817,9 @@ namespace Atlas_Web.Models
                     entity
                         .HasIndex(
                             e => new { e.ReportObjectTypeId, e.EpicMasterFile },
-                            "type_report_cert"
+                            "type_report"
                         )
-                        .IncludeProperties(p => new { p.ReportObjectId, p.CertificationTag });
+                        .IncludeProperties(p => p.ReportObjectId);
                     entity
                         .HasIndex(
                             e => new { e.SourceServer, e.EpicMasterFile },
@@ -851,8 +863,6 @@ namespace Atlas_Web.Models
                     entity.Property(e => e.ReportObjectId).HasColumnName("ReportObjectID");
 
                     entity.Property(e => e.AuthorUserId).HasColumnName("AuthorUserID");
-
-                    entity.Property(e => e.CertificationTagId).HasColumnName("CertificationTagID");
 
                     entity
                         .Property(e => e.DefaultVisibilityYn)
@@ -922,8 +932,6 @@ namespace Atlas_Web.Models
                         .HasForeignKey(d => d.ReportObjectTypeId)
                         .OnDelete(DeleteBehavior.SetNull)
                         .HasConstraintName("FK__ReportObj__Repor__3750728B");
-
-
                 }
             );
 

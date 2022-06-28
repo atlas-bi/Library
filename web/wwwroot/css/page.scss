@@ -2,35 +2,41 @@ section {
   position: relative;
 }
 
-.pageNav-badgeOrange {
+.pageNav-badgeOrange,
+.pageNav.legacy,
+.pageNav.epic-released {
   border: 2px solid #ffc107;
   border-radius: 3px;
   color: #ffc107;
   padding: 0 5px;
 }
 
-.pageNav-badgeRed {
+.pageNav-badgeRed,
+.pageNav.high-risk {
   border: 2px solid #ff6961;
   border-radius: 3px;
   color: #ff6961;
   padding: 0 5px;
 }
 
-.pageNav-badgeGreen {
+.pageNav-badgeGreen,
+.pageNav.analytics-reviewed {
   border: 2px solid rgb(41 206 66);
   border-radius: 3px;
   color: rgb(41 206 66);
   padding: 0 5px;
 }
 
-.pageNav-badgeBlue {
+.pageNav-badgeBlue,
+.pageNav.self-service {
   border: 2px solid rgb(35 96 252);
   border-radius: 3px;
   color: rgb(35 96 252);
   padding: 0 5px;
 }
 
-.pageNav-badgeHunterGreen {
+.pageNav-badgeHunterGreen,
+.pageNav.analytics-certified {
   border: 2px solid #22aa36;
   border-radius: 3px;
   color: #22aa36;

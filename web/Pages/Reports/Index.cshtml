@@ -60,41 +60,16 @@
         @Model.Report.Name
     }
 
-    @{
-        string cert_tooltip = "This report has not been validated by the Analytics Team and does not have a usage track record. It may display inaccurate or misleading information. Use at your own risk.";
-        string cert_class = "pageNav-badgeRed";
-
-        @if (Model.Report.CertificationTag == "Analytics Certified")
+    @foreach (var item in Model.Report.ReportTagLinks)
+    {
+        if(item.ShowInHeader == "Y" || item.Tag.ShowInHeader == "Y")
         {
-            cert_tooltip = "This report has received the highest level of scrutiny from the Analytics Team and the owning end user. Certified reports are the most reliable and accurate in the system.";
-            cert_class = "pageNav-badgeHunterGreen";
-        }
-        else if (Model.Report.CertificationTag == "Analytics Reviewed")
-        {
-            cert_tooltip = "This report has gone through the standard Analytics code review and validation process. Reviewed reports can be trusted for monitoring most operational processes.";
-            cert_class = "pageNav-badgeGreen";
-        }
-        else if (Model.Report.CertificationTag == "Epic Released")
-        {
-            cert_tooltip = "Epic Released Reports are limited to the standard Epic configuration. They cannot be customized to match Riverside’s unique system build and may not always be accurate. Use with caution.";
-            cert_class = "pageNav-badgeOrange";
-
-        }
-        else if (Model.Report.CertificationTag == "Legacy")
-        {
-            cert_tooltip = "This report has not been validated by the Analytics team for accuracy and reliability. Use with caution.";
-            cert_class = "pageNav-badgeOrange";
-        }
-        else if (Model.Report.CertificationTag == "Self-Service")
-        {
-            cert_tooltip = "Data has been validated but content produced via self-service is the responsibility of the end user.";
-            cert_class = "pageNav-badgeBlue";
+            <span class="has-tooltip-arrow has-tooltip-multiline has-tooltip-bottom" data-tooltip="@item.Tag.Description">
+                <span class="pageNav @PageExtensions.Slug(item.Tag.Name) is-nobreak">@item.Tag.Name</span>
+            </span>
         }
     }
 
-    <span class="has-tooltip-arrow has-tooltip-multiline has-tooltip-bottom" data-tooltip="@cert_tooltip">
-        <span class="@cert_class is-nobreak">@Model.Report.CertificationTag</span>
-    </span>
 </h1>
 
 @if (ViewBag.Permissions.Contains(12))

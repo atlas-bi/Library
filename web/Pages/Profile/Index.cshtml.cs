@@ -190,7 +190,10 @@ namespace Atlas_Web.Pages.Profile
                 if (certification.Any())
                 {
                     subquery_reports = subquery_reports.Where(
-                        x => certification.Contains(x.CertificationTag)
+                        x =>
+                            certification
+                                .Intersect(x.ReportTagLinks.Select(x => x.Tag.Name).ToList())
+                                .Any()
                     );
                 }
 
@@ -506,8 +509,8 @@ namespace Atlas_Web.Pages.Profile
                 )
                 .ToListAsync();
 
-            Filter_Certification = await _context.ReportObjects
-                .GroupBy(x => x.CertificationTag)
+            Filter_Certification = await _context.ReportTagLinks
+                .GroupBy(x => x.Tag.Name)
                 .Select(
                     x =>
                         new Filters
@@ -516,7 +519,7 @@ namespace Atlas_Web.Pages.Profile
                             Value = x.Key,
                             FriendlyValue = x.Key,
                             Count = subquery
-                                .Where(c => c.r.CertificationTag == x.Key)
+                                .Where(c => c.r.ReportTagLinks.Any(l => l.Tag.Name == x.Key))
                                 .Sum(y => y.b.Runs),
                             Checked = certification.Contains(x.Key)
                         }

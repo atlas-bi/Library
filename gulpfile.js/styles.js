@@ -21,8 +21,17 @@ gulp.task('css:build', function () {
           '!web/wwwroot/js/**/*min.js',
           'web/wwwroot/lib/**/*.js',
         ],
-        safelist: ['breadcrumb', 'is-active', '.editor-liveEditorPrev'],
-        whitelist: ['breadcrumb', 'is-active', '.editor-liveEditorPrev'],
+        safelist: [
+          'breadcrumb',
+          'is-active',
+          'editor-liveEditorPrev',
+          'analytics-reviewed',
+          'epic-released',
+          'legacy',
+          'high-risk',
+          'self-service',
+          'analytics-certified',
+        ],
       }),
     )
     .pipe(postcss(plugins))

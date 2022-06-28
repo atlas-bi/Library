@@ -38,105 +38,35 @@
   z-index: 2;
 }
 
-.srch-field {
+.tag.epic-released,
+.tag.legacy {
   background-color: #ffc107;
-  border-radius: 0.25rem;
   color: #212529;
-  display: inline-block;
-  font-size: 75%;
-  line-height: 1;
-  padding: 0.25em 0.4em;
-  text-align: center;
-  vertical-align: baseline;
-  white-space: nowrap;
 }
 
-.srch-fieldOrange {
-  background-color: #ffc107;
-  border-radius: 0.25rem;
-  color: #212529;
-  display: inline-block;
-  font-size: 75%;
-  line-height: 1;
-  padding: 0.25em 0.4em;
-  text-align: center;
-  vertical-align: baseline;
-  white-space: nowrap;
-}
-
-.srch-fieldHunterGreen {
+.tag.analytics-certified {
   background-color: #22aa36 !important;
-  border-radius: 0.25rem;
   color: #212529;
-  display: inline-block;
-  font-size: 75%;
-  line-height: 1;
-  padding: 0.25em 0.4em;
-  text-align: center;
-  vertical-align: baseline;
-  white-space: nowrap;
 }
 
-.srch-fieldGreen {
+.tag.analytics-reviewed {
   background-color: rgba(41 206 66) !important;
-  border-radius: 0.25rem;
   color: #212529;
-  display: inline-block;
-  font-size: 75%;
-  line-height: 1;
-  padding: 0.25em 0.4em;
-  text-align: center;
-  vertical-align: baseline;
-  white-space: nowrap;
 }
 
-.srch-fieldBlue {
+.tag.self-service {
   background-color: rgba(35 96 252) !important;
-  border-radius: 0.25rem;
   color: #fff !important;
-  display: inline-block;
-  font-size: 75%;
-  line-height: 1;
-  padding: 0.25em 0.4em;
-  text-align: center;
-  vertical-align: baseline;
-  white-space: nowrap;
 }
 
-.srch-fieldRed {
+.tag.high-risk {
   background-color: #ff6961 !important;
-  border-radius: 0.25rem;
   color: #212529;
-  display: inline-block;
-  font-size: 75%;
-  line-height: 1;
-  padding: 0.25em 0.4em;
-  text-align: center;
-  vertical-align: baseline;
-  white-space: nowrap;
 }
 
 .srch-none {
   margin: 30px;
   text-align: center;
-}
-
-.srch-results {
-  height: 100%;
-}
-
-.srch-result {
-  background-clip: border-box;
-  display: flex;
-  flex-direction: row;
-  min-width: 0;
-  padding: 10px 15px 0;
-  position: relative;
-  word-wrap: break-word;
-}
-
-.srch-result:hover .fav-links {
-  visibility: visible;
 }
 
 .pagination {

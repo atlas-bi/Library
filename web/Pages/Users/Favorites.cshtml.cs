@@ -99,6 +99,9 @@ namespace Atlas_Web.Pages.Users
                 .ThenInclude(x => x.ReportObjectAttachments)
                 .Include(x => x.Report)
                 .ThenInclude(x => x.StarredReports)
+                .Include(x => x.Report)
+                .ThenInclude(x => x.ReportTagLinks)
+                .ThenInclude(x => x.Tag)
                 .ToListAsync();
 
             Initiatives = await _context.StarredInitiatives
