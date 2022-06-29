@@ -1261,8 +1261,17 @@ namespace Atlas_Web.Models
 
                     entity.ToTable("ReportObjectRunDataBridge", "dbo");
 
+                    entity.Property(x => x.Inherited).HasDefaultValue(0);
+
                     entity
                         .HasIndex(e => e.ReportObjectId, "reportid_runid_runs")
+                        .IncludeProperties(p => new { p.RunId, p.Runs });
+
+                    entity
+                        .HasIndex(
+                            e => new { e.ReportObjectId, e.Inherited },
+                            "reportid_inheritied_runid_runs"
+                        )
                         .IncludeProperties(p => new { p.RunId, p.Runs });
 
                     entity

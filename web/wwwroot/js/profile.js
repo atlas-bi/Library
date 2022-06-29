@@ -304,9 +304,11 @@
         const element = event.target.closest(
           '.profile-filter input[type=checkbox]',
         );
+
         const parameters = element.checked
           ? chart.dataset.parameters + `&${element.dataset.filter}`
           : chart.dataset.parameters.replace(`&${element.dataset.filter}`, '');
+
         loadChart(parameters);
         loadFilters(parameters);
         loadBoxes(parameters);
@@ -378,18 +380,25 @@
       );
     }
 
-    function loadBoxes(parameters = '') {
+    function loadBoxes(parameters = undefined) {
       (
         document.querySelectorAll(
           `.bar-data-wrapper.profile[data-url][data-target="${chart.id}"]`,
         ) || []
       ).forEach(($element) => {
         $element.style.opacity = '.5';
-        $element.setAttribute('data-parameters', parameters.replace('?', '&'));
+        if (parameters !== undefined) {
+          $element.setAttribute(
+            'data-parameters',
+            parameters.replace('?', '&'),
+          );
+        }
+
         const aj = new XMLHttpRequest();
         aj.open(
           'get',
-          $element.dataset.url + parameters.replace('?', '&'),
+          $element.dataset.url +
+            ($element.dataset.parameters || '').replace('?', '&'),
           true,
         );
         aj.setRequestHeader(
@@ -409,7 +418,7 @@
       });
     }
 
-    function loadChart(parameters = '') {
+    function loadChart(parameters = undefined) {
       chart.style.opacity = '.5';
       const runs = document.querySelector(`#${chart.id}-runs`);
       const users = document.querySelector(`#${chart.id}-users`);
@@ -423,14 +432,22 @@
         primaryChartAjax.abort();
       }
 
-      if (chart.dataset.url.includes('?')) {
-        parameters = parameters.replace('?', '&');
+      if (parameters === undefined) {
+        parameters = '';
+      } else {
+        if (chart.dataset.url.includes('?')) {
+          parameters = parameters.replace('?', '&');
+        }
+
+        chart.setAttribute('data-parameters', parameters);
       }
 
-      chart.setAttribute('data-parameters', parameters);
-
       primaryChartAjax = new XMLHttpRequest();
-      primaryChartAjax.open('get', chart.dataset.url + parameters, true);
+      primaryChartAjax.open(
+        'get',
+        chart.dataset.url + (chart.dataset.parameters || ''),
+        true,
+      );
       primaryChartAjax.setRequestHeader(
         'Content-Type',
         'application/x-www-form-urlencoded; charset=UTF-8',

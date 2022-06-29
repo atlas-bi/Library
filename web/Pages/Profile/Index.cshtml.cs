@@ -67,6 +67,15 @@ namespace Atlas_Web.Pages.Profile
         public int Users { get; set; }
         public double RunTime { get; set; }
 
+        public class RunListData
+        {
+            public string Name { get; set; }
+            public string Type { get; set; }
+            public string Url { get; set; }
+            public int Runs { get; set; }
+            public string LastRun { get; set; }
+        }
+
         public List<User> UserStars { get; set; }
         public List<User> UserSubscriptions { get; set; }
 
@@ -89,6 +98,61 @@ namespace Atlas_Web.Pages.Profile
                 .Select(x => x.ReportObjectTypeId)
                 .ToListAsync();
             return Page();
+        }
+
+        public async Task<ActionResult> OnGetRunListAsync(
+            int id = -1,
+            string type = "user",
+            List<int> reportType = null
+        )
+        {
+            var run_data = _context.ReportObjectRunDatas.AsQueryable();
+
+            if (type == "user")
+            {
+                run_data = run_data.Where(x => x.RunUserId == id);
+            }
+            else if (type == "group")
+            {
+                run_data = run_data.Where(
+                    x => x.RunUser.UserGroupsMemberships.Any(g => g.GroupId == id)
+                );
+            }
+
+            var reports = _context.ReportObjects.AsQueryable();
+
+            if (reportType.Count > 0)
+            {
+                reports = reports.Where(x => reportType.Contains((int)x.ReportObjectTypeId));
+            }
+
+            ViewData["ReportRuns"] = await (
+                from r in reports
+                join b in _context.ReportObjectRunDataBridges
+                    on r.ReportObjectId equals b.ReportObjectId
+                join d in run_data on b.RunId equals d.RunDataId
+                where b.Inherited == 0
+                group new SubqueryData { d = d, b = b } by new
+                {
+                    r.ReportObjectId,
+                    r.Name,
+                    r.ReportObjectType.ShortName,
+                    ReportTypeName = r.ReportObjectType.Name
+                } into grp
+                orderby grp.Max(x => x.d.RunStartTime) descending
+                select new RunListData
+                {
+                    Name = grp.Key.Name,
+                    Type = string.IsNullOrEmpty(grp.Key.ShortName)
+                      ? grp.Key.ReportTypeName
+                      : grp.Key.ShortName,
+                    Url = $"\\reports?id={grp.Key.ReportObjectId}",
+                    Runs = grp.Sum(x => x.b.Runs),
+                    LastRun = grp.Max(x => x.d.RunStartTime).ToShortDateString(),
+                }
+            ).ToListAsync();
+
+            return new PartialViewResult() { ViewName = "Partials/_RunList", ViewData = ViewData };
         }
 
         public Tuple<
@@ -395,8 +459,8 @@ namespace Atlas_Web.Pages.Profile
                 reportType
             );
 
-            Filter_Server = await _context.ReportObjects
-                .GroupBy(x => x.SourceServer)
+            Filter_Server = await subquery
+                .GroupBy(x => x.r.SourceServer)
                 .Select(
                     x =>
                         new Filters
@@ -404,16 +468,14 @@ namespace Atlas_Web.Pages.Profile
                             Key = "server",
                             Value = x.Key,
                             FriendlyValue = x.Key,
-                            Count = subquery
-                                .Where(b => b.r.SourceServer == x.Key)
-                                .Sum(y => y.b.Runs),
+                            Count = x.Sum(y => y.b.Runs),
                             Checked = server.Contains(x.Key)
                         }
                 )
                 .ToListAsync();
 
-            Filter_Database = await _context.ReportObjects
-                .GroupBy(x => x.SourceDb)
+            Filter_Database = await subquery
+                .GroupBy(x => x.r.SourceDb)
                 .Select(
                     x =>
                         new Filters
@@ -421,14 +483,14 @@ namespace Atlas_Web.Pages.Profile
                             Key = "database",
                             Value = x.Key,
                             FriendlyValue = x.Key,
-                            Count = subquery.Where(c => c.r.SourceDb == x.Key).Sum(y => y.b.Runs),
+                            Count = x.Sum(y => y.b.Runs),
                             Checked = database.Contains(x.Key)
                         }
                 )
                 .ToListAsync();
 
-            Filter_ReportType = await _context.ReportObjects
-                .GroupBy(x => new { x.ReportObjectTypeId, x.ReportObjectType.Name })
+            Filter_ReportType = await subquery
+                .GroupBy(x => new { x.r.ReportObjectTypeId, x.r.ReportObjectType.Name })
                 .Select(
                     x =>
                         new Filters
@@ -436,23 +498,21 @@ namespace Atlas_Web.Pages.Profile
                             Key = "reportType",
                             Value = x.Key.ReportObjectTypeId.ToString(),
                             FriendlyValue = x.Key.Name,
-                            Count = subquery
-                                .Where(c => c.r.ReportObjectTypeId == x.Key.ReportObjectTypeId)
-                                .Sum(y => y.b.Runs),
+                            Count = x.Sum(y => y.b.Runs),
                             Checked = reportType.Contains((int)x.Key.ReportObjectTypeId)
                         }
                 )
                 .ToListAsync();
 
-            Filter_MasterFile = await _context.ReportObjects
+            Filter_MasterFile = await subquery
                 .GroupBy(
                     x =>
                         new
                         {
                             Key = "masterFile",
-                            Value = string.IsNullOrEmpty(x.EpicMasterFile)
+                            Value = string.IsNullOrEmpty(x.r.EpicMasterFile)
                               ? "None"
-                              : x.EpicMasterFile,
+                              : x.r.EpicMasterFile,
                         }
                 )
                 .Select(
@@ -462,29 +522,20 @@ namespace Atlas_Web.Pages.Profile
                             Key = x.Key.Key,
                             Value = x.Key.Value,
                             FriendlyValue = x.Key.Value,
-                            Count = subquery
-                                .Where(
-                                    c =>
-                                        (
-                                            string.IsNullOrEmpty(c.r.EpicMasterFile)
-                                              ? "None"
-                                              : c.r.EpicMasterFile
-                                        ) == x.Key.Value
-                                )
-                                .Sum(y => y.b.Runs),
+                            Count = x.Sum(y => y.b.Runs),
                             Checked = masterFile.Contains(x.Key.Value)
                         }
                 )
                 .ToListAsync();
 
-            Filter_Visible = await _context.ReportObjects
+            Filter_Visible = await subquery
                 .GroupBy(
                     x =>
                         new
                         {
                             Key = "visible",
-                            Value = x.DefaultVisibilityYn == "N" ? "N" : "Y",
-                            FriendlyValue = x.DefaultVisibilityYn == "N" ? "No" : "Yes"
+                            Value = x.r.DefaultVisibilityYn == "N" ? "N" : "Y",
+                            FriendlyValue = x.r.DefaultVisibilityYn == "N" ? "No" : "Yes"
                         }
                 )
                 .Select(
@@ -494,45 +545,35 @@ namespace Atlas_Web.Pages.Profile
                             Key = x.Key.Key,
                             Value = x.Key.Value,
                             FriendlyValue = x.Key.FriendlyValue,
-                            Count = subquery
-                                .Where(
-                                    c =>
-                                        (
-                                            string.IsNullOrEmpty(c.r.DefaultVisibilityYn)
-                                              ? "Y"
-                                              : c.r.DefaultVisibilityYn
-                                        ) == x.Key.Value
-                                )
-                                .Sum(y => y.b.Runs),
+                            Count = x.Sum(y => y.b.Runs),
                             Checked = visible.Contains(x.Key.Value)
                         }
                 )
                 .ToListAsync();
 
-            Filter_Certification = await _context.ReportTagLinks
-                .GroupBy(x => x.Tag.Name)
-                .Select(
-                    x =>
-                        new Filters
-                        {
-                            Key = "certification",
-                            Value = x.Key,
-                            FriendlyValue = x.Key,
-                            Count = subquery
-                                .Where(c => c.r.ReportTagLinks.Any(l => l.Tag.Name == x.Key))
-                                .Sum(y => y.b.Runs),
-                            Checked = certification.Contains(x.Key)
-                        }
-                )
-                .ToListAsync();
+            Filter_Certification = await (
+                from l in _context.ReportTagLinks
+                join y in subquery on l.ReportId equals y.r.ReportObjectId
+                group y by l.Tag.Name into x
+                select new Filters
+                {
+                    Key = "certification",
+                    Value = x.Key,
+                    FriendlyValue = x.Key,
+                    Count = x.Sum(y => y.b.Runs),
+                    Checked = certification.Contains(x.Key)
+                }
+            ).ToListAsync();
 
-            Filter_Availabiltiy = await _context.ReportObjects
+            Filter_Availabiltiy = await subquery
                 .GroupBy(
                     x =>
                         new
                         {
                             Key = "availability",
-                            Value = string.IsNullOrEmpty(x.Availability) ? "Public" : x.Availability
+                            Value = string.IsNullOrEmpty(x.r.Availability)
+                              ? "Public"
+                              : x.r.Availability
                         }
                 )
                 .Select(
@@ -542,16 +583,7 @@ namespace Atlas_Web.Pages.Profile
                             Key = x.Key.Key,
                             Value = x.Key.Value,
                             FriendlyValue = x.Key.Value,
-                            Count = subquery
-                                .Where(
-                                    c =>
-                                        (
-                                            string.IsNullOrEmpty(c.r.Availability)
-                                              ? "Public"
-                                              : c.r.Availability
-                                        ) == x.Key.Value
-                                )
-                                .Sum(y => y.b.Runs),
+                            Count = x.Sum(y => y.b.Runs),
                             Checked = availability.Contains(x.Key.Value)
                         }
                 )
