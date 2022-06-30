@@ -35,7 +35,7 @@ namespace Atlas_Web.Models
         public int AtlasId { get; set; }
 
         [SolrField("certification")]
-        public string Certification { get; set; }
+        public ICollection<string> Certification { get; set; }
 
         [SolrField("epic_master_file")]
         public string EpicMasterFile { get; set; }

@@ -53,7 +53,7 @@
         try { __jsnlog_configure(JL); } catch(e) {};
     </script>
 </head>
-<body>
+<body class="is-flex is-flex-direction-column has-background-white">
     <!-- site message -->
     @if (@ViewData["SiteMessage"] != null && @ViewData["SiteMessage"].ToString() != "")
     {
@@ -70,10 +70,10 @@
         </div>
     }
 
-    <nav class="navbar is-transparent atlas-navbar has-shadow is-sticky">
+    <nav class="navbar is-transparent atlas-navbar has-shadow is-sticky is-align-items-center">
         <div class="container">
             <div class="navbar-brand">
-                <a href="/">
+                <a class="navbar-item" href="/">
                     <img src="@Cache.Get("logo")" width="130" height="40" alt="site logo" />
                 </a>
                 <a role="button"
@@ -228,15 +228,14 @@
             </div>
         </div>
     </nav>
-    <section class="section my-5 py-0">
+    <section class="section py-0">
         <div class="container">
             <nav class="breadcrumb">
             </nav>
         </div>
     </section>
 
-
-    <section class="is-flex-grow-1">
+    <section class="is-flex-grow-1 mt-4">
         <div class="container is-relative mb-5">
             <div class="columns">
                 <div class="column is-narrow side-links" style="z-index: 2;">

@@ -237,7 +237,7 @@
         if ($r.percent) {
           row.innerHTML += `<div class="bar-percent py-2 is-relative has-text-centered"><div class="bar-percent-fill" style="width:${
             $r.percent * 100
-          }%"></div><span><strong>${Math.round(
+          }%"></div><span><strong class="has-text-grey-light">${Math.round(
             $r.percent * 100,
           )}%</strong></span>`;
         }

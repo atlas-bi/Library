@@ -40,7 +40,7 @@
 
     @if (!string.IsNullOrEmpty(Model.Report.RepositoryDescription))
     {
-        <nav id="repository-description" class="panel mt-5">
+        <nav id="repository-description" class="panel mt-4">
             <div class="panel-heading is-flex is-justify-content-space-between" data-action="collapse" data-target="collapse-repository-description">
                 <span>Repository Description</span>
                 <span class="icon">
@@ -58,7 +58,7 @@
 </div>
 
 @if(Model.Report.ReportObjectParameters.Any()){
-    <nav id="parameters" class="panel mt-5">
+    <nav id="parameters" class="panel mt-4">
         <p class="panel-heading is-flex is-justify-content-space-between" data-action="collapse" data-target="parameter-data">
             <span>Parameters</span>
             <span class="icon">

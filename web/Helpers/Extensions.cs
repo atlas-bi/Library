@@ -8,6 +8,7 @@ using Microsoft.Extensions.Caching.Memory;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.DependencyInjection;
 using WebOptimizer;
+using Slugify;
 
 namespace Atlas_Web.Helpers
 {
@@ -59,6 +60,12 @@ namespace Atlas_Web.Helpers
             {
                 return path;
             }
+        }
+
+        public static string Slug(string stuff)
+        {
+            SlugHelper helper = new SlugHelper();
+            return helper.GenerateSlug(stuff);
         }
     }
 

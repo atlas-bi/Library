@@ -1,7 +1,20 @@
 (function () {
   let q;
   document.addEventListener('click', function (event) {
-    if (
+    if (event.target.matches('button.report-tags-etl-reset')) {
+      q = new XMLHttpRequest();
+      q.open('get', '/Settings/?handler=DefaultEtl', true);
+      q.setRequestHeader('Content-Type', 'text/html;charset=UTF-8`');
+      q.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+      q.send();
+
+      q.addEventListener('readystatechange', function () {
+        if (this.readyState === 4 && this.status === 200) {
+          document.querySelector('.report-tags-etl textarea').value =
+            q.responseText;
+        }
+      });
+    } else if (
       event.target.matches('.settings-search-visiblity[type="checkbox"]') &&
       event.target.tagName === 'INPUT'
     ) {

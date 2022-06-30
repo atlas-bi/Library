@@ -1,0 +1,62 @@
+
+@model Atlas_Web.Pages.Settings.TagsModel
+<div>
+    @if (ViewBag.Permissions.Contains(33))
+    {
+        <form asp-page-handler="CreateTag">
+            <div class="field">
+                <label class="label">Add More</label>
+                <div class="field">
+                    <div class="control">
+                        <label class="label">Name</label>
+                        <input type="text" class="input" placeholder="name" asp-for="Tag.Name" required />
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="control">
+                        <label class="label">Name</label>
+                        <input type="text" class="input" placeholder="description" asp-for="Tag.Description" required />
+                    </div>
+                </div>
+                <div class="field toggle">
+                    <input type="hidden"  asp-for="Tag.ShowInHeader" value="Y">
+                    <input type="checkbox" id="Tag_ShowInHeader_Check" name="Tag_ShowInHeader_Check" class="switch is-rounded is-info settings-search-visiblity"  checked="checked" />
+                    <label class="label" for="Tag_ShowInHeader_Check">Show In Report Header</label>
+                </div>
+                <div class="field">
+                    <div class="control">
+                        <button class="button is-info" type="submit">
+                            Save
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    }
+
+    <div class="field is-grouped is-grouped-multiline">
+        @foreach (var i in ViewBag.TagList)
+        {
+            <div class="control">
+                @if (ViewBag.Permissions.Contains(34))
+                {
+                    <form asp-page-handler="DeleteTag" class="tags has-addons">
+                        <span class="tag is-link has-tooltip-arrow has-tooltip-bottom"  @if(!string.IsNullOrEmpty(@i.Description)){<text> data-tooltip="@i.Description"</text>}>@i.Name</span>
+                        <span class="tag is-dark">@i.Used uses</span>
+                        @if (ViewBag.Permissions.Contains(34))
+                        {
+                            <input type="hidden" asp-for="Tag.TagId" value="@i.Id" />
+                            <button type="submit" class="tag is-delete" href="/Settings?handler=DeleteTag&Id=@i.Id"></button>
+                        }
+                    </form>
+                } else
+                {
+                    <div class="tags has-addons has-tooltip-arrow has-tooltip-bottom"  @if(!string.IsNullOrEmpty(@i.Description)){<text> data-tooltip="@i.Description"</text>}>
+                        <span class="tag is-link">@i.Name</span>
+                        <span class="tag is-dark">@i.Used uses</span>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</div>

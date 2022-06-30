@@ -241,6 +241,7 @@ $icons: (
   lightbulb: $fa-var-lightbulb,
   project-diagram: $fa-var-project-diagram,
   copy: $fa-var-copy,
+  caret-up: $fa-var-caret-up,
 );
 
 @each $key, $value in $icons {

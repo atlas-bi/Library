@@ -23,14 +23,21 @@
         @foreach (var i in ViewBag.FragilityList)
         {
             <div class="control">
-                <div class="tags has-addons">
-                  <span class="tag is-link">@i.Name</span>
-                  <span class="tag is-dark">@i.Used uses</span>
-                  @if (ViewBag.Permissions.Contains(34))
-                    {
-                  <a class="tag is-delete" href="/Settings?handler=DeleteFragility&Id=@i.Id"></a>
-                    }
-                </div>
+                @if (ViewBag.Permissions.Contains(34))
+                {
+                    <form asp-page-handler="DeleteFragility" class="tags has-addons">
+                        <span class="tag is-link">@i.Name</span>
+                        <span class="tag is-dark">@i.Used uses</span>
+                        <input type="hidden" asp-for="Fragility.FragilityId" value="@i.Id" />
+                        <button type="submit" class="tag is-delete"></button>
+                    </form>
+                } else
+                {
+                    <div class="tags has-addons">
+                        <span class="tag is-link">@i.Name</span>
+                        <span class="tag is-dark">@i.Used uses</span>
+                    </div>
+                }
             </div>
         }
     </div>

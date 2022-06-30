@@ -433,6 +433,8 @@ namespace Atlas_Web.Pages.Search
                                                           .Include(x => x.ReportObjectAttachments)
                                                           .Include(x => x.StarredReports)
                                                           .Include(x => x.ReportObjectType)
+                                                          .Include(x => x.ReportTagLinks)
+                                                          .ThenInclude(x => x.Tag)
                                                           .AsSingleQuery()
                                                           .SingleOrDefault(
                                                               y => y.ReportObjectId == x.AtlasId
@@ -713,7 +715,7 @@ namespace Atlas_Web.Pages.Search
             {
                 SearchString = s;
             }
-            var x = BuildSearchString(SearchString, Request.Query);
+
             var FilterQuery = new List<SolrQuery>();
             FilterQuery.Add(new SolrQuery("user_roles_text:(Director)"));
 

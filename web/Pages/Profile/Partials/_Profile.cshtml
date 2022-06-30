@@ -2,7 +2,7 @@
     <nav class="breadcrumb">
         <ul>
             <li>
-                <a class="tab-lnk active" href="#runs-@ViewBag.ProfileType-@ViewBag.ProfileId">Run Details</a>
+                <a class="tab-lnk active" href="#runs-@ViewBag.ProfileType-@ViewBag.ProfileId">Run Analytics</a>
             </li>
             <li>
                 <a class="tab-lnk"  href="#stars-@ViewBag.ProfileType-@ViewBag.ProfileId">Stars</a>
@@ -19,7 +19,7 @@
 
 <section class="tab-cnt">
     <div class="tab-dta active" id="runs-@ViewBag.ProfileType-@ViewBag.ProfileId">
-        <div class="is-flex mb-5 is-justify-content-space-between">
+        <div class="is-flex mb-4 is-justify-content-space-between">
             <div class="is-flex">
                 <div class="is-flex mr-5 is-flex-direction-column">
                     <h1 class="title is-2 mb-0 is-family-sans-serif has-tooltip-arrow has-tooltip-right" data-tooltip="-"><span id="profile-@ViewBag.ProfileType-@ViewBag.ProfileId-runs">-</span></h1>
@@ -86,22 +86,22 @@
         </div>
 
         <div class="chart-wrapper profile"  style="height:400px;">
-            <canvas id="profile-@ViewBag.ProfileType-@ViewBag.ProfileId" data-url="/Profile?handler=Chart&type=@ViewBag.ProfileType&id=@ViewBag.ProfileId@ViewBag.DefaultFilters" width="400" height="400"></canvas>
+            <canvas id="profile-@ViewBag.ProfileType-@ViewBag.ProfileId" data-url="/Profile?handler=Chart&type=@ViewBag.ProfileType&id=@ViewBag.ProfileId" data-parameters="@ViewBag.DefaultFilters" width="400" height="400"></canvas>
         </div>
 
         <div class="columns pt-5 is-multiline">
             @if(ViewBag.ProfileType != "user"){
                 <div class="column @if(ViewBag.ProfileType=="term" || ViewBag.ProfileType == "collection" || (ViewBag.ProfileType== "report" && ViewBag.ProfileId == -1)){<text>is-one-third-desktop is-half-tablet</text>}else{<text>is-half</text>}">
-                    <div class="bar-data-wrapper profile" data-url="/Profile?handler=Users&type=@ViewBag.ProfileType&id=@ViewBag.ProfileId@ViewBag.DefaultFilters" data-target="profile-@ViewBag.ProfileType-@ViewBag.ProfileId"></div>
+                    <div class="bar-data-wrapper profile" data-url="/Profile?handler=Users&type=@ViewBag.ProfileType&id=@ViewBag.ProfileId" data-parameters="@ViewBag.DefaultFilters" data-target="profile-@ViewBag.ProfileType-@ViewBag.ProfileId"></div>
                 </div>
             }
             @if(ViewBag.ProfileType=="user" || ViewBag.ProfileType=="term" || ViewBag.ProfileType == "collection" || (ViewBag.ProfileType== "report" && ViewBag.ProfileId == -1)){
                 <div class="column @if(ViewBag.ProfileType=="user"){<text>is-half</text>}else{<text>is-one-third-desktop is-half-tablet</text>}">
-                    <div class="bar-data-wrapper profile" data-url="/Profile?handler=Reports&type=@ViewBag.ProfileType&id=@ViewBag.ProfileId@ViewBag.DefaultFilters" data-target="profile-@ViewBag.ProfileType-@ViewBag.ProfileId"></div>
+                    <div class="bar-data-wrapper profile" data-url="/Profile?handler=Reports&type=@ViewBag.ProfileType&id=@ViewBag.ProfileId" data-parameters="@ViewBag.DefaultFilters" data-target="profile-@ViewBag.ProfileType-@ViewBag.ProfileId"></div>
                 </div>
             }
             <div class="column @if(ViewBag.ProfileType=="term" || ViewBag.ProfileType == "collection" || (ViewBag.ProfileType== "report" && ViewBag.ProfileId == -1)){<text>is-one-third-desktop is-half-tablet</text>}else{<text>is-half</text>}">
-                <div class="bar-data-wrapper profile" data-url="/Profile?handler=Fails&type=@ViewBag.ProfileType&id=@ViewBag.ProfileId@ViewBag.DefaultFilters" data-target="profile-@ViewBag.ProfileType-@ViewBag.ProfileId"></div>
+                <div class="bar-data-wrapper profile" data-url="/Profile?handler=Fails&type=@ViewBag.ProfileType&id=@ViewBag.ProfileId" data-parameters="@ViewBag.DefaultFilters" data-target="profile-@ViewBag.ProfileType-@ViewBag.ProfileId"></div>
             </div>
         </div>
     </div>

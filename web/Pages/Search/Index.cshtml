@@ -19,7 +19,7 @@
     ViewBag.Query =  Model.SearchResults.Parameters.Filters.SingleOrDefault(x => x.Key == "query").Value;
 }
 
-<section class="section my-5 p-0 is-flex is-flex-direction-row is-align-items-center">
+<section class="section my-4 p-0 is-flex is-flex-direction-row is-align-items-center">
     <div class="icon-text mr-5">
         <span class="icon">
             <i class="fas fa-filter"></i>
@@ -119,7 +119,7 @@
         }
         else
         {
-            <div class="srch-none">
+            <div class="has-text-centered p-5">
                 <h5>Not finding what you are looking for?<br><a href="http://reports.riversidehealthcare.net/" target="_blank">Request a New Report here.</a></h5>
                 <p>
                     <hr />

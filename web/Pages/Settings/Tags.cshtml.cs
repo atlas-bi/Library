@@ -24,6 +24,7 @@ namespace Atlas_Web.Pages.Settings
 
         public IEnumerable<ValueListData> OrganizationalValueList { get; set; }
         public IEnumerable<ValueListData> EstimatedRunFrequencyList { get; set; }
+        public IEnumerable<ValueListData> TagList { get; set; }
         public IEnumerable<ValueListData> MaintenanceScheduleList { get; set; }
         public IEnumerable<ValueListData> FragilityTagList { get; set; }
         public IEnumerable<ValueListData> FragilityList { get; set; }
@@ -36,6 +37,9 @@ namespace Atlas_Web.Pages.Settings
 
         [BindProperty]
         public EstimatedRunFrequency EstimatedRunFrequency { get; set; }
+
+        [BindProperty]
+        public Tag Tag { get; set; }
 
         [BindProperty]
         public MaintenanceSchedule MaintenanceSchedule { get; set; }
@@ -60,6 +64,7 @@ namespace Atlas_Web.Pages.Settings
             public int Id { get; set; }
             public string Name { get; set; }
             public int? Used { get; set; }
+            public string Description { get; set; }
         }
 
         public async Task<IActionResult> OnGetOrganizationalValueList()
@@ -180,6 +185,28 @@ namespace Atlas_Web.Pages.Settings
                 ViewName = "Partials/_FragilityTagList",
                 ViewData = ViewData
             };
+        }
+
+        public async Task<IActionResult> OnGetTagList()
+        {
+            ViewData["TagList"] = await (
+                from o in _context.Tags
+                select new ValueListData
+                {
+                    Id = o.TagId,
+                    Name = o.Name,
+                    Description = o.Description,
+                    Used = o.ReportTagLinks.Count
+                }
+            ).ToListAsync();
+
+            ViewData["Permissions"] = UserHelpers.GetUserPermissions(
+                _cache,
+                _context,
+                User.Identity.Name
+            );
+
+            return new PartialViewResult { ViewName = "Partials/_TagList", ViewData = ViewData };
         }
 
         public async Task<IActionResult> OnGetMaintenanceLogStatusList()
@@ -328,6 +355,23 @@ namespace Atlas_Web.Pages.Settings
             return RedirectToPage("/Settings/Index");
         }
 
+        public ActionResult OnPostCreateTag()
+        {
+            var checkpoint = UserHelpers.CheckUserPermissions(
+                _cache,
+                _context,
+                User.Identity.Name,
+                33
+            );
+            if (ModelState.IsValid && Tag.Name != null && checkpoint)
+            {
+                _context.Add(Tag);
+                _context.SaveChanges();
+            }
+            _cache.Remove("tag");
+            return RedirectToPage("/Settings/Index");
+        }
+
         public ActionResult OnPostDeleteEstimatedRunFrequency()
         {
             var checkpoint = UserHelpers.CheckUserPermissions(
@@ -355,6 +399,24 @@ namespace Atlas_Web.Pages.Settings
                 _context.SaveChanges();
             }
             _cache.Remove("run-freq");
+            return RedirectToPage("/Settings/Index");
+        }
+
+        public ActionResult OnPostDeleteTag()
+        {
+            var checkpoint = UserHelpers.CheckUserPermissions(
+                _cache,
+                _context,
+                User.Identity.Name,
+                34
+            );
+            if (ModelState.IsValid && Tag.TagId > 0 && checkpoint)
+            {
+                _context.RemoveRange(_context.ReportTagLinks.Where(x => x.TagId == Tag.TagId));
+                _context.Remove(Tag);
+                _context.SaveChanges();
+            }
+            _cache.Remove("tag");
             return RedirectToPage("/Settings/Index");
         }
 

@@ -88,6 +88,8 @@ namespace Atlas_Web.Pages.Terms
                         .Include(x => x.ReportObjectType)
                         .Include(x => x.ReportObjectDoc)
                         .Include(x => x.ReportObjectAttachments)
+                        .Include(x => x.ReportTagLinks)
+                        .ThenInclude(x => x.Tag)
                         .ToList();
 
                     var level_two = _context.ReportObjects

@@ -18,7 +18,8 @@
   showScrollToTop();
   document.addEventListener('click', function (event) {
     if (event.target.closest('#back-to-top')) {
-      document.documentElement.scrollTop = document.body.scrollTop = 0;
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
       return false;
     }
   });
