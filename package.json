@@ -149,7 +149,8 @@
       "unicorn/prefer-number-properties": "off",
       "no-negated-condition": "warn",
       "no-multi-assign": "warn",
-      "unicorn/prefer-keyboard-event-key": "off"
+      "unicorn/prefer-keyboard-event-key": "off",
+      "no-new": "warn"
     }
   },
   "version": "3.4.1-alpha.1"

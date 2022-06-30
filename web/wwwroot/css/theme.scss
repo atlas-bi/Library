@@ -95,6 +95,7 @@ $size-6: 0.75rem;
 $size-7: 0.75rem;
 $sizes: $size-1 $size-2 $size-3 $size-4 $size-5 $size-6 $size-7;
 $block-spacing: 1rem;
+
 // $size-normal: $size-5;
 // $size-medium: $size-4;
 // $size-large: $size-3;
@@ -133,12 +134,14 @@ span[data-tooltip] {
 // @import './mail/mail-menu';
 // @import './mail/mail-msgPreview';
 @import './mail/mail-notification';
+
 // @import './mail/mail-reader';
 
 @import './utility/carousel';
 
 /* purgecss start ignore */
 @import '../lib/codemirror/mycss';
+
 /* purgecss end ignore */
 
 @import './page';
@@ -165,6 +168,7 @@ html {
 body {
   min-height: 100%;
 }
+
 section {
   position: relative;
 }
@@ -281,7 +285,7 @@ $card-colors: (
 }
 
 button.tag {
-  border: None;
+  border: none;
 }
 
 .card .tag {

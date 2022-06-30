@@ -14,7 +14,7 @@
   function formatThousandsWithRounding(n, dp) {
     // https://stackoverflow.com/a/20545587/10265880
     const w = Number(n).toFixed(Number(dp));
-    const k = w | 0;
+    const k = Math.trunc(w);
     const b = n < 0 ? 1 : 0;
     const u = Math.abs(w - k);
     const d = String(u.toFixed(Number(dp))).slice(2, 2 + Number(dp));
@@ -22,7 +22,7 @@
     let i = s.length;
     let r = '';
     while ((i -= 3) > b) {
-      r = ',' + s.substr(i, 3) + r;
+      r = ',' + s.slice(i, 3) + r;
     }
 
     return s.slice(0, Math.max(0, i + 3)) + r + (d ? '.' + d : '');

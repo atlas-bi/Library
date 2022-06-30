@@ -41,7 +41,7 @@
     const draftMessage = element.querySelector(
       '#draft_message_count',
     ).innerHTML;
-    const not = element.querySelector('#new_message_alerts');
+    // Const not = element.querySelector('#new_message_alerts');
 
     if (d.querySelector('#mlbx-fldrsDrafts .mail-draft-cnt')) {
       d.querySelector('#mlbx-fldrsDrafts .mail-draft-cnt').innerHTML =

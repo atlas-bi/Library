@@ -15,7 +15,7 @@
     const j = {};
     let crumbs = sessionStorage.getItem('breadcrumbs');
 
-    crumbs = crumbs !== null ? JSON.parse(crumbs) : [];
+    crumbs = crumbs === null ? [] : JSON.parse(crumbs);
 
     if (
       crumbs.length === 0 ||

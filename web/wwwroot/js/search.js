@@ -35,7 +35,8 @@
    */
   document.addEventListener('click', function (event) {
     if (event.target.closest('#nav-search')) {
-      document.documentElement.scrollTop = document.body.scrollTop = 0;
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
     }
   });
 
@@ -128,7 +129,8 @@
       (typeof value !== 'undefined' && value !== null && value.length > 0) ||
       typeof url !== 'undefined'
     ) {
-      document.documentElement.scrollTop = document.body.scrollTop = 0;
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
 
       if (typeof atmr !== 'undefined') clearTimeout(atmr);
 
