@@ -2,7 +2,6 @@
 @page
 @model IndexModel
 @{
-    Layout = HttpContext.Request.Headers["x-requested-with"] == "XMLHttpRequest" ? "../Shared/_AjaxLayout.cshtml" : "../Shared/_Layout.cshtml";
     ViewData["Title"] = "";
 }
 

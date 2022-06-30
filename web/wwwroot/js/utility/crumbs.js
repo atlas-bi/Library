@@ -47,6 +47,7 @@
 
   function buildcrumbs(crumbs) {
     const $ul = document.createElement('ul');
+    $ul.classList.add('mt-4');
 
     crumbs = crumbs.slice(Math.max(crumbs.length - 7, 0));
     crumbs.reverse();

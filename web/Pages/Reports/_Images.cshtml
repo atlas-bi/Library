@@ -6,7 +6,7 @@
 @if (Model.Report.ReportObjectImagesDocs.Count == 1)
 {
     var url= "/data/img?handler=Thumb&id=-1&imgId=" + @Model.Report.ReportObjectImagesDocs.FirstOrDefault().ImageId;
-    <div class="js-modal-trigger text-center box mb-5 p-0 report-image" data-target="report-image-@Model.Report.ReportObjectImagesDocs.FirstOrDefault().ImageId">
+    <div class="js-modal-trigger text-center box mb-4 p-0 report-image" data-target="report-image-@Model.Report.ReportObjectImagesDocs.FirstOrDefault().ImageId">
         <figure class="image">
             <picture>
                 <source srcset="@url&size=1200x400&type=webp 800w,
@@ -37,7 +37,7 @@
 }
 else
 {
-    <div class="carousel box is-relative mb-5 p-0">
+    <div class="carousel box is-relative mb-4 p-0">
         @foreach (var img in Model.Report.ReportObjectImagesDocs.OrderBy(x => x.ImageOrdinal))
         {
             var url="/data/img?handler=Thumb&id=-1&imgId=" + @img.ImageId;

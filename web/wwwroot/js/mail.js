@@ -63,20 +63,20 @@
     }
 
     // Show new mail notification.
-    if (not.innerHTML.length > 0) {
-      const notBox = document.querySelectorAll(
-        '.mail-notification-container',
-      )[0];
-      notBox.innerHTML = DOMPurify.sanitize(not.innerHTML);
-      notBox.style.transition = 'margin-right .5s';
-      notBox.style.marginRight = '500px';
+    // if (not.innerHTML.length > 0) {
+    //   const notBox = document.querySelectorAll(
+    //     '.mail-notification-container',
+    //   )[0];
+    //   notBox.innerHTML = DOMPurify.sanitize(not.innerHTML);
+    //   notBox.style.transition = 'margin-right .5s';
+    //   notBox.style.marginRight = '500px';
 
-      // eslint-disable-next-line no-unused-vars
-      const q = notBox.clientWidth; // Clear js cache
-      setTimeout(function () {
-        notBox.style.marginRight = '0px';
-      }, 10_000);
-    }
+    //   // eslint-disable-next-line no-unused-vars
+    //   const q = notBox.clientWidth; // Clear js cache
+    //   setTimeout(function () {
+    //     notBox.style.marginRight = '0px';
+    //   }, 10_000);
+    // }
 
     // Add new message previews, if they do not already exist.
     // sometimes mail check requests can cross paths.

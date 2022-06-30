@@ -81,6 +81,24 @@ h6 {
 $fullhd: 1400px + (2 * $gap);
 $card-footer-padding: 0.5rem 0.75rem;
 @import '../../../node_modules/bulma-checkradio/src/sass/index';
+
+$navbar-height: 4.25rem;
+$navbar-item-img-max-height: auto;
+$navbar-item-hover-background-color: transparent;
+$navbar-dropdown-item-hover-background-color: transparent;
+$size-1: 2.5rem;
+$size-2: 2rem;
+$size-3: 1.5rem;
+$size-4: 1.25rem;
+$size-5: 1rem;
+$size-6: 0.75rem;
+$size-7: 0.75rem;
+$sizes: $size-1 $size-2 $size-3 $size-4 $size-5 $size-6 $size-7;
+$block-spacing: 1rem;
+// $size-normal: $size-5;
+// $size-medium: $size-4;
+// $size-large: $size-3;
+
 @import '../../../node_modules/bulma/bulma';
 
 // reset pre
@@ -110,29 +128,24 @@ span[data-tooltip] {
   border-bottom: none;
 }
 
-@import './mail/mail';
-@import './mail/mail-folders';
-@import './mail/mail-menu';
-@import './mail/mail-msgPreview';
+// @import './mail/mail';
+// @import './mail/mail-folders';
+// @import './mail/mail-menu';
+// @import './mail/mail-msgPreview';
 @import './mail/mail-notification';
-@import './mail/mail-reader';
+// @import './mail/mail-reader';
 
 @import './utility/carousel';
-@import './error';
 
 /* purgecss start ignore */
 @import '../lib/codemirror/mycss';
-
 /* purgecss end ignore */
 
 @import './page';
-
 @import './search';
 @import './utility/collapse';
 @import './utility/tabs';
-
 @import './utility/drag';
-
 @import './messagebox';
 
 /* purgecss start ignore */
@@ -143,28 +156,24 @@ span[data-tooltip] {
 /* purgecss end ignore */
 @import './mail/mail-newMessage';
 @import './query';
-
 @import './mini';
 
 html {
   height: 100%;
-  scroll-behavior: smooth !important;
 }
 
 body {
-  background-color: $white;
-  display: flex;
-  flex-direction: column;
   min-height: 100%;
+}
+section {
+  position: relative;
 }
 
 @media screen and (min-width: $desktop) {
   .atlas-navbar .navbar-start {
     padding-top: 0 !important;
   }
-}
 
-@media screen and (min-width: $desktop) {
   .hide-desktop {
     display: none !important;
   }
@@ -222,7 +231,6 @@ $card-colors: (
 }
 
 /* badge in headings */
-
 .title.is-2 .badge {
   font-size: 50%;
   padding: 6px;
@@ -259,30 +267,13 @@ $card-colors: (
   font-size: 1.8em !important;
 }
 
-.atlas-navbar .navbar-brand img {
-  width: 130px !important;
-  height: 40px !important;
-  margin-top: 6px;
-  margin-bottom: -2px;
-}
-
 .is-flex-widescreen {
   display: none !important;
 }
 @media screen and (min-width: $widescreen) {
-  .atlas-navbar {
-    padding: 10px 0;
-  }
-
   .is-flex-widescreen {
     display: flex !important;
   }
-}
-
-a.navbar-item:hover,
-a.navbar-link:hover,
-.navbar-item.has-dropdown:hover .navbar-link {
-  background: transparent;
 }
 
 .tag:not(body) {
@@ -342,39 +333,6 @@ nav.is-sticky {
 .panel-tab.is-active {
   color: $panel-list-item-hover-color;
   background-color: $panel-block-hover-background-color;
-}
-
-.editor-liveEditorPrev p,
-.editor-liveEditorPrev pre {
-  white-space: pre-wrap;
-  margin-bottom: 1.5rem;
-}
-
-.new-image,
-.new-image > label {
-  height: 100%;
-}
-
-.new-image .file-cta {
-  width: 256px;
-  height: 296px;
-  justify-content: center;
-}
-
-.steps .is-submit .steps-marker.is-hollow:hover {
-  border-color: $success-dark;
-}
-
-.steps .is-cancel.steps-segment::after {
-  background-color: $grey-lighter;
-}
-
-.steps .is-cancel .steps-marker {
-  border-color: $grey-lighter;
-}
-
-.steps .is-cancel .steps-marker.is-hollow:hover {
-  border-color: $warning-dark;
 }
 
 .is-nobreak {
@@ -519,10 +477,6 @@ button.is-ghost:not(.button) {
 
 .table.bar.sort tr th {
   cursor: pointer;
-}
-
-.bar-percent span strong {
-  color: $grey-light;
 }
 
 .bar-data-wrapper {

@@ -1,5 +1,2 @@
 @page
 @model Atlas_Web.Pages.Requests.IndexModel
-@{
-    Layout = HttpContext.Request.Headers["x-requested-with"] == "XMLHttpRequest" ? "../Shared/_AjaxLayout.cshtml" : "../Shared/_Layout.cshtml";
-}

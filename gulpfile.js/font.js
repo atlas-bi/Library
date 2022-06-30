@@ -103,6 +103,7 @@ gulp.task('font:fontawesome', (done) => {
         'book',
         'lightbulb',
         'project-diagram',
+        'caret-up',
       ],
     },
     'web/wwwroot/font/fontawesome/webfonts',
