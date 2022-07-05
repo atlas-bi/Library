@@ -5,6 +5,12 @@
 @{
     ViewData["Title"] = @Model.Group.Name;
     ViewBag.GroupId = @Model.Group.Id;
+    if(ViewBag.DefaultReportTypes.Count > 0)
+    {
+        foreach (var item in ViewBag.DefaultReportTypes){
+            ViewBag.DefaultFilters += "&reportType=" + @item;
+        }
+    }
 }
 
 <h1 class="title is-1">@Model.Group.Name</h1>
@@ -121,13 +127,18 @@
             <h3 class="pageSection-title">No Reports With This Group</h3>
         }
     </div>
+    @{
+        ViewBag.ProfileType = "group";
+        ViewBag.ProfileId = ViewBag.GroupId;
+    }
     <div class="tab-dta" id="activity">
-        @{
-            ViewBag.ProfileType = "group";
-            ViewBag.ProfileId = ViewBag.GroupId;
-        }
         <partial name="Profile/Partials/_FullProfile" />
     </div>
+
+    <div class="tab-dta" id="run-list">
+        <div data-ajax="yes" data-url="/Profile" data-parameters="handler=RunList&type=@ViewBag.ProfileType&id=@ViewBag.ProfileId@ViewBag.DefaultFilters"></div>
+    </div>
+
     @if (ViewBag.Permissions.Contains(36))
     {
         <div class="tab-dta" id="analytics">
@@ -136,5 +147,6 @@
             }
             <partial name="Analytics/Partials/_Index" />
         </div>
+
     }
 </section>

@@ -216,7 +216,7 @@
   <field name="approved_by" type="text_en"/>
   <field name="atlas_id" type="plong"/>
   <field name="author" type="text_en"/>
-  <field name="certification" type="text_general" indexed="true" stored="true" multiValued="false"/>
+  <field name="certification" type="text_general" indexed="true" stored="true" multiValued="true"/>
   <field name="created" type="pdate"/>
   <field name="created_by" type="text_en"/>
   <field name="created_by_id" type="plong"/>
@@ -292,7 +292,7 @@
 
   <!-- facets fields are the original text -->
   <field name="approved_text" type="non_split_text" />
-  <field name="certification_text" type="non_split_text" />
+  <field name="certification_text" type="non_split_text" multiValued="true" />
   <field name="created_by_text" type="non_split_text" />
   <field name="do_not_purge_text" type="non_split_text" />
   <field name="epic_master_file_text" type="non_split_text" />

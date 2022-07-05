@@ -7,14 +7,14 @@
       for (let x = 0; x < t.length; x++) {
         const element = t[x]; // Only add sort if it is not there already.
 
-        if (element.querySelectorAll('th .icon-sm').length === 0) {
+        if (element.querySelectorAll('th .icon').length === 0) {
           const th = element.querySelectorAll('th');
 
           for (let q = 0; q < th.length; q++) {
             const h = th[q];
             h.style.cursor = 'pointer';
             h.innerHTML +=
-              '<svg class="icon-sm" viewBox="0 0 320 512" xmlns="http://www.w3.org/2000/svg"><path d="M41 288h238c21.4 0 32.1 25.9 17 41L177 448c-9.4 9.4-24.6 9.4-33.9 0L24 329c-15.1-15.1-4.4-41 17-41zm255-105L177 64c-9.4-9.4-24.6-9.4-33.9 0L24 183c-15.1 15.1-4.4 41 17 41h238c21.4 0 32.1-25.9 17-41z"/></svg>';
+              '<span class="icon is-small"><i class="fas fa-sort"></i></span>';
             h.parentElement.style.whiteSpace = 'nowrap';
             (function (h) {
               h.addEventListener('click', function () {

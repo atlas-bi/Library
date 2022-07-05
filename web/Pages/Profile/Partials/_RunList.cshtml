@@ -1,0 +1,29 @@
+@model Atlas_Web.Pages.Profile.IndexModel
+
+@if(ViewBag.ReportRuns.Count > 0){
+<div class="table-responsive">
+    <table class="table sort">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Runs</th>
+                <th>Last Run</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in ViewBag.ReportRuns)
+            {
+                <tr>
+                    <td><a href="@item.Url">@item.Name</a></td>
+                    <td>@item.Type</td>
+                    <td>@item.Runs</td>
+                    <td>@item.LastRun</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+} else {
+    <div>No run data to show.</div>
+}

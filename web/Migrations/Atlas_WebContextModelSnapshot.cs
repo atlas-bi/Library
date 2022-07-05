@@ -859,28 +859,6 @@ namespace Atlas_Web.Migrations
                     b.ToTable("OrganizationalValue", "app");
                 });
 
-            modelBuilder.Entity("Atlas_Web.Models.ReportCertificationTag", b =>
-                {
-                    b.Property<int>("CertId")
-                        .HasColumnType("int")
-                        .HasColumnName("Cert_ID");
-
-                    b.Property<string>("CertName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("Priority")
-                        .HasColumnType("int");
-
-                    b.HasKey("CertId");
-
-                    b.HasIndex(new[] { "CertId" }, "certid");
-
-                    b.ToTable("ReportCertificationTags");
-                });
-
             modelBuilder.Entity("Atlas_Web.Models.ReportGroupsMembership", b =>
                 {
                     b.Property<int>("MembershipId")
@@ -951,13 +929,6 @@ namespace Atlas_Web.Migrations
 
                     b.Property<string>("Availability")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("CertificationTag")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("CertificationTagId")
-                        .HasColumnType("int")
-                        .HasColumnName("CertificationTagID");
 
                     b.Property<string>("DefaultVisibilityYn")
                         .HasMaxLength(1)
@@ -1054,9 +1025,6 @@ namespace Atlas_Web.Migrations
 
                     b.HasIndex(new[] { "AuthorUserId" }, "authorid");
 
-                    b.HasIndex(new[] { "CertificationTagId" }, "certid")
-                        .HasDatabaseName("certid1");
-
                     b.HasIndex(new[] { "EpicMasterFile" }, "masterfile_report_visiblity_type");
 
                     SqlServerIndexBuilderExtensions.IncludeProperties(b.HasIndex(new[] { "EpicMasterFile" }, "masterfile_report_visiblity_type"), new[] { "ReportObjectId", "DefaultVisibilityYn", "ReportObjectTypeId" });
@@ -1091,9 +1059,9 @@ namespace Atlas_Web.Migrations
 
                     SqlServerIndexBuilderExtensions.IncludeProperties(b.HasIndex(new[] { "SourceServer", "ReportObjectTypeId" }, "sourceserver_type_report"), new[] { "ReportObjectId" });
 
-                    b.HasIndex(new[] { "ReportObjectTypeId", "EpicMasterFile" }, "type_report_cert");
+                    b.HasIndex(new[] { "ReportObjectTypeId", "EpicMasterFile" }, "type_report");
 
-                    SqlServerIndexBuilderExtensions.IncludeProperties(b.HasIndex(new[] { "ReportObjectTypeId", "EpicMasterFile" }, "type_report_cert"), new[] { "ReportObjectId", "CertificationTag" });
+                    SqlServerIndexBuilderExtensions.IncludeProperties(b.HasIndex(new[] { "ReportObjectTypeId", "EpicMasterFile" }, "type_report"), new[] { "ReportObjectId" });
 
                     b.HasIndex(new[] { "ReportObjectTypeId" }, "type_report_masterfile");
 
@@ -1101,9 +1069,9 @@ namespace Atlas_Web.Migrations
 
                     b.HasIndex(new[] { "DefaultVisibilityYn", "OrphanedReportObjectYn", "ReportObjectTypeId" }, "visibility + orphan + type");
 
-                    b.HasIndex(new[] { "DefaultVisibilityYn" }, "visibility_report_cert_masterfile");
+                    b.HasIndex(new[] { "DefaultVisibilityYn" }, "visibility_report_masterfile");
 
-                    SqlServerIndexBuilderExtensions.IncludeProperties(b.HasIndex(new[] { "DefaultVisibilityYn" }, "visibility_report_cert_masterfile"), new[] { "ReportObjectId", "CertificationTag", "EpicMasterFile" });
+                    SqlServerIndexBuilderExtensions.IncludeProperties(b.HasIndex(new[] { "DefaultVisibilityYn" }, "visibility_report_masterfile"), new[] { "ReportObjectId", "EpicMasterFile" });
 
                     b.ToTable("ReportObject", (string)null);
                 });
@@ -1534,6 +1502,11 @@ namespace Atlas_Web.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BridgeId"), 1L, 1);
 
+                    b.Property<int>("Inherited")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
+
                     b.Property<int>("ReportObjectId")
                         .HasColumnType("int");
 
@@ -1547,6 +1520,10 @@ namespace Atlas_Web.Migrations
                         .HasName("PK__ReportOb__2D122135AFCD5E790");
 
                     b.HasIndex("RunId");
+
+                    b.HasIndex(new[] { "ReportObjectId", "Inherited" }, "reportid_inheritied_runid_runs");
+
+                    SqlServerIndexBuilderExtensions.IncludeProperties(b.HasIndex(new[] { "ReportObjectId", "Inherited" }, "reportid_inheritied_runid_runs"), new[] { "RunId", "Runs" });
 
                     b.HasIndex(new[] { "ReportObjectId" }, "reportid_runid_runs");
 
@@ -1689,6 +1666,32 @@ namespace Atlas_Web.Migrations
                     b.HasIndex(new[] { "ReportObjectTypeId" }, "typeid");
 
                     b.ToTable("ReportObjectType", (string)null);
+                });
+
+            modelBuilder.Entity("Atlas_Web.Models.ReportTagLink", b =>
+                {
+                    b.Property<int>("ReportTagLinkId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ReportTagLinkId"), 1L, 1);
+
+                    b.Property<int>("ReportId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ShowInHeader")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("TagId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ReportTagLinkId");
+
+                    b.HasIndex("TagId");
+
+                    b.HasIndex(new[] { "ReportId", "TagId" }, "report_tag");
+
+                    b.ToTable("ReportTagLinks");
                 });
 
             modelBuilder.Entity("Atlas_Web.Models.RolePermission", b =>
@@ -2071,6 +2074,36 @@ namespace Atlas_Web.Migrations
                     b.HasIndex(new[] { "StrategicImportanceId" }, "strategicimportanceid");
 
                     b.ToTable("StrategicImportance", "app");
+                });
+
+            modelBuilder.Entity("Atlas_Web.Models.Tag", b =>
+                {
+                    b.Property<int>("TagId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TagId"), 1L, 1);
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int?>("Priority")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ShowInHeader")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("TagId");
+
+                    b.HasIndex(new[] { "TagId" }, "tagid")
+                        .HasDatabaseName("tagid1");
+
+                    b.HasIndex(new[] { "Name" }, "tagname");
+
+                    b.ToTable("Tags");
                 });
 
             modelBuilder.Entity("Atlas_Web.Models.Term", b =>
@@ -2949,6 +2982,25 @@ namespace Atlas_Web.Migrations
                     b.Navigation("Tag");
                 });
 
+            modelBuilder.Entity("Atlas_Web.Models.ReportTagLink", b =>
+                {
+                    b.HasOne("Atlas_Web.Models.ReportObject", "Report")
+                        .WithMany("ReportTagLinks")
+                        .HasForeignKey("ReportId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Atlas_Web.Models.Tag", "Tag")
+                        .WithMany("ReportTagLinks")
+                        .HasForeignKey("TagId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Report");
+
+                    b.Navigation("Tag");
+                });
+
             modelBuilder.Entity("Atlas_Web.Models.RolePermissionLink", b =>
                 {
                     b.HasOne("Atlas_Web.Models.UserRole", "Role")
@@ -3303,6 +3355,8 @@ namespace Atlas_Web.Migrations
 
                     b.Navigation("ReportObjectTagMemberships");
 
+                    b.Navigation("ReportTagLinks");
+
                     b.Navigation("StarredReports");
                 });
 
@@ -3342,6 +3396,11 @@ namespace Atlas_Web.Migrations
                     b.Navigation("Collections");
 
                     b.Navigation("Initiatives");
+                });
+
+            modelBuilder.Entity("Atlas_Web.Models.Tag", b =>
+                {
+                    b.Navigation("ReportTagLinks");
                 });
 
             modelBuilder.Entity("Atlas_Web.Models.Term", b =>

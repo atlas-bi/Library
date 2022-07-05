@@ -15,7 +15,7 @@
     const j = {};
     let crumbs = sessionStorage.getItem('breadcrumbs');
 
-    crumbs = crumbs !== null ? JSON.parse(crumbs) : [];
+    crumbs = crumbs === null ? [] : JSON.parse(crumbs);
 
     if (
       crumbs.length === 0 ||
@@ -47,6 +47,7 @@
 
   function buildcrumbs(crumbs) {
     const $ul = document.createElement('ul');
+    $ul.classList.add('mt-4');
 
     crumbs = crumbs.slice(Math.max(crumbs.length - 7, 0));
     crumbs.reverse();

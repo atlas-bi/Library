@@ -33,12 +33,21 @@
     <div class="tab-dta" id="subscriptions">
         <div data-ajax="yes" data-url="/Users?handler=Subscriptions" data-parameters="id=@Model.UserId"></div>
     </div>
-    <div class="tab-dta @if (@Model.UserId != @Model.MyId){ <text>active</text>}" id="activity">
-        @{
+     @{
             ViewBag.ProfileType = "user";
             ViewBag.ProfileId = Model.UserId;
+            if(ViewBag.DefaultReportTypes.Count > 0)
+            {
+                foreach (var item in ViewBag.DefaultReportTypes){
+                    ViewBag.DefaultFilters += "&reportType=" + @item;
+                }
+            }
         }
+    <div class="tab-dta" id="activity">
         <partial name="Profile/Partials/_FullProfile" />
+    </div>
+     <div class="tab-dta @if (@Model.UserId != @Model.MyId){ <text>active</text>}" id="run-list">
+        <div data-ajax="yes" data-url="/Profile" data-parameters="handler=RunList&type=@ViewBag.ProfileType&id=@ViewBag.ProfileId@ViewBag.DefaultFilters"></div>
     </div>
     <div class="tab-dta" id="atlas-history">
         <div data-ajax="yes" data-url="/Users?handler=History" data-parameters="id=@Model.UserId"></div>

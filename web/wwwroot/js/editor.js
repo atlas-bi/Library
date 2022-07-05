@@ -366,12 +366,7 @@
             line,
             ch: 0,
           });
-        } else if (start[0] !== '#') {
-          a.mirror.replaceRange('# ', {
-            line,
-            ch: 0,
-          });
-        } else {
+        } else if (start[0] === '#') {
           const level = (start.match(/#/g) || []).length;
           if (level >= 6) {
             a.mirror.replaceRange(
@@ -391,6 +386,11 @@
               ch: 0,
             });
           }
+        } else {
+          a.mirror.replaceRange('# ', {
+            line,
+            ch: 0,
+          });
         }
 
         a.mirror.focus();

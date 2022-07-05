@@ -12,7 +12,7 @@ const rollupConfig = {
   output: { format: 'iife', name: 'module' },
   plugins: [
     nodeResolve({ browser: true, preferBuiltins: false }),
-    commonjs(),
+    commonjs({ sourceMap: false }),
     babel({
       babelHelpers: 'bundled',
     }),
@@ -39,7 +39,6 @@ gulp.task('js:polyfill', function () {
       'web/wwwroot/js/polyfill/includes.js',
     ])
     .pipe(concat('polyfill.min.js'))
-
     .pipe(uglify(uglifyConfig))
     .pipe(gulp.dest('web/wwwroot/js/'));
 });
@@ -110,14 +109,11 @@ gulp.task('js:highlighter', () => {
 
 gulp.task('js:shared', function () {
   // shared functions should be imported as needed.
-  return (
-    gulp
-      .src(['web/wwwroot/js/shared.js'])
-      // .pipe(rollup(rollupConfig))
-      .pipe(concat('shared.min.js'))
-      .pipe(uglify(uglifyConfig))
-      .pipe(gulp.dest('web/wwwroot/js/'))
-  );
+  return gulp
+    .src(['web/wwwroot/js/shared.js'])
+    .pipe(concat('shared.min.js'))
+    .pipe(uglify(uglifyConfig))
+    .pipe(gulp.dest('web/wwwroot/js/'));
 });
 
 gulp.task('js:search', function () {

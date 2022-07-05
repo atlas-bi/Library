@@ -87,9 +87,51 @@ namespace Atlas_Web.Pages.Settings
             return RedirectToPage("/Settings/Index");
         }
 
-        public IActionResult OnGetEtl()
+        public async Task<IActionResult> OnGetEtl()
         {
+            ViewData["ReportTagEtl"] = await _context.GlobalSiteSettings
+                .Where(x => x.Name == "report_tag_etl")
+                .Select(x => x.Value)
+                .FirstOrDefaultAsync();
+
             return new PartialViewResult { ViewName = "Partials/_Etl", ViewData = ViewData };
+        }
+
+        public async Task<IActionResult> OnPostUpdateReportTagsEtl()
+        {
+            var report_tag_etl = await _context.GlobalSiteSettings
+                .Where(x => x.Name == "report_tag_etl")
+                .FirstOrDefaultAsync();
+
+            if (report_tag_etl != null)
+            {
+                report_tag_etl.Value = GlobalSiteSettings.Value;
+            }
+            else
+            {
+                await _context.AddAsync(
+                    new GlobalSiteSetting
+                    {
+                        Name = "report_tag_etl",
+                        Value = GlobalSiteSettings.Value
+                    }
+                );
+            }
+
+            await _context.SaveChangesAsync();
+
+            _cache.Set("global_css", GlobalSiteSettings.Value);
+
+            return RedirectToPage("/Settings/Index");
+        }
+
+        public async Task<IActionResult> OnGetDefaultEtl()
+        {
+            string text = await System.IO.File.ReadAllTextAsync(
+                "wwwroot/defaults/report_tags_etl.sql"
+            );
+
+            return Content(text);
         }
 
         public async Task<IActionResult> OnGetTheme()

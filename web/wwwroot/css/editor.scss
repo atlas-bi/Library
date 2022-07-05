@@ -37,3 +37,43 @@ pre > code,
   color: $link;
   text-decoration: none;
 }
+
+.editor-liveEditorPrev p,
+.editor-liveEditorPrev pre {
+  white-space: pre-wrap;
+  margin-bottom: 1.5rem;
+}
+
+.new-image {
+  height: 100%;
+
+  > label {
+    height: 100%;
+  }
+
+  .file-cta {
+    width: 256px;
+    height: 296px;
+    justify-content: center;
+  }
+}
+
+.steps {
+  .is-submit .steps-marker.is-hollow:hover {
+    border-color: $success-dark;
+  }
+
+  .is-cancel {
+    &.steps-segment::after {
+      background-color: $grey-lighter;
+    }
+
+    .steps-marker {
+      border-color: $grey-lighter;
+
+      &.is-hollow:hover {
+        border-color: $warning-dark;
+      }
+    }
+  }
+}

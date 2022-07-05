@@ -17,6 +17,7 @@ namespace Atlas_Web.Models
             ReportObjectQueries = new HashSet<ReportObjectQuery>();
             ReportObjectSubscriptions = new HashSet<ReportObjectSubscription>();
             ReportObjectTagMemberships = new HashSet<ReportObjectTagMembership>();
+            ReportTagLinks = new HashSet<ReportTagLink>();
             StarredReports = new HashSet<StarredReport>();
             ReportObjectRunDataBridges = new HashSet<ReportObjectRunDataBridge>();
         }
@@ -45,9 +46,7 @@ namespace Atlas_Web.Models
         public DateTime? LastLoadDate { get; set; }
         public string RepositoryDescription { get; set; }
         public string EpicReleased { get; set; }
-        public string CertificationTag { get; set; }
         public string Availability { get; set; }
-        public int? CertificationTagId { get; set; }
         public int? Runs { get; set; }
 
         public virtual User AuthorUser { get; set; }
@@ -67,5 +66,6 @@ namespace Atlas_Web.Models
         public virtual ICollection<ReportObjectTagMembership> ReportObjectTagMemberships { get; set; }
         public virtual ICollection<StarredReport> StarredReports { get; set; }
         public virtual ICollection<ReportObjectRunDataBridge> ReportObjectRunDataBridges { get; set; }
+        public virtual ICollection<ReportTagLink> ReportTagLinks { get; set; }
     }
 }

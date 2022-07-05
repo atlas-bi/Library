@@ -1,12 +1,11 @@
 .tab .tab-lnk + .tab-lnk::before {
-  color: #575353;
+  color: $grey-light;
   content: '/';
   margin: 8px;
 }
 
 .tab-cnt {
   display: block;
-  padding-top: 15px;
 }
 
 .tab-cnt > .tab-dta,

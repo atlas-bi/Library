@@ -1,22 +1,29 @@
 @if (@Model.SearchResults.LastPage > 1)
 {
-    <div style="margin-bottom:50px">
-        <nav aria-label="navigation">
-            <ul class="pagination pt-4" style="justify-content:center!important">
-                <li class="page-item @(Model.SearchResults.Parameters.EffectivePageIndex == 1 ? "disabled" : "")">
-                    <a class="page-link"  tabindex="-1"href="@UrlHelpers.SetSearchPageUrl(ViewContext.HttpContext, Model.SearchResults.Parameters.EffectivePageIndex - 1)">&laquo;</a>
-                </li>
-                @foreach (var p in Model.SearchResults.Pages)
+    <div>
+        <nav aria-label="pagination is-small">
+            <ul class="pagination-list">
+                @if(Model.SearchResults.Parameters.EffectivePageIndex > 1)
                 {
-                    <li class="page-item @(p == Model.SearchResults.Parameters.EffectivePageIndex ? "active" : "")">
-                        <a class="page-link" href="@UrlHelpers.SetSearchPageUrl(ViewContext.HttpContext, @p)">@p</a>
+                    <li>
+                        <a class="pagination-previous" tabindex="-1" href="@UrlHelpers.SetSearchPageUrl(ViewContext.HttpContext, Model.SearchResults.Parameters.EffectivePageIndex - 1)">&laquo;</a>
                     </li>
                 }
-                <li class="page-item @(Model.SearchResults.Parameters.EffectivePageIndex == Model.SearchResults.LastPage ? "disabled" : "")">
-                    <a class="page-link"href="@UrlHelpers.SetSearchPageUrl(ViewContext.HttpContext, Model.SearchResults.Parameters.EffectivePageIndex + 1)">&raquo;</a>
-                </li>
+                @foreach (var p in Model.SearchResults.Pages)
+                {
+                    <li>
+                        <a class="pagination-link @(p == Model.SearchResults.Parameters.EffectivePageIndex ? "is-current" : "")" href="@UrlHelpers.SetSearchPageUrl(ViewContext.HttpContext, @p)">@p</a>
+                    </li>
+                }
+                @if(Model.SearchResults.Parameters.EffectivePageIndex != Model.SearchResults.LastPage){
+                    <li>
+                        <a class="pagination-next" href="@UrlHelpers.SetSearchPageUrl(ViewContext.HttpContext, Model.SearchResults.Parameters.EffectivePageIndex + 1)">&raquo;</a>
+                    </li>
+                }
             </ul>
         </nav>
-        <div style="margin-left:45px;margin-top:10px">@Model.SearchResults.NumFound results found in @Model.SearchResults.QTime milliseconds</div>
+        <div class="my-4">
+            <small class="has-text-grey">@Model.SearchResults.NumFound results found in @Model.SearchResults.QTime milliseconds</small>
+        </div>
     </div>
 }
