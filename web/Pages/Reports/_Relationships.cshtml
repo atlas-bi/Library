@@ -21,7 +21,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach(var s in Model.Report.ReportGroupsMemberships){
+                            @foreach(var s in Model.Report.ReportGroupsMemberships.ToList()){
                             <tr>
                                 <td><a href="\Groups?id=@s.GroupId">@s.Group.GroupName</a></td>
                                 <td>@s.Group.GroupType</td>
@@ -39,7 +39,7 @@
     {
         <h3 class="title is-3">Reports included in this report.</h3>
         <div class="columns is-multiline">
-            @foreach (var child in Model.Children)
+            @foreach (var child in Model.Children.ToList())
             {
                 <div class="column is-half ">
                     <partial name="Reports/_Snippet" model="child" />
@@ -53,7 +53,7 @@
     {
         <h3 class="title is-3">Reports that include this report.</h3>
         <div class="columns is-multiline">
-        @foreach (var parent in Model.Parents)
+        @foreach (var parent in Model.Parents.ToList())
         {
             <div class="column is-half ">
                 <partial name="Reports/_Snippet" model="parent" />
@@ -66,7 +66,7 @@
     {
         <h3 id="collections" class="title is-3">Linked Collections</h3>
         <div class="columns is-multiline">
-            @foreach (var d in @Model.Report.CollectionReports)
+            @foreach (var d in @Model.Report.CollectionReports.ToList())
             {
                 <div class="column is-half ">
                     <partial name="Collections/_Snippet" model="d.DataProject" />

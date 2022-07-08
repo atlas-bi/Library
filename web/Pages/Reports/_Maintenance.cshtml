@@ -4,7 +4,7 @@
     <div class="panel-heading">
         Maintenance Logs
     </div>
-    @foreach (var log in Model.Report.ReportObjectDoc.MaintenanceLogs)
+    @foreach (var log in Model.Report.ReportObjectDoc.MaintenanceLogs.ToList())
     {
         <div class="panel-block">
             @if (Configuration["features:enable_user_profile"] == null || Configuration["features:enable_user_profile"].ToString().ToLower() == "true")

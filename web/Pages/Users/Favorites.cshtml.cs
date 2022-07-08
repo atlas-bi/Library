@@ -81,6 +81,7 @@ namespace Atlas_Web.Pages.Users
 
             Folders = await _context.UserFavoriteFolders
                 .Where(x => x.UserId == UserId)
+                .AsNoTracking()
                 .ToListAsync();
 
             Collections = await _context.StarredCollections

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Caching.Memory;
 using System;
+using System.Threading.Tasks;
 
 namespace Atlas_Web.Pages.Collections
 {
@@ -44,7 +45,7 @@ namespace Atlas_Web.Pages.Collections
             return Page();
         }
 
-        public IActionResult OnPostAsync()
+        public async Task<IActionResult> OnPostAsync()
         {
             var checkpoint = UserHelpers.CheckUserPermissions(
                 _cache,
@@ -75,7 +76,7 @@ namespace Atlas_Web.Pages.Collections
             Collection.LastUpdateDate = DateTime.Now;
 
             _context.Add(Collection);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             _cache.Remove("collections");
 

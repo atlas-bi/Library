@@ -152,7 +152,7 @@
 
             @if (!string.IsNullOrEmpty(@Model.Report.EpicMasterFile))
             {
-                var RecordViewerUrl = HtmlHelpers.RecordViewerLink(
+                var RecordViewerUrl = ReportLinkHelpers.RecordViewerLink(
                                ViewContext.HttpContext,
                                Model.Report.EpicMasterFile,
                                Model.Report.EpicRecordId.ToString(),
@@ -276,7 +276,7 @@
                     <td>Fragility Tags</td>
                     <td>
                         <div class="tags">
-                            @foreach (var tag in @Model.Report.ReportObjectDoc.ReportObjectDocFragilityTags)
+                            @foreach (var tag in @Model.Report.ReportObjectDoc.ReportObjectDocFragilityTags.ToList())
                             {
                                 <span class="tag">@tag.FragilityTag.FragilityTagName</span>
                             }
@@ -291,7 +291,7 @@
                     <td>Report Tags</td>
                     <td>
                         <div class="tags">
-                            @foreach (var tag in @Model.Report.ReportObjectTagMemberships)
+                            @foreach (var tag in @Model.Report.ReportObjectTagMemberships.ToList())
                             {
                                  <span class="tag">@tag.Tag.TagName</span>
                             }
@@ -309,7 +309,7 @@
         <div class="panel-heading">
             Service Requests
         </div>
-        @foreach (var ticket in Model.Report.ReportObjectDoc.ReportManageEngineTickets)
+        @foreach (var ticket in Model.Report.ReportObjectDoc.ReportManageEngineTickets.ToList())
         {
             <div class="panel-block">
                 @if (!string.IsNullOrEmpty(ticket.TicketUrl))

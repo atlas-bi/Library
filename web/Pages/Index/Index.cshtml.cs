@@ -35,18 +35,10 @@ namespace Atlas_Web.Pages
             public string Favorite { get; set; }
         }
 
-        public class BasicFavoriteReportData
-        {
-            public string Name { get; set; }
-            public int Id { get; set; }
-            public string Favorite { get; set; }
-            public string ReportUrl { get; set; }
-        }
-
         public List<AdList> AdLists { get; set; }
         public User PublicUser { get; set; }
 
-        public ActionResult OnGetAsync()
+        public async Task<ActionResult> OnGetAsync()
         {
             PublicUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
             var MyUser = PublicUser;
@@ -58,6 +50,11 @@ namespace Atlas_Web.Pages
                 new AdList { Url = "/Users?handler=SharedObjects", Column = 2 },
             };
             ViewData["AdLists"] = AdLists;
+
+            ViewData["DefaultReportTypes"] = await _context.ReportObjectTypes
+                .Where(v => v.Visible == "Y")
+                .Select(x => x.ReportObjectTypeId)
+                .ToListAsync();
 
             return Page();
         }

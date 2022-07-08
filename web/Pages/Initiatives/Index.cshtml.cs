@@ -26,8 +26,6 @@ namespace Atlas_Web.Pages.Initiatives
 
         public IEnumerable<Initiative> Initiatives { get; set; }
 
-        public string Favorite { get; set; }
-
         public async Task<IActionResult> OnGetAsync(int? id)
         {
             // if the id null then list all
@@ -48,6 +46,7 @@ namespace Atlas_Web.Pages.Initiatives
                             .Include(x => x.StrategicImportanceNavigation)
                             .Include(x => x.LastUpdateUserNavigation)
                             .Include(x => x.StarredInitiatives)
+                            .AsNoTracking()
                             .SingleAsync(x => x.DataInitiativeId == id);
                     }
                 );
@@ -74,7 +73,7 @@ namespace Atlas_Web.Pages.Initiatives
             return Page();
         }
 
-        public ActionResult OnGetDeleteInitiative(int Id)
+        public async Task<ActionResult> OnGetDeleteInitiative(int Id)
         {
             var checkpoint = UserHelpers.CheckUserPermissions(
                 _cache,
@@ -92,15 +91,16 @@ namespace Atlas_Web.Pages.Initiatives
             }
 
             // remove project links, contacts and remove initiative.
-            _context.Collections
-                .Where(d => d.DataInitiativeId == Id)
-                .ToList()
-                .ForEach(x => x.DataInitiativeId = null);
+            (
+                await _context.Collections.Where(d => d.DataInitiativeId == Id).ToListAsync()
+            ).ForEach(x => x.DataInitiativeId = null);
 
             _context.Remove(
-                _context.Initiatives.Where(x => x.DataInitiativeId == Id).FirstOrDefault()
+                await _context.Initiatives
+                    .Where(x => x.DataInitiativeId == Id)
+                    .FirstOrDefaultAsync()
             );
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             _cache.Remove("initiative-" + Id);
             _cache.Remove("initiatives");

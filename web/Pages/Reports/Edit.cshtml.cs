@@ -68,9 +68,9 @@ namespace Atlas_Web.Pages.Reports
                 );
             }
 
-            if (!_context.ReportObjectDocs.Any(x => x.ReportObjectId == id))
+            if (!await _context.ReportObjectDocs.AnyAsync(x => x.ReportObjectId == id))
             {
-                _context.Add(
+                await _context.AddAsync(
                     new ReportObjectDoc
                     {
                         ReportObjectId = id,
@@ -78,7 +78,7 @@ namespace Atlas_Web.Pages.Reports
                         CreatedBy = UserHelpers.GetUser(_cache, _context, User.Identity.Name).UserId
                     }
                 );
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
 
             Report = await _context.ReportObjectDocs
@@ -158,7 +158,7 @@ namespace Atlas_Web.Pages.Reports
             OldReport.EnabledForHyperspace = Report.EnabledForHyperspace;
             OldReport.UpdatedBy = UserHelpers.GetUser(_cache, _context, User.Identity.Name).UserId;
 
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             // updated any linked terms that were added and remove any that were delinked.
             _cache.Remove("terms");
@@ -168,27 +168,27 @@ namespace Atlas_Web.Pages.Reports
                 term.ReportObjectId = id;
 
                 if (
-                    !_context.ReportObjectDocTerms.Any(
+                    !await _context.ReportObjectDocTerms.AnyAsync(
                         x => x.TermId == term.TermId && x.ReportObjectId == term.ReportObjectId
                     )
                 )
                 {
-                    _context.Add(term);
+                    await _context.AddAsync(term);
                 }
             }
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             var RemovedTerms = _context.ReportObjectDocTerms
                 .Where(d => d.ReportObjectId == id)
                 .Where(d => !Terms.Select(x => x.TermId).Contains(d.TermId));
 
-            foreach (var term in RemovedTerms)
+            foreach (var term in await RemovedTerms.ToListAsync())
             {
                 _cache.Remove("term-" + term.TermId);
             }
 
             _context.RemoveRange(RemovedTerms);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             // update linked collections
             _cache.Remove("collections");
@@ -201,13 +201,13 @@ namespace Atlas_Web.Pages.Reports
                 collection.Rank = i;
 
                 // if annotation exists, update rank and text
-                CollectionReport oldCollection = _context.CollectionReports
+                CollectionReport oldCollection = await _context.CollectionReports
                     .Where(
                         x =>
                             x.ReportId == collection.ReportId
                             && x.DataProjectId == collection.DataProjectId
                     )
-                    .FirstOrDefault();
+                    .FirstOrDefaultAsync();
                 if (oldCollection != null)
                 {
                     oldCollection.Rank = i;
@@ -215,10 +215,10 @@ namespace Atlas_Web.Pages.Reports
                 }
                 else
                 {
-                    _context.Add(collection);
+                    await _context.AddAsync(collection);
                 }
 
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
 
             var RemovedCollections = _context.CollectionReports
@@ -227,13 +227,13 @@ namespace Atlas_Web.Pages.Reports
                     d => !Collections.Select(x => x.DataProjectId).Contains((int)d.DataProjectId)
                 );
 
-            foreach (var collection in RemovedCollections)
+            foreach (var collection in await RemovedCollections.ToListAsync())
             {
                 _cache.Remove("collection-" + collection.DataProjectId);
             }
 
             _context.RemoveRange(RemovedCollections);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             // update fragility tags
             foreach (var tag in FragilityTags.Distinct())
@@ -241,17 +241,17 @@ namespace Atlas_Web.Pages.Reports
                 tag.ReportObjectId = id;
 
                 if (
-                    !_context.ReportObjectDocFragilityTags.Any(
+                    !await _context.ReportObjectDocFragilityTags.AnyAsync(
                         x =>
                             x.FragilityTagId == tag.FragilityTagId
                             && x.ReportObjectId == tag.ReportObjectId
                     )
                 )
                 {
-                    _context.Add(tag);
+                    await _context.AddAsync(tag);
                 }
             }
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             _context.RemoveRange(
                 _context.ReportObjectDocFragilityTags
@@ -260,7 +260,7 @@ namespace Atlas_Web.Pages.Reports
                         d => !FragilityTags.Select(x => x.FragilityTagId).Contains(d.FragilityTagId)
                     )
             );
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             // remove removed images
             _context.RemoveRange(
@@ -268,18 +268,18 @@ namespace Atlas_Web.Pages.Reports
                     .Where(d => d.ReportObjectId == id)
                     .Where(d => !Images.Select(x => x.ImageId).Contains(d.ImageId))
             );
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             // update image rank
             for (int i = 0; i < Images.Count; i++)
             {
-                ReportObjectImagesDoc image = _context.ReportObjectImagesDocs
+                ReportObjectImagesDoc image = await _context.ReportObjectImagesDocs
                     .Where(x => x.ImageId == Images[i].ImageId && x.ReportObjectId == id)
-                    .FirstOrDefault();
+                    .FirstOrDefaultAsync();
                 if (image != null)
                 {
                     image.ImageOrdinal = i;
-                    _context.SaveChanges();
+                    await _context.SaveChangesAsync();
                 }
             }
 
@@ -290,8 +290,8 @@ namespace Atlas_Web.Pages.Reports
                 MaintenanceLog.ReportObjectId = id;
                 MaintenanceLog.MaintainerId =
                     UserHelpers.GetUser(_cache, _context, User.Identity.Name).UserId;
-                _context.Add(MaintenanceLog);
-                _context.SaveChanges();
+                await _context.AddAsync(MaintenanceLog);
+                await _context.SaveChangesAsync();
             }
 
             // remove deleted service requests
@@ -305,14 +305,14 @@ namespace Atlas_Web.Pages.Reports
                                 .Contains(d.ManageEngineTicketsId)
                     )
             );
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             // add service ticket
             if (ServiceRequest.TicketNumber != null)
             {
                 ServiceRequest.ReportObjectId = id;
-                _context.Add(ServiceRequest);
-                _context.SaveChanges();
+                await _context.AddAsync(ServiceRequest);
+                await _context.SaveChangesAsync();
             }
 
             return RedirectToPage("/Reports/Index", new { id, success = "Changes saved." });
@@ -367,18 +367,18 @@ namespace Atlas_Web.Pages.Reports
             return true;
         }
 
-        public ActionResult OnPostAddImage(int Id, IFormFile File)
+        public async Task<ActionResult> OnPostAddImage(int Id, IFormFile File)
         {
             if (ValidateFileUpload(File))
             {
                 var img = new ReportObjectImagesDoc { ReportObjectId = Id };
                 using (var stream = new MemoryStream())
                 {
-                    File.CopyTo(stream);
+                    await File.CopyToAsync(stream);
                     img.ImageData = stream.ToArray();
                 }
-                _context.Add(img);
-                _context.SaveChanges();
+                await _context.AddAsync(img);
+                await _context.SaveChangesAsync();
 
                 return Content(img.ImageId.ToString());
             }

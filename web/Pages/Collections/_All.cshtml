@@ -12,7 +12,7 @@
 }
 
 <div class="columns is-multiline">
-    @foreach (var p in Model.Collections)
+    @foreach (var p in Model.Collections.ToList())
     {
         <div class="column is-half ">
             <partial name="Collections/_Snippet" model="p" />

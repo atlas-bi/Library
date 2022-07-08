@@ -28,26 +28,6 @@ namespace Atlas_Web.Pages
         public int UserId { get; set; }
         public string FirstName { get; set; }
 
-        [BindProperty]
-        public UserFavoriteFolder Folder { get; set; }
-
-        public class BasicFavoriteData
-        {
-            public string Name { get; set; }
-            public int Id { get; set; }
-            public string Favorite { get; set; }
-        }
-
-        public class BasicFavoriteReportData
-        {
-            public string Name { get; set; }
-            public int Id { get; set; }
-            public string Favorite { get; set; }
-            public string ReportUrl { get; set; }
-        }
-
-        public List<AdList> AdLists { get; set; }
-
         public ActionResult OnGetAsync()
         {
             var MyUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);

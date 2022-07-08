@@ -4,9 +4,9 @@
 @inject Atlas_Web.Models.Atlas_WebContext Context
 
 @{
-    var ManageReportUrl = HtmlHelpers.ReportManageUrlFromParams(@Configuration["AppSettings:org_domain"], ViewContext.HttpContext, Model.ReportObjectType.Name, Model.ReportServerPath, Model.SourceServer, Model.OrphanedReportObjectYn);
-    var EditReportUrl = HtmlHelpers.EditReportFromParams(@Configuration["AppSettings:org_domain"], ViewContext.HttpContext, Model.ReportServerPath, Model.SourceServer, Model.EpicMasterFile, Model.EpicReportTemplateId.ToString(), Model.EpicRecordId.ToString(), Model.OrphanedReportObjectYn);
-    var RunReportUrl = HtmlHelpers.ReportUrlFromParams(ViewContext.HttpContext, Model, Context, User.Identity.Name);
+    var ManageReportUrl = ReportLinkHelpers.ReportManageUrlFromParams(@Configuration["AppSettings:org_domain"], ViewContext.HttpContext, Model.ReportObjectType.Name, Model.ReportServerPath, Model.SourceServer, Model.OrphanedReportObjectYn);
+    var EditReportUrl = ReportLinkHelpers.EditReportFromParams(@Configuration["AppSettings:org_domain"], ViewContext.HttpContext, Model.ReportServerPath, Model.SourceServer, Model.EpicMasterFile, Model.EpicReportTemplateId.ToString(), Model.EpicRecordId.ToString(), Model.OrphanedReportObjectYn);
+    var RunReportUrl = ReportLinkHelpers.ReportUrlFromParams(ViewContext.HttpContext, Model, Context, User.Identity.Name);
 }
 
 <div class="card">
@@ -18,7 +18,7 @@
                 {
                     <a aria-label="run" class="is-flex mr-2 has-tooltip-arrow has-tooltip-right js-modal-trigger" data-target="report-run-@Model.ReportObjectId" data-tooltip="Run Report" data-runurl="@RunReportUrl">
                         <span class="icon is-large has-text-success">
-                            <i class="far fa-2_3x fa-play-circle"></i>
+                            <i class="far fa-2_3x fa-circle-play"></i>
                         </span>
                     </a>
                 }
@@ -26,7 +26,7 @@
                 {
                     <a aria-label="run" class="is-flex mr-2 has-tooltip-arrow has-tooltip-right" target="_blank" data-tooltip="Run Report" href="@RunReportUrl">
                         <span class="icon is-large has-text-success">
-                            <i class="far fa-2_3x fa-play-circle"></i>
+                            <i class="far fa-2_3x fa-circle-play"></i>
                         </span>
                     </a>
                 }
@@ -36,7 +36,7 @@
                     {
                         <a aria-label="run" class="is-flex mr-2 is-disabled has-tooltip-arrow has-tooltip-right" data-tooltip="Open a related dashboard that uses this.">
                             <span class="icon is-large has-text-grey-light">
-                                <i class="far fa-2_3x fa-play-circle"></i>
+                                <i class="far fa-2_3x fa-circle-play"></i>
                             </span>
                         </a>
                     }
@@ -44,7 +44,7 @@
                     {
                         <a aria-label="run" class="is-flex mr-2 is-disabled has-tooltip-arrow has-tooltip-right" data-tooltip="Open in report library.">
                             <span class="icon is-large has-text-grey-light">
-                                <i class="far fa-2_3x fa-play-circle"></i>
+                                <i class="far fa-2_3x fa-circle-play"></i>
                             </span>
                         </a>
                     }
@@ -52,7 +52,7 @@
                     {
                         <a aria-label="run" class="is-flex mr-2 is-disabled has-tooltip-arrow has-tooltip-right" data-tooltip="Run from the Hyperspace report library.">
                             <span class="icon is-large has-text-grey-light">
-                                <i class="far fa-2_3x fa-play-circle"></i>
+                                <i class="far fa-2_3x fa-circle-play"></i>
                             </span>
                         </a>
                     }
@@ -83,10 +83,10 @@
                 }
                 <span class="tag">@type</span>
 
-                @foreach (var item in Model.ReportTagLinks)
+                @foreach (var item in Model.ReportTagLinks.ToList())
                 {
                     @if(item.ShowInHeader == "Y" || item.Tag.ShowInHeader == "Y"){
-                        <span class="tag @PageExtensions.Slug(item.Tag.Name)">@item.Tag.Name</span>
+                        <span class="tag @HtmlHelpers.Slug(item.Tag.Name)">@item.Tag.Name</span>
                     }
                 }
 
@@ -173,7 +173,7 @@
             <a class="card-footer-item px-0" target="_blank" href="@EditReportUrl">
                 <span class="icon-text">
                     <span class="icon">
-                        <i class="fas fa-edit"></i>
+                        <i class="fas fa-pen-to-square"></i>
                     </span>
                     <span>Edit</span>
                 </span>
@@ -184,7 +184,7 @@
             <a class="card-footer-item px-0" target="_blank" href="@ManageReportUrl">
                 <span class="icon-text">
                     <span class="icon">
-                        <i class="fas fa-cogs"></i>
+                        <i class="fas fa-gears"></i>
                     </span>
                     <span>Manage</span>
                 </span>
@@ -206,7 +206,7 @@
             }
             @if (@Configuration["features:enable_request_access"] == null || @Configuration["features:enable_request_access"].ToString().ToLower() == "true")
             {
-                 @if (Model.ReportObjectAttachments.Count() > 0 || RunReportUrl != null)
+                @if (Model.ReportObjectAttachments.Count() > 0 || RunReportUrl != null)
                 {
                     <a class="is-block has-tooltip-arrow has-tooltip-top js-modal-trigger ml-2" data-tooltip="Request Access" data-target="request-access-@Model.ReportObjectId">
                         <span class="icon has-text-grey">

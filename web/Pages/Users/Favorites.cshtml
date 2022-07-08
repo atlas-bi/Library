@@ -4,9 +4,16 @@
 @{
     Layout = null;
     ViewBag.IsMe = (@Model.UserId == @ViewBag.PublicUser.UserId);
+    var hasReports = Model.Reports.Any();
+    var hasCollections = Model.Collections.Any();
+    var hasInitiatives = Model.Initiatives.Any();
+    var hasTerms =  Model.Terms.Any();
+    var hasUsers =  Model.Users.Any();
+    var hasSearches =  Model.Searches.Any();
+    var hasGroups = Model.Groups.Any();
 }
 <div>
-    @if (Model.Reports.Any() || Model.Collections.Any() || Model.Initiatives.Any() || Model.Terms.Any() || Model.Users.Any() || Model.Searches.Any() || Model.Groups.Any())
+    @if (hasReports || hasCollections || hasInitiatives||hasTerms || hasUsers|| hasSearches|| hasGroups)
     {
         <section class="section my-4 p-0 is-flex is-flex-direction-row is-align-items-center">
 
@@ -19,11 +26,11 @@
             <div class="control has-icons-left mr-5">
                 <input class="input favorites-filter" type="email" placeholder="type to filter...">
                 <span class="icon is-small is-left">
-                    <i class="fas fa-search"></i>
+                    <i class="fas fa-magnifying-glass"></i>
                 </span>
             </div>
 
-            @if(Model.Reports.Any() && (Model.Collections.Any() || Model.Initiatives.Any() || Model.Terms.Any() || Model.Users.Any() || Model.Searches.Any() || Model.Groups.Any())){
+            @if(hasReports && (hasCollections || hasInitiatives||hasTerms || hasUsers|| hasSearches|| hasGroups)){
                 <a class="button is-warning is-outlined has-text-dark favorites-filter mr-5" data-type="report">
                     <span class="icon">
                         <i class="fas fa-chart-bar"></i>
@@ -31,15 +38,15 @@
                     <span>Reports</span>
                 </a>
             }
-            @if(Model.Collections.Any() && (Model.Reports.Any() || Model.Initiatives.Any() || Model.Terms.Any() || Model.Users.Any() || Model.Searches.Any() || Model.Groups.Any())){
+            @if(hasCollections && (hasReports || hasInitiatives||hasTerms || hasUsers|| hasSearches|| hasGroups)){
                 <a class="button is-warning is-outlined has-text-dark favorites-filter mr-5" data-type="collection">
                     <span class="icon">
-                        <i class="fas fa-project-diagram"></i>
+                        <i class="fas fa-diagram-project"></i>
                     </span>
                     <span>Collections</span>
                 </a>
              }
-             @if(Model.Initiatives.Any() && (Model.Reports.Any() || Model.Collections.Any() || Model.Terms.Any() || Model.Users.Any() || Model.Searches.Any() || Model.Groups.Any())){
+             @if(hasInitiatives&& (hasReports || hasCollections ||hasTerms || hasUsers|| hasSearches|| hasGroups)){
                 <a class="button is-warning is-outlined has-text-dark favorites-filter mr-5" data-type="initiative">
                     <span class="icon">
                         <i class="fas fa-lightbulb"></i>
@@ -47,7 +54,7 @@
                     <span>Initiatives</span>
                 </a>
             }
-            @if(Model.Terms.Any() && (Model.Reports.Any() || Model.Collections.Any() || Model.Initiatives.Any() || Model.Users.Any() || Model.Searches.Any() || Model.Groups.Any())){
+            @if(hasTerms && (hasReports || hasCollections || hasInitiatives|| hasUsers|| hasSearches|| hasGroups)){
                 <a class="button is-warning is-outlined has-text-dark favorites-filter mr-5" data-type="term">
                     <span class="icon">
                         <i class="fas fa-book"></i>
@@ -55,7 +62,7 @@
                     <span>Terms</span>
                 </a>
            }
-           @if(Model.Users.Any() && (Model.Reports.Any() || Model.Collections.Any() || Model.Initiatives.Any() || Model.Terms.Any() || Model.Searches.Any() || Model.Groups.Any())){
+           @if(hasUsers && (hasReports || hasCollections || hasInitiatives||hasTerms || hasSearches|| hasGroups)){
                 <a class="button is-warning is-outlined has-text-dark favorites-filter mr-5" data-type="user">
                     <span class="icon">
                         <i class="fas fa-user"></i>
@@ -63,7 +70,7 @@
                     <span>Users</span>
                 </a>
             }
-            @if(Model.Groups.Any() && (Model.Reports.Any() || Model.Collections.Any() || Model.Initiatives.Any() || Model.Terms.Any() || Model.Searches.Any() || Model.Users.Any())){
+            @if(hasGroups && (hasReports || hasCollections || hasInitiatives||hasTerms || hasSearches|| hasUsers)){
                 <a class="button is-warning is-outlined has-text-dark favorites-filter mr-5" data-type="group">
                     <span class="icon">
                         <i class="fas fa-users"></i>
@@ -71,10 +78,10 @@
                     <span>Groups</span>
                 </a>
             }
-            @if(Model.Searches.Any() && (Model.Reports.Any() || Model.Collections.Any() || Model.Initiatives.Any() || Model.Terms.Any() || Model.Groups.Any() || Model.Users.Any())){
+            @if(hasSearches && (hasReports || hasCollections || hasInitiatives||hasTerms || hasGroups || hasUsers)){
                 <a class="button is-warning is-outlined has-text-dark favorites-filter mr-5" data-type="search">
                     <span class="icon">
-                        <i class="fas fa-search"></i>
+                        <i class="fas fa-magnifying-glass"></i>
                     </span>
                     <span>Searches</span>
                 </a>
@@ -124,7 +131,7 @@
                         }
                     </div>
 
-                    @foreach (var f in Model.Folders.OrderBy(x => x.FolderRank))
+                    @foreach (var f in Model.Folders.OrderBy(x => x.FolderRank).ToList())
                     {
                         var folder_total = f.StarredCollections.Count() + f.StarredGroups.Count() + f.StarredInitiatives.Count() + f.StarredReports.Count() + f.StarredSearches.Count() + f.StarredTerms.Count() + f.StarredUsers.Count();
                         <div class="box favorites-folder is-clickable @if(ViewBag.IsMe){<text>drg</text>} is-relative" data-folderid="@f.UserFavoriteFolderId" folder-rank="@if(f.FolderRank>0){@f.FolderRank} else {<text>999</text>}">
@@ -142,9 +149,9 @@
                             @if (ViewBag.IsMe && ViewBag.Permissions.Contains(41))
                             {
                                 <div class="favorite-folder-controls button is-light is-rounded is-warning has-text-dark is-active">
-                                    <span class="icon js-modal-trigger" data-target="favorite-folder-@f.UserFavoriteFolderId"><i class="fas fa-edit"></i></span>
+                                    <span class="icon js-modal-trigger" data-target="favorite-folder-@f.UserFavoriteFolderId"><i class="fas fa-pen-to-square"></i></span>
                                     <span class="icon favorite-folder-delete" data-folderid="@f.UserFavoriteFolderId"><i class="fas fa-trash"></i></span>
-                                    <span class="icon drg-hdl"><i class="fas fa-arrows-alt"></i></span>
+                                    <span class="icon drg-hdl"><i class="fas fa-up-down-left-right"></i></span>
                                 </div>
                                 <script>
                                     (function(){
@@ -176,97 +183,97 @@
             <div class="column favorites">
                 <div class="columns is-multiline reorder">
 
-                    @foreach (var t in Model.Reports.OrderBy(x => x.Rank))
+                    @foreach (var t in Model.Reports.OrderBy(x => x.Rank).ToList())
                     {
                         <div class="column is-full favorite report @if(ViewBag.IsMe){<text>drg</text>} is-relative" data-rank="@t.Rank" data-folderid="@t.Folderid" data-favoriteid="@t.StarId" data-type="report">
                             @if(ViewBag.IsMe){
                                 <button class="favorite-reorder button is-light is-rounded is-warning has-text-dark is-active drg-hdl" type="button">
                                     <span class="icon">
-                                        <i class="fas fa-arrows-alt"></i>
+                                        <i class="fas fa-up-down-left-right"></i>
                                     </span>
                                 </button>
                             }
                             <partial name="Reports/_Snippet" model="t.Report" />
                         </div>
                     }
-                    @foreach (var t in Model.Collections.OrderBy(x => x.Rank))
+                    @foreach (var t in Model.Collections.OrderBy(x => x.Rank).ToList())
                     {
                         <div class="column is-full favorite collection @if(ViewBag.IsMe){<text>drg</text>} is-relative" data-rank="@t.Rank" data-folderid="@t.Folderid" data-favoriteid="@t.StarId" data-type="collection">
                             @if(ViewBag.IsMe)
                             {
                                 <button class="favorite-reorder button is-light is-rounded is-warning has-text-dark is-active drg-hdl" type="button">
                                     <span class="icon">
-                                        <i class="fas fa-arrows-alt"></i>
+                                        <i class="fas fa-up-down-left-right"></i>
                                     </span>
                                 </button>
                             }
                             <partial name="Collections/_Snippet" model="t.Collection" />
                         </div>
                     }
-                    @foreach (var t in Model.Initiatives.OrderBy(x => x.Rank))
+                    @foreach (var t in Model.Initiatives.OrderBy(x => x.Rank).ToList())
                     {
                         <div class="column is-full favorite initiative @if(ViewBag.IsMe){<text>drg</text>} is-relative" data-rank="@t.Rank" data-folderid="@t.Folderid" data-favoriteid="@t.StarId" data-type="initiative">
                             @if(ViewBag.IsMe)
                             {
                                 <button class="favorite-reorder button is-light is-rounded is-warning has-text-dark is-active drg-hdl" type="button">
                                     <span class="icon">
-                                        <i class="fas fa-arrows-alt"></i>
+                                        <i class="fas fa-up-down-left-right"></i>
                                     </span>
                                 </button>
                             }
                             <partial name="Initiatives/_Snippet" model="t.Initiative" />
                         </div>
                     }
-                    @foreach (var t in Model.Terms.OrderBy(x => x.Rank))
+                    @foreach (var t in Model.Terms.OrderBy(x => x.Rank).ToList())
                     {
                         <div class="column is-full favorite term @if(ViewBag.IsMe){<text>drg</text>} is-relative" data-rank="@t.Rank" data-folderid="@t.Folderid" data-favoriteid="@t.StarId" data-type="term">
                             @if(ViewBag.IsMe)
                             {
                                 <button class="favorite-reorder button is-light is-rounded is-warning has-text-dark is-active drg-hdl" type="button">
                                     <span class="icon">
-                                        <i class="fas fa-arrows-alt"></i>
+                                        <i class="fas fa-up-down-left-right"></i>
                                     </span>
                                 </button>
                             }
                             <partial name="Terms/_Snippet" model="t.Term" />
                         </div>
                     }
-                    @foreach (var t in Model.Users.OrderBy(x => x.Rank))
+                    @foreach (var t in Model.Users.OrderBy(x => x.Rank).ToList())
                     {
                         <div class="column is-full favorite user @if(ViewBag.IsMe){<text>drg</text>} is-relative" data-rank="@t.Rank" data-folderid="@t.Folderid" data-favoriteid="@t.StarId" data-type="user">
                             @if(ViewBag.IsMe)
                             {
                                 <button class="favorite-reorder button is-light is-rounded is-warning has-text-dark is-active drg-hdl" type="button">
                                     <span class="icon">
-                                        <i class="fas fa-arrows-alt"></i>
+                                        <i class="fas fa-up-down-left-right"></i>
                                     </span>
                                 </button>
                             }
                             <partial name="Groups/_Snippet" model="t.User" />
                         </div>
                     }
-                    @foreach (var t in Model.Groups.OrderBy(x => x.Rank))
+                    @foreach (var t in Model.Groups.OrderBy(x => x.Rank).ToList())
                     {
                         <div class="column is-full favorite group @if(ViewBag.IsMe){<text>drg</text>} is-relative" data-rank="@t.Rank" data-folderid="@t.Folderid" data-favoriteid="@t.StarId" data-type="group">
                             @if(ViewBag.IsMe)
                             {
                                 <button class="favorite-reorder button is-light is-rounded is-warning has-text-dark is-active drg-hdl" type="button">
                                     <span class="icon">
-                                        <i class="fas fa-arrows-alt"></i>
+                                        <i class="fas fa-up-down-left-right"></i>
                                     </span>
                                 </button>
                             }
                             <partial name="Users/_Snippet" model="t.Group" />
                         </div>
                     }
-                    @foreach (var t in Model.Searches.OrderBy(x => x.Rank))
+                    @foreach (var t in Model.Searches.OrderBy(x => x.Rank).ToList())
                     {
                         <div class="column is-full favorite search @if(ViewBag.IsMe){<text>drg</text>} is-relative" data-rank="@t.Rank" data-folderid="@t.Folderid" data-favoriteid="@t.StarId" data-type="search">
                             @if(ViewBag.IsMe)
                             {
                                 <button class="favorite-reorder button is-light is-rounded is-warning has-text-dark is-active drg-hdl" type="button">
                                     <span class="icon">
-                                        <i class="fas fa-arrows-alt"></i>
+                                        <i class="fas fa-up-down-left-right"></i>
                                     </span>
                                 </button>
                             }
@@ -292,7 +299,7 @@
     } else if (Model.RunReports != null && Model.RunReports.Count > 0) {
         <h3 class="title is-3" id="reports">You don't have any favorites! Here's some reports you've used.</h3>
         <div class="columns is-multiline">
-            @foreach (var t in Model.RunReports)
+            @foreach (var t in Model.RunReports.ToList())
             {
                 <div class="column is-half ">
                     <partial name="Reports/_Snippet" model="t" />

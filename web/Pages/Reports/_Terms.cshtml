@@ -4,7 +4,7 @@
 
 <h2 id="terms" class="title is-2">Terms</h2>
 <div class="columns is-multiline">
-    @foreach (var t in Model.Terms)
+    @foreach (var t in Model.Terms.ToList())
     {
         <div class="column is-half ">
             <partial name="Terms/_Snippet" model="t" />

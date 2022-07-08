@@ -57,7 +57,7 @@ namespace Atlas_Web.Pages.Initiatives
             return Page();
         }
 
-        public IActionResult OnPostAsync(int id)
+        public async Task<IActionResult> OnPostAsync(int id)
         {
             var checkpoint = UserHelpers.CheckUserPermissions(
                 _cache,
@@ -83,9 +83,9 @@ namespace Atlas_Web.Pages.Initiatives
             }
 
             // we get a copy of the initiative and then will only update several fields.
-            Initiative NewInitiative = _context.Initiatives
+            Initiative NewInitiative = await _context.Initiatives
                 .Where(m => m.DataInitiativeId == Initiative.DataInitiativeId)
-                .FirstOrDefault();
+                .FirstOrDefaultAsync();
 
             // update last update values & values that were posted
             NewInitiative.LastUpdateUser =
@@ -99,12 +99,12 @@ namespace Atlas_Web.Pages.Initiatives
             NewInitiative.StrategicImportance = Initiative.StrategicImportance;
 
             _context.Attach(NewInitiative).State = EntityState.Modified;
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             // updated any linked data projects that were added and remove any that were delinked.
-            var AddedCollections = _context.Collections
+            var AddedCollections = await _context.Collections
                 .Where(d => Collections.Select(x => x.DataProjectId).Contains(d.DataProjectId))
-                .ToList();
+                .ToListAsync();
 
             _cache.Remove("collections");
             foreach (var collection in AddedCollections)
@@ -112,19 +112,19 @@ namespace Atlas_Web.Pages.Initiatives
                 _cache.Remove("collection-" + collection.DataProjectId);
 
                 collection.DataInitiativeId = Initiative.DataInitiativeId;
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
 
-            var RemovedCollections = _context.Collections
+            var RemovedCollections = await _context.Collections
                 .Where(d => d.DataInitiativeId == Initiative.DataInitiativeId)
                 .Where(d => !Collections.Select(x => x.DataProjectId).Contains(d.DataProjectId))
-                .ToList();
+                .ToListAsync();
 
             foreach (var collection in RemovedCollections)
             {
                 _cache.Remove("collection-" + collection.DataProjectId);
                 collection.DataInitiativeId = null;
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
 
             _cache.Remove("initiative-" + Initiative.DataInitiativeId);

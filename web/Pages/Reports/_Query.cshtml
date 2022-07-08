@@ -10,9 +10,12 @@
     </p>
 
     <div class="panel-block is-collapsible is-block py-0" id="query-data">
+        @{
+            var queries = Model.Report.ReportObjectQueries.ToList();
+        }
         @for (var q=0; q< Model.Report.ReportObjectQueries.Count; q++)
         {
-            var t = Model.Report.ReportObjectQueries.ToList()[q];
+            var t = queries[q];
 
             <div class="is-flex is-justify-content-space-between m-3 mb-0 mt-5">
                 <h3 class="title is-3 mb-0">Query #@(q+1) | @t.Name</h3>
@@ -31,9 +34,9 @@
         }
 
         <!-- metric queries -->
-        @foreach (var t in Model.ComponentQueries)
+        @foreach (var t in Model.ComponentQueries.ToList())
         {
-            <div class="is-flex is-justify-content-space-between m-3 mb-0 mt-5">
+            <div class="is-flex is-justify-content-space-between m-3 mb-0 mt-4">
                 <h3 class="title is-3 mb-0"><a href="/Reports?id=@t.ReportObjectId">@t.Name (@t.ReportObject.EpicMasterFile @t.ReportObject.EpicRecordId)</a></h3>
                 <button class="button m-3 mb-0" onclick="copyQuery(event,query-@t.ReportObjectId)">
                     <span class="icon">

@@ -1,114 +1,60 @@
 @use 'sass:math';
 
-@import '_variables';
+@import '../../../../node_modules/@fortawesome/fontawesome-free/scss/_functions';
+@import '../../../../node_modules/@fortawesome/fontawesome-free/scss/_variables';
+@import '../../../../node_modules/@fortawesome/fontawesome-free/scss/_mixins';
+@import '../../../../node_modules/@fortawesome/fontawesome-free/scss/_core';
+@import '../../../../node_modules/@fortawesome/fontawesome-free/scss/_sizing';
+@import '../../../../node_modules/@fortawesome/fontawesome-free/scss/_animated';
 
 $fa-font-path: '/font/fontawesome/webfonts';
-
-/* from font awesome */
 @font-face {
-  font-family: 'Font Awesome 5 Free';
+  font-family: 'Font Awesome 6 Brands';
   font-style: normal;
   font-weight: 400;
   font-display: $fa-font-display;
-  src: url('#{$fa-font-path}/fa-regular-400.eot');
-  src: url('#{$fa-font-path}/fa-regular-400.eot?#iefix')
-      format('embedded-opentype'),
-    url('#{$fa-font-path}/fa-regular-400.woff2') format('woff2'),
-    url('#{$fa-font-path}/fa-regular-400.woff') format('woff'),
-    url('#{$fa-font-path}/fa-regular-400.ttf') format('truetype'),
-    url('#{$fa-font-path}/fa-regular-400.svg#fontawesome') format('svg');
-}
-
-.far {
-  font-family: 'Font Awesome 5 Free';
-  font-weight: 400;
+  src: url('#{$fa-font-path}/fa-brands-400.woff2') format('woff2'),
+    url('#{$fa-font-path}/fa-brands-400.ttf') format('truetype');
 }
 
 @font-face {
-  font-family: 'Font Awesome 5 Free';
+  font-family: 'Font Awesome 6 Free';
   font-style: normal;
   font-weight: 900;
   font-display: $fa-font-display;
-  src: url('#{$fa-font-path}/fa-solid-900.eot');
-  src: url('#{$fa-font-path}/fa-solid-900.eot?#iefix')
-      format('embedded-opentype'),
-    url('#{$fa-font-path}/fa-solid-900.woff2') format('woff2'),
-    url('#{$fa-font-path}/fa-solid-900.woff') format('woff'),
-    url('#{$fa-font-path}/fa-solid-900.ttf') format('truetype'),
-    url('#{$fa-font-path}/fa-solid-900.svg#fontawesome') format('svg');
+  src: url('#{$fa-font-path}/fa-solid-900.woff2') format('woff2'),
+    url('#{$fa-font-path}/fa-solid-900.ttf') format('truetype');
 }
 
-.fa,
-.fas {
-  font-family: 'Font Awesome 5 Free';
+@font-face {
+  font-family: 'Font Awesome 6 Free';
+  font-style: normal;
+  font-weight: 400;
+  font-display: $fa-font-display;
+  src: url('#{$fa-font-path}/fa-regular-400.woff2') format('woff2'),
+    url('#{$fa-font-path}/fa-regular-400.ttf') format('truetype');
+}
+
+.far,
+.#{$fa-css-prefix}-regular {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+
+.fas,
+.#{$fa-css-prefix}-solid {
+  font-family: 'Font Awesome 6 Free';
   font-weight: 900;
 }
 
-// List Icons
-// -------------------------
-
-.#{$fa-css-prefix}-ul {
-  list-style-type: none;
-  margin-left: $fa-li-width * math.div(5, 4);
-  padding-left: 0;
-
-  > li {
-    position: relative;
-  }
-}
-
-.#{$fa-css-prefix}-li {
-  left: -$fa-li-width;
-  position: absolute;
-  text-align: center;
-  width: $fa-li-width;
-  line-height: inherit;
-}
-
-// Icon Sizes
-// -------------------------
-
-// makes the font 33% larger relative to the icon container
-.#{$fa-css-prefix}-lg {
-  font-size: math.div(4em, 3);
-  line-height: math.div(3em, 4);
-  vertical-align: -0.0667em;
-}
-
-.#{$fa-css-prefix}-xs {
-  font-size: 0.75em;
-}
-
-.#{$fa-css-prefix}-sm {
-  font-size: 0.875em;
+.fab,
+.#{$fa-css-prefix}-brands {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
 }
 
 .#{$fa-css-prefix}-2_3x {
   font-size: 2.3em;
-}
-
-@for $i from 1 through 10 {
-  .#{$fa-css-prefix}-#{$i}x {
-    font-size: $i * 1em;
-  }
-}
-
-// Base Class Definition
-// -------------------------
-
-.#{$fa-css-prefix},
-.fas,
-.far,
-.fal,
-.fad,
-.fab {
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-font-smoothing: antialiased;
-  display: inline-block;
-  font-style: normal;
-  font-variant: normal;
-  text-rendering: auto;
-  line-height: 1;
 }
 
 .#{$fa-css-prefix}-spin {
@@ -177,30 +123,30 @@ $icons: (
   user: $fa-var-user,
   chevron-left: $fa-var-chevron-left,
   chevron-right: $fa-var-chevron-right,
-  search: $fa-var-search,
-  edit: $fa-var-edit,
+  magnifying-glass: $fa-var-magnifying-glass,
+  pen-to-square: $fa-var-pen-to-square,
   trash: $fa-var-trash,
   star: $fa-var-star,
   share: $fa-var-share,
   thumbs-up: $fa-var-thumbs-up,
   plus: $fa-var-plus,
   chart-bar: $fa-var-chart-bar,
-  play-circle: $fa-var-play-circle,
+  circle-play: $fa-var-circle-play,
   universal-access: $fa-var-universal-access,
-  sliders-h: $fa-var-sliders-h,
+  sliders: $fa-var-sliders,
   code: $fa-var-code,
   quote-left: $fa-var-quote-left,
   reply: $fa-var-reply,
   reply-all: $fa-var-reply-all,
   paper-plane: $fa-var-paper-plane,
   heading: $fa-var-heading,
-  times: $fa-var-times,
+  xmark: $fa-var-xmark,
   folder: $fa-var-folder,
   check: $fa-var-check,
   play: $fa-var-play,
   folder-plus: $fa-var-folder-plus,
-  file-upload: $fa-var-file-upload,
-  save: $fa-var-save,
+  file-arrow-up: $fa-var-file-arrow-up,
+  floppy-disk: $fa-var-floppy-disk,
   angle-down: $fa-var-angle-down,
   sort: $fa-var-sort,
   folder-open: $fa-var-folder-open,
@@ -209,17 +155,17 @@ $icons: (
   italic: $fa-var-italic,
   list-ol: $fa-var-list-ol,
   bold: $fa-var-bold,
-  trash-alt: $fa-var-trash-alt,
-  external-link-square-alt: $fa-var-external-link-square-alt,
-  cogs: $fa-var-cogs,
+  trash-can: $fa-var-trash-can,
+  arrow-up-right-from-square: $fa-var-arrow-up-right-from-square,
+  gears: $fa-var-gears,
   circle-notch: $fa-var-circle-notch,
-  long-arrow-alt-left: $fa-var-long-arrow-alt-left,
-  long-arrow-alt-right: $fa-var-long-arrow-alt-right,
+  left-long: $fa-var-left-long,
+  right-long: $fa-var-right-long,
   eye: $fa-var-eye,
   eye-slash: $fa-var-eye-slash,
   palette: $fa-var-palette,
   database: $fa-var-database,
-  comment-alt: $fa-var-comment-alt,
+  message: $fa-var-message,
   info: $fa-var-info,
   paperclip: $fa-var-paperclip,
   user-lock: $fa-var-user-lock,
@@ -227,19 +173,19 @@ $icons: (
   chevron-down: $fa-var-chevron-down,
   chevron-up: $fa-var-chevron-up,
   image: $fa-var-image,
-  arrows-alt: $fa-var-arrows-alt,
-  plus-circle: $fa-var-plus-circle,
-  minus-circle: $fa-var-minus-circle,
+  up-down-left-right: $fa-var-up-down-left-right,
+  circle-plus: $fa-var-circle-plus,
+  circle-minus: $fa-var-circle-minus,
   circle: $fa-var-circle,
   exclamation-triangle: $fa-var-exclamation-triangle,
   book-open: $fa-var-book-open,
-  check-circle: $fa-var-check-circle,
+  circle-check: $fa-var-circle-check,
   certificate: $fa-var-certificate,
   filter: $fa-var-filter,
   book: $fa-var-book,
   users: $fa-var-users,
   lightbulb: $fa-var-lightbulb,
-  project-diagram: $fa-var-project-diagram,
+  diagram-project: $fa-var-diagram-project,
   copy: $fa-var-copy,
   caret-up: $fa-var-caret-up,
 );

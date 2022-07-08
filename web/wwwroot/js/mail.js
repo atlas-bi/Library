@@ -7,26 +7,26 @@
   let saveDraftQ = null;
   let deleteMes = null;
   let sendMes = null;
-  const pollForNewMessages = function () {
-    const div = document.createElement('div');
+  // const pollForNewMessages = function () {
+  //   const div = document.createElement('div');
 
-    if (newMesQ !== null) {
-      newMesQ.abort();
-    }
+  //   if (newMesQ !== null) {
+  //     newMesQ.abort();
+  //   }
 
-    newMesQ = new XMLHttpRequest();
-    newMesQ.open('post', '/mail?handler=CheckForMail', true);
-    newMesQ.setRequestHeader(
-      'Content-Type',
-      'application/x-www-form-urlencoded; charset=UTF-8',
-    );
-    newMesQ.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-    newMesQ.send();
-    newMesQ.addEventListener('load', function () {
-      div.innerHTML = DOMPurify.sanitize(newMesQ.responseText);
-      parseNewMailData(div);
-    });
-  };
+  //   newMesQ = new XMLHttpRequest();
+  //   newMesQ.open('post', '/mail?handler=CheckForMail', true);
+  //   newMesQ.setRequestHeader(
+  //     'Content-Type',
+  //     'application/x-www-form-urlencoded; charset=UTF-8',
+  //   );
+  //   newMesQ.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+  //   newMesQ.send();
+  //   newMesQ.addEventListener('load', function () {
+  //     div.innerHTML = DOMPurify.sanitize(newMesQ.responseText);
+  //     parseNewMailData(div);
+  //   });
+  // };
 
   const parseNewMailData = function (element) {
     const unreadMessage = d.querySelectorAll('.mail-unread-cnt');
@@ -476,14 +476,14 @@
     }
 
     // Update mail icon
-    pollForNewMessages();
+    // pollForNewMessages();
   };
 
-  setInterval(function () {
-    if (typeof window.ajaxOn === 'undefined' || window.ajaxOn === true) {
-      pollForNewMessages();
-    }
-  }, 10_000); // 10000 milliseconds = 10 seconds
+  // SetInterval(function () {
+  //   if (typeof window.ajaxOn === 'undefined' || window.ajaxOn === true) {
+  //    // pollForNewMessages();
+  //   }
+  // }, 10_000); // 10000 milliseconds = 10 seconds
 
   document.addEventListener('loadMessage', function (event) {
     if (typeof event.detail !== 'undefined') {
@@ -713,7 +713,7 @@
         sendMes.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
         sendMes.send(JSON.stringify(data));
         sendMes.addEventListener('load', function () {
-          pollForNewMessages();
+          // PollForNewMessages();
         });
         // If we are in drafts folder, remove draft.
 

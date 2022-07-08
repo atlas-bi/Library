@@ -85,6 +85,7 @@ gulp.task(
           'web/wwwroot/js/polyfill/sticky.js',
           'web/wwwroot/js/polyfill/remove.js',
           'web/wwwroot/js/polyfill/includes.js',
+          'web/wwwroot/js/polyfill/trunc.js',
         ],
         gulp.series(
           gulp.parallel('js:polyfill', 'styles', 'iis:kill'),
