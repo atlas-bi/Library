@@ -46,7 +46,7 @@
     <div class="tab-dta" id="activity">
         <partial name="Profile/Partials/_FullProfile" />
     </div>
-     <div class="tab-dta @if (@Model.UserId != @Model.MyId){ <text>active</text>}" id="run-list">
+    <div class="tab-dta @if (@Model.UserId != @Model.MyId){ <text>active</text>}" id="run-list">
         <div data-ajax="yes" data-url="/Profile" data-parameters="handler=RunList&type=@ViewBag.ProfileType&id=@ViewBag.ProfileId@ViewBag.DefaultFilters"></div>
     </div>
     <div class="tab-dta" id="atlas-history">
