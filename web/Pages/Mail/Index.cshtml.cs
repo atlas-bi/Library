@@ -140,7 +140,7 @@ namespace Atlas_Web.Pages.Mail
                         .FirstOrDefault(),
                     AlertDisplayed = (mr.AlertDisplayed ?? 0)
                 }
-            ).ToListAsync();
+            ).AsNoTracking().ToListAsync();
 
             // what to do if this is null. can't use "count" in the html
             var NewMail = (
@@ -156,14 +156,14 @@ namespace Atlas_Web.Pages.Mail
 
             // update flag for alert displayed
             (
-                from mr in _context.MailRecipients
-                where
-                    mr.ToUserId == MyUser.UserId
-                    && (mr.AlertDisplayed == 0 || mr.AlertDisplayed == null)
-                select mr
-            )
-                .ToList()
-                .ForEach(x => x.AlertDisplayed = 1);
+                await (
+                    from mr in _context.MailRecipients
+                    where
+                        mr.ToUserId == MyUser.UserId
+                        && (mr.AlertDisplayed == 0 || mr.AlertDisplayed == null)
+                    select mr
+                ).ToListAsync()
+            ).ForEach(x => x.AlertDisplayed = 1);
 
             await _context.SaveChangesAsync();
 

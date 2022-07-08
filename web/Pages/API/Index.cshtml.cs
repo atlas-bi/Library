@@ -43,8 +43,6 @@ namespace Atlas_Web.Pages.API
 #pragma warning restore S3459
         }
 
-        public List<AdList> AdLists { get; set; }
-
         public void OnGet()
         {
             // placeholder to initialize.

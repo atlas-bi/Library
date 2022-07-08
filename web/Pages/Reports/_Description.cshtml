@@ -80,7 +80,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach(var param in Model.Report.ReportObjectParameters)
+                        @foreach(var param in Model.Report.ReportObjectParameters.ToList())
                         {
                             <tr>
                                 <td>@param.ParameterName</td>

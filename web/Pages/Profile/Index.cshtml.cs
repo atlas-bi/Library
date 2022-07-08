@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Atlas_Web.Models;
-using Atlas_Web.Helpers;
 using System.Collections.Generic;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
@@ -150,7 +149,7 @@ namespace Atlas_Web.Pages.Profile
                     Runs = grp.Sum(x => x.b.Runs),
                     LastRun = grp.Max(x => x.d.RunStartTime).ToShortDateString(),
                 }
-            ).ToListAsync();
+            ).AsNoTracking().ToListAsync();
 
             return new PartialViewResult() { ViewName = "Partials/_RunList", ViewData = ViewData };
         }
@@ -472,6 +471,7 @@ namespace Atlas_Web.Pages.Profile
                             Checked = server.Contains(x.Key)
                         }
                 )
+                .AsNoTracking()
                 .ToListAsync();
 
             Filter_Database = await subquery
@@ -487,6 +487,7 @@ namespace Atlas_Web.Pages.Profile
                             Checked = database.Contains(x.Key)
                         }
                 )
+                .AsNoTracking()
                 .ToListAsync();
 
             Filter_ReportType = await subquery
@@ -502,6 +503,7 @@ namespace Atlas_Web.Pages.Profile
                             Checked = reportType.Contains((int)x.Key.ReportObjectTypeId)
                         }
                 )
+                .AsNoTracking()
                 .ToListAsync();
 
             Filter_MasterFile = await subquery
@@ -526,6 +528,7 @@ namespace Atlas_Web.Pages.Profile
                             Checked = masterFile.Contains(x.Key.Value)
                         }
                 )
+                .AsNoTracking()
                 .ToListAsync();
 
             Filter_Visible = await subquery
@@ -549,6 +552,7 @@ namespace Atlas_Web.Pages.Profile
                             Checked = visible.Contains(x.Key.Value)
                         }
                 )
+                .AsNoTracking()
                 .ToListAsync();
 
             Filter_Certification = await (
@@ -563,7 +567,7 @@ namespace Atlas_Web.Pages.Profile
                     Count = x.Sum(y => y.b.Runs),
                     Checked = certification.Contains(x.Key)
                 }
-            ).ToListAsync();
+            ).AsNoTracking().ToListAsync();
 
             Filter_Availabiltiy = await subquery
                 .GroupBy(
@@ -587,6 +591,7 @@ namespace Atlas_Web.Pages.Profile
                             Checked = availability.Contains(x.Key.Value)
                         }
                 )
+                .AsNoTracking()
                 .ToListAsync();
             return new PartialViewResult { ViewName = "Partials/_Filters", ViewData = ViewData };
         }
@@ -629,7 +634,7 @@ namespace Atlas_Web.Pages.Profile
                     Runs = grp.Sum(x => x.b.Runs),
                     RunTime = Math.Round(grp.Average(x => (int)x.d.RunDurationSeconds), 1)
                 }
-            ).ToListAsync();
+            ).AsNoTracking().ToListAsync();
 
             Runs = RunHistory.Sum(x => x.Runs);
 
@@ -701,7 +706,7 @@ namespace Atlas_Web.Pages.Profile
                             ? "/users?id=" + grp.Key.RunUserId
                             : null,
                 }
-            ).OrderByDescending(x => x.Count).Take(20).ToListAsync();
+            ).OrderByDescending(x => x.Count).Take(20).AsNoTracking().ToListAsync();
 
             return new PartialViewResult { ViewName = "Partials/_BarData", ViewData = ViewData };
         }
@@ -752,7 +757,7 @@ namespace Atlas_Web.Pages.Profile
                     TitleOne = "Failed Runs",
                     TitleTwo = "Fails"
                 }
-            ).OrderByDescending(x => x.Count).Take(20).ToListAsync();
+            ).OrderByDescending(x => x.Count).Take(20).AsNoTracking().ToListAsync();
 
             return new PartialViewResult { ViewName = "Partials/_BarData", ViewData = ViewData };
         }
@@ -805,7 +810,7 @@ namespace Atlas_Web.Pages.Profile
                     TitleTwo = "Runs",
                     Href = "/reports?id=" + grp.Key.ReportObjectId
                 }
-            ).OrderByDescending(x => x.Count).Take(20).ToListAsync();
+            ).OrderByDescending(x => x.Count).Take(20).AsNoTracking().ToListAsync();
 
             return new PartialViewResult { ViewName = "Partials/_BarData", ViewData = ViewData };
         }
@@ -816,18 +821,21 @@ namespace Atlas_Web.Pages.Profile
             {
                 UserStars = await _context.Users
                     .Where(x => x.StarredReports.Any(r => r.Reportid == id))
+                    .AsNoTracking()
                     .ToListAsync();
             }
             else if (type == "term" && _context.Terms.Any(x => x.TermId == id))
             {
                 UserStars = await _context.Users
                     .Where(x => x.StarredTerms.Any(r => r.Termid == id))
+                    .AsNoTracking()
                     .ToListAsync();
             }
             else if (type == "collection" && _context.Collections.Any(x => x.DataProjectId == id))
             {
                 UserStars = await _context.Users
                     .Where(x => x.StarredCollections.Any(r => r.Collectionid == id))
+                    .AsNoTracking()
                     .ToListAsync();
             }
             else
@@ -848,6 +856,7 @@ namespace Atlas_Web.Pages.Profile
             {
                 UserSubscriptions = await _context.Users
                     .Where(x => x.ReportObjectSubscriptions.Any(r => r.ReportObjectId == id))
+                    .AsNoTracking()
                     .ToListAsync();
             }
             else

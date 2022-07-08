@@ -56,16 +56,6 @@ namespace Atlas_Web.Pages.Search
             _solrLookup = solrLookup;
         }
 
-        public class BasicFavoriteReportData
-        {
-            public string Name { get; set; }
-            public int Id { get; set; }
-            public string Favorite { get; set; }
-            public string ReportUrl { get; set; }
-        }
-
-        public List<AdList> AdLists { get; set; }
-
         public SolrAtlasResults SearchResults { get; set; }
 
         [BindProperty]
@@ -436,6 +426,7 @@ namespace Atlas_Web.Pages.Search
                                                           .Include(x => x.ReportTagLinks)
                                                           .ThenInclude(x => x.Tag)
                                                           .AsSingleQuery()
+                                                          .AsNoTracking()
                                                           .SingleOrDefault(
                                                               y => y.ReportObjectId == x.AtlasId
                                                           );
@@ -453,6 +444,7 @@ namespace Atlas_Web.Pages.Search
                                                       return _context.Collections
                                                           .Include(x => x.StarredCollections)
                                                           .AsSingleQuery()
+                                                          .AsNoTracking()
                                                           .SingleOrDefault(
                                                               y => y.DataProjectId == x.AtlasId
                                                           );

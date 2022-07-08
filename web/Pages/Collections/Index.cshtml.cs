@@ -25,9 +25,6 @@ namespace Atlas_Web.Pages.Collections
         [BindProperty]
         public Collection Collection { get; set; }
 
-        [BindProperty]
-        public CollectionReport CollectionReport { get; set; }
-
         public IEnumerable<Collection> Collections { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? id = null)
@@ -65,6 +62,7 @@ namespace Atlas_Web.Pages.Collections
                             .ThenInclude(x => x.Tag)
                             .Include(x => x.StarredCollections)
                             .Include(x => x.Initiative)
+                            .AsNoTracking()
                             .SingleAsync(x => x.DataProjectId == id);
                     }
                 );
@@ -87,7 +85,7 @@ namespace Atlas_Web.Pages.Collections
             return Page();
         }
 
-        public ActionResult OnGetDeleteCollection(int Id)
+        public async Task<ActionResult> OnGetDeleteCollection(int Id)
         {
             var checkpoint = UserHelpers.CheckUserPermissions(
                 _cache,
@@ -110,14 +108,14 @@ namespace Atlas_Web.Pages.Collections
             // delete report annotations and term annotations
             // then delete project and save.
             _context.RemoveRange(_context.CollectionReports.Where(m => m.DataProjectId == Id));
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             _context.RemoveRange(_context.CollectionTerms.Where(m => m.DataProjectId == Id));
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             _context.Remove(
                 _context.Collections.Where(m => m.DataProjectId == Id).FirstOrDefault()
             );
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             _cache.Remove("collection-" + Id);
             _cache.Remove("collections");

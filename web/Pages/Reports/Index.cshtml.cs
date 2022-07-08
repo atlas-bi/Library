@@ -42,30 +42,12 @@ namespace Atlas_Web.Pages.Reports
                     cacheEntry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20);
 
                     return _context.ReportObjects
+                        /* run the 1:1 as a single query */
                         .Include(x => x.ReportObjectImagesDocs)
-                        /* maintenance logs */
-                        .Include(x => x.ReportObjectDoc)
-                        .ThenInclude(x => x.MaintenanceLogs)
-                        .ThenInclude(x => x.Maintainer)
-                        .Include(x => x.ReportObjectDoc)
-                        .ThenInclude(x => x.MaintenanceLogs)
-                        .ThenInclude(x => x.MaintenanceLogStatus)
-                        .Include(x => x.ReportObjectDoc)
-                        .ThenInclude(x => x.EstimatedRunFrequency)
-                        .Include(x => x.ReportObjectDoc)
-                        .ThenInclude(x => x.Fragility)
-                        .Include(x => x.ReportObjectDoc)
-                        .ThenInclude(x => x.ReportObjectDocFragilityTags)
-                        .ThenInclude(x => x.FragilityTag)
-                        .Include(x => x.ReportObjectTagMemberships)
-                        .ThenInclude(x => x.Tag)
                         .Include(x => x.ReportObjectDoc)
                         .ThenInclude(x => x.MaintenanceSchedule)
                         .Include(x => x.ReportObjectDoc)
                         .ThenInclude(x => x.OrganizationalValue)
-                        /* type */
-                        .Include(x => x.ReportObjectType)
-                        /* users */
                         .Include(x => x.LastModifiedByUser)
                         .Include(x => x.AuthorUser)
                         .Include(x => x.ReportObjectDoc)
@@ -74,6 +56,22 @@ namespace Atlas_Web.Pages.Reports
                         .ThenInclude(x => x.RequesterNavigation)
                         .Include(x => x.ReportObjectDoc)
                         .ThenInclude(x => x.OperationalOwnerUser)
+                        .Include(x => x.ReportObjectType)
+                        .Include(x => x.ReportObjectDoc)
+                        .ThenInclude(x => x.EstimatedRunFrequency)
+                        .Include(x => x.ReportObjectDoc)
+                        .ThenInclude(x => x.Fragility)
+                        .Include(x => x.ReportObjectDoc)
+                        .ThenInclude(x => x.MaintenanceLogs)
+                        .ThenInclude(x => x.Maintainer)
+                        .Include(x => x.ReportObjectDoc)
+                        .ThenInclude(x => x.MaintenanceLogs)
+                        .ThenInclude(x => x.MaintenanceLogStatus)
+                        .Include(x => x.ReportObjectDoc)
+                        .ThenInclude(x => x.ReportObjectDocFragilityTags)
+                        .ThenInclude(x => x.FragilityTag)
+                        .Include(x => x.ReportObjectTagMemberships)
+                        .ThenInclude(x => x.Tag)
                         .Include(x => x.ReportObjectDoc)
                         .ThenInclude(x => x.ReportManageEngineTickets)
                         .Include(x => x.ReportObjectAttachments)
@@ -86,6 +84,7 @@ namespace Atlas_Web.Pages.Reports
                         .Include(x => x.ReportObjectParameters)
                         .Include(x => x.ReportTagLinks)
                         .ThenInclude(x => x.Tag)
+                        .AsNoTracking()
                         .SingleOrDefaultAsync(x => x.ReportObjectId == id);
                 }
             );
@@ -166,6 +165,7 @@ namespace Atlas_Web.Pages.Reports
                             )
                         )
                         .Distinct()
+                        .AsNoTracking()
                         .ToListAsync();
                 }
             );
@@ -188,6 +188,7 @@ namespace Atlas_Web.Pages.Reports
                                 )
                         )
                         .Include(x => x.ReportObject)
+                        .AsNoTracking()
                         .ToListAsync();
                 }
             );
@@ -234,6 +235,7 @@ namespace Atlas_Web.Pages.Reports
                                 .Include(x => x.ReportObjectType)
                                 .Include(x => x.ReportObjectAttachments)
                         )
+                        .AsNoTracking()
                         .ToListAsync();
                 }
             );
@@ -280,6 +282,7 @@ namespace Atlas_Web.Pages.Reports
                                 .Include(x => x.ReportObjectType)
                                 .Include(x => x.ReportObjectAttachments)
                         )
+                        .AsNoTracking()
                         .ToListAsync();
                 }
             );
@@ -342,7 +345,7 @@ namespace Atlas_Web.Pages.Reports
                 where n.NextDate < Today
                 orderby n.NextDate
                 select new MaintStatus { Required = "Report requires maintenance." }
-            ).FirstOrDefaultAsync();
+            ).AsNoTracking().FirstOrDefaultAsync();
 
             return new PartialViewResult
             {

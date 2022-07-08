@@ -35,14 +35,6 @@ namespace Atlas_Web.Pages
             public string Favorite { get; set; }
         }
 
-        public class BasicFavoriteReportData
-        {
-            public string Name { get; set; }
-            public int Id { get; set; }
-            public string Favorite { get; set; }
-            public string ReportUrl { get; set; }
-        }
-
         public List<AdList> AdLists { get; set; }
         public User PublicUser { get; set; }
 

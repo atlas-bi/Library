@@ -16,13 +16,13 @@
     }
 
 
-    ViewBag.RunReportUrl = HtmlHelpers.ReportUrlFromParams(
+    ViewBag.RunReportUrl = ReportLinkHelpers.ReportUrlFromParams(
                     ViewContext.HttpContext,
                     Model.Report,
                     DbContext,
                     User.Identity.Name
                 );
-    ViewBag.EditReportUrl = HtmlHelpers.EditReportFromParams(
+    ViewBag.EditReportUrl = ReportLinkHelpers.EditReportFromParams(
                         Configuration["AppSettings:org_domain"],
                         ViewContext.HttpContext,
                         Model.Report.ReportServerPath,
@@ -32,7 +32,7 @@
                         Model.Report.EpicRecordId.ToString(),
                         Model.Report.OrphanedReportObjectYn
                     );
-    ViewBag.ManageReportUrl = HtmlHelpers.ReportManageUrlFromParams(
+    ViewBag.ManageReportUrl = ReportLinkHelpers.ReportManageUrlFromParams(
                         Configuration["AppSettings:org_domain"],
                         ViewContext.HttpContext,
                         Model.Report.ReportObjectType.Name,
@@ -60,12 +60,12 @@
         @Model.Report.Name
     }
 
-    @foreach (var item in Model.Report.ReportTagLinks)
+    @foreach (var item in Model.Report.ReportTagLinks.ToList())
     {
         if(item.ShowInHeader == "Y" || item.Tag.ShowInHeader == "Y")
         {
             <span class="has-tooltip-arrow has-tooltip-multiline has-tooltip-bottom" data-tooltip="@item.Tag.Description">
-                <span class="pageNav @PageExtensions.Slug(item.Tag.Name) is-nobreak">@item.Tag.Name</span>
+                <span class="pageNav @HtmlHelpers.Slug(item.Tag.Name) is-nobreak">@item.Tag.Name</span>
             </span>
         }
     }

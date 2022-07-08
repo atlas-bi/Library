@@ -19,7 +19,7 @@
 {
     <h2 class="title is-2" id="reports">Reports</h2>
     <div class="columns is-multiline">
-        @foreach (var t in Model.Collection.CollectionReports.OrderBy(x => x.Rank))
+        @foreach (var t in Model.Collection.CollectionReports.OrderBy(x => x.Rank).ToList())
         {
             <div class="column is-half ">
                 <partial name="Reports/_Snippet" model="t.Report" />
@@ -34,7 +34,7 @@
     {
         <h2 class="title is-2" id="terms">Terms</h2>
         <div class="columns is-multiline">
-            @foreach (var t in Model.Collection.CollectionTerms.OrderBy(x => x.Rank))
+            @foreach (var t in Model.Collection.CollectionTerms.OrderBy(x => x.Rank).ToList())
             {
                 <div class="column is-half ">
                     <partial name="Terms/_Snippet" model="t.Term" />

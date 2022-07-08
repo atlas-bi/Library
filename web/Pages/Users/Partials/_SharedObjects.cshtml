@@ -7,7 +7,7 @@
             <div class="has-tooltip-arrow has-tooltip-left is-flex is-align-items-center"data-tooltip="Shared by @o.SharedFrom on @o.ShareDate">
                 <form class="remove-shared-object" asp-page-handler="RemoveSharedObject" method="post">
                     <input type="hidden" name="id" value="@o.Id" />
-                    <button class="button is-ghost py-0"><i class="fas fa-times"></i></button>
+                    <button class="button is-ghost py-0"><i class="fas fa-xmark"></i></button>
                 </form>
                 <a href="@o.Url" aria-label="@o.Name">@o.Name</a>
             </div>

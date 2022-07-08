@@ -86,14 +86,6 @@ namespace Atlas_Web.Pages.Tasks
             public string EpicId { get; set; }
         }
 
-        public IEnumerable<RecommendRetireReports> RecommendRetire { get; set; }
-        public IEnumerable<NextMaint> NextMaintenance { get; set; }
-        public List<NextMaint> AuditOnly { get; set; }
-        public List<NextMaint> MissingSchedule { get; set; }
-        public IEnumerable<UndocumentedReports> Undocumented { get; set; }
-        public IEnumerable<UndocumentedReports> NewUndocumented { get; set; }
-        public IEnumerable<EditedOutsideAnalyticsData> EditedOutsideAnalytics { get; set; }
-        public IEnumerable<DeadData> Dead { get; set; }
         public List<AdList> AdLists { get; set; }
 
         public IActionResult OnGet()
@@ -447,13 +439,13 @@ namespace Atlas_Web.Pages.Tasks
                     Name = r.DisplayName,
                     ReportType = r.ReportObjectType.Name,
                     Epic = r.EpicMasterFile + " " + r.EpicRecordId.ToString(),
-                    RunReportUrl = Helpers.HtmlHelpers.ReportUrlFromParams(
+                    RunReportUrl = Helpers.ReportLinkHelpers.ReportUrlFromParams(
                         HttpContext,
                         r,
                         _context,
                         User.Identity.Name
                     ),
-                    EditReportUrl = Helpers.HtmlHelpers.EditReportFromParams(
+                    EditReportUrl = Helpers.ReportLinkHelpers.EditReportFromParams(
                         _config["AppSettings:org_domain"],
                         HttpContext,
                         r.ReportServerPath,
@@ -463,7 +455,7 @@ namespace Atlas_Web.Pages.Tasks
                         r.EpicRecordId.ToString(),
                         r.OrphanedReportObjectYn
                     ),
-                    RecordViewerUrl = Helpers.HtmlHelpers.RecordViewerLink(
+                    RecordViewerUrl = Helpers.ReportLinkHelpers.RecordViewerLink(
                         HttpContext,
                         r.EpicMasterFile,
                         r.EpicRecordId.ToString(),

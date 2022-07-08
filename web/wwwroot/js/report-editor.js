@@ -45,7 +45,7 @@
     drag.setAttribute('type', 'button');
     drag.classList.add('button', 'is-light', 'drg-hdl');
     drag.innerHTML =
-      '<span class="icon"><i class="fas fa-arrows-alt"></i></span>';
+      '<span class="icon"><i class="fas fa-up-down-left-right"></i></span>';
 
     // Initial loaded as a spinner icon, the replaced w/ trash once we get a successful ajax response.
     const trash = document.createElement('button');
