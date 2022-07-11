@@ -57,7 +57,7 @@
     "stylelint": "14.9.1",
     "stylelint-config-prettier-scss": "0.0.1",
     "stylelint-config-standard-scss": "4.0.0",
-    "stylelint-scss": "4.2.0",
+    "stylelint-scss": "4.3.0",
     "xo": "0.48.0"
   },
   "homepage": "https://demo.atlas.bi",
@@ -153,5 +153,5 @@
       "no-new": "warn"
     }
   },
-  "version": "3.5.1"
+  "version": "3.5.2"
 }
