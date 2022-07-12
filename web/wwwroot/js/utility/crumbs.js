@@ -8,6 +8,12 @@
   // };
 
   const breadcrumbs = function () {
+    const element = document.querySelector('.breadcrumb.site-breadcrumbs');
+
+    if (element === null) {
+      return -1;
+    }
+
     const title = document.title.includes(' | ')
       ? document.title.split(' | ')[0]
       : document.title;
@@ -39,7 +45,6 @@
       sessionStorage.setItem('breadcrumbs', JSON.stringify(crumbs));
     }
 
-    const element = document.querySelector('.breadcrumb');
     if (crumbs.length <= 1) return;
     element.innerHTML = DOMPurify.sanitize(buildcrumbs(crumbs).outerHTML);
     element.style.opacity = 1;
