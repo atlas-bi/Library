@@ -4,6 +4,12 @@
             <li>
                 <a class="tab-lnk active" href="#runs-@ViewBag.ProfileType-@ViewBag.ProfileId">Run Analytics</a>
             </li>
+            @if(ViewBag.ProfileType == "report")
+            {
+                <li>
+                    <a class="tab-lnk" href="#report-runs-@ViewBag.ProfileType-@ViewBag.ProfileId">Report Runs</a>
+                </li>
+            }
             <li>
                 <a class="tab-lnk"  href="#stars-@ViewBag.ProfileType-@ViewBag.ProfileId">Stars</a>
             </li>
@@ -105,6 +111,12 @@
             </div>
         </div>
     </div>
+    @if(ViewBag.ProfileType == "report")
+    {
+        <div class="tab-dta active" id="report-runs-@ViewBag.ProfileType-@ViewBag.ProfileId">
+            <div data-ajax="yes" data-url="/Profile" data-parameters="handler=RunList&type=@ViewBag.ProfileType&id=@ViewBag.ProfileId@ViewBag.DefaultFilters"></div>
+        </div>
+    }
     @if(ViewBag.ProfileType != "user" && ViewBag.ProfileId != -1){
         <div class="tab-dta" id="stars-@ViewBag.ProfileType-@ViewBag.ProfileId">
             <div data-ajax="yes" data-url="/Profile" data-parameters="handler=Stars&type=@ViewBag.ProfileType&id=@ViewBag.ProfileId@ViewBag.DefaultFilters"></div>

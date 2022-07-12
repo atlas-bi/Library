@@ -6,7 +6,10 @@
         <thead>
             <tr>
                 <th>Name</th>
-                <th>Type</th>
+                @if(@ViewBag.ReportRuns[0].Type != null){
+                    <th>Type</th>
+                }
+
                 <th>Runs</th>
                 <th>Last Run</th>
             </tr>
@@ -15,8 +18,19 @@
             @foreach (var item in ViewBag.ReportRuns)
             {
                 <tr>
-                    <td><a href="@item.Url">@item.Name</a></td>
-                    <td>@item.Type</td>
+                    <td>
+                        @if(@item.Url != null)
+                        {
+                            <a href="@item.Url">@item.Name</a>
+                        } else
+                        {
+                            @item.Name
+                        }
+                    </td>
+                    @if(@item.Type != null)
+                    {
+                        <td>@item.Type</td>
+                    }
                     <td>@item.Runs</td>
                     <td>@item.LastRun</td>
                 </tr>
