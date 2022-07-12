@@ -153,18 +153,18 @@
                         </div>
                         <div class="navbar-dropdown">
                             <hr class=" hide-desktop dropdown-divider">
-                            @if (@Configuration["features:enable_initiatives"] == null || @Configuration["features:enable_initiatives"].ToString().ToLower() == "true")
+                            @if (@Configuration["features:enable_initiatives"] == null || @Configuration["features:enable_initiatives"].ToString().ToLower() != "false")
                             {
                 <a class="navbar-item" href="/initiatives">Initiatives</a>}
                             <a class="navbar-item" href="/collections">Collections</a>
-                            @if (@Configuration["features:enable_terms"] == null || @Configuration["features:enable_terms"].ToString().ToLower() == "true")
+                            @if (@Configuration["features:enable_terms"] == null || @Configuration["features:enable_terms"].ToString().ToLower() != "false")
                             {
                 <a class="navbar-item" href="/terms">Terms</a>}
                             <hr class="dropdown-divider">
                             <a class="navbar-item" href="/about_analytics">About Analytics</a>
                         </div>
                     </div>
-                    @if (@Configuration["features:enable_user_profile"] == null || @Configuration["features:enable_user_profile"].ToString().ToLower() == "true")
+                    @if (@Configuration["features:enable_user_profile"] == null || @Configuration["features:enable_user_profile"].ToString().ToLower() != "false")
                     {
                         <a class="navbar-item has-tooltip-arrow has-tooltip-bottom" href="/users" data-tooltip="Open Profile">
                             <span class="icon is-medium">
@@ -228,12 +228,15 @@
             </div>
         </div>
     </nav>
-    <section class="section py-0">
-        <div class="container">
-            <nav class="breadcrumb">
-            </nav>
-        </div>
-    </section>
+    @if (@Configuration["features:enable_breadcrumbs"] == null || @Configuration["features:enable_breadcrumbs"].ToString().ToLower() != "false")
+    {
+        <section class="section py-0">
+            <div class="container">
+                <nav class="breadcrumb site-breadcrumbs">
+                </nav>
+            </div>
+        </section>
+    }
 
     <section class="is-flex-grow-1 mt-4">
         <div class="container is-relative mb-5">
