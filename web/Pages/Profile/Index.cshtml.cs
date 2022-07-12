@@ -107,6 +107,40 @@ namespace Atlas_Web.Pages.Profile
         {
             var run_data = _context.ReportObjectRunDatas.AsQueryable();
 
+            if (type == "report")
+            {
+                run_data = run_data.Where(
+                    x => x.ReportObjectRunDataBridges.Any(y => y.ReportObjectId == id)
+                );
+
+                ViewData["ReportRuns"] = await (
+                    from b in run_data
+                    join d in _context.ReportObjectRunDataBridges on b.RunDataId equals d.RunId
+                    group new { b, d } by new { b.RunUserId, b.RunUser.FullnameCalc } into grp
+                    orderby grp.Max(x => x.b.RunStartTime) descending
+                    select new RunListData
+                    {
+                        Name = grp.Key.FullnameCalc,
+                        Url =
+                            (
+                                _config["features:enable_user_profile"] == null
+                                || _config["features:enable_user_profile"].ToString().ToLower()
+                                    == "true"
+                            )
+                                ? $"\\user?id={grp.Key.RunUserId}"
+                                : null,
+                        Runs = grp.Sum(x => x.d.Runs),
+                        LastRun = grp.Max(x => x.b.RunStartTime).ToShortDateString(),
+                    }
+                ).AsNoTracking().ToListAsync();
+
+                return new PartialViewResult()
+                {
+                    ViewName = "Partials/_RunList",
+                    ViewData = ViewData
+                };
+            }
+
             if (type == "user")
             {
                 run_data = run_data.Where(x => x.RunUserId == id);
