@@ -244,6 +244,8 @@ namespace Atlas_Web.Models
 
                     entity.Property(e => e.OperationOwnerId).HasColumnName("OperationOwnerID");
 
+                    entity.Property(e => e.Hidden).HasMaxLength(1).IsFixedLength();
+
                     entity
                         .HasOne(d => d.ExecutiveOwner)
                         .WithMany(p => p.DpDataInitiativeExecutiveOwners)
