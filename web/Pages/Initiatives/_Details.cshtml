@@ -80,6 +80,13 @@
                 <td>Last Updated</td>
                 <td>@Model.Initiative.LastUpdatedDateDisplayString</td>
             </tr>
+            @if (Model.Initiative.Hidden == "Y")
+            {
+                <tr>
+                    <td>Hidden from Search?</td>
+                    <td>Yes</td>
+                </tr>
+            }
         </tbody>
     </table>
 </div>

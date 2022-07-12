@@ -96,6 +96,7 @@ namespace Atlas_Web.Pages.Initiatives
             NewInitiative.OperationOwnerId = Initiative.OperationOwnerId;
             NewInitiative.ExecutiveOwnerId = Initiative.ExecutiveOwnerId;
             NewInitiative.FinancialImpact = Initiative.FinancialImpact;
+            NewInitiative.Hidden = Initiative.Hidden;
             NewInitiative.StrategicImportance = Initiative.StrategicImportance;
 
             _context.Attach(NewInitiative).State = EntityState.Modified;
