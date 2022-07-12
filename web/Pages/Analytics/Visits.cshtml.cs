@@ -3,12 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Atlas_Web.Models;
-using Atlas_Web.Helpers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json.Linq;
-using System.Text.RegularExpressions;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using UAParser;
@@ -77,12 +74,12 @@ namespace Atlas_Web.Pages.Analytics
                     && x.AccessDateTime <= DateTime.Now.AddSeconds(end_at)
             );
 
-            if (userId > 0 && _context.Users.Any(x => x.UserId == userId))
+            if (userId > 0 && await _context.Users.AnyAsync(x => x.UserId == userId))
             {
                 subquery = subquery.Where(x => x.UserId == userId);
             }
 
-            if (groupId > 0 && _context.UserGroups.Any(x => x.GroupId == groupId))
+            if (groupId > 0 && await _context.UserGroups.AnyAsync(x => x.GroupId == groupId))
             {
                 subquery = subquery.Where(
                     x => x.User.UserGroupsMemberships.Any(y => y.GroupId == groupId)
@@ -177,14 +174,14 @@ namespace Atlas_Web.Pages.Analytics
                     break;
             }
 
-            Views = subquery.Count();
+            Views = await subquery.CountAsync();
 
-            Visitors = subquery.Select(x => x.SessionId).Distinct().Count();
+            Visitors = await subquery.Select(x => x.SessionId).Distinct().CountAsync();
 
             if (Views > 0)
             {
                 LoadTime = Math.Round(
-                    (subquery.Average(x => (long)Convert.ToDouble(x.LoadTime)) / 1000),
+                    (await subquery.AverageAsync(x => (long)Convert.ToDouble(x.LoadTime)) / 1000),
                     1
                 );
             }
@@ -210,19 +207,19 @@ namespace Atlas_Web.Pages.Analytics
                     && x.AccessDateTime <= DateTime.Now.AddSeconds(end_at)
             );
 
-            if (userId > 0 && _context.Users.Any(x => x.UserId == userId))
+            if (userId > 0 && await _context.Users.AnyAsync(x => x.UserId == userId))
             {
                 subquery = subquery.Where(x => x.UserId == userId);
             }
 
-            if (groupId > 0 && _context.UserGroups.Any(x => x.GroupId == groupId))
+            if (groupId > 0 && await _context.UserGroups.AnyAsync(x => x.GroupId == groupId))
             {
                 subquery = subquery.Where(
                     x => x.User.UserGroupsMemberships.Any(y => y.GroupId == groupId)
                 );
             }
 
-            double total = subquery.Count();
+            double total = await subquery.CountAsync();
             var grouped = await subquery
                 .GroupBy(x => x.UserAgent)
                 .Select(x => new { x.Key, Count = x.Count() })
@@ -257,19 +254,19 @@ namespace Atlas_Web.Pages.Analytics
                     && x.AccessDateTime <= DateTime.Now.AddSeconds(end_at)
             );
 
-            if (userId > 0 && _context.Users.Any(x => x.UserId == userId))
+            if (userId > 0 && await _context.Users.AnyAsync(x => x.UserId == userId))
             {
                 subquery = subquery.Where(x => x.UserId == userId);
             }
 
-            if (groupId > 0 && _context.UserGroups.Any(x => x.GroupId == groupId))
+            if (groupId > 0 && await _context.UserGroups.AnyAsync(x => x.GroupId == groupId))
             {
                 subquery = subquery.Where(
                     x => x.User.UserGroupsMemberships.Any(y => y.GroupId == groupId)
                 );
             }
 
-            double total = subquery.Count();
+            double total = await subquery.CountAsync();
             var grouped = await subquery
                 .GroupBy(x => x.UserAgent)
                 .Select(x => new { x.Key, Count = x.Count() })
@@ -303,19 +300,19 @@ namespace Atlas_Web.Pages.Analytics
                     && x.AccessDateTime <= DateTime.Now.AddSeconds(end_at)
             );
 
-            if (userId > 0 && _context.Users.Any(x => x.UserId == userId))
+            if (userId > 0 && await _context.Users.AnyAsync(x => x.UserId == userId))
             {
                 subquery = subquery.Where(x => x.UserId == userId);
             }
 
-            if (groupId > 0 && _context.UserGroups.Any(x => x.GroupId == groupId))
+            if (groupId > 0 && await _context.UserGroups.AnyAsync(x => x.GroupId == groupId))
             {
                 subquery = subquery.Where(
                     x => x.User.UserGroupsMemberships.Any(y => y.GroupId == groupId)
                 );
             }
 
-            double total = subquery.Count();
+            double total = await subquery.CountAsync();
             BarDataSet = await (
                 from a in subquery
                 group a by new { a.ScreenWidth, a.ScreenHeight } into grp
@@ -345,19 +342,19 @@ namespace Atlas_Web.Pages.Analytics
                     && x.AccessDateTime <= DateTime.Now.AddSeconds(end_at)
             );
 
-            if (userId > 0 && _context.Users.Any(x => x.UserId == userId))
+            if (userId > 0 && await _context.Users.AnyAsync(x => x.UserId == userId))
             {
                 subquery = subquery.Where(x => x.UserId == userId);
             }
 
-            if (groupId > 0 && _context.UserGroups.Any(x => x.GroupId == groupId))
+            if (groupId > 0 && await _context.UserGroups.AnyAsync(x => x.GroupId == groupId))
             {
                 subquery = subquery.Where(
                     x => x.User.UserGroupsMemberships.Any(y => y.GroupId == groupId)
                 );
             }
 
-            double total = subquery.Count();
+            double total = await subquery.CountAsync();
             BarDataSet = await (
                 from a in subquery
                 group a by new { a.UserId, a.User.FullnameCalc } into grp
@@ -395,12 +392,12 @@ namespace Atlas_Web.Pages.Analytics
                     && x.AccessDateTime <= DateTime.Now.AddSeconds(end_at)
             );
 
-            if (userId > 0 && _context.Users.Any(x => x.UserId == userId))
+            if (userId > 0 && await _context.Users.AnyAsync(x => x.UserId == userId))
             {
                 subquery = subquery.Where(x => x.UserId == userId);
             }
 
-            if (groupId > 0 && _context.UserGroups.Any(x => x.GroupId == groupId))
+            if (groupId > 0 && await _context.UserGroups.AnyAsync(x => x.GroupId == groupId))
             {
                 subquery = subquery.Where(
                     x => x.User.UserGroupsMemberships.Any(y => y.GroupId == groupId)

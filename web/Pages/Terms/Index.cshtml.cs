@@ -30,9 +30,6 @@ namespace Atlas_Web.Pages.Terms
         public IEnumerable<Term> Terms { get; set; }
         public Term Term { get; set; }
 
-        [BindProperty]
-        public Term NewTerm { get; set; }
-
         public List<AdList> AdLists { get; set; }
         public List<ReportObject> RelatedReports { get; set; }
 
@@ -71,6 +68,7 @@ namespace Atlas_Web.Pages.Terms
                         .Include(x => x.ApprovedByUser)
                         .Include(x => x.UpdatedByUser)
                         .Include(x => x.StarredTerms)
+                        .AsNoTracking()
                         .SingleAsync(x => x.TermId == id);
                 }
             );
@@ -90,6 +88,7 @@ namespace Atlas_Web.Pages.Terms
                         .Include(x => x.ReportObjectAttachments)
                         .Include(x => x.ReportTagLinks)
                         .ThenInclude(x => x.Tag)
+                        .AsNoTracking()
                         .ToList();
 
                     var level_two = _context.ReportObjects
@@ -107,6 +106,7 @@ namespace Atlas_Web.Pages.Terms
                         .Include(x => x.ReportObjectType)
                         .Include(x => x.ReportObjectDoc)
                         .Include(x => x.ReportObjectAttachments)
+                        .AsNoTracking()
                         .ToList();
                     var level_three = _context.ReportObjects
                         .Where(
@@ -126,6 +126,7 @@ namespace Atlas_Web.Pages.Terms
                         .Include(x => x.ReportObjectType)
                         .Include(x => x.ReportObjectDoc)
                         .Include(x => x.ReportObjectAttachments)
+                        .AsNoTracking()
                         .ToList();
                     var level_four = _context.ReportObjects
                         .Where(
@@ -148,6 +149,7 @@ namespace Atlas_Web.Pages.Terms
                         .Include(x => x.ReportObjectType)
                         .Include(x => x.ReportObjectDoc)
                         .Include(x => x.ReportObjectAttachments)
+                        .AsNoTracking()
                         .ToList();
 
                     return level_one.Union(level_two).Union(level_three).Union(level_four).ToList();

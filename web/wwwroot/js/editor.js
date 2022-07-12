@@ -203,7 +203,7 @@
       this.btnSave.classList.add('save');
       this.btnSave.setAttribute('type', 'button');
       this.btnSave.innerHTML =
-        '<span class="icon"><i class="fas fa-save"></i></span>';
+        '<span class="icon"><i class="fas fa-floppy-disk"></i></span>';
       this.btnSave.addEventListener('click', this.save.bind(this), false);
 
       this.btnRight.append(this.btnSave);

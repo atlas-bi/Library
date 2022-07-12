@@ -3,14 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Atlas_Web.Models;
-using Atlas_Web.Helpers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json.Linq;
-using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
-using UAParser;
 
 namespace Atlas_Web.Pages.Analytics
 {
@@ -48,12 +44,12 @@ namespace Atlas_Web.Pages.Analytics
                         && x.LogDateTime <= DateTime.Now.AddSeconds(end_at)
                 );
 
-            if (userId > 0 && _context.Users.Any(x => x.UserId == userId))
+            if (userId > 0 && await _context.Users.AnyAsync(x => x.UserId == userId))
             {
                 root = root.Where(x => x.UserId == userId);
             }
 
-            if (groupId > 0 && _context.UserGroups.Any(x => x.GroupId == groupId))
+            if (groupId > 0 && await _context.UserGroups.AnyAsync(x => x.GroupId == groupId))
             {
                 root = root.Where(x => x.User.UserGroupsMemberships.Any(y => y.GroupId == groupId));
             }

@@ -26,12 +26,6 @@ namespace Atlas_Web.Pages.Analytics
             _config = config;
         }
 
-        public class SmallData
-        {
-            public string Name { get; set; }
-            public int Count { get; set; }
-        }
-
         public class MediumData
         {
             public string Name { get; set; }
@@ -58,13 +52,6 @@ namespace Atlas_Web.Pages.Analytics
             public string Month { get; set; }
             public int Hits { get; set; }
         }
-
-        public List<MediumData> TopUsers { get; set; }
-        public List<AccessHistoryData> AccessHistory { get; set; }
-        public List<AccessHistoryData> SearchHistory { get; set; }
-        public List<AccessHistoryData> ReportHistory { get; set; }
-        public List<AccessHistoryData> TermHistory { get; set; }
-        public List<MediumData> TopPages { get; set; }
 
         [BindProperty]
         public Models.Analytic NewAnalytic { get; set; }
@@ -187,7 +174,7 @@ namespace Atlas_Web.Pages.Analytics
             NewAnalytic.UpdateTime = DateTime.Now;
             NewAnalytic.Referrer = package.Value<string>("referrer") ?? "";
             NewAnalytic.Zoom = (double)package["zoom"];
-            NewAnalytic.Epic = HtmlHelpers.IsEpic(HttpContext) ? 1 : 0;
+            NewAnalytic.Epic = ReportLinkHelpers.IsEpic(HttpContext) ? 1 : 0;
             NewAnalytic.SessionId = package.Value<string>("sessionId") ?? "";
             NewAnalytic.PageId = package.Value<string>("pageId") ?? "";
             NewAnalytic.PageTime = (int)package["pageTime"];

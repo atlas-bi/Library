@@ -58,7 +58,7 @@ namespace Atlas_Web.Pages.Collections
             return Page();
         }
 
-        public IActionResult OnPostAsync(int id)
+        public async Task<IActionResult> OnPostAsync(int id)
         {
             var checkpoint = UserHelpers.CheckUserPermissions(
                 _cache,
@@ -84,7 +84,9 @@ namespace Atlas_Web.Pages.Collections
             }
 
             // we get a copy of the initiative and then will only update several fields.
-            Collection NewCollection = _context.Collections.Find(Collection.DataProjectId);
+            Collection NewCollection = await _context.Collections.FindAsync(
+                Collection.DataProjectId
+            );
 
             // update last update values & values that were posted
             NewCollection.LastUpdateUser =
@@ -95,7 +97,7 @@ namespace Atlas_Web.Pages.Collections
             NewCollection.Purpose = Collection.Purpose;
             NewCollection.Hidden = Collection.Hidden;
             _context.Attach(NewCollection).State = EntityState.Modified;
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             // updated any linked terms that were added and remove any that were delinked.
             _cache.Remove("terms");
@@ -104,29 +106,29 @@ namespace Atlas_Web.Pages.Collections
                 term.DataProjectId = NewCollection.DataProjectId;
 
                 if (
-                    !_context.CollectionTerms.Any(
+                    !await _context.CollectionTerms.AnyAsync(
                         x => x.TermId == term.TermId && x.DataProjectId == term.DataProjectId
                     )
                 )
                 {
                     // clear term cache
                     _cache.Remove("term-" + term.TermId);
-                    _context.Add(term);
+                    await _context.AddAsync(term);
                 }
             }
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             var RemovedTerms = _context.CollectionTerms
                 .Where(d => d.DataProjectId == NewCollection.DataProjectId)
                 .Where(d => !Terms.Select(x => x.TermId).Contains((int)d.TermId));
 
-            foreach (var term in RemovedTerms)
+            foreach (var term in await RemovedTerms.ToListAsync())
             {
                 _cache.Remove("term-" + term.TermId);
             }
 
             _context.RemoveRange(RemovedTerms);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             // update linked reports
             for (int i = 0; i < Reports.Count; i++)
@@ -140,35 +142,35 @@ namespace Atlas_Web.Pages.Collections
                 report.Rank = i;
 
                 // if annotation exists, update rank and text
-                CollectionReport oldReport = _context.CollectionReports
+                CollectionReport oldReport = await _context.CollectionReports
                     .Where(
                         x =>
                             x.ReportId == report.ReportId && x.DataProjectId == report.DataProjectId
                     )
-                    .FirstOrDefault();
+                    .FirstOrDefaultAsync();
                 if (oldReport != null)
                 {
                     oldReport.Rank = i;
                 }
                 else
                 {
-                    _context.Add(report);
+                    await _context.AddAsync(report);
                 }
 
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
 
             var RemovedReports = _context.CollectionReports
                 .Where(d => d.DataProjectId == NewCollection.DataProjectId)
                 .Where(d => !Reports.Select(x => x.ReportId).Contains((int)d.ReportId));
 
-            foreach (var report in RemovedReports)
+            foreach (var report in await RemovedReports.ToListAsync())
             {
                 _cache.Remove("report-" + report.ReportId);
             }
 
             _context.RemoveRange(RemovedReports);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             _cache.Remove("collection-" + NewCollection.DataProjectId);
             _cache.Remove("search-collection-" + NewCollection.DataProjectId);

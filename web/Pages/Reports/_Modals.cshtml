@@ -43,7 +43,7 @@
                         <div class="control">
                             <a class="button mini-clear">
                                 <span class="icon">
-                                    <i class="fas fa-times"></i>
+                                    <i class="fas fa-xmark"></i>
                                 </span>
                             </a>
                         </div>
@@ -144,9 +144,9 @@ Regards!</textarea>
                     This is a Crystal Report. Here are the recent run outputs.
 
                     <ul>
-                        @foreach (var r in Model.ReportObjectAttachments.OrderByDescending(x => x.CreationDate))
+                        @foreach (var r in Model.ReportObjectAttachments.OrderByDescending(x => x.CreationDate).ToList())
                         {
-                            var url = Helpers.HtmlHelpers.IsEpic(Context) ? "EpicAct:AC_RW_WEB_BROWSER,LaunchOptions:2,runparams:" + Context.Request.Scheme + "://" + Context.Request.Host.Value+"/Data/File?handler=CrystalRun&id="+r.ReportObjectAttachmentId+"|FormCaption="+r.Name+"|ActivityName="+Model.Name : "/Data/File?handler=CrystalRun&id="+r.ReportObjectAttachmentId;
+                            var url = Helpers.ReportLinkHelpers.IsEpic(Context) ? "EpicAct:AC_RW_WEB_BROWSER,LaunchOptions:2,runparams:" + Context.Request.Scheme + "://" + Context.Request.Host.Value+"/Data/File?handler=CrystalRun&id="+r.ReportObjectAttachmentId+"|FormCaption="+r.Name+"|ActivityName="+Model.Name : "/Data/File?handler=CrystalRun&id="+r.ReportObjectAttachmentId;
                         <li><a href="@url" target="_blank">@r.Name</a><span> ·  @r.CreationDate</span></li>
                         }
                     </ul>

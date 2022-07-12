@@ -37,6 +37,7 @@ gulp.task('js:polyfill', function () {
       'web/wwwroot/js/polyfill/sticky.js',
       'web/wwwroot/js/polyfill/remove.js',
       'web/wwwroot/js/polyfill/includes.js',
+      'web/wwwroot/js/polyfill/trunc.js',
     ])
     .pipe(concat('polyfill.min.js'))
     .pipe(uglify(uglifyConfig))

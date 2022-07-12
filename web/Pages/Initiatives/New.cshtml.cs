@@ -49,7 +49,7 @@ namespace Atlas_Web.Pages.Initiatives
             return Page();
         }
 
-        public IActionResult OnPostAsync()
+        public async Task<IActionResult> OnPostAsync()
         {
             var checkpoint = UserHelpers.CheckUserPermissions(
                 _cache,
@@ -79,21 +79,21 @@ namespace Atlas_Web.Pages.Initiatives
                 UserHelpers.GetUser(_cache, _context, User.Identity.Name).UserId;
             Initiative.LastUpdateDate = DateTime.Now;
 
-            _context.Add(Initiative);
-            _context.SaveChanges();
+            await _context.AddAsync(Initiative);
+            await _context.SaveChangesAsync();
 
             // updated any linked data projects that were added and remove any that were delinked.
             _cache.Remove("collections");
 
-            var AddedCollections = _context.Collections
+            var AddedCollections = await _context.Collections
                 .Where(d => Collections.Select(x => x.DataProjectId).Contains(d.DataProjectId))
-                .ToList();
+                .ToListAsync();
 
             foreach (var collection in AddedCollections)
             {
                 _cache.Remove("collection-" + collection.DataProjectId);
                 collection.DataInitiativeId = Initiative.DataInitiativeId;
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
 
             _cache.Remove("initatives");

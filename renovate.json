@@ -9,7 +9,7 @@
     ":npm",
     "npm:unpublishSafe"
   ],
-  "ignoreDeps": ["@fortawesome/fontawesome-free", "chart.js"],
+  "ignoreDeps": ["chart.js"],
   "assignees": ["christopherpickering"],
   "bumpVersion": "patch",
   "commitMessagePrefix": "chore(deps)",

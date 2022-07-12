@@ -18,11 +18,9 @@ namespace Atlas_Web.Pages.Data
             _context = context;
         }
 
-        public object ReportServer { get; private set; }
-
         public async Task<ActionResult> OnGetCube(int id)
         {
-            string text = System.IO.File.ReadAllText("wwwroot/defaults/Cube.xml");
+            string text = await System.IO.File.ReadAllTextAsync("wwwroot/defaults/Cube.xml");
             var cube = await _context.ReportObjects.Where(x => x.ReportObjectId == id).FirstAsync();
             text = text.Replace("server", cube.SourceServer);
             text = text.Replace("Catalog_Name", cube.Name);
@@ -61,7 +59,7 @@ namespace Atlas_Web.Pages.Data
             Response.Headers.Add("Content-Disposition", cd.ToString());
             Response.Headers.Add("X-Content-Type-Options", "nosniff");
 
-            return File(System.IO.File.ReadAllBytes(attachment.Path), "application/pdf");
+            return File(await System.IO.File.ReadAllBytesAsync(attachment.Path), "application/pdf");
         }
     }
 }

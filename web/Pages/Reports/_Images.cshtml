@@ -38,7 +38,7 @@
 else
 {
     <div class="carousel box is-relative mb-4 p-0">
-        @foreach (var img in Model.Report.ReportObjectImagesDocs.OrderBy(x => x.ImageOrdinal))
+        @foreach (var img in Model.Report.ReportObjectImagesDocs.OrderBy(x => x.ImageOrdinal).ToList())
         {
             var url="/data/img?handler=Thumb&id=-1&imgId=" + @img.ImageId;
             <div class="carousel-itm js-modal-trigger" data-target="report-image-@img.ImageId">

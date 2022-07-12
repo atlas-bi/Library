@@ -372,13 +372,13 @@ namespace Atlas_Web.Pages.Users
                                 EpicMasterFile = grp.Key.EpicMasterFile,
                                 ReportServerPath = grp.Key.ReportServerPath,
                                 SourceServer = grp.Key.SourceServer,
-                                ReportUrl = Helpers.HtmlHelpers.ReportUrlFromParams(
+                                ReportUrl = ReportLinkHelpers.ReportUrlFromParams(
                                     HttpContext,
                                     grp.Key,
                                     _context,
                                     User.Identity.Name
                                 ),
-                                EditReportUrl = HtmlHelpers.EditReportFromParams(
+                                EditReportUrl = ReportLinkHelpers.EditReportFromParams(
                                     _config["AppSettings:org_domain"],
                                     HttpContext,
                                     grp.Key.ReportServerPath,

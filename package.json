@@ -7,7 +7,7 @@
     "@fontsource/inter": "4.5.7",
     "@fontsource/rasa": "4.5.8",
     "@fontsource/source-code-pro": "^4.5.9",
-    "@fortawesome/fontawesome-free": "5.15.4",
+    "@fortawesome/fontawesome-free": "^6.1.1",
     "@rollup/plugin-babel": "5.3.1",
     "@rollup/plugin-commonjs": "22.0.0",
     "@rollup/plugin-json": "4.1.0",
@@ -32,7 +32,7 @@
     "eslint": "8.19.0",
     "fancy-log": "2.0.0",
     "focus-within": "3.0.2",
-    "fontawesome-subset": "3.0.0",
+    "fontawesome-subset": "^4.0.0",
     "gulp": "4.0.2",
     "gulp-autoprefixer": "8.0.0",
     "gulp-concat": "2.6.1",
@@ -57,7 +57,7 @@
     "stylelint": "14.9.1",
     "stylelint-config-prettier-scss": "0.0.1",
     "stylelint-config-standard-scss": "4.0.0",
-    "stylelint-scss": "4.2.0",
+    "stylelint-scss": "4.3.0",
     "xo": "0.48.0"
   },
   "homepage": "https://demo.atlas.bi",
@@ -153,5 +153,5 @@
       "no-new": "warn"
     }
   },
-  "version": "3.5.1"
+  "version": "3.5.2"
 }
