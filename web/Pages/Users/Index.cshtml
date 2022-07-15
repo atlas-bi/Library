@@ -21,8 +21,8 @@
 <partial name="_Links" />
 
 <section class="tab-cnt">
-    <div class="tab-dta @if (@Model.UserId == @Model.MyId){ <text>active</text>}" id="favorites">
-        <div data-ajax="yes" data-url="/Users/Favorites" data-parameters="id=@Model.UserId"></div>
+    <div class="tab-dta @if (@Model.UserId == @Model.MyId){ <text>active</text>}" id="stars">
+        <div data-ajax="yes" data-url="/Users/Stars" data-parameters="id=@Model.UserId"></div>
     </div>
    <!--  @if (@Model.UserId == @Model.MyId){
         <div class="tab-dta " id="mail">
@@ -62,11 +62,6 @@
                 <script src="/js/analytics.min.js" defer async></script>
             }
             <partial name="Analytics/Partials/_Index" />
-        </div>
-    }
-    @if (@Model.UserId == @Model.MyId){
-        <div class="tab-dta " id="settings">
-            <div data-ajax="yes" data-url="/Users?handler=Settings" data-parameters="id=@Model.UserId"></div>
         </div>
     }
 </section>

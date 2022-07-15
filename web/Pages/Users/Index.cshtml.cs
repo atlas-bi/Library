@@ -563,17 +563,6 @@ namespace Atlas_Web.Pages.Users
             return new PartialViewResult { ViewName = "Sections/_Groups", ViewData = ViewData };
         }
 
-        public async Task<ActionResult> OnGetSettings(int? id)
-        {
-            MyId = UserHelpers.GetUser(_cache, _context, User.Identity.Name).UserId;
-            if (MyId != id)
-            {
-                return Content("You are not authorized to view this page.");
-            }
-
-            return new PartialViewResult { ViewName = "Sections/_Settings", ViewData = ViewData };
-        }
-
         public async Task<ActionResult> OnGetSubscriptions(int? id)
         {
             MyId = UserHelpers.GetUser(_cache, _context, User.Identity.Name).UserId;

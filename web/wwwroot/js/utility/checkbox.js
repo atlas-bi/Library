@@ -9,6 +9,7 @@
       check.checked = input.value === 'Y';
       check.addEventListener('change', function () {
         input.value = check.checked ? 'Y' : 'N';
+        input.dispatchEvent(new CustomEvent('change'));
       });
     }
   };

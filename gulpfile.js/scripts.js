@@ -59,7 +59,7 @@ gulp.task('js:utility', function () {
       'web/wwwroot/js/hyperspace.js',
       'web/wwwroot/js/favorites.js',
       'web/wwwroot/js/ajax-content.js',
-      'web/wwwroot/js/messagebox.js',
+      'web/wwwroot/js/notification.js',
       'web/wwwroot/js/mail.js',
       'web/wwwroot/js/utility/hamburger.js',
       'web/wwwroot/js/mini.js',
@@ -86,6 +86,15 @@ gulp.task('js:profile', function () {
     .src(['web/wwwroot/js/profile.js'])
     .pipe(rollup(rollupConfig))
     .pipe(concat('profile.min.js'))
+    .pipe(uglify(uglifyConfig))
+    .pipe(gulp.dest('web/wwwroot/js/'));
+});
+
+gulp.task('js:userSettings', function () {
+  return gulp
+    .src(['web/wwwroot/js/user_settings.js'])
+    .pipe(rollup(rollupConfig))
+    .pipe(concat('user_settings.min.js'))
     .pipe(uglify(uglifyConfig))
     .pipe(gulp.dest('web/wwwroot/js/'));
 });
@@ -161,5 +170,6 @@ gulp.task(
     'js:tracker',
     'js:highlighter',
     'js:profile',
+    'js:userSettings',
   ),
 );

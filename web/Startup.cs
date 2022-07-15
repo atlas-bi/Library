@@ -155,6 +155,10 @@ namespace Atlas_Web
                     pipeline.AddJavaScriptBundle("/js/profile.min.js", "js/profile.min.js");
 
                     pipeline.AddJavaScriptBundle("/js/code.min.js", "js/highlight.min.js");
+                    pipeline.AddJavaScriptBundle(
+                        "/js/user_settings.min.js",
+                        "js/user_settings.min.js"
+                    );
 
                     pipeline.AddJavaScriptBundle("/js/analytics.min.js", "js/analytics.min.js");
                     pipeline.AddJavaScriptBundle("/js/alive.min.js", "js/alive.min.js");

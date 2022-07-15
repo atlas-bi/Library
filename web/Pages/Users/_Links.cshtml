@@ -2,7 +2,7 @@
 <nav class="breadcrumb">
     <ul>
         <li>
-            <a class="tab-lnk  @if (@Model.UserId == @Model.MyId){ <text>active</text>}" href="#favorites">Favorites</a>
+            <a class="tab-lnk  @if (@Model.UserId == @Model.MyId){ <text>active</text>}" href="#stars">Stars</a>
         </li>
        <!--  @if (@Model.UserId == @Model.MyId)
         {
@@ -29,12 +29,6 @@
         {
             <li>
                 <a class="tab-lnk" href="#analytics">Analytics</a>
-            </li>
-        }
-        @if (@Model.UserId == @Model.MyId)
-        {
-            <li>
-                <a class="tab-lnk" href="#settings">Settings</a>
             </li>
         }
     </ul>

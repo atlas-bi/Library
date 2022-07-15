@@ -1,5 +1,5 @@
 (function () {
-  function showMessageBox(message) {
+  function addNotification(message) {
     const d = document;
     const notificationWrapper = d.querySelectorAll(
       '.fixed-notification-wrapper',
@@ -24,14 +24,14 @@
   }
 
   document.addEventListener(
-    'show-message',
+    'notification',
     function (event) {
       if (
         typeof event.detail !== 'undefined' &&
         Boolean(event.detail) &&
         Boolean(event.detail.value)
       ) {
-        showMessageBox(event.detail.value);
+        addNotification(event.detail.value);
       }
     },
     false,

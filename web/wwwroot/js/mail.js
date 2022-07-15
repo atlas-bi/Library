@@ -61,7 +61,7 @@
         sendMes.send(JSON.stringify(data));
         sendMes.addEventListener('load', function () {
           document.dispatchEvent(
-            new CustomEvent('show-message', {
+            new CustomEvent('notification', {
               cancelable: true,
               detail: {
                 value: sendMes.responseText,

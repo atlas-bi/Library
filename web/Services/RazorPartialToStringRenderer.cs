@@ -15,9 +15,9 @@ namespace Atlas_Web.Services
 {
     public class RazorPartialToStringRenderer : IRazorPartialToStringRenderer
     {
-        private IRazorViewEngine _viewEngine;
-        private ITempDataProvider _tempDataProvider;
-        private IServiceProvider _serviceProvider;
+        private readonly IRazorViewEngine _viewEngine;
+        private readonly ITempDataProvider _tempDataProvider;
+        private readonly IServiceProvider _serviceProvider;
 
         public RazorPartialToStringRenderer(
             IRazorViewEngine viewEngine,
@@ -74,7 +74,7 @@ namespace Atlas_Web.Services
                     $"Unable to find partial '{partialName}'. The following locations were searched:"
                 }.Concat(searchedLocations)
             );
-            ;
+
             throw new InvalidOperationException(errorMessage);
         }
 

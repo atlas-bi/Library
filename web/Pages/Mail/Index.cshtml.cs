@@ -163,33 +163,33 @@ namespace Atlas_Web.Pages.Mail
                     await _context.AddAsync(newShare);
                     await _context.SaveChangesAsync();
 
-                    var UserSetting = user.UserSettings
-                        .Where(x => x.Name == "share_notification")
+                    var UserSetting = await _context.UserSettings
+                        .Where(x => x.Name == "share_notification" && x.UserId == user.UserId)
                         .Select(x => x.Value)
-                        .FirstOrDefault();
+                        .FirstOrDefaultAsync();
 
-                    if (!string.IsNullOrEmpty(user.Email) && UserSetting != "0")
+                    if (!string.IsNullOrEmpty(user.Email) && UserSetting != "N")
                     {
                         ViewData["Subject"] = $"New share from {MyUser.FullnameCalc}";
                         ViewData["Body"] = Helpers.HtmlHelpers.MarkdownToHtml(Message, _config);
                         ViewData["Sender"] = MyUser;
-                        ViewData["Reciever"] = user;
+                        ViewData["Receiver"] = user;
+
+                        var msgbody = await _renderer.RenderPartialToStringAsync(
+                            "_EmailTemplate",
+                            ViewData
+                        );
+
+                        BackgroundJob.Enqueue<IEmailService>(
+                            x =>
+                                x.SendAsync(
+                                    $"New share from {MyUser.FullnameCalc}",
+                                    HtmlHelpers.MinifyHtml(msgbody),
+                                    MyUser.Email,
+                                    user.Email
+                                )
+                        );
                     }
-
-                    var msgbody = await _renderer.RenderPartialToStringAsync(
-                        "_EmailTemplate",
-                        ViewData
-                    );
-
-                    BackgroundJob.Enqueue<IEmailService>(
-                        x =>
-                            x.SendAsync(
-                                $"New share from {MyUser.FullnameCalc}",
-                                HtmlHelpers.MinifyHtml(msgbody),
-                                MyUser.Email,
-                                user.Email
-                            )
-                    );
                 }
 
                 foreach (var group in GroupUserList)
@@ -206,13 +206,18 @@ namespace Atlas_Web.Pages.Mail
                     await _context.AddAsync(newShare);
                     await _context.SaveChangesAsync();
 
+                    var GroupUserSetting = await _context.UserSettings
+                        .Where(x => x.Name == "share_notification" && x.UserId == group.UserId)
+                        .Select(x => x.Value)
+                        .FirstOrDefaultAsync();
+
                     // iddea = use the group email address when possible. here the group is already expanded.
-                    if (!string.IsNullOrEmpty(group.User.Email))
+                    if (!string.IsNullOrEmpty(group.User.Email) && GroupUserSetting != "N")
                     {
                         ViewData["Subject"] = $"New share from {MyUser.FullnameCalc}";
                         ViewData["Body"] = Helpers.HtmlHelpers.MarkdownToHtml(Message, _config);
                         ViewData["Sender"] = MyUser;
-                        ViewData["Reciever"] = group.User;
+                        ViewData["Receiver"] = group.User;
 
                         var msgbody = await _renderer.RenderPartialToStringAsync(
                             "_EmailTemplate",

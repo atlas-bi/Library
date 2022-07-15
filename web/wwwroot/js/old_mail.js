@@ -718,7 +718,7 @@
         // If we are in drafts folder, remove draft.
 
         document.dispatchEvent(
-          new CustomEvent('show-message', {
+          new CustomEvent('notification', {
             cancelable: true,
             detail: {
               value: 'Messages sent! ¯\\_(ツ)_/¯',

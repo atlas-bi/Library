@@ -17,13 +17,13 @@ using System.Text.Json;
 namespace Atlas_Web.Pages.Users
 {
     [ResponseCache(NoStore = true)]
-    public class FavoritesModel : PageModel
+    public class StarsModel : PageModel
     {
         private readonly Atlas_WebContext _context;
         private readonly IConfiguration _config;
         private readonly IMemoryCache _cache;
 
-        public FavoritesModel(Atlas_WebContext context, IConfiguration config, IMemoryCache cache)
+        public StarsModel(Atlas_WebContext context, IConfiguration config, IMemoryCache cache)
         {
             _context = context;
             _config = config;
