@@ -46,6 +46,7 @@ namespace Atlas_Web.Models
             UserGroupsMemberships = new HashSet<UserGroupsMembership>();
             UserPreferences = new HashSet<UserPreference>();
             UserRoleLinks = new HashSet<UserRoleLink>();
+            UserSettings = new HashSet<UserSetting>();
         }
 
         public int UserId { get; set; }
@@ -105,5 +106,6 @@ namespace Atlas_Web.Models
         public virtual ICollection<UserGroupsMembership> UserGroupsMemberships { get; set; }
         public virtual ICollection<UserPreference> UserPreferences { get; set; }
         public virtual ICollection<UserRoleLink> UserRoleLinks { get; set; }
+        public virtual ICollection<UserSetting> UserSettings { get; set; }
     }
 }

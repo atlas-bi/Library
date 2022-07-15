@@ -7,6 +7,24 @@ const cssnano = require('gulp-cssnano');
 const postcssFocusWithin = require('focus-within/postcss');
 const gulp = require('gulp');
 
+gulp.task('css:email', function () {
+  return gulp
+    .src('web/wwwroot/css/email_theme.scss')
+    .pipe(sass().on('error', sass.logError))
+    .pipe(cssnano()) // Running this first to strip comments
+    .pipe(
+      purgecss({
+        content: ['web/Pages/Shared/_EmailTemplate.cshtml'],
+        safelist: [],
+        fontFace: true,
+        keyframes: true,
+      }),
+    )
+    .pipe(autoprefexer())
+    .pipe(rename('email.min.css'))
+    .pipe(gulp.dest('web/wwwroot/css/'));
+});
+
 gulp.task('css:build', function () {
   var plugins = [postcssFocusWithin];
   return gulp
@@ -73,4 +91,4 @@ gulp.task('css:rejected', function () {
     .pipe(gulp.dest('web/wwwroot/css/'));
 });
 
-gulp.task('styles', gulp.parallel('css:build'));
+gulp.task('styles', gulp.parallel('css:build', 'css:email'));

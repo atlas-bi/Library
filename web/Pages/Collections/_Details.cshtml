@@ -50,7 +50,7 @@
 {
     <h3 class="title is-3">Description</h3>
     <div class="markdown">
-        @Html.Raw(@Helpers.HtmlHelpers.MarkdownToHtml(Model.Collection.Description))
+        @Html.Raw(@Helpers.HtmlHelpers.MarkdownToHtml(Model.Collection.Description, Configuration))
     </div>
 }
 
@@ -58,7 +58,7 @@
 {
     <h3 class="title is-3">Search Summary</h3>
     <div class="markdown">
-        @Html.Raw(@Helpers.HtmlHelpers.MarkdownToHtml(Model.Collection.Purpose))
+        @Html.Raw(@Helpers.HtmlHelpers.MarkdownToHtml(Model.Collection.Purpose, Configuration))
     </div>
 }
 </div>

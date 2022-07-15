@@ -22,7 +22,7 @@
             @if (!string.IsNullOrEmpty(log.Comment))
             {
                 <div class="markdown">
-                    @Html.Raw(@Helpers.HtmlHelpers.MarkdownToHtml(log.Comment))
+                    @Html.Raw(@Helpers.HtmlHelpers.MarkdownToHtml(log.Comment, Configuration))
                 </div>
             }
         </div>

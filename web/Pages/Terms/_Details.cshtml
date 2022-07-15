@@ -18,7 +18,7 @@
     {
         <h3 class="title is-3">Summary</h3>
         <div class="markdown">
-            @Html.Raw(@Helpers.HtmlHelpers.MarkdownToHtml(Model.Term.Summary))
+            @Html.Raw(@Helpers.HtmlHelpers.MarkdownToHtml(Model.Term.Summary, Configuration))
         </div>
     }
 
@@ -26,7 +26,7 @@
     {
         <h3 class="title is-3">Technical Definition</h3>
         <div class="markdown">
-            @Html.Raw(@Helpers.HtmlHelpers.MarkdownToHtml(Model.Term.TechnicalDefinition))
+            @Html.Raw(@Helpers.HtmlHelpers.MarkdownToHtml(Model.Term.TechnicalDefinition, Configuration))
         </div>
     }
 

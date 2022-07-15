@@ -58,7 +58,7 @@
     @if (@ViewData["SiteMessage"] != null && @ViewData["SiteMessage"].ToString() != "")
     {
         <div class="notification is-light is-info has-text-centered my-0">
-            @Html.Raw(HtmlHelpers.MarkdownToHtml(@ViewData["SiteMessage"].ToString()))
+            @Html.Raw(HtmlHelpers.MarkdownToHtml(@ViewData["SiteMessage"].ToString(), Configuration))
         </div>
     }
 
@@ -66,7 +66,7 @@
     @if (@Configuration["banner_text:site_message"] != null && @Configuration["banner_text:site_message"].ToString() != "")
     {
         <div class="notification is-light is-link has-text-centered my-0">
-            @Html.Raw(HtmlHelpers.MarkdownToHtml(@Configuration["banner_text:site_message"]))
+            @Html.Raw(HtmlHelpers.MarkdownToHtml(@Configuration["banner_text:site_message"], Configuration))
         </div>
     }
 
@@ -99,7 +99,7 @@
             </div>
             <div class="navbar-menu is-flex-grow-0" id="atlas-main-nav">
                 <div class="navbar-end">
-                    @{ var r = new Random();
+                    @* @{ var r = new Random();
                         var randomNumber = r.Next(); }
                     <a class="navbar-item" href="/#mail" aria-label="mail">
                         <span class="icon is-medium is-relative">
@@ -107,7 +107,7 @@
                             <span title="mail count" class="badge" id="nav_unread_message_count">0</span>
                         </span>
                         <span class="hide-desktop">Mail</span>
-                    </a>
+                    </a> *@
 
                     @if (@ViewBag.Permissions.Contains(1) || ViewBag.Permissions.Contains(18) || ViewBag.Permissions.Contains(33) || ViewBag.Permissions.Contains(34))
                     {
@@ -116,7 +116,9 @@
                                 <span class="icon is-medium">
                                     <i class="fas fa-lg fa-wrench"></i>
                                 </span>
-                                <span class="hide-desktop">Administrative</span>
+                                <span class="icon is-small">
+                                    <i class="fa-solid fa-caret-down"></i>
+                                </span>
                             </div>
                             <div class="navbar-dropdown">
                                 <hr class="hide-desktop dropdown-divider">
@@ -149,35 +151,48 @@
                             <span class="icon is-medium">
                                 <i class="fas fa-lg fa-list-ul"></i>
                             </span>
-                            <span class="hide-desktop">Sections</span>
+                            <span class="icon is-small">
+                                <i class="fa-solid fa-caret-down"></i>
+                            </span>
                         </div>
                         <div class="navbar-dropdown">
                             <hr class=" hide-desktop dropdown-divider">
                             @if (@Configuration["features:enable_initiatives"] == null || @Configuration["features:enable_initiatives"].ToString().ToLower() != "false")
                             {
-                <a class="navbar-item" href="/initiatives">Initiatives</a>}
+                                <a class="navbar-item" href="/initiatives">Initiatives</a>
+                            }
                             <a class="navbar-item" href="/collections">Collections</a>
                             @if (@Configuration["features:enable_terms"] == null || @Configuration["features:enable_terms"].ToString().ToLower() != "false")
                             {
-                <a class="navbar-item" href="/terms">Terms</a>}
+                                <a class="navbar-item" href="/terms">Terms</a>
+                            }
                             <hr class="dropdown-divider">
                             <a class="navbar-item" href="/about_analytics">About Analytics</a>
                         </div>
                     </div>
+
                     @if (@Configuration["features:enable_user_profile"] == null || @Configuration["features:enable_user_profile"].ToString().ToLower() != "false")
                     {
-                        <a class="navbar-item has-tooltip-arrow has-tooltip-bottom" href="/users" data-tooltip="Open Profile">
-                            <span class="icon is-medium">
+                        <div class="navbar-item has-dropdown is-hoverable is-boxed">
+                            <div class="navbar-link is-arrowless">
+                                <span class="icon is-medium">
                                 <i class="fas fa-lg fa-user"></i>
                             </span>
-                            <span class="hide-desktop">Profile</span>
-                        </a>
+                            <span class="icon is-small">
+                                <i class="fa-solid fa-caret-down"></i>
+                            </span>
+                            </div>
+                            <div class="navbar-dropdown">
+                                <a class="navbar-item" href="/users">Profile</a>
+                                <a class="navbar-item" href="/users/settings">Settings</a>
+                            </div>
+                        </div>
                     }
 
                     @if (ViewBag.Permissions.Contains(44))
                     {
                         <div class="navbar-item has-dropdown is-hoverable is-boxed">
-                            <div class="navbar-link">
+                            <div class="navbar-link is-arrowless">
                                 @{ var ph = "";
                                     if (ViewBag.MyRole != null && ViewBag.MyRole.Name != null && ViewBag.MyRole.Name != "")
                                     {
@@ -188,6 +203,9 @@
                                         ph = "change role";
                                     } }
                                 @ph
+                                <span class="icon ml-2 is-small">
+                                    <i class="fa-solid fa-caret-down"></i>
+                                </span>
                             </div>
                             <div class="navbar-dropdown" id="role-change">
                                 <hr class=" hide-desktop dropdown-divider">
