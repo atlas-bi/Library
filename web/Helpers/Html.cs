@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.DependencyInjection;
 using WebOptimizer;
 using Slugify;
+using Ganss.XSS;
+using Microsoft.Extensions.Configuration;
+using WebMarkupMin.Core;
 
 namespace Atlas_Web.Helpers
 {
@@ -71,7 +74,7 @@ namespace Atlas_Web.Helpers
             return text;
         }
 
-        public static string MarkdownToHtml(string text)
+        public static string MarkdownToHtml(string text, IConfiguration _config)
         {
             if (text is null)
             {
@@ -86,7 +89,27 @@ namespace Atlas_Web.Helpers
                 .UseDiagrams()
                 .UseFootnotes()
                 .Build();
-            return Markdown.ToHtml(text, pipeline);
+
+            var sanitizer = new HtmlSanitizer();
+            return sanitizer.Sanitize(
+                Markdown.ToHtml(text, pipeline),
+                (
+                    string.IsNullOrEmpty(_config["AppSettings:base_url"])
+                      ? ""
+                      : _config["AppSettings:base_url"]
+                )
+            );
+        }
+
+        public static string MinifyHtml(string text)
+        {
+            var htmlMinifier = new HtmlMinifier();
+            MarkupMinificationResult result = htmlMinifier.Minify(text);
+            if (result.Errors.Count == 0)
+            {
+                return result.MinifiedContent;
+            }
+            return text;
         }
 
         public static string MarkdownToText(string text)

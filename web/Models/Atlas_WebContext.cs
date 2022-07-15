@@ -71,6 +71,7 @@ namespace Atlas_Web.Models
         public virtual DbSet<UserPreference> UserPreferences { get; set; }
         public virtual DbSet<UserRole> UserRoles { get; set; }
         public virtual DbSet<UserRoleLink> UserRoleLinks { get; set; }
+        public virtual DbSet<UserSetting> UserSettings { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -480,6 +481,20 @@ namespace Atlas_Web.Models
                 entity =>
                 {
                     entity.ToTable("GlobalSiteSettings", "app");
+                }
+            );
+
+            modelBuilder.Entity<UserSetting>(
+                entity =>
+                {
+                    entity.ToTable("UserSettings", "app");
+                    entity.HasIndex(e => new { e.UserId, e.Name }, "user_setting");
+                    entity.HasIndex(e => e.UserId, "user");
+                    entity
+                        .HasOne(d => d.User)
+                        .WithMany(p => p.UserSettings)
+                        .HasForeignKey(d => d.UserId)
+                        .HasConstraintName("FK_UserSettings_User");
                 }
             );
 

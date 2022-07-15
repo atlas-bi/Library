@@ -18,8 +18,11 @@ using SolrNet;
 using Microsoft.Extensions.Caching.Memory;
 using System.Linq;
 using Atlas_Web.Middleware;
+using Atlas_Web.Services;
 using Atlas_Web.Helpers;
 using Newtonsoft.Json.Linq;
+using Hangfire;
+using Hangfire.InMemory;
 
 namespace Atlas_Web
 {
@@ -37,6 +40,19 @@ namespace Atlas_Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddHangfire(
+                configuration =>
+                    configuration
+                        //.SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
+                        .UseSimpleAssemblyNameTypeSerializer()
+                        .UseRecommendedSerializerSettings()
+                        .UseInMemoryStorage()
+                        .WithJobExpirationTimeout(TimeSpan.FromHours(1))
+            );
+
+            // Add the processing server as IHostedService
+            services.AddHangfireServer();
+
             services.Configure<CookiePolicyOptions>(
                 options =>
                 {
@@ -46,6 +62,7 @@ namespace Atlas_Web
                 }
             );
             services.AddResponseCaching();
+
             services
                 .AddRazorPages()
                 .AddRazorPagesOptions(
@@ -110,6 +127,7 @@ namespace Atlas_Web
                 pipeline =>
                 {
                     pipeline.AddCssBundle("/css/site.min.css", "css/site.min.css");
+                    pipeline.AddCssBundle("/css.email.min.css", "email.min.css");
 
                     /************   javascript   *************/
                     pipeline.AddJavaScriptBundle("/js/polyfill.min.js", "js/polyfill.min.js");
@@ -196,6 +214,9 @@ namespace Atlas_Web
                     }
                 );
 
+            services.AddTransient<IEmailService, EmailService>();
+            services.AddTransient<IRazorPartialToStringRenderer, RazorPartialToStringRenderer>();
+
             services.Configure<IISServerOptions>(
                 options =>
                 {
@@ -224,6 +245,7 @@ namespace Atlas_Web
             }
             else
             {
+                app.UseHangfireDashboard();
                 app.UseDeveloperExceptionPage();
             }
 
@@ -287,15 +309,18 @@ namespace Atlas_Web
                     byte[] imageArray = System.IO.File.ReadAllBytes(Configuration["logo"]);
                     string base64ImageRepresentation = Convert.ToBase64String(imageArray);
                     cache.Set("logo", "data:image/png;base64," + base64ImageRepresentation);
+                    cache.Set("logo_path", Configuration["logo"]);
                 }
                 catch
                 {
                     cache.Set("logo", "/img/atlas-logo-smooth.png");
+                    cache.Set("logo_path", "wwwroot/img/atlas-logo-smooth.png");
                 }
             }
             else
             {
                 cache.Set("logo", "/img/atlas-logo-smooth.png");
+                cache.Set("logo_path", "wwwroot/img/atlas-logo-smooth.png");
             }
             // set version
             try

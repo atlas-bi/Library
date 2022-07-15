@@ -1,23 +1,27 @@
 (function () {
   function showMessageBox(message) {
     const d = document;
-    const w = d.querySelectorAll('.message-wrapper')[0];
-    d.querySelector('.message-container .message-inner').innerHTML =
-      DOMPurify.sanitize(message);
-    w.classList.remove('hidden');
-    setTimeout(function () {
-      w.classList.add('hidden');
-    }, 2000);
-  }
+    const notificationWrapper = d.querySelectorAll(
+      '.fixed-notification-wrapper',
+    )[0];
 
-  document.addEventListener('click', function (event) {
-    if (
-      event.target.matches('.message-close') &&
-      event.target.parentElement.matches('.message-wrapper')
-    ) {
-      event.target.parentElement.classList.add('hidden');
-    }
-  });
+    const notification = document.createElement('div');
+    notification.classList.add('notification', 'is-info', 'py-2');
+    const button = document.createElement('button');
+    button.classList.add('delete');
+
+    notification.append(button);
+    notification.insertAdjacentHTML('beforeend', DOMPurify.sanitize(message));
+    notificationWrapper.prepend(notification);
+
+    setTimeout(function () {
+      notification.remove();
+    }, 4000);
+
+    button.addEventListener('mouseup', () => {
+      notification.remove();
+    });
+  }
 
   document.addEventListener(
     'show-message',

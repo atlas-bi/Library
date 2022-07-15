@@ -8,7 +8,7 @@
     {
             <h3 class="title is-3">Developer Description</h3>
             <div class="markdown">
-                @Html.Raw(HtmlHelpers.MarkdownToHtml(Model.Report.ReportObjectDoc.DeveloperDescription))
+                @Html.Raw(HtmlHelpers.MarkdownToHtml(Model.Report.ReportObjectDoc.DeveloperDescription, Configuration))
             </div>
     }
 
@@ -16,7 +16,7 @@
     {
             <h3 class="title is-3">Key Assumptions</h3>
             <div class="markdown">
-                @Html.Raw(HtmlHelpers.MarkdownToHtml(Model.Report.ReportObjectDoc.KeyAssumptions))
+                @Html.Raw(HtmlHelpers.MarkdownToHtml(Model.Report.ReportObjectDoc.KeyAssumptions, Configuration))
             </div>
     }
 
@@ -24,7 +24,7 @@
     {
             <h3 class="title is-3">System Description</h3>
             <div class="markdown">
-                @Html.Raw(HtmlHelpers.MarkdownToHtml(Model.Report.Description))
+                @Html.Raw(HtmlHelpers.MarkdownToHtml(Model.Report.Description, Configuration))
             </div>
     }
 
@@ -33,7 +33,7 @@
 
             <h3 class="title is-3">System Detailed Description</h3>
             <div class="markdown">
-                @Html.Raw(HtmlHelpers.MarkdownToHtml(Model.Report.DetailedDescription))
+                @Html.Raw(HtmlHelpers.MarkdownToHtml(Model.Report.DetailedDescription, Configuration))
             </div>
 
     }
@@ -50,7 +50,7 @@
 
             <div id="collapse-repository-description" class="panel-block is-collapsible @if(ViewBag.HasDescription){<text></text>} else {<text>is-active</text>}" role="tabpanel">
                 <div class="markdown p-5">
-                    @Html.Raw(HtmlHelpers.MarkdownToHtml(Model.Report.RepositoryDescription))
+                    @Html.Raw(HtmlHelpers.MarkdownToHtml(Model.Report.RepositoryDescription, Configuration))
                 </div>
             </div>
         </nav>

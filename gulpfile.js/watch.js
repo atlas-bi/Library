@@ -31,6 +31,10 @@ gulp.task(
           'web/wwwroot/**/*.scss',
           'web/wwwroot/**/*.sass',
           'web/Pages/**/*.cshtml',
+          'web/Services/',
+          'web/Model/',
+          'web/Middleware/',
+          'web/Helpers',
         ],
         gulp.series(gulp.parallel('styles', 'iis:kill'), 'iis:run'),
       );

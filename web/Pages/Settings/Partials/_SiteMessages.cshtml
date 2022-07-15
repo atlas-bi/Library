@@ -40,7 +40,7 @@
 
             <label class="label">Preview</label>
             <div class="notification is-light is-info has-text-centered my-0">
-                @Html.Raw(HtmlHelpers.MarkdownToHtml(i.Description))
+                @Html.Raw(HtmlHelpers.MarkdownToHtml(i.Description, Configuration))
             </div>
         }
     }

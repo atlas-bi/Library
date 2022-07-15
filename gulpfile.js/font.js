@@ -103,6 +103,7 @@ gulp.task('font:fontawesome', (done) => {
         'lightbulb',
         'diagram-project',
         'caret-up',
+        'caret-down',
       ],
     },
     'web/wwwroot/font/fontawesome/webfonts',

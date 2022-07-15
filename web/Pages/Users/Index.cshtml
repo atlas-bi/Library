@@ -64,4 +64,9 @@
             <partial name="Analytics/Partials/_Index" />
         </div>
     }
+    @if (@Model.UserId == @Model.MyId){
+        <div class="tab-dta " id="settings">
+            <div data-ajax="yes" data-url="/Users?handler=Settings" data-parameters="id=@Model.UserId"></div>
+        </div>
+    }
 </section>
