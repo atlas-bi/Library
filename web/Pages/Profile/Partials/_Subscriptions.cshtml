@@ -5,20 +5,37 @@
     {
         <div class="table-responsive">
             <table class="table" aria-label="active users">
+                <thead>
+                    <tr>
+						<th>User</th>
+						<th>Subscription Description</th>
+						<th>Last Run</th>
+						<th>Message</th>
+						<th>Subscribed As</th>
+					</tr>
+                </thead>
                 <tbody>
-                    @foreach(var d in Model.UserSubscriptions.OrderBy(x => x.FullnameCalc))
+                    @foreach(var d in Model.UserSubscriptions)
                     {
                         <tr>
                             <td>
-                                @if (@Configuration["features:enable_user_profile"] == null || @Configuration["features:enable_user_profile"].ToString().ToLower() == "true")
-                                {
-                                    <a href="users?id=@d.UserId">@d.FullnameCalc</a>
-                                }
-                                else
-                                {
-                                    @d.FullnameCalc
+                                @if(d.User != null){
+                                    @if (@Configuration["features:enable_user_profile"] == null || @Configuration["features:enable_user_profile"].ToString().ToLower() == "true")
+                                    {
+                                        <a href="users?id=@d.User.UserId">@d.User.FullnameCalc</a>
+                                    }
+                                    else
+                                    {
+                                        @d.User.FullnameCalc
+                                    }
+                                } else {
+                                    @:N/A
                                 }
                             </td>
+                            <td>@d.Description</td>
+                            <td>@d.LastRunDisplayString</td>
+                            <td>@d.LastStatus.Replace(";", "; ")</td>
+                            <td>@d.SubscriptionTo.Replace(";", "; ")</td>
                         </tr>
                     }
                 </tbody>
