@@ -76,7 +76,7 @@ namespace Atlas_Web.Pages.Profile
         }
 
         public List<User> UserStars { get; set; }
-        public List<User> UserSubscriptions { get; set; }
+        public List<ReportObjectSubscription> UserSubscriptions { get; set; }
 
         public List<RunHistoryData> RunHistory { get; set; }
 
@@ -888,8 +888,9 @@ namespace Atlas_Web.Pages.Profile
         {
             if (type == "report" && _context.ReportObjects.Any(x => x.ReportObjectId == id))
             {
-                UserSubscriptions = await _context.Users
-                    .Where(x => x.ReportObjectSubscriptions.Any(r => r.ReportObjectId == id))
+                UserSubscriptions = await _context.ReportObjectSubscriptions
+                    .Where(r => r.ReportObjectId == id)
+                    .Include(x => x.User)
                     .AsNoTracking()
                     .ToListAsync();
             }
