@@ -188,6 +188,7 @@ $icons: (
   diagram-project: $fa-var-diagram-project,
   copy: $fa-var-copy,
   caret-up: $fa-var-caret-up,
+  caret-down: $fa-var-caret-down,
 );
 
 @each $key, $value in $icons {

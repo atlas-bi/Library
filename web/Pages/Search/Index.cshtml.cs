@@ -287,7 +287,7 @@ namespace Atlas_Web.Pages.Search
                     _cache,
                     _context,
                     User.Identity.Name,
-                    46
+                    "Show Advanced Search"
                 );
                 if (
                     !checkpoint
@@ -382,7 +382,7 @@ namespace Atlas_Web.Pages.Search
                     _cache,
                     _context,
                     User.Identity.Name,
-                    46
+                    "Show Advanced Search"
                 );
                 var advanced = "N";
                 if (

@@ -79,7 +79,7 @@ namespace Atlas_Web.Pages.Initiatives
                 _cache,
                 _context,
                 User.Identity.Name,
-                21
+                "Delete Initiative"
             );
 
             if (!checkpoint)

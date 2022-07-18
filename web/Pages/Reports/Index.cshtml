@@ -72,7 +72,7 @@
 
 </h1>
 
-@if (ViewBag.Permissions.Contains(12))
+@if (ViewBag.Permissions.Contains("Edit Report Documentation"))
 {
     <div data-ajax="yes" class="no-loader" data-url="/reports?Handler=MaintStatus&id=@Model.Report.ReportObjectId"></div>
 }
@@ -101,7 +101,7 @@
     <partial name="_Query" />
 }
 
-@if (Model.Parents.Any() || Model.Children.Any() || Model.Report.ReportGroupsMemberships.Any() || Model.Report.CollectionReports.Any())
+@if (Model.Parents.Any() || Model.Children.Any() || (Model.Report.ReportGroupsMemberships.Any() && ViewBag.Permissions.Contains("View Groups")) || Model.Report.CollectionReports.Any())
 {
     <partial name="_Relationships" />
 }

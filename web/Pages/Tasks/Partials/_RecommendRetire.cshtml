@@ -13,7 +13,7 @@
             @if (t.Comment != null)
             {
                 <div class="markdown">
-                    @Html.Raw(@Helpers.HtmlHelpers.MarkdownToHtml(t.Comment))
+                    @Html.Raw(@Helpers.HtmlHelpers.MarkdownToHtml(t.Comment, Configuration))
                 </div>
             }
         </div>

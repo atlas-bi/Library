@@ -138,6 +138,14 @@
             </div>
         </div>
     </div>
+    <div class="field toggle">
+        <input type="hidden" asp-for="Initiative.Hidden" value="@Model.Initiative.Hidden">
+        <input id="switch-hidden" type="checkbox" name="switch-hidden" class="switch is-rounded is-info"
+        @if(Model.Initiative.Hidden == "Y"){
+            <text>checked="checked"</text>
+        } >
+        <label for="switch-hidden">Hide Initiative?</label>
+    </div>
     <div class="field">
         <label class="label">Linked Collections</label>
         <div class="mini-tags field is-grouped is-grouped-multiline">

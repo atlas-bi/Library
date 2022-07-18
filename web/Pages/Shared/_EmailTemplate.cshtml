@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:v="urn:schemas-microsoft-com:vml"
+  xmlns:o="urn:schemas-microsoft-com:office:office"
+  lang="en">
+  <head>
+    <title>Atlas - @ViewBag.Subject </title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="/css/email.min.css" inline />
+    <style type="text/css" minify>@Cache.Get("global_css")</style>
+  </head>
+  <body class="m-0 p-0">
+    <table width="100%">
+        <tr>
+            <td>
+                <table width="650" align="center">
+                    <tr>
+                        <td>
+                            <table width="580" align="center">
+                                <!--header-->
+                                <tr><td height="30"></td></tr>
+                                <tr>
+                                    <td align="center">
+                                        <nav class="navbar has-shadow">
+                                            <a class="navbar-item mx-auto" href='@Configuration["AppSettings:base_url"]' align="center">
+                                                <img src="cid:atlas_logo" width="130" alt="site logo" style="width:130px;" class="mx-auto" />
+                                            </a>
+                                        </nav>
+                                    </td>
+                                </tr>
+                                <tr><td height="30"></td></tr>
+                                <tr>
+                                    <td><strong>Hi @ViewBag.Receiver.FullnameCalc,</strong></td>
+                                </tr>
+                                <tr><td height="10"></td></tr>
+                                <tr>
+                                    <td>@if (@Configuration["features:enable_user_profile"] == null || @Configuration["features:enable_user_profile"].ToString().ToLower() == "true")
+                                        {
+                                            <a href='@Configuration["AppSettings:base_url"]/users?id=@ViewBag.Sender.UserId'>@ViewBag.Sender.FullnameCalc</a>
+                                        } else {
+                                            @ViewBag.Sender.Fullname_calc
+                                        } shared something with you!
+                                    </td>
+                                </tr>
+                                <tr><td height="30"></td></tr>
+                                <!--/header-->
+                                <!--message-->
+                                <tr>
+                                    <td>
+                                        <div class="box">
+                                            @Html.Raw(@ViewBag.Body)
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr><td height="10"></td></tr>
+                                <!--/message-->
+                            </table>
+                        </td>
+                    </tr>
+                    <tr><td height="30"></td></tr>
+                    <!-- footer -->
+                    <tr>
+                        <td align="center">
+                            <small class="has-text-grey">You are receiving this email because Share Notifications are enabled on this account.</small>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="center">
+                            <small class="has-text-grey">You can manage your notifications <a href='@Configuration["AppSettings:base_url"]/users/settings'>here</a>.</small>
+                        </td>
+                    </tr>
+                    <tr><td height="30"></td></tr>
+                    <tr>
+                        <td align="center">
+                            <small class="has-text-grey">
+                                &copy; @DateTime.Now.Year @Configuration["AppSettings:org_name"]
+                                @if(!string.IsNullOrEmpty(Cache.Get<string>("version")))
+                                {
+                                    <text> | Release @Cache.Get("version")</text>
+                                }
+                            </small>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

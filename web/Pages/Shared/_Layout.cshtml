@@ -58,7 +58,7 @@
     @if (@ViewData["SiteMessage"] != null && @ViewData["SiteMessage"].ToString() != "")
     {
         <div class="notification is-light is-info has-text-centered my-0">
-            @Html.Raw(HtmlHelpers.MarkdownToHtml(@ViewData["SiteMessage"].ToString()))
+            @Html.Raw(HtmlHelpers.MarkdownToHtml(@ViewData["SiteMessage"].ToString(), Configuration))
         </div>
     }
 
@@ -66,7 +66,7 @@
     @if (@Configuration["banner_text:site_message"] != null && @Configuration["banner_text:site_message"].ToString() != "")
     {
         <div class="notification is-light is-link has-text-centered my-0">
-            @Html.Raw(HtmlHelpers.MarkdownToHtml(@Configuration["banner_text:site_message"]))
+            @Html.Raw(HtmlHelpers.MarkdownToHtml(@Configuration["banner_text:site_message"], Configuration))
         </div>
     }
 
@@ -99,7 +99,7 @@
             </div>
             <div class="navbar-menu is-flex-grow-0" id="atlas-main-nav">
                 <div class="navbar-end">
-                    @{ var r = new Random();
+                    @* @{ var r = new Random();
                         var randomNumber = r.Next(); }
                     <a class="navbar-item" href="/#mail" aria-label="mail">
                         <span class="icon is-medium is-relative">
@@ -107,33 +107,35 @@
                             <span title="mail count" class="badge" id="nav_unread_message_count">0</span>
                         </span>
                         <span class="hide-desktop">Mail</span>
-                    </a>
+                    </a> *@
 
-                    @if (@ViewBag.Permissions.Contains(1) || ViewBag.Permissions.Contains(18) || ViewBag.Permissions.Contains(33) || ViewBag.Permissions.Contains(34))
+                    @if (@ViewBag.Permissions.Contains("Edit User Permissions") || ViewBag.Permissions.Contains("Edit Role Permissions") || ViewBag.Permissions.Contains("Create Parameters") || ViewBag.Permissions.Contains("Delete Parameters"))
                     {
                         <div class="navbar-item has-dropdown is-hoverable is-boxed">
                             <div class="navbar-link is-arrowless">
                                 <span class="icon is-medium">
                                     <i class="fas fa-lg fa-wrench"></i>
                                 </span>
-                                <span class="hide-desktop">Administrative</span>
+                                <span class="icon is-small">
+                                    <i class="fa-solid fa-caret-down"></i>
+                                </span>
                             </div>
                             <div class="navbar-dropdown">
                                 <hr class="hide-desktop dropdown-divider">
 
-                                @if (ViewBag.Permissions.Contains(33) || ViewBag.Permissions.Contains(34) || ViewBag.Permissions.Contains(18) || ViewBag.Permissions.Contains(1))
+                                @if (ViewBag.Permissions.Contains("Create Parameters") || ViewBag.Permissions.Contains("Delete Parameters") || ViewBag.Permissions.Contains("Edit Role Permissions") || ViewBag.Permissions.Contains("Edit User Permissions"))
                                 {
                                     <a class="navbar-item" href="/settings">Settings</a>
                                 }
 
-                                @if (ViewBag.Permissions.Contains(36))
+                                @if (ViewBag.Permissions.Contains("View Site Analytics"))
                                 {
                                     <a class="navbar-item" href="/analytics">Analytics</a>
                                 }
 
                                 <a class="navbar-item" href="/tasks">Tasks</a>
 
-                                @if (ViewBag.Permissions.Contains(36))
+                                @if (ViewBag.Permissions.Contains("View Site Analytics"))
                                 {
                                     <hr class="dropdown-divider">
                                     <a class="navbar-item" href="/profile">Report Activity</a>
@@ -149,35 +151,50 @@
                             <span class="icon is-medium">
                                 <i class="fas fa-lg fa-list-ul"></i>
                             </span>
-                            <span class="hide-desktop">Sections</span>
+                            <span class="icon is-small">
+                                <i class="fa-solid fa-caret-down"></i>
+                            </span>
                         </div>
                         <div class="navbar-dropdown">
                             <hr class=" hide-desktop dropdown-divider">
-                            @if (@Configuration["features:enable_initiatives"] == null || @Configuration["features:enable_initiatives"].ToString().ToLower() == "true")
+                            @if (@Configuration["features:enable_initiatives"] == null || @Configuration["features:enable_initiatives"].ToString().ToLower() != "false")
                             {
-                <a class="navbar-item" href="/initiatives">Initiatives</a>}
+                                <a class="navbar-item" href="/initiatives">Initiatives</a>
+                            }
                             <a class="navbar-item" href="/collections">Collections</a>
-                            @if (@Configuration["features:enable_terms"] == null || @Configuration["features:enable_terms"].ToString().ToLower() == "true")
+                            @if (@Configuration["features:enable_terms"] == null || @Configuration["features:enable_terms"].ToString().ToLower() != "false")
                             {
-                <a class="navbar-item" href="/terms">Terms</a>}
+                                <a class="navbar-item" href="/terms">Terms</a>
+                            }
                             <hr class="dropdown-divider">
                             <a class="navbar-item" href="/about_analytics">About Analytics</a>
                         </div>
                     </div>
-                    @if (@Configuration["features:enable_user_profile"] == null || @Configuration["features:enable_user_profile"].ToString().ToLower() == "true")
-                    {
-                        <a class="navbar-item has-tooltip-arrow has-tooltip-bottom" href="/users" data-tooltip="Open Profile">
-                            <span class="icon is-medium">
-                                <i class="fas fa-lg fa-user"></i>
-                            </span>
-                            <span class="hide-desktop">Profile</span>
-                        </a>
-                    }
 
-                    @if (ViewBag.Permissions.Contains(44))
+                    @if (@Configuration["features:enable_user_profile"] == null || @Configuration["features:enable_user_profile"].ToString().ToLower() != "false")
                     {
                         <div class="navbar-item has-dropdown is-hoverable is-boxed">
-                            <div class="navbar-link">
+                            <div class="navbar-link is-arrowless">
+                                <span class="icon is-medium">
+                                <i class="fas fa-lg fa-user"></i>
+                            </span>
+                            <span class="icon is-small">
+                                <i class="fa-solid fa-caret-down"></i>
+                            </span>
+                            </div>
+                            <div class="navbar-dropdown">
+                                <a class="navbar-item" href="/users">Your profile</a>
+                                <a class="navbar-item" href="/users#stars">Your stars</a>
+                                <hr class="dropdown-divider">
+                                <a class="navbar-item" href="/users/settings">Settings</a>
+                            </div>
+                        </div>
+                    }
+
+                    @if (ViewBag.Permissions.Contains("Can Change Roles"))
+                    {
+                        <div class="navbar-item has-dropdown is-hoverable is-boxed">
+                            <div class="navbar-link is-arrowless">
                                 @{ var ph = "";
                                     if (ViewBag.MyRole != null && ViewBag.MyRole.Name != null && ViewBag.MyRole.Name != "")
                                     {
@@ -188,6 +205,9 @@
                                         ph = "change role";
                                     } }
                                 @ph
+                                <span class="icon ml-2 is-small">
+                                    <i class="fa-solid fa-caret-down"></i>
+                                </span>
                             </div>
                             <div class="navbar-dropdown" id="role-change">
                                 <hr class=" hide-desktop dropdown-divider">
@@ -228,12 +248,15 @@
             </div>
         </div>
     </nav>
-    <section class="section py-0">
-        <div class="container">
-            <nav class="breadcrumb">
-            </nav>
-        </div>
-    </section>
+    @if (@Configuration["features:enable_breadcrumbs"] == null || @Configuration["features:enable_breadcrumbs"].ToString().ToLower() != "false")
+    {
+        <section class="section py-0">
+            <div class="container">
+                <nav class="breadcrumb site-breadcrumbs">
+                </nav>
+            </div>
+        </section>
+    }
 
     <section class="is-flex-grow-1 mt-4">
         <div class="container is-relative mb-5">

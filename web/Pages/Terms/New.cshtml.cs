@@ -35,7 +35,7 @@ namespace Atlas_Web.Pages.Terms
                 _cache,
                 _context,
                 User.Identity.Name,
-                7
+                "Create New Terms"
             );
 
             if (!checkpoint)
@@ -55,14 +55,14 @@ namespace Atlas_Web.Pages.Terms
                 _cache,
                 _context,
                 User.Identity.Name,
-                7
+                "Create New Terms"
             );
 
             var checkpoint_approve = UserHelpers.CheckUserPermissions(
                 _cache,
                 _context,
                 User.Identity.Name,
-                6
+                "Approve Terms"
             );
 
             if (!checkpoint)

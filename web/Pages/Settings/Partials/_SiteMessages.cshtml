@@ -3,7 +3,7 @@
 <div>
     <h2 class="title is-2">URL Based Messages</h2>
     <p class="content">Url messages are accessed using a url parameter of <em>msg</em>. For example, <em>http://atlas?msg=1</em> will should you message with an ID of 1.</p>
-    @if (ViewBag.Permissions.Contains(45))
+    @if (ViewBag.Permissions.Contains("Manage Global Site Settings"))
     {
         <form asp-page-handler="AddSiteMessage">
             <h3 class="title is-3">Add More</h3>
@@ -33,14 +33,14 @@
     {
         @foreach (var i in Model.Messages)
         {
-            <h3 class="title is-3 is-flex is-justify-content-space-between"><span>Message @i.Value</span> @if(ViewBag.Permissions.Contains(44))
+            <h3 class="title is-3 is-flex is-justify-content-space-between"><span>Message @i.Value</span> @if(ViewBag.Permissions.Contains("Can Change Roles"))
                     {
                         <a href="/Settings?handler=DeleteSiteMessage&Id=@i.Id">Delete</a>
                     }</h3>
 
             <label class="label">Preview</label>
             <div class="notification is-light is-info has-text-centered my-0">
-                @Html.Raw(HtmlHelpers.MarkdownToHtml(i.Description))
+                @Html.Raw(HtmlHelpers.MarkdownToHtml(i.Description, Configuration))
             </div>
         }
     }

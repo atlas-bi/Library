@@ -1,6 +1,6 @@
 @model Atlas_Web.Pages.Settings.TagsModel
 <div>
-    @if (ViewBag.Permissions.Contains(33))
+    @if (ViewBag.Permissions.Contains("Create Parameters"))
     {
         <form asp-page-handler="CreateEstimatedRunFrequency">
             <div class="field">
@@ -23,7 +23,7 @@
         @foreach (var i in ViewBag.EstimatedRunFrequencyList)
         {
             <div class="control">
-                @if (ViewBag.Permissions.Contains(34))
+                @if (ViewBag.Permissions.Contains("Delete Parameters"))
                 {
                     <form asp-page-handler="DeleteEstimatedRunFrequency" class="tags has-addons">
                         <span class="tag is-link">@i.Name</span>
