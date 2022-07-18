@@ -173,21 +173,21 @@ namespace Atlas_Web.Pages.Terms
                 _cache,
                 _context,
                 User.Identity.Name,
-                8
+                "Delete Approved Terms"
             );
 
-            var checkpoint_uapproved = UserHelpers.CheckUserPermissions(
+            var checkpoint_unapproved = UserHelpers.CheckUserPermissions(
                 _cache,
                 _context,
                 User.Identity.Name,
-                9
+                "Delete Unapproved Terms"
             );
 
             Term OldTerm = _context.Terms.Where(x => x.TermId == Id).FirstOrDefault();
 
             if (
                 (OldTerm.ApprovedYn == "Y" && !checkpoint_approved)
-                || (OldTerm.ApprovedYn != "Y" && !checkpoint_uapproved)
+                || (OldTerm.ApprovedYn != "Y" && !checkpoint_unapproved)
             )
             {
                 return RedirectToPage(

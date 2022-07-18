@@ -1,7 +1,7 @@
 @model Atlas_Web.Pages.Reports.IndexModel
 
 <h2 id="relationships" class="title is-2">Relationships</h2>
-    @if (Model.Report.ReportGroupsMemberships.Any())
+    @if (ViewBag.Permissions.Contains("View Groups") && Model.Report.ReportGroupsMemberships.Any())
     {
         <nav id="groups" class="panel">
             <p class="panel-heading is-flex is-justify-content-space-between" data-action="collapse" data-target="related-groups">

@@ -13,6 +13,10 @@
     }
 }
 
+@if(!ViewBag.Permissions.Contains("View Groups")){
+    <p class="block">You do not have access to this page.</p>
+}
+else {
 <h1 class="title is-1">@Model.Group.Name</h1>
 
 <partial name="_Links" />
@@ -139,7 +143,7 @@
         <div data-ajax="yes" data-url="/Profile" data-parameters="handler=RunList&type=@ViewBag.ProfileType&id=@ViewBag.ProfileId@ViewBag.DefaultFilters"></div>
     </div>
 
-    @if (ViewBag.Permissions.Contains(36))
+    @if (ViewBag.Permissions.Contains("View Site Analytics"))
     {
         <div class="tab-dta" id="analytics">
             @section js {
@@ -150,3 +154,4 @@
 
     }
 </section>
+}

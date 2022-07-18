@@ -182,7 +182,7 @@ namespace Atlas_Web.Pages.Users
                 _cache,
                 _context,
                 User.Identity.Name,
-                37
+                "View Other User"
             );
             UserId = MyId;
             if (checkpoint)
@@ -299,7 +299,7 @@ namespace Atlas_Web.Pages.Users
                 _cache,
                 _context,
                 User.Identity.Name,
-                37
+                "View Other User"
             );
 
             if (checkpoint)
@@ -522,7 +522,7 @@ namespace Atlas_Web.Pages.Users
                 _cache,
                 _context,
                 User.Identity.Name,
-                37
+                "View Other User"
             );
             if (checkpoint)
             {
@@ -572,7 +572,7 @@ namespace Atlas_Web.Pages.Users
                 _cache,
                 _context,
                 User.Identity.Name,
-                37
+                "View Other User"
             );
             if (checkpoint)
             {
@@ -638,7 +638,7 @@ namespace Atlas_Web.Pages.Users
                 _cache,
                 _context,
                 User.Identity.Name,
-                37
+                "View Other User"
             );
             if (checkpoint)
             {

@@ -57,7 +57,7 @@ namespace Atlas_Web.Pages.Settings
                 _cache,
                 _context,
                 User.Identity.Name,
-                45
+                "Manage Global Site Settings"
             );
             if (checkpoint)
             {
@@ -76,7 +76,7 @@ namespace Atlas_Web.Pages.Settings
                 _cache,
                 _context,
                 User.Identity.Name,
-                45
+                "Manage Global Site Settings"
             );
             if (ModelState.IsValid && checkpoint)
             {

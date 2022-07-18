@@ -71,7 +71,7 @@ namespace Atlas_Web.Pages.Settings
                 _cache,
                 _context,
                 User.Identity.Name,
-                18
+                "Edit Role Permissions"
             );
             // cannot delete admin or user role
             if (
@@ -102,7 +102,7 @@ namespace Atlas_Web.Pages.Settings
                 _cache,
                 _context,
                 User.Identity.Name,
-                18
+                "Edit Role Permissions"
             );
             if (
                 ModelState.IsValid
@@ -124,7 +124,7 @@ namespace Atlas_Web.Pages.Settings
                 _cache,
                 _context,
                 User.Identity.Name,
-                18
+                "Edit Role Permissions"
             );
             if (checkpoint)
             {

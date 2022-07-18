@@ -109,7 +109,7 @@
                         <span class="hide-desktop">Mail</span>
                     </a> *@
 
-                    @if (@ViewBag.Permissions.Contains(1) || ViewBag.Permissions.Contains(18) || ViewBag.Permissions.Contains(33) || ViewBag.Permissions.Contains(34))
+                    @if (@ViewBag.Permissions.Contains("Edit User Permissions") || ViewBag.Permissions.Contains("Edit Role Permissions") || ViewBag.Permissions.Contains("Create Parameters") || ViewBag.Permissions.Contains("Delete Parameters"))
                     {
                         <div class="navbar-item has-dropdown is-hoverable is-boxed">
                             <div class="navbar-link is-arrowless">
@@ -123,19 +123,19 @@
                             <div class="navbar-dropdown">
                                 <hr class="hide-desktop dropdown-divider">
 
-                                @if (ViewBag.Permissions.Contains(33) || ViewBag.Permissions.Contains(34) || ViewBag.Permissions.Contains(18) || ViewBag.Permissions.Contains(1))
+                                @if (ViewBag.Permissions.Contains("Create Parameters") || ViewBag.Permissions.Contains("Delete Parameters") || ViewBag.Permissions.Contains("Edit Role Permissions") || ViewBag.Permissions.Contains("Edit User Permissions"))
                                 {
                                     <a class="navbar-item" href="/settings">Settings</a>
                                 }
 
-                                @if (ViewBag.Permissions.Contains(36))
+                                @if (ViewBag.Permissions.Contains("View Site Analytics"))
                                 {
                                     <a class="navbar-item" href="/analytics">Analytics</a>
                                 }
 
                                 <a class="navbar-item" href="/tasks">Tasks</a>
 
-                                @if (ViewBag.Permissions.Contains(36))
+                                @if (ViewBag.Permissions.Contains("View Site Analytics"))
                                 {
                                     <hr class="dropdown-divider">
                                     <a class="navbar-item" href="/profile">Report Activity</a>
@@ -191,7 +191,7 @@
                         </div>
                     }
 
-                    @if (ViewBag.Permissions.Contains(44))
+                    @if (ViewBag.Permissions.Contains("Can Change Roles"))
                     {
                         <div class="navbar-item has-dropdown is-hoverable is-boxed">
                             <div class="navbar-link is-arrowless">

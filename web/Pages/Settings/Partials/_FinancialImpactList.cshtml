@@ -1,7 +1,7 @@
 
 @model Atlas_Web.Pages.Settings.TagsModel
 <div>
-    @if (ViewBag.Permissions.Contains(33))
+    @if (ViewBag.Permissions.Contains("Create Parameters"))
     {
         <form asp-page-handler="CreateFinancialImpact">
             <div class="field">
@@ -24,7 +24,7 @@
         @foreach (var i in ViewBag.FinancialImpactList)
         {
             <div class="control">
-                @if (ViewBag.Permissions.Contains(34))
+                @if (ViewBag.Permissions.Contains("Delete Parameters"))
                 {
                     <form asp-page-handler="DeleteFinancialImpact" class="tags has-addons">
                         <span class="tag is-link">@i.Name</span>

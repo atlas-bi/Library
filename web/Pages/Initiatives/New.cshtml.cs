@@ -35,7 +35,7 @@ namespace Atlas_Web.Pages.Initiatives
                 _cache,
                 _context,
                 User.Identity.Name,
-                20
+                "Create Initiative"
             );
 
             if (!checkpoint)
@@ -55,7 +55,7 @@ namespace Atlas_Web.Pages.Initiatives
                 _cache,
                 _context,
                 User.Identity.Name,
-                20
+                "Create Initiative"
             );
 
             if (!checkpoint)

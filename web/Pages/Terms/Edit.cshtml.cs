@@ -34,14 +34,14 @@ namespace Atlas_Web.Pages.Terms
                 _cache,
                 _context,
                 User.Identity.Name,
-                13
+                "Edit Unapproved Terms"
             );
 
             var checkpoint_approved = UserHelpers.CheckUserPermissions(
                 _cache,
                 _context,
                 User.Identity.Name,
-                11
+                "Edit Approved Terms"
             );
 
             Term = await _context.Terms.SingleAsync(x => x.TermId == id);
@@ -66,14 +66,14 @@ namespace Atlas_Web.Pages.Terms
                 _cache,
                 _context,
                 User.Identity.Name,
-                13
+                "Edit Unapproved Terms"
             );
 
             var checkpoint_approved = UserHelpers.CheckUserPermissions(
                 _cache,
                 _context,
                 User.Identity.Name,
-                11
+                "Edit Approved Terms"
             );
 
             // we get a copy of the Term and then will only update several fields.

@@ -31,7 +31,7 @@ namespace Atlas_Web.Pages.Collections
                 _cache,
                 _context,
                 User.Identity.Name,
-                26
+                "Create Project"
             );
 
             if (!checkpoint)
@@ -51,7 +51,7 @@ namespace Atlas_Web.Pages.Collections
                 _cache,
                 _context,
                 User.Identity.Name,
-                26
+                "Create Project"
             );
 
             if (!checkpoint)
