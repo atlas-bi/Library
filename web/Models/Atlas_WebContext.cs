@@ -71,6 +71,7 @@ namespace Atlas_Web.Models
         public virtual DbSet<UserPreference> UserPreferences { get; set; }
         public virtual DbSet<UserRole> UserRoles { get; set; }
         public virtual DbSet<UserRoleLink> UserRoleLinks { get; set; }
+        public virtual DbSet<UserSetting> UserSettings { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -243,6 +244,8 @@ namespace Atlas_Web.Models
                     entity.Property(e => e.LastUpdateDate).HasColumnType("datetime");
 
                     entity.Property(e => e.OperationOwnerId).HasColumnName("OperationOwnerID");
+
+                    entity.Property(e => e.Hidden).HasMaxLength(1).IsFixedLength();
 
                     entity
                         .HasOne(d => d.ExecutiveOwner)
@@ -478,6 +481,20 @@ namespace Atlas_Web.Models
                 entity =>
                 {
                     entity.ToTable("GlobalSiteSettings", "app");
+                }
+            );
+
+            modelBuilder.Entity<UserSetting>(
+                entity =>
+                {
+                    entity.ToTable("UserSettings", "app");
+                    entity.HasIndex(e => new { e.UserId, e.Name }, "user_setting");
+                    entity.HasIndex(e => e.UserId, "user");
+                    entity
+                        .HasOne(d => d.User)
+                        .WithMany(p => p.UserSettings)
+                        .HasForeignKey(d => d.UserId)
+                        .HasConstraintName("FK_UserSettings_User");
                 }
             );
 

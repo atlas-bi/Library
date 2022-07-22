@@ -168,7 +168,7 @@
                 }
             </span>
         </a>
-        @if (EditReportUrl != null && EditReportUrl != "" && ViewBag.Permissions.Contains(38))
+        @if (EditReportUrl != null && EditReportUrl != "" && ViewBag.Permissions.Contains("Open In Editor"))
         {
             <a class="card-footer-item px-0" target="_blank" href="@EditReportUrl">
                 <span class="icon-text">
@@ -179,7 +179,7 @@
                 </span>
             </a>
         }
-        @if (ManageReportUrl != null && ManageReportUrl != "" && ViewBag.Permissions.Contains(38))
+        @if (ManageReportUrl != null && ManageReportUrl != "" && ViewBag.Permissions.Contains("Open In Editor"))
         {
             <a class="card-footer-item px-0" target="_blank" href="@ManageReportUrl">
                 <span class="icon-text">

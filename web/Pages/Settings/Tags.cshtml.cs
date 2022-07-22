@@ -292,7 +292,7 @@ namespace Atlas_Web.Pages.Settings
                 _cache,
                 _context,
                 User.Identity.Name,
-                33
+                "Create Parameters"
             );
 
             if (
@@ -314,7 +314,7 @@ namespace Atlas_Web.Pages.Settings
                 _cache,
                 _context,
                 User.Identity.Name,
-                34
+                "Delete Parameters"
             );
             if (ModelState.IsValid && OrganizationalValue.OrganizationalValueId > 0 && checkpoint)
             {
@@ -340,7 +340,7 @@ namespace Atlas_Web.Pages.Settings
                 _cache,
                 _context,
                 User.Identity.Name,
-                33
+                "Create Parameters"
             );
             if (
                 ModelState.IsValid
@@ -361,7 +361,7 @@ namespace Atlas_Web.Pages.Settings
                 _cache,
                 _context,
                 User.Identity.Name,
-                33
+                "Create Parameters"
             );
             if (ModelState.IsValid && Tag.Name != null && checkpoint)
             {
@@ -378,7 +378,7 @@ namespace Atlas_Web.Pages.Settings
                 _cache,
                 _context,
                 User.Identity.Name,
-                34
+                "Delete Parameters"
             );
             if (
                 ModelState.IsValid
@@ -408,7 +408,7 @@ namespace Atlas_Web.Pages.Settings
                 _cache,
                 _context,
                 User.Identity.Name,
-                34
+                "Delete Parameters"
             );
             if (ModelState.IsValid && Tag.TagId > 0 && checkpoint)
             {
@@ -426,7 +426,7 @@ namespace Atlas_Web.Pages.Settings
                 _cache,
                 _context,
                 User.Identity.Name,
-                33
+                "Create Parameters"
             );
             if (ModelState.IsValid && Fragility.FragilityName != null && checkpoint)
             {
@@ -443,7 +443,7 @@ namespace Atlas_Web.Pages.Settings
                 _cache,
                 _context,
                 User.Identity.Name,
-                34
+                "Delete Parameters"
             );
             if (ModelState.IsValid && Fragility.FragilityId > 0 && checkpoint)
             {
@@ -464,7 +464,7 @@ namespace Atlas_Web.Pages.Settings
                 _cache,
                 _context,
                 User.Identity.Name,
-                33
+                "Create Parameters"
             );
             if (
                 ModelState.IsValid
@@ -485,7 +485,7 @@ namespace Atlas_Web.Pages.Settings
                 _cache,
                 _context,
                 User.Identity.Name,
-                34
+                "Delete Parameters"
             );
             if (ModelState.IsValid && MaintenanceSchedule.MaintenanceScheduleId > 0 && checkpoint)
             {
@@ -511,7 +511,7 @@ namespace Atlas_Web.Pages.Settings
                 _cache,
                 _context,
                 User.Identity.Name,
-                33
+                "Create Parameters"
             );
             if (ModelState.IsValid && FragilityTag.FragilityTagName != null && checkpoint)
             {
@@ -528,7 +528,7 @@ namespace Atlas_Web.Pages.Settings
                 _cache,
                 _context,
                 User.Identity.Name,
-                34
+                "Delete Parameters"
             );
             if (ModelState.IsValid && FragilityTag.FragilityTagId > 0 && checkpoint)
             {
@@ -550,7 +550,7 @@ namespace Atlas_Web.Pages.Settings
                 _cache,
                 _context,
                 User.Identity.Name,
-                33
+                "Create Parameters"
             );
             if (
                 ModelState.IsValid
@@ -571,7 +571,7 @@ namespace Atlas_Web.Pages.Settings
                 _cache,
                 _context,
                 User.Identity.Name,
-                34
+                "Delete Parameters"
             );
             if (ModelState.IsValid && MaintenanceLogStatus.MaintenanceLogStatusId > 0 && checkpoint)
             {
@@ -596,7 +596,7 @@ namespace Atlas_Web.Pages.Settings
                 _cache,
                 _context,
                 User.Identity.Name,
-                33
+                "Create Parameters"
             );
             if (ModelState.IsValid && FinancialImpact.Name != null && checkpoint)
             {
@@ -613,7 +613,7 @@ namespace Atlas_Web.Pages.Settings
                 _cache,
                 _context,
                 User.Identity.Name,
-                34
+                "Delete Parameters"
             );
             if (ModelState.IsValid && FinancialImpact.FinancialImpactId > 0 && checkpoint)
             {
@@ -638,7 +638,7 @@ namespace Atlas_Web.Pages.Settings
                 _cache,
                 _context,
                 User.Identity.Name,
-                33
+                "Create Parameters"
             );
             if (ModelState.IsValid && StrategicImportance.Name != null && checkpoint)
             {
@@ -655,7 +655,7 @@ namespace Atlas_Web.Pages.Settings
                 _cache,
                 _context,
                 User.Identity.Name,
-                34
+                "Delete Parameters"
             );
             if (ModelState.IsValid && StrategicImportance.StrategicImportanceId > 0 && checkpoint)
             {

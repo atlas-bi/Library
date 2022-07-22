@@ -6,7 +6,7 @@
 @if (!string.IsNullOrEmpty(Model.Initiative.Description))
 {
     <h2 id="details" class="title is-2">Description</h2>
-    <div class="content">@Html.Raw(@Helpers.HtmlHelpers.MarkdownToHtml(Model.Initiative.Description))</div>
+    <div class="content">@Html.Raw(@Helpers.HtmlHelpers.MarkdownToHtml(Model.Initiative.Description, Configuration))</div>
 }
 
 <h2 class="title is-2">Details</h2>
@@ -80,6 +80,13 @@
                 <td>Last Updated</td>
                 <td>@Model.Initiative.LastUpdatedDateDisplayString</td>
             </tr>
+            @if (Model.Initiative.Hidden == "Y")
+            {
+                <tr>
+                    <td>Hidden from Search?</td>
+                    <td>Yes</td>
+                </tr>
+            }
         </tbody>
     </table>
 </div>

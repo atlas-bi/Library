@@ -2,7 +2,7 @@
 <nav class="breadcrumb">
     <ul>
         <li>
-            <a class="tab-lnk  @if (@Model.UserId == @Model.MyId){ <text>active</text>}" href="#favorites">Favorites</a>
+            <a class="tab-lnk  @if (@Model.UserId == @Model.MyId){ <text>active</text>}" href="#stars">Stars</a>
         </li>
        <!--  @if (@Model.UserId == @Model.MyId)
         {
@@ -13,9 +13,12 @@
         <li>
             <a class="tab-lnk" href="#subscriptions">Subscriptions</a>
         </li>
-        <li>
-            <a class="tab-lnk" href="#groups">Groups</a>
-        </li>
+        @if (ViewBag.Permissions.Contains("View Groups"))
+        {
+            <li>
+                <a class="tab-lnk" href="#groups">Groups</a>
+            </li>
+        }
         <li>
             <a class="tab-lnk @if (@Model.UserId != @Model.MyId){ <text>active</text>} " href="#activity">Run Analytics</a>
         </li>
@@ -25,7 +28,7 @@
         <li>
             <a class="tab-lnk" href="#atlas-history">Atlas History</a>
         </li>
-        @if (ViewBag.Permissions.Contains(36))
+        @if (ViewBag.Permissions.Contains("View Site Analytics"))
         {
             <li>
                 <a class="tab-lnk" href="#analytics">Analytics</a>

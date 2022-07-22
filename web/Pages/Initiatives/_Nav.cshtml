@@ -42,7 +42,7 @@
             </a>
         </li>
     }
-    @if (ViewBag.Permissions.Contains(20))
+    @if (ViewBag.Permissions.Contains("Create Initiative"))
     {
         <li>
             <a class="is-block has-tooltip-arrow has-tooltip-right" href="/Initiatives/New/" data-tooltip="Create New Initiative">
@@ -53,7 +53,7 @@
         </li>
 
     }
-    @if (ViewBag.Permissions.Contains(22))
+    @if (ViewBag.Permissions.Contains("Edit Initiative"))
     {
         <li>
             <a class="is-block has-tooltip-arrow has-tooltip-right" href="/Initiatives/Edit/?id=@Model.Initiative.DataInitiativeId" data-tooltip="Open Atlas Editor">
@@ -63,7 +63,7 @@
             </a>
         </li>
     }
-    @if (ViewBag.Permissions.Contains(21))
+    @if (ViewBag.Permissions.Contains("Delete Initiative"))
     {
         <li>
             <a class="is-block has-tooltip-arrow has-tooltip-right" data-tooltip="Delete this Initaitive" href="/Initiatives?handler=DeleteInitiative&Id=@Model.Initiative.DataInitiativeId"  onclick="return confirm('Are you sure you want to remove this?');">

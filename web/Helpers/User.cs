@@ -76,7 +76,7 @@ namespace Atlas_Web.Helpers
             );
         }
 
-        public static List<int?> GetUserPermissions(
+        public static List<string> GetUserPermissions(
             IMemoryCache cache,
             Atlas_WebContext _context,
             string username
@@ -100,7 +100,7 @@ namespace Atlas_Web.Helpers
                 cache.Set<List<string>>("MasterUserPermissions", master, TimeSpan.FromMinutes(20));
             }
 
-            return cache.GetOrCreate<List<int?>>(
+            return cache.GetOrCreate<List<string>>(
                 "UserPermissions-" + username,
                 cacheEntry =>
                 {
@@ -109,7 +109,7 @@ namespace Atlas_Web.Helpers
                     // permission table links
                     // user (username) > user role links > user roles > role permissions links > role permissions (activity)
 
-                    // if an admin, return all privaledges.
+                    // if an admin, return all privileges.
                     // ps, never check on the name, always the ID... someone could create a duplicate fake "admin" role and steal privaledges
                     var is_Admin = (
                         from r in _context.UserRoles
@@ -129,16 +129,14 @@ namespace Atlas_Web.Helpers
                             && MyRole.Id != 1
                         )
                         {
-                            List<int?> roles = _context.RolePermissionLinks
+                            List<string> roles = _context.RolePermissionLinks
                                 .Where(k => k.RoleId == MyRole.Id)
-                                .Select(x => x.RolePermissionsId)
+                                .Select(x => x.Role.Name)
                                 .ToList();
-                            roles.Add(44);
+                            roles.Add("Can Change Roles");
                             return roles;
                         }
-                        return _context.RolePermissions
-                            .Select(x => (int?)x.RolePermissionsId)
-                            .ToList();
+                        return _context.RolePermissions.Select(x => x.Name).ToList();
                     }
 
                     // default role is 5 (user)
@@ -155,7 +153,7 @@ namespace Atlas_Web.Helpers
 
                     var myPermissions = _context.RolePermissionLinks
                         .Where(k => RoleList.Contains(k.RoleId ?? 5))
-                        .Select(x => x.RolePermissionsId)
+                        .Select(x => x.Role.Name)
                         .ToList();
 
                     return myPermissions;
@@ -229,11 +227,12 @@ namespace Atlas_Web.Helpers
             IMemoryCache cache,
             Atlas_WebContext _context,
             string username,
-            int Access
+            string Access
         )
         {
             username ??= "default";
-            return GetUserPermissions(cache, _context, username).Any(x => x.Value == Access);
+
+            return GetUserPermissions(cache, _context, username).Contains(Access);
         }
     }
 }

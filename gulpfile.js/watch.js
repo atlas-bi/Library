@@ -31,6 +31,10 @@ gulp.task(
           'web/wwwroot/**/*.scss',
           'web/wwwroot/**/*.sass',
           'web/Pages/**/*.cshtml',
+          'web/Services/',
+          'web/Model/',
+          'web/Middleware/',
+          'web/Helpers',
         ],
         gulp.series(gulp.parallel('styles', 'iis:kill'), 'iis:run'),
       );
@@ -52,7 +56,7 @@ gulp.task(
           'web/wwwroot/js/hyperspace.js',
           'web/wwwroot/js/favorites.js',
           'web/wwwroot/js/ajax-content.js',
-          'web/wwwroot/js/messagebox.js',
+          'web/wwwroot/js/notification.js',
           'web/wwwroot/js/mail.js',
           'web/wwwroot/js/utility/hamburger.js',
           'web/wwwroot/js/mini.js',
@@ -134,6 +138,15 @@ gulp.task(
         'web/wwwroot/js/profile.js',
         gulp.series(
           gulp.parallel('js:profile', 'styles', 'iis:kill'),
+          'iis:run',
+        ),
+      );
+
+      // user settings
+      gulp.watch(
+        'web/wwwroot/js/user_settings.js',
+        gulp.series(
+          gulp.parallel('js:userSettings', 'styles', 'iis:kill'),
           'iis:run',
         ),
       );

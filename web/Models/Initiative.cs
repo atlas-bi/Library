@@ -20,6 +20,7 @@ namespace Atlas_Web.Models
         public int? StrategicImportance { get; set; }
         public DateTime? LastUpdateDate { get; set; }
         public int? LastUpdateUser { get; set; }
+        public string Hidden { get; set; }
 
         public virtual User ExecutiveOwner { get; set; }
         public virtual FinancialImpact FinancialImpactNavigation { get; set; }

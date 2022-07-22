@@ -487,6 +487,11 @@ namespace Atlas_Web.Migrations
                     b.Property<int?>("FinancialImpact")
                         .HasColumnType("int");
 
+                    b.Property<string>("Hidden")
+                        .HasMaxLength(1)
+                        .HasColumnType("nchar(1)")
+                        .IsFixedLength();
+
                     b.Property<DateTime?>("LastUpdateDate")
                         .HasColumnType("datetime");
 
@@ -2414,6 +2419,35 @@ namespace Atlas_Web.Migrations
                     b.ToTable("UserRoleLinks", "app");
                 });
 
+            modelBuilder.Entity("Atlas_Web.Models.UserSetting", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Value")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex(new[] { "UserId" }, "user");
+
+                    b.HasIndex(new[] { "UserId", "Name" }, "user_setting");
+
+                    b.ToTable("UserSettings", "app");
+                });
+
             modelBuilder.Entity("Atlas_Web.Models.Analytic", b =>
                 {
                     b.HasOne("Atlas_Web.Models.User", "User")
@@ -3257,6 +3291,18 @@ namespace Atlas_Web.Migrations
                     b.Navigation("UserRoles");
                 });
 
+            modelBuilder.Entity("Atlas_Web.Models.UserSetting", b =>
+                {
+                    b.HasOne("Atlas_Web.Models.User", "User")
+                        .WithMany("UserSettings")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("FK_UserSettings_User");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Atlas_Web.Models.Collection", b =>
                 {
                     b.Navigation("CollectionReports");
@@ -3491,6 +3537,8 @@ namespace Atlas_Web.Migrations
                     b.Navigation("UserPreferences");
 
                     b.Navigation("UserRoleLinks");
+
+                    b.Navigation("UserSettings");
                 });
 
             modelBuilder.Entity("Atlas_Web.Models.UserFavoriteFolder", b =>

@@ -89,7 +89,7 @@ namespace Atlas_Web.Pages.Settings
                 _cache,
                 _context,
                 User.Identity.Name,
-                1
+                "Edit User Permissions"
             );
             if (checkpoint)
             {
@@ -117,7 +117,7 @@ namespace Atlas_Web.Pages.Settings
                 _cache,
                 _context,
                 User.Identity.Name,
-                1
+                "Edit User Permissions"
             );
             if (
                 ModelState.IsValid

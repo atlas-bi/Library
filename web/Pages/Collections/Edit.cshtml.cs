@@ -37,7 +37,7 @@ namespace Atlas_Web.Pages.Collections
                 _cache,
                 _context,
                 User.Identity.Name,
-                28
+                "Edit Project"
             );
 
             if (!checkpoint)
@@ -64,7 +64,7 @@ namespace Atlas_Web.Pages.Collections
                 _cache,
                 _context,
                 User.Identity.Name,
-                28
+                "Edit Project"
             );
 
             if (!checkpoint)

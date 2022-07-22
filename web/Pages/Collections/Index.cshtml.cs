@@ -91,7 +91,7 @@ namespace Atlas_Web.Pages.Collections
                 _cache,
                 _context,
                 User.Identity.Name,
-                27
+                "Delete Project"
             );
             if (!checkpoint)
             {

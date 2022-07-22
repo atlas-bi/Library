@@ -21,8 +21,8 @@
 <partial name="_Links" />
 
 <section class="tab-cnt">
-    <div class="tab-dta @if (@Model.UserId == @Model.MyId){ <text>active</text>}" id="favorites">
-        <div data-ajax="yes" data-url="/Users/Favorites" data-parameters="id=@Model.UserId"></div>
+    <div class="tab-dta @if (@Model.UserId == @Model.MyId){ <text>active</text>}" id="stars">
+        <div data-ajax="yes" data-url="/Users/Stars" data-parameters="id=@Model.UserId"></div>
     </div>
    <!--  @if (@Model.UserId == @Model.MyId){
         <div class="tab-dta " id="mail">
@@ -52,10 +52,13 @@
     <div class="tab-dta" id="atlas-history">
         <div data-ajax="yes" data-url="/Users?handler=History" data-parameters="id=@Model.UserId"></div>
     </div>
-    <div class="tab-dta" id="groups">
-        <div data-ajax="yes" data-url="/Users?handler=Groups" data-parameters="id=@Model.UserId"></div>
-    </div>
-    @if (ViewBag.Permissions.Contains(36))
+    @if (ViewBag.Permissions.Contains("View Groups"))
+    {
+        <div class="tab-dta" id="groups">
+            <div data-ajax="yes" data-url="/Users?handler=Groups" data-parameters="id=@Model.UserId"></div>
+        </div>
+    }
+    @if (ViewBag.Permissions.Contains("View Site Analytics"))
     {
         <div class="tab-dta" id="analytics">
             @section js {

@@ -1,0 +1,23 @@
+@page
+@model Atlas_Web.Pages.Users.Settings.IndexModel
+
+
+<h1 class="title is-1">
+   Settings
+</h1>
+<h3 class="title is-3">Email</h3>
+
+<div class="field toggle">
+    <input type="hidden" id="enable_share_notification" value="@if(Model.EnableShareNotifications == null || Model.EnableShareNotifications.Value != "N"){<text>Y</text>}">
+    <input id="switch-share-notification" type="checkbox" name="switch-share-notification" class="switch is-rounded is-info"
+        @if(Model.EnableShareNotifications == null || Model.EnableShareNotifications.Value != "N")
+        {
+            <text>checked="checked"</text>
+        } >
+    <label for="switch-share-notification">Enable Share Notification</label>
+</div>
+
+
+@section js {
+    <script src="/js/user_settings.min.js" defer async></script>
+}
