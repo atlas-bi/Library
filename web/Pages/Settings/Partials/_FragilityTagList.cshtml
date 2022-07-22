@@ -1,7 +1,7 @@
 
 @model Atlas_Web.Pages.Settings.TagsModel
 <div>
-    @if (ViewBag.Permissions.Contains("Create Parameters"))
+    @if (User.HasPermission("Create Parameters"))
     {
         <form asp-page-handler="CreateFragilityTag">
             <div class="field">
@@ -24,7 +24,7 @@
         @foreach (var i in ViewBag.FragilityTagList)
         {
              <div class="control">
-                @if (ViewBag.Permissions.Contains("Delete Parameters"))
+                @if (User.HasPermission("Delete Parameters"))
                 {
                     <form asp-page-handler="DeleteFragilityTag" class="tags has-addons">
                         <span class="tag is-link">@i.Name</span>

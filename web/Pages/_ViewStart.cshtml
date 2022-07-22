@@ -1,15 +1,11 @@
 @{
     Layout = "_Layout";
-    ViewBag.Permissions = UserHelpers.GetUserPermissions(Cache, DbContext, User.Identity.Name);
-    ViewBag.PublicUser = UserHelpers.GetUser(Cache, DbContext, User.Identity.Name);
     ViewBag.Preferences = UserHelpers.GetPreferences(Cache, DbContext, User.Identity.Name);
-    ViewBag.MyRole = UserHelpers.GetMyRole(DbContext, User.Identity.Name);
-    ViewBag.Fullname = ViewBag.PublicUser.FullnameCalc;
     ViewBag.SiteMessage = HtmlHelpers.SiteMessage(ViewContext.HttpContext, DbContext);
 }
 
 
-@if (@ViewBag.Permissions.Contains("Search"))
+@if (User.HasPermission("Search"))
 {
     ViewBag.SearchPlaceholder = "type to search..";
 

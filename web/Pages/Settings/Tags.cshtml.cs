@@ -1,11 +1,9 @@
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Atlas_Web.Models;
-using System.Collections.Generic;
 using Atlas_Web.Helpers;
+using Atlas_Web.Authorization;
 using Microsoft.Extensions.Caching.Memory;
 
 namespace Atlas_Web.Pages.Settings
@@ -78,11 +76,6 @@ namespace Atlas_Web.Pages.Settings
                     Used = o.ReportObjectDocs.Count
                 }
             ).ToListAsync();
-            ViewData["Permissions"] = UserHelpers.GetUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name
-            );
 
             return new PartialViewResult
             {
@@ -102,11 +95,6 @@ namespace Atlas_Web.Pages.Settings
                     Used = o.ReportObjectDocs.Count
                 }
             ).ToListAsync();
-            ViewData["Permissions"] = UserHelpers.GetUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name
-            );
 
             return new PartialViewResult
             {
@@ -126,11 +114,6 @@ namespace Atlas_Web.Pages.Settings
                     Used = o.ReportObjectDocs.Count
                 }
             ).ToListAsync();
-            ViewData["Permissions"] = UserHelpers.GetUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name
-            );
 
             return new PartialViewResult
             {
@@ -150,11 +133,6 @@ namespace Atlas_Web.Pages.Settings
                     Used = o.ReportObjectDocs.Count
                 }
             ).ToListAsync();
-            ViewData["Permissions"] = UserHelpers.GetUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name
-            );
 
             return new PartialViewResult
             {
@@ -174,11 +152,6 @@ namespace Atlas_Web.Pages.Settings
                     Used = o.ReportObjectDocFragilityTags.Count
                 }
             ).ToListAsync();
-            ViewData["Permissions"] = UserHelpers.GetUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name
-            );
 
             return new PartialViewResult
             {
@@ -200,12 +173,6 @@ namespace Atlas_Web.Pages.Settings
                 }
             ).ToListAsync();
 
-            ViewData["Permissions"] = UserHelpers.GetUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name
-            );
-
             return new PartialViewResult { ViewName = "Partials/_TagList", ViewData = ViewData };
         }
 
@@ -220,11 +187,6 @@ namespace Atlas_Web.Pages.Settings
                     Used = o.MaintenanceLogs.Count
                 }
             ).ToListAsync();
-            ViewData["Permissions"] = UserHelpers.GetUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name
-            );
 
             return new PartialViewResult
             {
@@ -244,11 +206,6 @@ namespace Atlas_Web.Pages.Settings
                     Used = o.Initiatives.Count + o.Collections.Count
                 }
             ).ToListAsync();
-            ViewData["Permissions"] = UserHelpers.GetUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name
-            );
 
             return new PartialViewResult
             {
@@ -268,11 +225,6 @@ namespace Atlas_Web.Pages.Settings
                     Used = o.Initiatives.Count + o.Collections.Count
                 }
             ).ToListAsync();
-            ViewData["Permissions"] = UserHelpers.GetUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name
-            );
 
             return new PartialViewResult
             {
@@ -288,17 +240,10 @@ namespace Atlas_Web.Pages.Settings
 
         public ActionResult OnPostCreateOrganizationalValue()
         {
-            var checkpoint = UserHelpers.CheckUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name,
-                "Create Parameters"
-            );
-
             if (
                 ModelState.IsValid
                 && OrganizationalValue.OrganizationalValueName != null
-                && checkpoint
+                && User.HasPermission("Create Parameters")
             )
             {
                 _context.Add(OrganizationalValue);
@@ -310,13 +255,11 @@ namespace Atlas_Web.Pages.Settings
 
         public ActionResult OnPostDeleteOrganizationalValue()
         {
-            var checkpoint = UserHelpers.CheckUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name,
-                "Delete Parameters"
-            );
-            if (ModelState.IsValid && OrganizationalValue.OrganizationalValueId > 0 && checkpoint)
+            if (
+                ModelState.IsValid
+                && OrganizationalValue.OrganizationalValueId > 0
+                && User.HasPermission("Delete Parameters")
+            )
             {
                 _context.ReportObjectDocs
                     .Where(
@@ -336,16 +279,10 @@ namespace Atlas_Web.Pages.Settings
 
         public ActionResult OnPostCreateEstimatedRunFrequency()
         {
-            var checkpoint = UserHelpers.CheckUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name,
-                "Create Parameters"
-            );
             if (
                 ModelState.IsValid
                 && EstimatedRunFrequency.EstimatedRunFrequencyName != null
-                && checkpoint
+                && User.HasPermission("Create Parameters")
             )
             {
                 _context.Add(EstimatedRunFrequency);
@@ -357,13 +294,7 @@ namespace Atlas_Web.Pages.Settings
 
         public ActionResult OnPostCreateTag()
         {
-            var checkpoint = UserHelpers.CheckUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name,
-                "Create Parameters"
-            );
-            if (ModelState.IsValid && Tag.Name != null && checkpoint)
+            if (ModelState.IsValid && Tag.Name != null && User.HasPermission("Create Parameters"))
             {
                 _context.Add(Tag);
                 _context.SaveChanges();
@@ -374,16 +305,10 @@ namespace Atlas_Web.Pages.Settings
 
         public ActionResult OnPostDeleteEstimatedRunFrequency()
         {
-            var checkpoint = UserHelpers.CheckUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name,
-                "Delete Parameters"
-            );
             if (
                 ModelState.IsValid
                 && EstimatedRunFrequency.EstimatedRunFrequencyId > 0
-                && checkpoint
+                && User.HasPermission("Delete Parameters")
             )
             {
                 _context.ReportObjectDocs
@@ -404,13 +329,7 @@ namespace Atlas_Web.Pages.Settings
 
         public ActionResult OnPostDeleteTag()
         {
-            var checkpoint = UserHelpers.CheckUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name,
-                "Delete Parameters"
-            );
-            if (ModelState.IsValid && Tag.TagId > 0 && checkpoint)
+            if (ModelState.IsValid && Tag.TagId > 0 && User.HasPermission("Delete Parameters"))
             {
                 _context.RemoveRange(_context.ReportTagLinks.Where(x => x.TagId == Tag.TagId));
                 _context.Remove(Tag);
@@ -422,13 +341,11 @@ namespace Atlas_Web.Pages.Settings
 
         public ActionResult OnPostCreateFragility()
         {
-            var checkpoint = UserHelpers.CheckUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name,
-                "Create Parameters"
-            );
-            if (ModelState.IsValid && Fragility.FragilityName != null && checkpoint)
+            if (
+                ModelState.IsValid
+                && Fragility.FragilityName != null
+                && User.HasPermission("Create Parameters")
+            )
             {
                 _context.Add(Fragility);
                 _context.SaveChanges();
@@ -439,13 +356,11 @@ namespace Atlas_Web.Pages.Settings
 
         public ActionResult OnPostDeleteFragility()
         {
-            var checkpoint = UserHelpers.CheckUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name,
-                "Delete Parameters"
-            );
-            if (ModelState.IsValid && Fragility.FragilityId > 0 && checkpoint)
+            if (
+                ModelState.IsValid
+                && Fragility.FragilityId > 0
+                && User.HasPermission("Delete Parameters")
+            )
             {
                 _context.ReportObjectDocs
                     .Where(x => x.FragilityId.Equals(Fragility.FragilityId))
@@ -460,16 +375,10 @@ namespace Atlas_Web.Pages.Settings
 
         public ActionResult OnPostCreateMaintenanceSchedule()
         {
-            var checkpoint = UserHelpers.CheckUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name,
-                "Create Parameters"
-            );
             if (
                 ModelState.IsValid
                 && MaintenanceSchedule.MaintenanceScheduleName != null
-                && checkpoint
+                && User.HasPermission("Create Parameters")
             )
             {
                 _context.Add(MaintenanceSchedule);
@@ -481,13 +390,11 @@ namespace Atlas_Web.Pages.Settings
 
         public ActionResult OnPostDeleteMaintenanceSchedule()
         {
-            var checkpoint = UserHelpers.CheckUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name,
-                "Delete Parameters"
-            );
-            if (ModelState.IsValid && MaintenanceSchedule.MaintenanceScheduleId > 0 && checkpoint)
+            if (
+                ModelState.IsValid
+                && MaintenanceSchedule.MaintenanceScheduleId > 0
+                && User.HasPermission("Delete Parameters")
+            )
             {
                 _context.ReportObjectDocs
                     .Where(
@@ -507,13 +414,11 @@ namespace Atlas_Web.Pages.Settings
 
         public ActionResult OnPostCreateFragilityTag()
         {
-            var checkpoint = UserHelpers.CheckUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name,
-                "Create Parameters"
-            );
-            if (ModelState.IsValid && FragilityTag.FragilityTagName != null && checkpoint)
+            if (
+                ModelState.IsValid
+                && FragilityTag.FragilityTagName != null
+                && User.HasPermission("Create Parameters")
+            )
             {
                 _context.Add(FragilityTag);
                 _context.SaveChanges();
@@ -524,13 +429,11 @@ namespace Atlas_Web.Pages.Settings
 
         public ActionResult OnPostDeleteFragilityTag()
         {
-            var checkpoint = UserHelpers.CheckUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name,
-                "Delete Parameters"
-            );
-            if (ModelState.IsValid && FragilityTag.FragilityTagId > 0 && checkpoint)
+            if (
+                ModelState.IsValid
+                && FragilityTag.FragilityTagId > 0
+                && User.HasPermission("Delete Parameters")
+            )
             {
                 _context.RemoveRange(
                     _context.ReportObjectDocFragilityTags.Where(
@@ -546,16 +449,10 @@ namespace Atlas_Web.Pages.Settings
 
         public ActionResult OnPostCreateMaintenanceLogStatus()
         {
-            var checkpoint = UserHelpers.CheckUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name,
-                "Create Parameters"
-            );
             if (
                 ModelState.IsValid
                 && MaintenanceLogStatus.MaintenanceLogStatusName != null
-                && checkpoint
+                && User.HasPermission("Create Parameters")
             )
             {
                 _context.Add(MaintenanceLogStatus);
@@ -567,13 +464,11 @@ namespace Atlas_Web.Pages.Settings
 
         public ActionResult OnPostDeleteMaintenanceLogStatus()
         {
-            var checkpoint = UserHelpers.CheckUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name,
-                "Delete Parameters"
-            );
-            if (ModelState.IsValid && MaintenanceLogStatus.MaintenanceLogStatusId > 0 && checkpoint)
+            if (
+                ModelState.IsValid
+                && MaintenanceLogStatus.MaintenanceLogStatusId > 0
+                && User.HasPermission("Delete Parameters")
+            )
             {
                 _context.RemoveRange(
                     _context.MaintenanceLogs.Where(
@@ -592,13 +487,11 @@ namespace Atlas_Web.Pages.Settings
 
         public ActionResult OnPostCreateFinancialImpact()
         {
-            var checkpoint = UserHelpers.CheckUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name,
-                "Create Parameters"
-            );
-            if (ModelState.IsValid && FinancialImpact.Name != null && checkpoint)
+            if (
+                ModelState.IsValid
+                && FinancialImpact.Name != null
+                && User.HasPermission("Create Parameters")
+            )
             {
                 _context.Add(FinancialImpact);
                 _context.SaveChanges();
@@ -609,13 +502,11 @@ namespace Atlas_Web.Pages.Settings
 
         public ActionResult OnPostDeleteFinancialImpact()
         {
-            var checkpoint = UserHelpers.CheckUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name,
-                "Delete Parameters"
-            );
-            if (ModelState.IsValid && FinancialImpact.FinancialImpactId > 0 && checkpoint)
+            if (
+                ModelState.IsValid
+                && FinancialImpact.FinancialImpactId > 0
+                && User.HasPermission("Delete Parameters")
+            )
             {
                 _context.Collections
                     .Where(x => x.FinancialImpact.Equals(FinancialImpact.FinancialImpactId))
@@ -634,13 +525,11 @@ namespace Atlas_Web.Pages.Settings
 
         public ActionResult OnPostCreateStrategicImportance()
         {
-            var checkpoint = UserHelpers.CheckUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name,
-                "Create Parameters"
-            );
-            if (ModelState.IsValid && StrategicImportance.Name != null && checkpoint)
+            if (
+                ModelState.IsValid
+                && StrategicImportance.Name != null
+                && User.HasPermission("Create Parameters")
+            )
             {
                 _context.Add(StrategicImportance);
                 _context.SaveChanges();
@@ -651,13 +540,11 @@ namespace Atlas_Web.Pages.Settings
 
         public ActionResult OnPostDeleteStrategicImportance()
         {
-            var checkpoint = UserHelpers.CheckUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name,
-                "Delete Parameters"
-            );
-            if (ModelState.IsValid && StrategicImportance.StrategicImportanceId > 0 && checkpoint)
+            if (
+                ModelState.IsValid
+                && StrategicImportance.StrategicImportanceId > 0
+                && User.HasPermission("Delete Parameters")
+            )
             {
                 _context.Collections
                     .Where(

@@ -40,6 +40,9 @@
     <ProjectReference Include="..\web\web.csproj" />
   </ItemGroup>
   <ItemGroup>
+     <InternalsVisibleTo Include="web" />
+</ItemGroup>
+  <ItemGroup>
     <Content Include="..\.env*">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

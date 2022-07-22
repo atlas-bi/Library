@@ -1,13 +1,10 @@
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Atlas_Web.Models;
-using System.Collections.Generic;
 using Atlas_Web.Helpers;
+using Atlas_Web.Authorization;
 using Microsoft.Extensions.Caching.Memory;
-using System;
 
 namespace Atlas_Web.Pages.Collections
 {
@@ -87,13 +84,7 @@ namespace Atlas_Web.Pages.Collections
 
         public async Task<ActionResult> OnGetDeleteCollection(int Id)
         {
-            var checkpoint = UserHelpers.CheckUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name,
-                "Delete Project"
-            );
-            if (!checkpoint)
+            if (!User.HasPermission("Delete Project"))
             {
                 return RedirectToPage(
                     "/Collections/Index",

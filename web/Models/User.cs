@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Microsoft.AspNetCore.Identity;
 
 namespace Atlas_Web.Models
 {
-    public partial class User
+    public partial class User //: IdentityUser
     {
         public User()
         {

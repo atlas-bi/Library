@@ -1,14 +1,9 @@
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Atlas_Web.Models;
-using Microsoft.AspNetCore.Http;
-using System.IO;
-using System.Collections.Generic;
 using Atlas_Web.Helpers;
+using Atlas_Web.Authorization;
 using Microsoft.Extensions.Caching.Memory;
 using Newtonsoft.Json;
 
@@ -53,14 +48,7 @@ namespace Atlas_Web.Pages.Reports
 
         public async Task<IActionResult> OnGetAsync(int id)
         {
-            var checkpoint = UserHelpers.CheckUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name,
-                "Edit Project"
-            );
-
-            if (!checkpoint)
+            if (!User.HasPermission("Edit Project"))
             {
                 return RedirectToPage(
                     "/Reports/Index",
@@ -75,7 +63,7 @@ namespace Atlas_Web.Pages.Reports
                     {
                         ReportObjectId = id,
                         CreatedDateTime = DateTime.Now,
-                        CreatedBy = UserHelpers.GetUser(_cache, _context, User.Identity.Name).UserId
+                        CreatedBy = User.GetUserId()
                     }
                 );
                 await _context.SaveChangesAsync();
@@ -119,14 +107,7 @@ namespace Atlas_Web.Pages.Reports
 
         public async Task<IActionResult> OnPostAsync(int id)
         {
-            var checkpoint = UserHelpers.CheckUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name,
-                "Edit Project"
-            );
-
-            if (!checkpoint)
+            if (!User.HasPermission("Edit Project"))
             {
                 return RedirectToPage(
                     "/Reports/Index",
@@ -156,7 +137,7 @@ namespace Atlas_Web.Pages.Reports
             OldReport.Hidden = Report.Hidden;
             OldReport.LastUpdateDateTime = DateTime.Now;
             OldReport.EnabledForHyperspace = Report.EnabledForHyperspace;
-            OldReport.UpdatedBy = UserHelpers.GetUser(_cache, _context, User.Identity.Name).UserId;
+            OldReport.UpdatedBy = User.GetUserId();
 
             await _context.SaveChangesAsync();
 
@@ -288,8 +269,7 @@ namespace Atlas_Web.Pages.Reports
             {
                 MaintenanceLog.MaintenanceDate = DateTime.Now;
                 MaintenanceLog.ReportObjectId = id;
-                MaintenanceLog.MaintainerId =
-                    UserHelpers.GetUser(_cache, _context, User.Identity.Name).UserId;
+                MaintenanceLog.MaintainerId = User.GetUserId();
                 await _context.AddAsync(MaintenanceLog);
                 await _context.SaveChangesAsync();
             }

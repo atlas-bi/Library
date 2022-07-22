@@ -1,18 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Atlas_Web.Models;
 using Atlas_Web.Helpers;
+using Atlas_Web.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Newtonsoft.Json;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Caching.Memory;
 using SolrNet;
 using SolrNet.Commands.Parameters;
 using System.Text.RegularExpressions;
-using System.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System.Web;
 
@@ -69,7 +64,6 @@ namespace Atlas_Web.Pages.Search
 
         [BindProperty(SupportsGet = true)]
         public List<string> AppliedFilters { get; set; }
-        public User PublicUser { get; set; }
 
         public static string BuildSearchString(
             string search_string,
@@ -276,21 +270,13 @@ namespace Atlas_Web.Pages.Search
 
             static ISolrQuery[] BuildFilterQuery(
                 Microsoft.AspNetCore.Http.IQueryCollection query,
-                IMemoryCache _cache,
-                Atlas_WebContext _context,
                 System.Security.Claims.ClaimsPrincipal User
             )
             {
                 var FilterQuery = new List<SolrQuery>();
 
-                var checkpoint = UserHelpers.CheckUserPermissions(
-                    _cache,
-                    _context,
-                    User.Identity.Name,
-                    "Show Advanced Search"
-                );
                 if (
-                    !checkpoint
+                    !User.HasPermission("Show Advanced Search")
                     || !query.ContainsKey("advanced")
                     || query.ContainsKey("advanced") && query["advanced"] != "Y"
                 )
@@ -351,7 +337,7 @@ namespace Atlas_Web.Pages.Search
                 }
 
                 var search_string_built = BuildSearchString(Query, Request.Query);
-                var search_filter_built = BuildFilterQuery(Request.Query, _cache, _context, User);
+                var search_filter_built = BuildFilterQuery(Request.Query, User);
 
                 var results = await _solr.QueryAsync(
                     new SolrQuery(search_string_built),
@@ -378,15 +364,9 @@ namespace Atlas_Web.Pages.Search
                     }
                 );
 
-                var checkpoint = UserHelpers.CheckUserPermissions(
-                    _cache,
-                    _context,
-                    User.Identity.Name,
-                    "Show Advanced Search"
-                );
                 var advanced = "N";
                 if (
-                    checkpoint
+                    User.HasPermission("Show Advanced Search")
                     && Request.Query.ContainsKey("advanced")
                     && Request.Query["advanced"] == "Y"
                 )

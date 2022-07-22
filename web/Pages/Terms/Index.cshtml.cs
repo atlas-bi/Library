@@ -1,17 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using Atlas_Web.Helpers;
 using Atlas_Web.Models;
-using Microsoft.AspNetCore.Http;
+using Atlas_Web.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Configuration;
 
 namespace Atlas_Web.Pages.Terms
 {
@@ -169,25 +162,11 @@ namespace Atlas_Web.Pages.Terms
                 );
             }
 
-            var checkpoint_approved = UserHelpers.CheckUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name,
-                "Delete Approved Terms"
-            );
-
-            var checkpoint_unapproved = UserHelpers.CheckUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name,
-                "Delete Unapproved Terms"
-            );
-
             Term OldTerm = _context.Terms.Where(x => x.TermId == Id).FirstOrDefault();
 
             if (
-                (OldTerm.ApprovedYn == "Y" && !checkpoint_approved)
-                || (OldTerm.ApprovedYn != "Y" && !checkpoint_unapproved)
+                (OldTerm.ApprovedYn == "Y" && !User.HasPermission("Delete Approved Terms"))
+                || (OldTerm.ApprovedYn != "Y" && !User.HasPermission("Delete Unapproved Terms"))
             )
             {
                 return RedirectToPage(

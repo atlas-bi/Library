@@ -1,11 +1,9 @@
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Atlas_Web.Models;
-using System.Collections.Generic;
 using Atlas_Web.Helpers;
+using Atlas_Web.Authorization;
 using Microsoft.Extensions.Caching.Memory;
 
 namespace Atlas_Web.Pages.Settings
@@ -67,18 +65,12 @@ namespace Atlas_Web.Pages.Settings
 
         public ActionResult OnGetDeleteRole(int Id)
         {
-            var checkpoint = UserHelpers.CheckUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name,
-                "Edit Role Permissions"
-            );
             // cannot delete admin or user role
             if (
                 Id != 1
                 && Id != 5
                 && _context.UserRoles.Where(x => x.UserRolesId == Id).First().Name != "Director"
-                && checkpoint
+                && User.HasPermission("Edit Role Permissions")
             )
             {
                 // remove links, then remove role
@@ -98,15 +90,9 @@ namespace Atlas_Web.Pages.Settings
 
         public ActionResult OnPostCreateRole()
         {
-            var checkpoint = UserHelpers.CheckUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name,
-                "Edit Role Permissions"
-            );
             if (
                 ModelState.IsValid
-                && checkpoint
+                && User.HasPermission("Edit Role Permissions")
                 && UserRole.Name != "Administrator"
                 && UserRole.Name != "Director"
             )
@@ -120,13 +106,7 @@ namespace Atlas_Web.Pages.Settings
 
         public ActionResult OnPostUpdatePermissions(int RoleId, int PermissionId, int Type)
         {
-            var checkpoint = UserHelpers.CheckUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name,
-                "Edit Role Permissions"
-            );
-            if (checkpoint)
+            if (User.HasPermission("Edit Role Permissions"))
             {
                 // type 1 = add
                 // type 2 = remove

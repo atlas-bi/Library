@@ -1,17 +1,12 @@
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Atlas_Web.Models;
 using Atlas_Web.Helpers;
-using Microsoft.AspNetCore.Http;
 using System.Text.RegularExpressions;
-using System.Collections.Generic;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Caching.Memory;
-using Newtonsoft.Json.Linq;
+using Atlas_Web.Authorization;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Atlas_Web.Pages.Users
 {
@@ -20,12 +15,19 @@ namespace Atlas_Web.Pages.Users
         private readonly Atlas_WebContext _context;
         private readonly IConfiguration _config;
         private readonly IMemoryCache _cache;
+        private readonly IAuthorizationService _authorizationService;
 
-        public IndexModel(Atlas_WebContext context, IConfiguration config, IMemoryCache cache)
+        public IndexModel(
+            Atlas_WebContext context,
+            IConfiguration config,
+            IMemoryCache cache,
+            IAuthorizationService authorizationService
+        )
         {
             _context = context;
             _config = config;
             _cache = cache;
+            _authorizationService = authorizationService;
         }
 
         public class FolderList
@@ -162,34 +164,20 @@ namespace Atlas_Web.Pages.Users
         public List<SubscribedReportsData> SubscribedReports { get; set; }
 
         [BindProperty]
-        public MyRole MyRole { get; set; }
-
-        [BindProperty]
         public UserFavoriteFolder Folder { get; set; }
-
-        [BindProperty]
-        public MyRole AsAdmin { get; set; }
 
         public async Task<ActionResult> OnGetAsync(int? id)
         {
-            UserDetails = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
-
-            // for the viewing user, not the viewed user
-            MyId = UserDetails.UserId;
+            MyId = User.GetUserId();
 
             // can user view others?
-            var checkpoint = UserHelpers.CheckUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name,
-                "View Other User"
-            );
             UserId = MyId;
-            if (checkpoint)
+            if (User.HasPermission("View Other User"))
             {
                 UserId = id ?? MyId;
-                UserDetails = _context.Users.Where(x => x.UserId == UserId).FirstOrDefault();
             }
+
+            UserDetails = await _context.Users.Where(x => x.UserId == UserId).FirstOrDefaultAsync();
 
             ViewData["DefaultReportTypes"] = await _context.ReportObjectTypes
                 .Where(v => v.Visible == "Y")
@@ -201,13 +189,12 @@ namespace Atlas_Web.Pages.Users
 
         public ActionResult OnPostCreateFolder()
         {
-            var MyUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
             if (ModelState.IsValid)
             {
                 _context.Add(Folder);
                 _context.SaveChanges();
-                _cache.Remove("FavoriteFolders-" + MyUser.UserId);
-                _cache.Remove("FavoriteReports-" + MyUser.UserId);
+                _cache.Remove("FavoriteFolders-" + User.GetUserId());
+                _cache.Remove("FavoriteReports-" + User.GetUserId());
                 return Content(Folder.UserFavoriteFolderId.ToString());
             }
             return Content("error");
@@ -215,15 +202,14 @@ namespace Atlas_Web.Pages.Users
 
         public ActionResult OnPostDeleteFolder()
         {
-            var MyUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
             if (ModelState.IsValid)
             {
                 // remove any report links to this folder
 
                 _context.Remove(Folder);
                 _context.SaveChanges();
-                _cache.Remove("FavoriteFolders-" + MyUser.UserId);
-                _cache.Remove("FavoriteReports-" + MyUser.UserId);
+                _cache.Remove("FavoriteFolders-" + User.GetUserId());
+                _cache.Remove("FavoriteReports-" + User.GetUserId());
                 return Content(Folder.UserFavoriteFolderId.ToString());
             }
             return Content("error");
@@ -233,16 +219,15 @@ namespace Atlas_Web.Pages.Users
         {
             try
             {
-                var MyUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
                 foreach (var l in package)
                 {
                     var id = (int)l.FolderId;
                     _context.UserFavoriteFolders
-                        .Where(x => x.UserFavoriteFolderId == id && x.UserId == MyUser.UserId)
+                        .Where(x => x.UserFavoriteFolderId == id && x.UserId == User.GetUserId())
                         .FirstOrDefault().FolderRank = l.FolderRank;
                 }
                 _context.SaveChanges();
-                _cache.Remove("FavoriteFolders-" + MyUser.UserId);
+                _cache.Remove("FavoriteFolders-" + User.GetUserId());
                 return Content("ok");
             }
             catch
@@ -253,11 +238,9 @@ namespace Atlas_Web.Pages.Users
 
         public async Task<ActionResult> OnGetSearchHistory()
         {
-            var MyUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
-
             ViewData["SearchHistory"] = await (
                 from a in _context.Analytics
-                where a.Pathname.ToLower() == "/search" && a.UserId == MyUser.UserId
+                where a.Pathname.ToLower() == "/search" && a.UserId == User.GetUserId()
                 orderby a.AccessDateTime descending
                 select new SearchHistoryData
                 {
@@ -292,26 +275,14 @@ namespace Atlas_Web.Pages.Users
 
         public async Task<ActionResult> OnGetFavorites(int? id)
         {
-            UserId = UserHelpers.GetUser(_cache, _context, User.Identity.Name).UserId;
+            MyId = User.GetUserId();
 
             // can user view others?
-            var checkpoint = UserHelpers.CheckUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name,
-                "View Other User"
-            );
-
-            if (checkpoint)
+            if (User.HasPermission("View Other User"))
             {
                 UserId = id ?? MyId;
             }
 
-            ViewData["Permissions"] = UserHelpers.GetUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name
-            );
             ViewData["MyId"] = MyId;
             ViewData["UserId"] = UserId;
 
@@ -372,22 +343,16 @@ namespace Atlas_Web.Pages.Users
                                 EpicMasterFile = grp.Key.EpicMasterFile,
                                 ReportServerPath = grp.Key.ReportServerPath,
                                 SourceServer = grp.Key.SourceServer,
-                                ReportUrl = ReportLinkHelpers.ReportUrlFromParams(
+                                ReportUrl = grp.Key.RunReportUrl(
                                     HttpContext,
-                                    grp.Key,
-                                    _context,
-                                    User.Identity.Name
+                                    _config,
+                                    _authorizationService.AuthorizeAsync(
+                                        HttpContext.User,
+                                        grp.Key,
+                                        "ReportRunPolicy"
+                                    ).IsCompletedSuccessfully
                                 ),
-                                EditReportUrl = ReportLinkHelpers.EditReportFromParams(
-                                    _config["AppSettings:org_domain"],
-                                    HttpContext,
-                                    grp.Key.ReportServerPath,
-                                    grp.Key.SourceServer,
-                                    grp.Key.EpicMasterFile,
-                                    grp.Key.EpicReportTemplateId.ToString(),
-                                    grp.Key.EpicRecordId.ToString(),
-                                    grp.Key.OrphanedReportObjectYn
-                                ),
+                                EditReportUrl = grp.Key.EditReportUrl(HttpContext, _config),
                             }
                         ).Take(10).ToListAsync();
                     }
@@ -406,51 +371,31 @@ namespace Atlas_Web.Pages.Users
             return new PartialViewResult { ViewName = "Sections/_Favorites", ViewData = ViewData };
         }
 
-        public ActionResult OnGetChangeRole(int Id, string Url)
+        public async Task<ActionResult> OnGetChangeRole(string Id, string Url)
         {
-            var MyUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
-            if (!UserHelpers.IsAdmin(_context, User.Identity.Name))
+            if (!User.IsInRole("Administrator"))
             {
-                return Redirect("/");
+                return Redirect(Url);
             }
 
-            // clear cache
-            var oldPerm = _cache.Get<List<string>>("MasterUserPermissions");
-            for (var x = 0; x < oldPerm.Count; x++)
+            var adminDisabled = await _context.UserPreferences.SingleOrDefaultAsync(
+                x => x.UserId == User.GetUserId() && x.ItemType == "AdminDisabled"
+            );
+
+            if (adminDisabled == null)
             {
-                _cache.Remove(oldPerm[x]);
+                await _context.AddAsync(
+                    new UserPreference { UserId = User.GetUserId(), ItemType = "AdminDisabled" }
+                );
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                _context.Remove(adminDisabled);
+                await _context.SaveChangesAsync();
             }
 
-            var MyItemType = "ActiveRole";
-            var CurrentState = _context.UserPreferences
-                .Where(x => x.UserId == MyUser.UserId && x.ItemType == MyItemType)
-                .FirstOrDefault();
-            try
-            {
-                if (CurrentState != null)
-                {
-                    CurrentState.ItemValue = Id;
-                    _context.Attach(CurrentState).State = EntityState.Modified;
-                }
-                else
-                {
-                    _context.Add(
-                        new UserPreference
-                        {
-                            UserId = MyUser.UserId,
-                            ItemType = MyItemType,
-                            ItemValue = Id
-                        }
-                    );
-                }
-                _context.SaveChanges();
-
-                return Redirect(Url ?? "/");
-            }
-            catch
-            {
-                return Redirect(Url ?? "/");
-            }
+            return Redirect(Url);
         }
 
         public ActionResult OnGetSharedObjects()
@@ -464,11 +409,10 @@ namespace Atlas_Web.Pages.Users
             );
             HttpContext.Response.Headers.Add("Pragma", "no-cache"); // HTTP 1.0.
             HttpContext.Response.Headers.Add("Expires", "0"); // Proxies.
-            var MyUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
 
             ViewData["SharedToMe"] = (
                 from o in _context.SharedItems
-                where o.SharedToUserId == MyUser.UserId
+                where o.SharedToUserId == User.GetUserId()
                 orderby o.ShareDate descending
                 select new SharedObjectsData
                 {
@@ -484,7 +428,7 @@ namespace Atlas_Web.Pages.Users
             ).ToList();
             ViewData["SharedFromMe"] = (
                 from o in _context.SharedItems
-                where o.SharedFromUserId == MyUser.UserId
+                where o.SharedFromUserId == User.GetUserId()
                 select new SharedObjectsData
                 {
                     Id = o.Id,
@@ -515,16 +459,10 @@ namespace Atlas_Web.Pages.Users
 
         public async Task<ActionResult> OnGetGroups(int? id)
         {
-            MyId = UserHelpers.GetUser(_cache, _context, User.Identity.Name).UserId;
+            MyId = User.GetUserId();
 
             // can user view others?
-            var checkpoint = UserHelpers.CheckUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name,
-                "View Other User"
-            );
-            if (checkpoint)
+            if (User.HasPermission("View Other User"))
             {
                 UserId = id ?? MyId;
             }
@@ -532,11 +470,7 @@ namespace Atlas_Web.Pages.Users
             {
                 UserId = MyId;
             }
-            ViewData["Permissions"] = UserHelpers.GetUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name
-            );
+
             ViewData["MyId"] = MyId;
             ViewData["UserId"] = UserId;
 
@@ -565,16 +499,10 @@ namespace Atlas_Web.Pages.Users
 
         public async Task<ActionResult> OnGetSubscriptions(int? id)
         {
-            MyId = UserHelpers.GetUser(_cache, _context, User.Identity.Name).UserId;
+            MyId = User.GetUserId();
 
             // can user view others?
-            var checkpoint = UserHelpers.CheckUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name,
-                "View Other User"
-            );
-            if (checkpoint)
+            if (User.HasPermission("View Other User"))
             {
                 UserId = id ?? MyId;
             }
@@ -582,11 +510,7 @@ namespace Atlas_Web.Pages.Users
             {
                 UserId = MyId;
             }
-            ViewData["Permissions"] = UserHelpers.GetUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name
-            );
+
             ViewData["MyId"] = MyId;
             ViewData["UserId"] = UserId;
 
@@ -631,16 +555,10 @@ namespace Atlas_Web.Pages.Users
 
         public async Task<ActionResult> OnGetHistory(int? id)
         {
-            MyId = UserHelpers.GetUser(_cache, _context, User.Identity.Name).UserId;
+            MyId = User.GetUserId();
 
             // can user view others?
-            var checkpoint = UserHelpers.CheckUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name,
-                "View Other User"
-            );
-            if (checkpoint)
+            if (User.HasPermission("View Other User"))
             {
                 UserId = id ?? MyId;
             }
@@ -648,11 +566,7 @@ namespace Atlas_Web.Pages.Users
             {
                 UserId = MyId;
             }
-            ViewData["Permissions"] = UserHelpers.GetUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name
-            );
+
             ViewData["MyId"] = MyId;
             ViewData["UserId"] = UserId;
 

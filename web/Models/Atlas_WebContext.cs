@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace Atlas_Web.Models
 {
@@ -1931,6 +1928,7 @@ namespace Atlas_Web.Models
                 entity =>
                 {
                     entity.ToTable("User");
+                    entity.HasKey(k => k.UserId);
 
                     entity.HasIndex(e => e.UserId, "userid").IsUnique();
 

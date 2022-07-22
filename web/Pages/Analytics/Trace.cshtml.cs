@@ -1,15 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Atlas_Web.Models;
 using Atlas_Web.Helpers;
+using Atlas_Web.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Linq;
 using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Configuration;
 
 namespace Atlas_Web.Pages.Analytics
 {
@@ -87,7 +83,7 @@ namespace Atlas_Web.Pages.Analytics
                 .ReadToEndAsync()
                 .ConfigureAwait(false);
             var package = JObject.Parse(body);
-            var MyUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
+
             if (package["lg"] != null)
             {
                 foreach (var x in package["lg"])
@@ -95,7 +91,7 @@ namespace Atlas_Web.Pages.Analytics
                     await _context.AddAsync(
                         new AnalyticsTrace
                         {
-                            UserId = MyUser.UserId,
+                            UserId = User.GetUserId(),
                             Level = x.Value<int>("l"),
                             Message = x.Value<string>("m"),
                             Logger = x.Value<string>("n"),

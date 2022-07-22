@@ -888,7 +888,7 @@ namespace Atlas_Web.Migrations
 
                     b.HasIndex(new[] { "ReportId" }, "reportid");
 
-                    b.ToTable("ReportGroupsMemberships");
+                    b.ToTable("ReportGroupsMemberships", (string)null);
                 });
 
             modelBuilder.Entity("Atlas_Web.Models.ReportManageEngineTicket", b =>
@@ -1117,7 +1117,7 @@ namespace Atlas_Web.Migrations
                     b.HasIndex(new[] { "ReportObjectId" }, "reportid")
                         .HasDatabaseName("reportid2");
 
-                    b.ToTable("ReportObjectAttachments");
+                    b.ToTable("ReportObjectAttachments", (string)null);
                 });
 
             modelBuilder.Entity("Atlas_Web.Models.ReportObjectDoc", b =>
@@ -1372,7 +1372,7 @@ namespace Atlas_Web.Migrations
                     b.HasIndex(new[] { "ReportObjectId" }, "reportobjectid")
                         .HasDatabaseName("reportobjectid1");
 
-                    b.ToTable("ReportObjectParameters");
+                    b.ToTable("ReportObjectParameters", (string)null);
                 });
 
             modelBuilder.Entity("Atlas_Web.Models.ReportObjectQuery", b =>
@@ -1582,7 +1582,7 @@ namespace Atlas_Web.Migrations
 
                     b.HasIndex(new[] { "ReportObjectId", "UserId" }, "reportid + userid");
 
-                    b.ToTable("ReportObjectSubscriptions");
+                    b.ToTable("ReportObjectSubscriptions", (string)null);
                 });
 
             modelBuilder.Entity("Atlas_Web.Models.ReportObjectTag", b =>
@@ -1607,7 +1607,7 @@ namespace Atlas_Web.Migrations
 
                     b.HasIndex(new[] { "TagId" }, "tagid");
 
-                    b.ToTable("ReportObjectTags");
+                    b.ToTable("ReportObjectTags", (string)null);
                 });
 
             modelBuilder.Entity("Atlas_Web.Models.ReportObjectTagMembership", b =>
@@ -1636,7 +1636,7 @@ namespace Atlas_Web.Migrations
 
                     b.HasIndex(new[] { "ReportObjectId", "TagId" }, "tagid+reportid");
 
-                    b.ToTable("ReportObjectTagMemberships");
+                    b.ToTable("ReportObjectTagMemberships", (string)null);
                 });
 
             modelBuilder.Entity("Atlas_Web.Models.ReportObjectType", b =>
@@ -1696,7 +1696,7 @@ namespace Atlas_Web.Migrations
 
                     b.HasIndex(new[] { "ReportId", "TagId" }, "report_tag");
 
-                    b.ToTable("ReportTagLinks");
+                    b.ToTable("ReportTagLinks", (string)null);
                 });
 
             modelBuilder.Entity("Atlas_Web.Models.RolePermission", b =>
@@ -2108,7 +2108,7 @@ namespace Atlas_Web.Migrations
 
                     b.HasIndex(new[] { "Name" }, "tagname");
 
-                    b.ToTable("Tags");
+                    b.ToTable("Tags", (string)null);
                 });
 
             modelBuilder.Entity("Atlas_Web.Models.Term", b =>
@@ -2315,7 +2315,7 @@ namespace Atlas_Web.Migrations
                     b.HasIndex(new[] { "GroupId" }, "groupid")
                         .IsUnique();
 
-                    b.ToTable("UserGroups");
+                    b.ToTable("UserGroups", (string)null);
                 });
 
             modelBuilder.Entity("Atlas_Web.Models.UserGroupsMembership", b =>

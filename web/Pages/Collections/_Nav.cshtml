@@ -10,7 +10,7 @@
 
     <li>
         <a class="has-tooltip-arrow has-tooltip-right star" data-tooltip="Star this report" data-href="/users/favorites/?handler=Edit&type=collection&id=@Model.Collection.DataProjectId">
-            @if (Model.Collection.StarredCollections.Any(x => x.Ownerid == ViewBag.PublicUser.UserId))
+            @if (Model.Collection.StarredCollections.Any(x => x.Ownerid == User.GetUserId()))
             {
                 <span class="icon is-large has-text-gold ">
                     <i class="fas fa-lg fa-star is-relative">
@@ -50,7 +50,7 @@
         </li>
     }
 
-    @if (ViewBag.Permissions.Contains("Create Project"))
+    @if (User.HasPermission("Create Project"))
     {
     <li>
         <a class="is-block has-tooltip-arrow has-tooltip-right" href="/Collections/New" data-tooltip="Create New Collections">
@@ -59,7 +59,7 @@
             </span>
         </a>
     </li>}
-    @if (ViewBag.Permissions.Contains("Edit Project"))
+    @if (User.HasPermission("Edit Project"))
     {
     <li>
         <a class="is-block has-tooltip-arrow has-tooltip-right" href="/Collections/Edit/?id=@Model.Collection.DataProjectId" data-tooltip="Open Atlas Editor">
@@ -69,7 +69,7 @@
         </a>
     </li>}
 
-    @if (ViewBag.Permissions.Contains("Delete Project"))
+    @if (User.HasPermission("Delete Project"))
     {
     <li>
         <a class="is-block has-tooltip-arrow has-tooltip-right" data-tooltip="Delete this Collection" href="/Collections?handler=DeleteCollection&Id=@Model.Collection.DataProjectId" onclick="return confirm('Are you sure you want to remove this?');">

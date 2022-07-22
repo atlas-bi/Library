@@ -1,14 +1,9 @@
 using Atlas_Web.Helpers;
 using Atlas_Web.Models;
+using Atlas_Web.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Atlas_Web.Pages.Terms
 {
@@ -31,14 +26,7 @@ namespace Atlas_Web.Pages.Terms
 
         public IActionResult OnGetAsync()
         {
-            var checkpoint = UserHelpers.CheckUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name,
-                "Create New Terms"
-            );
-
-            if (!checkpoint)
+            if (!User.HasPermission("Create New Terms"))
             {
                 return RedirectToPage(
                     "/Terms/Index",
@@ -51,21 +39,7 @@ namespace Atlas_Web.Pages.Terms
 
         public IActionResult OnPostAsync(int id)
         {
-            var checkpoint = UserHelpers.CheckUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name,
-                "Create New Terms"
-            );
-
-            var checkpoint_approve = UserHelpers.CheckUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name,
-                "Approve Terms"
-            );
-
-            if (!checkpoint)
+            if (!User.HasPermission("Create New Terms"))
             {
                 return RedirectToPage(
                     "/Terms/Index",
@@ -82,13 +56,13 @@ namespace Atlas_Web.Pages.Terms
             }
 
             // update last update values & values that were posted
-            Term.UpdatedByUserId = UserHelpers.GetUser(_cache, _context, User.Identity.Name).UserId;
+            Term.UpdatedByUserId = User.GetUserId();
             Term.LastUpdatedDateTime = DateTime.Now;
 
-            if (checkpoint_approve && Term.ApprovedYn == "Y")
+            if (User.HasPermission("Approve Terms") && Term.ApprovedYn == "Y")
             {
                 Term.ApprovalDateTime = DateTime.Now;
-                Term.ApprovedByUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
+                Term.ApprovedByUserId = User.GetUserId();
             }
 
             _context.Add(Term);

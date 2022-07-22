@@ -1,20 +1,26 @@
 @model Atlas_Web.Pages.Reports.IndexModel
+@inject IConfiguration Configuration
+@inject IAuthorizationService Authorization
 
 <ul>
+    @{
+        string RunReportUrl = Model.Report.RunReportUrl(Context, Configuration, Authorization.AuthorizeAsync(Context.User,Model.Report, "ReportRunPolicy").IsCompletedSuccessfully);
+    }
     @if (Model.Report.ReportObjectAttachments.Any())
     {
         <li>
-            <a class="is-block has-tooltip-arrow has-tooltip-right js-modal-trigger"  data-target="report-run-@Model.Report.ReportObjectId" data-tooltip="Run Report" data-runurl="@ViewBag.RunReportUrl">
+            <a class="is-block has-tooltip-arrow has-tooltip-right js-modal-trigger"  data-target="report-run-@Model.Report.ReportObjectId" data-tooltip="Run Report" data-runurl="@RunReportUrl">
                 <span class="icon is-large has-text-success">
                     <i class="far fa-2_3x fa-circle-play"></i>
                 </span>
             </a>
         </li>
     }
-    else if (ViewBag.RunReportUrl != null)
+
+    else if (!string.IsNullOrEmpty(RunReportUrl))
     {
         <li>
-            <a class="is-block has-tooltip-arrow has-tooltip-right" target="_blank" data-tooltip="Run Report" href="@ViewBag.RunReportUrl">
+            <a class="is-block has-tooltip-arrow has-tooltip-right" target="_blank" data-tooltip="Run Report" href="@RunReportUrl">
                 <span class="icon is-large has-text-success">
                     <i class="far fa-2_3x fa-circle-play"></i>
                 </span>
@@ -33,7 +39,7 @@
                 </a>
             </li>
         }
-        else if (!string.IsNullOrEmpty(ViewBag.EditReportUrl))
+        else if (!string.IsNullOrEmpty(Model.Report.EditReportUrl(Context, Configuration)))
         {
             <li>
                 <a class="is-disabled is-block has-tooltip-arrow has-tooltip-right" data-tooltip="Open in report library.">
@@ -65,7 +71,7 @@
 
     <li>
         <a class="is-block has-tooltip-arrow has-tooltip-right star" data-tooltip="Star this report" data-href="/users/favorites/?handler=Edit&type=report&id=@Model.Report.ReportObjectId">
-            @if (Model.Report.StarredReports.Any(x => x.Ownerid == ViewBag.PublicUser.UserId))
+            @if (Model.Report.StarredReports.Any(x => x.Ownerid == User.GetUserId()))
             {
                 <span class="icon is-large has-text-gold ">
                     <i class="fas fa-lg fa-star is-relative">
@@ -84,7 +90,7 @@
         </a>
     </li>
 
-    @if (ViewBag.Permissions.Contains("Edit Report Documentation"))
+    @if (User.HasPermission("Edit Report Documentation"))
     {
         <li>
             <a class="is-block has-tooltip-arrow has-tooltip-right" id="open-editor" href="/reports/edit/?id=@Model.Report.ReportObjectId" data-tooltip="Open Atlas Editor">
@@ -126,10 +132,10 @@
             </a>
         </li>
     }
-    @if (ViewBag.Permissions.Contains("Open In Editor") && ViewBag.EditReportUrl != null)
+    @if (User.HasPermission("Open In Editor") && !string.IsNullOrEmpty(Model.Report.EditReportUrl(Context,Configuration)))
     {
         <li>
-            <a class="is-block has-tooltip-arrow has-tooltip-right" data-tooltip="Open Report Editor" target="_blank" href="@ViewBag.EditReportUrl">
+            <a class="is-block has-tooltip-arrow has-tooltip-right" data-tooltip="Open Report Editor" target="_blank" href="@Model.Report.EditReportUrl(Context,Configuration)">
                 <span class="icon has-text-grey is-large ">
                     <i class="fas fa-lg fa-arrow-up-right-from-square"></i>
                 </span>
@@ -137,10 +143,10 @@
         </li>
     }
 
-    @if (ViewBag.Permissions.Contains("Open In Editor") && ViewBag.ManageReportUrl != null)
+    @if (User.HasPermission("Open In Editor") && Model.Report.ManageReportUrl(Context, Configuration) != null)
     {
         <li>
-            <a class="is-block has-tooltip-arrow has-tooltip-right" data-tooltip="Manage Report" rel="noopener" target="_blank" href="@ViewBag.ManageReportUrl">
+            <a class="is-block has-tooltip-arrow has-tooltip-right" data-tooltip="Manage Report" rel="noopener" target="_blank" href="@Model.Report.ManageReportUrl(Context, Configuration)">
                 <span class="icon has-text-grey is-large ">
                     <i class="fas fa-lg fa-gears"></i>
                 </span>

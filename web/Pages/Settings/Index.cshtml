@@ -17,7 +17,7 @@
 <div class="columns">
     <div class="column is-one-quarter is-sticky is-align-self-flex-start">
         <nav class="panel">
-            @if (ViewBag.Permissions.Contains("Edit Role Permissions"))
+            @if (User.HasPermission("Edit Role Permissions"))
             {
                 <a class="panel-block is-active panel-tab py-3" href="#roles">
                     <span class="icon is-medium mr-2">
@@ -26,16 +26,16 @@
                     Role Configuration
                 </a>
             }
-            @if (ViewBag.Permissions.Contains("Edit User Permissions"))
+            @if (User.HasPermission("Edit User Permissions"))
             {
-                <a class="panel-block panel-tab py-3 @if (!ViewBag.Permissions.Contains("Edit Role Permissions")){<text> is-active</text>}" href="#user-roles">
+                <a class="panel-block panel-tab py-3 @if (!User.HasPermission("Edit Role Permissions")){<text> is-active</text>}" href="#user-roles">
                     <span class="icon is-medium mr-2">
                         <i class="fas fa-lg fa-user-lock" aria-hidden="true"></i>
                     </span>
                     User Roles
                 </a>
             }
-            <a class="panel-block panel-tab py-3 @if (!ViewBag.Permissions.Contains("Edit Role Permissions") && !ViewBag.Permissions.Contains("Edit User Permissions")){<text> is-active</text>}" href="#meta-fields">
+            <a class="panel-block panel-tab py-3 @if (!User.HasPermission("Edit Role Permissions") && !User.HasPermission("Edit User Permissions")){<text> is-active</text>}" href="#meta-fields">
                 <span class="icon is-medium mr-2">
                     <i class="fas fa-lg fa-list-ul" aria-hidden="true"></i>
                 </span>
@@ -69,19 +69,19 @@
     </div>
     <div class="column">
         <div class="box mb-5">
-            @if (ViewBag.Permissions.Contains("Edit Role Permissions"))
+            @if (User.HasPermission("Edit Role Permissions"))
             {
                 <div class="panel-tab-data is-active" id="roles">
                     <div data-ajax="yes" data-url="/settings/roles/"></div>
                 </div>
             }
-            @if (ViewBag.Permissions.Contains("Edit User Permissions"))
+            @if (User.HasPermission("Edit User Permissions"))
             {
-                <div class="panel-tab-data  @if (!ViewBag.Permissions.Contains("Edit Role Permissions")){<text> is-active</text>}" id="user-roles">
+                <div class="panel-tab-data  @if (!User.HasPermission("Edit Role Permissions")){<text> is-active</text>}" id="user-roles">
                     <div data-ajax="yes" data-url="/settings/userroles/"></div>
                 </div>
             }
-            <div class="panel-tab-data @if (!ViewBag.Permissions.Contains("Edit Role Permissions") && !ViewBag.Permissions.Contains("Edit User Permissions")){<text> is-active</text>}" id="meta-fields">
+            <div class="panel-tab-data @if (!User.HasPermission("Edit Role Permissions") && !User.HasPermission("Edit User Permissions")){<text> is-active</text>}" id="meta-fields">
                 <h3 class="title is-3 mb-0">Meta Fields</h3>
 
                 <h4 class="title is-4 mt-5">Organizational Value</h4>

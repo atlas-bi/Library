@@ -4,10 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Atlas_Web.Authorization;
 
 namespace Atlas_Web.Pages.Collections
 {
@@ -33,14 +30,7 @@ namespace Atlas_Web.Pages.Collections
 
         public async Task<IActionResult> OnGetAsync(int id)
         {
-            var checkpoint = UserHelpers.CheckUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name,
-                "Edit Project"
-            );
-
-            if (!checkpoint)
+            if (!User.HasPermission("Edit Project"))
             {
                 return RedirectToPage(
                     "/Collections/Index",
@@ -60,14 +50,7 @@ namespace Atlas_Web.Pages.Collections
 
         public async Task<IActionResult> OnPostAsync(int id)
         {
-            var checkpoint = UserHelpers.CheckUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name,
-                "Edit Project"
-            );
-
-            if (!checkpoint)
+            if (!User.HasPermission("Edit Project"))
             {
                 return RedirectToPage(
                     "/Collections/Index",
@@ -89,8 +72,7 @@ namespace Atlas_Web.Pages.Collections
             );
 
             // update last update values & values that were posted
-            NewCollection.LastUpdateUser =
-                UserHelpers.GetUser(_cache, _context, User.Identity.Name).UserId;
+            NewCollection.LastUpdateUser = User.GetUserId();
             NewCollection.LastUpdateDate = DateTime.Now;
             NewCollection.Name = Collection.Name;
             NewCollection.Description = Collection.Description;

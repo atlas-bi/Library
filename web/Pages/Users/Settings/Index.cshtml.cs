@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Atlas_Web.Models;
 using Atlas_Web.Helpers;
+using Atlas_Web.Authorization;
 using Microsoft.AspNetCore.Http;
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
@@ -28,10 +29,8 @@ namespace Atlas_Web.Pages.Users.Settings
 
         public async Task<ActionResult> OnGetAsync()
         {
-            var MyUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
-
             EnableShareNotifications = await _context.UserSettings.SingleOrDefaultAsync(
-                x => x.Name == "share_notification" && x.UserId == MyUser.UserId
+                x => x.Name == "share_notification" && x.UserId == User.GetUserId()
             );
 
             return Page();
@@ -39,10 +38,8 @@ namespace Atlas_Web.Pages.Users.Settings
 
         public async Task<ActionResult> OnGetEnableShareNotification(string value)
         {
-            var MyUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
-
             var shareNotification = await _context.UserSettings.SingleOrDefaultAsync(
-                x => x.Name == "share_notification" && x.UserId == MyUser.UserId
+                x => x.Name == "share_notification" && x.UserId == User.GetUserId()
             );
 
             if (shareNotification != null)
@@ -55,7 +52,7 @@ namespace Atlas_Web.Pages.Users.Settings
                 await _context.AddAsync(
                     new UserSetting
                     {
-                        UserId = MyUser.UserId,
+                        UserId = User.GetUserId(),
                         Name = "share_notification",
                         Value = value
                     }

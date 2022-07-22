@@ -1,13 +1,10 @@
 using Atlas_Web.Helpers;
 using Atlas_Web.Models;
+using Atlas_Web.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Atlas_Web.Pages.Terms
 {
@@ -30,25 +27,11 @@ namespace Atlas_Web.Pages.Terms
 
         public async Task<IActionResult> OnGetAsync(int id)
         {
-            var checkpoint_unapproved = UserHelpers.CheckUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name,
-                "Edit Unapproved Terms"
-            );
-
-            var checkpoint_approved = UserHelpers.CheckUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name,
-                "Edit Approved Terms"
-            );
-
             Term = await _context.Terms.SingleAsync(x => x.TermId == id);
 
             if (
-                (Term.ApprovedYn == "Y" && !checkpoint_approved)
-                || (Term.ApprovedYn != "Y" && !checkpoint_unapproved)
+                (Term.ApprovedYn == "Y" && !User.HasPermission("Edit Approved Terms"))
+                || (Term.ApprovedYn != "Y" && !User.HasPermission("Edit Unapproved Terms"))
             )
             {
                 return RedirectToPage(
@@ -62,26 +45,12 @@ namespace Atlas_Web.Pages.Terms
 
         public IActionResult OnPostAsync(int id)
         {
-            var checkpoint_unapproved = UserHelpers.CheckUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name,
-                "Edit Unapproved Terms"
-            );
-
-            var checkpoint_approved = UserHelpers.CheckUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name,
-                "Edit Approved Terms"
-            );
-
             // we get a copy of the Term and then will only update several fields.
             Term NewTerm = _context.Terms.Single(x => x.TermId == Term.TermId);
 
             if (
-                (Term.ApprovedYn == "Y" && !checkpoint_approved)
-                || (Term.ApprovedYn != "Y" && !checkpoint_unapproved)
+                (Term.ApprovedYn == "Y" && !User.HasPermission("Edit Approved Terms"))
+                || (Term.ApprovedYn != "Y" && !User.HasPermission("Edit Unapproved Terms"))
             )
             {
                 return RedirectToPage(
@@ -99,8 +68,7 @@ namespace Atlas_Web.Pages.Terms
             }
 
             // update last update values & values that were posted
-            NewTerm.UpdatedByUserId =
-                UserHelpers.GetUser(_cache, _context, User.Identity.Name).UserId;
+            NewTerm.UpdatedByUserId = User.GetUserId();
             NewTerm.LastUpdatedDateTime = DateTime.Now;
             NewTerm.Name = Term.Name;
             NewTerm.TechnicalDefinition = Term.TechnicalDefinition;
@@ -108,7 +76,7 @@ namespace Atlas_Web.Pages.Terms
             if (NewTerm.ApprovedYn != "Y" && Term.ApprovedYn == "Y")
             {
                 NewTerm.ApprovalDateTime = DateTime.Now;
-                NewTerm.ApprovedByUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
+                NewTerm.ApprovedByUserId = User.GetUserId();
             }
             else if (Term.ApprovedYn != "Y")
             {

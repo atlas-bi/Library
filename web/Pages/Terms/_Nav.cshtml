@@ -10,7 +10,7 @@
 
     <li>
         <a class="is-block has-tooltip-arrow has-tooltip-right star" data-tooltip="Star this term" data-href="/users/favorites/?handler=Edit&type=term&id=@Model.Term.TermId">
-            @if (Model.Term.StarredTerms.Any(x => x.Ownerid == ViewBag.PublicUser.UserId))
+            @if (Model.Term.StarredTerms.Any(x => x.Ownerid == User.GetUserId()))
             {
                 <span class="icon is-large has-text-gold ">
                     <i class="fas fa-lg fa-star is-relative">
@@ -51,7 +51,7 @@
         </li>
     }
 
-    @if (ViewBag.Permissions.Contains("Create New Terms"))
+    @if (User.HasPermission("Create New Terms"))
     {
         <li>
             <a class="is-block has-tooltip-arrow has-tooltip-right" href="/Terms/New/" data-tooltip="Create New Term">
@@ -62,7 +62,7 @@
         </li>
     }
 
-    @if ((ViewBag.Permissions.Contains("Edit Unapproved Terms") && Model.Term.ApprovedYn != "Y") || (ViewBag.Permissions.Contains("Edit Approved Terms") && Model.Term.ApprovedYn == "Y"))
+    @if ((User.HasPermission("Edit Unapproved Terms") && Model.Term.ApprovedYn != "Y") || (User.HasPermission("Edit Approved Terms") && Model.Term.ApprovedYn == "Y"))
     {
         <li>
             <a class="is-block has-tooltip-arrow has-tooltip-right" href="/Terms/Edit/?id=@Model.Term.TermId" data-tooltip="Open Atlas Editor">
@@ -73,7 +73,7 @@
         </li>
     }
 
-    @if ((ViewBag.Permissions.Contains("Delete Unapproved Terms") && Model.Term.ApprovedYn != "Y") || (ViewBag.Permissions.Contains("Delete Approved Terms") && Model.Term.ApprovedYn == "Y"))
+    @if ((User.HasPermission("Delete Unapproved Terms") && Model.Term.ApprovedYn != "Y") || (User.HasPermission("Delete Approved Terms") && Model.Term.ApprovedYn == "Y"))
     {
         <li>
             <a class="is-block has-tooltip-arrow has-tooltip-right" data-tooltip="Delete this Term" href="/terms?Handler=DeleteTerm&id=@Model.Term.TermId" onclick="return confirm('Are you sure you want to remove this?');">

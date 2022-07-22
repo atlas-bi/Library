@@ -152,12 +152,7 @@
 
             @if (!string.IsNullOrEmpty(@Model.Report.EpicMasterFile))
             {
-                var RecordViewerUrl = ReportLinkHelpers.RecordViewerLink(
-                               ViewContext.HttpContext,
-                               Model.Report.EpicMasterFile,
-                               Model.Report.EpicRecordId.ToString(),
-                               Model.Report.OrphanedReportObjectYn
-                           );
+                var RecordViewerUrl = Model.Report.RecordViewerUrl(Context);
                 <tr>
                     <td>Epic Identifier</td>
                     <td>@if (RecordViewerUrl != null)
@@ -222,7 +217,7 @@
                 </tr>
             }
 
-            @if (ViewBag.Permissions.Contains("Edit Report Purge Option") && @Model.Report.ReportObjectDoc != null && @Model.Report.ReportObjectDoc.DoNotPurge == "Y")
+            @if (User.HasPermission("Edit Report Purge Option") && @Model.Report.ReportObjectDoc != null && @Model.Report.ReportObjectDoc.DoNotPurge == "Y")
             {
                 <tr>
                     <td>Do Not Purge</td>
@@ -230,7 +225,7 @@
                 </tr>
             }
 
-            @if (ViewBag.Permissions.Contains("Edit Report Hidden Option") && @Model.Report.ReportObjectDoc != null && @Model.Report.ReportObjectDoc.Hidden == "Y")
+            @if (User.HasPermission("Edit Report Hidden Option") && @Model.Report.ReportObjectDoc != null && @Model.Report.ReportObjectDoc.Hidden == "Y")
             {
                 <tr>
                     <td>Hidden?</td>

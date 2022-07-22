@@ -1,12 +1,8 @@
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Atlas_Web.Models;
-using System.Collections.Generic;
-using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Atlas_Web.Pages.Tasks
 {
@@ -14,11 +10,17 @@ namespace Atlas_Web.Pages.Tasks
     {
         private readonly Atlas_WebContext _context;
         private readonly IConfiguration _config;
+        private readonly IAuthorizationService _authorizationService;
 
-        public IndexModel(Atlas_WebContext context, IConfiguration config)
+        public IndexModel(
+            Atlas_WebContext context,
+            IConfiguration config,
+            IAuthorizationService authorizationService
+        )
         {
             _context = context;
             _config = config;
+            _authorizationService = authorizationService;
         }
 
         public class UndocumentedReports
@@ -419,10 +421,10 @@ namespace Atlas_Web.Pages.Tasks
                     && (r.ReportObjectTypeId == 17 || r.ReportObjectTypeId == 3)
                 join l in _context.UserRoleLinks on r.LastModifiedByUserId equals l.UserId into tmp
                 from t in tmp.DefaultIfEmpty()
-                where (t.UserRolesId ?? 2) != 1
+                where (t.UserRolesId) != 1
                 join l in _context.UserRoleLinks on r.AuthorUserId equals l.UserId into tmptwo
                 from ttwp in tmptwo.DefaultIfEmpty()
-                where (ttwp.UserRolesId ?? 2) != 1
+                where (ttwp.UserRolesId) != 1
                 join f in (
                     from tr in _context.ReportObjectRunDataBridges
                     group tr by tr.ReportObjectId into g
@@ -439,28 +441,17 @@ namespace Atlas_Web.Pages.Tasks
                     Name = r.DisplayName,
                     ReportType = r.ReportObjectType.Name,
                     Epic = r.EpicMasterFile + " " + r.EpicRecordId.ToString(),
-                    RunReportUrl = Helpers.ReportLinkHelpers.ReportUrlFromParams(
+                    RunReportUrl = r.RunReportUrl(
                         HttpContext,
-                        r,
-                        _context,
-                        User.Identity.Name
+                        _config,
+                        _authorizationService.AuthorizeAsync(
+                            HttpContext.User,
+                            r,
+                            "ReportRunPolicy"
+                        ).IsCompletedSuccessfully
                     ),
-                    EditReportUrl = Helpers.ReportLinkHelpers.EditReportFromParams(
-                        _config["AppSettings:org_domain"],
-                        HttpContext,
-                        r.ReportServerPath,
-                        r.SourceServer,
-                        r.EpicMasterFile,
-                        r.EpicReportTemplateId.ToString(),
-                        r.EpicRecordId.ToString(),
-                        r.OrphanedReportObjectYn
-                    ),
-                    RecordViewerUrl = Helpers.ReportLinkHelpers.RecordViewerLink(
-                        HttpContext,
-                        r.EpicMasterFile,
-                        r.EpicRecordId.ToString(),
-                        r.OrphanedReportObjectYn
-                    ),
+                    EditReportUrl = r.EditReportUrl(HttpContext, _config),
+                    RecordViewerUrl = r.RecordViewerUrl(HttpContext),
                     Runs = ((int?)f.Cnt ?? 0)
                 }
             ).ToListAsync();

@@ -6,6 +6,7 @@ const purgecss = require('gulp-purgecss');
 const cssnano = require('gulp-cssnano');
 const postcssFocusWithin = require('focus-within/postcss');
 const gulp = require('gulp');
+const gulpMultiProcess = require('gulp-multi-process');
 
 gulp.task('css:email', function () {
   return gulp
@@ -26,7 +27,7 @@ gulp.task('css:email', function () {
 });
 
 gulp.task('css:build', function () {
-  var plugins = [postcssFocusWithin];
+  const plugins = [postcssFocusWithin];
   return gulp
     .src('web/wwwroot/css/theme.scss')
     .pipe(sass().on('error', sass.logError))
@@ -60,7 +61,6 @@ gulp.task('css:build', function () {
 });
 
 gulp.task('css:rejected', function () {
-  var plugins = [postcssFocusWithin];
   return gulp
     .src('web/wwwroot/css/theme.scss')
     .pipe(sass().on('error', sass.logError))
@@ -91,4 +91,6 @@ gulp.task('css:rejected', function () {
     .pipe(gulp.dest('web/wwwroot/css/'));
 });
 
-gulp.task('styles', gulp.parallel('css:build', 'css:email'));
+gulp.task('styles', (cb) => {
+  gulpMultiProcess(['css:build', 'css:email'], cb);
+});

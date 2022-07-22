@@ -1,15 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Atlas_Web.Models;
 using Atlas_Web.Helpers;
+using Atlas_Web.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Linq;
 using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Configuration;
 
 namespace Atlas_Web.Pages.Analytics
 {
@@ -129,7 +125,6 @@ namespace Atlas_Web.Pages.Analytics
                 .ReadToEndAsync()
                 .ConfigureAwait(false);
             var package = JObject.Parse(body);
-            var MyUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
 
             /*
                 * check if session + page exists
@@ -140,7 +135,7 @@ namespace Atlas_Web.Pages.Analytics
             var oldAna = await _context.Analytics
                 .Where(
                     x =>
-                        x.UserId == MyUser.UserId
+                        x.UserId == User.GetUserId()
                         && x.SessionId == package.Value<string>("sessionId")
                         && x.PageId == package.Value<string>("pageId")
                 )
@@ -158,7 +153,7 @@ namespace Atlas_Web.Pages.Analytics
                 view: session, time, url, referer
                 event: session, time, url, type, value
             */
-            NewAnalytic.UserId = MyUser.UserId;
+            NewAnalytic.UserId = User.GetUserId();
             NewAnalytic.Language = package.Value<string>("language") ?? "";
             NewAnalytic.UserAgent = package.Value<string>("userAgent") ?? "";
             NewAnalytic.Hostname = package.Value<string>("hostname") ?? ""; // keep
@@ -174,7 +169,7 @@ namespace Atlas_Web.Pages.Analytics
             NewAnalytic.UpdateTime = DateTime.Now;
             NewAnalytic.Referrer = package.Value<string>("referrer") ?? "";
             NewAnalytic.Zoom = (double)package["zoom"];
-            NewAnalytic.Epic = ReportLinkHelpers.IsEpic(HttpContext) ? 1 : 0;
+            NewAnalytic.Epic = HttpContext.IsHyperspace() ? 1 : 0;
             NewAnalytic.SessionId = package.Value<string>("sessionId") ?? "";
             NewAnalytic.PageId = package.Value<string>("pageId") ?? "";
             NewAnalytic.PageTime = (int)package["pageTime"];

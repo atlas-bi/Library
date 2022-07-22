@@ -1,12 +1,12 @@
 const concat = require('gulp-concat');
 const uglify = require('gulp-uglify');
 const gulp = require('gulp');
-const log = require('fancy-log');
 const rollup = require('rollup-stream-gulp');
 const { nodeResolve } = require('@rollup/plugin-node-resolve');
 const commonjs = require('@rollup/plugin-commonjs');
 const { babel } = require('@rollup/plugin-babel');
 const json = require('@rollup/plugin-json');
+const gulpMultiProcess = require('gulp-multi-process');
 
 const rollupConfig = {
   output: { format: 'iife', name: 'module' },
@@ -92,9 +92,9 @@ gulp.task('js:profile', function () {
 
 gulp.task('js:userSettings', function () {
   return gulp
-    .src(['web/wwwroot/js/user_settings.js'])
+    .src(['web/wwwroot/js/user-settings.js'])
     .pipe(rollup(rollupConfig))
-    .pipe(concat('user_settings.min.js'))
+    .pipe(concat('user-settings.min.js'))
     .pipe(uglify(uglifyConfig))
     .pipe(gulp.dest('web/wwwroot/js/'));
 });
@@ -118,7 +118,7 @@ gulp.task('js:highlighter', () => {
 });
 
 gulp.task('js:shared', function () {
-  // shared functions should be imported as needed.
+  // Shared functions should be imported as needed.
   return gulp
     .src(['web/wwwroot/js/shared.js'])
     .pipe(concat('shared.min.js'))
@@ -157,19 +157,21 @@ gulp.task('js:editor', function () {
     .pipe(gulp.dest('web/wwwroot/js/'));
 });
 
-gulp.task(
-  'scripts',
-  gulp.parallel(
-    'js:editor',
-    'js:polyfill',
-    'js:settings',
-    'js:search',
-    'js:shared',
-    'js:utility',
-    'js:analytics',
-    'js:tracker',
-    'js:highlighter',
-    'js:profile',
-    'js:userSettings',
-  ),
-);
+gulp.task('scripts', (cb) => {
+  gulpMultiProcess(
+    [
+      'js:editor',
+      'js:polyfill',
+      'js:settings',
+      'js:search',
+      'js:shared',
+      'js:utility',
+      'js:analytics',
+      'js:tracker',
+      'js:highlighter',
+      'js:profile',
+      'js:userSettings',
+    ],
+    cb,
+  );
+});

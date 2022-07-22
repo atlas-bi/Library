@@ -1,14 +1,9 @@
-using System;
 using Atlas_Web.Models;
-using System.Linq;
-using Microsoft.AspNetCore.Http;
 using Markdig;
 using Microsoft.AspNetCore.Mvc.Razor;
-using Microsoft.Extensions.DependencyInjection;
 using WebOptimizer;
 using Slugify;
 using Ganss.XSS;
-using Microsoft.Extensions.Configuration;
 using WebMarkupMin.Core;
 
 namespace Atlas_Web.Helpers

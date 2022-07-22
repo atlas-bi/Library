@@ -1,6 +1,6 @@
 @model Atlas_Web.Pages.Settings.TagsModel
 <div>
-    @if (ViewBag.Permissions.Contains("Create Parameters"))
+    @if (User.HasPermission("Create Parameters"))
     {
         <form asp-page-handler="CreateStrategicImportance">
             <div class="field">
@@ -23,7 +23,7 @@
         @foreach (var i in ViewBag.StrategicImportanceList)
         {
             <div class="control">
-                @if (ViewBag.Permissions.Contains("Delete Parameters"))
+                @if (User.HasPermission("Delete Parameters"))
                 {
                     <form asp-page-handler="DeleteStrategicImportance" class="tags has-addons">
                         <span class="tag is-link">@i.Name</span>

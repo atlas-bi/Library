@@ -1,13 +1,10 @@
 using Atlas_Web.Helpers;
 using Atlas_Web.Models;
+using Atlas_Web.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Atlas_Web.Pages.Initiatives
 {
@@ -30,14 +27,7 @@ namespace Atlas_Web.Pages.Initiatives
 
         public async Task<IActionResult> OnGetAsync(int id)
         {
-            var checkpoint = UserHelpers.CheckUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name,
-                "Edit Initiative"
-            );
-
-            if (!checkpoint)
+            if (!User.HasPermission("Edit Initiative"))
             {
                 return RedirectToPage(
                     "/Initiatives/Index",
@@ -59,14 +49,7 @@ namespace Atlas_Web.Pages.Initiatives
 
         public async Task<IActionResult> OnPostAsync(int id)
         {
-            var checkpoint = UserHelpers.CheckUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name,
-                "Edit Initiative"
-            );
-
-            if (!checkpoint)
+            if (!User.HasPermission("Edit Initiative"))
             {
                 return RedirectToPage(
                     "/Initiatives/Index",
@@ -88,8 +71,7 @@ namespace Atlas_Web.Pages.Initiatives
                 .FirstOrDefaultAsync();
 
             // update last update values & values that were posted
-            NewInitiative.LastUpdateUser =
-                UserHelpers.GetUser(_cache, _context, User.Identity.Name).UserId;
+            NewInitiative.LastUpdateUser = User.GetUserId();
             NewInitiative.LastUpdateDate = DateTime.Now;
             NewInitiative.Name = Initiative.Name;
             NewInitiative.Description = Initiative.Description;
@@ -129,7 +111,7 @@ namespace Atlas_Web.Pages.Initiatives
             }
 
             _cache.Remove("initiative-" + Initiative.DataInitiativeId);
-            _cache.Remove("initatives");
+            _cache.Remove("initiatives");
 
             return RedirectToPage("/Initiatives/Index", new { id, success = "Changes saved." });
         }

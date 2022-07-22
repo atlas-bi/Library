@@ -1,12 +1,7 @@
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Atlas_Web.Models;
-using System.Collections.Generic;
-using Atlas_Web.Helpers;
 using Microsoft.Extensions.Caching.Memory;
 
 namespace Atlas_Web.Pages.Settings

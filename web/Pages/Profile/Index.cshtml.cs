@@ -1,13 +1,8 @@
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Atlas_Web.Models;
-using System.Collections.Generic;
 using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Configuration;
 using System.Text.RegularExpressions;
 
 namespace Atlas_Web.Pages.Profile
@@ -127,7 +122,7 @@ namespace Atlas_Web.Pages.Profile
                                 || _config["features:enable_user_profile"].ToString().ToLower()
                                     == "true"
                             )
-                                ? $"\\user?id={grp.Key.RunUserId}"
+                                ? $"\\users?id={grp.Key.RunUserId}"
                                 : null,
                         Runs = grp.Sum(x => x.d.Runs),
                         LastRun = grp.Max(x => x.b.RunStartTime).ToShortDateString(),

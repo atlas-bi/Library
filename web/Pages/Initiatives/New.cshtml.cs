@@ -1,14 +1,10 @@
 using Atlas_Web.Helpers;
 using Atlas_Web.Models;
+using Atlas_Web.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Atlas_Web.Pages.Initiatives
 {
@@ -31,14 +27,7 @@ namespace Atlas_Web.Pages.Initiatives
 
         public IActionResult OnGet()
         {
-            var checkpoint = UserHelpers.CheckUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name,
-                "Create Initiative"
-            );
-
-            if (!checkpoint)
+            if (!User.HasPermission("Create Initiative"))
             {
                 return RedirectToPage(
                     "/Initiatives/Index",
@@ -51,14 +40,7 @@ namespace Atlas_Web.Pages.Initiatives
 
         public async Task<IActionResult> OnPostAsync()
         {
-            var checkpoint = UserHelpers.CheckUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name,
-                "Create Initiative"
-            );
-
-            if (!checkpoint)
+            if (!User.HasPermission("Create Initiative"))
             {
                 return RedirectToPage(
                     "/Initiatives/Index",
@@ -75,8 +57,7 @@ namespace Atlas_Web.Pages.Initiatives
             }
 
             // update last update values & values that were posted
-            Initiative.LastUpdateUser =
-                UserHelpers.GetUser(_cache, _context, User.Identity.Name).UserId;
+            Initiative.LastUpdateUser = User.GetUserId();
             Initiative.LastUpdateDate = DateTime.Now;
 
             await _context.AddAsync(Initiative);

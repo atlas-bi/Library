@@ -1,12 +1,9 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Atlas_Web.Models;
-using System.Collections.Generic;
 using Atlas_Web.Helpers;
+using Atlas_Web.Authorization;
 using Microsoft.Extensions.Caching.Memory;
 
 namespace Atlas_Web.Pages.Settings
@@ -39,11 +36,6 @@ namespace Atlas_Web.Pages.Settings
         {
             Messages = await _context.GlobalSiteSettings.Where(i => i.Name == "msg").ToListAsync();
 
-            ViewData["Permissions"] = UserHelpers.GetUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name
-            );
             return new PartialViewResult
             {
                 ViewName = "Partials/_SiteMessages",
@@ -53,13 +45,7 @@ namespace Atlas_Web.Pages.Settings
 
         public ActionResult OnGetDeleteSiteMessage(int Id)
         {
-            var checkpoint = UserHelpers.CheckUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name,
-                "Manage Global Site Settings"
-            );
-            if (checkpoint)
+            if (User.HasPermission("Manage Global Site Settings"))
             {
                 _context.Remove(
                     _context.GlobalSiteSettings.Where(x => x.Id == Id).FirstOrDefault()
@@ -72,13 +58,7 @@ namespace Atlas_Web.Pages.Settings
 
         public ActionResult OnPostAddSiteMessage()
         {
-            var checkpoint = UserHelpers.CheckUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name,
-                "Manage Global Site Settings"
-            );
-            if (ModelState.IsValid && checkpoint)
+            if (ModelState.IsValid && User.HasPermission("Manage Global Site Settings"))
             {
                 _context.Add(GlobalSiteSettings);
                 _context.SaveChanges();
@@ -140,12 +120,6 @@ namespace Atlas_Web.Pages.Settings
                 .Where(x => x.Name == "global_css")
                 .Select(x => x.Value)
                 .FirstOrDefaultAsync();
-
-            ViewData["Permissions"] = UserHelpers.GetUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name
-            );
 
             return new PartialViewResult { ViewName = "Partials/_Theme", ViewData = ViewData };
         }

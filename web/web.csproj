@@ -3,8 +3,8 @@
     <TargetFramework>net6.0</TargetFramework>
     <AspNetCoreHostingModel>OutOfProcess</AspNetCoreHostingModel>
     <RootNamespace>Atlas_Web</RootNamespace>
+    <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>934f839a-c16a-47a3-845c-ff0d6b817faf</UserSecretsId>
-    <StartupObject>Atlas_Web.Program</StartupObject>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <Optimize>true</Optimize>
@@ -34,6 +34,9 @@
     <PackageReference Include="LigerShark.WebOptimizer.AutoPrefixer" Version="7.1.8-beta" />
     <PackageReference Include="LigerShark.WebOptimizer.Core" Version="3.0.357" />
     <PackageReference Include="Markdig" Version="0.28.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Negotiate" Version="6.0.7" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="6.0.7" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.4" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.4" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.4">
@@ -55,11 +58,17 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
   </ItemGroup>
+  <PropertyGroup>
+  <DefaultItemExcludes>$(DefaultItemExcludes);solr\example\**\*</DefaultItemExcludes>
+</PropertyGroup>
+<!-- this will speed up builds when developing. Disable when doing a migration ;) -->
+<!-- <ItemGroup><Compile Remove="Migrations\**" /></ItemGroup> -->
   <ItemGroup>
-    <None Update="solr\**\*" CopyToOutputDirectory="PreserveNewest" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="solr\**\*" CopyToPublishDirectory="PreserveNewest" />
+    <None Include="solr\bin\**\*" CopyToPublishDirectory="PreserveNewest" />
+    <None Include="solr\dist\**\*" CopyToPublishDirectory="PreserveNewest" />
+    <None Include="solr\server\**\*" CopyToPublishDirectory="PreserveNewest" />
+    <None Include="solr\contrib\**\*" CopyToPublishDirectory="PreserveNewest" />
+    <None Include="solr\licenses\**\*.txt" CopyToPublishDirectory="PreserveNewest" />
   </ItemGroup>
   <ItemGroup>
     <Content Update=".env" CopyToPublishDirectory="Never" />
@@ -75,8 +84,6 @@
     <Folder Include="Pages\Groups\Sections\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Update="Stackify.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    <Content Update="Stackify.json" CopyToOutputDirectory="Always" />
   </ItemGroup>
 </Project>

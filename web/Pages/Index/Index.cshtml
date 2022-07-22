@@ -5,23 +5,23 @@
     ViewData["Title"] = "";
 }
 
-<h1 class="title is-1">Hi, @Model.FirstName!</h1>
+<h1 class="title is-1">Hi, @User.GetUserName()!</h1>
 
 <partial name="_Links" />
 
 
 <section class="tab-cnt">
     <div class="tab-dta active" id="stars">
-        <div data-ajax="yes" data-url="/Users/Stars" data-parameters="id=@Model.UserId"></div>
+        <div data-ajax="yes" data-url="/Users/Stars" data-parameters="id=@User.GetUserId()"></div>
     </div>
     @*
         <div class="tab-dta " id="mail">
-            <div data-ajax="yes" data-url="/Mail?handler=GetMailbox" data-parameters="id=@Model.UserId"></div>
+            <div data-ajax="yes" data-url="/Mail?handler=GetMailbox" data-parameters="id=@User.GetUserId()"></div>
         </div>
      *@
 
     <div class="tab-dta" id="subscriptions">
-        <div data-ajax="yes" data-url="/Users?handler=Subscriptions" data-parameters="id=@Model.UserId"></div>
+        <div data-ajax="yes" data-url="/Users?handler=Subscriptions" data-parameters="id=@User.GetUserId()"></div>
     </div>
      @{
             ViewBag.ProfileType = "user";
@@ -37,7 +37,7 @@
         <div data-ajax="yes" data-url="/Profile" data-parameters="handler=RunList&type=@ViewBag.ProfileType&id=@ViewBag.ProfileId@ViewBag.DefaultFilters"></div>
     </div>
     <div class="tab-dta" id="groups">
-        <div data-ajax="yes" data-url="/Users?handler=Groups" data-parameters="id=@Model.UserId"></div>
+        <div data-ajax="yes" data-url="/Users?handler=Groups" data-parameters="id=@User.GetUserId()"></div>
     </div>
 </section>
 

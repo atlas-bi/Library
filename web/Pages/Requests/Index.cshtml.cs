@@ -1,16 +1,11 @@
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Atlas_Web.Models;
-using System.IO;
-using System.Net.Http;
 using System.Text;
 using System.Xml;
 using System.Xml.Linq;
 using Atlas_Web.Helpers;
-using Microsoft.Extensions.Configuration;
+using Atlas_Web.Authorization;
 using Microsoft.Extensions.Caching.Memory;
 
 namespace Atlas_Web.Pages.Requests
@@ -148,10 +143,7 @@ namespace Atlas_Web.Pages.Requests
                 xmlWriter.WriteEndElement();
                 xmlWriter.WriteStartElement("parameter");
                 xmlWriter.WriteElementString("name", "requester");
-                xmlWriter.WriteElementString(
-                    "value",
-                    UserHelpers.GetUser(_cache, _context, User.Identity.Name).FullnameCalc
-                );
+                xmlWriter.WriteElementString("value", User.GetUserName());
                 xmlWriter.WriteEndElement();
                 xmlWriter.WriteStartElement("parameter");
                 xmlWriter.WriteElementString("name", "item");
@@ -171,10 +163,7 @@ namespace Atlas_Web.Pages.Requests
                 xmlWriter.WriteEndElement();
                 xmlWriter.WriteStartElement("parameter");
                 xmlWriter.WriteElementString("name", "requesteremail");
-                xmlWriter.WriteElementString(
-                    "value",
-                    UserHelpers.GetUser(_cache, _context, User.Identity.Name).Email
-                );
+                xmlWriter.WriteElementString("value", User.GetUserEmail());
                 xmlWriter.WriteEndElement();
                 xmlWriter.WriteStartElement("parameter");
                 xmlWriter.WriteElementString("name", "director");
@@ -256,10 +245,7 @@ namespace Atlas_Web.Pages.Requests
                 xmlWriter.WriteEndElement();
                 xmlWriter.WriteStartElement("parameter");
                 xmlWriter.WriteElementString("name", "requester");
-                xmlWriter.WriteElementString(
-                    "value",
-                    UserHelpers.GetUser(_cache, _context, User.Identity.Name).FullnameCalc
-                );
+                xmlWriter.WriteElementString("value", User.GetUserName());
                 xmlWriter.WriteEndElement();
                 xmlWriter.WriteStartElement("parameter");
                 xmlWriter.WriteElementString("name", "item");
@@ -279,10 +265,7 @@ namespace Atlas_Web.Pages.Requests
                 xmlWriter.WriteEndElement();
                 xmlWriter.WriteStartElement("parameter");
                 xmlWriter.WriteElementString("name", "requesteremail");
-                xmlWriter.WriteElementString(
-                    "value",
-                    UserHelpers.GetUser(_cache, _context, User.Identity.Name).Email
-                );
+                xmlWriter.WriteElementString("value", User.GetUserEmail());
                 xmlWriter.WriteEndElement();
                 xmlWriter.WriteStartElement("parameter");
                 xmlWriter.WriteElementString("name", "director");
