@@ -293,7 +293,11 @@ namespace Atlas_Web.Pages.Users
             }
             else
             {
-                _context.Remove(adminDisabled);
+                _context.RemoveRange(
+                    _context.UserPreferences
+                        .Where(x => x.UserId == User.GetUserId() && x.ItemType == "AdminDisabled")
+                        .ToList()
+                );
                 await _context.SaveChangesAsync();
             }
 
