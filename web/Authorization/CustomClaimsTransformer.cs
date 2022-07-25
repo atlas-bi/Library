@@ -21,6 +21,15 @@ public class CustomClaimsTransformer : IClaimsTransformation
 
         var userData = await GetUserData(principal.Identity.Name);
 
+        if (userData == null)
+        {
+            // need a better handling if users don't exist.
+#pragma warning disable S112
+            throw new Exception("User " + principal.Identity.Name + " does not exist.");
+#pragma warning restore S112
+
+        }
+
         var clone = principal.Clone();
 
         var claims = new List<Claim>()
