@@ -34,16 +34,19 @@ public class CustomClaimsTransformer : IClaimsTransformation
 
         var claims = new List<Claim>()
         {
-            new Claim("Fullname", userData.FullnameCalc),
-            new Claim(ClaimTypes.Email, userData.Email),
-            new Claim("Firstname", userData.FirstnameCalc),
+            new Claim("Fullname", userData.FullnameCalc ?? principal.Identity.Name),
+            new Claim(ClaimTypes.Email, userData.Email ?? ""),
+            new Claim("Firstname", userData.FirstnameCalc ?? ""),
             new Claim("UserId", userData.UserId.ToString(), ClaimValueTypes.Integer32),
         };
 
         // add user roles
         foreach (var role in userData.UserRoleLinks)
         {
-            claims.Add(new Claim(ClaimTypes.Role, role.UserRoles.Name));
+            if (!string.IsNullOrEmpty(role.UserRoles.Name))
+            {
+                claims.Add(new Claim(ClaimTypes.Role, role.UserRoles.Name));
+            }
         }
         // if they are an admin
         var isAdmin = userData.UserRoleLinks.Any(x => x.UserRoles.Name == "Administrator");
@@ -71,7 +74,10 @@ public class CustomClaimsTransformer : IClaimsTransformation
                 .Distinct()
         )
         {
-            claims.Add(new Claim("Permission", role.Name));
+            if (!string.IsNullOrEmpty(role.Name))
+            {
+                claims.Add(new Claim("Permission", role.Name));
+            }
         }
 
         // add user groups
