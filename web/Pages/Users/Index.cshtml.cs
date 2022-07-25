@@ -273,103 +273,103 @@ namespace Atlas_Web.Pages.Users
             };
         }
 
-        public async Task<ActionResult> OnGetFavorites(int? id)
-        {
-            MyId = User.GetUserId();
+        // public async Task<ActionResult> OnGetFavorites(int? id)
+        // {
+        //     MyId = User.GetUserId();
 
-            // can user view others?
-            if (User.HasPermission("View Other User"))
-            {
-                UserId = id ?? MyId;
-            }
+        //     // can user view others?
+        //     if (User.HasPermission("View Other User"))
+        //     {
+        //         UserId = id ?? MyId;
+        //     }
 
-            ViewData["MyId"] = MyId;
-            ViewData["UserId"] = UserId;
+        //     ViewData["MyId"] = MyId;
+        //     ViewData["UserId"] = UserId;
 
-            ViewData["FavoriteFolders"] = await _cache.GetOrCreateAsync<List<FolderList>>(
-                "FavoriteFolders-" + UserId,
-                cacheEntry =>
-                {
-                    cacheEntry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20);
-                    return (
-                        from l in _context.UserFavoriteFolders
-                        join u in _context.Users on l.UserId equals u.UserId
-                        where u.UserId == UserId
-                        orderby l.FolderRank ?? -1
-                        select new FolderList
-                        {
-                            FolderName = l.FolderName,
-                            FolderId = l.UserFavoriteFolderId,
-                            FolderRank = l.FolderRank,
-                            FavCount = 0
-                        }
-                    ).ToListAsync();
-                }
-            );
+        //     ViewData["FavoriteFolders"] = await _cache.GetOrCreateAsync<List<FolderList>>(
+        //         "FavoriteFolders-" + UserId,
+        //         cacheEntry =>
+        //         {
+        //             cacheEntry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20);
+        //             return (
+        //                 from l in _context.UserFavoriteFolders
+        //                 join u in _context.Users on l.UserId equals u.UserId
+        //                 where u.UserId == UserId
+        //                 orderby l.FolderRank ?? -1
+        //                 select new FolderList
+        //                 {
+        //                     FolderName = l.FolderName,
+        //                     FolderId = l.UserFavoriteFolderId,
+        //                     FolderRank = l.FolderRank,
+        //                     FavCount = 0
+        //                 }
+        //             ).ToListAsync();
+        //         }
+        //     );
 
-            if (!FavoriteReports.Any())
-            {
-                ViewData["TopRunReports"] = await _cache.GetOrCreateAsync<List<FavData>>(
-                    "FavTopRunReports-" + UserId,
-                    cacheEntry =>
-                    {
-                        cacheEntry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20);
-                        return (
-                            from d in _context.ReportObjectRunDatas
-                            join b in _context.ReportObjectRunDataBridges
-                                on d.RunDataId equals b.RunId
-                            where
-                                d.RunUserId == UserId
-                                && d.RunStartTime_Month > DateTime.Now.AddMonths(-1)
-                            group new { d, b } by b.ReportObject into grp
-                            orderby grp.Sum(x => x.b.Runs) descending
-                            select new FavData
-                            {
-                                FavoriteId = 0,
-                                Name = grp.Key.DisplayName,
-                                ItemId = grp.Key.ReportObjectId,
-                                EpicReportTemplateId = grp.Key.EpicReportTemplateId.ToString(),
-                                FolderId = 0,
-                                FolderName = "",
-                                ItemRank = 0,
-                                FolderRank = 0,
-                                Description = (
-                                    grp.Key.ReportObjectDoc.DeveloperDescription
-                                    ?? grp.Key.Description
-                                    ?? grp.Key.DetailedDescription
-                                    ?? grp.Key.ReportObjectDoc.KeyAssumptions
-                                ),
-                                EpicRecordId = grp.Key.EpicRecordId.ToString(),
-                                EpicMasterFile = grp.Key.EpicMasterFile,
-                                ReportServerPath = grp.Key.ReportServerPath,
-                                SourceServer = grp.Key.SourceServer,
-                                ReportUrl = grp.Key.RunReportUrl(
-                                    HttpContext,
-                                    _config,
-                                    _authorizationService.AuthorizeAsync(
-                                        HttpContext.User,
-                                        grp.Key,
-                                        "ReportRunPolicy"
-                                    ).IsCompletedSuccessfully
-                                ),
-                                EditReportUrl = grp.Key.EditReportUrl(HttpContext, _config),
-                            }
-                        ).Take(10).ToListAsync();
-                    }
-                );
-            }
-            else
-            {
-                // only show recomened reports if there are some favs
-                AdLists = new List<AdList>
-                {
-                    new AdList { Url = "/Users?handler=SharedObjects", Column = 2 },
-                };
-                ViewData["AdLists"] = AdLists;
-            }
+        //     if (!FavoriteReports.Any())
+        //     {
+        //         ViewData["TopRunReports"] = await _cache.GetOrCreateAsync<List<FavData>>(
+        //             "FavTopRunReports-" + UserId,
+        //             cacheEntry =>
+        //             {
+        //                 cacheEntry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20);
+        //                 return (
+        //                     from d in _context.ReportObjectRunDatas
+        //                     join b in _context.ReportObjectRunDataBridges
+        //                         on d.RunDataId equals b.RunId
+        //                     where
+        //                         d.RunUserId == UserId
+        //                         && d.RunStartTime_Month > DateTime.Now.AddMonths(-1)
+        //                     group new { d, b } by b.ReportObject into grp
+        //                     orderby grp.Sum(x => x.b.Runs) descending
+        //                     select new FavData
+        //                     {
+        //                         FavoriteId = 0,
+        //                         Name = grp.Key.DisplayName,
+        //                         ItemId = grp.Key.ReportObjectId,
+        //                         EpicReportTemplateId = grp.Key.EpicReportTemplateId.ToString(),
+        //                         FolderId = 0,
+        //                         FolderName = "",
+        //                         ItemRank = 0,
+        //                         FolderRank = 0,
+        //                         Description = (
+        //                             grp.Key.ReportObjectDoc.DeveloperDescription
+        //                             ?? grp.Key.Description
+        //                             ?? grp.Key.DetailedDescription
+        //                             ?? grp.Key.ReportObjectDoc.KeyAssumptions
+        //                         ),
+        //                         EpicRecordId = grp.Key.EpicRecordId.ToString(),
+        //                         EpicMasterFile = grp.Key.EpicMasterFile,
+        //                         ReportServerPath = grp.Key.ReportServerPath,
+        //                         SourceServer = grp.Key.SourceServer,
+        //                         ReportUrl = grp.Key.RunReportUrl(
+        //                             HttpContext,
+        //                             _config,
+        //                             (await _authorizationService.AuthorizeAsync(
+        //                                 HttpContext.User,
+        //                                 grp.Key,
+        //                                 "ReportRunPolicy"
+        //                             )).Succeeded
+        //                         ),
+        //                         EditReportUrl = grp.Key.EditReportUrl(HttpContext, _config),
+        //                     }
+        //                 ).Take(10).ToListAsync();
+        //             }
+        //         );
+        //     }
+        //     else
+        //     {
+        //         // only show recomened reports if there are some favs
+        //         AdLists = new List<AdList>
+        //         {
+        //             new AdList { Url = "/Users?handler=SharedObjects", Column = 2 },
+        //         };
+        //         ViewData["AdLists"] = AdLists;
+        //     }
 
-            return new PartialViewResult { ViewName = "Sections/_Favorites", ViewData = ViewData };
-        }
+        //     return new PartialViewResult { ViewName = "Sections/_Favorites", ViewData = ViewData };
+        // }
 
         public async Task<ActionResult> OnGetChangeRole(string Id, string Url)
         {

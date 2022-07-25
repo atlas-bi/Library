@@ -1,5 +1,4 @@
 using System.Security.Claims;
-
 using Microsoft.AspNetCore.Authentication;
 using Atlas_Web.Models;
 using Microsoft.EntityFrameworkCore;

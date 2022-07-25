@@ -4,7 +4,7 @@
 
 <ul>
     @{
-        string RunReportUrl = Model.Report.RunReportUrl(Context, Configuration, Authorization.AuthorizeAsync(Context.User,Model.Report, "ReportRunPolicy").IsCompletedSuccessfully);
+        string RunReportUrl = Model.Report.RunReportUrl(Context, Configuration, (await Authorization.AuthorizeAsync(Context.User,Model.Report, "ReportRunPolicy")).Succeeded);
     }
     @if (Model.Report.ReportObjectAttachments.Any())
     {

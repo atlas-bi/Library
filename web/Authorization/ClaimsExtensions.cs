@@ -1,5 +1,4 @@
 using System.Security.Claims;
-using Atlas_Web.Models;
 
 namespace Atlas_Web.Authorization;
 

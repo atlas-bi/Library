@@ -11,15 +11,15 @@
 
                 @if (Model.ReportObjectAttachments.Count() > 0)
                 {
-                    <a aria-label="run" class="is-flex mr-2 has-tooltip-arrow has-tooltip-right js-modal-trigger" data-target="report-run-@Model.ReportObjectId" data-tooltip="Run Report" data-runurl="@Model.RunReportUrl(Context,Configuration, Authorization.AuthorizeAsync(User,Model, "ReportRunPolicy").IsCompletedSuccessfully)">
+                    <a aria-label="run" class="is-flex mr-2 has-tooltip-arrow has-tooltip-right js-modal-trigger" data-target="report-run-@Model.ReportObjectId" data-tooltip="Run Report" data-runurl="@Model.RunReportUrl(Context,Configuration, (await Authorization.AuthorizeAsync(User,Model, "ReportRunPolicy")).Succeeded)">
                         <span class="icon is-large has-text-success">
                             <i class="far fa-2_3x fa-circle-play"></i>
                         </span>
                     </a>
                 }
-                else if (!string.IsNullOrEmpty(Model.RunReportUrl(Context,Configuration, Authorization.AuthorizeAsync(User,Model, "ReportRunPolicy").IsCompletedSuccessfully)))
+                else if (!string.IsNullOrEmpty(Model.RunReportUrl(Context,Configuration, (await Authorization.AuthorizeAsync(User,Model, "ReportRunPolicy")).Succeeded)))
                 {
-                    <a aria-label="run" class="is-flex mr-2 has-tooltip-arrow has-tooltip-right" target="_blank" data-tooltip="Run Report" href="@Model.RunReportUrl(Context,Configuration, Authorization.AuthorizeAsync(User,Model, "ReportRunPolicy").IsCompletedSuccessfully)">
+                    <a aria-label="run" class="is-flex mr-2 has-tooltip-arrow has-tooltip-right" target="_blank" data-tooltip="Run Report" href="@Model.RunReportUrl(Context,Configuration, (await Authorization.AuthorizeAsync(User,Model, "ReportRunPolicy")).Succeeded)">
                         <span class="icon is-large has-text-success">
                             <i class="far fa-2_3x fa-circle-play"></i>
                         </span>
@@ -201,7 +201,7 @@
             }
             @if (@Configuration["features:enable_request_access"] == null || @Configuration["features:enable_request_access"].ToString().ToLower() == "true")
             {
-                @if (Model.ReportObjectAttachments.Count() > 0 || !string.IsNullOrEmpty(Model.RunReportUrl(Context,Configuration,Authorization.AuthorizeAsync(User,Model, "ReportRunPolicy").IsCompletedSuccessfully)))
+                @if (Model.ReportObjectAttachments.Count() > 0 || !string.IsNullOrEmpty(Model.RunReportUrl(Context,Configuration,(await Authorization.AuthorizeAsync(User,Model, "ReportRunPolicy")).Succeeded)))
                 {
                     <a class="is-block has-tooltip-arrow has-tooltip-top js-modal-trigger ml-2" data-tooltip="Request Access" data-target="request-access-@Model.ReportObjectId">
                         <span class="icon has-text-grey">

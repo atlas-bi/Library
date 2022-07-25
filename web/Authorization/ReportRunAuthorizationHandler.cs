@@ -1,8 +1,5 @@
-using System.Threading.Tasks;
 using Atlas_Web.Models;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Authorization.Infrastructure;
-using Microsoft.AspNetCore.Identity;
 
 namespace Atlas_Web.Authorization
 {

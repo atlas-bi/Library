@@ -441,15 +441,15 @@ namespace Atlas_Web.Pages.Tasks
                     Name = r.DisplayName,
                     ReportType = r.ReportObjectType.Name,
                     Epic = r.EpicMasterFile + " " + r.EpicRecordId.ToString(),
-                    RunReportUrl = r.RunReportUrl(
-                        HttpContext,
-                        _config,
-                        _authorizationService.AuthorizeAsync(
-                            HttpContext.User,
-                            r,
-                            "ReportRunPolicy"
-                        ).IsCompletedSuccessfully
-                    ),
+                    // RunReportUrl = r.RunReportUrl(
+                    //     HttpContext,
+                    //     _config,
+                    //     (await _authorizationService.AuthorizeAsync(
+                    //         HttpContext.User,
+                    //         r,
+                    //         "ReportRunPolicy"
+                    //     )).Succeeded
+                    // ),
                     EditReportUrl = r.EditReportUrl(HttpContext, _config),
                     RecordViewerUrl = r.RecordViewerUrl(HttpContext),
                     Runs = ((int?)f.Cnt ?? 0)
