@@ -40,16 +40,30 @@ public class CustomClaimsTransformer : IClaimsTransformation
             new Claim("UserId", userData.UserId.ToString(), ClaimValueTypes.Integer32),
         };
 
-        // add user roles
-        foreach (var role in userData.UserRoleLinks)
+        // add user roles + group roles
+        foreach (
+            var role in userData.UserRoleLinks
+                .Select(x => x.UserRoles)
+                .Union(
+                    userData.UserGroupsMemberships
+                        .Select(x => x.Group)
+                        .SelectMany(x => x.GroupRoleLinks)
+                        .Select(x => x.UserRoles)
+                )
+        )
         {
-            if (!string.IsNullOrEmpty(role.UserRoles.Name))
+            if (!string.IsNullOrEmpty(role.Name))
             {
-                claims.Add(new Claim(ClaimTypes.Role, role.UserRoles.Name));
+                claims.Add(new Claim(ClaimTypes.Role, role.Name));
             }
         }
         // if they are an admin
-        var isAdmin = userData.UserRoleLinks.Any(x => x.UserRoles.Name == "Administrator");
+        var isAdmin =
+            userData.UserRoleLinks.Any(x => x.UserRoles.Name == "Administrator")
+            || userData.UserGroupsMemberships.Any(
+                x => x.Group.GroupRoleLinks.Any(x => x.UserRoles.Name == "Administrator")
+            );
+
         // add active role
         var adminDisabled = userData.UserPreferences.FirstOrDefault(
             x => x.ItemType == "AdminDisabled"
@@ -60,17 +74,31 @@ public class CustomClaimsTransformer : IClaimsTransformation
 
         // add users permission points as roles
         foreach (
+            // permissions from the users roles
             var role in userData.UserRoleLinks
                 .Where(x => x.UserRoles.Name != "User" && x.UserRoles.Name != "Administrator")
                 .Select(x => x.UserRoles)
                 .SelectMany(x => x.RolePermissionLinks)
                 .Select(x => x.RolePermissions)
+                // union in the base user permissions
                 .Union(
                     _context.RolePermissionLinks
                         .Where(x => x.Role.Name == "User")
                         .Select(x => x.RolePermissions)
                 )
+                // if user is admin, add all admin permissions
                 .Union(_context.RolePermissions.Where(x => isAdmin && adminDisabled == null))
+                // if user is in a group, add the groups permissions (excluding user and admin)
+                .Union(
+                    userData.UserGroupsMemberships
+                        .SelectMany(x => x.Group.GroupRoleLinks)
+                        .Where(
+                            x => x.UserRoles.Name != "Administrator" && x.UserRoles.Name != "User"
+                        )
+                        .Select(x => x.UserRoles)
+                        .SelectMany(x => x.RolePermissionLinks)
+                        .Select(x => x.RolePermissions)
+                )
                 .Distinct()
         )
         {
@@ -110,6 +138,12 @@ public class CustomClaimsTransformer : IClaimsTransformation
             .ThenInclude(x => x.RolePermissions)
             .Include(x => x.UserPreferences)
             .Include(x => x.UserGroupsMemberships)
+            .Include(x => x.UserGroupsMemberships)
+            .ThenInclude(x => x.Group)
+            .ThenInclude(x => x.GroupRoleLinks)
+            .ThenInclude(x => x.UserRoles)
+            .ThenInclude(x => x.RolePermissionLinks)
+            .ThenInclude(x => x.RolePermissions)
             .SingleAsync(x => x.Username == username);
     }
 }

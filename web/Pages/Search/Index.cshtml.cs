@@ -647,6 +647,41 @@ namespace Atlas_Web.Pages.Search
             return Content(json);
         }
 
+        public ActionResult OnPostGroupSearch(string s)
+        {
+            if (s != null)
+            {
+                SearchString = s;
+            }
+
+            UserSearch = _solr
+                .Query(
+                    new SolrQuery(BuildSearchString(SearchString, Request.Query)),
+                    new QueryOptions
+                    {
+                        RequestHandler = new RequestHandlerParameters("/groups"),
+                        StartOrCursor = new StartOrCursor.Start(0),
+                        Rows = 10,
+                    }
+                )
+                .Select(
+                    x =>
+                        new ObjectSearch
+                        {
+                            ObjectId = x.AtlasId,
+                            Name =
+                                x.Name
+                                + (!string.IsNullOrEmpty(x.Email) ? " (" + x.Email + ")" : ""),
+                            Type = "u"
+                        }
+                )
+                .ToList();
+
+            var json = JsonConvert.SerializeObject(UserSearch);
+
+            return Content(json);
+        }
+
         public ActionResult OnPostUserSearchMail(string s)
         {
             if (s != null)

@@ -35,6 +35,17 @@
                     User Roles
                 </a>
             }
+
+            @if (User.HasPermission("Edit Group Permissions"))
+            {
+                <a class="panel-block panel-tab py-3 " href="#user-groups">
+                    <div class="fa-layers mr-2 w-auto">
+                        <span class="icon is-medium"><i class="fas fa-lg fa-users"></i></span>
+                        <span class="icon is-small fa-transform is-group-roles has-background-white"><i class="fas fa-lg fa-lock shrink-7"></i></span>
+                    </div>
+                    Group Roles
+                </a>
+            }
             <a class="panel-block panel-tab py-3 @if (!User.HasPermission("Edit Role Permissions") && !User.HasPermission("Edit User Permissions")){<text> is-active</text>}" href="#meta-fields">
                 <span class="icon is-medium mr-2">
                     <i class="fas fa-lg fa-list-ul" aria-hidden="true"></i>
@@ -75,10 +86,17 @@
                     <div data-ajax="yes" data-url="/settings/roles/"></div>
                 </div>
             }
+
             @if (User.HasPermission("Edit User Permissions"))
             {
                 <div class="panel-tab-data  @if (!User.HasPermission("Edit Role Permissions")){<text> is-active</text>}" id="user-roles">
                     <div data-ajax="yes" data-url="/settings/userroles/"></div>
+                </div>
+            }
+            @if (User.HasPermission("Edit Group Permissions"))
+            {
+                <div class="panel-tab-data" id="user-groups">
+                    <div data-ajax="yes" data-url="/settings/grouproles/"></div>
                 </div>
             }
             <div class="panel-tab-data @if (!User.HasPermission("Edit Role Permissions") && !User.HasPermission("Edit User Permissions")){<text> is-active</text>}" id="meta-fields">

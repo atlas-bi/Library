@@ -68,6 +68,7 @@ namespace Atlas_Web.Models
         public virtual DbSet<UserPreference> UserPreferences { get; set; }
         public virtual DbSet<UserRole> UserRoles { get; set; }
         public virtual DbSet<UserRoleLink> UserRoleLinks { get; set; }
+        public virtual DbSet<GroupRoleLink> GroupRoleLinks { get; set; }
         public virtual DbSet<UserSetting> UserSettings { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -1845,6 +1846,28 @@ namespace Atlas_Web.Models
                         .WithMany(p => p.UserRoleLinks)
                         .HasForeignKey(d => d.UserRolesId)
                         .HasConstraintName("FK_UserRoleLinks_UserRoles");
+                }
+            );
+            modelBuilder.Entity<GroupRoleLink>(
+                entity =>
+                {
+                    entity.HasKey(e => e.GroupRoleLinksId).HasName("PK__GroupRole__LinkId");
+
+                    entity.ToTable("GroupRoleLinks", "app");
+
+                    entity.HasIndex(e => new { e.GroupId, e.UserRolesId }, "groupid+roleid");
+
+                    entity
+                        .HasOne(d => d.Group)
+                        .WithMany(p => p.GroupRoleLinks)
+                        .HasForeignKey(d => d.GroupId)
+                        .HasConstraintName("FK_GroupRoleLinks_Group");
+
+                    entity
+                        .HasOne(d => d.UserRoles)
+                        .WithMany(p => p.GroupRoleLinks)
+                        .HasForeignKey(d => d.UserRolesId)
+                        .HasConstraintName("FK_GroupRoleLinks_UserRoles");
                 }
             );
 

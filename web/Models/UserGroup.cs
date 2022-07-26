@@ -8,6 +8,7 @@
             ReportGroupsMemberships = new HashSet<ReportGroupsMembership>();
             StarredGroups = new HashSet<StarredGroup>();
             UserGroupsMemberships = new HashSet<UserGroupsMembership>();
+            GroupRoleLinks = new HashSet<GroupRoleLink>();
         }
 
         public int GroupId { get; set; }
@@ -23,5 +24,6 @@
         public virtual ICollection<ReportGroupsMembership> ReportGroupsMemberships { get; set; }
         public virtual ICollection<StarredGroup> StarredGroups { get; set; }
         public virtual ICollection<UserGroupsMembership> UserGroupsMemberships { get; set; }
+        public virtual ICollection<GroupRoleLink> GroupRoleLinks { get; set; }
     }
 }

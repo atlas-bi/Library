@@ -4,6 +4,7 @@ using Atlas_Web.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Atlas_Web.Migrations
 {
     [DbContext(typeof(Atlas_WebContext))]
-    partial class Atlas_WebContextModelSnapshot : ModelSnapshot
+    [Migration("20220726163041_AddGroupPermissionSecurityPoint")]
+    partial class AddGroupPermissionSecurityPoint
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -424,30 +426,6 @@ namespace Atlas_Web.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("GlobalSiteSettings", "app");
-                });
-
-            modelBuilder.Entity("Atlas_Web.Models.GroupRoleLink", b =>
-                {
-                    b.Property<int>("GroupRoleLinksId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("GroupRoleLinksId"), 1L, 1);
-
-                    b.Property<int>("GroupId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserRolesId")
-                        .HasColumnType("int");
-
-                    b.HasKey("GroupRoleLinksId")
-                        .HasName("PK__GroupRole__LinkId");
-
-                    b.HasIndex("UserRolesId");
-
-                    b.HasIndex(new[] { "GroupId", "UserRolesId" }, "groupid+roleid");
-
-                    b.ToTable("GroupRoleLinks", "app");
                 });
 
             modelBuilder.Entity("Atlas_Web.Models.Initiative", b =>
@@ -2513,27 +2491,6 @@ namespace Atlas_Web.Migrations
                     b.Navigation("Term");
                 });
 
-            modelBuilder.Entity("Atlas_Web.Models.GroupRoleLink", b =>
-                {
-                    b.HasOne("Atlas_Web.Models.UserGroup", "Group")
-                        .WithMany("GroupRoleLinks")
-                        .HasForeignKey("GroupId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("FK_GroupRoleLinks_Group");
-
-                    b.HasOne("Atlas_Web.Models.UserRole", "UserRoles")
-                        .WithMany("GroupRoleLinks")
-                        .HasForeignKey("UserRolesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("FK_GroupRoleLinks_UserRoles");
-
-                    b.Navigation("Group");
-
-                    b.Navigation("UserRoles");
-                });
-
             modelBuilder.Entity("Atlas_Web.Models.Initiative", b =>
                 {
                     b.HasOne("Atlas_Web.Models.User", "ExecutiveOwner")
@@ -3572,8 +3529,6 @@ namespace Atlas_Web.Migrations
 
             modelBuilder.Entity("Atlas_Web.Models.UserGroup", b =>
                 {
-                    b.Navigation("GroupRoleLinks");
-
                     b.Navigation("MailRecipients");
 
                     b.Navigation("ReportGroupsMemberships");
@@ -3585,8 +3540,6 @@ namespace Atlas_Web.Migrations
 
             modelBuilder.Entity("Atlas_Web.Models.UserRole", b =>
                 {
-                    b.Navigation("GroupRoleLinks");
-
                     b.Navigation("RolePermissionLinks");
 
                     b.Navigation("UserRoleLinks");

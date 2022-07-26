@@ -6,6 +6,7 @@
         {
             RolePermissionLinks = new HashSet<RolePermissionLink>();
             UserRoleLinks = new HashSet<UserRoleLink>();
+            GroupRoleLinks = new HashSet<GroupRoleLink>();
         }
 
         public int UserRolesId { get; set; }
@@ -14,5 +15,6 @@
 
         public virtual ICollection<RolePermissionLink> RolePermissionLinks { get; set; }
         public virtual ICollection<UserRoleLink> UserRoleLinks { get; set; }
+        public virtual ICollection<GroupRoleLink> GroupRoleLinks { get; set; }
     }
 }

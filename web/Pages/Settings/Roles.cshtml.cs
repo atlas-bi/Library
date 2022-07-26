@@ -75,12 +75,7 @@ namespace Atlas_Web.Pages.Settings
                 _context.Remove(_context.UserRoles.Where(x => x.UserRolesId == Id).First());
                 _context.SaveChanges();
             }
-            // clear cache
-            var oldPerm = _cache.Get<List<string>>("MasterUserPermissions");
-            for (var x = 0; x < oldPerm.Count; x++)
-            {
-                _cache.Remove(oldPerm[x]);
-            }
+
             return RedirectToPage("/AccessControl/Index");
         }
 
@@ -119,19 +114,7 @@ namespace Atlas_Web.Pages.Settings
                         new RolePermissionLink { RoleId = RoleId, RolePermissionsId = PermissionId }
                     );
                 }
-                // clear cache
-                var oldPerm = _cache.Get<List<string>>("MasterUserPermissions");
-                for (var x = 0; x < oldPerm.Count; x++)
-                {
-                    try
-                    {
-                        _cache.Remove(oldPerm[x]);
-                    }
-                    catch
-                    {
-                        // if the perm failed to remove let it hang.
-                    }
-                }
+
                 _context.SaveChanges();
             }
 

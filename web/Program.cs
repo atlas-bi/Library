@@ -229,7 +229,7 @@ if (!app.Environment.IsDevelopment())
 {
     app.UseHsts();
 
-    app.UseHttpsRedirection();
+    // app.UseHttpsRedirection();
     app.UseStatusCodePagesWithReExecute("/Error", "?id={0}");
     app.UseExceptionHandler("/Error");
 }
