@@ -74,7 +74,7 @@ else {
                         @foreach (var s in Model.GroupUsers)
                         {
                             <tr>
-                                <td>@if (@Configuration["features:enable_user_profile"] == null || @Configuration["features:enable_user_profile"].ToString().ToLower() == "true")
+                                <td>@if (User.HasPermission("View Other User") && @Configuration["features:enable_user_profile"] == null || @Configuration["features:enable_user_profile"].ToString().ToLower() == "true")
                                     {<a href="\Users?id=@s.Id">@s.Name</a>} else {@s.Name}</td>
                                 <td>
                                     @if (s.Email != "")

@@ -23,7 +23,12 @@
                         <tbody>
                             @foreach(var s in Model.Report.ReportGroupsMemberships.ToList()){
                             <tr>
-                                <td><a href="\Groups?id=@s.GroupId">@s.Group.GroupName</a></td>
+                                @if(User.HasPermission("View Groups"))
+                                {
+                                    <td><a href="\Groups?id=@s.GroupId">@s.Group.GroupName</a></td>
+                                } else {
+                                    <td>@s.Group.GroupName</td>
+                                }
                                 <td>@s.Group.GroupType</td>
                                 <td>@s.Group.GroupSource</td>
                             </tr>

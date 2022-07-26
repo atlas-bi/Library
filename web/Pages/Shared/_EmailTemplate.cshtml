@@ -38,7 +38,7 @@
                                 </tr>
                                 <tr><td height="10"></td></tr>
                                 <tr>
-                                    <td>@if (@Configuration["features:enable_user_profile"] == null || @Configuration["features:enable_user_profile"].ToString().ToLower() == "true")
+                                    <td>@if (User.HasPermission("View Other User") && @Configuration["features:enable_user_profile"] == null || @Configuration["features:enable_user_profile"].ToString().ToLower() == "true")
                                         {
                                             <a href='@Configuration["AppSettings:base_url"]/users?id=@ViewBag.Sender.UserId'>@ViewBag.Sender.FullnameCalc</a>
                                         } else {

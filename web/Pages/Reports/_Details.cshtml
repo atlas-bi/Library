@@ -35,7 +35,7 @@
                     @if (@Model.Report.LastModifiedByUser != null)
                     {
                         <text>&nbsp;&middot;&nbsp;</text>
-                        @if (@Configuration["features:enable_user_profile"] == null || @Configuration["features:enable_user_profile"].ToString().ToLower() == "true")
+                        @if (User.HasPermission("View Other User") && @Configuration["features:enable_user_profile"] == null || @Configuration["features:enable_user_profile"].ToString().ToLower() == "true")
                         {
                             <a href="/users?id=@Model.Report.LastModifiedByUserId">@Model.Report.LastModifiedByUser.FullnameCalc</a>
                         }
@@ -56,7 +56,7 @@
                         @if (@Model.Report.ReportObjectDoc.UpdatedByNavigation != null)
                         {
                             <text>&nbsp;&middot;&nbsp;</text>
-                            @if (@Configuration["features:enable_user_profile"] == null || @Configuration["features:enable_user_profile"].ToString().ToLower() == "true")
+                            @if (User.HasPermission("View Other User") && @Configuration["features:enable_user_profile"] == null || @Configuration["features:enable_user_profile"].ToString().ToLower() == "true")
                             {
                                 <a href="/users?id=@Model.Report.ReportObjectDoc.UpdatedBy">@Model.Report.ReportObjectDoc.UpdatedByNavigation.FullnameCalc</a>
                             }

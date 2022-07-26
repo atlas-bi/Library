@@ -7,7 +7,7 @@
     @foreach (var log in Model.Report.ReportObjectDoc.MaintenanceLogs.ToList())
     {
         <div class="panel-block">
-            @if (Configuration["features:enable_user_profile"] == null || Configuration["features:enable_user_profile"].ToString().ToLower() == "true")
+            @if (User.HasPermission("View Other User") && Configuration["features:enable_user_profile"] == null || Configuration["features:enable_user_profile"].ToString().ToLower() == "true")
             {
                 <a href="/users?id=@log.MaintainerId">@log.Maintainer.FullnameCalc</a>
             } else

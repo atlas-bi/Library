@@ -74,7 +74,13 @@
                     @foreach (var r in u.Roles)
                     {
                         <tr>
-                            <td>@u.Name</td>
+                            @if(User.HasPermission("View Groups"))
+                            {
+                                <td><a href="/groups?id=@u.Id">@u.Name</a></td>
+                            } else {
+                                <td>@u.Name</td>
+                            }
+
                             <td>@r.Name</td>
                             <td>
                                 <a href="/Settings/GroupRoles/?handler=RemoveGroupPermission&GroupId=@u.Id&Id=@r.Id">
