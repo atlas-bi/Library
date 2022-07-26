@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Atlas_Web.Models;
-using Atlas_Web.Helpers;
 using Atlas_Web.Authorization;
 using Microsoft.Extensions.Caching.Memory;
 
@@ -19,16 +18,6 @@ namespace Atlas_Web.Pages.Settings
             _context = context;
             _cache = cache;
         }
-
-        public IEnumerable<ValueListData> OrganizationalValueList { get; set; }
-        public IEnumerable<ValueListData> EstimatedRunFrequencyList { get; set; }
-        public IEnumerable<ValueListData> TagList { get; set; }
-        public IEnumerable<ValueListData> MaintenanceScheduleList { get; set; }
-        public IEnumerable<ValueListData> FragilityTagList { get; set; }
-        public IEnumerable<ValueListData> FragilityList { get; set; }
-        public IEnumerable<ValueListData> MaintenanceLogStatusList { get; set; }
-        public IEnumerable<ValueListData> FinancialImpactList { get; set; }
-        public IEnumerable<ValueListData> StrategicImportanceList { get; set; }
 
         [BindProperty]
         public OrganizationalValue OrganizationalValue { get; set; }
@@ -71,8 +60,8 @@ namespace Atlas_Web.Pages.Settings
                 from o in _context.OrganizationalValues
                 select new ValueListData
                 {
-                    Id = o.OrganizationalValueId,
-                    Name = o.OrganizationalValueName,
+                    Id = o.Id,
+                    Name = o.Name,
                     Used = o.ReportObjectDocs.Count
                 }
             ).ToListAsync();
@@ -90,8 +79,8 @@ namespace Atlas_Web.Pages.Settings
                 from o in _context.EstimatedRunFrequencies
                 select new ValueListData
                 {
-                    Id = o.EstimatedRunFrequencyId,
-                    Name = o.EstimatedRunFrequencyName,
+                    Id = o.Id,
+                    Name = o.Name,
                     Used = o.ReportObjectDocs.Count
                 }
             ).ToListAsync();
@@ -109,8 +98,8 @@ namespace Atlas_Web.Pages.Settings
                 from o in _context.MaintenanceSchedules
                 select new ValueListData
                 {
-                    Id = o.MaintenanceScheduleId,
-                    Name = o.MaintenanceScheduleName,
+                    Id = o.Id,
+                    Name = o.Name,
                     Used = o.ReportObjectDocs.Count
                 }
             ).ToListAsync();
@@ -128,8 +117,8 @@ namespace Atlas_Web.Pages.Settings
                 from o in _context.Fragilities
                 select new ValueListData
                 {
-                    Id = o.FragilityId,
-                    Name = o.FragilityName,
+                    Id = o.Id,
+                    Name = o.Name,
                     Used = o.ReportObjectDocs.Count
                 }
             ).ToListAsync();
@@ -147,8 +136,8 @@ namespace Atlas_Web.Pages.Settings
                 from o in _context.FragilityTags
                 select new ValueListData
                 {
-                    Id = o.FragilityTagId,
-                    Name = o.FragilityTagName,
+                    Id = o.Id,
+                    Name = o.Name,
                     Used = o.ReportObjectDocFragilityTags.Count
                 }
             ).ToListAsync();
@@ -182,8 +171,8 @@ namespace Atlas_Web.Pages.Settings
                 from o in _context.MaintenanceLogStatuses
                 select new ValueListData
                 {
-                    Id = o.MaintenanceLogStatusId,
-                    Name = o.MaintenanceLogStatusName,
+                    Id = o.Id,
+                    Name = o.Name,
                     Used = o.MaintenanceLogs.Count
                 }
             ).ToListAsync();
@@ -201,7 +190,7 @@ namespace Atlas_Web.Pages.Settings
                 from o in _context.FinancialImpacts
                 select new ValueListData
                 {
-                    Id = o.FinancialImpactId,
+                    Id = o.Id,
                     Name = o.Name,
                     Used = o.Initiatives.Count + o.Collections.Count
                 }
@@ -220,7 +209,7 @@ namespace Atlas_Web.Pages.Settings
                 from o in _context.StrategicImportances
                 select new ValueListData
                 {
-                    Id = o.StrategicImportanceId,
+                    Id = o.Id,
                     Name = o.Name,
                     Used = o.Initiatives.Count + o.Collections.Count
                 }
@@ -242,7 +231,7 @@ namespace Atlas_Web.Pages.Settings
         {
             if (
                 ModelState.IsValid
-                && OrganizationalValue.OrganizationalValueName != null
+                && OrganizationalValue.Name != null
                 && User.HasPermission("Create Parameters")
             )
             {
@@ -257,17 +246,12 @@ namespace Atlas_Web.Pages.Settings
         {
             if (
                 ModelState.IsValid
-                && OrganizationalValue.OrganizationalValueId > 0
+                && OrganizationalValue.Id > 0
                 && User.HasPermission("Delete Parameters")
             )
             {
                 _context.ReportObjectDocs
-                    .Where(
-                        x =>
-                            x.OrganizationalValueId.Equals(
-                                OrganizationalValue.OrganizationalValueId
-                            )
-                    )
+                    .Where(x => x.OrganizationalValueId.Equals(OrganizationalValue.Id))
                     .ToList()
                     .ForEach(q => q.OrganizationalValueId = null);
                 _context.Remove(OrganizationalValue);
@@ -281,7 +265,7 @@ namespace Atlas_Web.Pages.Settings
         {
             if (
                 ModelState.IsValid
-                && EstimatedRunFrequency.EstimatedRunFrequencyName != null
+                && EstimatedRunFrequency.Name != null
                 && User.HasPermission("Create Parameters")
             )
             {
@@ -307,17 +291,12 @@ namespace Atlas_Web.Pages.Settings
         {
             if (
                 ModelState.IsValid
-                && EstimatedRunFrequency.EstimatedRunFrequencyId > 0
+                && EstimatedRunFrequency.Id > 0
                 && User.HasPermission("Delete Parameters")
             )
             {
                 _context.ReportObjectDocs
-                    .Where(
-                        x =>
-                            x.EstimatedRunFrequencyId.Equals(
-                                EstimatedRunFrequency.EstimatedRunFrequencyId
-                            )
-                    )
+                    .Where(x => x.EstimatedRunFrequencyId.Equals(EstimatedRunFrequency.Id))
                     .ToList()
                     .ForEach(q => q.EstimatedRunFrequencyId = null);
                 _context.Remove(EstimatedRunFrequency);
@@ -343,7 +322,7 @@ namespace Atlas_Web.Pages.Settings
         {
             if (
                 ModelState.IsValid
-                && Fragility.FragilityName != null
+                && Fragility.Name != null
                 && User.HasPermission("Create Parameters")
             )
             {
@@ -356,14 +335,10 @@ namespace Atlas_Web.Pages.Settings
 
         public ActionResult OnPostDeleteFragility()
         {
-            if (
-                ModelState.IsValid
-                && Fragility.FragilityId > 0
-                && User.HasPermission("Delete Parameters")
-            )
+            if (ModelState.IsValid && Fragility.Id > 0 && User.HasPermission("Delete Parameters"))
             {
                 _context.ReportObjectDocs
-                    .Where(x => x.FragilityId.Equals(Fragility.FragilityId))
+                    .Where(x => x.FragilityId.Equals(Fragility.Id))
                     .ToList()
                     .ForEach(q => q.FragilityId = null);
                 _context.Remove(Fragility);
@@ -377,7 +352,7 @@ namespace Atlas_Web.Pages.Settings
         {
             if (
                 ModelState.IsValid
-                && MaintenanceSchedule.MaintenanceScheduleName != null
+                && MaintenanceSchedule.Name != null
                 && User.HasPermission("Create Parameters")
             )
             {
@@ -392,17 +367,12 @@ namespace Atlas_Web.Pages.Settings
         {
             if (
                 ModelState.IsValid
-                && MaintenanceSchedule.MaintenanceScheduleId > 0
+                && MaintenanceSchedule.Id > 0
                 && User.HasPermission("Delete Parameters")
             )
             {
                 _context.ReportObjectDocs
-                    .Where(
-                        x =>
-                            x.MaintenanceScheduleId.Equals(
-                                MaintenanceSchedule.MaintenanceScheduleId
-                            )
-                    )
+                    .Where(x => x.MaintenanceScheduleId.Equals(MaintenanceSchedule.Id))
                     .ToList()
                     .ForEach(q => q.MaintenanceScheduleId = null);
                 _context.Remove(MaintenanceSchedule);
@@ -416,7 +386,7 @@ namespace Atlas_Web.Pages.Settings
         {
             if (
                 ModelState.IsValid
-                && FragilityTag.FragilityTagName != null
+                && FragilityTag.Name != null
                 && User.HasPermission("Create Parameters")
             )
             {
@@ -430,14 +400,12 @@ namespace Atlas_Web.Pages.Settings
         public ActionResult OnPostDeleteFragilityTag()
         {
             if (
-                ModelState.IsValid
-                && FragilityTag.FragilityTagId > 0
-                && User.HasPermission("Delete Parameters")
+                ModelState.IsValid && FragilityTag.Id > 0 && User.HasPermission("Delete Parameters")
             )
             {
                 _context.RemoveRange(
                     _context.ReportObjectDocFragilityTags.Where(
-                        x => x.FragilityTagId.Equals(FragilityTag.FragilityTagId)
+                        x => x.FragilityTagId.Equals(FragilityTag.Id)
                     )
                 );
                 _context.Remove(FragilityTag);
@@ -451,7 +419,7 @@ namespace Atlas_Web.Pages.Settings
         {
             if (
                 ModelState.IsValid
-                && MaintenanceLogStatus.MaintenanceLogStatusName != null
+                && MaintenanceLogStatus.Name != null
                 && User.HasPermission("Create Parameters")
             )
             {
@@ -466,16 +434,13 @@ namespace Atlas_Web.Pages.Settings
         {
             if (
                 ModelState.IsValid
-                && MaintenanceLogStatus.MaintenanceLogStatusId > 0
+                && MaintenanceLogStatus.Id > 0
                 && User.HasPermission("Delete Parameters")
             )
             {
                 _context.RemoveRange(
                     _context.MaintenanceLogs.Where(
-                        x =>
-                            x.MaintenanceLogStatusId.Equals(
-                                MaintenanceLogStatus.MaintenanceLogStatusId
-                            )
+                        x => x.MaintenanceLogStatusId.Equals(MaintenanceLogStatus.Id)
                     )
                 );
                 _context.Remove(MaintenanceLogStatus);
@@ -504,16 +469,16 @@ namespace Atlas_Web.Pages.Settings
         {
             if (
                 ModelState.IsValid
-                && FinancialImpact.FinancialImpactId > 0
+                && FinancialImpact.Id > 0
                 && User.HasPermission("Delete Parameters")
             )
             {
                 _context.Collections
-                    .Where(x => x.FinancialImpact.Equals(FinancialImpact.FinancialImpactId))
+                    .Where(x => x.FinancialImpact.Equals(FinancialImpact.Id))
                     .ToList()
                     .ForEach(q => q.FinancialImpact = null);
                 _context.Initiatives
-                    .Where(x => x.FinancialImpact.Equals(FinancialImpact.FinancialImpactId))
+                    .Where(x => x.FinancialImpact.Equals(FinancialImpact.Id))
                     .ToList()
                     .ForEach(q => q.FinancialImpact = null);
                 _context.Remove(FinancialImpact);
@@ -542,20 +507,16 @@ namespace Atlas_Web.Pages.Settings
         {
             if (
                 ModelState.IsValid
-                && StrategicImportance.StrategicImportanceId > 0
+                && StrategicImportance.Id > 0
                 && User.HasPermission("Delete Parameters")
             )
             {
                 _context.Collections
-                    .Where(
-                        x => x.StrategicImportance.Equals(StrategicImportance.StrategicImportanceId)
-                    )
+                    .Where(x => x.StrategicImportance.Equals(StrategicImportance.Id))
                     .ToList()
                     .ForEach(q => q.StrategicImportance = null);
                 _context.Initiatives
-                    .Where(
-                        x => x.StrategicImportance.Equals(StrategicImportance.StrategicImportanceId)
-                    )
+                    .Where(x => x.StrategicImportance.Equals(StrategicImportance.Id))
                     .ToList()
                     .ForEach(q => q.StrategicImportance = null);
                 _context.Remove(StrategicImportance);

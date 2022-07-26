@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Atlas_Web.Models;
-using Atlas_Web.Helpers;
 using Atlas_Web.Authorization;
 using Microsoft.Extensions.Caching.Memory;
 
@@ -21,28 +20,10 @@ namespace Atlas_Web.Pages.Settings
             _config = config;
         }
 
-        public List<UserRolesData> UserRoles { get; set; }
-        public List<RolePermission> RolePermissions { get; set; }
         public List<PrivilegedUsersData> PrivilegedUsers { get; set; }
 
         [BindProperty]
-        public UserRole UserRole { get; set; }
-
-        [BindProperty]
         public UserRoleLink NewUserRole { get; set; }
-
-        public class UserRolesData
-        {
-            public int Id { get; set; }
-            public string Name { get; set; }
-            public IEnumerable<RolePermissionsData> Permissions { get; set; }
-        }
-
-        public class RolePermissionsData
-        {
-            public int? Id { get; set; }
-            public string Name { get; set; }
-        }
 
         public class PrivilegedUsersData
         {

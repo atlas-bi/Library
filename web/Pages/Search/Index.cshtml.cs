@@ -1,5 +1,4 @@
 using Atlas_Web.Models;
-using Atlas_Web.Helpers;
 using Atlas_Web.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -426,7 +425,7 @@ namespace Atlas_Web.Pages.Search
                                                           .AsSingleQuery()
                                                           .AsNoTracking()
                                                           .SingleOrDefault(
-                                                              y => y.DataProjectId == x.AtlasId
+                                                              y => y.CollectionId == x.AtlasId
                                                           );
                                                   }
                                               )
@@ -460,7 +459,7 @@ namespace Atlas_Web.Pages.Search
                                                           .Include(x => x.StarredInitiatives)
                                                           .AsSingleQuery()
                                                           .SingleOrDefault(
-                                                              y => y.DataInitiativeId == x.AtlasId
+                                                              y => y.InitiativeId == x.AtlasId
                                                           );
                                                   }
                                               )

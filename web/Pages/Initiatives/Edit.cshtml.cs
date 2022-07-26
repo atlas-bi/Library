@@ -1,4 +1,3 @@
-using Atlas_Web.Helpers;
 using Atlas_Web.Models;
 using Atlas_Web.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -42,7 +41,7 @@ namespace Atlas_Web.Pages.Initiatives
                 .Include(x => x.ExecutiveOwner)
                 .Include(x => x.FinancialImpactNavigation)
                 .Include(x => x.StrategicImportanceNavigation)
-                .SingleAsync(x => x.DataInitiativeId == id);
+                .SingleAsync(x => x.InitiativeId == id);
 
             return Page();
         }
@@ -67,7 +66,7 @@ namespace Atlas_Web.Pages.Initiatives
 
             // we get a copy of the initiative and then will only update several fields.
             Initiative NewInitiative = await _context.Initiatives
-                .Where(m => m.DataInitiativeId == Initiative.DataInitiativeId)
+                .Where(m => m.InitiativeId == Initiative.InitiativeId)
                 .FirstOrDefaultAsync();
 
             // update last update values & values that were posted
@@ -86,31 +85,31 @@ namespace Atlas_Web.Pages.Initiatives
 
             // updated any linked data projects that were added and remove any that were delinked.
             var AddedCollections = await _context.Collections
-                .Where(d => Collections.Select(x => x.DataProjectId).Contains(d.DataProjectId))
+                .Where(d => Collections.Select(x => x.CollectionId).Contains(d.CollectionId))
                 .ToListAsync();
 
             _cache.Remove("collections");
             foreach (var collection in AddedCollections)
             {
-                _cache.Remove("collection-" + collection.DataProjectId);
+                _cache.Remove("collection-" + collection.CollectionId);
 
-                collection.DataInitiativeId = Initiative.DataInitiativeId;
+                collection.InitiativeId = Initiative.InitiativeId;
                 await _context.SaveChangesAsync();
             }
 
             var RemovedCollections = await _context.Collections
-                .Where(d => d.DataInitiativeId == Initiative.DataInitiativeId)
-                .Where(d => !Collections.Select(x => x.DataProjectId).Contains(d.DataProjectId))
+                .Where(d => d.InitiativeId == Initiative.InitiativeId)
+                .Where(d => !Collections.Select(x => x.CollectionId).Contains(d.CollectionId))
                 .ToListAsync();
 
             foreach (var collection in RemovedCollections)
             {
-                _cache.Remove("collection-" + collection.DataProjectId);
-                collection.DataInitiativeId = null;
+                _cache.Remove("collection-" + collection.CollectionId);
+                collection.InitiativeId = null;
                 await _context.SaveChangesAsync();
             }
 
-            _cache.Remove("initiative-" + Initiative.DataInitiativeId);
+            _cache.Remove("initiative-" + Initiative.InitiativeId);
             _cache.Remove("initiatives");
 
             return RedirectToPage("/Initiatives/Index", new { id, success = "Changes saved." });

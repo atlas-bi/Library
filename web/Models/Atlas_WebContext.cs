@@ -33,7 +33,7 @@ namespace Atlas_Web.Models
         public virtual DbSet<Tag> Tags { get; set; }
         public virtual DbSet<ReportTagLink> ReportTagLinks { get; set; }
         public virtual DbSet<ReportGroupsMembership> ReportGroupsMemberships { get; set; }
-        public virtual DbSet<ReportManageEngineTicket> ReportManageEngineTickets { get; set; }
+        public virtual DbSet<ReportServiceRequest> ReportServiceRequests { get; set; }
         public virtual DbSet<ReportObject> ReportObjects { get; set; }
         public virtual DbSet<ReportObjectAttachment> ReportObjectAttachments { get; set; }
         public virtual DbSet<ReportObjectDoc> ReportObjectDocs { get; set; }
@@ -99,49 +99,9 @@ namespace Atlas_Web.Models
 
                     entity.HasIndex(e => e.UserId, "userid");
 
-                    entity
-                        .Property(e => e.AccessDateTime)
-                        .HasColumnType("datetime")
-                        .HasColumnName("accessDateTime");
+                    entity.Property(e => e.AccessDateTime).HasColumnType("datetime");
 
-                    entity.Property(e => e.Active).HasColumnName("active");
-
-                    entity.Property(e => e.Hash).HasColumnName("hash");
-
-                    entity.Property(e => e.Hostname).HasColumnName("hostname");
-
-                    entity.Property(e => e.Href).HasColumnName("href");
-
-                    entity.Property(e => e.Language).HasColumnName("language");
-
-                    entity.Property(e => e.LoadTime).HasColumnName("loadTime");
-
-                    entity.Property(e => e.Origin).HasColumnName("origin");
-
-                    entity.Property(e => e.PageId).HasColumnName("pageId");
-
-                    entity.Property(e => e.PageTime).HasColumnName("pageTime");
-
-                    entity.Property(e => e.Pathname).HasColumnName("pathname");
-
-                    entity.Property(e => e.Protocol).HasColumnName("protocol");
-
-                    entity.Property(e => e.Referrer).HasColumnName("referrer");
-
-                    entity.Property(e => e.ScreenHeight).HasColumnName("screenHeight");
-
-                    entity.Property(e => e.ScreenWidth).HasColumnName("screenWidth");
-
-                    entity.Property(e => e.Search).HasColumnName("search");
-
-                    entity.Property(e => e.SessionId).HasColumnName("sessionId");
-
-                    entity
-                        .Property(e => e.UpdateTime)
-                        .HasColumnType("datetime")
-                        .HasColumnName("updateTime");
-
-                    entity.Property(e => e.UserAgent).HasColumnName("userAgent");
+                    entity.Property(e => e.UpdateTime).HasColumnType("datetime");
 
                     entity
                         .HasOne(d => d.User)
@@ -156,23 +116,9 @@ namespace Atlas_Web.Models
                 {
                     entity.ToTable("AnalyticsTrace", "app");
 
-                    entity.Property(e => e.Handled).HasColumnName("handled");
+                    entity.Property(e => e.LogDateTime).HasColumnType("datetime");
 
-                    entity
-                        .Property(e => e.LogDateTime)
-                        .HasColumnType("datetime")
-                        .HasColumnName("logDateTime");
-
-                    entity.Property(e => e.LogId).HasColumnName("logId");
-
-                    entity.Property(e => e.Referer).HasColumnName("referer");
-
-                    entity
-                        .Property(e => e.UpdateTime)
-                        .HasColumnType("datetime")
-                        .HasColumnName("updateTime");
-
-                    entity.Property(e => e.UserAgent).HasColumnName("userAgent");
+                    entity.Property(e => e.UpdateTime).HasColumnType("datetime");
 
                     entity
                         .HasOne(d => d.User)
@@ -187,21 +133,9 @@ namespace Atlas_Web.Models
                 {
                     entity.ToTable("AnalyticsError", "app");
 
-                    entity.Property(e => e.Handled).HasColumnName("handled");
+                    entity.Property(e => e.LogDateTime).HasColumnType("datetime");
 
-                    entity
-                        .Property(e => e.LogDateTime)
-                        .HasColumnType("datetime")
-                        .HasColumnName("logDateTime");
-
-                    entity.Property(e => e.Referer).HasColumnName("referer");
-
-                    entity
-                        .Property(e => e.UpdateTime)
-                        .HasColumnType("datetime")
-                        .HasColumnName("updateTime");
-
-                    entity.Property(e => e.UserAgent).HasColumnName("userAgent");
+                    entity.Property(e => e.UpdateTime).HasColumnType("datetime");
 
                     entity
                         .HasOne(d => d.User)
@@ -214,9 +148,7 @@ namespace Atlas_Web.Models
             modelBuilder.Entity<Initiative>(
                 entity =>
                 {
-                    entity
-                        .HasKey(e => e.DataInitiativeId)
-                        .HasName("PK__DP_DataI__1EFC948C3A83A845");
+                    entity.HasKey(e => e.InitiativeId).HasName("PK__DP_DataI__1EFC948C3A83A845");
 
                     entity.ToTable("Initiative", "app");
 
@@ -224,7 +156,7 @@ namespace Atlas_Web.Models
 
                     entity.HasIndex(e => e.FinancialImpact, "financialimpact");
 
-                    entity.HasIndex(e => e.DataInitiativeId, "initiativeid");
+                    entity.HasIndex(e => e.InitiativeId, "initiativeid");
 
                     entity.HasIndex(e => e.LastUpdateDate, "lastupdatedate");
 
@@ -233,14 +165,6 @@ namespace Atlas_Web.Models
                     entity.HasIndex(e => e.OperationOwnerId, "operationownderid");
 
                     entity.HasIndex(e => e.StrategicImportance, "strategicimportance");
-
-                    entity.Property(e => e.DataInitiativeId).HasColumnName("DataInitiativeID");
-
-                    entity.Property(e => e.ExecutiveOwnerId).HasColumnName("ExecutiveOwnerID");
-
-                    entity.Property(e => e.LastUpdateDate).HasColumnType("datetime");
-
-                    entity.Property(e => e.OperationOwnerId).HasColumnName("OperationOwnerID");
 
                     entity.Property(e => e.Hidden).HasMaxLength(1).IsFixedLength();
 
@@ -279,13 +203,13 @@ namespace Atlas_Web.Models
             modelBuilder.Entity<Collection>(
                 entity =>
                 {
-                    entity.HasKey(e => e.DataProjectId).HasName("PK__DP_DataP__E8D09D08794EBFAD");
+                    entity.HasKey(e => e.CollectionId).HasName("PK__DP_DataP__E8D09D08794EBFAD");
 
                     entity.ToTable("Collection", "app");
 
                     entity.HasIndex(e => e.AnalyticsOwnerId, "analyticsownerid");
 
-                    entity.HasIndex(e => e.DataProjectId, "collectionid");
+                    entity.HasIndex(e => e.CollectionId, "collectionid");
 
                     entity.HasIndex(e => e.DataManagerId, "datamanagerid");
 
@@ -293,7 +217,7 @@ namespace Atlas_Web.Models
 
                     entity.HasIndex(e => e.FinancialImpact, "financialimpact");
 
-                    entity.HasIndex(e => e.DataInitiativeId, "initiativeid");
+                    entity.HasIndex(e => e.InitiativeId, "initiativeid");
 
                     entity.HasIndex(e => e.LastUpdateDate, "lastupdatedate");
 
@@ -303,25 +227,9 @@ namespace Atlas_Web.Models
 
                     entity.HasIndex(e => e.StrategicImportance, "strategicimportance");
 
-                    entity.Property(e => e.DataProjectId).HasColumnName("DataProjectID");
-
-                    entity.Property(e => e.AnalyticsOwnerId).HasColumnName("AnalyticsOwnerID");
-
-                    entity.Property(e => e.DataInitiativeId).HasColumnName("DataInitiativeID");
-
-                    entity.Property(e => e.DataManagerId).HasColumnName("DataManagerID");
-
-                    entity.Property(e => e.ExecutiveOwnerId).HasColumnName("ExecutiveOwnerID");
-
-                    entity
-                        .Property(e => e.ExternalDocumentationUrl)
-                        .HasColumnName("ExternalDocumentationURL");
-
                     entity.Property(e => e.Hidden).HasMaxLength(1).IsFixedLength();
 
                     entity.Property(e => e.LastUpdateDate).HasColumnType("datetime");
-
-                    entity.Property(e => e.OperationOwnerId).HasColumnName("OperationOwnerID");
 
                     entity
                         .HasOne(d => d.AnalyticsOwner)
@@ -332,7 +240,7 @@ namespace Atlas_Web.Models
                     entity
                         .HasOne(d => d.Initiative)
                         .WithMany(p => p.Collections)
-                        .HasForeignKey(d => d.DataInitiativeId)
+                        .HasForeignKey(d => d.InitiativeId)
                         .HasConstraintName("FK_DP_DataProject_DP_DataInitiative");
 
                     entity
@@ -376,23 +284,19 @@ namespace Atlas_Web.Models
             modelBuilder.Entity<CollectionReport>(
                 entity =>
                 {
-                    entity
-                        .HasKey(e => e.ReportAnnotationId)
-                        .HasName("PK__DP_Repor__84AFA7F30D34E922");
+                    entity.HasKey(e => e.LinkId).HasName("PK__DP_Repor__84AFA7F30D34E922");
 
                     entity.ToTable("CollectionReport", "app");
 
                     entity.HasIndex(
-                        e => new { e.ReportId, e.DataProjectId },
-                        "reportid+dataprojectid"
+                        e => new { e.ReportId, e.CollectionId },
+                        "reportid+collectionid"
                     );
-
-                    entity.Property(e => e.ReportAnnotationId).HasColumnName("ReportAnnotationID");
 
                     entity
                         .HasOne(d => d.DataProject)
                         .WithMany(p => p.CollectionReports)
-                        .HasForeignKey(d => d.DataProjectId)
+                        .HasForeignKey(d => d.CollectionId)
                         .HasConstraintName("FK_DP_ReportAnnotation_DP_DataProject");
 
                     entity
@@ -406,20 +310,16 @@ namespace Atlas_Web.Models
             modelBuilder.Entity<CollectionTerm>(
                 entity =>
                 {
-                    entity
-                        .HasKey(e => e.TermAnnotationId)
-                        .HasName("PK__DP_TermA__1BB492E32D415E15");
+                    entity.HasKey(e => e.LinkId).HasName("PK__DP_TermA__1BB492E32D415E15");
 
                     entity.ToTable("CollectionTerm", "app");
 
-                    entity.HasIndex(e => new { e.TermId, e.DataProjectId }, "termid+dataprojectid");
-
-                    entity.Property(e => e.TermAnnotationId).HasColumnName("TermAnnotationID");
+                    entity.HasIndex(e => new { e.TermId, e.CollectionId }, "termid+collectionid");
 
                     entity
                         .HasOne(d => d.DataProject)
                         .WithMany(p => p.CollectionTerms)
-                        .HasForeignKey(d => d.DataProjectId)
+                        .HasForeignKey(d => d.CollectionId)
                         .HasConstraintName("FK_DP_TermAnnotation_DP_DataProject");
 
                     entity
@@ -435,11 +335,7 @@ namespace Atlas_Web.Models
                 {
                     entity.ToTable("EstimatedRunFrequency", "app");
 
-                    entity.HasIndex(e => e.EstimatedRunFrequencyId, "estimatedrunfrequencyid");
-
-                    entity
-                        .Property(e => e.EstimatedRunFrequencyId)
-                        .HasColumnName("EstimatedRunFrequencyID");
+                    entity.HasIndex(e => e.Id);
                 }
             );
 
@@ -448,7 +344,7 @@ namespace Atlas_Web.Models
                 {
                     entity.ToTable("FinancialImpact", "app");
 
-                    entity.HasIndex(e => e.FinancialImpactId, "financialimpactid");
+                    entity.HasIndex(e => e.Id);
                 }
             );
 
@@ -457,9 +353,7 @@ namespace Atlas_Web.Models
                 {
                     entity.ToTable("Fragility", "app");
 
-                    entity.HasIndex(e => e.FragilityId, "fragilityid");
-
-                    entity.Property(e => e.FragilityId).HasColumnName("FragilityID");
+                    entity.HasIndex(e => e.Id);
                 }
             );
 
@@ -468,9 +362,7 @@ namespace Atlas_Web.Models
                 {
                     entity.ToTable("FragilityTag", "app");
 
-                    entity.HasIndex(e => e.FragilityTagId, "fragilitytagid");
-
-                    entity.Property(e => e.FragilityTagId).HasColumnName("FragilityTagID");
+                    entity.HasIndex(e => e.Id);
                 }
             );
 
@@ -649,15 +541,7 @@ namespace Atlas_Web.Models
 
                     entity.HasIndex(e => e.MaintenanceLogStatusId, "maintenancelogstatusid");
 
-                    entity.Property(e => e.MaintenanceLogId).HasColumnName("MaintenanceLogID");
-
-                    entity.Property(e => e.MaintainerId).HasColumnName("MaintainerID");
-
                     entity.Property(e => e.MaintenanceDate).HasColumnType("datetime");
-
-                    entity
-                        .Property(e => e.MaintenanceLogStatusId)
-                        .HasColumnName("MaintenanceLogStatusID");
 
                     entity
                         .HasOne(d => d.Maintainer)
@@ -676,7 +560,7 @@ namespace Atlas_Web.Models
                     entity
                         .HasOne(d => d.ReportObjectDoc)
                         .WithMany(p => p.MaintenanceLogs)
-                        .HasForeignKey(d => d.ReportObjectId)
+                        .HasForeignKey(d => d.ReportId)
                         .HasConstraintName("FK__ReportObj__Repor__72E3DB65");
                 }
             );
@@ -686,13 +570,9 @@ namespace Atlas_Web.Models
                 {
                     entity.ToTable("MaintenanceLogStatus", "app");
 
-                    entity.HasIndex(e => e.MaintenanceLogStatusId, "maintenancelogstatusid");
+                    entity.HasIndex(e => e.Id);
 
-                    entity
-                        .Property(e => e.MaintenanceLogStatusId)
-                        .HasColumnName("MaintenanceLogStatusID");
-
-                    entity.Property(e => e.MaintenanceLogStatusName).IsRequired();
+                    entity.Property(e => e.Name).IsRequired();
                 }
             );
 
@@ -701,13 +581,9 @@ namespace Atlas_Web.Models
                 {
                     entity.ToTable("MaintenanceSchedule", "app");
 
-                    entity.HasIndex(e => e.MaintenanceScheduleId, "maintenancescheduleid");
+                    entity.HasIndex(e => e.Id);
 
-                    entity
-                        .Property(e => e.MaintenanceScheduleId)
-                        .HasColumnName("MaintenanceScheduleID");
-
-                    entity.Property(e => e.MaintenanceScheduleName).IsRequired();
+                    entity.Property(e => e.Name).IsRequired();
                 }
             );
 
@@ -716,17 +592,14 @@ namespace Atlas_Web.Models
                 {
                     entity.ToTable("OrganizationalValue", "app");
 
-                    entity.HasIndex(e => e.OrganizationalValueId, "organizationalvalueid");
-
-                    entity
-                        .Property(e => e.OrganizationalValueId)
-                        .HasColumnName("OrganizationalValueID");
+                    entity.HasIndex(e => e.Id);
                 }
             );
 
             modelBuilder.Entity<Tag>(
                 entity =>
                 {
+                    entity.ToTable("Tags", "dbo");
                     entity.HasKey(e => e.TagId);
 
                     entity.HasIndex(e => e.TagId, "tagid");
@@ -737,6 +610,7 @@ namespace Atlas_Web.Models
             modelBuilder.Entity<ReportTagLink>(
                 entity =>
                 {
+                    entity.ToTable("ReportTagLinks", "dbo");
                     entity.HasKey(e => e.ReportTagLinkId);
                     entity.HasIndex(e => new { e.ReportId, e.TagId }, "report_tag");
                     entity
@@ -753,6 +627,7 @@ namespace Atlas_Web.Models
             modelBuilder.Entity<ReportGroupsMembership>(
                 entity =>
                 {
+                    entity.ToTable("ReportGroupsMemberships", "dbo");
                     entity.HasKey(e => e.MembershipId).HasName("PK__ReportGr__92A786790B03128D");
 
                     entity.HasIndex(e => new { e.GroupId, e.ReportId }, "groupid+reportid");
@@ -777,29 +652,30 @@ namespace Atlas_Web.Models
                 }
             );
 
-            modelBuilder.Entity<ReportManageEngineTicket>(
+            modelBuilder.Entity<ReportServiceRequest>(
                 entity =>
                 {
+                    entity.ToTable("ReportServiceRequests", "app");
                     entity
-                        .HasKey(e => e.ManageEngineTicketsId)
+                        .HasKey(e => e.ServiceRequestId)
                         .HasName("PK__ReportMa__97EB8BADB02592C9");
 
-                    entity.ToTable("ReportManageEngineTickets", "app");
+                    entity.ToTable("ReportServiceRequests", "app");
 
                     entity.HasIndex(e => e.ReportObjectId, "reportobjectid");
 
                     entity
                         .HasOne(d => d.ReportObject)
-                        .WithMany(p => p.ReportManageEngineTickets)
+                        .WithMany(p => p.ReportServiceRequests)
                         .HasForeignKey(d => d.ReportObjectId)
-                        .HasConstraintName("FK_ReportManageEngineTickets_ReportObject");
+                        .HasConstraintName("FK_ReportServiceRequests_ReportObject");
                 }
             );
 
             modelBuilder.Entity<ReportObject>(
                 entity =>
                 {
-                    entity.ToTable("ReportObject");
+                    entity.ToTable("ReportObject", "dbo");
 
                     entity.HasIndex(e => e.AuthorUserId, "authorid");
 
@@ -952,6 +828,7 @@ namespace Atlas_Web.Models
             modelBuilder.Entity<ReportObjectAttachment>(
                 entity =>
                 {
+                    entity.ToTable("ReportObjectAttachments", "dbo");
                     entity.HasIndex(e => e.ReportObjectId, "reportid");
 
                     entity.Property(e => e.CreationDate).HasColumnType("datetime");
@@ -1121,10 +998,6 @@ namespace Atlas_Web.Models
 
                     entity.ToTable("ReportObjectDocFragilityTags", "app");
 
-                    entity.Property(e => e.FragilityTagId).HasColumnName("FragilityTagID");
-
-                    entity.Property(e => e.ReportObjectId).HasColumnName("ReportObjectID");
-
                     entity
                         .HasOne(d => d.FragilityTag)
                         .WithMany(p => p.ReportObjectDocFragilityTags)
@@ -1145,8 +1018,6 @@ namespace Atlas_Web.Models
                     entity.HasKey(e => e.LinkId).HasName("PK__ReportOb__2D122135AFCD5E79");
 
                     entity.ToTable("ReportObjectDocTerms", "app");
-
-                    entity.Property(e => e.ReportObjectId).HasColumnName("ReportObjectID");
 
                     entity
                         .HasOne(d => d.ReportObject)
@@ -1169,7 +1040,7 @@ namespace Atlas_Web.Models
                         .HasKey(e => new { e.ParentReportObjectId, e.ChildReportObjectId })
                         .HasName("PK__ReportOb__913B66516CC9406D");
 
-                    entity.ToTable("ReportObjectHierarchy");
+                    entity.ToTable("ReportObjectHierarchy", "dbo");
 
                     entity.HasIndex(e => e.ChildReportObjectId, "childid");
 
@@ -1215,13 +1086,9 @@ namespace Atlas_Web.Models
 
                     entity.HasIndex(e => e.ReportObjectId, "reportid");
 
-                    entity.Property(e => e.ImageId).HasColumnName("ImageID");
-
                     entity.Property(e => e.ImageData).IsRequired();
 
                     entity.Property(e => e.ImageOrdinal).HasDefaultValueSql("((1))");
-
-                    entity.Property(e => e.ReportObjectId).HasColumnName("ReportObjectID");
 
                     entity
                         .HasOne(d => d.ReportObject)
@@ -1235,9 +1102,8 @@ namespace Atlas_Web.Models
             modelBuilder.Entity<ReportObjectParameter>(
                 entity =>
                 {
+                    entity.ToTable("ReportObjectParameters", "dbo");
                     entity.HasIndex(e => e.ReportObjectId, "reportobjectid");
-
-                    entity.Property(e => e.ReportObjectId).HasColumnName("ReportObjectID");
 
                     entity
                         .HasOne(d => d.ReportObject)
@@ -1250,7 +1116,7 @@ namespace Atlas_Web.Models
             modelBuilder.Entity<ReportObjectQuery>(
                 entity =>
                 {
-                    entity.ToTable("ReportObjectQuery");
+                    entity.ToTable("ReportObjectQuery", "dbo");
 
                     entity.HasIndex(e => e.ReportObjectId, "NonClusteredIndex-20220324-104152");
 
@@ -1411,6 +1277,7 @@ namespace Atlas_Web.Models
             modelBuilder.Entity<ReportObjectSubscription>(
                 entity =>
                 {
+                    entity.ToTable("ReportObjectSubscriptions", "dbo");
                     entity
                         .HasKey(e => e.ReportObjectSubscriptionsId)
                         .HasName("PK__ReportOb__1AA55D23FE572619");
@@ -1438,6 +1305,7 @@ namespace Atlas_Web.Models
             modelBuilder.Entity<ReportObjectTag>(
                 entity =>
                 {
+                    entity.ToTable("ReportObjectTags", "dbo");
                     entity.HasKey(e => e.TagId);
 
                     entity.HasIndex(e => e.TagId, "tagid");
@@ -1456,6 +1324,7 @@ namespace Atlas_Web.Models
             modelBuilder.Entity<ReportObjectTagMembership>(
                 entity =>
                 {
+                    entity.ToTable("ReportObjectTagMemberships", "dbo");
                     entity.HasKey(e => e.TagMembershipId);
 
                     entity.HasIndex(e => new { e.ReportObjectId, e.TagId }, "tagid+reportid");
@@ -1485,7 +1354,7 @@ namespace Atlas_Web.Models
             modelBuilder.Entity<ReportObjectType>(
                 entity =>
                 {
-                    entity.ToTable("ReportObjectType");
+                    entity.ToTable("ReportObjectType", "dbo");
 
                     entity.HasIndex(e => e.ReportObjectTypeId, "typeid");
 
@@ -1575,16 +1444,6 @@ namespace Atlas_Web.Models
 
                     entity.HasIndex(e => e.StarId, "starid").IsUnique();
 
-                    entity.Property(e => e.StarId).HasColumnName("star_id");
-
-                    entity.Property(e => e.Collectionid).HasColumnName("collectionid");
-
-                    entity.Property(e => e.Folderid).HasColumnName("folderid");
-
-                    entity.Property(e => e.Ownerid).HasColumnName("ownerid");
-
-                    entity.Property(e => e.Rank).HasColumnName("rank");
-
                     entity
                         .HasOne(d => d.Collection)
                         .WithMany(p => p.StarredCollections)
@@ -1617,16 +1476,6 @@ namespace Atlas_Web.Models
                     entity.HasIndex(e => new { e.Groupid, e.Ownerid }, "groupid + ownerid");
 
                     entity.HasIndex(e => e.StarId, "starid").IsUnique();
-
-                    entity.Property(e => e.StarId).HasColumnName("star_id");
-
-                    entity.Property(e => e.Folderid).HasColumnName("folderid");
-
-                    entity.Property(e => e.Groupid).HasColumnName("groupid");
-
-                    entity.Property(e => e.Ownerid).HasColumnName("ownerid");
-
-                    entity.Property(e => e.Rank).HasColumnName("rank");
 
                     entity
                         .HasOne(d => d.Folder)
@@ -1664,16 +1513,6 @@ namespace Atlas_Web.Models
 
                     entity.HasIndex(e => e.StarId, "starid").IsUnique();
 
-                    entity.Property(e => e.StarId).HasColumnName("star_id");
-
-                    entity.Property(e => e.Folderid).HasColumnName("folderid");
-
-                    entity.Property(e => e.Initiativeid).HasColumnName("initiativeid");
-
-                    entity.Property(e => e.Ownerid).HasColumnName("ownerid");
-
-                    entity.Property(e => e.Rank).HasColumnName("rank");
-
                     entity
                         .HasOne(d => d.Folder)
                         .WithMany(p => p.StarredInitiatives)
@@ -1707,16 +1546,6 @@ namespace Atlas_Web.Models
 
                     entity.HasIndex(e => e.StarId, "starid").IsUnique();
 
-                    entity.Property(e => e.StarId).HasColumnName("star_id");
-
-                    entity.Property(e => e.Folderid).HasColumnName("folderid");
-
-                    entity.Property(e => e.Ownerid).HasColumnName("ownerid");
-
-                    entity.Property(e => e.Rank).HasColumnName("rank");
-
-                    entity.Property(e => e.Reportid).HasColumnName("reportid");
-
                     entity
                         .HasOne(d => d.Folder)
                         .WithMany(p => p.StarredReports)
@@ -1748,16 +1577,6 @@ namespace Atlas_Web.Models
 
                     entity.HasIndex(e => e.StarId, "starid").IsUnique();
 
-                    entity.Property(e => e.StarId).HasColumnName("star_id");
-
-                    entity.Property(e => e.Folderid).HasColumnName("folderid");
-
-                    entity.Property(e => e.Ownerid).HasColumnName("ownerid");
-
-                    entity.Property(e => e.Rank).HasColumnName("rank");
-
-                    entity.Property(e => e.Search).HasColumnName("search");
-
                     entity
                         .HasOne(d => d.Folder)
                         .WithMany(p => p.StarredSearches)
@@ -1784,16 +1603,6 @@ namespace Atlas_Web.Models
                     entity.HasIndex(e => e.StarId, "starid").IsUnique();
 
                     entity.HasIndex(e => new { e.Termid, e.Ownerid }, "termid + ownerid");
-
-                    entity.Property(e => e.StarId).HasColumnName("star_id");
-
-                    entity.Property(e => e.Folderid).HasColumnName("folderid");
-
-                    entity.Property(e => e.Ownerid).HasColumnName("ownerid");
-
-                    entity.Property(e => e.Rank).HasColumnName("rank");
-
-                    entity.Property(e => e.Termid).HasColumnName("termid");
 
                     entity
                         .HasOne(d => d.Folder)
@@ -1828,16 +1637,6 @@ namespace Atlas_Web.Models
 
                     entity.HasIndex(e => e.StarId, "starid").IsUnique();
 
-                    entity.Property(e => e.StarId).HasColumnName("star_id");
-
-                    entity.Property(e => e.Folderid).HasColumnName("folderid");
-
-                    entity.Property(e => e.Ownerid).HasColumnName("ownerid");
-
-                    entity.Property(e => e.Rank).HasColumnName("rank");
-
-                    entity.Property(e => e.Userid).HasColumnName("userid");
-
                     entity
                         .HasOne(d => d.Folder)
                         .WithMany(p => p.StarredUsers)
@@ -1853,6 +1652,7 @@ namespace Atlas_Web.Models
                     entity
                         .HasOne(d => d.User)
                         .WithMany(p => p.StarredUserUsers)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .HasForeignKey(d => d.Userid)
                         .HasConstraintName("FK_StarredUsers_User");
                 }
@@ -1863,7 +1663,7 @@ namespace Atlas_Web.Models
                 {
                     entity.ToTable("StrategicImportance", "app");
 
-                    entity.HasIndex(e => e.StrategicImportanceId, "strategicimportanceid");
+                    entity.HasIndex(e => e.Id);
                 }
             );
 
@@ -1927,7 +1727,7 @@ namespace Atlas_Web.Models
             modelBuilder.Entity<User>(
                 entity =>
                 {
-                    entity.ToTable("User");
+                    entity.ToTable("User", "dbo");
                     entity.HasKey(k => k.UserId);
 
                     entity.HasIndex(e => e.UserId, "userid").IsUnique();
@@ -1960,6 +1760,7 @@ namespace Atlas_Web.Models
             modelBuilder.Entity<UserGroup>(
                 entity =>
                 {
+                    entity.ToTable("UserGroups", "dbo");
                     entity.HasKey(e => e.GroupId);
 
                     entity.HasIndex(e => e.GroupId, "groupid").IsUnique();
@@ -1973,7 +1774,7 @@ namespace Atlas_Web.Models
                 {
                     entity.HasKey(e => e.MembershipId);
 
-                    entity.ToTable("UserGroupsMembership");
+                    entity.ToTable("UserGroupsMembership", "dbo");
 
                     entity.HasIndex(e => e.GroupId, "groupdid + userid");
 

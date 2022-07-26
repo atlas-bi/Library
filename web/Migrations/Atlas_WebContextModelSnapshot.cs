@@ -31,85 +31,66 @@ namespace Atlas_Web.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<DateTime?>("AccessDateTime")
-                        .HasColumnType("datetime")
-                        .HasColumnName("accessDateTime");
+                        .HasColumnType("datetime");
 
                     b.Property<int?>("Active")
-                        .HasColumnType("int")
-                        .HasColumnName("active");
+                        .HasColumnType("int");
 
                     b.Property<int?>("Epic")
                         .HasColumnType("int");
 
                     b.Property<string>("Hash")
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("hash");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Hostname")
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("hostname");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Href")
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("href");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Language")
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("language");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LoadTime")
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("loadTime");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Origin")
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("origin");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PageId")
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("pageId");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("PageTime")
-                        .HasColumnType("int")
-                        .HasColumnName("pageTime");
+                        .HasColumnType("int");
 
                     b.Property<string>("Pathname")
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("pathname");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Protocol")
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("protocol");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Referrer")
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("referrer");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ScreenHeight")
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("screenHeight");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ScreenWidth")
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("screenWidth");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Search")
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("search");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SessionId")
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("sessionId");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("UpdateTime")
-                        .HasColumnType("datetime")
-                        .HasColumnName("updateTime");
+                        .HasColumnType("datetime");
 
                     b.Property<string>("UserAgent")
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("userAgent");
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("UserId")
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.Property<double?>("Zoom")
@@ -141,19 +122,16 @@ namespace Atlas_Web.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<int?>("Handled")
-                        .HasColumnType("int")
-                        .HasColumnName("handled");
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("LogDateTime")
-                        .HasColumnType("datetime")
-                        .HasColumnName("logDateTime");
+                        .HasColumnType("datetime");
 
                     b.Property<string>("Message")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Referer")
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("referer");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("StatusCode")
                         .HasColumnType("int");
@@ -162,14 +140,12 @@ namespace Atlas_Web.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("UpdateTime")
-                        .HasColumnType("datetime")
-                        .HasColumnName("updateTime");
+                        .HasColumnType("datetime");
 
                     b.Property<string>("UserAgent")
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("userAgent");
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("UserId")
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -188,19 +164,16 @@ namespace Atlas_Web.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<int?>("Handled")
-                        .HasColumnType("int")
-                        .HasColumnName("handled");
+                        .HasColumnType("int");
 
                     b.Property<int?>("Level")
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("LogDateTime")
-                        .HasColumnType("datetime")
-                        .HasColumnName("logDateTime");
+                        .HasColumnType("datetime");
 
                     b.Property<string>("LogId")
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("logId");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Logger")
                         .HasColumnType("nvarchar(max)");
@@ -209,18 +182,15 @@ namespace Atlas_Web.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Referer")
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("referer");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("UpdateTime")
-                        .HasColumnType("datetime")
-                        .HasColumnName("updateTime");
+                        .HasColumnType("datetime");
 
                     b.Property<string>("UserAgent")
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("userAgent");
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("UserId")
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -232,35 +202,26 @@ namespace Atlas_Web.Migrations
 
             modelBuilder.Entity("Atlas_Web.Models.Collection", b =>
                 {
-                    b.Property<int>("DataProjectId")
+                    b.Property<int>("CollectionId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("DataProjectID");
+                        .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DataProjectId"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CollectionId"), 1L, 1);
 
                     b.Property<int?>("AnalyticsOwnerId")
-                        .HasColumnType("int")
-                        .HasColumnName("AnalyticsOwnerID");
-
-                    b.Property<int?>("DataInitiativeId")
-                        .HasColumnType("int")
-                        .HasColumnName("DataInitiativeID");
+                        .HasColumnType("int");
 
                     b.Property<int?>("DataManagerId")
-                        .HasColumnType("int")
-                        .HasColumnName("DataManagerID");
+                        .HasColumnType("int");
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("ExecutiveOwnerId")
-                        .HasColumnType("int")
-                        .HasColumnName("ExecutiveOwnerID");
+                        .HasColumnType("int");
 
                     b.Property<string>("ExternalDocumentationUrl")
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("ExternalDocumentationURL");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("FinancialImpact")
                         .HasColumnType("int");
@@ -269,6 +230,9 @@ namespace Atlas_Web.Migrations
                         .HasMaxLength(1)
                         .HasColumnType("nchar(1)")
                         .IsFixedLength();
+
+                    b.Property<int?>("InitiativeId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("LastUpdateDate")
                         .HasColumnType("datetime");
@@ -280,8 +244,7 @@ namespace Atlas_Web.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("OperationOwnerId")
-                        .HasColumnType("int")
-                        .HasColumnName("OperationOwnerID");
+                        .HasColumnType("int");
 
                     b.Property<string>("Purpose")
                         .HasColumnType("nvarchar(max)");
@@ -289,12 +252,12 @@ namespace Atlas_Web.Migrations
                     b.Property<int?>("StrategicImportance")
                         .HasColumnType("int");
 
-                    b.HasKey("DataProjectId")
+                    b.HasKey("CollectionId")
                         .HasName("PK__DP_DataP__E8D09D08794EBFAD");
 
                     b.HasIndex(new[] { "AnalyticsOwnerId" }, "analyticsownerid");
 
-                    b.HasIndex(new[] { "DataProjectId" }, "collectionid");
+                    b.HasIndex(new[] { "CollectionId" }, "collectionid");
 
                     b.HasIndex(new[] { "DataManagerId" }, "datamanagerid");
 
@@ -302,7 +265,7 @@ namespace Atlas_Web.Migrations
 
                     b.HasIndex(new[] { "FinancialImpact" }, "financialimpact");
 
-                    b.HasIndex(new[] { "DataInitiativeId" }, "initiativeid");
+                    b.HasIndex(new[] { "InitiativeId" }, "initiativeid");
 
                     b.HasIndex(new[] { "LastUpdateDate" }, "lastupdatedate");
 
@@ -317,131 +280,126 @@ namespace Atlas_Web.Migrations
 
             modelBuilder.Entity("Atlas_Web.Models.CollectionReport", b =>
                 {
-                    b.Property<int>("ReportAnnotationId")
+                    b.Property<int>("LinkId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("ReportAnnotationID");
+                        .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ReportAnnotationId"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("LinkId"), 1L, 1);
 
-                    b.Property<int?>("DataProjectId")
+                    b.Property<int>("CollectionId")
                         .HasColumnType("int");
 
                     b.Property<int?>("Rank")
                         .HasColumnType("int");
 
-                    b.Property<int?>("ReportId")
+                    b.Property<int>("ReportId")
                         .HasColumnType("int");
 
-                    b.HasKey("ReportAnnotationId")
+                    b.HasKey("LinkId")
                         .HasName("PK__DP_Repor__84AFA7F30D34E922");
 
-                    b.HasIndex("DataProjectId");
+                    b.HasIndex("CollectionId");
 
-                    b.HasIndex(new[] { "ReportId", "DataProjectId" }, "reportid+dataprojectid");
+                    b.HasIndex(new[] { "ReportId", "CollectionId" }, "reportid+collectionid");
 
                     b.ToTable("CollectionReport", "app");
                 });
 
             modelBuilder.Entity("Atlas_Web.Models.CollectionTerm", b =>
                 {
-                    b.Property<int>("TermAnnotationId")
+                    b.Property<int>("LinkId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("TermAnnotationID");
+                        .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TermAnnotationId"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("LinkId"), 1L, 1);
 
-                    b.Property<int?>("DataProjectId")
+                    b.Property<int>("CollectionId")
                         .HasColumnType("int");
 
                     b.Property<int?>("Rank")
                         .HasColumnType("int");
 
-                    b.Property<int?>("TermId")
+                    b.Property<int>("TermId")
                         .HasColumnType("int");
 
-                    b.HasKey("TermAnnotationId")
+                    b.HasKey("LinkId")
                         .HasName("PK__DP_TermA__1BB492E32D415E15");
 
-                    b.HasIndex("DataProjectId");
+                    b.HasIndex("CollectionId");
 
-                    b.HasIndex(new[] { "TermId", "DataProjectId" }, "termid+dataprojectid");
+                    b.HasIndex(new[] { "TermId", "CollectionId" }, "termid+collectionid");
 
                     b.ToTable("CollectionTerm", "app");
                 });
 
             modelBuilder.Entity("Atlas_Web.Models.EstimatedRunFrequency", b =>
                 {
-                    b.Property<int>("EstimatedRunFrequencyId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("EstimatedRunFrequencyID");
+                        .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("EstimatedRunFrequencyId"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<string>("EstimatedRunFrequencyName")
+                    b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("EstimatedRunFrequencyId");
+                    b.HasKey("Id");
 
-                    b.HasIndex(new[] { "EstimatedRunFrequencyId" }, "estimatedrunfrequencyid");
+                    b.HasIndex("Id");
 
                     b.ToTable("EstimatedRunFrequency", "app");
                 });
 
             modelBuilder.Entity("Atlas_Web.Models.FinancialImpact", b =>
                 {
-                    b.Property<int>("FinancialImpactId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("FinancialImpactId"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("FinancialImpactId");
+                    b.HasKey("Id");
 
-                    b.HasIndex(new[] { "FinancialImpactId" }, "financialimpactid");
+                    b.HasIndex("Id");
 
                     b.ToTable("FinancialImpact", "app");
                 });
 
             modelBuilder.Entity("Atlas_Web.Models.Fragility", b =>
                 {
-                    b.Property<int>("FragilityId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("FragilityID");
+                        .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("FragilityId"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<string>("FragilityName")
+                    b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("FragilityId");
+                    b.HasKey("Id");
 
-                    b.HasIndex(new[] { "FragilityId" }, "fragilityid");
+                    b.HasIndex("Id");
 
                     b.ToTable("Fragility", "app");
                 });
 
             modelBuilder.Entity("Atlas_Web.Models.FragilityTag", b =>
                 {
-                    b.Property<int>("FragilityTagId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("FragilityTagID");
+                        .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("FragilityTagId"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<string>("FragilityTagName")
+                    b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("FragilityTagId");
+                    b.HasKey("Id");
 
-                    b.HasIndex(new[] { "FragilityTagId" }, "fragilitytagid");
+                    b.HasIndex("Id");
 
                     b.ToTable("FragilityTag", "app");
                 });
@@ -470,19 +428,17 @@ namespace Atlas_Web.Migrations
 
             modelBuilder.Entity("Atlas_Web.Models.Initiative", b =>
                 {
-                    b.Property<int>("DataInitiativeId")
+                    b.Property<int>("InitiativeId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("DataInitiativeID");
+                        .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DataInitiativeId"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("InitiativeId"), 1L, 1);
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("ExecutiveOwnerId")
-                        .HasColumnType("int")
-                        .HasColumnName("ExecutiveOwnerID");
+                        .HasColumnType("int");
 
                     b.Property<int?>("FinancialImpact")
                         .HasColumnType("int");
@@ -493,7 +449,7 @@ namespace Atlas_Web.Migrations
                         .IsFixedLength();
 
                     b.Property<DateTime?>("LastUpdateDate")
-                        .HasColumnType("datetime");
+                        .HasColumnType("datetime2");
 
                     b.Property<int?>("LastUpdateUser")
                         .HasColumnType("int");
@@ -502,13 +458,12 @@ namespace Atlas_Web.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("OperationOwnerId")
-                        .HasColumnType("int")
-                        .HasColumnName("OperationOwnerID");
+                        .HasColumnType("int");
 
                     b.Property<int?>("StrategicImportance")
                         .HasColumnType("int");
 
-                    b.HasKey("DataInitiativeId")
+                    b.HasKey("InitiativeId")
                         .HasName("PK__DP_DataI__1EFC948C3A83A845");
 
                     b.HasIndex(new[] { "ExecutiveOwnerId" }, "executiveownerid")
@@ -517,7 +472,7 @@ namespace Atlas_Web.Migrations
                     b.HasIndex(new[] { "FinancialImpact" }, "financialimpact")
                         .HasDatabaseName("financialimpact1");
 
-                    b.HasIndex(new[] { "DataInitiativeId" }, "initiativeid")
+                    b.HasIndex(new[] { "InitiativeId" }, "initiativeid")
                         .HasDatabaseName("initiativeid1");
 
                     b.HasIndex(new[] { "LastUpdateDate" }, "lastupdatedate")
@@ -767,31 +722,28 @@ namespace Atlas_Web.Migrations
                 {
                     b.Property<int>("MaintenanceLogId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("MaintenanceLogID");
+                        .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MaintenanceLogId"), 1L, 1);
 
                     b.Property<string>("Comment")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("MaintainerId")
-                        .HasColumnType("int")
-                        .HasColumnName("MaintainerID");
+                    b.Property<int>("MaintainerId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("MaintenanceDate")
                         .HasColumnType("datetime");
 
                     b.Property<int?>("MaintenanceLogStatusId")
-                        .HasColumnType("int")
-                        .HasColumnName("MaintenanceLogStatusID");
+                        .HasColumnType("int");
 
-                    b.Property<int?>("ReportObjectId")
+                    b.Property<int>("ReportId")
                         .HasColumnType("int");
 
                     b.HasKey("MaintenanceLogId");
 
-                    b.HasIndex("ReportObjectId");
+                    b.HasIndex("ReportId");
 
                     b.HasIndex(new[] { "MaintenanceLogId" }, "logid");
 
@@ -806,60 +758,56 @@ namespace Atlas_Web.Migrations
 
             modelBuilder.Entity("Atlas_Web.Models.MaintenanceLogStatus", b =>
                 {
-                    b.Property<int>("MaintenanceLogStatusId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("MaintenanceLogStatusID");
+                        .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MaintenanceLogStatusId"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<string>("MaintenanceLogStatusName")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("MaintenanceLogStatusId");
+                    b.HasKey("Id");
 
-                    b.HasIndex(new[] { "MaintenanceLogStatusId" }, "maintenancelogstatusid")
-                        .HasDatabaseName("maintenancelogstatusid1");
+                    b.HasIndex("Id");
 
                     b.ToTable("MaintenanceLogStatus", "app");
                 });
 
             modelBuilder.Entity("Atlas_Web.Models.MaintenanceSchedule", b =>
                 {
-                    b.Property<int>("MaintenanceScheduleId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("MaintenanceScheduleID");
+                        .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MaintenanceScheduleId"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<string>("MaintenanceScheduleName")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("MaintenanceScheduleId");
+                    b.HasKey("Id");
 
-                    b.HasIndex(new[] { "MaintenanceScheduleId" }, "maintenancescheduleid");
+                    b.HasIndex("Id");
 
                     b.ToTable("MaintenanceSchedule", "app");
                 });
 
             modelBuilder.Entity("Atlas_Web.Models.OrganizationalValue", b =>
                 {
-                    b.Property<int>("OrganizationalValueId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("OrganizationalValueID");
+                        .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OrganizationalValueId"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<string>("OrganizationalValueName")
+                    b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("OrganizationalValueId");
+                    b.HasKey("Id");
 
-                    b.HasIndex(new[] { "OrganizationalValueId" }, "organizationalvalueid");
+                    b.HasIndex("Id");
 
                     b.ToTable("OrganizationalValue", "app");
                 });
@@ -888,35 +836,7 @@ namespace Atlas_Web.Migrations
 
                     b.HasIndex(new[] { "ReportId" }, "reportid");
 
-                    b.ToTable("ReportGroupsMemberships", (string)null);
-                });
-
-            modelBuilder.Entity("Atlas_Web.Models.ReportManageEngineTicket", b =>
-                {
-                    b.Property<int>("ManageEngineTicketsId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ManageEngineTicketsId"), 1L, 1);
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("ReportObjectId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("TicketNumber")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("TicketUrl")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("ManageEngineTicketsId")
-                        .HasName("PK__ReportMa__97EB8BADB02592C9");
-
-                    b.HasIndex(new[] { "ReportObjectId" }, "reportobjectid");
-
-                    b.ToTable("ReportManageEngineTickets", "app");
+                    b.ToTable("ReportGroupsMemberships", "dbo");
                 });
 
             modelBuilder.Entity("Atlas_Web.Models.ReportObject", b =>
@@ -1078,7 +998,7 @@ namespace Atlas_Web.Migrations
 
                     SqlServerIndexBuilderExtensions.IncludeProperties(b.HasIndex(new[] { "DefaultVisibilityYn" }, "visibility_report_masterfile"), new[] { "ReportObjectId", "EpicMasterFile" });
 
-                    b.ToTable("ReportObject", (string)null);
+                    b.ToTable("ReportObject", "dbo");
                 });
 
             modelBuilder.Entity("Atlas_Web.Models.ReportObjectAttachment", b =>
@@ -1117,7 +1037,7 @@ namespace Atlas_Web.Migrations
                     b.HasIndex(new[] { "ReportObjectId" }, "reportid")
                         .HasDatabaseName("reportid2");
 
-                    b.ToTable("ReportObjectAttachments", (string)null);
+                    b.ToTable("ReportObjectAttachments", "dbo");
                 });
 
             modelBuilder.Entity("Atlas_Web.Models.ReportObjectDoc", b =>
@@ -1206,11 +1126,9 @@ namespace Atlas_Web.Migrations
 
                     SqlServerIndexBuilderExtensions.IncludeProperties(b.HasIndex(new[] { "ExecutiveVisibilityYn" }, "execvis_reportid"), new[] { "ReportObjectId" });
 
-                    b.HasIndex(new[] { "FragilityId" }, "fragilityid")
-                        .HasDatabaseName("fragilityid1");
+                    b.HasIndex(new[] { "FragilityId" }, "fragilityid");
 
-                    b.HasIndex(new[] { "MaintenanceScheduleId" }, "maintenancescheduleid")
-                        .HasDatabaseName("maintenancescheduleid1");
+                    b.HasIndex(new[] { "MaintenanceScheduleId" }, "maintenancescheduleid");
 
                     b.HasIndex(new[] { "MaintenanceScheduleId" }, "maintschedule_report_updated");
 
@@ -1222,8 +1140,7 @@ namespace Atlas_Web.Migrations
 
                     b.HasIndex(new[] { "OperationalOwnerUserId" }, "operationalownerid");
 
-                    b.HasIndex(new[] { "OrganizationalValueId" }, "organizationalvalueid")
-                        .HasDatabaseName("organizationalvalueid1");
+                    b.HasIndex(new[] { "OrganizationalValueId" }, "organizationalvalueid");
 
                     b.HasIndex(new[] { "ReportObjectId" }, "reportid")
                         .IsUnique()
@@ -1245,12 +1162,10 @@ namespace Atlas_Web.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("LinkId"), 1L, 1);
 
                     b.Property<int>("FragilityTagId")
-                        .HasColumnType("int")
-                        .HasColumnName("FragilityTagID");
+                        .HasColumnType("int");
 
                     b.Property<int>("ReportObjectId")
-                        .HasColumnType("int")
-                        .HasColumnName("ReportObjectID");
+                        .HasColumnType("int");
 
                     b.HasKey("LinkId")
                         .HasName("PK__ReportOb__2D122135B03BB8CE");
@@ -1271,8 +1186,7 @@ namespace Atlas_Web.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("LinkId"), 1L, 1);
 
                     b.Property<int>("ReportObjectId")
-                        .HasColumnType("int")
-                        .HasColumnName("ReportObjectID");
+                        .HasColumnType("int");
 
                     b.Property<int>("TermId")
                         .HasColumnType("int");
@@ -1312,15 +1226,14 @@ namespace Atlas_Web.Migrations
 
                     b.HasIndex(new[] { "ParentReportObjectId" }, "parentid");
 
-                    b.ToTable("ReportObjectHierarchy", (string)null);
+                    b.ToTable("ReportObjectHierarchy", "dbo");
                 });
 
             modelBuilder.Entity("Atlas_Web.Models.ReportObjectImagesDoc", b =>
                 {
                     b.Property<int>("ImageId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("ImageID");
+                        .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ImageId"), 1L, 1);
 
@@ -1337,8 +1250,7 @@ namespace Atlas_Web.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("ReportObjectId")
-                        .HasColumnType("int")
-                        .HasColumnName("ReportObjectID");
+                        .HasColumnType("int");
 
                     b.HasKey("ImageId")
                         .HasName("PK__ReportOb__7516F4ECD36AFC26");
@@ -1363,16 +1275,14 @@ namespace Atlas_Web.Migrations
                     b.Property<string>("ParameterValue")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("ReportObjectId")
-                        .HasColumnType("int")
-                        .HasColumnName("ReportObjectID");
+                    b.Property<int>("ReportObjectId")
+                        .HasColumnType("int");
 
                     b.HasKey("ReportObjectParameterId");
 
-                    b.HasIndex(new[] { "ReportObjectId" }, "reportobjectid")
-                        .HasDatabaseName("reportobjectid1");
+                    b.HasIndex(new[] { "ReportObjectId" }, "reportobjectid");
 
-                    b.ToTable("ReportObjectParameters", (string)null);
+                    b.ToTable("ReportObjectParameters", "dbo");
                 });
 
             modelBuilder.Entity("Atlas_Web.Models.ReportObjectQuery", b =>
@@ -1395,7 +1305,7 @@ namespace Atlas_Web.Migrations
                     b.Property<string>("Query")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("ReportObjectId")
+                    b.Property<int>("ReportObjectId")
                         .HasColumnType("int");
 
                     b.Property<string>("SourceServer")
@@ -1408,9 +1318,9 @@ namespace Atlas_Web.Migrations
                     b.HasIndex(new[] { "ReportObjectQueryId" }, "queryid");
 
                     b.HasIndex(new[] { "ReportObjectId" }, "reportobjectid")
-                        .HasDatabaseName("reportobjectid2");
+                        .HasDatabaseName("reportobjectid1");
 
-                    b.ToTable("ReportObjectQuery", (string)null);
+                    b.ToTable("ReportObjectQuery", "dbo");
                 });
 
             modelBuilder.Entity("Atlas_Web.Models.ReportObjectRunData", b =>
@@ -1582,7 +1492,7 @@ namespace Atlas_Web.Migrations
 
                     b.HasIndex(new[] { "ReportObjectId", "UserId" }, "reportid + userid");
 
-                    b.ToTable("ReportObjectSubscriptions", (string)null);
+                    b.ToTable("ReportObjectSubscriptions", "dbo");
                 });
 
             modelBuilder.Entity("Atlas_Web.Models.ReportObjectTag", b =>
@@ -1607,7 +1517,7 @@ namespace Atlas_Web.Migrations
 
                     b.HasIndex(new[] { "TagId" }, "tagid");
 
-                    b.ToTable("ReportObjectTags", (string)null);
+                    b.ToTable("ReportObjectTags", "dbo");
                 });
 
             modelBuilder.Entity("Atlas_Web.Models.ReportObjectTagMembership", b =>
@@ -1636,7 +1546,7 @@ namespace Atlas_Web.Migrations
 
                     b.HasIndex(new[] { "ReportObjectId", "TagId" }, "tagid+reportid");
 
-                    b.ToTable("ReportObjectTagMemberships", (string)null);
+                    b.ToTable("ReportObjectTagMemberships", "dbo");
                 });
 
             modelBuilder.Entity("Atlas_Web.Models.ReportObjectType", b =>
@@ -1670,7 +1580,36 @@ namespace Atlas_Web.Migrations
 
                     b.HasIndex(new[] { "ReportObjectTypeId" }, "typeid");
 
-                    b.ToTable("ReportObjectType", (string)null);
+                    b.ToTable("ReportObjectType", "dbo");
+                });
+
+            modelBuilder.Entity("Atlas_Web.Models.ReportServiceRequest", b =>
+                {
+                    b.Property<int>("ServiceRequestId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ServiceRequestId"), 1L, 1);
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ReportObjectId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("TicketNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TicketUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ServiceRequestId")
+                        .HasName("PK__ReportMa__97EB8BADB02592C9");
+
+                    b.HasIndex(new[] { "ReportObjectId" }, "reportobjectid")
+                        .HasDatabaseName("reportobjectid2");
+
+                    b.ToTable("ReportServiceRequests", "app");
                 });
 
             modelBuilder.Entity("Atlas_Web.Models.ReportTagLink", b =>
@@ -1696,7 +1635,7 @@ namespace Atlas_Web.Migrations
 
                     b.HasIndex(new[] { "ReportId", "TagId" }, "report_tag");
 
-                    b.ToTable("ReportTagLinks", (string)null);
+                    b.ToTable("ReportTagLinks", "dbo");
                 });
 
             modelBuilder.Entity("Atlas_Web.Models.RolePermission", b =>
@@ -1727,10 +1666,10 @@ namespace Atlas_Web.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RolePermissionLinksId"), 1L, 1);
 
-                    b.Property<int?>("RoleId")
+                    b.Property<int>("RoleId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("RolePermissionsId")
+                    b.Property<int>("RolePermissionsId")
                         .HasColumnType("int");
 
                     b.HasKey("RolePermissionLinksId")
@@ -1779,26 +1718,21 @@ namespace Atlas_Web.Migrations
                 {
                     b.Property<int>("StarId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("star_id");
+                        .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("StarId"), 1L, 1);
 
-                    b.Property<int?>("Collectionid")
-                        .HasColumnType("int")
-                        .HasColumnName("collectionid");
+                    b.Property<int>("Collectionid")
+                        .HasColumnType("int");
 
                     b.Property<int?>("Folderid")
-                        .HasColumnType("int")
-                        .HasColumnName("folderid");
+                        .HasColumnType("int");
 
-                    b.Property<int?>("Ownerid")
-                        .HasColumnType("int")
-                        .HasColumnName("ownerid");
+                    b.Property<int>("Ownerid")
+                        .HasColumnType("int");
 
                     b.Property<int?>("Rank")
-                        .HasColumnType("int")
-                        .HasColumnName("rank");
+                        .HasColumnType("int");
 
                     b.HasKey("StarId")
                         .HasName("PK__StarredC__88222DCEA294BB15");
@@ -1819,26 +1753,21 @@ namespace Atlas_Web.Migrations
                 {
                     b.Property<int>("StarId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("star_id");
+                        .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("StarId"), 1L, 1);
 
                     b.Property<int?>("Folderid")
-                        .HasColumnType("int")
-                        .HasColumnName("folderid");
+                        .HasColumnType("int");
 
-                    b.Property<int?>("Groupid")
-                        .HasColumnType("int")
-                        .HasColumnName("groupid");
+                    b.Property<int>("Groupid")
+                        .HasColumnType("int");
 
-                    b.Property<int?>("Ownerid")
-                        .HasColumnType("int")
-                        .HasColumnName("ownerid");
+                    b.Property<int>("Ownerid")
+                        .HasColumnType("int");
 
                     b.Property<int?>("Rank")
-                        .HasColumnType("int")
-                        .HasColumnName("rank");
+                        .HasColumnType("int");
 
                     b.HasKey("StarId")
                         .HasName("PK__StarredG__88222DCE76B4AC11");
@@ -1860,26 +1789,21 @@ namespace Atlas_Web.Migrations
                 {
                     b.Property<int>("StarId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("star_id");
+                        .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("StarId"), 1L, 1);
 
                     b.Property<int?>("Folderid")
-                        .HasColumnType("int")
-                        .HasColumnName("folderid");
+                        .HasColumnType("int");
 
-                    b.Property<int?>("Initiativeid")
-                        .HasColumnType("int")
-                        .HasColumnName("initiativeid");
+                    b.Property<int>("Initiativeid")
+                        .HasColumnType("int");
 
-                    b.Property<int?>("Ownerid")
-                        .HasColumnType("int")
-                        .HasColumnName("ownerid");
+                    b.Property<int>("Ownerid")
+                        .HasColumnType("int");
 
                     b.Property<int?>("Rank")
-                        .HasColumnType("int")
-                        .HasColumnName("rank");
+                        .HasColumnType("int");
 
                     b.HasKey("StarId")
                         .HasName("PK__StarredI__88222DCEFCC5A8E5");
@@ -1902,26 +1826,21 @@ namespace Atlas_Web.Migrations
                 {
                     b.Property<int>("StarId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("star_id");
+                        .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("StarId"), 1L, 1);
 
                     b.Property<int?>("Folderid")
-                        .HasColumnType("int")
-                        .HasColumnName("folderid");
+                        .HasColumnType("int");
 
-                    b.Property<int?>("Ownerid")
-                        .HasColumnType("int")
-                        .HasColumnName("ownerid");
+                    b.Property<int>("Ownerid")
+                        .HasColumnType("int");
 
                     b.Property<int?>("Rank")
-                        .HasColumnType("int")
-                        .HasColumnName("rank");
+                        .HasColumnType("int");
 
-                    b.Property<int?>("Reportid")
-                        .HasColumnType("int")
-                        .HasColumnName("reportid");
+                    b.Property<int>("Reportid")
+                        .HasColumnType("int");
 
                     b.HasKey("StarId")
                         .HasName("PK__StarredR__88222DCE157D560E");
@@ -1944,26 +1863,21 @@ namespace Atlas_Web.Migrations
                 {
                     b.Property<int>("StarId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("star_id");
+                        .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("StarId"), 1L, 1);
 
                     b.Property<int?>("Folderid")
-                        .HasColumnType("int")
-                        .HasColumnName("folderid");
+                        .HasColumnType("int");
 
-                    b.Property<int?>("Ownerid")
-                        .HasColumnType("int")
-                        .HasColumnName("ownerid");
+                    b.Property<int>("Ownerid")
+                        .HasColumnType("int");
 
                     b.Property<int?>("Rank")
-                        .HasColumnType("int")
-                        .HasColumnName("rank");
+                        .HasColumnType("int");
 
                     b.Property<string>("Search")
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("search");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("StarId")
                         .HasName("PK__StarredS__88222DCE6D6FEE1D");
@@ -1983,26 +1897,21 @@ namespace Atlas_Web.Migrations
                 {
                     b.Property<int>("StarId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("star_id");
+                        .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("StarId"), 1L, 1);
 
                     b.Property<int?>("Folderid")
-                        .HasColumnType("int")
-                        .HasColumnName("folderid");
+                        .HasColumnType("int");
 
-                    b.Property<int?>("Ownerid")
-                        .HasColumnType("int")
-                        .HasColumnName("ownerid");
+                    b.Property<int>("Ownerid")
+                        .HasColumnType("int");
 
                     b.Property<int?>("Rank")
-                        .HasColumnType("int")
-                        .HasColumnName("rank");
+                        .HasColumnType("int");
 
-                    b.Property<int?>("Termid")
-                        .HasColumnType("int")
-                        .HasColumnName("termid");
+                    b.Property<int>("Termid")
+                        .HasColumnType("int");
 
                     b.HasKey("StarId")
                         .HasName("PK__StarredT__88222DCE11EE382D");
@@ -2025,26 +1934,21 @@ namespace Atlas_Web.Migrations
                 {
                     b.Property<int>("StarId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("star_id");
+                        .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("StarId"), 1L, 1);
 
                     b.Property<int?>("Folderid")
-                        .HasColumnType("int")
-                        .HasColumnName("folderid");
+                        .HasColumnType("int");
 
-                    b.Property<int?>("Ownerid")
-                        .HasColumnType("int")
-                        .HasColumnName("ownerid");
+                    b.Property<int>("Ownerid")
+                        .HasColumnType("int");
 
                     b.Property<int?>("Rank")
-                        .HasColumnType("int")
-                        .HasColumnName("rank");
+                        .HasColumnType("int");
 
-                    b.Property<int?>("Userid")
-                        .HasColumnType("int")
-                        .HasColumnName("userid");
+                    b.Property<int>("Userid")
+                        .HasColumnType("int");
 
                     b.HasKey("StarId")
                         .HasName("PK__StarredU__88222DCE446292A3");
@@ -2065,18 +1969,18 @@ namespace Atlas_Web.Migrations
 
             modelBuilder.Entity("Atlas_Web.Models.StrategicImportance", b =>
                 {
-                    b.Property<int>("StrategicImportanceId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("StrategicImportanceId"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("StrategicImportanceId");
+                    b.HasKey("Id");
 
-                    b.HasIndex(new[] { "StrategicImportanceId" }, "strategicimportanceid");
+                    b.HasIndex("Id");
 
                     b.ToTable("StrategicImportance", "app");
                 });
@@ -2108,7 +2012,7 @@ namespace Atlas_Web.Migrations
 
                     b.HasIndex(new[] { "Name" }, "tagname");
 
-                    b.ToTable("Tags", (string)null);
+                    b.ToTable("Tags", "dbo");
                 });
 
             modelBuilder.Entity("Atlas_Web.Models.Term", b =>
@@ -2253,7 +2157,7 @@ namespace Atlas_Web.Migrations
                         .IsUnique()
                         .HasDatabaseName("userid1");
 
-                    b.ToTable("User", (string)null);
+                    b.ToTable("User", "dbo");
                 });
 
             modelBuilder.Entity("Atlas_Web.Models.UserFavoriteFolder", b =>
@@ -2270,7 +2174,7 @@ namespace Atlas_Web.Migrations
                     b.Property<int?>("FolderRank")
                         .HasColumnType("int");
 
-                    b.Property<int?>("UserId")
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("UserFavoriteFolderId");
@@ -2315,7 +2219,7 @@ namespace Atlas_Web.Migrations
                     b.HasIndex(new[] { "GroupId" }, "groupid")
                         .IsUnique();
 
-                    b.ToTable("UserGroups", (string)null);
+                    b.ToTable("UserGroups", "dbo");
                 });
 
             modelBuilder.Entity("Atlas_Web.Models.UserGroupsMembership", b =>
@@ -2326,13 +2230,13 @@ namespace Atlas_Web.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MembershipId"), 1L, 1);
 
-                    b.Property<int?>("GroupId")
+                    b.Property<int>("GroupId")
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("LastLoadDate")
                         .HasColumnType("datetime");
 
-                    b.Property<int?>("UserId")
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("MembershipId");
@@ -2341,7 +2245,7 @@ namespace Atlas_Web.Migrations
 
                     b.HasIndex(new[] { "UserId", "GroupId" }, "userid+groupid");
 
-                    b.ToTable("UserGroupsMembership", (string)null);
+                    b.ToTable("UserGroupsMembership", "dbo");
                 });
 
             modelBuilder.Entity("Atlas_Web.Models.UserPreference", b =>
@@ -2361,7 +2265,7 @@ namespace Atlas_Web.Migrations
                     b.Property<int?>("ItemValue")
                         .HasColumnType("int");
 
-                    b.Property<int?>("UserId")
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("UserPreferenceId");
@@ -2403,10 +2307,10 @@ namespace Atlas_Web.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserRoleLinksId"), 1L, 1);
 
-                    b.Property<int?>("UserId")
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("UserRolesId")
+                    b.Property<int>("UserRolesId")
                         .HasColumnType("int");
 
                     b.HasKey("UserRoleLinksId")
@@ -2453,6 +2357,8 @@ namespace Atlas_Web.Migrations
                     b.HasOne("Atlas_Web.Models.User", "User")
                         .WithMany("Analytics")
                         .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
                         .HasConstraintName("FK_Analytics_User");
 
                     b.Navigation("User");
@@ -2463,6 +2369,8 @@ namespace Atlas_Web.Migrations
                     b.HasOne("Atlas_Web.Models.User", "User")
                         .WithMany("AnalyticsErrors")
                         .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
                         .HasConstraintName("FK_Analytics_Error_User");
 
                     b.Navigation("User");
@@ -2473,6 +2381,8 @@ namespace Atlas_Web.Migrations
                     b.HasOne("Atlas_Web.Models.User", "User")
                         .WithMany("AnalyticsTraces")
                         .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
                         .HasConstraintName("FK_Analytics_Trace_User");
 
                     b.Navigation("User");
@@ -2484,11 +2394,6 @@ namespace Atlas_Web.Migrations
                         .WithMany("DpDataProjectAnalyticsOwners")
                         .HasForeignKey("AnalyticsOwnerId")
                         .HasConstraintName("FK_DP_DataProject_WebAppUsers1");
-
-                    b.HasOne("Atlas_Web.Models.Initiative", "Initiative")
-                        .WithMany("Collections")
-                        .HasForeignKey("DataInitiativeId")
-                        .HasConstraintName("FK_DP_DataProject_DP_DataInitiative");
 
                     b.HasOne("Atlas_Web.Models.User", "DataManager")
                         .WithMany("DpDataProjectDataManagers")
@@ -2504,6 +2409,11 @@ namespace Atlas_Web.Migrations
                         .WithMany("Collections")
                         .HasForeignKey("FinancialImpact")
                         .HasConstraintName("FK_DP_DataProject_FinancialImpact");
+
+                    b.HasOne("Atlas_Web.Models.Initiative", "Initiative")
+                        .WithMany("Collections")
+                        .HasForeignKey("InitiativeId")
+                        .HasConstraintName("FK_DP_DataProject_DP_DataInitiative");
 
                     b.HasOne("Atlas_Web.Models.User", "LastUpdateUserNavigation")
                         .WithMany("DpDataProjectLastUpdateUserNavigations")
@@ -2541,12 +2451,16 @@ namespace Atlas_Web.Migrations
                 {
                     b.HasOne("Atlas_Web.Models.Collection", "DataProject")
                         .WithMany("CollectionReports")
-                        .HasForeignKey("DataProjectId")
+                        .HasForeignKey("CollectionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
                         .HasConstraintName("FK_DP_ReportAnnotation_DP_DataProject");
 
                     b.HasOne("Atlas_Web.Models.ReportObject", "Report")
                         .WithMany("CollectionReports")
                         .HasForeignKey("ReportId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
                         .HasConstraintName("FK_DP_ReportAnnotation_ReportObject");
 
                     b.Navigation("DataProject");
@@ -2558,12 +2472,16 @@ namespace Atlas_Web.Migrations
                 {
                     b.HasOne("Atlas_Web.Models.Collection", "DataProject")
                         .WithMany("CollectionTerms")
-                        .HasForeignKey("DataProjectId")
+                        .HasForeignKey("CollectionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
                         .HasConstraintName("FK_DP_TermAnnotation_DP_DataProject");
 
                     b.HasOne("Atlas_Web.Models.Term", "Term")
                         .WithMany("CollectionTerms")
                         .HasForeignKey("TermId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
                         .HasConstraintName("FK_DP_TermAnnotation_Term");
 
                     b.Navigation("DataProject");
@@ -2714,6 +2632,7 @@ namespace Atlas_Web.Migrations
                         .WithMany("MaintenanceLogs")
                         .HasForeignKey("MaintainerId")
                         .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
                         .HasConstraintName("FK__Maintenan__Maint__65F62111");
 
                     b.HasOne("Atlas_Web.Models.MaintenanceLogStatus", "MaintenanceLogStatus")
@@ -2724,7 +2643,9 @@ namespace Atlas_Web.Migrations
 
                     b.HasOne("Atlas_Web.Models.ReportObjectDoc", "ReportObjectDoc")
                         .WithMany("MaintenanceLogs")
-                        .HasForeignKey("ReportObjectId")
+                        .HasForeignKey("ReportId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
                         .HasConstraintName("FK__ReportObj__Repor__72E3DB65");
 
                     b.Navigation("Maintainer");
@@ -2751,16 +2672,6 @@ namespace Atlas_Web.Migrations
                     b.Navigation("Group");
 
                     b.Navigation("Report");
-                });
-
-            modelBuilder.Entity("Atlas_Web.Models.ReportManageEngineTicket", b =>
-                {
-                    b.HasOne("Atlas_Web.Models.ReportObjectDoc", "ReportObject")
-                        .WithMany("ReportManageEngineTickets")
-                        .HasForeignKey("ReportObjectId")
-                        .HasConstraintName("FK_ReportManageEngineTickets_ReportObject");
-
-                    b.Navigation("ReportObject");
                 });
 
             modelBuilder.Entity("Atlas_Web.Models.ReportObject", b =>
@@ -2936,6 +2847,8 @@ namespace Atlas_Web.Migrations
                     b.HasOne("Atlas_Web.Models.ReportObject", "ReportObject")
                         .WithMany("ReportObjectParameters")
                         .HasForeignKey("ReportObjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
                         .HasConstraintName("FK_ReportObjectParameters1_ReportObject");
 
                     b.Navigation("ReportObject");
@@ -2946,6 +2859,8 @@ namespace Atlas_Web.Migrations
                     b.HasOne("Atlas_Web.Models.ReportObject", "ReportObject")
                         .WithMany("ReportObjectQueries")
                         .HasForeignKey("ReportObjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
                         .HasConstraintName("FK_ReportObjectQuery_ReportObject");
 
                     b.Navigation("ReportObject");
@@ -3016,6 +2931,18 @@ namespace Atlas_Web.Migrations
                     b.Navigation("Tag");
                 });
 
+            modelBuilder.Entity("Atlas_Web.Models.ReportServiceRequest", b =>
+                {
+                    b.HasOne("Atlas_Web.Models.ReportObjectDoc", "ReportObject")
+                        .WithMany("ReportServiceRequests")
+                        .HasForeignKey("ReportObjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("FK_ReportServiceRequests_ReportObject");
+
+                    b.Navigation("ReportObject");
+                });
+
             modelBuilder.Entity("Atlas_Web.Models.ReportTagLink", b =>
                 {
                     b.HasOne("Atlas_Web.Models.ReportObject", "Report")
@@ -3040,11 +2967,15 @@ namespace Atlas_Web.Migrations
                     b.HasOne("Atlas_Web.Models.UserRole", "Role")
                         .WithMany("RolePermissionLinks")
                         .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
                         .HasConstraintName("FK_RolePermissionLinks_UserRoles");
 
                     b.HasOne("Atlas_Web.Models.RolePermission", "RolePermissions")
                         .WithMany("RolePermissionLinks")
                         .HasForeignKey("RolePermissionsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
                         .HasConstraintName("FK_RolePermissionLinks_RolePermissions");
 
                     b.Navigation("Role");
@@ -3074,6 +3005,8 @@ namespace Atlas_Web.Migrations
                     b.HasOne("Atlas_Web.Models.Collection", "Collection")
                         .WithMany("StarredCollections")
                         .HasForeignKey("Collectionid")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
                         .HasConstraintName("FK_StarredCollections_DP_DataProject");
 
                     b.HasOne("Atlas_Web.Models.UserFavoriteFolder", "Folder")
@@ -3084,6 +3017,8 @@ namespace Atlas_Web.Migrations
                     b.HasOne("Atlas_Web.Models.User", "Owner")
                         .WithMany("StarredCollections")
                         .HasForeignKey("Ownerid")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
                         .HasConstraintName("FK_StarredCollections_User");
 
                     b.Navigation("Collection");
@@ -3103,11 +3038,15 @@ namespace Atlas_Web.Migrations
                     b.HasOne("Atlas_Web.Models.UserGroup", "Group")
                         .WithMany("StarredGroups")
                         .HasForeignKey("Groupid")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
                         .HasConstraintName("FK_StarredGroups_UserGroups");
 
                     b.HasOne("Atlas_Web.Models.User", "Owner")
                         .WithMany("StarredGroups")
                         .HasForeignKey("Ownerid")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
                         .HasConstraintName("FK_StarredGroups_User");
 
                     b.Navigation("Folder");
@@ -3127,11 +3066,15 @@ namespace Atlas_Web.Migrations
                     b.HasOne("Atlas_Web.Models.Initiative", "Initiative")
                         .WithMany("StarredInitiatives")
                         .HasForeignKey("Initiativeid")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
                         .HasConstraintName("FK_StarredInitiatives_DP_DataInitiative");
 
                     b.HasOne("Atlas_Web.Models.User", "Owner")
                         .WithMany("StarredInitiatives")
                         .HasForeignKey("Ownerid")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
                         .HasConstraintName("FK_StarredInitiatives_User");
 
                     b.Navigation("Folder");
@@ -3151,11 +3094,15 @@ namespace Atlas_Web.Migrations
                     b.HasOne("Atlas_Web.Models.User", "Owner")
                         .WithMany("StarredReports")
                         .HasForeignKey("Ownerid")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
                         .HasConstraintName("FK_StarredReports_User");
 
                     b.HasOne("Atlas_Web.Models.ReportObject", "Report")
                         .WithMany("StarredReports")
                         .HasForeignKey("Reportid")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
                         .HasConstraintName("FK_StarredReports_ReportObject");
 
                     b.Navigation("Folder");
@@ -3175,6 +3122,8 @@ namespace Atlas_Web.Migrations
                     b.HasOne("Atlas_Web.Models.User", "Owner")
                         .WithMany("StarredSearches")
                         .HasForeignKey("Ownerid")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
                         .HasConstraintName("FK_StarredSearches_User");
 
                     b.Navigation("Folder");
@@ -3192,11 +3141,15 @@ namespace Atlas_Web.Migrations
                     b.HasOne("Atlas_Web.Models.User", "Owner")
                         .WithMany("StarredTerms")
                         .HasForeignKey("Ownerid")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
                         .HasConstraintName("FK_StarredTerms_User");
 
                     b.HasOne("Atlas_Web.Models.Term", "Term")
                         .WithMany("StarredTerms")
                         .HasForeignKey("Termid")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
                         .HasConstraintName("FK_StarredTerms_Term");
 
                     b.Navigation("Folder");
@@ -3216,11 +3169,15 @@ namespace Atlas_Web.Migrations
                     b.HasOne("Atlas_Web.Models.User", "Owner")
                         .WithMany("StarredUserOwners")
                         .HasForeignKey("Ownerid")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
                         .HasConstraintName("FK_StarredUsers_User_owner");
 
                     b.HasOne("Atlas_Web.Models.User", "User")
                         .WithMany("StarredUserUsers")
                         .HasForeignKey("Userid")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired()
                         .HasConstraintName("FK_StarredUsers_User");
 
                     b.Navigation("Folder");
@@ -3252,11 +3209,15 @@ namespace Atlas_Web.Migrations
                     b.HasOne("Atlas_Web.Models.UserGroup", "Group")
                         .WithMany("UserGroupsMemberships")
                         .HasForeignKey("GroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
                         .HasConstraintName("FK_UserGroupsMembership_UserGroups");
 
                     b.HasOne("Atlas_Web.Models.User", "User")
                         .WithMany("UserGroupsMemberships")
                         .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
                         .HasConstraintName("FK_UserGroupsMembership_User");
 
                     b.Navigation("Group");
@@ -3269,6 +3230,8 @@ namespace Atlas_Web.Migrations
                     b.HasOne("Atlas_Web.Models.User", "User")
                         .WithMany("UserPreferences")
                         .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
                         .HasConstraintName("FK_UserPreferences_User");
 
                     b.Navigation("User");
@@ -3279,11 +3242,15 @@ namespace Atlas_Web.Migrations
                     b.HasOne("Atlas_Web.Models.User", "User")
                         .WithMany("UserRoleLinks")
                         .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
                         .HasConstraintName("FK_UserRoleLinks_User");
 
                     b.HasOne("Atlas_Web.Models.UserRole", "UserRoles")
                         .WithMany("UserRoleLinks")
                         .HasForeignKey("UserRolesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
                         .HasConstraintName("FK_UserRoleLinks_UserRoles");
 
                     b.Navigation("User");
@@ -3410,11 +3377,11 @@ namespace Atlas_Web.Migrations
                 {
                     b.Navigation("MaintenanceLogs");
 
-                    b.Navigation("ReportManageEngineTickets");
-
                     b.Navigation("ReportObjectDocFragilityTags");
 
                     b.Navigation("ReportObjectDocTerms");
+
+                    b.Navigation("ReportServiceRequests");
                 });
 
             modelBuilder.Entity("Atlas_Web.Models.ReportObjectRunData", b =>

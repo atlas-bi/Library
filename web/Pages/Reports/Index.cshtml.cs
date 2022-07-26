@@ -80,7 +80,7 @@ namespace Atlas_Web.Pages.Reports
                         .Include(x => x.ReportObjectTagMemberships)
                         .ThenInclude(x => x.Tag)
                         .Include(x => x.ReportObjectDoc)
-                        .ThenInclude(x => x.ReportManageEngineTickets)
+                        .ThenInclude(x => x.ReportServiceRequests)
                         .Include(x => x.ReportObjectAttachments)
                         .Include(x => x.ReportGroupsMemberships)
                         .ThenInclude(x => x.Group)

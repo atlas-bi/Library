@@ -3,7 +3,7 @@ namespace Atlas_Web.Models
     public partial class AnalyticsError
     {
         public int Id { get; set; }
-        public int? UserId { get; set; }
+        public int UserId { get; set; }
         public int? StatusCode { get; set; }
         public string Message { get; set; }
         public string Trace { get; set; }

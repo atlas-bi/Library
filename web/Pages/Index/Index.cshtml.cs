@@ -2,9 +2,7 @@ using Atlas_Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using Atlas_Web.Helpers;
 using Microsoft.Extensions.Caching.Memory;
-using Atlas_Web.Authorization;
 using Microsoft.AspNetCore.Authorization;
 
 namespace Atlas_Web.Pages
@@ -29,9 +27,6 @@ namespace Atlas_Web.Pages
             _cache = cache;
             _authorizationService = authorizationService;
         }
-
-        public int UserId { get; set; }
-        public string FirstName { get; set; }
 
         public class BasicFavoriteData
         {

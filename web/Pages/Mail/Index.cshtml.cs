@@ -88,7 +88,7 @@ namespace Atlas_Web.Pages.Mail
                 .ToListAsync();
 
             var GroupUserList = await _context.UserGroupsMemberships
-                .Where(m => GroupIds.Contains((int)m.GroupId))
+                .Where(m => GroupIds.Contains(m.GroupId))
                 .ToListAsync();
 
             if (!UserIds.Any() && !GroupUserList.Any())

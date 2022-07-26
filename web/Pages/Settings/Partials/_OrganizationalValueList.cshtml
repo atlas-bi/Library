@@ -7,7 +7,7 @@
                 <label class="label">Add More</label>
                 <div class="field has-addons">
                     <div class="control">
-                        <input type="text" class="input" placeholder="invaluable" asp-for="OrganizationalValue.OrganizationalValueName" required />
+                        <input type="text" class="input" placeholder="invaluable" asp-for="OrganizationalValue.Name" required />
                     </div>
                     <div class="control">
                         <button class="button is-info" type="submit">
@@ -28,7 +28,7 @@
                     <form asp-page-handler="DeleteOrganizationalValue" class="tags has-addons">
                         <span class="tag is-link">@i.Name</span>
                         <span class="tag is-dark">@i.Used uses</span>
-                        <input type="hidden" asp-for="OrganizationalValue.OrganizationalValueId" value="@i.Id" />
+                        <input type="hidden" asp-for="OrganizationalValue.Id" value="@i.Id" />
                         <button type="submit" class="tag is-delete"></button>
                     </form>
                 } else

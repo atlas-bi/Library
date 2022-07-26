@@ -6,7 +6,7 @@
         public string ItemType { get; set; }
         public int? ItemValue { get; set; }
         public int? ItemId { get; set; }
-        public int? UserId { get; set; }
+        public int UserId { get; set; }
 
         public virtual User User { get; set; }
     }

@@ -139,7 +139,7 @@ namespace Atlas_Web.Pages.Tasks
             ViewData["RecommendRetire"] = await (
                 from m in _context.MaintenanceLogs
                 where
-                    m.MaintenanceLogStatus.MaintenanceLogStatusName == "Recommend Retire"
+                    m.MaintenanceLogStatus.Name == "Recommend Retire"
                     && m.ReportObjectDoc.ExecutiveVisibilityYn == "Y"
                 select new RecommendRetireReports
                 {
@@ -147,7 +147,7 @@ namespace Atlas_Web.Pages.Tasks
                     Name = m.ReportObjectDoc.ReportObject.DisplayName,
                     MaintenanceDate = m.MaintenanceDate,
                     MaintenanceDateString = m.MaintenanceDateDisplayString,
-                    ReportId = (int)m.ReportObjectId,
+                    ReportId = m.ReportId,
                     Comment = m.Comment
                 }
             ).ToListAsync();
@@ -216,7 +216,7 @@ namespace Atlas_Web.Pages.Tasks
                         && d.ReportObject.OrphanedReportObjectYn == "N"
                     join l in (
                         from l in _context.MaintenanceLogs
-                        group l by l.ReportObjectId into grp
+                        group l by l.ReportId into grp
                         select new
                         {
                             ReportObjectId = grp.Key,
@@ -295,7 +295,7 @@ namespace Atlas_Web.Pages.Tasks
                         && d.ReportObject.OrphanedReportObjectYn == "N"
                     join l in (
                         from l in _context.MaintenanceLogs
-                        group l by l.ReportObjectId into grp
+                        group l by l.ReportId into grp
                         select new
                         {
                             ReportObjectId = grp.Key,
@@ -370,7 +370,7 @@ namespace Atlas_Web.Pages.Tasks
                         && d.ReportObject.OrphanedReportObjectYn == "N"
                     join l in (
                         from l in _context.MaintenanceLogs
-                        group l by l.ReportObjectId into grp
+                        group l by l.ReportId into grp
                         select new
                         {
                             ReportObjectId = grp.Key,

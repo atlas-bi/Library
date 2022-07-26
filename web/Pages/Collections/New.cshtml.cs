@@ -1,4 +1,3 @@
-using Atlas_Web.Helpers;
 using Atlas_Web.Models;
 using Atlas_Web.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -66,7 +65,7 @@ namespace Atlas_Web.Pages.Collections
 
             return RedirectToPage(
                 "/Collections/Index",
-                new { id = Collection.DataProjectId, success = "Changes saved." }
+                new { id = Collection.CollectionId, success = "Changes saved." }
             );
         }
     }

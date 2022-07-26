@@ -25,7 +25,7 @@
     </div>
      @{
             ViewBag.ProfileType = "user";
-            ViewBag.ProfileId = Model.UserId;
+            ViewBag.ProfileId = User.GetUserId();
             if(ViewBag.DefaultReportTypes.Count > 0)
             {
                 foreach (var item in ViewBag.DefaultReportTypes){

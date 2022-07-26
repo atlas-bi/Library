@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Atlas_Web.Models;
-using Atlas_Web.Helpers;
 using Atlas_Web.Authorization;
 using Microsoft.Extensions.Caching.Memory;
 using Newtonsoft.Json.Linq;
@@ -123,36 +122,36 @@ namespace Atlas_Web.Pages.Users
             };
             ViewData["AdLists"] = AdLists;
 
-#pragma warning disable S125
-            // if (
-            //     Reports.Count
-            //         + Collections.Count
-            //         + Initiatives.Count
-            //         + Terms.Count
-            //         + Users.Count
-            //         + Searches.Count
-            //         + Groups.Count
-            //     == 0
-            // )
-            // {
-            //     RunReports = await _context.ReportObjects
-            //         .Where(
-            //             x =>
-            //                 x.ReportObjectTopRuns.Any(y => y.RunUserId == UserId)
-            //                 && x.ReportObjectType.Visible == "Y"
-            //         )
-            //         .Include(x => x.ReportObjectDoc)
-            //         .Include(x => x.ReportObjectType)
-            //         .Include(x => x.ReportObjectAttachments)
-            //         .Include(x => x.StarredReports)
-            //         .OrderByDescending(
-            //             x =>
-            //                 x.ReportObjectTopRuns.Where(y => y.RunUserId == UserId).Sum(x => x.Runs)
-            //         )
-            //         .Take(30)
-            //         .ToListAsync();
-            // }
-#pragma warning restore S125
+            if (
+                Reports.Count
+                    + Collections.Count
+                    + Initiatives.Count
+                    + Terms.Count
+                    + Users.Count
+                    + Searches.Count
+                    + Groups.Count
+                == 0
+            )
+            {
+                RunReports = await _context.ReportObjects
+                    .Where(
+                        x =>
+                            x.ReportObjectRunDataBridges.Any(y => y.RunData.RunUserId == UserId)
+                            && x.ReportObjectType.Visible == "Y"
+                    )
+                    .Include(x => x.ReportObjectDoc)
+                    .Include(x => x.ReportObjectType)
+                    .Include(x => x.ReportObjectAttachments)
+                    .Include(x => x.StarredReports)
+                    .OrderByDescending(
+                        x =>
+                            x.ReportObjectRunDataBridges
+                                .Where(y => y.RunData.RunUserId == UserId)
+                                .Sum(x => x.Runs)
+                    )
+                    .Take(30)
+                    .ToListAsync();
+            }
 
             return Page();
         }

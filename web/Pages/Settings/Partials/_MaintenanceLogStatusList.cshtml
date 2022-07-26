@@ -7,7 +7,7 @@
                 <label class="label">Add More</label>
                 <div class="field has-addons">
                     <div class="control">
-                        <input type="text" class="input" placeholder="checked out" asp-for="MaintenanceLogStatus.MaintenanceLogStatusName" required />
+                        <input type="text" class="input" placeholder="checked out" asp-for="MaintenanceLogStatus.Name" required />
                     </div>
                     <div class="control">
                         <button class="button is-info" type="submit">
@@ -28,7 +28,7 @@
                     <form asp-page-handler="DeleteMaintenanceLogStatus" class="tags has-addons">
                         <span class="tag is-link">@i.Name</span>
                         <span class="tag is-dark">@i.Used uses</span>
-                        <input type="hidden" asp-for="MaintenanceLogStatus.MaintenanceLogStatusId" value="@i.Id" />
+                        <input type="hidden" asp-for="MaintenanceLogStatus.Id" value="@i.Id" />
                         <button type="submit" class="tag is-delete"></button>
                     </form>
                 } else

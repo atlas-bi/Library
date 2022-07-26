@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Atlas_Web.Models;
-using Atlas_Web.Helpers;
 using Atlas_Web.Authorization;
 using Microsoft.Extensions.Caching.Memory;
 
@@ -23,14 +22,6 @@ namespace Atlas_Web.Pages.Settings
         public GlobalSiteSetting GlobalSiteSettings { get; set; }
 
         public List<GlobalSiteSetting> Messages { get; set; }
-
-        public class GlobalSettingsData
-        {
-            public int Id { get; set; }
-            public string Name { get; set; }
-            public string Description { get; set; }
-            public string Value { get; set; }
-        }
 
         public async Task<IActionResult> OnGetSiteMessages()
         {

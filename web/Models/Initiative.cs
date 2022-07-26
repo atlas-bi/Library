@@ -8,7 +8,7 @@
             StarredInitiatives = new HashSet<StarredInitiative>();
         }
 
-        public int DataInitiativeId { get; set; }
+        public int InitiativeId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public int? OperationOwnerId { get; set; }

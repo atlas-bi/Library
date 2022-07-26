@@ -1,11 +1,11 @@
 ﻿namespace Atlas_Web.Models
 {
-    public partial class ReportManageEngineTicket
+    public partial class ReportServiceRequest
     {
-        public int ManageEngineTicketsId { get; set; }
+        public int ServiceRequestId { get; set; }
         public string TicketNumber { get; set; }
         public string Description { get; set; }
-        public int? ReportObjectId { get; set; }
+        public int ReportObjectId { get; set; }
         public string TicketUrl { get; set; }
 
         public virtual ReportObjectDoc ReportObject { get; set; }

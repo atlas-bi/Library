@@ -7,7 +7,7 @@
             ReportObjectDocFragilityTags = new HashSet<ReportObjectDocFragilityTag>();
             MaintenanceLogs = new HashSet<MaintenanceLog>();
             ReportObjectDocTerms = new HashSet<ReportObjectDocTerm>();
-            ReportManageEngineTickets = new HashSet<ReportManageEngineTicket>();
+            ReportServiceRequests = new HashSet<ReportServiceRequest>();
         }
 
         public int ReportObjectId { get; set; }
@@ -41,6 +41,6 @@
         public virtual ICollection<ReportObjectDocFragilityTag> ReportObjectDocFragilityTags { get; set; }
         public virtual ICollection<MaintenanceLog> MaintenanceLogs { get; set; }
         public virtual ICollection<ReportObjectDocTerm> ReportObjectDocTerms { get; set; }
-        public virtual ICollection<ReportManageEngineTicket> ReportManageEngineTickets { get; set; }
+        public virtual ICollection<ReportServiceRequest> ReportServiceRequests { get; set; }
     }
 }

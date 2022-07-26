@@ -222,12 +222,12 @@ namespace Atlas_Web.Pages.Profile
                             .Contains(x.ReportObjectId)
                 );
             }
-            else if (type == "collection" && _context.Collections.Any(x => x.DataProjectId == id))
+            else if (type == "collection" && _context.Collections.Any(x => x.CollectionId == id))
             {
                 subquery_reports = subquery_reports.Where(
                     x =>
                         _context.CollectionReports
-                            .Where(c => c.DataProjectId == id)
+                            .Where(c => c.CollectionId == id)
                             .Select(c => c.ReportId)
                             .Contains(x.ReportObjectId)
                 );
@@ -860,7 +860,7 @@ namespace Atlas_Web.Pages.Profile
                     .AsNoTracking()
                     .ToListAsync();
             }
-            else if (type == "collection" && _context.Collections.Any(x => x.DataProjectId == id))
+            else if (type == "collection" && _context.Collections.Any(x => x.CollectionId == id))
             {
                 UserStars = await _context.Users
                     .Where(x => x.StarredCollections.Any(r => r.Collectionid == id))

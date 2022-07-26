@@ -1,4 +1,3 @@
-using Atlas_Web.Helpers;
 using Atlas_Web.Models;
 using Atlas_Web.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -20,9 +19,6 @@ namespace Atlas_Web.Pages.Terms
 
         [BindProperty]
         public Term Term { get; set; }
-
-        [BindProperty]
-        public List<Term> Terms { get; set; }
 
         public IActionResult OnGetAsync()
         {

@@ -9,8 +9,8 @@
             StarredCollections = new HashSet<StarredCollection>();
         }
 
-        public int DataProjectId { get; set; }
-        public int? DataInitiativeId { get; set; }
+        public int CollectionId { get; set; }
+        public int? InitiativeId { get; set; }
         public string Name { get; set; }
         public string Purpose { get; set; }
         public string Description { get; set; }

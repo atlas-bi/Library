@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Atlas_Web.Models;
-using Atlas_Web.Helpers;
 using Atlas_Web.Authorization;
 using Microsoft.Extensions.Caching.Memory;
 using Newtonsoft.Json;
@@ -36,12 +35,10 @@ namespace Atlas_Web.Pages.Reports
         public MaintenanceLog MaintenanceLog { get; set; }
 
         [BindProperty]
-        public ReportManageEngineTicket ServiceRequest { get; set; }
+        public ReportServiceRequest ServiceRequest { get; set; }
 
         [BindProperty]
-        public List<ReportManageEngineTicket> ServiceRequests { get; set; }
-
-        public ReportObjectImagesDoc RemovedImage { get; set; }
+        public List<ReportServiceRequest> ServiceRequests { get; set; }
 
         [BindProperty]
         public ReportObjectDoc Report { get; set; }
@@ -91,7 +88,7 @@ namespace Atlas_Web.Pages.Reports
                 .Include(x => x.RequesterNavigation)
                 .Include(x => x.OperationalOwnerUser)
                 /* me tickets */
-                .Include(x => x.ReportManageEngineTickets)
+                .Include(x => x.ReportServiceRequests)
                 /* collections */
                 .Include(x => x.ReportObject)
                 .ThenInclude(x => x.CollectionReports)
@@ -177,7 +174,7 @@ namespace Atlas_Web.Pages.Reports
             {
                 CollectionReport collection = Collections[i];
 
-                _cache.Remove("collection-" + collection.DataProjectId);
+                _cache.Remove("collection-" + collection.CollectionId);
                 collection.ReportId = id;
                 collection.Rank = i;
 
@@ -186,13 +183,13 @@ namespace Atlas_Web.Pages.Reports
                     .Where(
                         x =>
                             x.ReportId == collection.ReportId
-                            && x.DataProjectId == collection.DataProjectId
+                            && x.CollectionId == collection.CollectionId
                     )
                     .FirstOrDefaultAsync();
                 if (oldCollection != null)
                 {
                     oldCollection.Rank = i;
-                    _cache.Remove("collection-" + oldCollection.DataProjectId);
+                    _cache.Remove("collection-" + oldCollection.CollectionId);
                 }
                 else
                 {
@@ -204,13 +201,11 @@ namespace Atlas_Web.Pages.Reports
 
             var RemovedCollections = _context.CollectionReports
                 .Where(d => d.ReportId == id)
-                .Where(
-                    d => !Collections.Select(x => x.DataProjectId).Contains((int)d.DataProjectId)
-                );
+                .Where(d => !Collections.Select(x => x.CollectionId).Contains(d.CollectionId));
 
             foreach (var collection in await RemovedCollections.ToListAsync())
             {
-                _cache.Remove("collection-" + collection.DataProjectId);
+                _cache.Remove("collection-" + collection.CollectionId);
             }
 
             _context.RemoveRange(RemovedCollections);
@@ -268,7 +263,7 @@ namespace Atlas_Web.Pages.Reports
             if (MaintenanceLog.MaintenanceLogStatusId != null)
             {
                 MaintenanceLog.MaintenanceDate = DateTime.Now;
-                MaintenanceLog.ReportObjectId = id;
+                MaintenanceLog.ReportId = id;
                 MaintenanceLog.MaintainerId = User.GetUserId();
                 await _context.AddAsync(MaintenanceLog);
                 await _context.SaveChangesAsync();
@@ -276,13 +271,13 @@ namespace Atlas_Web.Pages.Reports
 
             // remove deleted service requests
             _context.RemoveRange(
-                _context.ReportManageEngineTickets
+                _context.ReportServiceRequests
                     .Where(d => d.ReportObjectId == id)
                     .Where(
                         d =>
                             !ServiceRequests
-                                .Select(x => x.ManageEngineTicketsId)
-                                .Contains(d.ManageEngineTicketsId)
+                                .Select(x => x.ServiceRequestId)
+                                .Contains(d.ServiceRequestId)
                     )
             );
             await _context.SaveChangesAsync();

@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Atlas_Web.Models;
-using Atlas_Web.Helpers;
 using System.Text.RegularExpressions;
 using Microsoft.Extensions.Caching.Memory;
 using Atlas_Web.Authorization;
@@ -555,7 +554,7 @@ namespace Atlas_Web.Pages.Users
                         {
                             Date = r.LastUpdatedDateDisplayString,
                             Name = r.Name,
-                            Url = "\\initiatives?id=" + r.DataInitiativeId
+                            Url = "\\initiatives?id=" + r.InitiativeId
                         }
                     ).Take(10).ToListAsync();
                 }
@@ -576,7 +575,7 @@ namespace Atlas_Web.Pages.Users
                         {
                             Date = r.LastUpdatedDateDisplayString,
                             Name = r.Name,
-                            Url = "\\collections?id=" + r.DataProjectId
+                            Url = "\\collections?id=" + r.CollectionId
                         }
                     ).Take(10).ToListAsync();
                 }

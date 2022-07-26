@@ -8,7 +8,7 @@
             Collections = new HashSet<Collection>();
         }
 
-        public int FinancialImpactId { get; set; }
+        public int Id { get; set; }
         public string Name { get; set; }
 
         public virtual ICollection<Initiative> Initiatives { get; set; }

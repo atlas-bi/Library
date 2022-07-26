@@ -7,8 +7,8 @@
             ReportObjectDocs = new HashSet<ReportObjectDoc>();
         }
 
-        public int OrganizationalValueId { get; set; }
-        public string OrganizationalValueName { get; set; }
+        public int Id { get; set; }
+        public string Name { get; set; }
 
         public virtual ICollection<ReportObjectDoc> ReportObjectDocs { get; set; }
     }

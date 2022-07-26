@@ -15,7 +15,7 @@
 
         public int UserFavoriteFolderId { get; set; }
         public string FolderName { get; set; }
-        public int? UserId { get; set; }
+        public int UserId { get; set; }
         public int? FolderRank { get; set; }
 
         public virtual ICollection<StarredCollection> StarredCollections { get; set; }

@@ -1,4 +1,3 @@
-using Atlas_Web.Helpers;
 using Atlas_Web.Models;
 using Atlas_Web.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -67,13 +66,13 @@ namespace Atlas_Web.Pages.Initiatives
             _cache.Remove("collections");
 
             var AddedCollections = await _context.Collections
-                .Where(d => Collections.Select(x => x.DataProjectId).Contains(d.DataProjectId))
+                .Where(d => Collections.Select(x => x.CollectionId).Contains(d.CollectionId))
                 .ToListAsync();
 
             foreach (var collection in AddedCollections)
             {
-                _cache.Remove("collection-" + collection.DataProjectId);
-                collection.DataInitiativeId = Initiative.DataInitiativeId;
+                _cache.Remove("collection-" + collection.CollectionId);
+                collection.InitiativeId = Initiative.InitiativeId;
                 await _context.SaveChangesAsync();
             }
 
@@ -81,7 +80,7 @@ namespace Atlas_Web.Pages.Initiatives
 
             return RedirectToPage(
                 "/Initiatives/Index",
-                new { id = Initiative.DataInitiativeId, success = "Changes saved." }
+                new { id = Initiative.InitiativeId, success = "Changes saved." }
             );
         }
     }

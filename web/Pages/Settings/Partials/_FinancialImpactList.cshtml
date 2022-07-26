@@ -29,7 +29,7 @@
                     <form asp-page-handler="DeleteFinancialImpact" class="tags has-addons">
                         <span class="tag is-link">@i.Name</span>
                         <span class="tag is-dark">@i.Used uses</span>
-                        <input type="hidden" asp-for="FinancialImpact.FinancialImpactId" value="@i.Id" />
+                        <input type="hidden" asp-for="FinancialImpact.Id" value="@i.Id" />
                         <button type="submit" class="tag is-delete"></button>
                     </form>
                 } else

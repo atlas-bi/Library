@@ -7,8 +7,8 @@
             ReportObjectDocFragilityTags = new HashSet<ReportObjectDocFragilityTag>();
         }
 
-        public int FragilityTagId { get; set; }
-        public string FragilityTagName { get; set; }
+        public int Id { get; set; }
+        public string Name { get; set; }
 
         public virtual ICollection<ReportObjectDocFragilityTag> ReportObjectDocFragilityTags { get; set; }
     }

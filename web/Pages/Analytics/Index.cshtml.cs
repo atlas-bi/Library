@@ -22,13 +22,6 @@ namespace Atlas_Web.Pages.Analytics
             _config = config;
         }
 
-        public class MediumData
-        {
-            public string Name { get; set; }
-            public double Time { get; set; }
-            public int Count { get; set; }
-        }
-
         public class ActiveUserData
         {
             public string Fullname { get; set; }
@@ -41,12 +34,6 @@ namespace Atlas_Web.Pages.Analytics
             public string UpdateTime { get; set; }
             public int Pages { get; set; }
             public string SessionId { get; set; }
-        }
-
-        public class AccessHistoryData
-        {
-            public string Month { get; set; }
-            public int Hits { get; set; }
         }
 
         [BindProperty]
@@ -84,7 +71,7 @@ namespace Atlas_Web.Pages.Analytics
                 select new ActiveUserData
                 {
                     Fullname = u.FullnameCalc,
-                    UserId = (int)b.UserId,
+                    UserId = b.UserId,
                     SessionId = b.SessionId,
                     SessionTime = TimeSpan.FromMilliseconds(sub.SessionTime).ToString(@"h\:mm\:ss"),
                     PageTime = TimeSpan.FromMilliseconds(b.PageTime ?? 0).ToString(@"h\:mm\:ss"),

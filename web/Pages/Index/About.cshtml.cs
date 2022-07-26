@@ -1,7 +1,6 @@
 using Atlas_Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Atlas_Web.Helpers;
 using Microsoft.Extensions.Caching.Memory;
 
 namespace Atlas_Web.Pages
@@ -18,9 +17,6 @@ namespace Atlas_Web.Pages
             _cache = cache;
             _config = config;
         }
-
-        public int UserId { get; set; }
-        public string FirstName { get; set; }
 
         public ActionResult OnGetAsync()
         {

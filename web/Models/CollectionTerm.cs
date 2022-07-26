@@ -2,9 +2,9 @@
 {
     public partial class CollectionTerm
     {
-        public int TermAnnotationId { get; set; }
-        public int? TermId { get; set; }
-        public int? DataProjectId { get; set; }
+        public int LinkId { get; set; }
+        public int TermId { get; set; }
+        public int CollectionId { get; set; }
         public int? Rank { get; set; }
 
         public virtual Collection DataProject { get; set; }
