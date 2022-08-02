@@ -1,0 +1,4 @@
+# characters that should not split words
+# important for sql table names like "this_table" or [this-table]
+_ => LOWER
+- => LOWER

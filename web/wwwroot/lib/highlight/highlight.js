@@ -5272,10 +5272,11 @@ hljs.registerLanguage(
     };
   })(),
 );
-
 hljs.highlightAll();
+
 document.addEventListener('code-highlight', function () {
   setTimeout(function () {
     hljs.highlightAll();
+
   }, 0);
 });
