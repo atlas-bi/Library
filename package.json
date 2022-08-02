@@ -108,7 +108,9 @@
     "prettier": true,
     "ignores": [
       "web/wwwroot/js/polyfill/",
-      "web/wwwroot/js/**/*.min.js"
+      "web/wwwroot/js/**/*.min.js",
+      "web/wwwroot/js/old_mail.js",
+      "web/wwwroot/js/essential.js"
     ],
     "globals": [
       "cache",

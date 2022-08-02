@@ -460,9 +460,11 @@ button.is-ghost:not(.button) {
   display: inline-block;
   min-width: 100px;
 }
+
 .w-auto {
   width: auto !important;
 }
+
 .icon.is-group-roles {
   left: 15px;
   top: 11px;
@@ -470,6 +472,7 @@ button.is-ghost:not(.button) {
   width: 17px;
   height: 17px;
 }
+
 .bar-percent-fill {
   background-color: rgba(38 128 235 / 10%);
   border: 1px solid rgba(38 128 235 / 20%);
