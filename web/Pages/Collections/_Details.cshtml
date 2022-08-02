@@ -69,7 +69,7 @@
             <tr>
                 <td>Last Updated By</td>
                 <td>
-                    @if (@Configuration["features:enable_user_profile"] == null || @Configuration["features:enable_user_profile"].ToString().ToLower() == "true")
+                    @if (User.HasPermission("View Other User") && @Configuration["features:enable_user_profile"] == null || @Configuration["features:enable_user_profile"].ToString().ToLower() == "true")
                     {
                         <a href="/users?id=@Model.Collection.LastUpdateUser">@Model.Collection.LastUpdateUserNavigation.FullnameCalc</a>
                     } else

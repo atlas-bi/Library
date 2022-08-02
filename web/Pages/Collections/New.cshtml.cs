@@ -1,10 +1,8 @@
-using Atlas_Web.Helpers;
 using Atlas_Web.Models;
+using Atlas_Web.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Caching.Memory;
-using System;
-using System.Threading.Tasks;
 
 namespace Atlas_Web.Pages.Collections
 {
@@ -27,14 +25,7 @@ namespace Atlas_Web.Pages.Collections
 
         public IActionResult OnGet()
         {
-            var checkpoint = UserHelpers.CheckUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name,
-                "Create Project"
-            );
-
-            if (!checkpoint)
+            if (!User.HasPermission("Create Project"))
             {
                 return RedirectToPage(
                     "/Collections/Index",
@@ -47,14 +38,7 @@ namespace Atlas_Web.Pages.Collections
 
         public async Task<IActionResult> OnPostAsync()
         {
-            var checkpoint = UserHelpers.CheckUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name,
-                "Create Project"
-            );
-
-            if (!checkpoint)
+            if (!User.HasPermission("Create Project"))
             {
                 return RedirectToPage(
                     "/Collections/Index",
@@ -71,8 +55,7 @@ namespace Atlas_Web.Pages.Collections
             }
 
             // update last update values & values that were posted
-            Collection.LastUpdateUser =
-                UserHelpers.GetUser(_cache, _context, User.Identity.Name).UserId;
+            Collection.LastUpdateUser = User.GetUserId();
             Collection.LastUpdateDate = DateTime.Now;
 
             _context.Add(Collection);
@@ -82,7 +65,7 @@ namespace Atlas_Web.Pages.Collections
 
             return RedirectToPage(
                 "/Collections/Index",
-                new { id = Collection.DataProjectId, success = "Changes saved." }
+                new { id = Collection.CollectionId, success = "Changes saved." }
             );
         }
     }

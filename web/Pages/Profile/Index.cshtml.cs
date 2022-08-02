@@ -1,13 +1,8 @@
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Atlas_Web.Models;
-using System.Collections.Generic;
 using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Configuration;
 using System.Text.RegularExpressions;
 
 namespace Atlas_Web.Pages.Profile
@@ -127,7 +122,7 @@ namespace Atlas_Web.Pages.Profile
                                 || _config["features:enable_user_profile"].ToString().ToLower()
                                     == "true"
                             )
-                                ? $"\\user?id={grp.Key.RunUserId}"
+                                ? $"\\users?id={grp.Key.RunUserId}"
                                 : null,
                         Runs = grp.Sum(x => x.d.Runs),
                         LastRun = grp.Max(x => x.b.RunStartTime).ToShortDateString(),
@@ -227,12 +222,12 @@ namespace Atlas_Web.Pages.Profile
                             .Contains(x.ReportObjectId)
                 );
             }
-            else if (type == "collection" && _context.Collections.Any(x => x.DataProjectId == id))
+            else if (type == "collection" && _context.Collections.Any(x => x.CollectionId == id))
             {
                 subquery_reports = subquery_reports.Where(
                     x =>
                         _context.CollectionReports
-                            .Where(c => c.DataProjectId == id)
+                            .Where(c => c.CollectionId == id)
                             .Select(c => c.ReportId)
                             .Contains(x.ReportObjectId)
                 );
@@ -865,7 +860,7 @@ namespace Atlas_Web.Pages.Profile
                     .AsNoTracking()
                     .ToListAsync();
             }
-            else if (type == "collection" && _context.Collections.Any(x => x.DataProjectId == id))
+            else if (type == "collection" && _context.Collections.Any(x => x.CollectionId == id))
             {
                 UserStars = await _context.Users
                     .Where(x => x.StarredCollections.Any(r => r.Collectionid == id))

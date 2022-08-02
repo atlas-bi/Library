@@ -35,7 +35,7 @@
                     @if (@Model.Report.LastModifiedByUser != null)
                     {
                         <text>&nbsp;&middot;&nbsp;</text>
-                        @if (@Configuration["features:enable_user_profile"] == null || @Configuration["features:enable_user_profile"].ToString().ToLower() == "true")
+                        @if (User.HasPermission("View Other User") && @Configuration["features:enable_user_profile"] == null || @Configuration["features:enable_user_profile"].ToString().ToLower() == "true")
                         {
                             <a href="/users?id=@Model.Report.LastModifiedByUserId">@Model.Report.LastModifiedByUser.FullnameCalc</a>
                         }
@@ -56,7 +56,7 @@
                         @if (@Model.Report.ReportObjectDoc.UpdatedByNavigation != null)
                         {
                             <text>&nbsp;&middot;&nbsp;</text>
-                            @if (@Configuration["features:enable_user_profile"] == null || @Configuration["features:enable_user_profile"].ToString().ToLower() == "true")
+                            @if (User.HasPermission("View Other User") && @Configuration["features:enable_user_profile"] == null || @Configuration["features:enable_user_profile"].ToString().ToLower() == "true")
                             {
                                 <a href="/users?id=@Model.Report.ReportObjectDoc.UpdatedBy">@Model.Report.ReportObjectDoc.UpdatedByNavigation.FullnameCalc</a>
                             }
@@ -152,12 +152,7 @@
 
             @if (!string.IsNullOrEmpty(@Model.Report.EpicMasterFile))
             {
-                var RecordViewerUrl = ReportLinkHelpers.RecordViewerLink(
-                               ViewContext.HttpContext,
-                               Model.Report.EpicMasterFile,
-                               Model.Report.EpicRecordId.ToString(),
-                               Model.Report.OrphanedReportObjectYn
-                           );
+                var RecordViewerUrl = Model.Report.RecordViewerUrl(Context);
                 <tr>
                     <td>Epic Identifier</td>
                     <td>@if (RecordViewerUrl != null)
@@ -222,7 +217,7 @@
                 </tr>
             }
 
-            @if (ViewBag.Permissions.Contains("Edit Report Purge Option") && @Model.Report.ReportObjectDoc != null && @Model.Report.ReportObjectDoc.DoNotPurge == "Y")
+            @if (User.HasPermission("Edit Report Purge Option") && @Model.Report.ReportObjectDoc != null && @Model.Report.ReportObjectDoc.DoNotPurge == "Y")
             {
                 <tr>
                     <td>Do Not Purge</td>
@@ -230,7 +225,7 @@
                 </tr>
             }
 
-            @if (ViewBag.Permissions.Contains("Edit Report Hidden Option") && @Model.Report.ReportObjectDoc != null && @Model.Report.ReportObjectDoc.Hidden == "Y")
+            @if (User.HasPermission("Edit Report Hidden Option") && @Model.Report.ReportObjectDoc != null && @Model.Report.ReportObjectDoc.Hidden == "Y")
             {
                 <tr>
                     <td>Hidden?</td>
@@ -242,7 +237,7 @@
             {
                 <tr>
                     <td>Estimated Run Frequency</td>
-                    <td>@Model.Report.ReportObjectDoc.EstimatedRunFrequency.EstimatedRunFrequencyName</td>
+                    <td>@Model.Report.ReportObjectDoc.EstimatedRunFrequency.Name</td>
                 </tr>
             }
 
@@ -250,7 +245,7 @@
             {
                 <tr>
                     <td>Fragility Rating</td>
-                    <td>@Model.Report.ReportObjectDoc.Fragility.FragilityName</td>
+                    <td>@Model.Report.ReportObjectDoc.Fragility.Name</td>
                 </tr>
             }
 
@@ -258,7 +253,7 @@
             {
                 <tr>
                     <td>Maintenance Schedule</td>
-                    <td>@Model.Report.ReportObjectDoc.MaintenanceSchedule.MaintenanceScheduleName</td>
+                    <td>@Model.Report.ReportObjectDoc.MaintenanceSchedule.Name</td>
                 </tr>
             }
 
@@ -266,7 +261,7 @@
             {
                 <tr>
                     <td>Organizational Value Rating</td>
-                    <td>@Model.Report.ReportObjectDoc.OrganizationalValue.OrganizationalValueName</td>
+                    <td>@Model.Report.ReportObjectDoc.OrganizationalValue.Name</td>
                 </tr>
             }
 
@@ -278,7 +273,7 @@
                         <div class="tags">
                             @foreach (var tag in @Model.Report.ReportObjectDoc.ReportObjectDocFragilityTags.ToList())
                             {
-                                <span class="tag">@tag.FragilityTag.FragilityTagName</span>
+                                <span class="tag">@tag.FragilityTag.Name</span>
                             }
                         </div>
                     </td>
@@ -303,13 +298,13 @@
     </table>
 </div>
 
-@if (@Model.Report.ReportObjectDoc != null && Model.Report.ReportObjectDoc.ReportManageEngineTickets.Any())
+@if (@Model.Report.ReportObjectDoc != null && Model.Report.ReportObjectDoc.ReportServiceRequests.Any())
 {
     <nav id="maintenance" class="panel">
         <div class="panel-heading">
             Service Requests
         </div>
-        @foreach (var ticket in Model.Report.ReportObjectDoc.ReportManageEngineTickets.ToList())
+        @foreach (var ticket in Model.Report.ReportObjectDoc.ReportServiceRequests.ToList())
         {
             <div class="panel-block">
                 @if (!string.IsNullOrEmpty(ticket.TicketUrl))

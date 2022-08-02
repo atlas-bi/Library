@@ -23,7 +23,7 @@
     </div>
 </div>
 @*
-        <div class="mlbx-menuTitle">Mail &#x2013; @ViewBag.Fullname <span class="mlbx-msgCnt mail-all-cnt">
+        <div class="mlbx-menuTitle">Mail &#x2013; @User.GetUserName() <span class="mlbx-msgCnt mail-all-cnt">
             @if (ViewBag.AllMail.Count > 0)
             {<text> (@ViewBag.AllMail.Count @if (ViewBag.AllMail.Count > 1)
             {<text>Messages</text>}

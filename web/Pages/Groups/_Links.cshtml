@@ -16,7 +16,7 @@
         <li>
             <a class="tab-lnk" href="#run-list">Report Runs</a>
         </li>
-        @if (ViewBag.Permissions.Contains("View Site Analytics"))
+        @if (User.HasPermission("View Site Analytics"))
         {
             <li>
                 <a class="tab-lnk" href="#analytics">Analytics</a>

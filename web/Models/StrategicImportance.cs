@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Atlas_Web.Models
+﻿namespace Atlas_Web.Models
 {
     public partial class StrategicImportance
     {
@@ -11,7 +8,7 @@ namespace Atlas_Web.Models
             Collections = new HashSet<Collection>();
         }
 
-        public int StrategicImportanceId { get; set; }
+        public int Id { get; set; }
         public string Name { get; set; }
 
         public virtual ICollection<Initiative> Initiatives { get; set; }

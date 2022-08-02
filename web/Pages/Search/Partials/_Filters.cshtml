@@ -9,7 +9,7 @@
         </a>
     }
 
-    @if (ViewBag.Permissions.Contains("Show Advanced Search"))
+    @if (User.HasPermission("Show Advanced Search"))
     {
         var advanced = @Model.SearchResults.Advanced == "Y" ? "N" : "Y";
 
@@ -48,7 +48,7 @@
     {
         @* if there is only one value, do not show.*@
 
-        @if ( Model.SearchResults.Advanced == "Y" && (ViewBag.Permissions.Contains("Show Advanced Search") && field.FriendlyName == "Visible") || (field.FriendlyName != "Visible" && field.Values.Count > 1) || field.FriendlyName == "Type" || UrlHelpers.HasFacet(Model.SearchResults.Parameters, field.Key))
+        @if ( Model.SearchResults.Advanced == "Y" && (User.HasPermission("Show Advanced Search") && field.FriendlyName == "Visible") || (field.FriendlyName != "Visible" && field.Values.Count > 1) || field.FriendlyName == "Type" || UrlHelpers.HasFacet(Model.SearchResults.Parameters, field.Key))
         {
             <strong>@field.FriendlyName</strong>
             <div class="m-2">
@@ -57,7 +57,7 @@
                 {
                     @* hide filters with 0 matches, or show advanced search *@
 
-                    @if ((ViewBag.Permissions.Contains("Show Advanced Search") && field.FriendlyName == "Visible") || (field.FriendlyName != "Visible" && (@value.Count > 0 || field.FriendlyName == "Visible" || field.FriendlyName == "Type" || UrlHelpers.SetSearchFacetChecked(Model.SearchResults.Parameters, field.Key, value.Value))))
+                    @if ((User.HasPermission("Show Advanced Search") && field.FriendlyName == "Visible") || (field.FriendlyName != "Visible" && (@value.Count > 0 || field.FriendlyName == "Visible" || field.FriendlyName == "Type" || UrlHelpers.SetSearchFacetChecked(Model.SearchResults.Parameters, field.Key, value.Value))))
                     {
                         <div class="field search-filter">
                             <input class="is-checkradio is-info"

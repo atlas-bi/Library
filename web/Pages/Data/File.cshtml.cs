@@ -1,10 +1,9 @@
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Atlas_Web.Models;
 using System.Text;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Atlas_Web.Pages.Data
 {
@@ -12,10 +11,12 @@ namespace Atlas_Web.Pages.Data
     public class FileModel : PageModel
     {
         private readonly Atlas_WebContext _context;
+        private readonly IAuthorizationService _authorizationService;
 
-        public FileModel(Atlas_WebContext context)
+        public FileModel(Atlas_WebContext context, IAuthorizationService authorizationService)
         {
             _context = context;
+            _authorizationService = authorizationService;
         }
 
         public async Task<ActionResult> OnGetCube(int id)
@@ -42,11 +43,13 @@ namespace Atlas_Web.Pages.Data
             }
 
             if (
-                !Helpers.UserHelpers.CheckHrxPermissions(
-                    _context,
-                    attachment.ReportObjectId,
-                    User.Identity.Name
-                )
+                (
+                    await _authorizationService.AuthorizeAsync(
+                        HttpContext.User,
+                        attachment.ReportObject,
+                        "ReportRunPolicy"
+                    )
+                ).Succeeded
             )
             {
                 return Content("Your are not authorized to view this page.");

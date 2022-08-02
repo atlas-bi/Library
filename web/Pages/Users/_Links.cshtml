@@ -13,7 +13,7 @@
         <li>
             <a class="tab-lnk" href="#subscriptions">Subscriptions</a>
         </li>
-        @if (ViewBag.Permissions.Contains("View Groups"))
+        @if (User.HasPermission("View Groups"))
         {
             <li>
                 <a class="tab-lnk" href="#groups">Groups</a>
@@ -28,7 +28,7 @@
         <li>
             <a class="tab-lnk" href="#atlas-history">Atlas History</a>
         </li>
-        @if (ViewBag.Permissions.Contains("View Site Analytics"))
+        @if (User.HasPermission("View Site Analytics"))
         {
             <li>
                 <a class="tab-lnk" href="#analytics">Analytics</a>

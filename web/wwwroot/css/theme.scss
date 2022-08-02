@@ -461,6 +461,18 @@ button.is-ghost:not(.button) {
   min-width: 100px;
 }
 
+.w-auto {
+  width: auto !important;
+}
+
+.icon.is-group-roles {
+  left: 15px;
+  top: 11px;
+  border-radius: 8px;
+  width: 17px;
+  height: 17px;
+}
+
 .bar-percent-fill {
   background-color: rgba(38 128 235 / 10%);
   border: 1px solid rgba(38 128 235 / 20%);

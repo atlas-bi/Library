@@ -74,7 +74,7 @@
         <div class="notification @if(Trace.Handled != 1){<text>is-danger</text>} is-family-monospace is-light mt-2 is-wordbreak">@message.logData.errorMsg</div>
                         </td>
                         <td>
-                            @if (@Configuration["features:enable_user_profile"] == null || @Configuration["features:enable_user_profile"].ToString().ToLower() == "true")
+                            @if (@Configuration["features:enable_user_profile"] == null || @Configuration["features:enable_user_profile"].ToString().ToLower() == "true" && User.HasPermission("View Other User"))
                             {
                                 <a href="/users?id=@Trace.UserId">@Trace.User.FullnameCalc</a>
                             } else {

@@ -3,7 +3,7 @@
 
 @{
     Layout = null;
-    ViewBag.IsMe = (@Model.UserId == @ViewBag.PublicUser.UserId);
+    ViewBag.IsMe = (@Model.UserId == User.GetUserId());
     var hasReports = Model.Reports.Any();
     var hasCollections = Model.Collections.Any();
     var hasInitiatives = Model.Initiatives.Any();
@@ -102,7 +102,7 @@
                             </span>
                             <span>All</span>
                         </div>
-                        @if (ViewBag.IsMe && ViewBag.Permissions.Contains("Edit Other Users"))
+                        @if (ViewBag.IsMe && User.HasPermission("Edit Other Users"))
                         {
                             <div class="favorite-folder-controls button is-light is-rounded is-warning has-text-dark is-active">
                                 <span class="icon js-modal-trigger" data-target="favorite-folder-new"><i class="fas fa-plus"></i></span>
@@ -146,7 +146,7 @@
 
 
                             </div>
-                            @if (ViewBag.IsMe && ViewBag.Permissions.Contains("Edit Other Users"))
+                            @if (ViewBag.IsMe && User.HasPermission("Edit Other Users"))
                             {
                                 <div class="favorite-folder-controls button is-light is-rounded is-warning has-text-dark is-active">
                                     <span class="icon js-modal-trigger" data-target="favorite-folder-@f.UserFavoriteFolderId"><i class="fas fa-pen-to-square"></i></span>

@@ -12,10 +12,10 @@
 
 }
 
-<form class="mb-4" action="/Initiatives/Edit/?id=@Model.Initiative.DataInitiativeId" method="post" >
+<form class="mb-4" action="/Initiatives/Edit/?id=@Model.Initiative.InitiativeId" method="post" >
     <h1 class="title is-1">@ViewData["Title"]</h1>
     <p class="buttons is-flex is-justify-content-space-between">
-        <a class="button p-5" href="/Initiatives/?id=@Model.Initiative.DataInitiativeId">
+        <a class="button p-5" href="/Initiatives/?id=@Model.Initiative.InitiativeId">
             <span class="icon">
               <i class="fas fa-lg fa-left-long"></i>
             </span>
@@ -29,7 +29,7 @@
         </button>
     </p>
 
-    <input asp-for="Initiative.DataInitiativeId" type="hidden" value="@Model.Initiative.DataInitiativeId" />
+    <input asp-for="Initiative.InitiativeId" type="hidden" value="@Model.Initiative.InitiativeId" />
 
     <div class="field">
         <label class="label">Name</label>
@@ -154,7 +154,7 @@
                     <div class="control">
                         <div class="tags has-addons">
                             <span class="tag is-link">@Model.Initiative.Collections.ToList()[x].Name</span>
-                            <input type="hidden" name="Collections[@x].DataProjectId" value="@Model.Initiative.Collections.ToList()[x].DataProjectId" />
+                            <input type="hidden" name="Collections[@x].CollectionId" value="@Model.Initiative.Collections.ToList()[x].CollectionId" />
                             <a class="tag is-delete"></a>
                         </div>
                     </div>
@@ -162,7 +162,7 @@
             </div>
         <div class="field">
             <div class="control is-relative is-expanded">
-                <input class="input input-mini multiselect" placeholder="search for collections.." search-area="CollectionSearch" data-name="Collections[].DataProjectId" />
+                <input class="input input-mini multiselect" placeholder="search for collections.." search-area="CollectionSearch" data-name="Collections[].CollectionId" />
                 <div class="mini">
                     <div class="mini-waiting">
                         <span class="icon">

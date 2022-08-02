@@ -1,13 +1,7 @@
 using Atlas_Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Atlas_Web.Helpers;
-using Microsoft.Extensions.Configuration;
+using Atlas_Web.Authorization;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.AspNetCore.Diagnostics;
 
@@ -35,8 +29,6 @@ namespace Atlas_Web.Pages
 
         public ActionResult OnGetAsync(int? id)
         {
-            var MyUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
-
             RequestId = HttpContext.TraceIdentifier;
 
             var exceptionHandlerPathFeature =
@@ -60,7 +52,7 @@ namespace Atlas_Web.Pages
                 _context.Add(
                     new AnalyticsError
                     {
-                        UserId = MyUser.UserId,
+                        UserId = User.GetUserId(),
                         StatusCode = id,
                         Referer = referer,
                         Message = "Invalid request.",
@@ -83,7 +75,7 @@ namespace Atlas_Web.Pages
             _context.Add(
                 new AnalyticsError
                 {
-                    UserId = MyUser.UserId,
+                    UserId = User.GetUserId(),
                     StatusCode = Response.StatusCode,
                     Referer = exceptionHandlerPathFeature?.Path,
                     Message = message,

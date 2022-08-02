@@ -1,13 +1,13 @@
 @model Atlas_Web.Pages.Settings.TagsModel
 <div>
-    @if (ViewBag.Permissions.Contains("Create Parameters"))
+    @if (User.HasPermission("Create Parameters"))
     {
         <form asp-page-handler="CreateEstimatedRunFrequency">
             <div class="field">
                 <label class="label">Add More</label>
                 <div class="field has-addons">
                     <div class="control">
-                        <input type="text" class="input" placeholder="centuryly" asp-for="EstimatedRunFrequency.EstimatedRunFrequencyName" required />
+                        <input type="text" class="input" placeholder="centuryly" asp-for="EstimatedRunFrequency.Name" required />
                     </div>
                     <div class="control">
                         <button class="button is-info" type="submit">
@@ -23,12 +23,12 @@
         @foreach (var i in ViewBag.EstimatedRunFrequencyList)
         {
             <div class="control">
-                @if (ViewBag.Permissions.Contains("Delete Parameters"))
+                @if (User.HasPermission("Delete Parameters"))
                 {
                     <form asp-page-handler="DeleteEstimatedRunFrequency" class="tags has-addons">
                         <span class="tag is-link">@i.Name</span>
                         <span class="tag is-dark">@i.Used uses</span>
-                        <input type="hidden" asp-for="EstimatedRunFrequency.EstimatedRunFrequencyId" value="@i.Id" />
+                        <input type="hidden" asp-for="EstimatedRunFrequency.Id" value="@i.Id" />
                         <button type="submit" class="tag is-delete"></button>
                     </form>
                 } else

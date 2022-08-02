@@ -60,7 +60,7 @@
                 <tr>
                     <td>Approved By</td>
                     <td>
-                        @if (@Configuration["features:enable_user_profile"] == null || @Configuration["features:enable_user_profile"].ToString().ToLower() == "true")
+                        @if (User.HasPermission("View Other User") && @Configuration["features:enable_user_profile"] == null || @Configuration["features:enable_user_profile"].ToString().ToLower() == "true")
                         {
                             <a href="/users?id=@Model.Term.ApprovedByUserId">@Model.Term.ApprovedByUser.FullnameCalc</a>
                         } else
@@ -80,7 +80,7 @@
             <tr>
                 <td>Last Updated By</td>
                 <td>
-                    @if (@Configuration["features:enable_user_profile"] == null || @Configuration["features:enable_user_profile"].ToString().ToLower() == "true")
+                    @if (User.HasPermission("View Other User") && @Configuration["features:enable_user_profile"] == null || @Configuration["features:enable_user_profile"].ToString().ToLower() == "true")
                     {
                         <a href="/users?id=@Model.Term.UpdatedByUserId">@Model.Term.UpdatedByUser.FullnameCalc</a>
                     } else

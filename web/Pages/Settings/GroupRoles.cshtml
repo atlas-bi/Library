@@ -1,0 +1,98 @@
+@page
+@{
+	Layout = null;
+}
+@model Atlas_Web.Pages.Settings.GroupRolesModel
+
+<div>
+	<h2 class="title is-2">Group Roles</h2>
+    <h3 class="title is-3">Add Privileged Group</h3>
+    <form class="content" method="post" asp-page-handler="AddGroupPermission">
+        <div class="field">
+            <label class="label">Group</label>
+            <div class="field is-grouped">
+                <div class="control is-relative is-expanded">
+                    <input class="input input-mini" placeholder="type to search.." search-area="GroupSearch" />
+                    <input type="hidden" asp-for="NewGroupRole.GroupId"/>
+                    <div class="mini">
+                        <div class="mini-waiting">
+                            <span class="icon">
+                                <i class="fas fa-circle-notch fa-spin"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="control">
+                    <a class="button mini-clear">
+                        <span class="icon">
+                            <i class="fas fa-xmark"></i>
+                        </span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="field">
+            <label class="label">Role</label>
+            <div class="field is-grouped">
+                <div class="control is-relative is-expanded">
+                    <input class="input input-mini" placeholder="type to search.." lookup-area="user-roles" />
+                    <input type="hidden"  asp-for="NewGroupRole.UserRolesId"/>
+                    <div class="mini">
+                        <div class="mini-waiting">
+                            <span class="icon">
+                                <i class="fas fa-circle-notch fa-spin"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="control">
+                    <a class="button mini-clear">
+                        <span class="icon">
+                            <i class="fas fa-xmark"></i>
+                        </span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <button class="button" type="submit">Save</button>
+    </form>
+
+    <h3 class="title is-3">Privileged Groups</h3>
+    <div class="table-container">
+        <table class="table is-narrow is-fullwidth is-align-middel" aria-label="privileged groups">
+            <thead>
+                <tr>
+                    <th>Group</th>
+                    <th>Role</th>
+                    <th>Remove Role</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var u in Model.PrivilegedGroups)
+                {
+                    @foreach (var r in u.Roles)
+                    {
+                        <tr>
+                            @if(User.HasPermission("View Groups"))
+                            {
+                                <td><a href="/groups?id=@u.Id">@u.Name</a></td>
+                            } else {
+                                <td>@u.Name</td>
+                            }
+
+                            <td>@r.Name</td>
+                            <td>
+                                <a href="/Settings/GroupRoles/?handler=RemoveGroupPermission&GroupId=@u.Id&Id=@r.Id">
+                                <span class="icon">
+                                    <i class="fas fa-trash"></i>
+                                </span>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

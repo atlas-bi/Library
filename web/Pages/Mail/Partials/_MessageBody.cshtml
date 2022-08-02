@@ -16,7 +16,7 @@
                             <div class="mlbx-usrDrp-box-inner">
                                 <div class="mlbx-usrDrpItm mail-new-message" data-from="@me.From" data-fromid="@me.FromId">New Mail</div>
                                 <div class="separator"></div>
-                                <div class="mlbx-usrDrpItm">@if (@Configuration["features:enable_user_profile"] == null || @Configuration["features:enable_user_profile"].ToString().ToLower() == "true")
+                                <div class="mlbx-usrDrpItm">@if (User.HasPermission("View Other User") && @Configuration["features:enable_user_profile"] == null || @Configuration["features:enable_user_profile"].ToString().ToLower() == "true")
                     {<a class="" href="/users?id=@me.FromId">Open Profile</a>}</div>
                             </div>
                         </div>

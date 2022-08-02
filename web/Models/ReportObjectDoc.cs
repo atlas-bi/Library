@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Atlas_Web.Models
+﻿namespace Atlas_Web.Models
 {
     public partial class ReportObjectDoc
     {
@@ -10,7 +7,7 @@ namespace Atlas_Web.Models
             ReportObjectDocFragilityTags = new HashSet<ReportObjectDocFragilityTag>();
             MaintenanceLogs = new HashSet<MaintenanceLog>();
             ReportObjectDocTerms = new HashSet<ReportObjectDocTerm>();
-            ReportManageEngineTickets = new HashSet<ReportManageEngineTicket>();
+            ReportServiceRequests = new HashSet<ReportServiceRequest>();
         }
 
         public int ReportObjectId { get; set; }
@@ -44,6 +41,6 @@ namespace Atlas_Web.Models
         public virtual ICollection<ReportObjectDocFragilityTag> ReportObjectDocFragilityTags { get; set; }
         public virtual ICollection<MaintenanceLog> MaintenanceLogs { get; set; }
         public virtual ICollection<ReportObjectDocTerm> ReportObjectDocTerms { get; set; }
-        public virtual ICollection<ReportManageEngineTicket> ReportManageEngineTickets { get; set; }
+        public virtual ICollection<ReportServiceRequest> ReportServiceRequests { get; set; }
     }
 }

@@ -13,17 +13,17 @@ public class UserHelpersTests : IClassFixture<TestDatabaseFixture>
 
     public TestDatabaseFixture Fixture { get; }
 
-    [Fact]
-    public void IsAdmin()
-    {
-        Assert.False(UserHelpers.IsAdmin(Fixture.CreateContext(), null));
+    // [Fact]
+    // public void IsAdmin()
+    // {
+    //     Assert.False(UserHelpers.IsAdmin(Fixture.CreateContext(), null));
 
-        using var context = Fixture.CreateContext();
-        //var controller = new BloggingController(context);
-        // var blog = controller.GetBlog("Blog2").Value;
-        // Assert.Equal("http://blog2.com", blog.Url);
+    //     using var context = Fixture.CreateContext();
+    //     //var controller = new BloggingController(context);
+    //     // var blog = controller.GetBlog("Blog2").Value;
+    //     // Assert.Equal("http://blog2.com", blog.Url);
 
-    }
+    // }
     // public void GetPreferences() {
     // need cache here
     //     Assert.Equal(new List<UserPreference>(), UserHelpers.GetPreferences(cache, Fixture.CreateContext(), null));

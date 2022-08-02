@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Atlas_Web.Models
+﻿namespace Atlas_Web.Models
 {
     public partial class Analytic
     {
@@ -20,7 +17,7 @@ namespace Atlas_Web.Models
         public string LoadTime { get; set; }
         public DateTime? AccessDateTime { get; set; }
         public string Referrer { get; set; }
-        public int? UserId { get; set; }
+        public int UserId { get; set; }
         public double? Zoom { get; set; }
         public int? Epic { get; set; }
         public int? Active { get; set; }

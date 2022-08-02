@@ -1,21 +1,19 @@
 const log = require('fancy-log');
 const gulp = require('gulp');
-const path = require('path');
 
-var dotnet, iis;
+let dotnet;
 const { spawn } = require('child_process');
 
-gulp.task('dotnet:build', function (cb) {
+gulp.task('dotnet:run', function (cb) {
   if (dotnet) dotnet.kill();
-  // if (iis) iis.kill();
-  var env = Object.create(process.env);
+  const env = Object.create(process.env);
   env.ASPNETCORE_ENVIRONMENT = 'Development';
   env.DOTNET_SYSTEM_CONSOLE_ALLOW_ANSI_COLOR_REDIRECTION = '1';
   // https://docs.microsoft.com/en-us/dotnet/core/tools/dotnet-build
   dotnet = spawn(
     'dotnet',
-    ['build', 'web/web.csproj', '-c', 'Debug', '-v', 'm'],
-    { env: env, detached: true },
+    ['run', '--project', 'web/web.csproj', '-c', 'Debug', '-v', 'm'],
+    { env },
   );
   dotnet.stderr.on('data', (data) => {
     log.error(data.toString().replace(/^\s+|\s+$/g, ''));
@@ -27,7 +25,34 @@ gulp.task('dotnet:build', function (cb) {
     if (code === 8) {
       log('Error detected, waiting for changes...');
     }
-    // only return after completing
+  });
+  // Return before completing
+  cb();
+});
+
+gulp.task('dotnet:build', function (cb) {
+  if (dotnet) dotnet.kill();
+  // somehow the hot reload on dotnet watch does not work, so we stick w/ dotnet build.
+  const env = Object.create(process.env);
+  env.ASPNETCORE_ENVIRONMENT = 'Development';
+  env.DOTNET_SYSTEM_CONSOLE_ALLOW_ANSI_COLOR_REDIRECTION = '1';
+  // https://docs.microsoft.com/en-us/dotnet/core/tools/dotnet-build
+  dotnet = spawn(
+    'dotnet',
+    ['build', 'web/web.csproj', '-c', 'Debug', '-v', 'm'],
+    { env, detached: true },
+  );
+  dotnet.stderr.on('data', (data) => {
+    log.error(data.toString().replace(/^\s+|\s+$/g, ''));
+  });
+  dotnet.stdout.on('data', (data) => {
+    log.info(data.toString().replace(/^\s+|\s+$/g, ''));
+  });
+  dotnet.on('close', function (code) {
+    if (code === 8) {
+      log('Error detected, waiting for changes...');
+    }
+    // Only return after completing
     cb();
   });
 });

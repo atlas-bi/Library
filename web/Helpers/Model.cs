@@ -1,5 +1,3 @@
-using System;
-
 namespace Atlas_Web.Helpers
 {
     public static class ModelHelpers

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Atlas_Web.Models
+﻿namespace Atlas_Web.Models
 {
     public partial class UserRole
     {
@@ -9,6 +6,7 @@ namespace Atlas_Web.Models
         {
             RolePermissionLinks = new HashSet<RolePermissionLink>();
             UserRoleLinks = new HashSet<UserRoleLink>();
+            GroupRoleLinks = new HashSet<GroupRoleLink>();
         }
 
         public int UserRolesId { get; set; }
@@ -17,5 +15,6 @@ namespace Atlas_Web.Models
 
         public virtual ICollection<RolePermissionLink> RolePermissionLinks { get; set; }
         public virtual ICollection<UserRoleLink> UserRoleLinks { get; set; }
+        public virtual ICollection<GroupRoleLink> GroupRoleLinks { get; set; }
     }
 }

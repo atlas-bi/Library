@@ -1,7 +1,7 @@
 @model Atlas_Web.Pages.Reports.IndexModel
 
 @* only show this if there are other tabs present. *@
-@if (Model.Report.ReportObjectImagesDocs.Any() || ViewBag.HasDescription || !string.IsNullOrEmpty(Model.Report.RepositoryDescription) || Model.Terms.Any() && (@Configuration["features:enable_terms"] == null || @Configuration["features:enable_terms"].ToString().ToLower() == "true") || Model.Report.ReportObjectQueries.Any() || Model.ComponentQueries.Any() || Model.Parents.Any() || Model.Children.Any() ||  (Model.Report.ReportGroupsMemberships.Any() && ViewBag.Permissions.Contains("View Groups")) || Model.Report.CollectionReports.Any() || Model.Report.ReportObjectDoc != null && Model.Report.ReportObjectDoc.MaintenanceLogs.Any())
+@if (Model.Report.ReportObjectImagesDocs.Any() || ViewBag.HasDescription || !string.IsNullOrEmpty(Model.Report.RepositoryDescription) || Model.Terms.Any() && (@Configuration["features:enable_terms"] == null || @Configuration["features:enable_terms"].ToString().ToLower() == "true") || Model.Report.ReportObjectQueries.Any() || Model.ComponentQueries.Any() || Model.Parents.Any() || Model.Children.Any() ||  (Model.Report.ReportGroupsMemberships.Any() && User.HasPermission("View Groups")) || Model.Report.CollectionReports.Any() || Model.Report.ReportObjectDoc != null && Model.Report.ReportObjectDoc.MaintenanceLogs.Any())
 {
 <nav class="breadcrumb">
     <ul>
@@ -36,7 +36,7 @@
             </li>
         }
 
-        @if (Model.Parents.Any() || Model.Children.Any() ||  (Model.Report.ReportGroupsMemberships.Any() && ViewBag.Permissions.Contains("View Groups")) || Model.Report.CollectionReports.Any())
+        @if (Model.Parents.Any() || Model.Children.Any() ||  (Model.Report.ReportGroupsMemberships.Any() && User.HasPermission("View Groups")) || Model.Report.CollectionReports.Any())
         {
             <li>
                 <a href="#relationships">Relationships</a>

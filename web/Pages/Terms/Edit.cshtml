@@ -45,7 +45,7 @@
         <div class="editor" data-inputName="Term.TechnicalDefinition" data-inputId="Term_TechnicalDefinition"><textarea class="textarea">@Html.Raw(Model.Term.TechnicalDefinition)</textarea></div>
     </div>
 
-    @if (ViewBag.Permissions.Contains("Approve Terms"))
+    @if (User.HasPermission("Approve Terms"))
     {
         <label class="label">Other Options</label>
         <div class="field toggle" typeId="groups">

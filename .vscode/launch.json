@@ -5,7 +5,7 @@
       "name": "Atlas Debugger",
       "type": "coreclr",
       "request": "attach",
-      "processName": "iisexpress.exe",
+      "processName": "Atlas_Web.exe",
       "requireExactSource": false
     }
   ]

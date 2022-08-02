@@ -2,13 +2,8 @@ using Atlas_Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Atlas_Web.Helpers;
 using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Atlas_Web.Pages
 {
@@ -18,15 +13,20 @@ namespace Atlas_Web.Pages
         private readonly IMemoryCache _cache;
         private readonly IConfiguration _config;
 
-        public IndexModel(Atlas_WebContext context, IMemoryCache cache, IConfiguration config)
+        private readonly IAuthorizationService _authorizationService;
+
+        public IndexModel(
+            Atlas_WebContext context,
+            IMemoryCache cache,
+            IConfiguration config,
+            IAuthorizationService authorizationService
+        )
         {
             _context = context;
             _config = config;
             _cache = cache;
+            _authorizationService = authorizationService;
         }
-
-        public int UserId { get; set; }
-        public string FirstName { get; set; }
 
         public class BasicFavoriteData
         {
@@ -36,15 +36,9 @@ namespace Atlas_Web.Pages
         }
 
         public List<AdList> AdLists { get; set; }
-        public User PublicUser { get; set; }
 
         public async Task<ActionResult> OnGetAsync()
         {
-            PublicUser = UserHelpers.GetUser(_cache, _context, User.Identity.Name);
-            var MyUser = PublicUser;
-            UserId = MyUser.UserId;
-            FirstName = MyUser.FirstnameCalc;
-
             AdLists = new List<AdList>
             {
                 new AdList { Url = "/Users?handler=SharedObjects", Column = 2 },
