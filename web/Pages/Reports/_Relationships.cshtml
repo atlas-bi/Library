@@ -1,7 +1,7 @@
 @model Atlas_Web.Pages.Reports.IndexModel
 
 <h2 id="relationships" class="title is-2">Relationships</h2>
-    @if (ViewBag.Permissions.Contains("View Groups") && Model.Report.ReportGroupsMemberships.Any())
+    @if (User.HasPermission("View Groups") && Model.Report.ReportGroupsMemberships.Any())
     {
         <nav id="groups" class="panel">
             <p class="panel-heading is-flex is-justify-content-space-between" data-action="collapse" data-target="related-groups">
@@ -23,7 +23,12 @@
                         <tbody>
                             @foreach(var s in Model.Report.ReportGroupsMemberships.ToList()){
                             <tr>
-                                <td><a href="\Groups?id=@s.GroupId">@s.Group.GroupName</a></td>
+                                @if(User.HasPermission("View Groups"))
+                                {
+                                    <td><a href="\Groups?id=@s.GroupId">@s.Group.GroupName</a></td>
+                                } else {
+                                    <td>@s.Group.GroupName</td>
+                                }
                                 <td>@s.Group.GroupType</td>
                                 <td>@s.Group.GroupSource</td>
                             </tr>

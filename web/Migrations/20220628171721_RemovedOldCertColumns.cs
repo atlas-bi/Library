@@ -10,7 +10,7 @@ namespace Atlas_Web.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropIndex(
-                name: "certid",
+                name: "certid1",
                 table: "ReportObject");
 
             migrationBuilder.DropIndex(

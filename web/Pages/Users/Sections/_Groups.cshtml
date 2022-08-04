@@ -14,7 +14,13 @@
 					@foreach(var s in ViewBag.Groups)
 					{
 						<tr>
-							<td><a href="/groups?id=@s.Id">@s.Name</a></td>
+                            @if(User.HasPermission("View Groups"))
+                            {
+                                <td><a href="/groups?id=@s.Id">@s.Name</a></td>
+                            } else {
+                                <td>@s.Name</td>
+                            }
+
 							<td>@s.Type</td>
 							<td>@s.Source</td>
 						</tr>

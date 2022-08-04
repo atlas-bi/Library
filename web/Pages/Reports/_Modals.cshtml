@@ -146,7 +146,7 @@ Regards!</textarea>
                     <ul>
                         @foreach (var r in Model.ReportObjectAttachments.OrderByDescending(x => x.CreationDate).ToList())
                         {
-                            var url = Helpers.ReportLinkHelpers.IsEpic(Context) ? "EpicAct:AC_RW_WEB_BROWSER,LaunchOptions:2,runparams:" + Context.Request.Scheme + "://" + Context.Request.Host.Value+"/Data/File?handler=CrystalRun&id="+r.ReportObjectAttachmentId+"|FormCaption="+r.Name+"|ActivityName="+Model.Name : "/Data/File?handler=CrystalRun&id="+r.ReportObjectAttachmentId;
+                            var url = Context.IsHyperspace() ? "EpicAct:AC_RW_WEB_BROWSER,LaunchOptions:2,runparams:" + Context.Request.Scheme + "://" + Context.Request.Host.Value+"/Data/File?handler=CrystalRun&id="+r.ReportObjectAttachmentId+"|FormCaption="+r.Name+"|ActivityName="+Model.Name : "/Data/File?handler=CrystalRun&id="+r.ReportObjectAttachmentId;
                         <li><a href="@url" target="_blank">@r.Name</a><span> ·  @r.CreationDate</span></li>
                         }
                     </ul>

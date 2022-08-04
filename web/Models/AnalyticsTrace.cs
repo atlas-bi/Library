@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Atlas_Web.Models
+﻿namespace Atlas_Web.Models
 {
     public partial class AnalyticsTrace
     {
         public int Id { get; set; }
-        public int? UserId { get; set; }
+        public int UserId { get; set; }
         public int? Level { get; set; }
         public string Message { get; set; }
         public string Logger { get; set; }

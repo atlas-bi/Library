@@ -1,13 +1,9 @@
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Atlas_Web.Models;
-using System.Collections.Generic;
-using Atlas_Web.Helpers;
+using Atlas_Web.Authorization;
 using Microsoft.Extensions.Caching.Memory;
-using System;
 
 namespace Atlas_Web.Pages.Collections
 {
@@ -63,7 +59,7 @@ namespace Atlas_Web.Pages.Collections
                             .Include(x => x.StarredCollections)
                             .Include(x => x.Initiative)
                             .AsNoTracking()
-                            .SingleAsync(x => x.DataProjectId == id);
+                            .SingleAsync(x => x.CollectionId == id);
                     }
                 );
 
@@ -87,19 +83,13 @@ namespace Atlas_Web.Pages.Collections
 
         public async Task<ActionResult> OnGetDeleteCollection(int Id)
         {
-            var checkpoint = UserHelpers.CheckUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name,
-                "Delete Project"
-            );
-            if (!checkpoint)
+            if (!User.HasPermission("Delete Project"))
             {
                 return RedirectToPage(
                     "/Collections/Index",
                     new
                     {
-                        id = Collection.DataProjectId,
+                        id = Collection.CollectionId,
                         error = "You do not have permission to access that page."
                     }
                 );
@@ -107,14 +97,12 @@ namespace Atlas_Web.Pages.Collections
 
             // delete report annotations and term annotations
             // then delete project and save.
-            _context.RemoveRange(_context.CollectionReports.Where(m => m.DataProjectId == Id));
+            _context.RemoveRange(_context.CollectionReports.Where(m => m.CollectionId == Id));
             await _context.SaveChangesAsync();
-            _context.RemoveRange(_context.CollectionTerms.Where(m => m.DataProjectId == Id));
+            _context.RemoveRange(_context.CollectionTerms.Where(m => m.CollectionId == Id));
             await _context.SaveChangesAsync();
 
-            _context.Remove(
-                _context.Collections.Where(m => m.DataProjectId == Id).FirstOrDefault()
-            );
+            _context.Remove(_context.Collections.Where(m => m.CollectionId == Id).FirstOrDefault());
             await _context.SaveChangesAsync();
 
             _cache.Remove("collection-" + Id);

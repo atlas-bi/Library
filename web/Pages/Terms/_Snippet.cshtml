@@ -61,7 +61,7 @@
     <footer class="card-footer">
         <a class="card-footer-item star" data-href="/users/favorites/?handler=Edit&type=term&id=@Model.TermId">
             <span class="icon-text">
-                @if (Model.StarredTerms.Any(x => x.Ownerid == ViewBag.PublicUser.UserId))
+                @if (Model.StarredTerms.Any(x => x.Ownerid == User.GetUserId()))
                 {
                     <span class="icon has-text-gold">
                         <i class="fas fa-star"></i>

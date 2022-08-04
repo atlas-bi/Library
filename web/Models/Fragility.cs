@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Atlas_Web.Models
+﻿namespace Atlas_Web.Models
 {
     public partial class Fragility
     {
@@ -10,8 +7,8 @@ namespace Atlas_Web.Models
             ReportObjectDocs = new HashSet<ReportObjectDoc>();
         }
 
-        public int FragilityId { get; set; }
-        public string FragilityName { get; set; }
+        public int Id { get; set; }
+        public string Name { get; set; }
 
         public virtual ICollection<ReportObjectDoc> ReportObjectDocs { get; set; }
     }

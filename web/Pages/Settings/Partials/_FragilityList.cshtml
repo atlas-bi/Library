@@ -1,13 +1,13 @@
 @model Atlas_Web.Pages.Settings.TagsModel
 <div>
-    @if (ViewBag.Permissions.Contains("Create Parameters"))
+    @if (User.HasPermission("Create Parameters"))
     {
         <form asp-page-handler="CreateFragility">
             <div class="field">
                 <label class="label">Add More</label>
                 <div class="field has-addons">
                     <div class="control">
-                        <input type="text" class="input" placeholder="plate glass" asp-for="Fragility.FragilityName" required />
+                        <input type="text" class="input" placeholder="plate glass" asp-for="Fragility.Name" required />
                     </div>
                     <div class="control">
                         <button class="button is-info" type="submit">
@@ -23,12 +23,12 @@
         @foreach (var i in ViewBag.FragilityList)
         {
             <div class="control">
-                @if (ViewBag.Permissions.Contains("Delete Parameters"))
+                @if (User.HasPermission("Delete Parameters"))
                 {
                     <form asp-page-handler="DeleteFragility" class="tags has-addons">
                         <span class="tag is-link">@i.Name</span>
                         <span class="tag is-dark">@i.Used uses</span>
-                        <input type="hidden" asp-for="Fragility.FragilityId" value="@i.Id" />
+                        <input type="hidden" asp-for="Fragility.Id" value="@i.Id" />
                         <button type="submit" class="tag is-delete"></button>
                     </form>
                 } else

@@ -11,7 +11,7 @@
                     <th>Last Modified</th>
                     <th>Runs</th>
                     <th>RecordViewer</th>
-                    <th>RunReport</th>
+                    @* <th>RunReport</th> *@
                     <th>Editor</th>
                 </tr>
             </thead>
@@ -34,12 +34,12 @@
                                 @t.Epic
                             }
                         </td>
-                        <td>
+                        @* <td>
                             @if (t.RunReportUrl != null && t.RunReportUrl != "")
                             {
                                 <a href="@t.RunReportUrl">Run</a>
                             }
-                        </td>
+                        </td> *@
                         <td>
                             @if (t.EditReportUrl != null && t.EditReportUrl != "")
                             {

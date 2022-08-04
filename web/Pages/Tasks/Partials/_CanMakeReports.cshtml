@@ -13,7 +13,12 @@
                 {
                     <tr>
                         <td><a href="\users?id=@t.UserId">@t.Name</a></td>
-                        <td><a href="\groups?id=@t.RoleId">@t.Role</a></td>
+                        @if(User.HasPermission("View Groups"))
+                        {
+                            <td><a href="\groups?id=@t.RoleId">@t.Role</a></td>
+                        } else {
+                            <td>@t.Role</td>
+                        }
                     </tr>
                 }
             </tbody>

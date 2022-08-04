@@ -161,7 +161,7 @@
             <label class="label">Organizational Value</label>
             <div class="field is-grouped">
                 <div class="control is-relative is-expanded">
-                    <input readonly class="input input-mini" placeholder="click to select.."  value="@if(@Model.Report.OrganizationalValue!=null){@Model.Report.OrganizationalValue.OrganizationalValueName}" lookup-area="org-value" />
+                    <input readonly class="input input-mini" placeholder="click to select.."  value="@if(@Model.Report.OrganizationalValue!=null){@Model.Report.OrganizationalValue.Name}" lookup-area="org-value" />
                     <input type="hidden" asp-for="Report.OrganizationalValueId" value='@Model.Report.OrganizationalValueId'/>
                     <div class="mini">
                         <div class="mini-waiting">
@@ -185,7 +185,7 @@
             <label class="label">Estimated Run Frequency</label>
             <div class="field is-grouped">
                 <div class="control is-relative is-expanded">
-                    <input readonly class="input input-mini" placeholder="click to select.."  value="@if(@Model.Report.EstimatedRunFrequency!=null){@Model.Report.EstimatedRunFrequency.EstimatedRunFrequencyName}" lookup-area="run-freq" />
+                    <input readonly class="input input-mini" placeholder="click to select.."  value="@if(@Model.Report.EstimatedRunFrequency!=null){@Model.Report.EstimatedRunFrequency.Name}" lookup-area="run-freq" />
                     <input type="hidden" asp-for="Report.EstimatedRunFrequencyId" value='@Model.Report.EstimatedRunFrequencyId'/>
                     <div class="mini">
                         <div class="mini-waiting">
@@ -209,7 +209,7 @@
             <label class="label">Fragility</label>
             <div class="field is-grouped">
                 <div class="control is-relative is-expanded">
-                    <input readonly class="input input-mini" placeholder="click to select.."  value="@if(@Model.Report.Fragility!=null){@Model.Report.Fragility.FragilityName}" lookup-area="fragility" />
+                    <input readonly class="input input-mini" placeholder="click to select.."  value="@if(@Model.Report.Fragility!=null){@Model.Report.Fragility.Name}" lookup-area="fragility" />
                     <input type="hidden" asp-for="Report.FragilityId" value='@Model.Report.FragilityId'/>
                     <div class="mini">
                         <div class="mini-waiting">
@@ -233,7 +233,7 @@
             <label class="label">Maintenance Schedule</label>
             <div class="field is-grouped">
                 <div class="control is-relative is-expanded">
-                    <input readonly class="input input-mini" placeholder="click to select.."  value="@if(@Model.Report.MaintenanceSchedule!=null){@Model.Report.MaintenanceSchedule.MaintenanceScheduleName}" lookup-area="maint-sched" />
+                    <input readonly class="input input-mini" placeholder="click to select.."  value="@if(@Model.Report.MaintenanceSchedule!=null){@Model.Report.MaintenanceSchedule.Name}" lookup-area="maint-sched" />
                     <input type="hidden" asp-for="Report.MaintenanceScheduleId" value='@Model.Report.MaintenanceScheduleId'/>
                     <div class="mini">
                         <div class="mini-waiting">
@@ -260,8 +260,8 @@
                 {
                         <div class="control">
                             <div class="tags has-addons">
-                                <span class="tag is-link">@Model.Report.ReportObjectDocFragilityTags.ToList()[x].FragilityTag.FragilityTagName</span>
-                                <input type="hidden" name="FragilityTags[@x].FragilityTagId" value="@Model.Report.ReportObjectDocFragilityTags.ToList()[x].FragilityTagId" />
+                                <span class="tag is-link">@Model.Report.ReportObjectDocFragilityTags.ToList()[x].FragilityTag.Name</span>
+                                <input type="hidden" name="FragilityTags[@x].Id" value="@Model.Report.ReportObjectDocFragilityTags.ToList()[x].FragilityTagId" />
                                 <a class="tag is-delete"></a>
                             </div>
                         </div>
@@ -269,7 +269,7 @@
                 </div>
             <div class="field">
                 <div class="control is-relative is-expanded">
-                    <input class="input input-mini multiselect" placeholder="search for tags.." lookup-area="ro-fragility" data-name="FragilityTags[].FragilityTagId" />
+                    <input class="input input-mini multiselect" placeholder="search for tags.." lookup-area="ro-fragility" data-name="FragilityTags[].Id" />
                     <div class="mini">
                         <div class="mini-waiting">
                             <span class="icon">
@@ -290,8 +290,8 @@
                     <div class="control drg">
                         <div class="tags has-addons">
                             <span class="tag is-link drg-hdl">@Collections[x].DataProject.Name</span>
-                            <input type="hidden" name="Collections[@x].DataProjectId" value="@Collections[x].DataProjectId" />
-                            <a class="tag is-delete" value="@Collections[x].DataProjectId"></a>
+                            <input type="hidden" name="Collections[@x].DataProjectId" value="@Collections[x].CollectionId" />
+                            <a class="tag is-delete" value="@Collections[x].CollectionId"></a>
                         </div>
                     </div>
                 }
@@ -430,7 +430,7 @@
         <h3 class="title is-3">Service Requests</h3>
         <div class="mini-tags field is-grouped is-grouped-multiline">
             @{
-                var tickets = Model.Report.ReportManageEngineTickets.ToList();
+                var tickets = Model.Report.ReportServiceRequests.ToList();
             }
             @for (var x = 0; x < tickets.Count; x++)
             {
@@ -438,7 +438,7 @@
                 <div class="control">
                     <div class="tags has-addons">
                         <span class="tag is-link">@ticket.TicketNumber</span>
-                        <input type="hidden" name="ServiceRequests[@x].ManageEngineTicketsId" value="@ticket.ManageEngineTicketsId" />
+                        <input type="hidden" name="ServiceRequests[@x].ServiceRequestId" value="@ticket.ServiceRequestId" />
                         <a class="tag is-delete"></a>
                     </div>
                 </div>

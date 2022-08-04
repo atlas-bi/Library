@@ -1,7 +1,7 @@
 @model Atlas_Web.Pages.Collections.IndexModel
 <ul>
     <li>
-        <a class="is-block has-tooltip-arrow has-tooltip-right js-modal-trigger" data-target="collection-profile-@Model.Collection.DataProjectId" data-tooltip="Open Report Profile">
+        <a class="is-block has-tooltip-arrow has-tooltip-right js-modal-trigger" data-target="collection-profile-@Model.Collection.CollectionId" data-tooltip="Open Report Profile">
             <span class="icon has-text-grey is-large ">
                 <i class="fas fa-lg fa-chart-bar"></i>
             </span>
@@ -9,8 +9,8 @@
     </li>
 
     <li>
-        <a class="has-tooltip-arrow has-tooltip-right star" data-tooltip="Star this report" data-href="/users/favorites/?handler=Edit&type=collection&id=@Model.Collection.DataProjectId">
-            @if (Model.Collection.StarredCollections.Any(x => x.Ownerid == ViewBag.PublicUser.UserId))
+        <a class="has-tooltip-arrow has-tooltip-right star" data-tooltip="Star this report" data-href="/users/favorites/?handler=Edit&type=collection&id=@Model.Collection.CollectionId">
+            @if (Model.Collection.StarredCollections.Any(x => x.Ownerid == User.GetUserId()))
             {
                 <span class="icon is-large has-text-gold ">
                     <i class="fas fa-lg fa-star is-relative">
@@ -31,7 +31,7 @@
     @if (@Configuration["features:enable_sharing"] == null || @Configuration["features:enable_sharing"].ToString().ToLower() == "true")
     {
         <li>
-            <a class="is-block has-tooltip-arrow has-tooltip-right js-modal-trigger" data-tooltip="Share" data-target="collection-share-@Model.Collection.DataProjectId" data-name="@Model.Collection.Name" data-type="collection">
+            <a class="is-block has-tooltip-arrow has-tooltip-right js-modal-trigger" data-tooltip="Share" data-target="collection-share-@Model.Collection.CollectionId" data-name="@Model.Collection.Name" data-type="collection">
                 <span class="icon has-text-grey is-large ">
                     <i class="fas fa-lg fa-share"></i>
                 </span>
@@ -42,7 +42,7 @@
     @if (@Configuration["features:enable_feedback"] == null || @Configuration["features:enable_feedback"].ToString().ToLower() == "true")
     {
         <li>
-            <a class="is-block has-tooltip-arrow has-tooltip-right js-modal-trigger" data-tooltip="Share Feedback" data-target="collection-share-feedback-@Model.Collection.DataProjectId" data-name="@Model.Collection.Name">
+            <a class="is-block has-tooltip-arrow has-tooltip-right js-modal-trigger" data-tooltip="Share Feedback" data-target="collection-share-feedback-@Model.Collection.CollectionId" data-name="@Model.Collection.Name">
                 <span class="icon has-text-grey is-large ">
                     <i class="far fa-lg fa-thumbs-up"></i>
                 </span>
@@ -50,7 +50,7 @@
         </li>
     }
 
-    @if (ViewBag.Permissions.Contains("Create Project"))
+    @if (User.HasPermission("Create Project"))
     {
     <li>
         <a class="is-block has-tooltip-arrow has-tooltip-right" href="/Collections/New" data-tooltip="Create New Collections">
@@ -59,20 +59,20 @@
             </span>
         </a>
     </li>}
-    @if (ViewBag.Permissions.Contains("Edit Project"))
+    @if (User.HasPermission("Edit Project"))
     {
     <li>
-        <a class="is-block has-tooltip-arrow has-tooltip-right" href="/Collections/Edit/?id=@Model.Collection.DataProjectId" data-tooltip="Open Atlas Editor">
+        <a class="is-block has-tooltip-arrow has-tooltip-right" href="/Collections/Edit/?id=@Model.Collection.CollectionId" data-tooltip="Open Atlas Editor">
             <span class="icon has-text-grey is-large ">
                 <i class="fas fa-lg fa-pen-to-square"></i>
             </span>
         </a>
     </li>}
 
-    @if (ViewBag.Permissions.Contains("Delete Project"))
+    @if (User.HasPermission("Delete Project"))
     {
     <li>
-        <a class="is-block has-tooltip-arrow has-tooltip-right" data-tooltip="Delete this Collection" href="/Collections?handler=DeleteCollection&Id=@Model.Collection.DataProjectId" onclick="return confirm('Are you sure you want to remove this?');">
+        <a class="is-block has-tooltip-arrow has-tooltip-right" data-tooltip="Delete this Collection" href="/Collections?handler=DeleteCollection&Id=@Model.Collection.CollectionId" onclick="return confirm('Are you sure you want to remove this?');">
             <span class="icon has-text-grey is-large ">
                 <i class="fas fa-lg fa-trash"></i>
             </span>

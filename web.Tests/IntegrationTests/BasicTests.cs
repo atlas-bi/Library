@@ -4,11 +4,11 @@ using Xunit;
 
 namespace web.Tests.IntegrationTests
 {
-    public class BasicTests : IClassFixture<WebFactory<Atlas_Web.Startup>>
+    public class BasicTests : IClassFixture<WebFactory<Program>>
     {
-        private readonly WebFactory<Atlas_Web.Startup> _factory;
+        private readonly WebFactory<Program> _factory;
 
-        public BasicTests(WebFactory<Atlas_Web.Startup> factory)
+        public BasicTests(WebFactory<Program> factory)
         {
             _factory = factory;
         }

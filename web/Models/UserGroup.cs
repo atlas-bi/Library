@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Atlas_Web.Models
+﻿namespace Atlas_Web.Models
 {
     public partial class UserGroup
     {
@@ -11,6 +8,7 @@ namespace Atlas_Web.Models
             ReportGroupsMemberships = new HashSet<ReportGroupsMembership>();
             StarredGroups = new HashSet<StarredGroup>();
             UserGroupsMemberships = new HashSet<UserGroupsMembership>();
+            GroupRoleLinks = new HashSet<GroupRoleLink>();
         }
 
         public int GroupId { get; set; }
@@ -26,5 +24,6 @@ namespace Atlas_Web.Models
         public virtual ICollection<ReportGroupsMembership> ReportGroupsMemberships { get; set; }
         public virtual ICollection<StarredGroup> StarredGroups { get; set; }
         public virtual ICollection<UserGroupsMembership> UserGroupsMemberships { get; set; }
+        public virtual ICollection<GroupRoleLink> GroupRoleLinks { get; set; }
     }
 }

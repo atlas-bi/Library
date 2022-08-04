@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-
 // this table will be app, but joined to dbo report object as we will allow ETL to update it
 namespace Atlas_Web.Models
 {

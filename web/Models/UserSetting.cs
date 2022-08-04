@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-
 namespace Atlas_Web.Models
 {
     public partial class UserSetting

@@ -10,11 +10,11 @@
     <script src="/js/flowchart.min.js"></script>
 }
 
-<form action="/Collections/Edit/?id=@Model.Collection.DataProjectId" method="post">
+<form action="/Collections/Edit/?id=@Model.Collection.CollectionId" method="post">
 	<h1 class="title is-1">@ViewData["Title"]</h1>
 
 	<p class="buttons is-flex is-justify-content-space-between">
-        <a class="button p-5" href="/Collections/?id=@Model.Collection.DataProjectId">
+        <a class="button p-5" href="/Collections/?id=@Model.Collection.CollectionId">
             <span class="icon">
               <i class="fas fa-lg fa-left-long"></i>
             </span>
@@ -28,7 +28,7 @@
         </button>
     </p>
 
-    <input asp-for="Collection.DataProjectId" type="hidden" value="@Model.Collection.DataProjectId" />
+    <input asp-for="Collection.CollectionId" type="hidden" value="@Model.Collection.CollectionId" />
 
     <div class="field">
         <label class="label">Name</label>

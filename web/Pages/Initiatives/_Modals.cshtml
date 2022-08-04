@@ -3,14 +3,14 @@
 @if (@Configuration["features:enable_feedback"] == null || @Configuration["features:enable_feedback"].ToString().ToLower() == "true")
 {
     <!-- feedback modal -->
-    <div class="modal" id="initiative-share-feedback-@Model.DataInitiativeId">
+    <div class="modal" id="initiative-share-feedback-@Model.InitiativeId">
         <div class="modal-background"></div>
         <div class="modal-content">
             <div class="box">
                 <strong class="mb-4">Share Feedback</strong>
                 <br>
                 <textarea class="textarea py-3" name="description"></textarea>
-                <button class="button share-feedback mt-4"  data-name="@Model.Name" data-url="@Context.Request.HttpContext.Request.Scheme://@Context.Request.HttpContext.Request.Host/initiatives?id=@Model.DataInitiativeId">Send Feedback</button>
+                <button class="button share-feedback mt-4"  data-name="@Model.Name" data-url="@Context.Request.HttpContext.Request.Scheme://@Context.Request.HttpContext.Request.Host/initiatives?id=@Model.InitiativeId">Send Feedback</button>
             </div>
         </div>
     </div>
@@ -20,7 +20,7 @@
 @if (@Configuration["features:enable_sharing"] == null || @Configuration["features:enable_sharing"].ToString().ToLower() == "true")
 {
     <!-- share modal -->
-    <div class="modal" id="initiative-share-@Model.DataInitiativeId">
+    <div class="modal" id="initiative-share-@Model.InitiativeId">
         <div class="modal-background"></div>
         <div class="modal-content">
             <div class="box">
@@ -29,7 +29,7 @@
                 <form class="share" action="/mail?handler=SendMail" method="post">
                     <input type="hidden" class="mlbx-share" value="1" />
                     <input type="hidden" class="share-name" value="@Model.Name" />
-                    <input type="hidden" class="share-url" value="@Context.Request.HttpContext.Request.Scheme://@Context.Request.HttpContext.Request.Host/initiatives?id=@Model.DataInitiativeId" />
+                    <input type="hidden" class="share-url" value="@Context.Request.HttpContext.Request.Scheme://@Context.Request.HttpContext.Request.Host/initiatives?id=@Model.InitiativeId" />
 
                     <input type="hidden" id="convid" />
 
@@ -63,7 +63,7 @@ Hi!
 
 I would like to share this initiative with you.
 
-[@Model.Name](@Context.Request.HttpContext.Request.Scheme://@Context.Request.HttpContext.Request.Host/initiatives?id=@Model.DataInitiativeId)
+[@Model.Name](@Context.Request.HttpContext.Request.Scheme://@Context.Request.HttpContext.Request.Host/initiatives?id=@Model.InitiativeId)
 
 Check it out sometime!
 Regards!</textarea>

@@ -11,13 +11,13 @@ using Newtonsoft.Json.Linq;
 
 namespace web.Tests;
 
-public class BasicTests : IClassFixture<BrowserFactory<Atlas_Web.Startup>>
+public class BasicTests : IClassFixture<BrowserFactory<Program>>
 {
-    private readonly BrowserFactory<Atlas_Web.Startup> _factory;
+    private readonly BrowserFactory<Program> _factory;
 
     private readonly Uri _baseAddress;
 
-    public BasicTests(ITestOutputHelper outputHelper, BrowserFactory<Atlas_Web.Startup> factory)
+    public BasicTests(ITestOutputHelper outputHelper, BrowserFactory<Program> factory)
     {
         OutputHelper = outputHelper;
         _factory = factory;

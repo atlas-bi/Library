@@ -3,7 +3,7 @@
 <div class="card">
     <div class="card-header">
         <div class="card-header-title py-2 is-justify-content-space-between">
-            <a class="has-text-dark" href="/Initiatives?id=@Model.DataInitiativeId">@Model.Name
+            <a class="has-text-dark" href="/Initiatives?id=@Model.InitiativeId">@Model.Name
                 <div class="fa-layers ml-2 fa-lg">
                     <span class="icon has-text-info "><i class="fas fa-certificate"></i></span>
                     <span class="icon has-text-white fa-transform"><i class="fas fa-check shrink-5"></i></span>
@@ -33,7 +33,7 @@
             </div>
             <!-- extra wrap if to fix IE11 bug https://github.com/philipwalton/flexbugs#flexbug-3 -->
             <div class="is-flex is-flex-direction-column is-flex-grow-1">
-                <a class="media-content is-flex is-justify-content-space-between is-flex-direction-column is-min-h-96  has-text-dark" href="/Initiatives?id=@Model.DataInitiativeId">
+                <a class="media-content is-flex is-justify-content-space-between is-flex-direction-column is-min-h-96  has-text-dark" href="/Initiatives?id=@Model.InitiativeId">
                     <p>
                         @if (!string.IsNullOrEmpty(Model.Description))
                         {
@@ -54,9 +54,9 @@
         </div>
     </div>
     <footer class="card-footer">
-        <a class="card-footer-item star" data-href="/users/favorites/?handler=Edit&type=initiative&id=@Model.DataInitiativeId">
+        <a class="card-footer-item star" data-href="/users/favorites/?handler=Edit&type=initiative&id=@Model.InitiativeId">
             <span class="icon-text">
-                @if (Model.StarredInitiatives.Any(x => x.Ownerid == ViewBag.PublicUser.UserId))
+                @if (Model.StarredInitiatives.Any(x => x.Ownerid ==User.GetUserId()))
                 {
                     <span class="icon has-text-gold">
                         <i class="fas fa-star"></i>
@@ -75,7 +75,7 @@
         <div class="card-footer-item">
              @if (@Configuration["features:enable_sharing"] == null || @Configuration["features:enable_sharing"].ToString().ToLower() == "true")
             {
-                <a class="is-block has-tooltip-arrow has-tooltip-right js-modal-trigger" data-tooltip="Share" data-target="initiative-share-@Model.DataInitiativeId" data-name="@Model.Name" data-type="initiative">
+                <a class="is-block has-tooltip-arrow has-tooltip-right js-modal-trigger" data-tooltip="Share" data-target="initiative-share-@Model.InitiativeId" data-name="@Model.Name" data-type="initiative">
                     <span class="icon has-text-grey">
                         <i class="fas fa-share"></i>
                     </span>

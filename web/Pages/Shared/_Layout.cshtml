@@ -74,7 +74,7 @@
         <div class="container">
             <div class="navbar-brand">
                 <a class="navbar-item" href="/">
-                    <img src="@Cache.Get("logo")" width="130" height="40" alt="site logo" />
+                    <img src="@Cache.Get("logo")" width="133" height="40" alt="site logo" />
                 </a>
                 <a role="button"
                    class="navbar-burger"
@@ -109,7 +109,7 @@
                         <span class="hide-desktop">Mail</span>
                     </a> *@
 
-                    @if (@ViewBag.Permissions.Contains("Edit User Permissions") || ViewBag.Permissions.Contains("Edit Role Permissions") || ViewBag.Permissions.Contains("Create Parameters") || ViewBag.Permissions.Contains("Delete Parameters"))
+                    @if (User.HasPermission("Edit User Permissions") || User.HasPermission("Edit Role Permissions") || User.HasPermission("Create Parameters") || User.HasPermission("Delete Parameters"))
                     {
                         <div class="navbar-item has-dropdown is-hoverable is-boxed">
                             <div class="navbar-link is-arrowless">
@@ -123,19 +123,19 @@
                             <div class="navbar-dropdown">
                                 <hr class="hide-desktop dropdown-divider">
 
-                                @if (ViewBag.Permissions.Contains("Create Parameters") || ViewBag.Permissions.Contains("Delete Parameters") || ViewBag.Permissions.Contains("Edit Role Permissions") || ViewBag.Permissions.Contains("Edit User Permissions"))
+                                @if (User.HasPermission("Create Parameters") || User.HasPermission("Delete Parameters") || User.HasPermission("Edit Role Permissions") || User.HasPermission("Edit User Permissions"))
                                 {
                                     <a class="navbar-item" href="/settings">Settings</a>
                                 }
 
-                                @if (ViewBag.Permissions.Contains("View Site Analytics"))
+                                @if (User.HasPermission("View Site Analytics"))
                                 {
                                     <a class="navbar-item" href="/analytics">Analytics</a>
                                 }
 
                                 <a class="navbar-item" href="/tasks">Tasks</a>
 
-                                @if (ViewBag.Permissions.Contains("View Site Analytics"))
+                                @if (User.HasPermission("View Site Analytics"))
                                 {
                                     <hr class="dropdown-divider">
                                     <a class="navbar-item" href="/profile">Report Activity</a>
@@ -191,47 +191,22 @@
                         </div>
                     }
 
-                    @if (ViewBag.Permissions.Contains("Can Change Roles"))
+                    @if (User.IsInRole("Administrator"))
                     {
-                        <div class="navbar-item has-dropdown is-hoverable is-boxed">
-                            <div class="navbar-link is-arrowless">
-                                @{ var ph = "";
-                                    if (ViewBag.MyRole != null && ViewBag.MyRole.Name != null && ViewBag.MyRole.Name != "")
-                                    {
-                                        ph = ViewBag.MyRole.Name;
-                                    }
-                                    else
-                                    {
-                                        ph = "change role";
-                                    } }
-                                @ph
-                                <span class="icon ml-2 is-small">
-                                    <i class="fa-solid fa-caret-down"></i>
-                                </span>
-                            </div>
-                            <div class="navbar-dropdown" id="role-change">
-                                <hr class=" hide-desktop dropdown-divider">
+                        <div class="navbar-item">
+                            <div class="field toggle">
+                                <input type="hidden" id="enable-administrator" value="@User.HasAdminEnabled()">
+                                <input id="switch-enable-administrator" type="checkbox" name="switch-enable-administrator" class="switch is-rounded is-info"
+                                @if(@User.HasAdminEnabled() == "Y"){
+                                    <text>checked="checked"</text>
+                                } >
+                                <label class="py-0" for="switch-enable-administrator"><strong>Admin</strong></label>
                             </div>
                         </div>
-
-                        <script>
-                            var q = new XMLHttpRequest();
-                            q.open('post', '/Search?handler=ValueList&s=user-roles', true);
-                            q.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
-                            q.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-                            q.send();
-                            q.onload = function () {
-                                var data = JSON.parse(q.responseText);
-                                var el = document.getElementById('role-change');
-                                for (var x in data) {
-                                    el.innerHTML += "<a class='navbar-item' href='/Users?handler=ChangeRole&Id=" + data[x].ObjectId + "&Url=" + window.location.href.replace(window.location.origin, '') + "'>" + data[x].Name + "</a>";
-                                }
-                            };
-                        </script>
                     }
 
                     <!-- epic navigation -->
-                    @if (Helpers.ReportLinkHelpers.IsEpic(ViewContext.HttpContext) == true)
+                    @if (ViewContext.HttpContext.IsHyperspace())
                     {
                         <a class="navbar-item" onclick="history.back()">
                             <span class="icon is-medium">

@@ -1,13 +1,9 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Atlas_Web.Models;
-using System.Collections.Generic;
-using Atlas_Web.Helpers;
+using Atlas_Web.Authorization;
 using Microsoft.Extensions.Caching.Memory;
-using System;
 
 namespace Atlas_Web.Pages.Initiatives
 {
@@ -47,7 +43,7 @@ namespace Atlas_Web.Pages.Initiatives
                             .Include(x => x.LastUpdateUserNavigation)
                             .Include(x => x.StarredInitiatives)
                             .AsNoTracking()
-                            .SingleAsync(x => x.DataInitiativeId == id);
+                            .SingleAsync(x => x.InitiativeId == id);
                     }
                 );
 
@@ -75,14 +71,7 @@ namespace Atlas_Web.Pages.Initiatives
 
         public async Task<ActionResult> OnGetDeleteInitiative(int Id)
         {
-            var checkpoint = UserHelpers.CheckUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name,
-                "Delete Initiative"
-            );
-
-            if (!checkpoint)
+            if (!User.HasPermission("Delete Initiative"))
             {
                 return RedirectToPage(
                     "/Initiatives/Index",
@@ -91,14 +80,12 @@ namespace Atlas_Web.Pages.Initiatives
             }
 
             // remove project links, contacts and remove initiative.
-            (
-                await _context.Collections.Where(d => d.DataInitiativeId == Id).ToListAsync()
-            ).ForEach(x => x.DataInitiativeId = null);
+            (await _context.Collections.Where(d => d.InitiativeId == Id).ToListAsync()).ForEach(
+                x => x.InitiativeId = null
+            );
 
             _context.Remove(
-                await _context.Initiatives
-                    .Where(x => x.DataInitiativeId == Id)
-                    .FirstOrDefaultAsync()
+                await _context.Initiatives.Where(x => x.InitiativeId == Id).FirstOrDefaultAsync()
             );
             await _context.SaveChangesAsync();
 

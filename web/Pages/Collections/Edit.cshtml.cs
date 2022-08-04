@@ -1,13 +1,9 @@
-using Atlas_Web.Helpers;
 using Atlas_Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Atlas_Web.Authorization;
 
 namespace Atlas_Web.Pages.Collections
 {
@@ -33,14 +29,7 @@ namespace Atlas_Web.Pages.Collections
 
         public async Task<IActionResult> OnGetAsync(int id)
         {
-            var checkpoint = UserHelpers.CheckUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name,
-                "Edit Project"
-            );
-
-            if (!checkpoint)
+            if (!User.HasPermission("Edit Project"))
             {
                 return RedirectToPage(
                     "/Collections/Index",
@@ -53,21 +42,14 @@ namespace Atlas_Web.Pages.Collections
                 .ThenInclude(x => x.Report)
                 .Include(x => x.CollectionTerms)
                 .ThenInclude(x => x.Term)
-                .SingleAsync(x => x.DataProjectId == id);
+                .SingleAsync(x => x.CollectionId == id);
 
             return Page();
         }
 
         public async Task<IActionResult> OnPostAsync(int id)
         {
-            var checkpoint = UserHelpers.CheckUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name,
-                "Edit Project"
-            );
-
-            if (!checkpoint)
+            if (!User.HasPermission("Edit Project"))
             {
                 return RedirectToPage(
                     "/Collections/Index",
@@ -85,12 +67,11 @@ namespace Atlas_Web.Pages.Collections
 
             // we get a copy of the initiative and then will only update several fields.
             Collection NewCollection = await _context.Collections.FindAsync(
-                Collection.DataProjectId
+                Collection.CollectionId
             );
 
             // update last update values & values that were posted
-            NewCollection.LastUpdateUser =
-                UserHelpers.GetUser(_cache, _context, User.Identity.Name).UserId;
+            NewCollection.LastUpdateUser = User.GetUserId();
             NewCollection.LastUpdateDate = DateTime.Now;
             NewCollection.Name = Collection.Name;
             NewCollection.Description = Collection.Description;
@@ -103,11 +84,11 @@ namespace Atlas_Web.Pages.Collections
             _cache.Remove("terms");
             foreach (var term in Terms.Distinct())
             {
-                term.DataProjectId = NewCollection.DataProjectId;
+                term.CollectionId = NewCollection.CollectionId;
 
                 if (
                     !await _context.CollectionTerms.AnyAsync(
-                        x => x.TermId == term.TermId && x.DataProjectId == term.DataProjectId
+                        x => x.TermId == term.TermId && x.CollectionId == term.CollectionId
                     )
                 )
                 {
@@ -119,8 +100,8 @@ namespace Atlas_Web.Pages.Collections
             await _context.SaveChangesAsync();
 
             var RemovedTerms = _context.CollectionTerms
-                .Where(d => d.DataProjectId == NewCollection.DataProjectId)
-                .Where(d => !Terms.Select(x => x.TermId).Contains((int)d.TermId));
+                .Where(d => d.CollectionId == NewCollection.CollectionId)
+                .Where(d => !Terms.Select(x => x.TermId).Contains(d.TermId));
 
             foreach (var term in await RemovedTerms.ToListAsync())
             {
@@ -138,14 +119,13 @@ namespace Atlas_Web.Pages.Collections
                 // clear report cache
                 _cache.Remove("report-" + report.ReportId);
 
-                report.DataProjectId = NewCollection.DataProjectId;
+                report.CollectionId = NewCollection.CollectionId;
                 report.Rank = i;
 
                 // if annotation exists, update rank and text
                 CollectionReport oldReport = await _context.CollectionReports
                     .Where(
-                        x =>
-                            x.ReportId == report.ReportId && x.DataProjectId == report.DataProjectId
+                        x => x.ReportId == report.ReportId && x.CollectionId == report.CollectionId
                     )
                     .FirstOrDefaultAsync();
                 if (oldReport != null)
@@ -161,8 +141,8 @@ namespace Atlas_Web.Pages.Collections
             }
 
             var RemovedReports = _context.CollectionReports
-                .Where(d => d.DataProjectId == NewCollection.DataProjectId)
-                .Where(d => !Reports.Select(x => x.ReportId).Contains((int)d.ReportId));
+                .Where(d => d.CollectionId == NewCollection.CollectionId)
+                .Where(d => !Reports.Select(x => x.ReportId).Contains(d.ReportId));
 
             foreach (var report in await RemovedReports.ToListAsync())
             {
@@ -172,8 +152,8 @@ namespace Atlas_Web.Pages.Collections
             _context.RemoveRange(RemovedReports);
             await _context.SaveChangesAsync();
 
-            _cache.Remove("collection-" + NewCollection.DataProjectId);
-            _cache.Remove("search-collection-" + NewCollection.DataProjectId);
+            _cache.Remove("collection-" + NewCollection.CollectionId);
+            _cache.Remove("search-collection-" + NewCollection.CollectionId);
             _cache.Remove("collections");
 
             return RedirectToPage("/Collections/Index", new { id, success = "Changes saved." });

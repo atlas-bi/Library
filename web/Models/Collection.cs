@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Atlas_Web.Models
+﻿namespace Atlas_Web.Models
 {
     public partial class Collection
     {
@@ -12,8 +9,8 @@ namespace Atlas_Web.Models
             StarredCollections = new HashSet<StarredCollection>();
         }
 
-        public int DataProjectId { get; set; }
-        public int? DataInitiativeId { get; set; }
+        public int CollectionId { get; set; }
+        public int? InitiativeId { get; set; }
         public string Name { get; set; }
         public string Purpose { get; set; }
         public string Description { get; set; }

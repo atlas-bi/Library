@@ -75,7 +75,7 @@
                             }
                         </td>
                         <td>
-                            @if (@Configuration["features:enable_user_profile"] == null || @Configuration["features:enable_user_profile"].ToString().ToLower() == "true")
+                            @if (@Configuration["features:enable_user_profile"] == null || @Configuration["features:enable_user_profile"].ToString().ToLower() == "true" && User.HasPermission("View Other User"))
                             {
                                 <a href="/users?id=@Error.UserId">@Error.User.FullnameCalc</a>
                             } else {

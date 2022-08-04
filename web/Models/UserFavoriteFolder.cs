@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Atlas_Web.Models
+﻿namespace Atlas_Web.Models
 {
     public partial class UserFavoriteFolder
     {
@@ -18,7 +15,7 @@ namespace Atlas_Web.Models
 
         public int UserFavoriteFolderId { get; set; }
         public string FolderName { get; set; }
-        public int? UserId { get; set; }
+        public int UserId { get; set; }
         public int? FolderRank { get; set; }
 
         public virtual ICollection<StarredCollection> StarredCollections { get; set; }

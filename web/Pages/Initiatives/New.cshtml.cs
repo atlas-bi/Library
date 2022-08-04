@@ -1,14 +1,9 @@
-using Atlas_Web.Helpers;
 using Atlas_Web.Models;
+using Atlas_Web.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Atlas_Web.Pages.Initiatives
 {
@@ -31,14 +26,7 @@ namespace Atlas_Web.Pages.Initiatives
 
         public IActionResult OnGet()
         {
-            var checkpoint = UserHelpers.CheckUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name,
-                "Create Initiative"
-            );
-
-            if (!checkpoint)
+            if (!User.HasPermission("Create Initiative"))
             {
                 return RedirectToPage(
                     "/Initiatives/Index",
@@ -51,14 +39,7 @@ namespace Atlas_Web.Pages.Initiatives
 
         public async Task<IActionResult> OnPostAsync()
         {
-            var checkpoint = UserHelpers.CheckUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name,
-                "Create Initiative"
-            );
-
-            if (!checkpoint)
+            if (!User.HasPermission("Create Initiative"))
             {
                 return RedirectToPage(
                     "/Initiatives/Index",
@@ -75,8 +56,7 @@ namespace Atlas_Web.Pages.Initiatives
             }
 
             // update last update values & values that were posted
-            Initiative.LastUpdateUser =
-                UserHelpers.GetUser(_cache, _context, User.Identity.Name).UserId;
+            Initiative.LastUpdateUser = User.GetUserId();
             Initiative.LastUpdateDate = DateTime.Now;
 
             await _context.AddAsync(Initiative);
@@ -86,13 +66,13 @@ namespace Atlas_Web.Pages.Initiatives
             _cache.Remove("collections");
 
             var AddedCollections = await _context.Collections
-                .Where(d => Collections.Select(x => x.DataProjectId).Contains(d.DataProjectId))
+                .Where(d => Collections.Select(x => x.CollectionId).Contains(d.CollectionId))
                 .ToListAsync();
 
             foreach (var collection in AddedCollections)
             {
-                _cache.Remove("collection-" + collection.DataProjectId);
-                collection.DataInitiativeId = Initiative.DataInitiativeId;
+                _cache.Remove("collection-" + collection.CollectionId);
+                collection.InitiativeId = Initiative.InitiativeId;
                 await _context.SaveChangesAsync();
             }
 
@@ -100,7 +80,7 @@ namespace Atlas_Web.Pages.Initiatives
 
             return RedirectToPage(
                 "/Initiatives/Index",
-                new { id = Initiative.DataInitiativeId, success = "Changes saved." }
+                new { id = Initiative.InitiativeId, success = "Changes saved." }
             );
         }
     }

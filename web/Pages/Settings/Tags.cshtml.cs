@@ -1,11 +1,8 @@
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Atlas_Web.Models;
-using System.Collections.Generic;
-using Atlas_Web.Helpers;
+using Atlas_Web.Authorization;
 using Microsoft.Extensions.Caching.Memory;
 
 namespace Atlas_Web.Pages.Settings
@@ -21,16 +18,6 @@ namespace Atlas_Web.Pages.Settings
             _context = context;
             _cache = cache;
         }
-
-        public IEnumerable<ValueListData> OrganizationalValueList { get; set; }
-        public IEnumerable<ValueListData> EstimatedRunFrequencyList { get; set; }
-        public IEnumerable<ValueListData> TagList { get; set; }
-        public IEnumerable<ValueListData> MaintenanceScheduleList { get; set; }
-        public IEnumerable<ValueListData> FragilityTagList { get; set; }
-        public IEnumerable<ValueListData> FragilityList { get; set; }
-        public IEnumerable<ValueListData> MaintenanceLogStatusList { get; set; }
-        public IEnumerable<ValueListData> FinancialImpactList { get; set; }
-        public IEnumerable<ValueListData> StrategicImportanceList { get; set; }
 
         [BindProperty]
         public OrganizationalValue OrganizationalValue { get; set; }
@@ -73,16 +60,11 @@ namespace Atlas_Web.Pages.Settings
                 from o in _context.OrganizationalValues
                 select new ValueListData
                 {
-                    Id = o.OrganizationalValueId,
-                    Name = o.OrganizationalValueName,
+                    Id = o.Id,
+                    Name = o.Name,
                     Used = o.ReportObjectDocs.Count
                 }
             ).ToListAsync();
-            ViewData["Permissions"] = UserHelpers.GetUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name
-            );
 
             return new PartialViewResult
             {
@@ -97,16 +79,11 @@ namespace Atlas_Web.Pages.Settings
                 from o in _context.EstimatedRunFrequencies
                 select new ValueListData
                 {
-                    Id = o.EstimatedRunFrequencyId,
-                    Name = o.EstimatedRunFrequencyName,
+                    Id = o.Id,
+                    Name = o.Name,
                     Used = o.ReportObjectDocs.Count
                 }
             ).ToListAsync();
-            ViewData["Permissions"] = UserHelpers.GetUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name
-            );
 
             return new PartialViewResult
             {
@@ -121,16 +98,11 @@ namespace Atlas_Web.Pages.Settings
                 from o in _context.MaintenanceSchedules
                 select new ValueListData
                 {
-                    Id = o.MaintenanceScheduleId,
-                    Name = o.MaintenanceScheduleName,
+                    Id = o.Id,
+                    Name = o.Name,
                     Used = o.ReportObjectDocs.Count
                 }
             ).ToListAsync();
-            ViewData["Permissions"] = UserHelpers.GetUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name
-            );
 
             return new PartialViewResult
             {
@@ -145,16 +117,11 @@ namespace Atlas_Web.Pages.Settings
                 from o in _context.Fragilities
                 select new ValueListData
                 {
-                    Id = o.FragilityId,
-                    Name = o.FragilityName,
+                    Id = o.Id,
+                    Name = o.Name,
                     Used = o.ReportObjectDocs.Count
                 }
             ).ToListAsync();
-            ViewData["Permissions"] = UserHelpers.GetUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name
-            );
 
             return new PartialViewResult
             {
@@ -169,16 +136,11 @@ namespace Atlas_Web.Pages.Settings
                 from o in _context.FragilityTags
                 select new ValueListData
                 {
-                    Id = o.FragilityTagId,
-                    Name = o.FragilityTagName,
+                    Id = o.Id,
+                    Name = o.Name,
                     Used = o.ReportObjectDocFragilityTags.Count
                 }
             ).ToListAsync();
-            ViewData["Permissions"] = UserHelpers.GetUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name
-            );
 
             return new PartialViewResult
             {
@@ -200,12 +162,6 @@ namespace Atlas_Web.Pages.Settings
                 }
             ).ToListAsync();
 
-            ViewData["Permissions"] = UserHelpers.GetUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name
-            );
-
             return new PartialViewResult { ViewName = "Partials/_TagList", ViewData = ViewData };
         }
 
@@ -215,16 +171,11 @@ namespace Atlas_Web.Pages.Settings
                 from o in _context.MaintenanceLogStatuses
                 select new ValueListData
                 {
-                    Id = o.MaintenanceLogStatusId,
-                    Name = o.MaintenanceLogStatusName,
+                    Id = o.Id,
+                    Name = o.Name,
                     Used = o.MaintenanceLogs.Count
                 }
             ).ToListAsync();
-            ViewData["Permissions"] = UserHelpers.GetUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name
-            );
 
             return new PartialViewResult
             {
@@ -239,16 +190,11 @@ namespace Atlas_Web.Pages.Settings
                 from o in _context.FinancialImpacts
                 select new ValueListData
                 {
-                    Id = o.FinancialImpactId,
+                    Id = o.Id,
                     Name = o.Name,
                     Used = o.Initiatives.Count + o.Collections.Count
                 }
             ).ToListAsync();
-            ViewData["Permissions"] = UserHelpers.GetUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name
-            );
 
             return new PartialViewResult
             {
@@ -263,16 +209,11 @@ namespace Atlas_Web.Pages.Settings
                 from o in _context.StrategicImportances
                 select new ValueListData
                 {
-                    Id = o.StrategicImportanceId,
+                    Id = o.Id,
                     Name = o.Name,
                     Used = o.Initiatives.Count + o.Collections.Count
                 }
             ).ToListAsync();
-            ViewData["Permissions"] = UserHelpers.GetUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name
-            );
 
             return new PartialViewResult
             {
@@ -288,17 +229,10 @@ namespace Atlas_Web.Pages.Settings
 
         public ActionResult OnPostCreateOrganizationalValue()
         {
-            var checkpoint = UserHelpers.CheckUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name,
-                "Create Parameters"
-            );
-
             if (
                 ModelState.IsValid
-                && OrganizationalValue.OrganizationalValueName != null
-                && checkpoint
+                && OrganizationalValue.Name != null
+                && User.HasPermission("Create Parameters")
             )
             {
                 _context.Add(OrganizationalValue);
@@ -310,21 +244,14 @@ namespace Atlas_Web.Pages.Settings
 
         public ActionResult OnPostDeleteOrganizationalValue()
         {
-            var checkpoint = UserHelpers.CheckUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name,
-                "Delete Parameters"
-            );
-            if (ModelState.IsValid && OrganizationalValue.OrganizationalValueId > 0 && checkpoint)
+            if (
+                ModelState.IsValid
+                && OrganizationalValue.Id > 0
+                && User.HasPermission("Delete Parameters")
+            )
             {
                 _context.ReportObjectDocs
-                    .Where(
-                        x =>
-                            x.OrganizationalValueId.Equals(
-                                OrganizationalValue.OrganizationalValueId
-                            )
-                    )
+                    .Where(x => x.OrganizationalValueId.Equals(OrganizationalValue.Id))
                     .ToList()
                     .ForEach(q => q.OrganizationalValueId = null);
                 _context.Remove(OrganizationalValue);
@@ -336,16 +263,10 @@ namespace Atlas_Web.Pages.Settings
 
         public ActionResult OnPostCreateEstimatedRunFrequency()
         {
-            var checkpoint = UserHelpers.CheckUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name,
-                "Create Parameters"
-            );
             if (
                 ModelState.IsValid
-                && EstimatedRunFrequency.EstimatedRunFrequencyName != null
-                && checkpoint
+                && EstimatedRunFrequency.Name != null
+                && User.HasPermission("Create Parameters")
             )
             {
                 _context.Add(EstimatedRunFrequency);
@@ -357,13 +278,7 @@ namespace Atlas_Web.Pages.Settings
 
         public ActionResult OnPostCreateTag()
         {
-            var checkpoint = UserHelpers.CheckUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name,
-                "Create Parameters"
-            );
-            if (ModelState.IsValid && Tag.Name != null && checkpoint)
+            if (ModelState.IsValid && Tag.Name != null && User.HasPermission("Create Parameters"))
             {
                 _context.Add(Tag);
                 _context.SaveChanges();
@@ -374,25 +289,14 @@ namespace Atlas_Web.Pages.Settings
 
         public ActionResult OnPostDeleteEstimatedRunFrequency()
         {
-            var checkpoint = UserHelpers.CheckUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name,
-                "Delete Parameters"
-            );
             if (
                 ModelState.IsValid
-                && EstimatedRunFrequency.EstimatedRunFrequencyId > 0
-                && checkpoint
+                && EstimatedRunFrequency.Id > 0
+                && User.HasPermission("Delete Parameters")
             )
             {
                 _context.ReportObjectDocs
-                    .Where(
-                        x =>
-                            x.EstimatedRunFrequencyId.Equals(
-                                EstimatedRunFrequency.EstimatedRunFrequencyId
-                            )
-                    )
+                    .Where(x => x.EstimatedRunFrequencyId.Equals(EstimatedRunFrequency.Id))
                     .ToList()
                     .ForEach(q => q.EstimatedRunFrequencyId = null);
                 _context.Remove(EstimatedRunFrequency);
@@ -404,13 +308,7 @@ namespace Atlas_Web.Pages.Settings
 
         public ActionResult OnPostDeleteTag()
         {
-            var checkpoint = UserHelpers.CheckUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name,
-                "Delete Parameters"
-            );
-            if (ModelState.IsValid && Tag.TagId > 0 && checkpoint)
+            if (ModelState.IsValid && Tag.TagId > 0 && User.HasPermission("Delete Parameters"))
             {
                 _context.RemoveRange(_context.ReportTagLinks.Where(x => x.TagId == Tag.TagId));
                 _context.Remove(Tag);
@@ -422,13 +320,11 @@ namespace Atlas_Web.Pages.Settings
 
         public ActionResult OnPostCreateFragility()
         {
-            var checkpoint = UserHelpers.CheckUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name,
-                "Create Parameters"
-            );
-            if (ModelState.IsValid && Fragility.FragilityName != null && checkpoint)
+            if (
+                ModelState.IsValid
+                && Fragility.Name != null
+                && User.HasPermission("Create Parameters")
+            )
             {
                 _context.Add(Fragility);
                 _context.SaveChanges();
@@ -439,16 +335,10 @@ namespace Atlas_Web.Pages.Settings
 
         public ActionResult OnPostDeleteFragility()
         {
-            var checkpoint = UserHelpers.CheckUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name,
-                "Delete Parameters"
-            );
-            if (ModelState.IsValid && Fragility.FragilityId > 0 && checkpoint)
+            if (ModelState.IsValid && Fragility.Id > 0 && User.HasPermission("Delete Parameters"))
             {
                 _context.ReportObjectDocs
-                    .Where(x => x.FragilityId.Equals(Fragility.FragilityId))
+                    .Where(x => x.FragilityId.Equals(Fragility.Id))
                     .ToList()
                     .ForEach(q => q.FragilityId = null);
                 _context.Remove(Fragility);
@@ -460,16 +350,10 @@ namespace Atlas_Web.Pages.Settings
 
         public ActionResult OnPostCreateMaintenanceSchedule()
         {
-            var checkpoint = UserHelpers.CheckUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name,
-                "Create Parameters"
-            );
             if (
                 ModelState.IsValid
-                && MaintenanceSchedule.MaintenanceScheduleName != null
-                && checkpoint
+                && MaintenanceSchedule.Name != null
+                && User.HasPermission("Create Parameters")
             )
             {
                 _context.Add(MaintenanceSchedule);
@@ -481,21 +365,14 @@ namespace Atlas_Web.Pages.Settings
 
         public ActionResult OnPostDeleteMaintenanceSchedule()
         {
-            var checkpoint = UserHelpers.CheckUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name,
-                "Delete Parameters"
-            );
-            if (ModelState.IsValid && MaintenanceSchedule.MaintenanceScheduleId > 0 && checkpoint)
+            if (
+                ModelState.IsValid
+                && MaintenanceSchedule.Id > 0
+                && User.HasPermission("Delete Parameters")
+            )
             {
                 _context.ReportObjectDocs
-                    .Where(
-                        x =>
-                            x.MaintenanceScheduleId.Equals(
-                                MaintenanceSchedule.MaintenanceScheduleId
-                            )
-                    )
+                    .Where(x => x.MaintenanceScheduleId.Equals(MaintenanceSchedule.Id))
                     .ToList()
                     .ForEach(q => q.MaintenanceScheduleId = null);
                 _context.Remove(MaintenanceSchedule);
@@ -507,13 +384,11 @@ namespace Atlas_Web.Pages.Settings
 
         public ActionResult OnPostCreateFragilityTag()
         {
-            var checkpoint = UserHelpers.CheckUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name,
-                "Create Parameters"
-            );
-            if (ModelState.IsValid && FragilityTag.FragilityTagName != null && checkpoint)
+            if (
+                ModelState.IsValid
+                && FragilityTag.Name != null
+                && User.HasPermission("Create Parameters")
+            )
             {
                 _context.Add(FragilityTag);
                 _context.SaveChanges();
@@ -524,17 +399,13 @@ namespace Atlas_Web.Pages.Settings
 
         public ActionResult OnPostDeleteFragilityTag()
         {
-            var checkpoint = UserHelpers.CheckUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name,
-                "Delete Parameters"
-            );
-            if (ModelState.IsValid && FragilityTag.FragilityTagId > 0 && checkpoint)
+            if (
+                ModelState.IsValid && FragilityTag.Id > 0 && User.HasPermission("Delete Parameters")
+            )
             {
                 _context.RemoveRange(
                     _context.ReportObjectDocFragilityTags.Where(
-                        x => x.FragilityTagId.Equals(FragilityTag.FragilityTagId)
+                        x => x.FragilityTagId.Equals(FragilityTag.Id)
                     )
                 );
                 _context.Remove(FragilityTag);
@@ -546,16 +417,10 @@ namespace Atlas_Web.Pages.Settings
 
         public ActionResult OnPostCreateMaintenanceLogStatus()
         {
-            var checkpoint = UserHelpers.CheckUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name,
-                "Create Parameters"
-            );
             if (
                 ModelState.IsValid
-                && MaintenanceLogStatus.MaintenanceLogStatusName != null
-                && checkpoint
+                && MaintenanceLogStatus.Name != null
+                && User.HasPermission("Create Parameters")
             )
             {
                 _context.Add(MaintenanceLogStatus);
@@ -567,20 +432,15 @@ namespace Atlas_Web.Pages.Settings
 
         public ActionResult OnPostDeleteMaintenanceLogStatus()
         {
-            var checkpoint = UserHelpers.CheckUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name,
-                "Delete Parameters"
-            );
-            if (ModelState.IsValid && MaintenanceLogStatus.MaintenanceLogStatusId > 0 && checkpoint)
+            if (
+                ModelState.IsValid
+                && MaintenanceLogStatus.Id > 0
+                && User.HasPermission("Delete Parameters")
+            )
             {
                 _context.RemoveRange(
                     _context.MaintenanceLogs.Where(
-                        x =>
-                            x.MaintenanceLogStatusId.Equals(
-                                MaintenanceLogStatus.MaintenanceLogStatusId
-                            )
+                        x => x.MaintenanceLogStatusId.Equals(MaintenanceLogStatus.Id)
                     )
                 );
                 _context.Remove(MaintenanceLogStatus);
@@ -592,13 +452,11 @@ namespace Atlas_Web.Pages.Settings
 
         public ActionResult OnPostCreateFinancialImpact()
         {
-            var checkpoint = UserHelpers.CheckUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name,
-                "Create Parameters"
-            );
-            if (ModelState.IsValid && FinancialImpact.Name != null && checkpoint)
+            if (
+                ModelState.IsValid
+                && FinancialImpact.Name != null
+                && User.HasPermission("Create Parameters")
+            )
             {
                 _context.Add(FinancialImpact);
                 _context.SaveChanges();
@@ -609,20 +467,18 @@ namespace Atlas_Web.Pages.Settings
 
         public ActionResult OnPostDeleteFinancialImpact()
         {
-            var checkpoint = UserHelpers.CheckUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name,
-                "Delete Parameters"
-            );
-            if (ModelState.IsValid && FinancialImpact.FinancialImpactId > 0 && checkpoint)
+            if (
+                ModelState.IsValid
+                && FinancialImpact.Id > 0
+                && User.HasPermission("Delete Parameters")
+            )
             {
                 _context.Collections
-                    .Where(x => x.FinancialImpact.Equals(FinancialImpact.FinancialImpactId))
+                    .Where(x => x.FinancialImpact.Equals(FinancialImpact.Id))
                     .ToList()
                     .ForEach(q => q.FinancialImpact = null);
                 _context.Initiatives
-                    .Where(x => x.FinancialImpact.Equals(FinancialImpact.FinancialImpactId))
+                    .Where(x => x.FinancialImpact.Equals(FinancialImpact.Id))
                     .ToList()
                     .ForEach(q => q.FinancialImpact = null);
                 _context.Remove(FinancialImpact);
@@ -634,13 +490,11 @@ namespace Atlas_Web.Pages.Settings
 
         public ActionResult OnPostCreateStrategicImportance()
         {
-            var checkpoint = UserHelpers.CheckUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name,
-                "Create Parameters"
-            );
-            if (ModelState.IsValid && StrategicImportance.Name != null && checkpoint)
+            if (
+                ModelState.IsValid
+                && StrategicImportance.Name != null
+                && User.HasPermission("Create Parameters")
+            )
             {
                 _context.Add(StrategicImportance);
                 _context.SaveChanges();
@@ -651,24 +505,18 @@ namespace Atlas_Web.Pages.Settings
 
         public ActionResult OnPostDeleteStrategicImportance()
         {
-            var checkpoint = UserHelpers.CheckUserPermissions(
-                _cache,
-                _context,
-                User.Identity.Name,
-                "Delete Parameters"
-            );
-            if (ModelState.IsValid && StrategicImportance.StrategicImportanceId > 0 && checkpoint)
+            if (
+                ModelState.IsValid
+                && StrategicImportance.Id > 0
+                && User.HasPermission("Delete Parameters")
+            )
             {
                 _context.Collections
-                    .Where(
-                        x => x.StrategicImportance.Equals(StrategicImportance.StrategicImportanceId)
-                    )
+                    .Where(x => x.StrategicImportance.Equals(StrategicImportance.Id))
                     .ToList()
                     .ForEach(q => q.StrategicImportance = null);
                 _context.Initiatives
-                    .Where(
-                        x => x.StrategicImportance.Equals(StrategicImportance.StrategicImportanceId)
-                    )
+                    .Where(x => x.StrategicImportance.Equals(StrategicImportance.Id))
                     .ToList()
                     .ForEach(q => q.StrategicImportance = null);
                 _context.Remove(StrategicImportance);

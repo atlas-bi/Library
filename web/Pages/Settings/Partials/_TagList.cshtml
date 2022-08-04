@@ -1,7 +1,7 @@
 
 @model Atlas_Web.Pages.Settings.TagsModel
 <div>
-    @if (ViewBag.Permissions.Contains("Create Parameters"))
+    @if (User.HasPermission("Create Parameters"))
     {
         <form asp-page-handler="CreateTag">
             <div class="field">
@@ -38,7 +38,7 @@
         @foreach (var i in ViewBag.TagList)
         {
             <div class="control">
-                @if (ViewBag.Permissions.Contains("Delete Parameters"))
+                @if (User.HasPermission("Delete Parameters"))
                 {
                     <form asp-page-handler="DeleteTag" class="tags has-addons">
                         <span class="tag is-link has-tooltip-arrow has-tooltip-bottom"  @if(!string.IsNullOrEmpty(@i.Description)){<text> data-tooltip="@i.Description"</text>}>@i.Name</span>

@@ -1,12 +1,7 @@
 using System.Net.Mail;
 using System.Net.Mime;
-using System.Threading.Tasks;
 using System.Net;
-using System;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Caching.Memory;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Hosting;
 
 namespace Atlas_Web.Services
 {
@@ -23,7 +18,7 @@ namespace Atlas_Web.Services
             _cache = cache;
         }
 
-        public async Task SendAsync(string subject, string body, string sender, string reciever)
+        public async Task SendAsync(string subject, string body, string sender, string receiver)
         {
             using (var smtp = new SmtpClient())
             {
@@ -46,7 +41,7 @@ namespace Atlas_Web.Services
                     IsBodyHtml = true
                 };
 
-                message.To.Add(reciever);
+                message.To.Add(receiver);
 
                 if (!string.IsNullOrEmpty(sender))
                 {

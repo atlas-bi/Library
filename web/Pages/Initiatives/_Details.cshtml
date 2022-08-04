@@ -18,7 +18,7 @@
                 <tr>
                     <td>Operational Owner</td>
                     <td>
-                        @if (@Configuration["features:enable_user_profile"] == null || @Configuration["features:enable_user_profile"].ToString().ToLower() == "true")
+                        @if (User.HasPermission("View Other User") && @Configuration["features:enable_user_profile"] == null || @Configuration["features:enable_user_profile"].ToString().ToLower() == "true")
                         {
                             <a href="/users?id=@Model.Initiative.OperationOwnerId">@Model.Initiative.OperationOwner.FullnameCalc</a>
                         } else
@@ -33,7 +33,7 @@
                 <tr>
                     <td>Executive Owner</td>
                     <td>
-                        @if (@Configuration["features:enable_user_profile"] == null || @Configuration["features:enable_user_profile"].ToString().ToLower() == "true")
+                        @if (User.HasPermission("View Other User") && @Configuration["features:enable_user_profile"] == null || @Configuration["features:enable_user_profile"].ToString().ToLower() == "true")
                         {
                             <a href="/users?id=@Model.Initiative.ExecutiveOwnerId">@Model.Initiative.ExecutiveOwner.FullnameCalc</a>
                         } else
@@ -66,7 +66,7 @@
                 <tr>
                     <td>Last Updated By</td>
                     <td>
-                        @if (@Configuration["features:enable_user_profile"] == null || @Configuration["features:enable_user_profile"].ToString().ToLower() == "true")
+                        @if (User.HasPermission("View Other User") && @Configuration["features:enable_user_profile"] == null || @Configuration["features:enable_user_profile"].ToString().ToLower() == "true")
                             {
                                 <a href="/users?id=@Model.Initiative.LastUpdateUser">@Model.Initiative.LastUpdateUserNavigation.FullnameCalc</a>
                             } else

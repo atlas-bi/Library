@@ -27,7 +27,7 @@
                                     <td align="center">
                                         <nav class="navbar has-shadow">
                                             <a class="navbar-item mx-auto" href='@Configuration["AppSettings:base_url"]' align="center">
-                                                <img src="cid:atlas_logo" width="130" alt="site logo" style="width:130px;" class="mx-auto" />
+                                                <img src="cid:atlas_logo" width="133" alt="site logo" style="width:133px;" class="mx-auto" />
                                             </a>
                                         </nav>
                                     </td>
@@ -38,7 +38,7 @@
                                 </tr>
                                 <tr><td height="10"></td></tr>
                                 <tr>
-                                    <td>@if (@Configuration["features:enable_user_profile"] == null || @Configuration["features:enable_user_profile"].ToString().ToLower() == "true")
+                                    <td>@if (User.HasPermission("View Other User") && @Configuration["features:enable_user_profile"] == null || @Configuration["features:enable_user_profile"].ToString().ToLower() == "true")
                                         {
                                             <a href='@Configuration["AppSettings:base_url"]/users?id=@ViewBag.Sender.UserId'>@ViewBag.Sender.FullnameCalc</a>
                                         } else {
