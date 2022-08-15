@@ -10,7 +10,7 @@
     "npm:unpublishSafe"
   ],
   "ignoreDeps": ["chart.js"],
-  "assignees": ["christopherpickering"],
+  "baseBranches": ["dev"],
   "bumpVersion": "patch",
   "commitMessagePrefix": "chore(deps)",
   "labels": ["maintenance", "renovate"],
