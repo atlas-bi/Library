@@ -163,7 +163,7 @@ namespace Atlas_Web.Pages.Profile
                 group new SubqueryData { d = d, b = b } by new
                 {
                     r.ReportObjectId,
-                    r.Name,
+                    Name = string.IsNullOrEmpty(r.DisplayTitle) ? r.Name : r.DisplayTitle,
                     r.ReportObjectType.ShortName,
                     ReportTypeName = r.ReportObjectType.Name
                 } into grp
