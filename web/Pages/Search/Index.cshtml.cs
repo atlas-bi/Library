@@ -502,7 +502,7 @@ namespace Atlas_Web.Pages.Search
                     BuildFacetModels(results.FacetFields),
                     BuildHighlightModels(results.Highlights),
                     BuildFilterFields(Type),
-                    results.NumFound,
+                    (int)results.NumFound,
                     results.Header.QTime,
                     parameters,
                     advanced
