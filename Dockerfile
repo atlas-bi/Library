@@ -26,14 +26,14 @@ ARG PASSWORD
 ARG HOST
 
 # create config
-RUN echo "{\"solr\": {\"atlas_address\": \"https://atlas-dotnet-search.herokuapp.com/solr/atlas\", \"atlas_lookups_address\": \"http://atlas-dotnet-search.herokuapp.com/solr/atlas_lookups\"},\"ConnectionStrings\": {\"AtlasDatabase\": \"Server=$HOST;Database=atlas;User Id=$USER; Password=$PASSWORD; MultipleActiveResultSets=true\"}}" > appsettings.cust.json
+RUN echo "{\"Demo\": true, \"solr\": {\"atlas_address\": \"https://atlas-dotnet-search.herokuapp.com/solr/atlas\", \"atlas_lookups_address\": \"http://atlas-dotnet-search.herokuapp.com/solr/atlas_lookups\"},\"ConnectionStrings\": {\"AtlasDatabase\": \"Server=$HOST;Database=atlas;User Id=$USER; Password=$PASSWORD; MultipleActiveResultSets=true\"}}" > appsettings.cust.json
 
 # migrate
 RUN dotnet tool install --global dotnet-ef \
   && export PATH="$PATH:/root/.dotnet/tools" \
   && dotnet tool restore
 
-RUN  dotnet ef database update --project web.csproj -v
+RUN  export PATH="$PATH:/root/.dotnet/tools" && dotnet ef database update --project web.csproj -v
 
 RUN dotnet publish -c Release -o out web.csproj
 
