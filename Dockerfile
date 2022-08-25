@@ -26,7 +26,7 @@ ARG PASSWORD
 ARG HOST
 
 # create config
-RUN echo "{\"solr\": {\"atlas_address\": \"https://atlas-dotnet-search.herokuapp.com/solr/atlas\", \"atlas_lookups_address\": \"http://atlas-dotnet-search.herokuapp.com/solr/atlas_lookups\"},\"ConnectionStrings\": {\"AtlasDatabase\": \"Server=$HOST;Database=atlas;User Id=$USER; Password=$PASSWORD; MultipleActiveResultSets=true\"}}" > appsettings.cust.json
+RUN echo "{\"Demo\": true, \"solr\": {\"atlas_address\": \"https://atlas-dotnet-search.herokuapp.com/solr/atlas\", \"atlas_lookups_address\": \"http://atlas-dotnet-search.herokuapp.com/solr/atlas_lookups\"},\"ConnectionStrings\": {\"AtlasDatabase\": \"Server=$HOST;Database=atlas;User Id=$USER; Password=$PASSWORD; MultipleActiveResultSets=true\"}}" > appsettings.cust.json
 
 # migrate
 RUN dotnet tool install --global dotnet-ef \

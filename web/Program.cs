@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Negotiate;
 using Microsoft.AspNetCore.Authorization;
 using Atlas_Web.Authorization;
+using Atlas_Web.Authentication;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Configuration.AddJsonFile("appsettings.cust.json", optional: true, reloadOnChange: true);
@@ -198,7 +199,18 @@ builder.Services
 builder.Services.AddTransient<IEmailService, EmailService>();
 builder.Services.AddTransient<IRazorPartialToStringRenderer, RazorPartialToStringRenderer>();
 
-builder.Services.AddAuthentication(NegotiateDefaults.AuthenticationScheme).AddNegotiate();
+if (builder.Configuration["Demo"] == "True")
+{
+    builder.Services
+        .AddAuthentication(options => options.DefaultScheme = "Demo")
+        .AddScheme<DemoSchemeOptions, DemoAuthHandler>("Demo", options => { });
+    ;
+}
+else
+{
+    builder.Services.AddAuthentication(NegotiateDefaults.AuthenticationScheme).AddNegotiate();
+}
+
 builder.Services.AddAuthorization(
     options =>
     {
