@@ -33,7 +33,7 @@ RUN dotnet tool install --global dotnet-ef \
   && export PATH="$PATH:/root/.dotnet/tools" \
   && dotnet tool restore
 
-RUN  dotnet ef database update --project web.csproj -v
+RUN  export PATH="$PATH:/root/.dotnet/tools" && dotnet ef database update --project web.csproj -v
 
 RUN dotnet publish -c Release -o out web.csproj
 
