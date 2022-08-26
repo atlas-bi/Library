@@ -80,6 +80,10 @@ namespace Atlas_Web.Pages.Terms
                         .Include(x => x.ReportObjectAttachments)
                         .Include(x => x.ReportTagLinks)
                         .ThenInclude(x => x.Tag)
+                        // for authentication
+                        .Include(x => x.ReportObjectHierarchyChildReportObjects)
+                        .ThenInclude(x => x.ParentReportObject)
+                        .ThenInclude(x => x.ReportGroupsMemberships)
                         .AsNoTracking()
                         .ToList();
 
@@ -98,6 +102,12 @@ namespace Atlas_Web.Pages.Terms
                         .Include(x => x.ReportObjectType)
                         .Include(x => x.ReportObjectDoc)
                         .Include(x => x.ReportObjectAttachments)
+                        .Include(x => x.ReportTagLinks)
+                        .ThenInclude(x => x.Tag)
+                        // for authentication
+                        .Include(x => x.ReportObjectHierarchyChildReportObjects)
+                        .ThenInclude(x => x.ParentReportObject)
+                        .ThenInclude(x => x.ReportGroupsMemberships)
                         .AsNoTracking()
                         .ToList();
                     var level_three = _context.ReportObjects
@@ -118,6 +128,12 @@ namespace Atlas_Web.Pages.Terms
                         .Include(x => x.ReportObjectType)
                         .Include(x => x.ReportObjectDoc)
                         .Include(x => x.ReportObjectAttachments)
+                        .Include(x => x.ReportTagLinks)
+                        .ThenInclude(x => x.Tag)
+                        // for authentication
+                        .Include(x => x.ReportObjectHierarchyChildReportObjects)
+                        .ThenInclude(x => x.ParentReportObject)
+                        .ThenInclude(x => x.ReportGroupsMemberships)
                         .AsNoTracking()
                         .ToList();
                     var level_four = _context.ReportObjects
@@ -141,6 +157,12 @@ namespace Atlas_Web.Pages.Terms
                         .Include(x => x.ReportObjectType)
                         .Include(x => x.ReportObjectDoc)
                         .Include(x => x.ReportObjectAttachments)
+                        .Include(x => x.ReportTagLinks)
+                        .ThenInclude(x => x.Tag)
+                        // for authentication
+                        .Include(x => x.ReportObjectHierarchyChildReportObjects)
+                        .ThenInclude(x => x.ParentReportObject)
+                        .ThenInclude(x => x.ReportGroupsMemberships)
                         .AsNoTracking()
                         .ToList();
 

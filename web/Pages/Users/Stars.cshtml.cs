@@ -89,6 +89,11 @@ namespace Atlas_Web.Pages.Users
                 .Include(x => x.Report)
                 .ThenInclude(x => x.ReportTagLinks)
                 .ThenInclude(x => x.Tag)
+                // for authentication
+                .Include(x => x.Report)
+                .ThenInclude(x => x.ReportObjectHierarchyChildReportObjects)
+                .ThenInclude(x => x.ParentReportObject)
+                .ThenInclude(x => x.ReportGroupsMemberships)
                 .ToListAsync();
 
             Initiatives = await _context.StarredInitiatives

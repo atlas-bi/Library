@@ -16,6 +16,7 @@ namespace Atlas_Web.Authorization
             if (report.ReportObjectTypeId != 3 && report.ReportObjectTypeId != 17)
             {
                 context.Succeed(requirement);
+                return Task.CompletedTask;
             }
 
             var groups = context.User.Claims
@@ -32,7 +33,7 @@ namespace Atlas_Web.Authorization
 
             // check hrg
             if (
-                report.ReportObjectHierarchyParentReportObjects.Any(
+                report.ReportObjectHierarchyChildReportObjects.Any(
                     x =>
                         x.ParentReportObject.ReportGroupsMemberships.Any(
                             y => groups.Contains(y.GroupId.ToString())
