@@ -58,6 +58,12 @@ namespace Atlas_Web.Pages.Collections
                             .ThenInclude(x => x.Tag)
                             .Include(x => x.StarredCollections)
                             .Include(x => x.Initiative)
+                            // for authentication
+                            .Include(x => x.CollectionReports)
+                            .ThenInclude(x => x.Report)
+                            .ThenInclude(x => x.ReportObjectHierarchyChildReportObjects)
+                            .ThenInclude(x => x.ParentReportObject)
+                            .ThenInclude(x => x.ReportGroupsMemberships)
                             .AsNoTracking()
                             .SingleAsync(x => x.CollectionId == id);
                     }
