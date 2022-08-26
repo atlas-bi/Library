@@ -91,6 +91,10 @@ namespace Atlas_Web.Pages.Reports
                         .Include(x => x.ReportObjectParameters)
                         .Include(x => x.ReportTagLinks)
                         .ThenInclude(x => x.Tag)
+                        // needed for authorization
+                        .Include(x => x.ReportObjectHierarchyChildReportObjects)
+                        .ThenInclude(x => x.ParentReportObject)
+                        .ThenInclude(x => x.ReportGroupsMemberships)
                         .AsNoTracking()
                         .SingleOrDefaultAsync(x => x.ReportObjectId == id);
                 }

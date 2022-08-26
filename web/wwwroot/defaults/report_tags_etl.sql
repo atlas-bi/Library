@@ -36,7 +36,7 @@ as (
               (
                 select Max([t2].[MaintenanceLogID])
                 from [app].[MaintenanceLog] as [t2]
-                where [t2].[ReportObjectID] = [t0].[ReportObjectID]
+                where [t2].ReportId = [t0].[ReportObjectID]
                 )
               )
           ) as [t3]
@@ -50,7 +50,7 @@ as (
 as (
   select r.ReportObjectID
   from dbo.ReportObject r
-  left join app.MaintenanceLog l on l.ReportObjectID = r.ReportObjectID
+  left join app.MaintenanceLog l on l.reportid = r.ReportObjectID
   where l.MaintenanceLogStatusID in (
       1
       ,2

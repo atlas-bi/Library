@@ -404,6 +404,15 @@ namespace Atlas_Web.Pages.Search
                                                           .Include(x => x.ReportObjectType)
                                                           .Include(x => x.ReportTagLinks)
                                                           .ThenInclude(x => x.Tag)
+                                                          // for authentication
+                                                          .Include(
+                                                              x =>
+                                                                  x.ReportObjectHierarchyChildReportObjects
+                                                          )
+                                                          .ThenInclude(x => x.ParentReportObject)
+                                                          .ThenInclude(
+                                                              x => x.ReportGroupsMemberships
+                                                          )
                                                           .AsSingleQuery()
                                                           .AsNoTracking()
                                                           .SingleOrDefault(
