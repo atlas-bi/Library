@@ -120,9 +120,9 @@ select r.ReportObjectID as ReportId
   ,t.tagid as Tagid
 into #report_cert_load_temp
 from #report_cert_temp r
-inner join app.Tags t on r.CertTag = t.Name
+inner join dbo.Tags t on r.CertTag = t.Name
 
-merge app.ReportTagLinks as dest
+merge dbo.ReportTagLinks as dest
 using #report_cert_load_temp as source
   on dest.ReportId = source.ReportId
     and dest.TagId = source.TagId
