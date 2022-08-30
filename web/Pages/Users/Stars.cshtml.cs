@@ -221,7 +221,7 @@ namespace Atlas_Web.Pages.Users
                 }
                 else
                 {
-                    _context.Add(new StarredInitiative { Ownerid = UserId, Initiativeid = id });
+                    _context.Add(new StarredInitiative { Ownerid = MyId, Initiativeid = id });
                     _context.SaveChanges();
                 }
                 // pop from cache

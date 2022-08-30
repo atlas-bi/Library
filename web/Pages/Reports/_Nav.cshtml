@@ -70,7 +70,7 @@
     </li>
 
     <li>
-        <a class="is-block has-tooltip-arrow has-tooltip-right star" data-tooltip="Star this report" data-href="/users/favorites/?handler=Edit&type=report&id=@Model.Report.ReportObjectId">
+        <a class="is-block has-tooltip-arrow has-tooltip-right star" data-tooltip="Star this report" data-href="/users/stars/?handler=Edit&type=report&id=@Model.Report.ReportObjectId">
             @if (Model.Report.StarredReports.Any(x => x.Ownerid == User.GetUserId()))
             {
                 <span class="icon is-large has-text-gold ">

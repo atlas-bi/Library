@@ -59,7 +59,7 @@
         </div>
     </div>
     <footer class="card-footer">
-        <a class="card-footer-item star" data-href="/users/favorites/?handler=Edit&type=term&id=@Model.TermId">
+        <a class="card-footer-item star" data-href="/users/stars/?handler=Edit&type=term&id=@Model.TermId">
             <span class="icon-text">
                 @if (Model.StarredTerms.Any(x => x.Ownerid == User.GetUserId()))
                 {

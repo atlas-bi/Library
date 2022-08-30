@@ -145,7 +145,7 @@
         </div>
     </div>
     <footer class="card-footer">
-        <a class="card-footer-item star px-0" data-href="/users/favorites/?handler=Edit&type=report&id=@Model.ReportObjectId">
+        <a class="card-footer-item star px-0" data-href="/users/stars/?handler=Edit&type=report&id=@Model.ReportObjectId">
             <span class="icon-text">
                 @if (Model.StarredReports.Any(x => x.Ownerid == User.GetUserId()))
                 {
