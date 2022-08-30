@@ -9,7 +9,7 @@
     </li>
 
     <li>
-        <a class="has-tooltip-arrow has-tooltip-right star" data-tooltip="Star this report" data-href="/users/favorites/?handler=Edit&type=collection&id=@Model.Collection.CollectionId">
+        <a class="has-tooltip-arrow has-tooltip-right star" data-tooltip="Star this report" data-href="/users/stars/?handler=Edit&type=collection&id=@Model.Collection.CollectionId">
             @if (Model.Collection.StarredCollections.Any(x => x.Ownerid == User.GetUserId()))
             {
                 <span class="icon is-large has-text-gold ">

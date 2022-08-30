@@ -2,7 +2,7 @@
 
 <ul>
     <li>
-        <a class="is-block has-tooltip-arrow has-tooltip-right star" data-tooltip="Star this initiative" data-href="/users/favorites/?handler=Edit&type=initiative&id=@Model.Initiative.InitiativeId">
+        <a class="is-block has-tooltip-arrow has-tooltip-right star" data-tooltip="Star this initiative" data-href="/users/stars/?handler=Edit&type=initiative&id=@Model.Initiative.InitiativeId">
             @if (Model.Initiative.StarredInitiatives.Any(x => x.Ownerid == User.GetUserId()))
             {
                 <span class="icon is-large has-text-gold ">
