@@ -1,5 +1,6 @@
 appsettings.cust.json
 appsettings.cust.Development.json
+.gulp-cache/
 PublishProfiles
 web.csproj.user
 .vs

@@ -19,14 +19,15 @@ RUN dotnet restore ./web/web.csproj
 COPY ["./web/.", "./web/"]
 WORKDIR "/app/web/"
 # add analytics
-RUN  sed -i -e 's/<\/body>/<script async defer data-website-id="833156f8-3343-4da3-b7d5-45b5fa4f224d" src="https:\/\/analytics.atlas.bi\/umami.js"><\/script><\/body>/g' Pages/Shared/_Layout.cshtml
+RUN  sed -i -e 's/<\/body>/<script async defer data-website-id="fb4377bf-3d8a-40f7-97f9-c8e57e11c953" src="https:\/\/analytics.atlas.bi\/umami.js"><\/script><\/body>/g' Pages/Shared/_Layout.cshtml
 
 ARG USER
 ARG PASSWORD
 ARG HOST
+ARG SOLR
 
 # create config
-RUN echo "{\"Demo\": true, \"solr\": {\"atlas_address\": \"https://atlas-dotnet-search.herokuapp.com/solr/atlas\", \"atlas_lookups_address\": \"http://atlas-dotnet-search.herokuapp.com/solr/atlas_lookups\"},\"ConnectionStrings\": {\"AtlasDatabase\": \"Server=$HOST;Database=atlas;User Id=$USER; Password=$PASSWORD; MultipleActiveResultSets=true\"}}" > appsettings.cust.json
+RUN echo "{\"Demo\": true, \"solr\": {\"atlas_address\": \"$SOLR/solr/atlas\", \"atlas_lookups_address\": \"$SOLR/solr/atlas_lookups\"},\"ConnectionStrings\": {\"AtlasDatabase\": \"Server=$HOST;Database=atlas;User Id=$USER; Password=$PASSWORD; MultipleActiveResultSets=true;TrustServerCertificate=YES\"}}" > appsettings.cust.json
 
 # migrate
 RUN dotnet tool install --global dotnet-ef \
