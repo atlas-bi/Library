@@ -90,7 +90,7 @@
       const q = new XMLHttpRequest();
       q.open(
         'post',
-        '/users/favorites?handler=DeleteFolder&id=' + $target.dataset.folderid,
+        '/users/stars?handler=DeleteFolder&id=' + $target.dataset.folderid,
         true,
       );
       q.setRequestHeader(
@@ -176,7 +176,7 @@
         });
 
         q = new XMLHttpRequest();
-        q.open('post', '/Users/Favorites?handler=ReorderFolders', true);
+        q.open('post', '/Users/stars?handler=ReorderFolders', true);
         q.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
         q.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
         q.send(JSON.stringify(array));
@@ -192,7 +192,7 @@
         });
 
         q = new XMLHttpRequest();
-        q.open('post', '/Users/Favorites?handler=ReorderFavorites', true);
+        q.open('post', '/Users/stars?handler=ReorderFavorites', true);
         q.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
         q.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
         q.send(JSON.stringify(array));
@@ -305,7 +305,7 @@
     item.FolderId = $folder.dataset.folderid;
     item.FavoriteType = $favorite.dataset.type;
     const q = new XMLHttpRequest();
-    q.open('post', '/Users/Favorites?handler=UpdateFavoriteFolder', true);
+    q.open('post', '/Users/stars?handler=UpdateFavoriteFolder', true);
     q.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
     q.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
     q.send(JSON.stringify(item));
