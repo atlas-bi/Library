@@ -23,8 +23,8 @@ RUN apk add --no-cache openjdk11 bash lsof python3-dev curl gcc git py3-pip gcc 
     pip3 install pyodbc pysolr pytz python-dotenv
 
 # install sql server driver
-RUN curl -O https://download.microsoft.com/download/e/4/e/e4e67866-dffd-428c-aac7-8d28ddafb39b/msodbcsql17_17.8.1.1-1_amd64.apk && \
-    apk add --allow-untrusted msodbcsql17_17.8.1.1-1_amd64.apk
+RUN curl -O https://download.microsoft.com/download/b/9/f/b9f3cce4-3925-46d4-9f46-da08869c6486/msodbcsql18_18.1.1.1-1_amd64.apk && \
+    apk add --allow-untrusted msodbcsql18_18.1.1.1-1_amd64.apk
 
 # pull solr etl
 RUN mkdir etl && cd etl && git clone --depth 1 https://github.com/atlas-bi/Solr-Search-ETL.git .
@@ -32,7 +32,7 @@ RUN mkdir etl && cd etl && git clone --depth 1 https://github.com/atlas-bi/Solr-
 # create settings
 RUN cd etl && echo "SOLRURL = \"http://localhost:8983/solr/atlas\"" > .env && \
     echo "SOLRLOOKUPURL = \"http://localhost:8983/solr/atlas_lookups\"" >> .env && \
-    echo "ATLASDATABASE = \"DRIVER={ODBC Driver 17 for SQL Server};SERVER=$HOST;DATABASE=atlas;UID=$USER;PWD=$PASSWORD\"" >> .env
+    echo "ATLASDATABASE = \"DRIVER={ODBC Driver 18 for SQL Server};SERVER=$HOST;DATABASE=atlas;UID=$USER;PWD=$PASSWORD;TrustServerCertificate=YES\"" >> .env
 
 # load search
 RUN chmod -R 777 bin && bin/solr start -force -noprompt -v && sleep 20 && cd etl && python3 atlas_collections.py && python3 atlas_groups.py && python3 atlas_initiatives.py && \
