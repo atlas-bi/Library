@@ -2278,7 +2278,7 @@ namespace Atlas_Web.Migrations
                     b.HasKey("UserFavoriteFolderId");
 
                     b.HasIndex(new[] { "UserId" }, "userid")
-                        .HasDatabaseName("userid2");
+                        .HasDatabaseName("userid3");
 
                     b.ToTable("UserFavoriteFolders", "app");
                 });
