@@ -2,9 +2,11 @@
   var enableAdmin = document.querySelector('input#enable-administrator');
   if (enableAdmin !== null) {
     enableAdmin.addEventListener('change', function (event) {
-      window.location = `/Users?handler=ChangeRole&Id=${
-        event.target.value
-      }&Url=${window.location.href.replace(window.location.origin, '')}`;
+      window.location =
+        '/Users?handler=ChangeRole&Id=' +
+        event.target.value +
+        '&Url=' +
+        window.location.href.replace(window.location.origin, '');
     });
   }
 

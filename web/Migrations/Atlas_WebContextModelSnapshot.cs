@@ -500,7 +500,7 @@ namespace Atlas_Web.Migrations
                         .HasDatabaseName("initiativeid1");
 
                     b.HasIndex(new[] { "LastUpdateDate" }, "lastupdatedate")
-                        .HasDatabaseName("lastupdatedate1");
+                        .HasDatabaseName("lastupdatedate");
 
                     b.HasIndex(new[] { "LastUpdateUser" }, "lastupdateuser")
                         .HasDatabaseName("lastupdateuser1");
