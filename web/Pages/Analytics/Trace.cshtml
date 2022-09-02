@@ -70,8 +70,15 @@
                             @Trace.LogDateTime
                         </td>
                         <td>
-    @message.logData.msg at <a @if(Trace.Handled == 1){<text>class="has-text-grey-light"</text>} href='@Trace.Referer' target="_blank">@Trace.Referer</a><br>in <a @if(Trace.Handled == 1){<text>class="has-text-grey-light"</text>} href='@message.logData.url:@message.logData["line number"]:@message.logData.column' target="_blank">@message.logData.url:@message.logData["line number"]:@message.logData.column</a>
-        <div class="notification @if(Trace.Handled != 1){<text>is-danger</text>} is-family-monospace is-light mt-2 is-wordbreak">@message.logData.errorMsg</div>
+                            @message.msg at
+                            <a @if(Trace.Handled == 1)
+                                {
+                                    <text>class="has-text-grey-light"</text>
+                                }
+                                href='@Trace.Referer'
+                                target="_blank">@Trace.Referer</a>
+                            <br>in <a @if(Trace.Handled == 1){<text>class="has-text-grey-light"</text>} href='@message.url:@message["line number"]:@message.column' target="_blank">@message.url:@message["line number"]:@message.column</a>
+        <div class="notification @if(Trace.Handled != 1){<text>is-danger</text>} is-family-monospace is-light mt-2 is-wordbreak">@message.errorMsg</div>
                         </td>
                         <td>
                             @if (@Configuration["features:enable_user_profile"] == null || @Configuration["features:enable_user_profile"].ToString().ToLower() == "true" && User.HasPermission("View Other User"))
