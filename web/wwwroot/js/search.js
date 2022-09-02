@@ -110,6 +110,8 @@
           '',
         );
     } else if (url) {
+      console.log('here');
+      console.log(url);
       s = url;
     } else {
       s = '/Search?Query=' + value;
