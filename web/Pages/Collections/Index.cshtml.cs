@@ -80,7 +80,7 @@ namespace Atlas_Web.Pages.Collections
                 cacheEntry =>
                 {
                     cacheEntry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20);
-                    return _context.Collections.ToListAsync();
+                    return _context.Collections.Include(x => x.StarredCollections).ToListAsync();
                 }
             );
 

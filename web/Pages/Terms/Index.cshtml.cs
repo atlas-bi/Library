@@ -44,7 +44,12 @@ namespace Atlas_Web.Pages.Terms
                     cacheEntry =>
                     {
                         cacheEntry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20);
-                        return _context.Terms.ToListAsync();
+                        return _context.Terms
+                            .Include(x => x.ApprovedByUser)
+                            .Include(x => x.UpdatedByUser)
+                            .Include(x => x.StarredTerms)
+                            .AsNoTracking()
+                            .ToListAsync();
                     }
                 );
 

@@ -480,7 +480,7 @@ namespace Atlas_Web.Migrations
                         .HasDatabaseName("initiativeid1");
 
                     b.HasIndex(new[] { "LastUpdateDate" }, "lastupdatedate")
-                        .HasDatabaseName("lastupdatedate1");
+                        .HasDatabaseName("lastupdatedate");
 
                     b.HasIndex(new[] { "LastUpdateUser" }, "lastupdateuser")
                         .HasDatabaseName("lastupdateuser1");
@@ -2184,7 +2184,7 @@ namespace Atlas_Web.Migrations
                     b.HasKey("UserFavoriteFolderId");
 
                     b.HasIndex(new[] { "UserId" }, "userid")
-                        .HasDatabaseName("userid2");
+                        .HasDatabaseName("userid3");
 
                     b.ToTable("UserFavoriteFolders", "app");
                 });
