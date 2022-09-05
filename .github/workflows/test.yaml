@@ -22,7 +22,7 @@ jobs:
         run: npm run lint
 
   integration_tests:
-    name: test
+    name: 'integration tests'
     runs-on: windows-latest
     env:
       config: 'Release'
@@ -82,7 +82,7 @@ jobs:
           verbose: true
 
   browser_tests:
-    name: test
+    name: 'browser tests'
     runs-on: windows-latest
     env:
       config: 'Release'
@@ -142,7 +142,7 @@ jobs:
           verbose: true
 
   function_tests:
-    name: test
+    name: 'function tests'
     runs-on: windows-latest
     env:
       config: 'Release'
