@@ -30,17 +30,17 @@ public class GroupsIndexTests : IClassFixture<TestDatabaseFixture>
 
     public TestDatabaseFixture Fixture { get; }
 
-    [Fact]
-    public async void OnGetAsync_with_id()
-    {
-        using var cache = Fixture.CreateCache();
-        var config = Fixture.CreateConfig();
-        using var context = Fixture.CreateContext();
+    // [Fact]
+    // public async void OnGetAsync_with_id()
+    // {
+    //     using var cache = Fixture.CreateCache();
+    //     var config = Fixture.CreateConfig();
+    //     using var context = Fixture.CreateContext();
 
-        var pageModel = new Atlas_Web.Pages.Groups.IndexModel(context, cache, config);
+    //     var pageModel = new Atlas_Web.Pages.Groups.IndexModel(context, cache, config);
 
-        await pageModel.OnGetAsync(1);
-    }
+    //     await pageModel.OnGetAsync(1);
+    // }
 
     // [Fact]
     // public async void OnGetActivity_with_id()
