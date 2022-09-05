@@ -9,7 +9,7 @@ using BrowserStack;
 using MartinCostello.BrowserStack.Automate;
 using Newtonsoft.Json.Linq;
 
-namespace web.Tests;
+namespace web.Tests.BrowserTests;
 
 public class BasicTests : IClassFixture<BrowserFactory<Program>>
 {

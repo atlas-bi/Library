@@ -7,7 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Atlas_Web.Models;
 
-namespace web.Tests
+namespace web.Tests.IntegrationTests
 {
     public class WebFactory<TStartup> : WebApplicationFactory<TStartup> where TStartup : class
     {
@@ -43,7 +43,7 @@ namespace web.Tests
 
                         try
                         {
-                            Utilities.InitializeDbForTests(db);
+                            web.Tests.FunctionTests.Utilities.InitializeDbForTests(db);
                             logger.LogWarning("Test database initialized");
                         }
                         catch (Exception ex)

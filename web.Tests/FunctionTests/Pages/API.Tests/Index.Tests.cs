@@ -1,6 +1,6 @@
 using Xunit;
 
-namespace web.Tests;
+namespace web.Tests.FunctionTests;
 
 public class APIIndexTests : IClassFixture<TestDatabaseFixture>
 {

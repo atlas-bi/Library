@@ -22,7 +22,7 @@ using Microsoft.Extensions.Caching.Memory;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace web.Tests;
+namespace web.Tests.FunctionTests;
 
 public class GroupsIndexTests : IClassFixture<TestDatabaseFixture>
 {

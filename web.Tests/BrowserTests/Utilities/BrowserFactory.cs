@@ -9,13 +9,13 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 
 using Microsoft.EntityFrameworkCore;
-
+using web.Tests.FunctionTests;
 using Microsoft.Extensions.Logging;
 using Atlas_Web.Models;
 
-namespace web.Tests
+namespace web.Tests.BrowserTests
 {
-    public class BrowserFactory<TStartup> : IDisposable where TStartup : class
+    public class BrowserFactory<TEntryPoint> : IDisposable where TEntryPoint : Program
     {
         private readonly IHost _host;
 
@@ -27,7 +27,7 @@ namespace web.Tests
                 .ConfigureWebHostDefaults(
                     webBuilder =>
                     {
-                        webBuilder.UseStartup<TStartup>();
+                        webBuilder.UseStartup<TEntryPoint>();
 
                         // needs to be relative to actual project root
                         // so static resources are picked up.
@@ -62,7 +62,7 @@ namespace web.Tests
                             var scopedServices = scope.ServiceProvider;
                             var db = scopedServices.GetRequiredService<Atlas_WebContext>();
                             var logger = scopedServices.GetRequiredService<
-                                ILogger<WebFactory<TStartup>>
+                                ILogger<BrowserFactory<TEntryPoint>>
                             >();
 
                             db.Database.EnsureDeleted();
