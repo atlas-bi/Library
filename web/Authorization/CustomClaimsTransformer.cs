@@ -131,7 +131,7 @@ public class CustomClaimsTransformer : IClaimsTransformation
 
     public async Task<User> GetUserData(string username)
     {
-        return await _context.Users
+        User me = await _context.Users
             .Include(x => x.UserRoleLinks)
             .ThenInclude(x => x.UserRoles)
             .ThenInclude(x => x.RolePermissionLinks)
@@ -144,6 +144,44 @@ public class CustomClaimsTransformer : IClaimsTransformation
             .ThenInclude(x => x.UserRoles)
             .ThenInclude(x => x.RolePermissionLinks)
             .ThenInclude(x => x.RolePermissions)
-            .SingleAsync(x => x.Username == username);
+            .SingleOrDefaultAsync(x => x.Username == username);
+
+        if (me == null)
+        {
+            await _context.AddAsync(
+                new User
+                {
+                    Username = username,
+                    FullnameCalc = "Guest",
+                    FirstnameCalc = "Guest"
+                }
+            );
+            await _context.SaveChangesAsync();
+
+            // if this is the first user in the db (new install), make them an admin.
+            if (await _context.Users.CountAsync() == 1)
+            {
+                await _context.AddAsync(
+                    new UserRoleLink
+                    {
+                        UserId = _context.Users.Where(x => x.Username == username).First().UserId,
+                        UserRolesId =
+                            _context.UserRoles
+                                .Where(x => x.Name == "Administrator")
+                                .First().UserRolesId
+                    }
+                );
+                await _context.SaveChangesAsync();
+            }
+
+            me = await _context.Users
+                .Include(x => x.UserRoleLinks)
+                .ThenInclude(x => x.UserRoles)
+                .ThenInclude(x => x.RolePermissionLinks)
+                .ThenInclude(x => x.RolePermissions)
+                .SingleAsync(x => x.Username == username);
+        }
+
+        return me;
     }
 }

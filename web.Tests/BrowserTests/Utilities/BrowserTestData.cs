@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using Xunit;
 
-namespace web.Tests;
+namespace web.Tests.BrowserTests;
 
 public sealed class BrowsersTestData : IEnumerable<object[]>
 {

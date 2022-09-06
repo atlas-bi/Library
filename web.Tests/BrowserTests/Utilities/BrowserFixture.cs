@@ -2,7 +2,7 @@ using Xunit.Abstractions;
 using System.Collections.Generic;
 using OpenQA.Selenium;
 
-namespace web.Tests;
+namespace web.Tests.BrowserTests;
 
 public class BrowserFixture
 {

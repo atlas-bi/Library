@@ -9,7 +9,7 @@ using Atlas_Web.Models;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 
-namespace web.Tests
+namespace web.Tests.FunctionTests
 {
     public static class Utilities
     {
@@ -31,7 +31,7 @@ namespace web.Tests
         {
             return new List<User>()
             {
-                new User() { Username = "default", UserId = 1 },
+                new User() { Username = "Default", UserId = 1 },
                 new User() { Username = "user 2", UserId = 2 }
             };
         }
