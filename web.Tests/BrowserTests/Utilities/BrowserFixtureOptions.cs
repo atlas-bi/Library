@@ -1,6 +1,6 @@
 using System;
 
-namespace web.Tests;
+namespace web.Tests.BrowserTests;
 
 public class BrowserFixtureOptions
 {

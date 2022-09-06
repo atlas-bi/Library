@@ -25,6 +25,7 @@ builder.Configuration.AddJsonFile(
     optional: true,
     reloadOnChange: true
 );
+builder.Configuration.AddEnvironmentVariables();
 
 builder.WebHost.CaptureStartupErrors(true);
 

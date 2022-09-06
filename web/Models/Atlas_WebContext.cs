@@ -1009,7 +1009,7 @@ namespace Atlas_Web.Models
                         .HasOne(d => d.ReportObject)
                         .WithMany(p => p.ReportObjectDocFragilityTags)
                         .HasForeignKey(d => d.ReportObjectId)
-                        .HasConstraintName("FK__ReportObj__Repor__72E3DB65");
+                        .HasConstraintName("FK__ReportObj__Repor__72E3DB67");
                 }
             );
 

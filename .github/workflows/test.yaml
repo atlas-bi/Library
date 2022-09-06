@@ -20,9 +20,48 @@ jobs:
 
       - name: lint
         run: npm run lint
+  install_test:
+    name: 'install test'
+    runs-on: windows-latest
+    env:
+      config: 'Release'
 
-  test:
-    name: test
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+
+      - name: setup dotnet
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: '6.0.x'
+      - name: setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16.x'
+      - name: install node deps
+        run: npm install
+      - name: node build
+        run: npm run build
+      - name: install dotnet ef
+        run: |
+          dotnet tool install --global dotnet-ef
+      - name: create settings file
+        run: |
+          cd web
+          echo '{"ConnectionStrings":' > appsettings.cust.json
+          echo '{"AtlasDatabase":' >> appsettings.cust.json
+          echo '"Server=(localdb)\\mssqllocaldb;Database=atlas_test;Trusted_Connection=True"' >> appsettings.cust.json
+          echo "}}" >> appsettings.cust.json
+          cat appsettings.cust.json
+      - name: install localdb
+        uses: potatoqualitee/mssqlsuite@v1.5.1
+        with:
+          install: localdb
+      - name: migrate
+        run: dotnet ef database update --project web/web.csproj
+
+  integration_tests:
+    name: 'integration tests'
     runs-on: windows-latest
     env:
       config: 'Release'
@@ -60,7 +99,127 @@ jobs:
 
       - name: test
         run: |
-          npm run test
+          npm run test:integrationTests
+        env:
+          BROWSERSTACK_ACCESS_KEY: ${{ secrets.BROWSERSTACK_ACCESS_KEY }}
+          BROWSERSTACK_USERNAME: ${{ secrets.BROWSERSTACK_USERNAME }}
+
+      - name: console coverage
+        if: always()
+        run: |
+          # generate a report just to show in the action history
+          reportgenerator -reports:coverage.cobertura.xml -targetdir:coverage/ -reporttypes:textSummary
+          # print out the report
+          cat coverage/Summary.txt
+
+      - name: upload cov
+        if: always()
+        uses: codecov/codecov-action@v3
+        with:
+          files: ./coverage.cobertura.xml
+          fail_ci_if_error: true
+          verbose: true
+
+  browser_tests:
+    name: 'browser tests'
+    runs-on: windows-latest
+    env:
+      config: 'Release'
+
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+
+      - name: setup dotnet
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: '6.0.x'
+      - name: setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16.x'
+      - name: setup java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'microsoft'
+          java-version: '17'
+      - name: install node deps
+        run: npm install
+      - name: node build
+        run: npm run build
+      - name: install dotnet deps
+        run: |
+          dotnet tool install -g coverlet.console
+          dotnet tool install -g dotnet-reportgenerator-globaltool
+          dotnet restore
+      - name: build
+        run: npm run dotnet:build
+      - name: start solr
+        run: ./web/solr/bin/solr start
+
+      - name: test
+        run: |
+          npm run test:browserTests
+        env:
+          BROWSERSTACK_ACCESS_KEY: ${{ secrets.BROWSERSTACK_ACCESS_KEY }}
+          BROWSERSTACK_USERNAME: ${{ secrets.BROWSERSTACK_USERNAME }}
+
+      - name: console coverage
+        if: always()
+        run: |
+          # generate a report just to show in the action history
+          reportgenerator -reports:coverage.cobertura.xml -targetdir:coverage/ -reporttypes:textSummary
+          # print out the report
+          cat coverage/Summary.txt
+
+      - name: upload cov
+        if: always()
+        uses: codecov/codecov-action@v3
+        with:
+          files: ./coverage.cobertura.xml
+          fail_ci_if_error: true
+          verbose: true
+
+  function_tests:
+    name: 'function tests'
+    runs-on: windows-latest
+    env:
+      config: 'Release'
+
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+
+      - name: setup dotnet
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: '6.0.x'
+      - name: setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16.x'
+      - name: setup java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'microsoft'
+          java-version: '17'
+      - name: install node deps
+        run: npm install
+      - name: node build
+        run: npm run build
+      - name: install dotnet deps
+        run: |
+          dotnet tool install -g coverlet.console
+          dotnet tool install -g dotnet-reportgenerator-globaltool
+          dotnet restore
+      - name: build
+        run: npm run dotnet:build
+      - name: start solr
+        run: ./web/solr/bin/solr start
+
+      - name: test
+        run: |
+          npm run test:functionTests
         env:
           BROWSERSTACK_ACCESS_KEY: ${{ secrets.BROWSERSTACK_ACCESS_KEY }}
           BROWSERSTACK_USERNAME: ${{ secrets.BROWSERSTACK_USERNAME }}

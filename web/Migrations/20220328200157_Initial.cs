@@ -3393,10 +3393,10 @@ namespace Atlas_Web.Migrations
             ");
 
             // users
-            migrationBuilder.Sql(
-            @"
-                insert into dbo.[User] (Username) values ('Default')
-            ");
+            // migrationBuilder.Sql(
+            // @"
+            //     insert into dbo.[User] (Username) values ('Default')
+            // ");
 
             // user roles
             migrationBuilder.Sql(
@@ -3410,10 +3410,10 @@ namespace Atlas_Web.Migrations
             ");
 
             // create admin user !! Ensure this user is removed from the admin role after running ETL !!
-            migrationBuilder.Sql(
-            @"
-                insert into app.UserRoleLinks (UserId, UserRolesId) values (1,1)
-            ");
+            // migrationBuilder.Sql(
+            // @"
+            //     insert into app.UserRoleLinks (UserId, UserRolesId) values (1,1)
+            // ");
 
             // create security points
             migrationBuilder.Sql(
