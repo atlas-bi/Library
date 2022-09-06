@@ -20,6 +20,37 @@ jobs:
 
       - name: lint
         run: npm run lint
+  install_test:
+    name: 'install test'
+    runs-on: windows-latest
+    env:
+      config: 'Release'
+
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+
+      - name: setup dotnet
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: '6.0.x'
+      - name: setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16.x'
+      - name: install node deps
+        run: npm install
+      - name: node build
+        run: npm run build
+      - name: install dotnet ef
+        run: |
+          dotnet tool install --global dotnet-ef
+      - name: create settings file
+        run: |
+          JSON="{\"ConnectionStrings\": {\"AtlasDatabase\": \"Server=(localdb)\\mssqllocaldb;Database=atlas_test;Trusted_Connection=True\"}}"
+          echo JSON > appsettings.cust.json
+      - name: migrate
+        run: dotnet ef database update --project web/web.csproj
 
   integration_tests:
     name: 'integration tests'
