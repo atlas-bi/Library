@@ -47,7 +47,7 @@ jobs:
           dotnet tool install --global dotnet-ef
       - name: create settings file
         run: |
-          JSON="{\"ConnectionStrings\": {\"AtlasDatabase\": \"Server=(localdb)\\mssqllocaldb;Database=atlas_test;Trusted_Connection=True\"}}"
+          JSON="{\"ConnectionStrings\": {\"AtlasDatabase\": \"Server=\(localdb\)\\mssqllocaldb;Database=atlas_test;Trusted_Connection=True\"}}"
           echo JSON > appsettings.cust.json
       - name: migrate
         run: dotnet ef database update --project web/web.csproj
