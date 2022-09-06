@@ -52,6 +52,10 @@ jobs:
           echo '"Server=(localdb)\\mssqllocaldb;Database=atlas_test;Trusted_Connection=True"' >> appsettings.cust.json
           echo "}}" >> appsettings.cust.json
           cat appsettings.cust.json
+      - name: install localdb
+        uses: potatoqualitee/mssqlsuite@v1.5.1
+        with:
+          install: localdb
       - name: migrate
         run: dotnet ef database update --project web/web.csproj
 
