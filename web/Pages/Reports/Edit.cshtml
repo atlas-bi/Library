@@ -261,7 +261,7 @@
                         <div class="control">
                             <div class="tags has-addons">
                                 <span class="tag is-link">@Model.Report.ReportObjectDocFragilityTags.ToList()[x].FragilityTag.Name</span>
-                                <input type="hidden" name="FragilityTags[@x].Id" value="@Model.Report.ReportObjectDocFragilityTags.ToList()[x].FragilityTagId" />
+                                <input type="hidden" name="FragilityTags[@x].FragilityTagId" value="@Model.Report.ReportObjectDocFragilityTags.ToList()[x].FragilityTagId" />
                                 <a class="tag is-delete"></a>
                             </div>
                         </div>
@@ -269,7 +269,7 @@
                 </div>
             <div class="field">
                 <div class="control is-relative is-expanded">
-                    <input class="input input-mini multiselect" placeholder="search for tags.." lookup-area="ro-fragility" data-name="FragilityTags[].Id" />
+                    <input class="input input-mini multiselect" placeholder="search for tags.." lookup-area="ro-fragility" data-name="FragilityTags[].FragilityTagId" />
                     <div class="mini">
                         <div class="mini-waiting">
                             <span class="icon">
@@ -290,7 +290,7 @@
                     <div class="control drg">
                         <div class="tags has-addons">
                             <span class="tag is-link drg-hdl">@Collections[x].DataProject.Name</span>
-                            <input type="hidden" name="Collections[@x].DataProjectId" value="@Collections[x].CollectionId" />
+                            <input type="hidden" name="Collections[@x].CollectionId" value="@Collections[x].CollectionId" />
                             <a class="tag is-delete" value="@Collections[x].CollectionId"></a>
                         </div>
                     </div>
@@ -298,7 +298,7 @@
             </div>
             <div class="field">
                 <div class="control is-relative is-expanded">
-                    <input class="input input-mini multiselect" placeholder="search for collections.." search-area="CollectionSearch" data-name="Collections[].DataProjectId"  />
+                    <input class="input input-mini multiselect" placeholder="search for collections.." search-area="CollectionSearch" data-name="Collections[].CollectionId"  />
                     <div class="mini">
                         <div class="mini-waiting">
                             <span class="icon">

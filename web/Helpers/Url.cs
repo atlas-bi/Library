@@ -79,8 +79,13 @@ namespace Atlas_Web.Helpers
             {
                 foreach (var p in parameters)
                 {
+                    // remove change page from query
+                    if (qs.ContainsKey("PageIndex"))
+                    {
+                        qs.Remove("PageIndex");
+                    }
                     // if we need an "uncheck" url, the pop the key.
-                    if (qs.ContainsKey(p.Key) && qs[p.Key] == p.Value || p.Key == "PageIndex")
+                    if (qs.ContainsKey(p.Key) && qs[p.Key] == p.Value)
                     {
                         qs.Remove(p.Key);
                     }
