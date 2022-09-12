@@ -83,7 +83,7 @@ namespace Atlas_Web.Pages.Initiatives
             _context.Attach(NewInitiative).State = EntityState.Modified;
             await _context.SaveChangesAsync();
 
-            // updated any linked data projects that were added and remove any that were delinked.
+            // updated any linked collections that were added and remove any that were delinked.
             var AddedCollections = await _context.Collections
                 .Where(d => Collections.Select(x => x.CollectionId).Contains(d.CollectionId))
                 .ToListAsync();

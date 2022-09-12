@@ -89,7 +89,7 @@ namespace Atlas_Web.Pages.Collections
 
         public async Task<ActionResult> OnGetDeleteCollection(int Id)
         {
-            if (!User.HasPermission("Delete Project"))
+            if (!User.HasPermission("Delete Collection"))
             {
                 return RedirectToPage(
                     "/Collections/Index",
@@ -102,7 +102,7 @@ namespace Atlas_Web.Pages.Collections
             }
 
             // delete report annotations and term annotations
-            // then delete project and save.
+            // then delete collection and save.
             _context.RemoveRange(_context.CollectionReports.Where(m => m.CollectionId == Id));
             await _context.SaveChangesAsync();
             _context.RemoveRange(_context.CollectionTerms.Where(m => m.CollectionId == Id));

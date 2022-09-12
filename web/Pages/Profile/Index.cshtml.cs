@@ -104,13 +104,14 @@ namespace Atlas_Web.Pages.Profile
 
             if (type == "report")
             {
-                run_data = run_data.Where(
-                    x => x.ReportObjectRunDataBridges.Any(y => y.ReportObjectId == id)
-                );
+                // run_data = run_data.Where(
+                //     x => x.ReportObjectRunDataBridges.Any(y => y.ReportObjectId == id)
+                // );
 
                 ViewData["ReportRuns"] = await (
                     from b in run_data
-                    join d in _context.ReportObjectRunDataBridges on b.RunDataId equals d.RunId
+                    from d in b.ReportObjectRunDataBridges
+                    where d.ReportObjectId == id
                     group new { b, d } by new { b.RunUserId, b.RunUser.FullnameCalc } into grp
                     orderby grp.Max(x => x.b.RunStartTime) descending
                     select new RunListData
