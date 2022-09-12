@@ -25,7 +25,7 @@ namespace Atlas_Web.Pages.Collections
 
         public IActionResult OnGet()
         {
-            if (!User.HasPermission("Create Project"))
+            if (!User.HasPermission("Create Collection"))
             {
                 return RedirectToPage(
                     "/Collections/Index",
@@ -38,7 +38,7 @@ namespace Atlas_Web.Pages.Collections
 
         public async Task<IActionResult> OnPostAsync()
         {
-            if (!User.HasPermission("Create Project"))
+            if (!User.HasPermission("Create Collection"))
             {
                 return RedirectToPage(
                     "/Collections/Index",
