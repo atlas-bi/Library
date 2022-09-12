@@ -79,7 +79,7 @@ namespace Atlas_Web.Pages.Initiatives
                 );
             }
 
-            // remove project links, contacts and remove initiative.
+            // remove collection links, contacts and remove initiative.
             (await _context.Collections.Where(d => d.InitiativeId == Id).ToListAsync()).ForEach(
                 x => x.InitiativeId = null
             );

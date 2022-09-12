@@ -113,7 +113,7 @@
     </div>
     @if(ViewBag.ProfileType == "report")
     {
-        <div class="tab-dta active" id="report-runs-@ViewBag.ProfileType-@ViewBag.ProfileId">
+        <div class="tab-dta" id="report-runs-@ViewBag.ProfileType-@ViewBag.ProfileId">
             <div data-ajax="yes" data-url="/Profile" data-parameters="handler=RunList&type=@ViewBag.ProfileType&id=@ViewBag.ProfileId@ViewBag.DefaultFilters"></div>
         </div>
     }

@@ -50,7 +50,7 @@
         </li>
     }
 
-    @if (User.HasPermission("Create Project"))
+    @if (User.HasPermission("Create Collection"))
     {
     <li>
         <a class="is-block has-tooltip-arrow has-tooltip-right" href="/Collections/New" data-tooltip="Create New Collections">
@@ -59,7 +59,7 @@
             </span>
         </a>
     </li>}
-    @if (User.HasPermission("Edit Project"))
+    @if (User.HasPermission("Edit Collection"))
     {
     <li>
         <a class="is-block has-tooltip-arrow has-tooltip-right" href="/Collections/Edit/?id=@Model.Collection.CollectionId" data-tooltip="Open Atlas Editor">
@@ -69,7 +69,7 @@
         </a>
     </li>}
 
-    @if (User.HasPermission("Delete Project"))
+    @if (User.HasPermission("Delete Collection"))
     {
     <li>
         <a class="is-block has-tooltip-arrow has-tooltip-right" data-tooltip="Delete this Collection" href="/Collections?handler=DeleteCollection&Id=@Model.Collection.CollectionId" onclick="return confirm('Are you sure you want to remove this?');">

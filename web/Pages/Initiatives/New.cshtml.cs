@@ -62,7 +62,7 @@ namespace Atlas_Web.Pages.Initiatives
             await _context.AddAsync(Initiative);
             await _context.SaveChangesAsync();
 
-            // updated any linked data projects that were added and remove any that were delinked.
+            // updated any linked collections that were added and remove any that were delinked.
             _cache.Remove("collections");
 
             var AddedCollections = await _context.Collections

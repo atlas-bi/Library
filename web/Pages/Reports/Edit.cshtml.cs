@@ -45,7 +45,7 @@ namespace Atlas_Web.Pages.Reports
 
         public async Task<IActionResult> OnGetAsync(int id)
         {
-            if (!User.HasPermission("Edit Project"))
+            if (!User.HasPermission("Edit Collection"))
             {
                 return RedirectToPage(
                     "/Reports/Index",
@@ -104,7 +104,7 @@ namespace Atlas_Web.Pages.Reports
 
         public async Task<IActionResult> OnPostAsync(int id)
         {
-            if (!User.HasPermission("Edit Project"))
+            if (!User.HasPermission("Edit Collection"))
             {
                 return RedirectToPage(
                     "/Reports/Index",
