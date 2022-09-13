@@ -27,7 +27,7 @@ ARG HOST
 ARG SOLR
 
 # create config
-RUN echo "{\"Demo\": true, \"solr\": {\"atlas_address\": \"$SOLR/solr/atlas\", \"atlas_lookups_address\": \"$SOLR/solr/atlas_lookups\"},\"ConnectionStrings\": {\"AtlasDatabase\": \"Server=$HOST;Database=atlas;User Id=$USER; Password=$PASSWORD; MultipleActiveResultSets=true;TrustServerCertificate=YES\"},  "links": {\"Status\": {\"Status\": \"https://status.atlas.bi/status/atlas\", \"Documentation\": \"https://atlas.bi\", \"Source Code\": \"https://github.com/atlas-bi/atlas-bi-library\" }}}" > appsettings.cust.json
+RUN echo "{\"Demo\": true, \"solr\": {\"atlas_address\": \"$SOLR/solr/atlas\", \"atlas_lookups_address\": \"$SOLR/solr/atlas_lookups\"},\"ConnectionStrings\": {\"AtlasDatabase\": \"Server=$HOST;Database=atlas;User Id=$USER; Password=$PASSWORD; MultipleActiveResultSets=true;TrustServerCertificate=YES\"},  \"footer\": {\"links\":{\"Status\": {\"Status\": \"https://status.atlas.bi/status/atlas\", \"Documentation\": \"https://atlas.bi\", \"Source Code\": \"https://github.com/atlas-bi/atlas-bi-library\" }},\"subtitle\": \"Atlas was created by the Riverside Healthcare Analytics team.\"}}" > appsettings.cust.json
 
 # migrate
 RUN dotnet tool install --global dotnet-ef \
