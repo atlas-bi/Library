@@ -68,6 +68,7 @@ namespace Atlas_Web.Pages.Terms
             NewTerm.LastUpdatedDateTime = DateTime.Now;
             NewTerm.Name = Term.Name;
             NewTerm.TechnicalDefinition = Term.TechnicalDefinition;
+            NewTerm.Summary = Term.Summary;
 
             if (NewTerm.ApprovedYn != "Y" && Term.ApprovedYn == "Y")
             {

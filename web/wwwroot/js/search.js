@@ -200,7 +200,7 @@
       element.remove();
     }
 
-    d.title = 'Search: ' + value + ' | Atlas BI Library';
+    d.title = 'Search: ' + value + ' | Genesis Analytics';
 
     history.replaceState(
       {
