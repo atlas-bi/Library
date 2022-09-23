@@ -150,7 +150,6 @@ builder.Services.AddWebOptimizer(
         );
 
         pipeline.AddJavaScriptBundle(
-            "/js/editor.min.js",
             "lib/codemirror/codemirror.js",
             "lib/codemirror/autorefresh.js",
             "lib/codemirror/overlay.js",

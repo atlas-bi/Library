@@ -1,0 +1,45 @@
+name: Lighthouse
+on: [push]
+jobs:
+  lhci:
+    name: Lighthouse
+    runs-on: windows-latest
+    env:
+      config: 'Release'
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: setup dotnet
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: '6.0.x'
+      - name: setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16.x'
+      - name: install node deps
+        run: npm install
+      - name: node build
+        run: npm run build
+      - name: create settings file
+        run: |
+          cd web
+          echo '{"ConnectionStrings":' > appsettings.cust.json
+          echo '{"AtlasDatabase":' >> appsettings.cust.json
+          echo '"Server=(localdb)\\mssqllocaldb;Database=atlas_test;Trusted_Connection=True"' >> appsettings.cust.json
+          echo "}}" >> appsettings.cust.json
+          cat appsettings.cust.json
+      - name: install localdb
+        uses: potatoqualitee/mssqlsuite@v1.5.1
+        with:
+          install: localdb
+      - name: migrate
+        run: dotnet ef database update --project web/web.csproj
+      - name: run Lighthouse CI
+        run: |
+          npm install -g @lhci/cli@0.9.x
+          lhci autorun
+        env:
+          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+          LHCI_TOKEN: ${{ secrets.LHCI_TOKEN }}
