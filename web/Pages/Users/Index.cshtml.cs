@@ -315,7 +315,7 @@ namespace Atlas_Web.Pages.Users
             HttpContext.Response.Headers.Add("Pragma", "no-cache"); // HTTP 1.0.
             HttpContext.Response.Headers.Add("Expires", "0"); // Proxies.
 
-            ViewData["SharedToMe"] = (
+            var sharedToMeList = (
                 from o in _context.SharedItems
                 where o.SharedToUserId == User.GetUserId()
                 orderby o.ShareDate descending
@@ -331,6 +331,8 @@ namespace Atlas_Web.Pages.Users
                     Url = o.Url
                 }
             ).ToList();
+
+            ViewData["SharedToMe"] = sharedToMeList.DistinctBy(t => t.Name).ToList();
             ViewData["SharedFromMe"] = (
                 from o in _context.SharedItems
                 where o.SharedFromUserId == User.GetUserId()
