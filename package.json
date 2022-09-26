@@ -52,7 +52,7 @@
     "proxy-polyfill": "0.3.2",
     "regenerator-runtime": "0.13.9",
     "rollup-stream-gulp": "0.0.3",
-    "sass": "1.54.9",
+    "sass": "1.55.0",
     "semantic-release": "19.0.5",
     "stylelint": "14.12.0",
     "stylelint-config-prettier-scss": "0.0.1",
@@ -157,5 +157,5 @@
       "no-new": "warn"
     }
   },
-  "version": "3.10.10"
+  "version": "3.10.11"
 }
