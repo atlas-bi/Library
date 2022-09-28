@@ -46,11 +46,11 @@
     <script src="/js/purify.min.js"></script>
     <script>
         __jsnlog_configure = function (JL) {
-        JL.setOptions({
-            "defaultAjaxUrl":"/analytics/trace"
-        })
+            JL.setOptions({
+                "defaultAjaxUrl": "/analytics/trace"
+            })
         };
-        try { __jsnlog_configure(JL); } catch(e) {};
+        try { __jsnlog_configure(JL); } catch (e) { };
     </script>
 </head>
 <body class="is-flex is-flex-direction-column has-background-white">
@@ -100,14 +100,14 @@
             <div class="navbar-menu is-flex-grow-0" id="atlas-main-nav">
                 <div class="navbar-end">
                     @* @{ var r = new Random();
-                        var randomNumber = r.Next(); }
-                    <a class="navbar-item" href="/#mail" aria-label="mail">
-                        <span class="icon is-medium is-relative">
-                            <i class="far fa-lg fa-envelope"></i>
-                            <span title="mail count" class="badge" id="nav_unread_message_count">0</span>
-                        </span>
-                        <span class="hide-desktop">Mail</span>
-                    </a> *@
+                            var randomNumber = r.Next(); }
+                        <a class="navbar-item" href="/#mail" aria-label="mail">
+                            <span class="icon is-medium is-relative">
+                                <i class="far fa-lg fa-envelope"></i>
+                                <span title="mail count" class="badge" id="nav_unread_message_count">0</span>
+                            </span>
+                            <span class="hide-desktop">Mail</span>
+                        </a> *@
 
                     @if (User.HasPermission("Edit User Permissions") || User.HasPermission("Edit Role Permissions") || User.HasPermission("Create Parameters") || User.HasPermission("Delete Parameters"))
                     {
@@ -176,11 +176,11 @@
                         <div class="navbar-item has-dropdown is-hoverable is-boxed">
                             <div class="navbar-link is-arrowless">
                                 <span class="icon is-medium">
-                                <i class="fas fa-lg fa-user"></i>
-                            </span>
-                            <span class="icon is-small">
-                                <i class="fa-solid fa-caret-down"></i>
-                            </span>
+                                    <i class="fas fa-lg fa-user"></i>
+                                </span>
+                                <span class="icon is-small">
+                                    <i class="fa-solid fa-caret-down"></i>
+                                </span>
                             </div>
                             <div class="navbar-dropdown">
                                 <a class="navbar-item" href="/users">Your profile</a>
@@ -197,9 +197,7 @@
                             <div class="field toggle">
                                 <input type="hidden" id="enable-administrator" value="@User.HasAdminEnabled()">
                                 <input id="switch-enable-administrator" type="checkbox" name="switch-enable-administrator" class="switch is-rounded is-info"
-                                @if(@User.HasAdminEnabled() == "Y"){
-                                    <text>checked="checked"</text>
-                                } >
+                                       @if (@User.HasAdminEnabled() == "Y") { <text> checked="checked" </text> }>
                                 <label class="py-0" for="switch-enable-administrator"><strong>Admin</strong></label>
                             </div>
                         </div>
