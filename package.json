@@ -1,17 +1,17 @@
 {
   "description": "Atlas BI Library",
   "devDependencies": {
-    "@babel/preset-env": "7.19.1",
+    "@babel/preset-env": "7.19.4",
     "@creativebulma/bulma-badge": "github:christopherpickering/bulma-badge",
     "@creativebulma/bulma-tooltip": "1.2.0",
-    "@fontsource/inter": "4.5.12",
-    "@fontsource/rasa": "4.5.12",
+    "@fontsource/inter": "4.5.14",
+    "@fontsource/rasa": "4.5.13",
     "@fontsource/source-code-pro": "4.5.12",
     "@fortawesome/fontawesome-free": "6.2.0",
-    "@rollup/plugin-babel": "5.3.1",
-    "@rollup/plugin-commonjs": "22.0.2",
-    "@rollup/plugin-json": "4.1.0",
-    "@rollup/plugin-node-resolve": "14.1.0",
+    "@rollup/plugin-babel": "6.0.0",
+    "@rollup/plugin-commonjs": "23.0.0",
+    "@rollup/plugin-json": "5.0.0",
+    "@rollup/plugin-node-resolve": "15.0.0",
     "@semantic-release/changelog": "6.0.1",
     "@semantic-release/commit-analyzer": "9.0.2",
     "@semantic-release/exec": "6.0.3",
@@ -29,7 +29,7 @@
     "date-fns": "2.29.3",
     "dompurify": "2.4.0",
     "es6-symbol": "3.1.3",
-    "eslint": "8.24.0",
+    "eslint": "8.25.0",
     "fancy-log": "2.0.0",
     "focus-within": "3.0.2",
     "fontawesome-subset": "4.3.1",
@@ -47,18 +47,18 @@
     "jsnlog": "2.30.0",
     "lint-staged": "13.0.3",
     "open": "8.4.0",
-    "postcss": "8.4.16",
+    "postcss": "8.4.18",
     "prettier": "2.7.1",
     "proxy-polyfill": "0.3.2",
-    "regenerator-runtime": "0.13.9",
+    "regenerator-runtime": "0.13.10",
     "rollup-stream-gulp": "0.0.3",
     "sass": "1.55.0",
     "semantic-release": "19.0.5",
-    "stylelint": "14.12.1",
+    "stylelint": "14.14.0",
     "stylelint-config-prettier-scss": "0.0.1",
     "stylelint-config-standard-scss": "5.0.0",
     "stylelint-scss": "4.3.0",
-    "xo": "0.52.3"
+    "xo": "0.52.4"
   },
   "homepage": "https://demo.atlas.bi",
   "license": "AGPL-3.0-or-later",
@@ -157,5 +157,5 @@
       "no-new": "warn"
     }
   },
-  "version": "3.10.12"
+  "version": "3.10.8-alpha.1"
 }

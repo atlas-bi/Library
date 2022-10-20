@@ -150,6 +150,7 @@ builder.Services.AddWebOptimizer(
         );
 
         pipeline.AddJavaScriptBundle(
+            "/js/editor.min.js",
             "lib/codemirror/codemirror.js",
             "lib/codemirror/autorefresh.js",
             "lib/codemirror/overlay.js",
@@ -160,7 +161,7 @@ builder.Services.AddWebOptimizer(
             "lib/codemirror/shell.js",
             "lib/codemirror/sql.js",
             "lib/codemirror/spellcheck.js",
-            "/js/editor.min.js"
+            "js/editor.min.js"
         );
     }
 );
