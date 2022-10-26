@@ -133,7 +133,7 @@ Regards!</textarea>
 
 <!-- attachment run modal -->
 
-@if (Model.ReportObjectAttachments.Any()){
+@if (Model.ReportObjectAttachments.Any() && !Context.IsAgl()){
     <div class="modal" id="report-run-@Model.ReportObjectId">
         <div class="modal-background"></div>
         <div class="modal-card box">
@@ -146,8 +146,25 @@ Regards!</textarea>
                     <ul>
                         @foreach (var r in Model.ReportObjectAttachments.OrderByDescending(x => x.CreationDate).ToList())
                         {
-                            var url = Context.IsHyperspace() ? "EpicAct:AC_RW_WEB_BROWSER,LaunchOptions:2,runparams:" + Context.Request.Scheme + "://" + Context.Request.Host.Value+"/Data/File?handler=CrystalRun&id="+r.ReportObjectAttachmentId+"|FormCaption="+r.Name+"|ActivityName="+Model.Name : "/Data/File?handler=CrystalRun&id="+r.ReportObjectAttachmentId;
-                        <li><a href="@url" target="_blank">@r.Name</a><span> ·  @r.CreationDate</span></li>
+                            var url = "/Data/File?handler=CrystalRun&id="+r.ReportObjectAttachmentId;
+                            var dataUrl = url;
+                            // no agl activity for pdf's
+                            if(Context.IsHyperspace()){
+                                url = "EpicAct:AC_RW_WEB_BROWSER,LaunchOptions:2,runparams:" + Context.Request.Scheme + "://" + Context.Request.Host.Value+"/Data/File?handler=CrystalRun&id="+r.ReportObjectAttachmentId+"|FormCaption="+r.Name+"|ActivityName="+Model.Name;
+                                dataUrl = url;
+                            }
+                            <li>
+                                <a href="@url"
+                                target="_blank"
+                                data-id="@Model.EpicRecordId"
+                                data-name="@Model.DisplayName"
+                                data-url="@dataUrl"
+                                data-templateid="@Model.EpicReportTemplateId"
+                                data-ini="@Model.EpicMasterFile"
+                                data-hyperspace="@Model.ReportObjectDoc?.EnabledForHyperspace">
+                                @r.Name
+                                </a><span> ·  @r.CreationDate</span>
+                            </li>
                         }
                     </ul>
                 </p>

@@ -28,7 +28,7 @@
                         <td>
                             @if (t.RecordViewerUrl != null && t.RecordViewerUrl != "")
                             {
-                                <a href="@t.RecordViewerUrl">@t.Epic</a>
+                                <a data-agl="AR_ITM_RECORDVIEWER" data-ini="@t.EpicMasterFile" data-id="@t.EpicRecordId" href="@t.RecordViewerUrl">@t.Epic</a>
                             } else
                             {
                                 @t.Epic
