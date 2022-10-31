@@ -11,20 +11,25 @@
 # http://localhost:1234
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0-alpine AS build
+ENV DOTNET_CLI_TELEMETRY_OPTOUT=1
+
 WORKDIR /app
+
 COPY web.sln .
 COPY ["./web/web.csproj", "./web/"]
 RUN dotnet restore ./web/web.csproj
 
 COPY ["./web/.", "./web/"]
+
 WORKDIR "/app/web/"
+
 # add analytics
 RUN  sed -i -e 's/<\/body>/<script async defer data-website-id="fb4377bf-3d8a-40f7-97f9-c8e57e11c953" src="https:\/\/analytics.atlas.bi\/umami.js"><\/script><\/body>/g' Pages/Shared/_Layout.cshtml
 
-ARG USER
-ARG PASSWORD
-ARG HOST
-ARG SOLR
+ARG USER \
+    PASSWORD \
+    HOST \
+    SOLR
 
 # create config
 RUN echo "{\"Demo\": true, \"solr\": {\"atlas_address\": \"$SOLR/solr/atlas\", \"atlas_lookups_address\": \"$SOLR/solr/atlas_lookups\"},\"ConnectionStrings\": {\"AtlasDatabase\": \"Server=$HOST;Database=atlas;User Id=$USER; Password=$PASSWORD; MultipleActiveResultSets=true;TrustServerCertificate=YES\"},  \"footer\": {\"links\":{\"Status\": {\"Status\": \"https://status.atlas.bi/status/atlas\", \"Documentation\": \"https://atlas.bi\", \"Source Code\": \"https://github.com/atlas-bi/atlas-bi-library\" }},\"subtitle\": \"Atlas was created by the Riverside Healthcare Analytics team.\"}}" > appsettings.cust.json
@@ -39,6 +44,7 @@ RUN  export PATH="$PATH:/root/.dotnet/tools" && dotnet ef database update --proj
 RUN dotnet publish -c Release -o out web.csproj
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0-alpine
+ENV DOTNET_CLI_TELEMETRY_OPTOUT=1
 WORKDIR /app
 COPY --from=build ["/app/web/out", "./"]
 
