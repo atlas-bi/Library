@@ -1,7 +1,7 @@
 {
   "description": "Atlas BI Library",
   "devDependencies": {
-    "@babel/preset-env": "7.19.4",
+    "@babel/preset-env": "7.20.2",
     "@creativebulma/bulma-badge": "github:christopherpickering/bulma-badge",
     "@creativebulma/bulma-tooltip": "1.2.0",
     "@fontsource/inter": "4.5.14",
@@ -52,7 +52,7 @@
     "proxy-polyfill": "0.3.2",
     "regenerator-runtime": "0.13.10",
     "rollup-stream-gulp": "0.0.3",
-    "sass": "1.55.0",
+    "sass": "1.56.0",
     "semantic-release": "19.0.5",
     "stylelint": "14.14.0",
     "stylelint-config-prettier-scss": "0.0.1",
@@ -157,5 +157,5 @@
       "no-new": "warn"
     }
   },
-  "version": "3.10.24"
+  "version": "3.10.25"
 }
