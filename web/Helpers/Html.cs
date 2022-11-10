@@ -3,7 +3,7 @@ using Markdig;
 using Microsoft.AspNetCore.Mvc.Razor;
 using WebOptimizer;
 using Slugify;
-using Ganss.XSS;
+using Ganss.Xss;
 using WebMarkupMin.Core;
 
 namespace Atlas_Web.Helpers
