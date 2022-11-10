@@ -33,6 +33,11 @@ gulp.task(
       gulp.series('styles', 'dotnet:run'),
     );
 
+    // hyperspace
+    gulp.watch(
+      ['web/wwwroot/js/hyperspace.js'],
+      gulp.series(gulp.parallel('js:hyperspace', 'styles'), 'dotnet:run'),
+    );
     // Utility
     gulp.watch(
       [

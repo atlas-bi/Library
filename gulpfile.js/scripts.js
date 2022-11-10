@@ -44,6 +44,15 @@ gulp.task('js:polyfill', function () {
     .pipe(gulp.dest('web/wwwroot/js/'));
 });
 
+gulp.task('js:hyperspace', function () {
+  return gulp
+    .src(['web/wwwroot/js/hyperspace.js'])
+    .pipe(rollup(rollupConfig))
+    .pipe(concat('hyperspace.min.js'))
+    .pipe(uglify(uglifyConfig))
+    .pipe(gulp.dest('web/wwwroot/js/'));
+});
+
 gulp.task('js:utility', function () {
   return gulp
     .src([
@@ -56,7 +65,6 @@ gulp.task('js:utility', function () {
       'web/wwwroot/js/utility/modal.js',
       'web/wwwroot/js/utility/lazyload.js',
       'web/wwwroot/js/utility/crumbs.js',
-      'web/wwwroot/js/hyperspace.js',
       'web/wwwroot/js/favorites.js',
       'web/wwwroot/js/ajax-content.js',
       'web/wwwroot/js/notification.js',
@@ -171,6 +179,7 @@ gulp.task('scripts', (cb) => {
       'js:highlighter',
       'js:profile',
       'js:userSettings',
+      'js:hyperspace',
     ],
     cb,
   );

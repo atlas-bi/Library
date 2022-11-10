@@ -5,11 +5,16 @@
 <ul>
     @{
         string RunReportUrl = Model.Report.RunReportUrl(Context, Configuration, (await Authorization.AuthorizeAsync(Context.User,Model.Report, "ReportRunPolicy")).Succeeded);
+        string EditReportUrl = Model.Report.EditReportUrl(Context,Configuration);
+        string ManageReportUrl = Model.Report.ManageReportUrl(Context, Configuration);
     }
     @if (Model.Report.ReportObjectAttachments.Any())
     {
         <li>
-            <a class="is-block has-tooltip-arrow has-tooltip-right js-modal-trigger"  data-target="report-run-@Model.Report.ReportObjectId" data-tooltip="Run Report" data-runurl="@RunReportUrl">
+            <a class="is-block has-tooltip-arrow has-tooltip-right js-modal-trigger"
+               data-target="report-run-@Model.Report.ReportObjectId"
+               data-tooltip="Run Report"
+               data-runurl="@RunReportUrl">
                 <span class="icon is-large has-text-success">
                     <i class="far fa-2_3x fa-circle-play"></i>
                 </span>
@@ -20,7 +25,16 @@
     else if (!string.IsNullOrEmpty(RunReportUrl))
     {
         <li>
-            <a class="is-block has-tooltip-arrow has-tooltip-right" target="_blank" data-tooltip="Run Report" href="@RunReportUrl">
+            <a class="is-block has-tooltip-arrow has-tooltip-right"
+               target="_blank"
+               data-tooltip="Run Report"
+               href="@RunReportUrl"
+               data-id="@Model.Report.EpicRecordId"
+               data-name="@Model.Report.DisplayName"
+               data-url="@Model.Report.ReportObjectUrl"
+               data-templateid="@Model.Report.EpicReportTemplateId"
+               data-ini="@Model.Report.EpicMasterFile"
+               data-hyperspace="@Model.Report.ReportObjectDoc?.EnabledForHyperspace">
                 <span class="icon is-large has-text-success">
                     <i class="far fa-2_3x fa-circle-play"></i>
                 </span>
@@ -132,10 +146,19 @@
             </a>
         </li>
     }
-    @if (User.HasPermission("Open In Editor") && !string.IsNullOrEmpty(Model.Report.EditReportUrl(Context,Configuration)))
+    @if (User.HasPermission("Open In Editor") && !string.IsNullOrEmpty(EditReportUrl))
     {
         <li>
-            <a class="is-block has-tooltip-arrow has-tooltip-right" data-tooltip="Open Report Editor" target="_blank" href="@Model.Report.EditReportUrl(Context,Configuration)">
+            <a class="is-block has-tooltip-arrow has-tooltip-right"
+               data-tooltip="Open Report Editor"
+               target="_blank"
+               href="@EditReportUrl"
+               data-id="@Model.Report.EpicRecordId"
+               data-name="@Model.Report.DisplayName"
+               data-url="@Model.Report.ReportObjectUrl"
+               data-templateid="@Model.Report.EpicReportTemplateId"
+               data-ini="@Model.Report.EpicMasterFile"
+               data-hyperspace="@Model.Report.ReportObjectDoc?.EnabledForHyperspace">
                 <span class="icon has-text-grey is-large ">
                     <i class="fas fa-lg fa-arrow-up-right-from-square"></i>
                 </span>
@@ -143,10 +166,14 @@
         </li>
     }
 
-    @if (User.HasPermission("Open In Editor") && Model.Report.ManageReportUrl(Context, Configuration) != null)
+    @if (User.HasPermission("Open In Editor") && !string.IsNullOrEmpty(ManageReportUrl))
     {
         <li>
-            <a class="is-block has-tooltip-arrow has-tooltip-right" data-tooltip="Manage Report" rel="noopener" target="_blank" href="@Model.Report.ManageReportUrl(Context, Configuration)">
+            <a class="is-block has-tooltip-arrow has-tooltip-right"
+               data-tooltip="Manage Report"
+               rel="noopener"
+               target="_blank"
+               href="@ManageReportUrl">
                 <span class="icon has-text-grey is-large ">
                     <i class="fas fa-lg fa-gears"></i>
                 </span>

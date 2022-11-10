@@ -19,3 +19,4 @@ web.Tests/bin/*
 web.Tests/obj/*
 web.Tests/*
 out/
+.lighthouseci/*
