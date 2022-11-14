@@ -16,4 +16,16 @@ public static class ContextExtensions
             return false;
         }
     }
+
+    public static bool IsAgl(this HttpContext context)
+    {
+        if (context.Request.Cookies["AGL"] == "1" || context.Request.Query["AGL"] == "1")
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
 }

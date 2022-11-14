@@ -202,7 +202,7 @@
               // Custom range
 
               break;
-            case '2':
+            case '2': // eslint-disable-line unicorn/no-useless-switch-case
             default:
               // Last 24 hours
 

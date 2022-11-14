@@ -13,15 +13,8 @@
     <link rel="stylesheet" href="/css/site.min.css" />
     <style type="text/css" minify>@Cache.Get("global_css")</style>
 
-    <link rel="preload" href="/js/purify.min.js" as="script" />
-    <link rel="preload" href="/js/polyfill.min.js" as="script" />
-    <link rel="preload" href="/js/shared.min.js" as="script" />
-    <link rel="preload" href="/js/alive.min.js" as="script" />
-    <link rel="preload" href="/js/search.min.js" as="script" />
-    <link rel="preload" href="/js/utility.min.js" as="script" />
-    <link rel="preload" href="/js/main.min.js" as="script" />
-    <link rel="preload" href="/js/profile.min.js" as="script" />
-    <link rel="preload" href="/js/editor.min.js" as="script" />
+
+
 
     @RenderSection("css", required: false)
 
@@ -34,6 +27,20 @@
         <title>Home | Atlas BI Library</title>
     }
 
+    <script src="/js/polyfill.min.js"></script>
+    <script src="/js/purify.min.js"></script>
+    <script src="/js/shared.min.js"></script>
+    <script src="/js/hyperspace.min.js"></script>
+
+    <link rel="preload" href="/js/purify.min.js" as="script" />
+    <link rel="preload" href="/js/polyfill.min.js" as="script" />
+    <link rel="preload" href="/js/alive.min.js" as="script" />
+    <link rel="preload" href="/js/search.min.js" as="script" />
+    <link rel="preload" href="/js/utility.min.js" as="script" />
+    <link rel="preload" href="/js/main.min.js" as="script" />
+    <link rel="preload" href="/js/profile.min.js" as="script" />
+    <link rel="preload" href="/js/editor.min.js" as="script" />
+
     <link rel="preload" href="@Helpers.UrlHelpers.FontHash("/font/fontawesome/webfonts/fa-regular-400.woff2", Cache)" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="@Helpers.UrlHelpers.FontHash("/font/fontawesome/webfonts/fa-solid-900.woff2", Cache)" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="@Helpers.UrlHelpers.FontHash("/font/rasa/files/rasa-latin-600-normal.woff2", Cache)" as="font" type="font/woff2" crossorigin />
@@ -42,8 +49,7 @@
     <link rel="preload" href="@Helpers.UrlHelpers.FontHash("/font/inter/files/inter-latin-600-normal.woff2", Cache)" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="@Helpers.UrlHelpers.FontHash("/font/inter/files/inter-latin-700-normal.woff2", Cache)" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="@Helpers.UrlHelpers.FontHash("/font/source-code-pro/files/source-code-pro-latin-400-normal.woff2", Cache)" as="font" type="font/woff2" crossorigin />
-    <script src="/js/polyfill.min.js"></script>
-    <script src="/js/purify.min.js"></script>
+
     <script>
         __jsnlog_configure = function (JL) {
         JL.setOptions({
@@ -280,7 +286,7 @@
     <div class="mail-notification-container"></div>
     <partial name="_Messagebox" />
 
-    <script src="/js/shared.min.js"></script>
+
     <script src="/js/alive.min.js"></script>
     <script src="/js/search.min.js" defer></script>
     <script src="/js/utility.min.js" defer></script>

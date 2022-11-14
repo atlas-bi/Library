@@ -406,6 +406,12 @@ button.is-ghost:not(.button) {
   border: 1px solid rgb(255 215 0);
 }
 
+.favorites-folder,
+.favorites-show-unsorted,
+.favorites-show-all {
+  border: 1px solid transparent;
+}
+
 .is-hover {
   border: 1px solid $warning;
 }
@@ -421,7 +427,9 @@ button.is-ghost:not(.button) {
   right: -14px;
 }
 
-.favorites-folder.is-active {
+.favorites-folder.is-active,
+.favorites-show-unsorted.is-active,
+.favorites-show-all.is-active {
   font-weight: bold;
 }
 
