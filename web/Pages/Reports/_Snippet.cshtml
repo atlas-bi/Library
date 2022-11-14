@@ -2,14 +2,15 @@
 @model Atlas_Web.Models.ReportObject
 @inject IConfiguration Configuration
 @inject IAuthorizationService Authorization
-@* @inject Atlas_Web.Models.Atlas_WebContext Context *@
 
 <div class="card">
     <div class="card-header">
         <div class="card-header-title py-2 is-justify-content-space-between">
             <span class="is-flex is-align-items-center">
-
-                @if (Model.ReportObjectAttachments.Count() > 0)
+                @{
+                    string RunReportUrl = Model.RunReportUrl(Context, Configuration, (await Authorization.AuthorizeAsync(User,Model, "ReportRunPolicy")).Succeeded);
+                }
+                @if (Model.ReportObjectAttachments.Count() > 0 && !Context.IsAgl())
                 {
                     <a aria-label="run" class="is-flex mr-2 has-tooltip-arrow has-tooltip-right js-modal-trigger" data-target="report-run-@Model.ReportObjectId" data-tooltip="Run Report" data-runurl="@Model.RunReportUrl(Context,Configuration, (await Authorization.AuthorizeAsync(User,Model, "ReportRunPolicy")).Succeeded)">
                         <span class="icon is-large has-text-success">
@@ -17,9 +18,19 @@
                         </span>
                     </a>
                 }
-                else if (!string.IsNullOrEmpty(Model.RunReportUrl(Context,Configuration, (await Authorization.AuthorizeAsync(User,Model, "ReportRunPolicy")).Succeeded)))
+                else if (!string.IsNullOrEmpty(RunReportUrl))
                 {
-                    <a aria-label="run" class="is-flex mr-2 has-tooltip-arrow has-tooltip-right" target="_blank" data-tooltip="Run Report" href="@Model.RunReportUrl(Context,Configuration, (await Authorization.AuthorizeAsync(User,Model, "ReportRunPolicy")).Succeeded)">
+                    <a aria-label="run"
+                       class="is-flex mr-2 has-tooltip-arrow has-tooltip-right"
+                       target="_blank"
+                       data-tooltip="Run Report"
+                       href="@RunReportUrl"
+                       data-id="@Model.EpicRecordId"
+                       data-name="@Model.DisplayName"
+                       data-url="@Model.ReportObjectUrl"
+                       data-templateid="@Model.EpicReportTemplateId"
+                       data-ini="@Model.EpicMasterFile"
+                       data-hyperspace="@Model.ReportObjectDoc?.EnabledForHyperspace">
                         <span class="icon is-large has-text-success">
                             <i class="far fa-2_3x fa-circle-play"></i>
                         </span>
@@ -165,7 +176,15 @@
         </a>
         @if (!string.IsNullOrEmpty(Model.EditReportUrl(Context,Configuration)) && User.HasPermission("Open In Editor"))
         {
-            <a class="card-footer-item px-0" target="_blank" href="@Model.EditReportUrl(Context,Configuration)">
+            <a class="card-footer-item px-0"
+               target="_blank"
+               href="@Model.EditReportUrl(Context,Configuration)"
+               data-id="@Model.EpicRecordId"
+               data-name="@Model.DisplayName"
+               data-url="@Model.ReportObjectUrl"
+               data-templateid="@Model.EpicReportTemplateId"
+               data-ini="@Model.EpicMasterFile"
+               data-hyperspace="@Model.ReportObjectDoc?.EnabledForHyperspace">
                 <span class="icon-text">
                     <span class="icon">
                         <i class="fas fa-pen-to-square"></i>

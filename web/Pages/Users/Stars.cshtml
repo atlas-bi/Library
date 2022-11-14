@@ -91,10 +91,11 @@
         <div class="columns">
            @{
                var total = Model.Reports.Count() + Model.Collections.Count() + Model.Initiatives.Count() + Model.Terms.Count() + Model.Users.Count() + Model.Searches.Count() + Model.Groups.Count();
+               var unsorted_total = Model.Reports.Count(x => x.Folderid== null) + Model.Collections.Count(x => x.Folderid== null) + Model.Initiatives.Count(x => x.Folderid== null) + Model.Terms.Count(x => x.Folderid== null) + Model.Users.Count(x => x.Folderid== null) + Model.Searches.Count(x => x.Folderid== null) + Model.Groups.Count(x => x.Folderid== null);
             }
             <div class="column is-one-quarter is-sticky is-align-self-flex-start">
                 <div class="is-relative favorite-folders @if(ViewBag.IsMe){<text>reorder</text>}">
-                    <div class="box active favorites-show-all is-clickable is-relative" data-folderid="0">
+                    <div class="box is-active favorites-show-all is-clickable is-relative" data-folderid="0">
                         <div class="icon-text">
                             <span class="icon mr-5 is-relative">
                                 <i class="fas fa-folder-open fa-lg"></i>
@@ -130,6 +131,21 @@
                             </script>
                         }
                     </div>
+
+                    @if(Model.Folders.Count > 0 && unsorted_total > 0){
+
+
+
+                        <div class="box favorites-show-unsorted is-clickable is-relative" data-folderid="">
+                            <div class="icon-text">
+                                <span class="icon mr-5 is-relative">
+                                    <i class="fas fa-folder fa-lg"></i>
+                                    <span class="tag fav-count is-primary is-rounded">@unsorted_total</span>
+                                </span>
+                                <span>Unsorted</span>
+                            </div>
+                        </div>
+                    }
 
                     @foreach (var f in Model.Folders.OrderBy(x => x.FolderRank).ToList())
                     {

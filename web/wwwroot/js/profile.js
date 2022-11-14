@@ -282,7 +282,7 @@
                 differenceInSeconds(endOfDay(addHours(now, -24)), now);
 
               break;
-            case '11':
+            case '11': // eslint-disable-line unicorn/no-useless-switch-case
             default:
               // Last 12 months
               dataset =

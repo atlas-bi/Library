@@ -132,6 +132,8 @@ builder.Services.AddWebOptimizer(
         // used on all pages, but not for load
         pipeline.AddJavaScriptBundle("/js/utility.min.js", "js/utility.min.js");
 
+        pipeline.AddJavaScriptBundle("/js/hyperspace.min.js", "js/hyperspace.min.js");
+
         pipeline.AddJavaScriptBundle("/js/settings.min.js", "js/settings.min.js");
 
         pipeline.AddJavaScriptBundle("/js/profile.min.js", "js/profile.min.js");
@@ -292,6 +294,14 @@ app.Use(
                 Public = true,
                 MaxAge = TimeSpan.FromMinutes(20)
             };
+        await next();
+    }
+);
+
+app.Use(
+    async (context, next) =>
+    {
+        context.Response.Headers.Add("Content-Security-Policy", "frame-ancestors 'self' '*';");
         await next();
     }
 );

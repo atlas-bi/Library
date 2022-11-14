@@ -66,6 +66,8 @@ namespace Atlas_Web.Pages.Tasks
             public string EditReportUrl { get; set; }
             public string RecordViewerUrl { get; set; }
             public int Runs { get; set; }
+            public string EpicMasterFile { get; set; }
+            public string EpicRecordId { get; set; }
         }
 
         public class CanMakeReports
@@ -452,7 +454,9 @@ namespace Atlas_Web.Pages.Tasks
                     // ),
                     EditReportUrl = r.EditReportUrl(HttpContext, _config),
                     RecordViewerUrl = r.RecordViewerUrl(HttpContext),
-                    Runs = ((int?)f.Cnt ?? 0)
+                    Runs = ((int?)f.Cnt ?? 0),
+                    EpicRecordId = r.EpicRecordId.ToString(),
+                    EpicMasterFile = r.EpicMasterFile
                 }
             ).ToListAsync();
 

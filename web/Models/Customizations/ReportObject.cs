@@ -190,6 +190,8 @@ namespace Atlas_Web.Models
                 return null;
             }
             bool Epic = context.IsHyperspace();
+            bool AGL = context.IsAgl();
+
             if (!string.IsNullOrEmpty(report.ReportServerPath) && !Epic)
             {
                 Url =
@@ -201,47 +203,81 @@ namespace Atlas_Web.Models
                     + config["AppSettings:org_domain"]
                     + "%3A443%2FReportServer";
             }
-            else if (report.EpicMasterFile == "HGR" && report.EpicRecordId != null && Epic)
+            else if (Epic)
             {
-                Url =
-                    "EpicAct:AC_NEW_REPORT_ADMIN,INFONAME:HGRRECORDID,INFOVALUE:"
-                    + report.EpicRecordId;
-            }
-            else if (report.EpicMasterFile == "IDM" && report.EpicRecordId != null && Epic)
-            {
-                Url =
-                    "EpicAct:WM_DASHBOARD_EDITOR,INFONAME:IDMRECORDID,INFOVALUE:"
-                    + report.EpicRecordId;
-            }
-            else if (report.EpicMasterFile == "IDB" && report.EpicRecordId != null && Epic)
-            {
-                Url =
-                    "EpicAct:WM_COMPONENT_EDITOR,INFONAME:IDBRECORDID,INFOVALUE:"
-                    + report.EpicRecordId;
-            }
-            else if (
-                report.EpicMasterFile == "HRX"
-                && report.EpicRecordId != null
-                && Epic
-                && report.EpicReportTemplateId != null
-            )
-            {
-                Url =
-                    "EpicAct:IP_REPORT_SETTING_POPUP,runparams:"
-                    + report.EpicReportTemplateId
-                    + "|"
-                    + report.EpicRecordId;
-            }
-            else if (
-                report.EpicMasterFile == "IDN"
-                && report.EpicRecordId != null
-                && Epic
-                && report.EpicReportTemplateId != null
-            )
-            {
-                Url =
-                    "EpicAct:WM_METRIC_EDITOR,INFONAME:IDNRECORDID,INFOVALUE:"
-                    + report.EpicRecordId;
+                if (report.EpicMasterFile == "HGR" && report.EpicRecordId != null)
+                {
+                    if (AGL)
+                    {
+                        // not yet developed
+                        Url = null;
+                    }
+                    else
+                    {
+                        Url =
+                            "EpicAct:AC_NEW_REPORT_ADMIN,INFONAME:HGRRECORDID,INFOVALUE:"
+                            + report.EpicRecordId;
+                    }
+                }
+                else if (report.EpicMasterFile == "IDM" && report.EpicRecordId != null)
+                {
+                    if (AGL)
+                    {
+                        // not yet developed
+                        Url = null;
+                    }
+                    else
+                    {
+                        Url =
+                            "EpicAct:WM_DASHBOARD_EDITOR,INFONAME:IDMRECORDID,INFOVALUE:"
+                            + report.EpicRecordId;
+                    }
+                }
+                else if (report.EpicMasterFile == "IDB" && report.EpicRecordId != null)
+                {
+                    if (AGL)
+                    {
+                        Url = "WM_ITM_COMPONENT_EDITOR";
+                    }
+                    else
+                    {
+                        Url =
+                            "EpicAct:WM_COMPONENT_EDITOR,INFONAME:IDBRECORDID,INFOVALUE:"
+                            + report.EpicRecordId;
+                    }
+                }
+                else if (
+                    report.EpicMasterFile == "HRX"
+                    && report.EpicRecordId != null
+                    && report.EpicReportTemplateId != null
+                )
+                {
+                    if (AGL)
+                    {
+                        Url = "AC_REPORT_SETTINGS_WEB";
+                    }
+                    else
+                    {
+                        Url =
+                            "EpicAct:IP_REPORT_SETTING_POPUP,runparams:"
+                            + report.EpicReportTemplateId
+                            + "|"
+                            + report.EpicRecordId;
+                    }
+                }
+                else if (report.EpicMasterFile == "IDN" && report.EpicRecordId != null)
+                {
+                    if (AGL)
+                    {
+                        Url = "WM_ITM_METRIC_EDITOR";
+                    }
+                    else
+                    {
+                        Url =
+                            "EpicAct:WM_METRIC_EDITOR,INFONAME:IDNRECORDID,INFOVALUE:"
+                            + report.EpicRecordId;
+                    }
+                }
             }
 
             return Url;
@@ -278,6 +314,7 @@ namespace Atlas_Web.Models
             }
             string ReportName = Name.Replace("|", " ").Replace("=", " ");
             bool Epic = context.IsHyperspace();
+            bool AGL = context.IsAgl();
 
             if (
                 (
@@ -298,58 +335,108 @@ namespace Atlas_Web.Models
                 // authorization service before hitting this code.
                 )
                 {
-                    NewUrl =
-                        "EpicAct:AC_RW_STATUS,RUNPARAMS:"
-                        + EpicReportTemplateId
-                        + "|"
-                        + EpicRecordId;
-                }
-                else if (EpicMasterFile == "HGR")
-                {
-                    NewUrl = "EpicAct:AC_RW_STATUS,RUNPARAMS:" + EpicReportTemplateId;
-                }
-                else if (EpicMasterFile == "IDM")
-                {
-                    NewUrl = "EpicAct:WM_DASHBOARD_LAUNCHER,runparams:" + EpicRecordId;
-                }
-                else if ((ReportType == "SSRS Report" || ReportType == "SSRS File") && Epic)
-                {
-                    if (EnabledForHyperspace == "Y")
+                    if (AGL)
                     {
-                        NewUrl =
-                            "EpicAct:AC_RW_WEB_BROWSER,LaunchOptions:2,runparams:"
-                            + Url
-                            + "&EPIC=1|FormCaption="
-                            + ReportName
-                            + "|ActivityName="
-                            + ReportName;
+                        NewUrl = "AC_RW_STATUS";
                     }
                     else
                     {
                         NewUrl =
-                            "EpicAct:AC_RW_WEB_BROWSER,LaunchOptions:2,runparams:"
-                            + Url
-                            + "|FormCaption="
-                            + ReportName
-                            + "|ActivityName="
-                            + ReportName;
+                            "EpicAct:AC_RW_STATUS,RUNPARAMS:"
+                            + EpicReportTemplateId
+                            + "|"
+                            + EpicRecordId;
+                    }
+                }
+                else if (EpicMasterFile == "HGR")
+                {
+                    if (AGL)
+                    {
+                        NewUrl = "AC_REPORT_SETTINGS_WEB";
+                    }
+                    else
+                    {
+                        NewUrl = "EpicAct:AC_RW_STATUS,RUNPARAMS:" + EpicReportTemplateId;
+                    }
+                }
+                else if (EpicMasterFile == "IDM")
+                {
+                    if (AGL)
+                    {
+                        NewUrl = "WM_DASHBOARD_LAUNCHER";
+                    }
+                    else
+                    {
+                        NewUrl = "EpicAct:WM_DASHBOARD_LAUNCHER,runparams:" + EpicRecordId;
+                    }
+                }
+                else if ((ReportType == "SSRS Report" || ReportType == "SSRS File") && Epic)
+                {
+                    if (AGL)
+                    {
+                        NewUrl = "CST_WEB_BROWSER";
+                    }
+                    else
+                    {
+                        if (EnabledForHyperspace == "Y")
+                        {
+                            NewUrl =
+                                "EpicAct:AC_RW_WEB_BROWSER,LaunchOptions:2,runparams:"
+                                + Url
+                                + "&EPIC=1|FormCaption="
+                                + ReportName
+                                + "|ActivityName="
+                                + ReportName;
+                        }
+                        else
+                        {
+                            NewUrl =
+                                "EpicAct:AC_RW_WEB_BROWSER,LaunchOptions:2,runparams:"
+                                + Url
+                                + "|FormCaption="
+                                + ReportName
+                                + "|ActivityName="
+                                + ReportName;
+                        }
                     }
                 }
                 else if (EpicMasterFile == "IDN")
                 {
-                    NewUrl =
-                        "EpicAct:WM_METRIC_EDITOR,INFONAME:IDNRECORDID,INFOVALUE:" + EpicRecordId;
+                    if (AGL)
+                    {
+                        NewUrl = "WM_ITM_METRIC_EDITOR";
+                    }
+                    else
+                    {
+                        NewUrl =
+                            "EpicAct:WM_METRIC_EDITOR,INFONAME:IDNRECORDID,INFOVALUE:"
+                            + EpicRecordId;
+                    }
                 }
                 else if (EpicMasterFile == "FDM" && EpicRecordId != null)
                 {
-                    NewUrl =
-                        "EpicACT:BI_SLICERDICER,LaunchOptions:16,RunParams:StartingDataModelId="
-                        + EpicRecordId;
+                    if (AGL)
+                    {
+                        NewUrl = "BI_ITM_SLICERDICER";
+                    }
+                    else
+                    {
+                        NewUrl =
+                            "EpicACT:BI_SLICERDICER,LaunchOptions:16,RunParams:StartingDataModelId="
+                            + EpicRecordId;
+                    }
                 }
                 else if (ReportType == "SlicerDicer Session" && EpicRecordId != null)
                 {
-                    NewUrl =
-                        "EpicACT:BI_SLICERDICER,RunParams:StartingPopulationId=" + EpicRecordId;
+                    if (AGL)
+                    {
+                        NewUrl = "BI_ITM_SLICERDICER";
+                    }
+                    else
+                    {
+                        NewUrl =
+                            "EpicACT:BI_SLICERDICER,RunParams:StartingPopulationId=" + EpicRecordId;
+                    }
                 }
                 else
                 {

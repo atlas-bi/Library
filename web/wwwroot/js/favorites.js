@@ -4,44 +4,48 @@
   d.addEventListener('click', function (event) {
     if (event.target.closest('.favorites-show-all')) {
       showall();
+    } else if (event.target.closest('.favorites-show-unsorted')) {
+      showFolder(event.target.closest('.favorites-show-unsorted'));
     } else if (event.target.closest('.favorites-folder')) {
-      const $target = event.target.closest('.favorites-folder');
-
-      // Close other folders
-      (
-        document.querySelectorAll(
-          '.favorites-folder.is-active,.favorites-show-all.is-active',
-        ) || []
-      ).forEach(($element) => {
-        $element.classList.remove('is-active');
-      });
-
-      (
-        document.querySelectorAll(
-          '.favorites-folder .fa-folder-open,.favorites-show-all .fa-folder-open',
-        ) || []
-      ).forEach(($element) => {
-        $element.classList.remove('fa-folder-open');
-        $element.classList.add('fa-folder');
-      });
-
-      // Update icon
-      if ($target.querySelector('.fa-folder')) {
-        const $icon = $target.querySelector('.fa-folder');
-        $icon.classList.remove('fa-folder');
-        $icon.classList.add('fa-folder-open');
-      }
-
-      // Make active
-      $target.classList.add('is-active');
-
-      // Filter favs
-      document.querySelectorAll('.favorites .favorite').forEach(($element) => {
-        const newLocal = $target.dataset.folderid === $element.dataset.folderid;
-        $element.style.display = newLocal ? '' : 'None';
-      });
+      showFolder(event.target.closest('.favorites-folder'));
     }
   });
+
+  function showFolder($target) {
+    // Close other folders
+    (
+      document.querySelectorAll(
+        '.favorites-folder.is-active,.favorites-show-all.is-active,.favorites-show-unsorted.is-active',
+      ) || []
+    ).forEach(($element) => {
+      $element.classList.remove('is-active');
+    });
+
+    (
+      document.querySelectorAll(
+        '.favorites-folder .fa-folder-open,.favorites-show-all .fa-folder-open,.favorites-show-unsorted .fa-folder-open',
+      ) || []
+    ).forEach(($element) => {
+      $element.classList.remove('fa-folder-open');
+      $element.classList.add('fa-folder');
+    });
+
+    // Update icon
+    if ($target.querySelector('.fa-folder')) {
+      const $icon = $target.querySelector('.fa-folder');
+      $icon.classList.remove('fa-folder');
+      $icon.classList.add('fa-folder-open');
+    }
+
+    // Make active
+    $target.classList.add('is-active');
+
+    // Filter favs
+    document.querySelectorAll('.favorites .favorite').forEach(($element) => {
+      const newLocal = $target.dataset.folderid === $element.dataset.folderid;
+      $element.style.display = newLocal ? '' : 'None';
+    });
+  }
 
   function showall() {
     // Show everything
@@ -216,11 +220,21 @@
         const $folder = document.querySelector(
           '.favorite-folders .favorites-folder[data-folderid="' +
             $folderid +
+            '"],.favorite-folders .favorites-show-unsorted[data-folderid="' +
+            $folderid +
+            '"]',
+        );
+        const $unsortedFolder = document.querySelector(
+          '.favorite-folders .favorites-show-unsorted[data-folderid="' +
+            $folderid +
             '"]',
         );
 
         if ($folderid && $folder !== null) {
           $count = $folder.querySelector('.fav-count');
+          $count.textContent = parseInt($count.textContent, 10) - 1;
+        } else if ($unsortedFolder !== null) {
+          $count = $unsortedFolder.querySelector('.fav-count');
           $count.textContent = parseInt($count.textContent, 10) - 1;
         }
 
@@ -271,7 +285,7 @@
   function getHoveredFolder(element, x, y) {
     if (element.classList.contains('favorite')) {
       const i = d.querySelectorAll(
-        '.favorite-folders .favorites-show-all,.favorite-folders .favorites-folder',
+        '.favorite-folders .favorites-show-all,.favorite-folders .favorites-show-unsorted,.favorite-folders .favorites-folder',
       );
       let l;
       let g;
@@ -302,7 +316,7 @@
     const item = {};
     $favorite.dataset.folderid = $folder.dataset.folderid;
     item.FavoriteId = $favorite.dataset.favoriteid;
-    item.FolderId = $folder.dataset.folderid;
+    item.FolderId = $folder.dataset.folderid || 0;
     item.FavoriteType = $favorite.dataset.type;
     const q = new XMLHttpRequest();
     q.open('post', '/Users/stars?handler=UpdateFavoriteFolder', true);
