@@ -54,7 +54,7 @@
     "rollup-stream-gulp": "0.0.3",
     "sass": "1.56.1",
     "semantic-release": "19.0.5",
-    "stylelint": "14.14.1",
+    "stylelint": "14.15.0",
     "stylelint-config-prettier-scss": "0.0.1",
     "stylelint-config-standard-scss": "6.1.0",
     "stylelint-scss": "4.3.0",
@@ -157,5 +157,5 @@
       "no-new": "warn"
     }
   },
-  "version": "3.10.26"
+  "version": "3.10.27"
 }
