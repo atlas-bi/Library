@@ -12,11 +12,11 @@
     "@rollup/plugin-commonjs": "23.0.3",
     "@rollup/plugin-json": "5.0.2",
     "@rollup/plugin-node-resolve": "15.0.1",
-    "@semantic-release/changelog": "6.0.1",
+    "@semantic-release/changelog": "6.0.2",
     "@semantic-release/commit-analyzer": "9.0.2",
     "@semantic-release/exec": "6.0.3",
     "@semantic-release/git": "10.0.1",
-    "@semantic-release/github": "8.0.6",
+    "@semantic-release/github": "8.0.7",
     "@semantic-release/npm": "9.0.1",
     "@semantic-release/release-notes-generator": "10.0.3",
     "@toycode/markdown-it-class": "1.2.4",
@@ -157,5 +157,5 @@
       "no-new": "warn"
     }
   },
-  "version": "3.10.30"
+  "version": "3.10.31"
 }
