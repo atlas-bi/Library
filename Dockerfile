@@ -10,7 +10,7 @@
 # to access webapp
 # http://localhost:1234
 
-FROM mcr.microsoft.com/dotnet/sdk:6.0-alpine AS build
+FROM mcr.microsoft.com/dotnet/sdk:7.0-alpine AS build
 ENV DOTNET_CLI_TELEMETRY_OPTOUT=1
 
 WORKDIR /app
