@@ -118,7 +118,7 @@ namespace Atlas_Web.Migrations
                 table: "ReportObjectRunData",
                 type: "datetime",
                 nullable: false,
-                defaultValue: new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                defaultValue: new DateTime(1753, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                 oldClrType: typeof(DateTime),
                 oldType: "datetime",
                 oldNullable: true);
@@ -129,7 +129,7 @@ namespace Atlas_Web.Migrations
                 table: "ReportObjectRunData",
                 type: "datetime",
                 nullable: false,
-                defaultValue: new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                defaultValue: new DateTime(1753, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                 oldClrType: typeof(DateTime),
                 oldType: "datetime",
                 oldNullable: true);
@@ -150,7 +150,7 @@ namespace Atlas_Web.Migrations
                 table: "ReportObjectRunData",
                 type: "datetime2",
                 nullable: false,
-                defaultValue: new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified));
+                defaultValue: new DateTime(1753, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified));
 
             migrationBuilder.AddColumn<DateTime>(
                 name: "RunStartTime_Hour",
@@ -158,7 +158,7 @@ namespace Atlas_Web.Migrations
                 table: "ReportObjectRunData",
                 type: "datetime2",
                 nullable: false,
-                defaultValue: new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified));
+                defaultValue: new DateTime(1753, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified));
 
             migrationBuilder.AddColumn<DateTime>(
                 name: "RunStartTime_Month",
@@ -166,7 +166,7 @@ namespace Atlas_Web.Migrations
                 table: "ReportObjectRunData",
                 type: "datetime2",
                 nullable: false,
-                defaultValue: new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified));
+                defaultValue: new DateTime(1753, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified));
 
             migrationBuilder.AddColumn<DateTime>(
                 name: "RunStartTime_Year",
@@ -174,7 +174,7 @@ namespace Atlas_Web.Migrations
                 table: "ReportObjectRunData",
                 type: "datetime2",
                 nullable: false,
-                defaultValue: new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified));
+                defaultValue: new DateTime(1753, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified));
 
             migrationBuilder.AddUniqueConstraint(
                 name: "AK_ReportObjectRunData_RunDataId",
