@@ -154,6 +154,10 @@ namespace Atlas_Web.Pages.Users
                     .Include(x => x.ReportObjectType)
                     .Include(x => x.ReportObjectAttachments)
                     .Include(x => x.StarredReports)
+                    // for authentication
+                    .Include(x => x.ReportObjectHierarchyChildReportObjects)
+                    .ThenInclude(x => x.ParentReportObject)
+                    .ThenInclude(x => x.ReportGroupsMemberships)
                     .OrderByDescending(
                         x =>
                             x.ReportObjectRunDataBridges

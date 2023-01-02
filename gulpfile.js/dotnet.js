@@ -9,6 +9,7 @@ gulp.task('dotnet:run', function (cb) {
   const env = Object.create(process.env);
   env.ASPNETCORE_ENVIRONMENT = 'Development';
   env.DOTNET_SYSTEM_CONSOLE_ALLOW_ANSI_COLOR_REDIRECTION = '1';
+  env.DOTNET_CLI_TELEMETRY_OPTOUT = '1';
   // https://docs.microsoft.com/en-us/dotnet/core/tools/dotnet-build
   dotnet = spawn(
     'dotnet',
