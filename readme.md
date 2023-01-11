@@ -74,7 +74,7 @@ This repository uses commitizen. Commit code changes for pr's with `npm run comm
 
 ## 🏆 Credits
 
-Atlas was created by the Riverside Healthcare Analytics team. See the [credits](https://www.atlas.bi/about/) for more details.
+Atlas was originally created and made open source by the Riverside Healthcare Analytics team. See the [credits](https://www.atlas.bi/about/) for more details.
 
 ## 🔧 Tools
 

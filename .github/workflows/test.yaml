@@ -33,7 +33,7 @@ jobs:
       - name: setup dotnet
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: '6.0.x'
+          dotnet-version: '7.0.x'
       - name: setup node
         uses: actions/setup-node@v3
         with:
@@ -51,7 +51,7 @@ jobs:
           echo "}}" >> appsettings.cust.json
           cat appsettings.cust.json
       - name: install localdb
-        uses: potatoqualitee/mssqlsuite@v1.5.1
+        uses: potatoqualitee/mssqlsuite@v1.7
         with:
           install: localdb
       - name: migrate
@@ -70,7 +70,7 @@ jobs:
       - name: setup dotnet
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: '6.0.x'
+          dotnet-version: '7.0.x'
       - name: setup node
         uses: actions/setup-node@v3
         with:
@@ -130,7 +130,7 @@ jobs:
       - name: setup dotnet
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: '6.0.x'
+          dotnet-version: '7.0.x'
       - name: setup node
         uses: actions/setup-node@v3
         with:
@@ -190,7 +190,7 @@ jobs:
       - name: setup dotnet
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: '6.0.x'
+          dotnet-version: '7.0.x'
       - name: setup node
         uses: actions/setup-node@v3
         with:
