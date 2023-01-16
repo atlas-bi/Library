@@ -53,7 +53,7 @@
     "regenerator-runtime": "0.13.11",
     "rollup-stream-gulp": "0.0.3",
     "sass": "1.57.1",
-    "semantic-release": "19.0.5",
+    "semantic-release": "20.0.2",
     "stylelint": "14.16.1",
     "stylelint-config-prettier-scss": "0.0.1",
     "stylelint-config-standard-scss": "6.1.0",
@@ -157,5 +157,5 @@
       "no-new": "warn"
     }
   },
-  "version": "3.11.3"
+  "version": "3.11.4"
 }
