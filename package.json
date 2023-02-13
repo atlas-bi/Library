@@ -48,7 +48,7 @@
     "lint-staged": "13.1.0",
     "open": "8.4.0",
     "postcss": "8.4.21",
-    "prettier": "2.8.3",
+    "prettier": "2.8.4",
     "proxy-polyfill": "0.3.2",
     "regenerator-runtime": "0.13.11",
     "rollup-stream-gulp": "0.0.3",
@@ -157,5 +157,5 @@
       "no-new": "warn"
     }
   },
-  "version": "3.12.2"
+  "version": "3.12.3"
 }
