@@ -29,7 +29,7 @@
     "date-fns": "2.29.3",
     "dompurify": "3.0.0",
     "es6-symbol": "3.1.3",
-    "eslint": "8.33.0",
+    "eslint": "8.34.0",
     "fancy-log": "2.0.0",
     "focus-within": "3.0.2",
     "fontawesome-subset": "4.3.1",
@@ -57,7 +57,7 @@
     "stylelint": "14.16.1",
     "stylelint-config-prettier-scss": "0.0.1",
     "stylelint-config-standard-scss": "6.1.0",
-    "stylelint-scss": "4.3.0",
+    "stylelint-scss": "4.4.0",
     "xo": "0.53.1"
   },
   "homepage": "https://demo.atlas.bi",
@@ -157,5 +157,5 @@
       "no-new": "warn"
     }
   },
-  "version": "3.12.4"
+  "version": "3.12.5"
 }
