@@ -28,14 +28,13 @@ Atlas business intelligence library plugs in to your existing reporting platform
 
 ## 🏃 Getting Started
 
-> Atlas BI Library is built with [.Net 6.0](https://dotnet.microsoft.com/download/dotnet/6.0) and [Node](https://nodejs.org/en/download/). \
+> Atlas BI Library is built with [.Net 7.0](https://dotnet.microsoft.com/download/dotnet/7.0) and [Node](https://nodejs.org/en/download/). \
 > Aside from those installs you will need to install ef core tools `dotnet tool install -g dotnet-ef`. \
 > These guide can be run with [Visual Studio Code](https://code.visualstudio.com/download) and the built in terminal.
 
 -   Get the code `git clone git@github.com:atlas-bi/atlas-bi-library.git`
 -   Install the project dependencies `npm install` and `npm run dotnet:restore`
 -   Create an `appsettings.cust.json` and `appsettings.cust.Development.json` as specified in the [docs](https://www.atlas.bi/docs/bi-library/deploy/configuration/)
--   Create a `.env` file with `NODE_ENV=development`
 -   Initialize the database and create tables `npm run db:update`
 -   Run the [ETL](https://www.atlas.bi/docs/bi-library/deploy/configuration/), or just insert your account name into the `dbo.[User]` `username` column.
 -   Finally, start up the website `npm start`
