@@ -1,0 +1,43 @@
+name: Sync Updates
+on:
+  push:
+    branches:
+      - 'dev'
+      - 'alpha'
+
+jobs:
+  alpha:
+    runs-on: ubuntu-latest
+    if: github.ref_name == 'dev'
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        ref: alpha
+    - name: Reset promotion branch
+      run: |
+        git fetch origin ${{github.ref_name}}:${{github.ref_name}}
+        git reset --hard ${{github.ref_name}}
+    - name: Create Pull Request
+      uses: peter-evans/create-pull-request@v4.2.4
+      with:
+        labels: automated pr
+        branch: ${{github.ref_name}}
+        title: chore(sync) Syncing changes from ${{github.ref_name}} to alpha
+
+  master:
+    runs-on: ubuntu-latest
+    if: github.ref_name == 'alpha'
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        ref: master
+    - name: Reset promotion branch
+      run: |
+        git fetch origin ${{github.ref_name}}:${{github.ref_name}}
+        git reset --hard ${{github.ref_name}}
+    - name: Create Pull Request
+      uses: peter-evans/create-pull-request@v4.2.4
+      with:
+        labels: automated pr
+        branch: ${{github.ref_name}}
+        title: chore(sync) Syncing changes from ${{github.ref_name}} to master
