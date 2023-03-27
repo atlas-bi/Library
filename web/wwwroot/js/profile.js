@@ -210,7 +210,7 @@
 
           let dataset;
           switch ($target.dataset.range) {
-            case '3':
+            case '3': {
               // This week
 
               dataset =
@@ -219,7 +219,9 @@
                 '&end_at=' +
                 differenceInSeconds(endOfWeek(now), now);
               break;
-            case '4':
+            }
+
+            case '4': {
               // Last 7 days
 
               dataset =
@@ -227,7 +229,9 @@
                 differenceInSeconds(startOfDay(addDays(now, -7)), now) +
                 '&end_at=0';
               break;
-            case '5':
+            }
+
+            case '5': {
               // This month
 
               dataset =
@@ -236,7 +240,9 @@
                 '&end_at=' +
                 differenceInSeconds(endOfMonth(now), now);
               break;
-            case '6':
+            }
+
+            case '6': {
               // Last 30 days
 
               dataset =
@@ -244,7 +250,9 @@
                 differenceInSeconds(startOfDay(addDays(now, -30)), now) +
                 '&end_at=0';
               break;
-            case '7':
+            }
+
+            case '7': {
               // Last 90 days
 
               dataset =
@@ -252,7 +260,9 @@
                 differenceInSeconds(startOfDay(addDays(now, -90)), now) +
                 '&end_at=0';
               break;
-            case '8':
+            }
+
+            case '8': {
               // This year
 
               dataset =
@@ -261,7 +271,9 @@
                 '&end_at=' +
                 differenceInSeconds(endOfYear(now), now);
               break;
-            case '9':
+            }
+
+            case '9': {
               // All time
 
               dataset =
@@ -269,11 +281,15 @@
                 differenceInSeconds(addYears(now, -10), now) +
                 '&end_at=0';
               break;
-            case '10':
+            }
+
+            case '10': {
               // Custom range
 
               break;
-            case '1':
+            }
+
+            case '1': {
               // Yesterday
               dataset =
                 '?start_at=' +
@@ -282,14 +298,17 @@
                 differenceInSeconds(endOfDay(addHours(now, -24)), now);
 
               break;
+            }
+
             case '11': // eslint-disable-line unicorn/no-useless-switch-case
-            default:
+            default: {
               // Last 12 months
               dataset =
                 '?start_at=' +
                 differenceInSeconds(addYears(now, -1), now) +
                 '&end_at=0';
               break;
+            }
           }
 
           loadChart(dataset);
