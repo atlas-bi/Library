@@ -102,12 +102,9 @@
 }
 
 .mailbox-reader-body .mailbox-reader-inner .mailbox-reader-liner {
-  bottom: 25px;
-  left: 25px;
+  inset: 8px 25px 25px;
   overflow: auto;
   position: absolute;
-  right: 25px;
-  top: 8px;
 }
 
 .mlbx-rdrHead .mailbox-sender {
