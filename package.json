@@ -46,7 +46,7 @@
     "gulp-uglify": "3.0.2",
     "jsnlog": "2.30.0",
     "lint-staged": "^13.1.2",
-    "open": "8.4.2",
+    "open": "9.0.0",
     "postcss": "^8.4.21",
     "prettier": "^2.8.7",
     "proxy-polyfill": "0.3.2",
@@ -157,5 +157,5 @@
       "no-new": "warn"
     }
   },
-  "version": "3.12.8"
+  "version": "3.12.9"
 }
