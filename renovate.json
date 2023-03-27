@@ -9,7 +9,7 @@
     ":npm",
     "npm:unpublishSafe"
   ],
-  "ignoreDeps": ["chart.js"],
+  "ignoreDeps": ["chart.js", "open"],
   "baseBranches": ["dev"],
   "bumpVersion": "patch",
   "commitMessagePrefix": "chore(deps)",

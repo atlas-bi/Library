@@ -4,7 +4,7 @@ require('./styles');
 require('./scripts');
 require('./dotnet');
 require('./build');
-const open = require('open');
+
 /*
 Style changes > run styles
 font changes > run font > styles
@@ -12,7 +12,8 @@ js changes > run js, styles
 c# changes > run dotnet
 html changes > run styles, dotnet
 */
-gulp.task('browser', function (cb) {
+gulp.task('browser', async function (cb) {
+  const open = await import('open');
   open('https://localhost:5001');
   cb();
 });
