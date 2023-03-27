@@ -34,6 +34,6 @@
       "automerge": true
     }
   ],
-  "schedule": ["before 8am on Monday"],
+  "schedule": ["before 10pm on Sunday"],
   "timezone": "America/Chicago"
 }
