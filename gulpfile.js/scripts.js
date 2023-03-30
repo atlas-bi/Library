@@ -72,7 +72,7 @@ gulp.task('js:utility', function () {
       'web/wwwroot/js/utility/hamburger.js',
       'web/wwwroot/js/mini.js',
       'web/wwwroot/js/dropdown.js',
-      'node_modules/chart.js/dist/chart.js',
+      'node_modules/chart.js/dist/Chart.js',
     ])
     .pipe(rollup(rollupConfig))
     .pipe(concat('utility.min.js'))
