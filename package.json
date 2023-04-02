@@ -32,7 +32,7 @@
     "eslint": "^8.35.0",
     "fancy-log": "2.0.0",
     "focus-within": "3.0.2",
-    "fontawesome-subset": "4.3.1",
+    "fontawesome-subset": "4.4.0",
     "gulp": "4.0.2",
     "gulp-autoprefixer": "8.0.0",
     "gulp-concat": "2.6.1",
@@ -157,5 +157,5 @@
       "no-new": "warn"
     }
   },
-  "version": "3.12.8"
+  "version": "3.12.9"
 }
