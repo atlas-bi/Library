@@ -11,7 +11,7 @@
     "@rollup/plugin-babel": "^6.0.3",
     "@rollup/plugin-commonjs": "^24.0.1",
     "@rollup/plugin-json": "^6.0.0",
-    "@rollup/plugin-node-resolve": "15.0.1",
+    "@rollup/plugin-node-resolve": "15.0.2",
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/commit-analyzer": "9.0.2",
     "@semantic-release/exec": "6.0.3",
@@ -32,7 +32,7 @@
     "eslint": "^8.35.0",
     "fancy-log": "2.0.0",
     "focus-within": "3.0.2",
-    "fontawesome-subset": "4.3.1",
+    "fontawesome-subset": "4.4.0",
     "gulp": "4.0.2",
     "gulp-autoprefixer": "8.0.0",
     "gulp-concat": "2.6.1",
@@ -58,7 +58,7 @@
     "stylelint-config-prettier-scss": "0.0.1",
     "stylelint-config-standard-scss": "^7.0.1",
     "stylelint-scss": "^4.6.0",
-    "xo": "^0.53.1"
+    "xo": "^0.54.0"
   },
   "homepage": "https://demo.atlas.bi",
   "license": "AGPL-3.0-or-later",
@@ -157,5 +157,5 @@
       "no-new": "warn"
     }
   },
-  "version": "3.12.2-alpha.1"
+  "version": "3.12.10"
 }
