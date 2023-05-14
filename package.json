@@ -55,7 +55,7 @@
     "sass": "^1.62.0",
     "semantic-release": "^21.0.1",
     "stylelint": "^15.6.0",
-    "stylelint-config-prettier-scss": "0.0.1",
+    "stylelint-config-prettier-scss": "1.0.0",
     "stylelint-config-standard-scss": "^9.0.0",
     "stylelint-scss": "^5.0.0",
     "xo": "^0.54.1"
@@ -157,5 +157,5 @@
       "no-new": "warn"
     }
   },
-  "version": "3.12.14"
+  "version": "3.12.15"
 }
