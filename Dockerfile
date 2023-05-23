@@ -24,7 +24,7 @@ COPY ["./web/.", "./web/"]
 WORKDIR "/app/web/"
 
 # add analytics
-RUN  sed -i -e 's/<\/body>/<script async defer data-website-id="fb4377bf-3d8a-40f7-97f9-c8e57e11c953" src="https:\/\/analytics.atlas.bi\/umami.js"><\/script><\/body>/g' Pages/Shared/_Layout.cshtml
+RUN  sed -i -e 's/<\/body>/<script async defer data-website-id="fb4377bf-3d8a-40f7-97f9-c8e57e11c953" src="https:\/\/analytics.atlas.bi\/script.js"><\/script><\/body>/g' Pages/Shared/_Layout.cshtml
 
 ARG USER \
     PASSWORD \
