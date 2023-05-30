@@ -118,7 +118,6 @@ jobs:
         uses: codecov/codecov-action@v3
         with:
           files: ./coverage.cobertura.xml
-          fail_ci_if_error: true
           verbose: true
 
   # browser_tests:
@@ -178,7 +177,6 @@ jobs:
   #       uses: codecov/codecov-action@v3
   #       with:
   #         files: ./coverage.cobertura.xml
-  #         fail_ci_if_error: true
   #         verbose: true
 
   function_tests:
@@ -238,5 +236,4 @@ jobs:
         uses: codecov/codecov-action@v3
         with:
           files: ./coverage.cobertura.xml
-          fail_ci_if_error: true
           verbose: true

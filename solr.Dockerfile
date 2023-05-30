@@ -35,7 +35,13 @@ RUN cd etl && echo "SOLRURL = \"http://localhost:8983/solr/atlas\"" > .env && \
     echo "ATLASDATABASE = \"DRIVER={ODBC Driver 18 for SQL Server};SERVER=$HOST;DATABASE=atlas;UID=$USER;PWD=$PASSWORD;TrustServerCertificate=YES\"" >> .env
 
 # load search
-RUN chmod -R 777 bin && bin/solr start -force -noprompt -v && sleep 60 && cd etl && python3 atlas_collections.py && python3 atlas_groups.py && python3 atlas_initiatives.py && \
+RUN chmod -R 777 bin && bin/solr start -force -noprompt -v
+
+# pass rand as a param to force sleep.
+ARG RAND
+RUN sleep 60
+
+RUN cd etl && python3 atlas_collections.py && python3 atlas_groups.py && python3 atlas_initiatives.py && \
     python3 atlas_lookups.py && python3 atlas_reports.py && python3 atlas_terms.py && \
     python3 atlas_users.py
 
