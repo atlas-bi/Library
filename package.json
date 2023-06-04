@@ -4,7 +4,7 @@
     "@babel/preset-env": "^7.21.4",
     "@creativebulma/bulma-badge": "github:christopherpickering/bulma-badge",
     "@creativebulma/bulma-tooltip": "1.2.0",
-    "@fontsource/inter": "^4.5.15",
+    "@fontsource/inter": "^5.0.0",
     "@fontsource/rasa": "^4.5.14",
     "@fontsource/source-code-pro": "^4.5.14",
     "@fortawesome/fontawesome-free": "^6.4.0",
@@ -157,5 +157,5 @@
       "no-new": "warn"
     }
   },
-  "version": "3.12.16"
+  "version": "3.12.17"
 }
