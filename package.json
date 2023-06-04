@@ -6,7 +6,7 @@
     "@creativebulma/bulma-tooltip": "1.2.0",
     "@fontsource/inter": "^5.0.0",
     "@fontsource/rasa": "^5.0.0",
-    "@fontsource/source-code-pro": "^4.5.14",
+    "@fontsource/source-code-pro": "^5.0.0",
     "@fortawesome/fontawesome-free": "^6.4.0",
     "@rollup/plugin-babel": "^6.0.3",
     "@rollup/plugin-commonjs": "^24.1.0",
@@ -157,5 +157,5 @@
       "no-new": "warn"
     }
   },
-  "version": "3.12.18"
+  "version": "3.12.19"
 }
