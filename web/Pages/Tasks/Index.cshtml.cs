@@ -142,7 +142,7 @@ namespace Atlas_Web.Pages.Tasks
                 from m in _context.MaintenanceLogs
                 where
                     m.MaintenanceLogStatus.Name == "Recommend Retire"
-                    && m.ReportObjectDoc.ExecutiveVisibilityYn == "Y"
+                    && m.ReportObjectDoc.ReportObject.DefaultVisibilityYn == "Y"
                 select new RecommendRetireReports
                 {
                     FullName = m.Maintainer.FullnameCalc,
