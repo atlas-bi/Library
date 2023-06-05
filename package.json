@@ -154,7 +154,8 @@
       "no-negated-condition": "warn",
       "no-multi-assign": "warn",
       "unicorn/prefer-keyboard-event-key": "off",
-      "no-new": "warn"
+      "no-new": "warn",
+      "unicorn/no-typeof-undefined": "off"
     }
   },
   "version": "3.12.20"
