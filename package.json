@@ -4,21 +4,21 @@
     "@babel/preset-env": "^7.21.4",
     "@creativebulma/bulma-badge": "github:christopherpickering/bulma-badge",
     "@creativebulma/bulma-tooltip": "1.2.0",
-    "@fontsource/inter": "^4.5.15",
-    "@fontsource/rasa": "^4.5.14",
-    "@fontsource/source-code-pro": "^4.5.14",
+    "@fontsource/inter": "^5.0.0",
+    "@fontsource/rasa": "^5.0.0",
+    "@fontsource/source-code-pro": "^5.0.0",
     "@fortawesome/fontawesome-free": "^6.4.0",
     "@rollup/plugin-babel": "^6.0.3",
-    "@rollup/plugin-commonjs": "^24.1.0",
+    "@rollup/plugin-commonjs": "^25.0.0",
     "@rollup/plugin-json": "^6.0.0",
     "@rollup/plugin-node-resolve": "^15.0.2",
     "@semantic-release/changelog": "^6.0.3",
-    "@semantic-release/commit-analyzer": "9.0.2",
+    "@semantic-release/commit-analyzer": "10.0.1",
     "@semantic-release/exec": "6.0.3",
     "@semantic-release/git": "10.0.1",
-    "@semantic-release/github": "^8.0.7",
+    "@semantic-release/github": "^9.0.0",
     "@semantic-release/npm": "^10.0.3",
-    "@semantic-release/release-notes-generator": "11.0.1",
+    "@semantic-release/release-notes-generator": "11.0.3",
     "@toycode/markdown-it-class": "1.2.4",
     "bulma": "0.9.4",
     "bulma-checkradio": "2.1.3",
@@ -154,8 +154,9 @@
       "no-negated-condition": "warn",
       "no-multi-assign": "warn",
       "unicorn/prefer-keyboard-event-key": "off",
-      "no-new": "warn"
+      "no-new": "warn",
+      "unicorn/no-typeof-undefined": "off"
     }
   },
-  "version": "3.12.3-alpha.1"
+  "version": "3.12.23"
 }
