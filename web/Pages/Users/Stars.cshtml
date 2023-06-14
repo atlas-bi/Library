@@ -265,7 +265,7 @@
                                     </span>
                                 </button>
                             }
-                            <partial name="Groups/_Snippet" model="t.User" />
+                            <partial name="Users/_Snippet" model="t.User" />
                         </div>
                     }
                     @foreach (var t in Model.Groups.OrderBy(x => x.Rank).ToList())
@@ -279,7 +279,7 @@
                                     </span>
                                 </button>
                             }
-                            <partial name="Users/_Snippet" model="t.Group" />
+                            <partial name="Groups/_Snippet" model="t.Group" />
                         </div>
                     }
                     @foreach (var t in Model.Searches.OrderBy(x => x.Rank).ToList())

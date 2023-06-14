@@ -100,6 +100,12 @@ gulp.task(
       gulp.series(gulp.parallel('js:highlighter', 'styles'), 'dotnet:run'),
     );
 
+    // Purify
+    gulp.watch(
+      ['web/wwwroot/lib/dompurify/purify.min.js'],
+      gulp.series(gulp.parallel('js:purify', 'styles'), 'dotnet:run'),
+    );
+
     // Shared
     gulp.watch(
       ['web/wwwroot/js/shared.js'],

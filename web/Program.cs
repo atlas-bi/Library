@@ -116,7 +116,7 @@ builder.Services.AddWebOptimizer(
 
         /************   javascript   *************/
         pipeline.AddJavaScriptBundle("/js/polyfill.min.js", "js/polyfill.min.js");
-        pipeline.AddJavaScriptBundle("/js/purify.min.js", "lib/dompurify/purify.min.js");
+        pipeline.AddJavaScriptBundle("/js/purify.min.js", "js/purify.min.js");
         pipeline.AddJavaScriptBundle("/js/shared.min.js", "js/shared.min.js");
         pipeline.AddJavaScriptBundle("/js/realtime.min.js", "js/realtime.js");
 
