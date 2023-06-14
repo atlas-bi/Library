@@ -1,1 +1,30 @@
-{"name":"@fontsource/source-code-pro","version":"4.5.14","description":"Self-host the Source Code Pro font in a neatly bundled NPM package.","main":"index.css","publishConfig":{"access":"public"},"keywords":["fontsource","font","font family","google fonts","Source Code Pro","source-code-pro"],"author":"Lotus <declininglotus@gmail.com>","license":"MIT","homepage":"https://github.com/fontsource/fontsource/tree/main/fonts/google/source-code-pro#readme","repository":{"type":"git","url":"https://github.com/fontsource/fontsource.git","directory":"fonts/google/source-code-pro"}}
+{
+  "name": "@fontsource/source-code-pro",
+  "version": "5.0.3",
+  "description": "Self-host the Source Code Pro font in a neatly bundled NPM package.",
+  "main": "index.css",
+  "publishConfig": {"access": "public"},
+  "keywords": [
+    "fontsource",
+    "font",
+    "font family",
+    "google fonts",
+    "source-code-pro",
+    "Source Code Pro",
+    "css",
+    "sass",
+    "front-end",
+    "web",
+    "typeface",
+    "variable"
+  ],
+  "author": "Google Inc.",
+  "license": "OFL-1.1",
+  "homepage": "https://fontsource.org/fonts/source-code-pro",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fontsource/font-files.git",
+    "directory": "fonts/google/source-code-pro"
+  },
+  "publishHash": "2c8ce3df2e689a09"
+}

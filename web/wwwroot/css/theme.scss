@@ -1,56 +1,36 @@
 /* stylelint-disable no-invalid-position-at-import-rule */
-@import '../../../node_modules/@fontsource/inter/scss/mixins';
+@use '../../../node_modules/@fontsource/inter/scss/mixins' as Inter;
+@use '../../../node_modules/@fontsource/rasa/scss/mixins' as Rasa;
+@use '../../../node_modules/@fontsource/source-code-pro/scss/mixins' as
+  SourceCodePro;
 
-@include fontFace(
-  $fontName: Inter,
-  $weight: 400,
+@include Inter.faces(
+  $subsets: latin,
+  $weights: (
+    400,
+    500,
+    600,
+    700,
+  ),
+  $family: 'Inter',
   $display: swap,
-  $unicodeMap: latin,
-  $fontDir: '/font/inter/files/'
+  $directory: '/font/inter/files/'
 );
 
-@include fontFace(
-  $fontName: Inter,
-  $weight: 500,
+@include Rasa.faces(
+  $subsets: latin,
+  $weights: 600,
+  $family: 'Rasa',
   $display: swap,
-  $unicodeMap: latin,
-  $fontDir: '/font/inter/files/'
+  $directory: '/font/rasa/files/'
 );
 
-@include fontFace(
-  $fontName: Inter,
-  $weight: 600,
+@include SourceCodePro.faces(
+  $subsets: latin,
+  $weights: 400,
+  $family: 'Source Code Pro',
   $display: swap,
-  $unicodeMap: latin,
-  $fontDir: '/font/inter/files/'
-);
-
-@include fontFace(
-  $fontName: Inter,
-  $weight: 700,
-  $display: swap,
-  $unicodeMap: latin,
-  $fontDir: '/font/inter/files/'
-);
-
-@import '../../../node_modules/@fontsource/rasa/scss/mixins';
-
-@include fontFace(
-  $fontName: Rasa,
-  $weight: 600,
-  $display: swap,
-  $unicodeMap: latin,
-  $fontDir: '/font/rasa/files/'
-);
-
-@import '../../../node_modules/@fontsource/source-code-pro/scss/mixins';
-
-@include fontFace(
-  $fontName: 'Source Code Pro',
-  $weight: 400,
-  $display: swap,
-  $unicodeMap: latin,
-  $fontDir: '/font/source-code-pro/files/'
+  $directory: '/font/source-code-pro/files/'
 );
 
 @import '../font/fontawesome/stylesheet';
