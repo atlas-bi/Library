@@ -1,9 +1,8 @@
-/* rasa-vietnamese-500-italic*/
+/* rasa-vietnamese-500-italic */
 @font-face {
   font-family: 'Rasa';
   font-style: italic;
   font-display: swap;
   font-weight: 500;
-  src: url('/font/rasa/files/rasa-vietnamese-500-italic.woff2') format('woff2'), url('/font/rasa/files/rasa-vietnamese-500-italic.woff') format('woff');
-  
+  src: url(/font/rasa/files/rasa-vietnamese-500-italic.woff2) format('woff2'), url(/font/rasa/files/rasa-vietnamese-500-italic.woff) format('woff');
 }
