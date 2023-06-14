@@ -1,9 +1,8 @@
-/* inter-greek-200-normal*/
+/* inter-greek-200-normal */
 @font-face {
   font-family: 'Inter';
   font-style: normal;
   font-display: swap;
   font-weight: 200;
-  src: url('/font/inter/files/inter-greek-200-normal.woff2') format('woff2'), url('/font/inter/files/inter-greek-200-normal.woff') format('woff');
-  
+  src: url(/font/inter/files/inter-greek-200-normal.woff2) format('woff2'), url(/font/inter/files/inter-greek-200-normal.woff) format('woff');
 }
