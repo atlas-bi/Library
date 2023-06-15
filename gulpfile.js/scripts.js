@@ -53,15 +53,6 @@ gulp.task('js:hyperspace', function () {
     .pipe(gulp.dest('web/wwwroot/js/'));
 });
 
-gulp.task('js:purify', function () {
-  return gulp
-    .src(['web/wwwroot/lib/dompurify/purify.min.js'])
-    .pipe(rollup(rollupConfig))
-    .pipe(concat('purify.min.js'))
-    .pipe(uglify(uglifyConfig))
-    .pipe(gulp.dest('web/wwwroot/js/'));
-});
-
 gulp.task('js:utility', function () {
   return gulp
     .src([
@@ -189,7 +180,6 @@ gulp.task('scripts', (cb) => {
       'js:profile',
       'js:userSettings',
       'js:hyperspace',
-      'js:purify',
     ],
     cb,
   );
