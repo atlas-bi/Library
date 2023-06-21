@@ -3,21 +3,16 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Atlas_Web.Models;
 using Atlas_Web.Authorization;
-using Microsoft.Extensions.Caching.Memory;
 
 namespace Atlas_Web.Pages.Settings
 {
     public class GroupRolesModel : PageModel
     {
-        private readonly IMemoryCache _cache;
         private readonly Atlas_WebContext _context;
-        private readonly IConfiguration _config;
 
-        public GroupRolesModel(Atlas_WebContext context, IMemoryCache cache, IConfiguration config)
+        public GroupRolesModel(Atlas_WebContext context)
         {
             _context = context;
-            _cache = cache;
-            _config = config;
         }
 
         public List<PrivilegedGroupData> PrivilegedGroups { get; set; }

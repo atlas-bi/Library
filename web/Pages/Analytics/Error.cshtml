@@ -68,7 +68,7 @@
                             @Error.LogDateTime
                         </td>
                         <td>
-                            <a href="@Error.Referer">@Error.Referer</a>
+                            <a href="@Error.Referrer">@Error.Referrer</a>
                             @Error.Message
                             @if(!string.IsNullOrEmpty(@Error.Trace)){
                                 <div class="notification @if(Error.Handled != 1){<text>is-danger</text>} is-family-monospace is-light mt-2 is-wordbreak">@Error.Trace</div>

@@ -3392,12 +3392,6 @@ namespace Atlas_Web.Migrations
                 ('SSAS Cubes',null, 'SASS Cube', 'Y')
             ");
 
-            // users
-            // migrationBuilder.Sql(
-            // @"
-            //     insert into dbo.[User] (Username) values ('Default')
-            // ");
-
             // user roles
             migrationBuilder.Sql(
             @"
@@ -3408,12 +3402,6 @@ namespace Atlas_Web.Migrations
                 ('Term Builder','Term Builders can create and edit Term documentation, but cannot approve them, edit them after approval, or link them to ReportObjects.'),
                 ('User','Users do not have any special permissions. They can navigate the site, comment, and view approved Terms and all non-hidden ReportObjects.')
             ");
-
-            // create admin user !! Ensure this user is removed from the admin role after running ETL !!
-            // migrationBuilder.Sql(
-            // @"
-            //     insert into app.UserRoleLinks (UserId, UserRolesId) values (1,1)
-            // ");
 
             // create security points
             migrationBuilder.Sql(

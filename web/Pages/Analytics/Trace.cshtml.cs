@@ -4,21 +4,16 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Linq;
-using Microsoft.Extensions.Caching.Memory;
 
 namespace Atlas_Web.Pages.Analytics
 {
     public class TraceModel : PageModel
     {
         private readonly Atlas_WebContext _context;
-        private readonly IMemoryCache _cache;
-        private readonly IConfiguration _config;
 
-        public TraceModel(Atlas_WebContext context, IMemoryCache cache, IConfiguration config)
+        public TraceModel(Atlas_WebContext context)
         {
             _context = context;
-            _cache = cache;
-            _config = config;
         }
 
         public List<AnalyticsTrace> Traces { get; set; }

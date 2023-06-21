@@ -175,6 +175,7 @@ namespace Atlas_Web.Pages.Reports
                 CollectionReport collection = Collections[i];
 
                 _cache.Remove("collection-" + collection.CollectionId);
+                _cache.Remove("search-collection-" + collection.CollectionId);
                 collection.ReportId = id;
                 collection.Rank = i;
 
@@ -190,6 +191,7 @@ namespace Atlas_Web.Pages.Reports
                 {
                     oldCollection.Rank = i;
                     _cache.Remove("collection-" + oldCollection.CollectionId);
+                    _cache.Remove("search-collection-" + oldCollection.CollectionId);
                 }
                 else
                 {
@@ -207,6 +209,8 @@ namespace Atlas_Web.Pages.Reports
             {
                 _cache.Remove("collection-" + collection.CollectionId);
             }
+
+            _cache.Remove("collections");
 
             _context.RemoveRange(RemovedCollections);
             await _context.SaveChangesAsync();

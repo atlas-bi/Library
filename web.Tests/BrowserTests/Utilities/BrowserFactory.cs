@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 using System.Linq;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Hosting.Server;
@@ -7,7 +6,6 @@ using Microsoft.AspNetCore.Hosting.Server.Features;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.DependencyInjection;
-
 using Microsoft.EntityFrameworkCore;
 using web.Tests.FunctionTests;
 using Microsoft.Extensions.Logging;
@@ -17,7 +15,7 @@ namespace web.Tests.BrowserTests
 {
     public class BrowserFactory<TEntryPoint> : IDisposable where TEntryPoint : Program
     {
-        private readonly IHost _host;
+        private readonly IHost? _host;
 
         public Uri BaseAddress { get; }
 
@@ -93,17 +91,22 @@ namespace web.Tests.BrowserTests
             _host.Start();
 
             // Store base address so that tests can pass it to the browser.
-            BaseAddress = new Uri(
-                _host.Services
-                    .GetRequiredService<IServer>()
-                    .Features.Get<IServerAddressesFeature>()
-                    .Addresses.First()
-            );
+            var address =
+                _host?.Services?.GetRequiredService<IServer>()?.Features.Get<IServerAddressesFeature>()?.Addresses.First();
+
+            if (address != null)
+            {
+                BaseAddress = new Uri(address);
+            }
+            else
+            {
+                BaseAddress = new Uri("http://127.0.0.1:5000");
+            }
         }
 
         public void Dispose()
         {
-            _host.Dispose();
+            _host?.Dispose();
         }
     }
 }

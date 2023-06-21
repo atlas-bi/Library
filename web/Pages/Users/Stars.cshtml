@@ -13,7 +13,7 @@
     var hasGroups = Model.Groups.Any();
 }
 <div>
-    @if (hasReports || hasCollections || hasInitiatives||hasTerms || hasUsers|| hasSearches|| hasGroups)
+    @if (hasReports || hasCollections || hasInitiatives || hasTerms || hasUsers || hasSearches || hasGroups)
     {
         <section class="section my-4 p-0 is-flex is-flex-direction-row is-align-items-center">
 
@@ -162,7 +162,7 @@
 
 
                             </div>
-                            @if (ViewBag.IsMe && User.HasPermission("Edit Other Users"))
+                            @if (ViewBag.IsMe || User.HasPermission("Edit Other Users"))
                             {
                                 <div class="favorite-folder-controls button is-light is-rounded is-warning has-text-dark is-active">
                                     <span class="icon js-modal-trigger" data-target="favorite-folder-@f.UserFavoriteFolderId"><i class="fas fa-pen-to-square"></i></span>

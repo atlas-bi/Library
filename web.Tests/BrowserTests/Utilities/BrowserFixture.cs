@@ -192,6 +192,31 @@ public class BrowserFixture
             default:
                 break;
         }
-        return null;
+
+        // if nothing found, use chrome
+        OpenQA.Selenium.Chrome.ChromeOptions chromeCapabilityDefault =
+            new OpenQA.Selenium.Chrome.ChromeOptions();
+        chromeCapabilityDefault.BrowserVersion = Options.BrowserVersion;
+        Dictionary<string, object> browserstackChromeOptionsDefault = new Dictionary<
+            string,
+            object
+        >();
+        browserstackChromeOptionsDefault.Add("os", Options.OperatingSystem);
+        browserstackChromeOptionsDefault.Add("osVersion", Options.OperatingSystemVersion);
+        browserstackChromeOptionsDefault.Add("local", "true");
+        browserstackChromeOptionsDefault.Add("projectName", Options.ProjectName);
+        browserstackChromeOptionsDefault.Add("buildName", Options.BuildName);
+        browserstackChromeOptionsDefault.Add("consoleLogs", "verbose");
+        browserstackChromeOptionsDefault.Add("networkLogs", "true");
+        browserstackChromeOptionsDefault.Add("userName", Options.BrowserStackCredentials.UserName);
+        browserstackChromeOptionsDefault.Add(
+            "accessKey",
+            Options.BrowserStackCredentials.AccessKey
+        );
+        chromeCapabilityDefault.AddAdditionalOption(
+            "bstack:options",
+            browserstackChromeOptionsDefault
+        );
+        return chromeCapabilityDefault;
     }
 }

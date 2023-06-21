@@ -50,11 +50,12 @@ public class CustomClaimsTransformer : IClaimsTransformation
                         .SelectMany(x => x.GroupRoleLinks)
                         .Select(x => x.UserRoles)
                 )
+                .Select(role => role.Name)
         )
         {
-            if (!string.IsNullOrEmpty(role.Name))
+            if (!string.IsNullOrEmpty(role))
             {
-                claims.Add(new Claim(ClaimTypes.Role, role.Name));
+                claims.Add(new Claim(ClaimTypes.Role, role));
             }
         }
         // if they are an admin
@@ -100,11 +101,12 @@ public class CustomClaimsTransformer : IClaimsTransformation
                         .Select(x => x.RolePermissions)
                 )
                 .Distinct()
+                .Select(role => role.Name)
         )
         {
-            if (!string.IsNullOrEmpty(role.Name))
+            if (!string.IsNullOrEmpty(role))
             {
-                claims.Add(new Claim("Permission", role.Name));
+                claims.Add(new Claim("Permission", role));
             }
         }
 

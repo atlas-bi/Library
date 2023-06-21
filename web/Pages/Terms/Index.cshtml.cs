@@ -188,7 +188,7 @@ namespace Atlas_Web.Pages.Terms
                 );
             }
 
-            Term OldTerm = _context.Terms.Where(x => x.TermId == Id).FirstOrDefault();
+            Term OldTerm = _context.Terms.Where(x => x.TermId == Id).First();
 
             if (
                 (OldTerm.ApprovedYn == "Y" && !User.HasPermission("Delete Approved Terms"))

@@ -2,21 +2,21 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Atlas_Web.Models;
-using Microsoft.Extensions.Caching.Memory;
 using System.Text.RegularExpressions;
 
+#pragma warning disable S1481
 namespace Atlas_Web.Pages.Profile
 {
     public class IndexModel : PageModel
     {
         private readonly Atlas_WebContext _context;
-        private readonly IMemoryCache _cache;
+
         private readonly IConfiguration _config;
 
-        public IndexModel(Atlas_WebContext context, IMemoryCache cache, IConfiguration config)
+        public IndexModel(Atlas_WebContext context, IConfiguration config)
         {
             _context = context;
-            _cache = cache;
+
             _config = config;
         }
 
@@ -104,10 +104,6 @@ namespace Atlas_Web.Pages.Profile
 
             if (type == "report")
             {
-                // run_data = run_data.Where(
-                //     x => x.ReportObjectRunDataBridges.Any(y => y.ReportObjectId == id)
-                // );
-
                 ViewData["ReportRuns"] = await (
                     from b in run_data
                     from d in b.ReportObjectRunDataBridges

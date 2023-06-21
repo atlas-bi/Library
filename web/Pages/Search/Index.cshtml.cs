@@ -30,21 +30,20 @@ namespace Atlas_Web.Pages.Search
     public class IndexModel : PageModel
     {
         private readonly Atlas_WebContext _context;
-        private readonly IConfiguration _config;
+
         private readonly ISolrReadOnlyOperations<SolrAtlas> _solr;
         private readonly ISolrReadOnlyOperations<SolrAtlasLookups> _solrLookup;
         private readonly IMemoryCache _cache;
 
         public IndexModel(
             Atlas_WebContext context,
-            IConfiguration config,
             IMemoryCache cache,
             ISolrReadOnlyOperations<SolrAtlas> solr,
             ISolrReadOnlyOperations<SolrAtlasLookups> solrLookup
         )
         {
             _context = context;
-            _config = config;
+
             _cache = cache;
             _solr = solr;
             _solrLookup = solrLookup;
@@ -319,7 +318,7 @@ namespace Atlas_Web.Pages.Search
                 var FilterQuery = new Dictionary<string, string>();
                 foreach (string key in query.Keys)
                 {
-                    FilterQuery.Add(key.ToLowerInvariant(), query[key].First());
+                    FilterQuery.Add(key.ToLowerInvariant(), query[key][0]);
                 }
 
                 return FilterQuery;

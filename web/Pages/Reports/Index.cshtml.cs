@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Atlas_Web.Models;
 using Microsoft.Extensions.Caching.Memory;
-using Microsoft.AspNetCore.Authorization;
 
 namespace Atlas_Web.Pages.Reports
 {
@@ -12,20 +11,12 @@ namespace Atlas_Web.Pages.Reports
         private readonly Atlas_WebContext _context;
         private readonly IMemoryCache _cache;
 
-        private readonly IConfiguration _config;
-        private readonly IAuthorizationService _authorizationService;
-
-        public IndexModel(
-            Atlas_WebContext context,
-            IMemoryCache cache,
-            IConfiguration config,
-            IAuthorizationService authorizationService
-        )
+        public IndexModel(Atlas_WebContext context, IMemoryCache cache)
         {
             _context = context;
             _cache = cache;
-            _config = config;
-            _authorizationService = authorizationService;
+
+
         }
 
         public class MaintStatus

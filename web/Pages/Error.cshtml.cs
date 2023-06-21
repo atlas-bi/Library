@@ -2,7 +2,6 @@ using Atlas_Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Atlas_Web.Authorization;
-using Microsoft.Extensions.Caching.Memory;
 using Microsoft.AspNetCore.Diagnostics;
 
 namespace Atlas_Web.Pages
@@ -12,14 +11,10 @@ namespace Atlas_Web.Pages
     public class ErrorModel : PageModel
     {
         private readonly Atlas_WebContext _context;
-        private readonly IConfiguration _config;
-        private readonly IMemoryCache _cache;
 
-        public ErrorModel(Atlas_WebContext context, IConfiguration config, IMemoryCache cache)
+        public ErrorModel(Atlas_WebContext context)
         {
             _context = context;
-            _config = config;
-            _cache = cache;
         }
 
         public string RequestId { get; set; }
@@ -39,10 +34,10 @@ namespace Atlas_Web.Pages
                 var statusCodeReExecuteFeature =
                     HttpContext.Features.Get<IStatusCodeReExecuteFeature>();
 
-                string referer = Request.Headers["Referer"].ToString();
+                string referrer = Request.Headers["Referrer"].ToString();
                 if (statusCodeReExecuteFeature is not null)
                 {
-                    referer = string.Join(
+                    referrer = string.Join(
                         statusCodeReExecuteFeature.OriginalPathBase,
                         statusCodeReExecuteFeature.OriginalPath,
                         statusCodeReExecuteFeature.OriginalQueryString
@@ -54,7 +49,7 @@ namespace Atlas_Web.Pages
                     {
                         UserId = User.GetUserId(),
                         StatusCode = id,
-                        Referer = referer,
+                        Referrer = referrer,
                         Message = "Invalid request.",
                         LogDateTime = DateTime.Now,
                         UserAgent = Request.Headers["User-Agent"].ToString(),
@@ -77,7 +72,7 @@ namespace Atlas_Web.Pages
                 {
                     UserId = User.GetUserId(),
                     StatusCode = Response.StatusCode,
-                    Referer = exceptionHandlerPathFeature?.Path,
+                    Referrer = exceptionHandlerPathFeature?.Path,
                     Message = message,
                     Trace = exceptionHandlerPathFeature?.Error?.StackTrace,
                     LogDateTime = DateTime.Now,

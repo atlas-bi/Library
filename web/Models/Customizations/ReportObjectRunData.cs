@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Atlas_Web.Models
 {
-    public class ReportObjectRunData__Metadata { }
+    public interface ReportObjectRunData__Metadata { }
 
     [ModelMetadataType(typeof(ReportObjectRunData__Metadata))]
     public partial class ReportObjectRunData
