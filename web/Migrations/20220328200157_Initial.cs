@@ -3446,7 +3446,8 @@ namespace Atlas_Web.Migrations
                 ('Uncomplete Milestone Task Checklist Item', 'NULL'),
                 ('Edit Report Hidden Option', 'NULL'),
                 ('Can Change Roles', 'NULL'),
-                ('Manage Global Site Settings', 'NULL')
+                ('Manage Global Site Settings', 'NULL'),
+                ('Show Advanced Search', 'NULL')
             ");
 
             // add some user roles
