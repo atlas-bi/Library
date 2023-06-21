@@ -1,16 +1,27 @@
 .title .legacy,
 .title .epic-released {
-  border: 2px solid #ffc107;
-  border-radius: $radius;
-  color: #ffc107;
-  padding: 0 5px;
+    border: 2px solid #ffc107;
+    border-radius: $radius;
+    color: #ffc107;
+    padding: 0 5px;
 }
-
+.title .documentation-pending {
+    border: 2px solid #12a39c;
+    border-radius: $radius;
+    color: #12a39c;
+    padding: 0 5px;
+}
+.title .epic-released {
+    border: 2px solid #6cb5f9;
+    border-radius: $radius;
+    color: #6cb5f9;
+    padding: 0 5px;
+}
 .title .high-risk {
-  border: 2px solid #ff6961;
-  border-radius: $radius;
-  color: #ff6961;
-  padding: 0 5px;
+    border: 2px solid #ff6961;
+    border-radius: $radius;
+    color: #ff6961;
+    padding: 0 5px;
 }
 
 .title .analytics-reviewed {

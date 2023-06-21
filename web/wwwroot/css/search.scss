@@ -1,9 +1,12 @@
 @import '../../../node_modules/bulma/sass/utilities/initial-variables';
 
-.tag.epic-released,
+.tag.epic-released {
+    background-color: #6cb5f9;
+    color: #212529;
+}
 .tag.legacy {
-  background-color: #ffc107;
-  color: #212529;
+    background-color: #ffc107;
+    color: #212529;
 }
 
 .tag.analytics-certified {
@@ -22,10 +25,14 @@
 }
 
 .tag.high-risk {
-  background-color: #ff6961 !important;
-  color: #212529;
+    background-color: #ff6961 !important;
+    color: #212529;
 }
 
+.tag.documentation-pending {
+    background-color: #12a39c !important;
+    color: #212529;
+}
 // .pagination {
 //   .page-item{
 //     .page-link {

@@ -269,7 +269,8 @@ namespace Atlas_Web.Pages.Reports
                         )
                         .Where(x => x.ReportObjectTypeId != 12) //Personal dashboard
                         .Where(x => x.EpicMasterFile != "IDK")
-                        .Where(x => x.DefaultVisibilityYn == "Y")
+                        //let's show parent even if it is has default visibility set to N
+                        //.Where(x => x.DefaultVisibilityYn == "Y")
                         .Where(x => (x.ReportObjectDoc.Hidden ?? "N") == "N")
                         .Include(x => x.ReportObjectDoc)
                         .Include(x => x.ReportObjectType)
@@ -287,7 +288,8 @@ namespace Atlas_Web.Pages.Reports
                                         )
                                 )
                                 .Where(x => x.EpicMasterFile == "IDB")
-                                .Where(x => x.DefaultVisibilityYn == "Y")
+                                //let's show parent even if it is has default visibility set to N
+                                //.Where(x => x.DefaultVisibilityYn == "Y")
                                 .Where(x => (x.ReportObjectDoc.Hidden ?? "N") == "N")
                                 .Include(x => x.ReportObjectDoc)
                                 .Include(x => x.ReportObjectType)

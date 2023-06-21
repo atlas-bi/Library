@@ -11,7 +11,7 @@
 						<th>Subscription Description</th>
 						<th>Last Run</th>
 						<th>Message</th>
-						<th>Subscribed As</th>
+						<!--<th>Subscribed As</th>-->
 					</tr>
                 </thead>
                 <tbody>
@@ -35,7 +35,7 @@
                             <td>@d.Description</td>
                             <td>@d.LastRunDisplayString</td>
                             <td>@d.LastStatus.Replace(";", "; ")</td>
-                            <td>@d.SubscriptionTo.Replace(";", "; ")</td>
+                           @* <td>@d.SubscriptionTo.Replace(";", "; ")</td>*@
                         </tr>
                     }
                 </tbody>

@@ -244,12 +244,12 @@ namespace Atlas_Web.Pages.Search
                 {
                     "epic_master_file_text",
                     "organizational_value_text",
+                    "certification_text",
                     "estimated_run_frequency_text",
                     "maintenance_schedule_text",
                     "fragility_text",
                     "executive_visiblity_text",
                     "visible_text",
-                    "certification_text",
                     "report_type_text",
                     "type"
                 };
@@ -781,6 +781,9 @@ namespace Atlas_Web.Pages.Search
 
                 case "ro-fragility":
                     index_type = "fragility_tag";
+                    break;
+                case "Tags":
+                    index_type = "Tags";
                     break;
 
                 case "maint-log-stat":
