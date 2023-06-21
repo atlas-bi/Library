@@ -5,28 +5,20 @@ using Atlas_Web.Models;
 using System.Text.RegularExpressions;
 using Microsoft.Extensions.Caching.Memory;
 using Atlas_Web.Authorization;
-using Microsoft.AspNetCore.Authorization;
 
 namespace Atlas_Web.Pages.Users
 {
     public class IndexModel : PageModel
     {
         private readonly Atlas_WebContext _context;
-        private readonly IConfiguration _config;
-        private readonly IMemoryCache _cache;
-        private readonly IAuthorizationService _authorizationService;
 
-        public IndexModel(
-            Atlas_WebContext context,
-            IConfiguration config,
-            IMemoryCache cache,
-            IAuthorizationService authorizationService
-        )
+        private readonly IMemoryCache _cache;
+
+        public IndexModel(Atlas_WebContext context, IMemoryCache cache)
         {
             _context = context;
-            _config = config;
+
             _cache = cache;
-            _authorizationService = authorizationService;
         }
 
         public class FolderList
@@ -223,7 +215,7 @@ namespace Atlas_Web.Pages.Users
                     var id = (int)l.FolderId;
                     _context.UserFavoriteFolders
                         .Where(x => x.UserFavoriteFolderId == id && x.UserId == User.GetUserId())
-                        .FirstOrDefault().FolderRank = l.FolderRank;
+                        .First().FolderRank = l.FolderRank;
                 }
                 _context.SaveChanges();
                 _cache.Remove("FavoriteFolders-" + User.GetUserId());

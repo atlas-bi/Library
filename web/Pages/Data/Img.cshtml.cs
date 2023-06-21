@@ -84,46 +84,36 @@ namespace Atlas_Web.Pages.Data
 
         public ActionResult OnGetThumb(int id, string size, int? imgId, string type)
         {
-            return _cache.GetOrCreate<FileContentResult>(
-                $"thumb-{id}-{size}-{imgId ?? 0}-{type}",
-                cacheEntry =>
-                {
-                    cacheEntry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20);
+            string Extension = type ?? "jpeg";
+            ReportObjectImagesDoc img;
 
-                    string Extension = type ?? "jpeg";
-                    ReportObjectImagesDoc img;
+            if (imgId.HasValue)
+            {
+                img = _context.ReportObjectImagesDocs
+                    .Where(x => x.ImageId == imgId)
+                    .FirstOrDefault();
+            }
+            else
+            {
+                img = _context.ReportObjectImagesDocs
+                    .Where(x => x.ReportObjectId == id)
+                    .FirstOrDefault();
+            }
 
-                    if (imgId.HasValue)
-                    {
-                        img = _context.ReportObjectImagesDocs
-                            .Where(x => x.ImageId == imgId)
-                            .FirstOrDefault();
-                    }
-                    else
-                    {
-                        img = _context.ReportObjectImagesDocs
-                            .Where(x => x.ReportObjectId == id)
-                            .FirstOrDefault();
-                    }
+            byte[] image_data;
+            if (img != null)
+            {
+                image_data = img.ImageData;
+            }
+            else
+            {
+                image_data = System.IO.File.ReadAllBytes("wwwroot/img/report_placeholder.png");
+            }
 
-                    byte[] image_data;
-                    if (img != null)
-                    {
-                        image_data = img.ImageData;
-                    }
-                    else
-                    {
-                        image_data = System.IO.File.ReadAllBytes(
-                            "wwwroot/img/report_placeholder.png"
-                        );
-                    }
-
-                    return File(
-                        BuildImage(image_data, size, Extension),
-                        "application/octet-stream",
-                        $"{id}.{Extension}"
-                    );
-                }
+            return File(
+                BuildImage(image_data, size, Extension),
+                "application/octet-stream",
+                $"{id}.{Extension}"
             );
         }
 

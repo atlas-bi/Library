@@ -5,6 +5,7 @@ using Microsoft.Extensions.Options;
 
 namespace Atlas_Web.Authentication
 {
+#pragma warning disable S2094
     public class DemoSchemeOptions : AuthenticationSchemeOptions { }
 
     public class DemoAuthHandler : AuthenticationHandler<DemoSchemeOptions>

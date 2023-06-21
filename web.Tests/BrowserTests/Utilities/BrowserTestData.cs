@@ -13,7 +13,7 @@ public sealed class BrowsersTestData : IEnumerable<object[]>
 
     public static bool UseBrowserStack => BrowserStackCredentials() != default;
 
-    public static (string? UserName, string? AccessToken) BrowserStackCredentials()
+    public static (string UserName, string AccessToken) BrowserStackCredentials()
     {
         var root = Directory.GetCurrentDirectory();
 

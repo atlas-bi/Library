@@ -3,19 +3,16 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Atlas_Web.Models;
 using Atlas_Web.Authorization;
-using Microsoft.Extensions.Caching.Memory;
 
 namespace Atlas_Web.Pages.Settings
 {
     public class RolesModel : PageModel
     {
-        private readonly IMemoryCache _cache;
         private readonly Atlas_WebContext _context;
 
-        public RolesModel(Atlas_WebContext context, IMemoryCache cache)
+        public RolesModel(Atlas_WebContext context)
         {
             _context = context;
-            _cache = cache;
         }
 
         public List<UserRolesData> UserRoles { get; set; }

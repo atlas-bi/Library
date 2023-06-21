@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Atlas_Web.Models;
-using Microsoft.AspNetCore.Authorization;
 
 namespace Atlas_Web.Pages.Tasks
 {
@@ -10,17 +9,11 @@ namespace Atlas_Web.Pages.Tasks
     {
         private readonly Atlas_WebContext _context;
         private readonly IConfiguration _config;
-        private readonly IAuthorizationService _authorizationService;
 
-        public IndexModel(
-            Atlas_WebContext context,
-            IConfiguration config,
-            IAuthorizationService authorizationService
-        )
+        public IndexModel(Atlas_WebContext context, IConfiguration config)
         {
             _context = context;
             _config = config;
-            _authorizationService = authorizationService;
         }
 
         public class UndocumentedReports

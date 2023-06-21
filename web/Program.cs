@@ -204,6 +204,7 @@ builder.Services.AddTransient<IRazorPartialToStringRenderer, RazorPartialToStrin
 
 if (builder.Configuration["Demo"] == "True")
 {
+# pragma warning disable S1116
     builder.Services
         .AddAuthentication(options => options.DefaultScheme = "Demo")
         .AddScheme<DemoSchemeOptions, DemoAuthHandler>("Demo", options => { });
@@ -243,8 +244,6 @@ app.UseResponseCompression();
 if (!app.Environment.IsDevelopment())
 {
     app.UseHsts();
-
-    // app.UseHttpsRedirection();
     app.UseStatusCodePagesWithReExecute("/Error", "?id={0}");
     app.UseExceptionHandler("/Error");
 }
@@ -277,12 +276,7 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.UseEndpoints(
-    endpoints =>
-    {
-        endpoints.MapRazorPages();
-    }
-);
+app.MapRazorPages();
 
 app.UseResponseCaching();
 app.Use(
@@ -301,7 +295,7 @@ app.Use(
 app.Use(
     async (context, next) =>
     {
-        context.Response.Headers.Add("Content-Security-Policy", "frame-ancestors 'self' '*';");
+        context.Response.Headers.Add("Content-Security-Policy", "frame-ancestors 'self' *;");
         await next();
     }
 );
@@ -366,4 +360,5 @@ using (var scope = app.Services.CreateScope())
 
 app.Run();
 
+# pragma warning disable S1118
 public partial class Program { }

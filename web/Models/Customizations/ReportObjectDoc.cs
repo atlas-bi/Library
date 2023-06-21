@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Atlas_Web.Models
 {
-    public class ReportObjectDoc__Metadata { }
+    public interface ReportObjectDoc__Metadata { }
 
     [ModelMetadataType(typeof(ReportObjectDoc__Metadata))]
     public partial class ReportObjectDoc

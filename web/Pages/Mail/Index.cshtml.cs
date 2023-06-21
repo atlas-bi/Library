@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Atlas_Web.Helpers;
 using Newtonsoft.Json;
-using Microsoft.Extensions.Caching.Memory;
 using Newtonsoft.Json.Linq;
 using Atlas_Web.Services;
 
@@ -17,20 +16,18 @@ namespace Atlas_Web.Pages.Mail
     {
         private readonly Atlas_WebContext _context;
         private readonly IConfiguration _config;
-        private readonly IMemoryCache _cache;
+
         private readonly IRazorPartialToStringRenderer _renderer;
         private readonly IEmailService _emailer;
 
         public IndexModel(
             Atlas_WebContext context,
-            IMemoryCache cache,
             IConfiguration config,
             IRazorPartialToStringRenderer renderer,
             IEmailService emailer
         )
         {
             _context = context;
-            _cache = cache;
             _config = config;
             _renderer = renderer;
             _emailer = emailer;
@@ -38,10 +35,10 @@ namespace Atlas_Web.Pages.Mail
 
         private sealed class MailRecipientJsonData
         {
-#pragma warning disable S3459
+#pragma warning disable S3459,S1144
             public int UserId { get; set; }
             public string Type { get; set; }
-#pragma warning restore S3459
+#pragma warning restore S3459,S1144
         }
 
         public void OnGet()

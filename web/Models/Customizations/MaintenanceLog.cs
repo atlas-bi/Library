@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Atlas_Web.Models
 {
-    public class MaintenanceLog__Metadata { }
+    public interface MaintenanceLog__Metadata { }
 
     [ModelMetadataType(typeof(MaintenanceLog__Metadata))]
     public partial class MaintenanceLog
