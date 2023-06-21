@@ -103,7 +103,7 @@
                             </span>
                             <span>All</span>
                         </div>
-                        @if (ViewBag.IsMe && User.HasPermission("Edit Other Users"))
+                        @if (ViewBag.IsMe || User.HasPermission("Edit Other Users"))
                         {
                             <div class="favorite-folder-controls button is-light is-rounded is-warning has-text-dark is-active">
                                 <span class="icon js-modal-trigger" data-target="favorite-folder-new"><i class="fas fa-plus"></i></span>
