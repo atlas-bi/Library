@@ -28,7 +28,7 @@ at
 be
 but
 by
-for
+# for >> used in sql
 if
 in
 into
@@ -51,4 +51,4 @@ this
 to
 was
 will
-with
+# with >> used in sql
