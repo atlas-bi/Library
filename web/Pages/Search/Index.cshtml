@@ -39,7 +39,7 @@
                             <span class="tag is-light is-medium">@Model.SearchResults.FacetFields.SingleOrDefault(x => x.Key == field.Key).FriendlyName</span>
                             @* if there are 0 results, the filters do not show or have values *@
                             @if(@Model.SearchResults.FacetFields.SingleOrDefault(x => x.Key == field.Key).Values.Count > 0){
-                                <span class="tag is-warning is-medium" >@Model.SearchResults.FacetFields.SingleOrDefault(x => x.Key == field.Key).Values.SingleOrDefault(x => x.Value == field.Value).FriendlyName<a class="delete is-small" href="@UrlHelpers.SetSearchFacetUrl(ViewContext.HttpContext, @field.Key, @field.Value)"></a></span>
+                                <span class="tag is-warning is-medium" >@Model.SearchResults.FacetFields?.SingleOrDefault(x => x.Key == field.Key)?.Values?.SingleOrDefault(x => x.Value == field.Value)?.FriendlyName<a class="delete is-small" href="@UrlHelpers.SetSearchFacetUrl(ViewContext.HttpContext, @field.Key, @field.Value)"></a></span>
                             } else {
                                 <span class="tag is-warning is-medium" >@field.Value<a class="delete is-small" href="@UrlHelpers.SetSearchFacetUrl(ViewContext.HttpContext, @field.Key, @field.Value)"></a></span>
                             }
