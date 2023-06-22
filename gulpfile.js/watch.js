@@ -25,6 +25,7 @@ gulp.task(
         'web/wwwroot/**/*.scss',
         'web/wwwroot/**/*.sass',
         'web/Pages/**/*.cshtml',
+        'web/Controllers/**/*',
         'web/Services/',
         'web/Model/',
         'web/Middleware/',

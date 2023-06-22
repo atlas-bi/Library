@@ -2,7 +2,6 @@ using Microsoft.EntityFrameworkCore;
 using Atlas_Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Net.Http.Headers;
-using Microsoft.AspNetCore.Identity;
 using System.IO.Compression;
 using WebMarkupMin.AspNet.Common.Compressors;
 using WebMarkupMin.AspNetCore5;
@@ -11,12 +10,17 @@ using Microsoft.Extensions.Caching.Memory;
 using Atlas_Web.Middleware;
 using Atlas_Web.Services;
 using Hangfire;
-using Hangfire.InMemory;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Negotiate;
 using Microsoft.AspNetCore.Authorization;
 using Atlas_Web.Authorization;
 using Atlas_Web.Authentication;
+using ITfoxtec.Identity.Saml2;
+using ITfoxtec.Identity.Saml2.Util;
+using ITfoxtec.Identity.Saml2.Schemas.Metadata;
+using ITfoxtec.Identity.Saml2.MvcCore.Configuration;
+using ITfoxtec.Identity.Saml2.MvcCore;
+using System.Security.Cryptography.X509Certificates;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Configuration.AddJsonFile("appsettings.cust.json", optional: true, reloadOnChange: true);
@@ -62,7 +66,7 @@ builder.Services
         }
     )
     .AddRazorRuntimeCompilation();
-
+builder.Services.AddControllers();
 builder.Services.AddSolrNet<SolrAtlas>(builder.Configuration["solr:atlas_address"]);
 builder.Services.AddSolrNet<SolrAtlasLookups>(builder.Configuration["solr:atlas_lookups_address"]);
 
@@ -214,6 +218,72 @@ else
 {
     builder.Services.AddAuthentication(NegotiateDefaults.AuthenticationScheme).AddNegotiate();
 }
+if (builder.Configuration.GetSection("Saml2") != null)
+{
+    builder.Services.AddHttpClient();
+    builder.Services.BindConfig<Saml2Configuration>(
+        builder.Configuration,
+        "Saml2",
+        (serviceProvider, saml2Configuration) =>
+        {
+            //saml2Configuration.SignAuthnRequest = true;
+            var l = builder.Configuration["Saml2:SigningCertificateFile"];
+            saml2Configuration.SigningCertificate = CertificateUtil.Load(
+                builder.Environment.MapToPhysicalFilePath(
+                    builder.Configuration["Saml2:SigningCertificateFile"]
+                ),
+                builder.Configuration["Saml2:SigningCertificatePassword"],
+                X509KeyStorageFlags.MachineKeySet | X509KeyStorageFlags.PersistKeySet
+            );
+
+            //saml2Configuration.SignatureValidationCertificates.Add(CertificateUtil.Load(AppEnvironment.MapToPhysicalFilePath(Configuration["Saml2:SignatureValidationCertificateFile"])));
+            saml2Configuration.AllowedAudienceUris.Add(saml2Configuration.Issuer);
+
+            var httpClientFactory = serviceProvider.GetService<IHttpClientFactory>();
+            var entityDescriptor = new EntityDescriptor();
+            entityDescriptor
+                .ReadIdPSsoDescriptorFromUrlAsync(
+                    httpClientFactory,
+                    new Uri(builder.Configuration["Saml2:IdPMetadata"])
+                )
+                .GetAwaiter()
+                .GetResult();
+            if (entityDescriptor.IdPSsoDescriptor != null)
+            {
+                saml2Configuration.AllowedIssuer = entityDescriptor.EntityId;
+                saml2Configuration.SingleSignOnDestination =
+                    entityDescriptor.IdPSsoDescriptor.SingleSignOnServices.First().Location;
+                // saml2Configuration.SingleLogoutDestination = entityDescriptor.IdPSsoDescriptor.SingleLogoutServices.First().Location;
+                foreach (
+                    var signingCertificate in entityDescriptor.IdPSsoDescriptor.SigningCertificates
+                )
+                {
+                    if (signingCertificate.IsValidLocalTime())
+                    {
+                        saml2Configuration.SignatureValidationCertificates.Add(signingCertificate);
+                    }
+                }
+                if (saml2Configuration.SignatureValidationCertificates.Count <= 0)
+                {
+                    throw new Exception("The IdP signing certificates has expired.");
+                }
+                if (entityDescriptor.IdPSsoDescriptor.WantAuthnRequestsSigned.HasValue)
+                {
+                    saml2Configuration.SignAuthnRequest =
+                        entityDescriptor.IdPSsoDescriptor.WantAuthnRequestsSigned.Value;
+                }
+            }
+            else
+            {
+                throw new Exception("IdPSsoDescriptor not loaded from metadata.");
+            }
+
+            return saml2Configuration;
+        }
+    );
+
+    builder.Services.AddSaml2(slidingExpiration: true);
+}
 
 builder.Services.AddAuthorization(
     options =>
@@ -277,6 +347,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapRazorPages();
+app.MapControllers();
 
 app.UseResponseCaching();
 app.Use(

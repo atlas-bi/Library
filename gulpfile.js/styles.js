@@ -1,12 +1,11 @@
 const rename = require('gulp-rename');
 const autoprefexer = require('gulp-autoprefixer');
-const sass = require('gulp-sass')(require('sass'));
+const sass = require('gulp-sass')(require('sass-embedded'));
 const postcss = require('gulp-postcss');
 const purgecss = require('gulp-purgecss');
 const cssnano = require('gulp-cssnano');
 const postcssFocusWithin = require('focus-within/postcss');
 const gulp = require('gulp');
-const gulpMultiProcess = require('gulp-multi-process');
 
 gulp.task('css:email', function () {
   return gulp
@@ -91,6 +90,4 @@ gulp.task('css:rejected', function () {
     .pipe(gulp.dest('web/wwwroot/css/'));
 });
 
-gulp.task('styles', (cb) => {
-  gulpMultiProcess(['css:build', 'css:email'], cb);
-});
+gulp.task('styles', gulp.parallel('css:build', 'css:email'));

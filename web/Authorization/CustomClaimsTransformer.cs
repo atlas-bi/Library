@@ -133,20 +133,42 @@ public class CustomClaimsTransformer : IClaimsTransformation
 
     public async Task<User> GetUserData(string username)
     {
-        User me = await _context.Users
-            .Include(x => x.UserRoleLinks)
-            .ThenInclude(x => x.UserRoles)
-            .ThenInclude(x => x.RolePermissionLinks)
-            .ThenInclude(x => x.RolePermissions)
-            .Include(x => x.UserPreferences)
-            .Include(x => x.UserGroupsMemberships)
-            .Include(x => x.UserGroupsMemberships)
-            .ThenInclude(x => x.Group)
-            .ThenInclude(x => x.GroupRoleLinks)
-            .ThenInclude(x => x.UserRoles)
-            .ThenInclude(x => x.RolePermissionLinks)
-            .ThenInclude(x => x.RolePermissions)
-            .SingleOrDefaultAsync(x => x.Username == username);
+        User me;
+        // saml returns email address.
+        if (username.Contains("@"))
+        {
+            me = await _context.Users
+                .Include(x => x.UserRoleLinks)
+                .ThenInclude(x => x.UserRoles)
+                .ThenInclude(x => x.RolePermissionLinks)
+                .ThenInclude(x => x.RolePermissions)
+                .Include(x => x.UserPreferences)
+                .Include(x => x.UserGroupsMemberships)
+                .Include(x => x.UserGroupsMemberships)
+                .ThenInclude(x => x.Group)
+                .ThenInclude(x => x.GroupRoleLinks)
+                .ThenInclude(x => x.UserRoles)
+                .ThenInclude(x => x.RolePermissionLinks)
+                .ThenInclude(x => x.RolePermissions)
+                .SingleOrDefaultAsync(x => x.Email == username);
+        }
+        else
+        {
+            me = await _context.Users
+                .Include(x => x.UserRoleLinks)
+                .ThenInclude(x => x.UserRoles)
+                .ThenInclude(x => x.RolePermissionLinks)
+                .ThenInclude(x => x.RolePermissions)
+                .Include(x => x.UserPreferences)
+                .Include(x => x.UserGroupsMemberships)
+                .Include(x => x.UserGroupsMemberships)
+                .ThenInclude(x => x.Group)
+                .ThenInclude(x => x.GroupRoleLinks)
+                .ThenInclude(x => x.UserRoles)
+                .ThenInclude(x => x.RolePermissionLinks)
+                .ThenInclude(x => x.RolePermissions)
+                .SingleOrDefaultAsync(x => x.Username == username);
+        }
 
         if (me == null)
         {
