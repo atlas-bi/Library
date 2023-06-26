@@ -15,7 +15,7 @@ namespace web.Tests.BrowserTests
 {
     public class BrowserFactory<TEntryPoint> : IDisposable where TEntryPoint : Program
     {
-        private readonly IHost? _host;
+        private readonly IHost _host;
 
         public Uri BaseAddress { get; }
 
@@ -106,7 +106,7 @@ namespace web.Tests.BrowserTests
 
         public void Dispose()
         {
-            _host?.Dispose();
+            _host.Dispose();
         }
     }
 }

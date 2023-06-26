@@ -79,7 +79,7 @@
     "format:static": "prettier --config .prettierrc \"**/*.{ts,css,less,scss,js,json,md,yaml,yml,html}\" --write",
     "format:cs": "dotnet csharpier .",
     "format": "npm run format:static & npm run format:cs",
-    "dotnet:build": "dotnet build",
+    "dotnet:build": "dotnet build /clp:performancesummary",
     "dotnet:restore": "dotnet restore",
     "db:update": "dotnet ef database update --project web/web.csproj -v",
     "dotnet:publish": "npm run build && dotnet publish web/web.csproj -r win-x86 --self-contained false -c Release -o out",

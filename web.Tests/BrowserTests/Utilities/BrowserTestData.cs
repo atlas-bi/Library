@@ -20,8 +20,8 @@ public sealed class BrowsersTestData : IEnumerable<object[]>
         var dotenv = Path.Combine(root, ".env");
         DotEnv.Load(dotenv);
 
-        string? userName = Environment.GetEnvironmentVariable("BROWSERSTACK_USERNAME");
-        string? accessToken = Environment.GetEnvironmentVariable("BROWSERSTACK_ACCESS_KEY");
+        string userName = Environment.GetEnvironmentVariable("BROWSERSTACK_USERNAME");
+        string accessToken = Environment.GetEnvironmentVariable("BROWSERSTACK_ACCESS_KEY");
 
         Assert.NotNull(userName);
         Assert.NotNull(accessToken);
@@ -31,7 +31,7 @@ public sealed class BrowsersTestData : IEnumerable<object[]>
 
     public static string ProjectName()
     {
-        string? project = Environment.GetEnvironmentVariable("GITHUB_REPOSITORY");
+        string project = Environment.GetEnvironmentVariable("GITHUB_REPOSITORY");
 
         if (!string.IsNullOrEmpty(project))
         {
@@ -43,7 +43,7 @@ public sealed class BrowsersTestData : IEnumerable<object[]>
 
     public static string BuildName()
     {
-        string? run = Environment.GetEnvironmentVariable("GITHUB_RUN_NUMBER");
+        string run = Environment.GetEnvironmentVariable("GITHUB_RUN_NUMBER");
 
         if (!string.IsNullOrEmpty(run))
         {
