@@ -54,8 +54,6 @@
     "prettier": "^2.8.8",
     "proxy-polyfill": "0.3.2",
     "regenerator-runtime": "^0.13.11",
-    "rollup-stream-gulp": "0.0.3",
-    "sass": "^1.63.6",
     "sass-embedded": "^1.63.6",
     "semantic-release": "^21.0.5",
     "stylelint": "^15.8.0",

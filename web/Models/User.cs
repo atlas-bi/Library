@@ -62,6 +62,7 @@ namespace Atlas_Web.Models
         public string Email { get; set; }
         public string Base { get; set; }
         public string EpicId { get; set; }
+        public string ProfilePhoto { get; set; }
         public DateTime? LastLoadDate { get; set; }
         public DateTime? LastLogin { get; set; }
         public string FullnameCalc { get; set; }

@@ -218,7 +218,7 @@ else
 {
     builder.Services.AddAuthentication(NegotiateDefaults.AuthenticationScheme).AddNegotiate();
 }
-if (builder.Configuration.GetSection("Saml2") != null)
+if (builder.Configuration.GetSection("Saml2").Exists())
 {
     builder.Services.AddHttpClient();
     builder.Services.BindConfig<Saml2Configuration>(
