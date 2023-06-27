@@ -37,18 +37,18 @@
     <PackageReference Include="System.Threading" Version="4.3.0" />
     <PackageReference Include="System.Runtime.Handles" Version="4.3.0" />
     <PackageReference Include="System.Diagnostics.Tracing" Version="4.3.0" />
-    <PackageReference Include="Hangfire" Version="1.8.2" />
-    <PackageReference Include="Hangfire.InMemory" Version="0.4.1" />
+    <PackageReference Include="Hangfire" Version="1.8.3" />
+    <PackageReference Include="Hangfire.InMemory" Version="0.5.0" />
     <PackageReference Include="HtmlSanitizer" Version="8.0.645" />
     <PackageReference Include="LigerShark.WebOptimizer.AutoPrefixer" Version="7.1.8-beta" />
     <PackageReference Include="LigerShark.WebOptimizer.Core" Version="3.0.384" />
     <PackageReference Include="Markdig" Version="0.31.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.Negotiate" Version="7.0.7" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="7.0.7" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="7.0.7" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.7" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.7" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.7">
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Negotiate" Version="7.0.8" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="7.0.8" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="7.0.8" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.8" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.8" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.8">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
@@ -61,8 +61,8 @@
     <PackageReference Include="System.Data.SqlClient" Version="4.8.5" />
     <PackageReference Include="System.Text.Json" Version="7.0.3" />
     <PackageReference Include="UAParser" Version="3.1.47" />
-    <PackageReference Include="WebMarkupMin.AspNetCore5" Version="2.14.0" />
-    <PackageReference Include="SonarAnalyzer.CSharp" Version="9.3.0.71466">
+    <PackageReference Include="WebMarkupMin.AspNetCore5" Version="2.14.1" />
+    <PackageReference Include="SonarAnalyzer.CSharp" Version="9.4.0.72892">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
