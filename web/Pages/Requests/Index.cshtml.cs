@@ -1,25 +1,19 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Atlas_Web.Models;
-using System.Text;
 using System.Xml;
 using System.Xml.Linq;
 using Atlas_Web.Authorization;
-using Microsoft.Extensions.Caching.Memory;
+using System.Text;
 
 namespace Atlas_Web.Pages.Requests
 {
     public class IndexModel : PageModel
     {
-        private readonly Atlas_WebContext _context;
         private readonly IConfiguration _config;
-        private readonly IMemoryCache _cache;
 
-        public IndexModel(Atlas_WebContext context, IConfiguration config, IMemoryCache cache)
+        public IndexModel(IConfiguration config)
         {
-            _context = context;
             _config = config;
-            _cache = cache;
         }
 
         public void OnGet()

@@ -5,21 +5,16 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Linq;
-using Microsoft.Extensions.Caching.Memory;
 
 namespace Atlas_Web.Pages.Analytics
 {
     public class IndexModel : PageModel
     {
         private readonly Atlas_WebContext _context;
-        private readonly IMemoryCache _cache;
-        private readonly IConfiguration _config;
 
-        public IndexModel(Atlas_WebContext context, IMemoryCache cache, IConfiguration config)
+        public IndexModel(Atlas_WebContext context)
         {
             _context = context;
-            _cache = cache;
-            _config = config;
         }
 
         public class ActiveUserData
@@ -61,7 +56,12 @@ namespace Atlas_Web.Pages.Analytics
                         Pages = grp.Count()
                     }
                 )
-                    on new { b.UserId, b.SessionId, time = b.UpdateTime } equals new
+                    on new
+                    {
+                        b.UserId,
+                        b.SessionId,
+                        time = b.UpdateTime
+                    } equals new
                     {
                         sub.UserId,
                         sub.SessionId,
@@ -129,8 +129,8 @@ namespace Atlas_Web.Pages.Analytics
                 .ToListAsync();
             if (oldAna.Count > 0)
             {
-                oldAna.FirstOrDefault().PageTime = (int)package["pageTime"];
-                oldAna.FirstOrDefault().UpdateTime = DateTime.Now;
+                oldAna[0].PageTime = (int)package["pageTime"];
+                oldAna[0].UpdateTime = DateTime.Now;
                 await _context.SaveChangesAsync();
                 return Content("ok");
             }

@@ -7,19 +7,20 @@ using Microsoft.Extensions.Caching.Memory;
 using Newtonsoft.Json.Linq;
 using System.Text.Json;
 
+#pragma warning disable S2259
 namespace Atlas_Web.Pages.Users
 {
     [ResponseCache(NoStore = true)]
     public class StarsModel : PageModel
     {
         private readonly Atlas_WebContext _context;
-        private readonly IConfiguration _config;
+
         private readonly IMemoryCache _cache;
 
-        public StarsModel(Atlas_WebContext context, IConfiguration config, IMemoryCache cache)
+        public StarsModel(Atlas_WebContext context, IMemoryCache cache)
         {
             _context = context;
-            _config = config;
+
             _cache = cache;
         }
 
@@ -392,45 +393,45 @@ namespace Atlas_Web.Pages.Users
                 int id = Int32.Parse(l.FavoriteId);
                 if (l.FavoriteType == "report")
                 {
-                    _context.StarredReports.SingleOrDefault(
-                        x => x.StarId == id && x.Ownerid == User.GetUserId()
-                    ).Rank = l.FavoriteRank;
+                    _context.StarredReports
+                        .Single(x => x.StarId == id && x.Ownerid == User.GetUserId())
+                        .Rank = l.FavoriteRank;
                 }
                 else if (l.FavoriteType == "collection")
                 {
-                    _context.StarredCollections.SingleOrDefault(
-                        x => x.StarId == id && x.Ownerid == User.GetUserId()
-                    ).Rank = l.FavoriteRank;
+                    _context.StarredCollections
+                        .Single(x => x.StarId == id && x.Ownerid == User.GetUserId())
+                        .Rank = l.FavoriteRank;
                 }
                 else if (l.FavoriteType == "initiative")
                 {
-                    _context.StarredInitiatives.SingleOrDefault(
-                        x => x.StarId == id && x.Ownerid == User.GetUserId()
-                    ).Rank = l.FavoriteRank;
+                    _context.StarredInitiatives
+                        .Single(x => x.StarId == id && x.Ownerid == User.GetUserId())
+                        .Rank = l.FavoriteRank;
                 }
                 else if (l.FavoriteType == "term")
                 {
-                    _context.StarredTerms.SingleOrDefault(
-                        x => x.StarId == id && x.Ownerid == User.GetUserId()
-                    ).Rank = l.FavoriteRank;
+                    _context.StarredTerms
+                        .Single(x => x.StarId == id && x.Ownerid == User.GetUserId())
+                        .Rank = l.FavoriteRank;
                 }
                 else if (l.FavoriteType == "user")
                 {
-                    _context.StarredUsers.SingleOrDefault(
-                        x => x.StarId == id && x.Ownerid == User.GetUserId()
-                    ).Rank = l.FavoriteRank;
+                    _context.StarredUsers
+                        .Single(x => x.StarId == id && x.Ownerid == User.GetUserId())
+                        .Rank = l.FavoriteRank;
                 }
                 else if (l.FavoriteType == "group")
                 {
-                    _context.StarredGroups.SingleOrDefault(
-                        x => x.StarId == id && x.Ownerid == User.GetUserId()
-                    ).Rank = l.FavoriteRank;
+                    _context.StarredGroups
+                        .Single(x => x.StarId == id && x.Ownerid == User.GetUserId())
+                        .Rank = l.FavoriteRank;
                 }
                 else if (l.FavoriteType == "search")
                 {
-                    _context.StarredSearches.SingleOrDefault(
-                        x => x.StarId == id && x.Ownerid == User.GetUserId()
-                    ).Rank = l.FavoriteRank;
+                    _context.StarredSearches
+                        .Single(x => x.StarId == id && x.Ownerid == User.GetUserId())
+                        .Rank = l.FavoriteRank;
                 }
             }
             _context.SaveChanges();
@@ -455,45 +456,45 @@ namespace Atlas_Web.Pages.Users
 
             if (FavoriteType == "report")
             {
-                _context.StarredReports.SingleOrDefault(
-                    x => x.StarId == FavoriteId && x.Ownerid == User.GetUserId()
-                ).Folderid = FolderId;
+                _context.StarredReports
+                    .SingleOrDefault(x => x.StarId == FavoriteId && x.Ownerid == User.GetUserId())
+                    .Folderid = FolderId;
             }
             else if (FavoriteType == "collection")
             {
-                _context.StarredCollections.SingleOrDefault(
-                    x => x.StarId == FavoriteId && x.Ownerid == User.GetUserId()
-                ).Folderid = FolderId;
+                _context.StarredCollections
+                    .SingleOrDefault(x => x.StarId == FavoriteId && x.Ownerid == User.GetUserId())
+                    .Folderid = FolderId;
             }
             else if (FavoriteType == "initiative")
             {
-                _context.StarredInitiatives.SingleOrDefault(
-                    x => x.StarId == FavoriteId && x.Ownerid == User.GetUserId()
-                ).Folderid = FolderId;
+                _context.StarredInitiatives
+                    .SingleOrDefault(x => x.StarId == FavoriteId && x.Ownerid == User.GetUserId())
+                    .Folderid = FolderId;
             }
             else if (FavoriteType == "term")
             {
-                _context.StarredTerms.SingleOrDefault(
-                    x => x.StarId == FavoriteId && x.Ownerid == User.GetUserId()
-                ).Folderid = FolderId;
+                _context.StarredTerms
+                    .SingleOrDefault(x => x.StarId == FavoriteId && x.Ownerid == User.GetUserId())
+                    .Folderid = FolderId;
             }
             else if (FavoriteType == "user")
             {
-                _context.StarredUsers.SingleOrDefault(
-                    x => x.StarId == FavoriteId && x.Ownerid == User.GetUserId()
-                ).Folderid = FolderId;
+                _context.StarredUsers
+                    .SingleOrDefault(x => x.StarId == FavoriteId && x.Ownerid == User.GetUserId())
+                    .Folderid = FolderId;
             }
             else if (FavoriteType == "group")
             {
-                _context.StarredGroups.SingleOrDefault(
-                    x => x.StarId == FavoriteId && x.Ownerid == User.GetUserId()
-                ).Folderid = FolderId;
+                _context.StarredGroups
+                    .SingleOrDefault(x => x.StarId == FavoriteId && x.Ownerid == User.GetUserId())
+                    .Folderid = FolderId;
             }
             else if (FavoriteType == "search")
             {
-                _context.StarredSearches.SingleOrDefault(
-                    x => x.StarId == FavoriteId && x.Ownerid == User.GetUserId()
-                ).Folderid = FolderId;
+                _context.StarredSearches
+                    .SingleOrDefault(x => x.StarId == FavoriteId && x.Ownerid == User.GetUserId())
+                    .Folderid = FolderId;
             }
 
             _context.SaveChanges();
@@ -508,7 +509,8 @@ namespace Atlas_Web.Pages.Users
                 int id = Int32.Parse(l.FolderId);
                 _context.UserFavoriteFolders
                     .Where(x => x.UserFavoriteFolderId == id && x.UserId == User.GetUserId())
-                    .FirstOrDefault().FolderRank = l.FolderRank;
+                    .FirstOrDefault()
+                    .FolderRank = l.FolderRank;
             }
             _context.SaveChanges();
 

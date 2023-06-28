@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Atlas_Web.Models
 {
-    public class ReportObjectSubscriptions__Metadata { }
+    public interface ReportObjectSubscriptions__Metadata { }
 
     [ModelMetadataType(typeof(ReportObjectSubscriptions__Metadata))]
     public partial class ReportObjectSubscription

@@ -27,7 +27,6 @@ public class CustomClaimsTransformer : IClaimsTransformation
 #pragma warning disable S112
             throw new Exception("User " + principal.Identity.Name + " does not exist.");
 #pragma warning restore S112
-
         }
 
         var clone = principal.Clone();
@@ -50,11 +49,12 @@ public class CustomClaimsTransformer : IClaimsTransformation
                         .SelectMany(x => x.GroupRoleLinks)
                         .Select(x => x.UserRoles)
                 )
+                .Select(role => role.Name)
         )
         {
-            if (!string.IsNullOrEmpty(role.Name))
+            if (!string.IsNullOrEmpty(role))
             {
-                claims.Add(new Claim(ClaimTypes.Role, role.Name));
+                claims.Add(new Claim(ClaimTypes.Role, role));
             }
         }
         // if they are an admin
@@ -100,11 +100,12 @@ public class CustomClaimsTransformer : IClaimsTransformation
                         .Select(x => x.RolePermissions)
                 )
                 .Distinct()
+                .Select(role => role.Name)
         )
         {
-            if (!string.IsNullOrEmpty(role.Name))
+            if (!string.IsNullOrEmpty(role))
             {
-                claims.Add(new Claim("Permission", role.Name));
+                claims.Add(new Claim("Permission", role));
             }
         }
 
@@ -131,31 +132,68 @@ public class CustomClaimsTransformer : IClaimsTransformation
 
     public async Task<User> GetUserData(string username)
     {
-        User me = await _context.Users
-            .Include(x => x.UserRoleLinks)
-            .ThenInclude(x => x.UserRoles)
-            .ThenInclude(x => x.RolePermissionLinks)
-            .ThenInclude(x => x.RolePermissions)
-            .Include(x => x.UserPreferences)
-            .Include(x => x.UserGroupsMemberships)
-            .Include(x => x.UserGroupsMemberships)
-            .ThenInclude(x => x.Group)
-            .ThenInclude(x => x.GroupRoleLinks)
-            .ThenInclude(x => x.UserRoles)
-            .ThenInclude(x => x.RolePermissionLinks)
-            .ThenInclude(x => x.RolePermissions)
-            .SingleOrDefaultAsync(x => x.Username == username);
+        User me;
+        // saml returns email address.
+        if (username.Contains("@"))
+        {
+            me = await _context.Users
+                .Include(x => x.UserRoleLinks)
+                .ThenInclude(x => x.UserRoles)
+                .ThenInclude(x => x.RolePermissionLinks)
+                .ThenInclude(x => x.RolePermissions)
+                .Include(x => x.UserPreferences)
+                .Include(x => x.UserGroupsMemberships)
+                .Include(x => x.UserGroupsMemberships)
+                .ThenInclude(x => x.Group)
+                .ThenInclude(x => x.GroupRoleLinks)
+                .ThenInclude(x => x.UserRoles)
+                .ThenInclude(x => x.RolePermissionLinks)
+                .ThenInclude(x => x.RolePermissions)
+                .SingleOrDefaultAsync(x => x.Email == username);
+        }
+        else
+        {
+            me = await _context.Users
+                .Include(x => x.UserRoleLinks)
+                .ThenInclude(x => x.UserRoles)
+                .ThenInclude(x => x.RolePermissionLinks)
+                .ThenInclude(x => x.RolePermissions)
+                .Include(x => x.UserPreferences)
+                .Include(x => x.UserGroupsMemberships)
+                .Include(x => x.UserGroupsMemberships)
+                .ThenInclude(x => x.Group)
+                .ThenInclude(x => x.GroupRoleLinks)
+                .ThenInclude(x => x.UserRoles)
+                .ThenInclude(x => x.RolePermissionLinks)
+                .ThenInclude(x => x.RolePermissions)
+                .SingleOrDefaultAsync(x => x.Username == username);
+        }
 
         if (me == null)
         {
-            await _context.AddAsync(
-                new User
-                {
-                    Username = username,
-                    FullnameCalc = "Guest",
-                    FirstnameCalc = "Guest"
-                }
-            );
+            if (username.Contains("@"))
+            {
+                await _context.AddAsync(
+                    new User
+                    {
+                        Email = username,
+                        Username = username,
+                        FullnameCalc = "Guest",
+                        FirstnameCalc = "Guest"
+                    }
+                );
+            }
+            else
+            {
+                await _context.AddAsync(
+                    new User
+                    {
+                        Username = username,
+                        FullnameCalc = "Guest",
+                        FirstnameCalc = "Guest"
+                    }
+                );
+            }
             await _context.SaveChangesAsync();
 
             // if this is the first user in the db (new install), make them an admin.
@@ -164,11 +202,19 @@ public class CustomClaimsTransformer : IClaimsTransformation
                 await _context.AddAsync(
                     new UserRoleLink
                     {
-                        UserId = _context.Users.Where(x => x.Username == username).First().UserId,
-                        UserRolesId =
-                            _context.UserRoles
-                                .Where(x => x.Name == "Administrator")
-                                .First().UserRolesId
+                        UserId = _context.Users
+                            .Where(
+                                x =>
+                                    username.Contains("@")
+                                        ? x.Email == username
+                                        : x.Username == username
+                            )
+                            .First()
+                            .UserId,
+                        UserRolesId = _context.UserRoles
+                            .Where(x => x.Name == "Administrator")
+                            .First()
+                            .UserRolesId
                     }
                 );
                 await _context.SaveChangesAsync();

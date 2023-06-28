@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Atlas_Web.Models
 {
-    public class Initiative__Metadata { }
+    public interface Initiative__Metadata { }
 
     [ModelMetadataType(typeof(Initiative__Metadata))]
     public partial class Initiative

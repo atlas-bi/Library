@@ -8,12 +8,10 @@ namespace Atlas_Web.Pages.Analytics
     public class ErrorModel : PageModel
     {
         private readonly Atlas_WebContext _context;
-        private readonly IConfiguration _config;
 
-        public ErrorModel(Atlas_WebContext context, IConfiguration config)
+        public ErrorModel(Atlas_WebContext context)
         {
             _context = context;
-            _config = config;
         }
 
         public List<AnalyticsError> Errors { get; set; }

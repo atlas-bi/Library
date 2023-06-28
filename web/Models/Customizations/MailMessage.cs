@@ -1,11 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
 
 namespace Atlas_Web.Models
 {
-    public class MailMessages__Metadata { }
+    public interface MailMessages__Metadata { }
 
     [ModelMetadataType(typeof(MailMessages__Metadata))]
     public partial class MailMessage

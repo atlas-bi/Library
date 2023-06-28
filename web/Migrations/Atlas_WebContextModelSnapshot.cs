@@ -17,10 +17,10 @@ namespace Atlas_Web.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.8")
+                .HasAnnotation("ProductVersion", "7.0.7")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
+            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
             modelBuilder.Entity("Atlas_Web.Models.Analytic", b =>
                 {
@@ -28,7 +28,7 @@ namespace Atlas_Web.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime?>("AccessDateTime")
                         .HasColumnType("datetime");
@@ -119,7 +119,7 @@ namespace Atlas_Web.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int?>("Handled")
                         .HasColumnType("int");
@@ -130,7 +130,7 @@ namespace Atlas_Web.Migrations
                     b.Property<string>("Message")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Referer")
+                    b.Property<string>("Referrer")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("StatusCode")
@@ -161,7 +161,7 @@ namespace Atlas_Web.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int?>("Handled")
                         .HasColumnType("int");
@@ -206,7 +206,7 @@ namespace Atlas_Web.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CollectionId"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CollectionId"));
 
                     b.Property<int?>("AnalyticsOwnerId")
                         .HasColumnType("int");
@@ -284,7 +284,7 @@ namespace Atlas_Web.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("LinkId"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("LinkId"));
 
                     b.Property<int>("CollectionId")
                         .HasColumnType("int");
@@ -311,7 +311,7 @@ namespace Atlas_Web.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("LinkId"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("LinkId"));
 
                     b.Property<int>("CollectionId")
                         .HasColumnType("int");
@@ -338,7 +338,7 @@ namespace Atlas_Web.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
@@ -356,7 +356,7 @@ namespace Atlas_Web.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
@@ -374,7 +374,7 @@ namespace Atlas_Web.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
@@ -392,7 +392,7 @@ namespace Atlas_Web.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
@@ -410,7 +410,7 @@ namespace Atlas_Web.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
@@ -432,7 +432,7 @@ namespace Atlas_Web.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("GroupRoleLinksId"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("GroupRoleLinksId"));
 
                     b.Property<int>("GroupId")
                         .HasColumnType("int");
@@ -456,7 +456,7 @@ namespace Atlas_Web.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("InitiativeId"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("InitiativeId"));
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
@@ -490,25 +490,19 @@ namespace Atlas_Web.Migrations
                     b.HasKey("InitiativeId")
                         .HasName("PK__DP_DataI__1EFC948C3A83A845");
 
-                    b.HasIndex(new[] { "ExecutiveOwnerId" }, "executiveownerid")
-                        .HasDatabaseName("executiveownerid1");
+                    b.HasIndex(new[] { "ExecutiveOwnerId" }, "executiveownerid");
 
-                    b.HasIndex(new[] { "FinancialImpact" }, "financialimpact")
-                        .HasDatabaseName("financialimpact1");
+                    b.HasIndex(new[] { "FinancialImpact" }, "financialimpact");
 
-                    b.HasIndex(new[] { "InitiativeId" }, "initiativeid")
-                        .HasDatabaseName("initiativeid1");
+                    b.HasIndex(new[] { "InitiativeId" }, "initiativeid");
 
-                    b.HasIndex(new[] { "LastUpdateDate" }, "lastupdatedate")
-                        .HasDatabaseName("lastupdatedate1");
+                    b.HasIndex(new[] { "LastUpdateDate" }, "lastupdatedate");
 
-                    b.HasIndex(new[] { "LastUpdateUser" }, "lastupdateuser")
-                        .HasDatabaseName("lastupdateuser1");
+                    b.HasIndex(new[] { "LastUpdateUser" }, "lastupdateuser");
 
                     b.HasIndex(new[] { "OperationOwnerId" }, "operationownderid");
 
-                    b.HasIndex(new[] { "StrategicImportance" }, "strategicimportance")
-                        .HasDatabaseName("strategicimportance1");
+                    b.HasIndex(new[] { "StrategicImportance" }, "strategicimportance");
 
                     b.ToTable("Initiative", "app");
                 });
@@ -519,7 +513,7 @@ namespace Atlas_Web.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ConversationId"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ConversationId"));
 
                     b.Property<int>("MessageId")
                         .HasColumnType("int");
@@ -538,7 +532,7 @@ namespace Atlas_Web.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DraftId"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DraftId"));
 
                     b.Property<DateTime?>("EditDate")
                         .HasColumnType("datetime");
@@ -580,7 +574,7 @@ namespace Atlas_Web.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("FolderId"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("FolderId"));
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
@@ -608,7 +602,7 @@ namespace Atlas_Web.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int?>("FolderId")
                         .HasColumnType("int");
@@ -631,7 +625,7 @@ namespace Atlas_Web.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MessageId"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MessageId"));
 
                     b.Property<int?>("FromUserId")
                         .HasColumnType("int");
@@ -667,7 +661,7 @@ namespace Atlas_Web.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MessageTypeId"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MessageTypeId"));
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
@@ -684,7 +678,7 @@ namespace Atlas_Web.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int?>("AlertDisplayed")
                         .HasColumnType("int");
@@ -718,7 +712,7 @@ namespace Atlas_Web.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int?>("AlertDisplayed")
                         .HasColumnType("int");
@@ -748,7 +742,7 @@ namespace Atlas_Web.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MaintenanceLogId"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MaintenanceLogId"));
 
                     b.Property<string>("Comment")
                         .HasColumnType("nvarchar(max)");
@@ -786,7 +780,7 @@ namespace Atlas_Web.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -805,7 +799,7 @@ namespace Atlas_Web.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -824,7 +818,7 @@ namespace Atlas_Web.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
@@ -842,7 +836,7 @@ namespace Atlas_Web.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MembershipId"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MembershipId"));
 
                     b.Property<int>("GroupId")
                         .HasColumnType("int");
@@ -870,7 +864,7 @@ namespace Atlas_Web.Migrations
                         .HasColumnType("int")
                         .HasColumnName("ReportObjectID");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ReportObjectId"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ReportObjectId"));
 
                     b.Property<int?>("AuthorUserId")
                         .HasColumnType("int")
@@ -898,7 +892,7 @@ namespace Atlas_Web.Migrations
                         .HasColumnType("nvarchar(3)");
 
                     b.Property<decimal?>("EpicRecordId")
-                        .HasColumnType("numeric(18,0)")
+                        .HasColumnType("numeric(18, 0)")
                         .HasColumnName("EpicRecordID");
 
                     b.Property<string>("EpicReleased")
@@ -906,7 +900,7 @@ namespace Atlas_Web.Migrations
                         .HasColumnType("nvarchar(1)");
 
                     b.Property<decimal?>("EpicReportTemplateId")
-                        .HasColumnType("numeric(18,0)");
+                        .HasColumnType("numeric(18, 0)");
 
                     b.Property<DateTime?>("LastLoadDate")
                         .HasColumnType("datetime");
@@ -985,8 +979,7 @@ namespace Atlas_Web.Migrations
                     b.HasIndex(new[] { "LastModifiedByUserId" }, "modifiedby");
 
                     b.HasIndex(new[] { "ReportObjectId" }, "reportid")
-                        .IsUnique()
-                        .HasDatabaseName("reportid1");
+                        .IsUnique();
 
                     b.HasIndex(new[] { "SourceDb", "EpicMasterFile" }, "sourcedb_masterfile_report");
 
@@ -1031,7 +1024,7 @@ namespace Atlas_Web.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ReportObjectAttachmentId"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ReportObjectAttachmentId"));
 
                     b.Property<DateTime?>("CreationDate")
                         .HasColumnType("datetime");
@@ -1058,8 +1051,7 @@ namespace Atlas_Web.Migrations
 
                     b.HasKey("ReportObjectAttachmentId");
 
-                    b.HasIndex(new[] { "ReportObjectId" }, "reportid")
-                        .HasDatabaseName("reportid2");
+                    b.HasIndex(new[] { "ReportObjectId" }, "reportid");
 
                     b.ToTable("ReportObjectAttachments", "dbo");
                 });
@@ -1167,8 +1159,7 @@ namespace Atlas_Web.Migrations
                     b.HasIndex(new[] { "OrganizationalValueId" }, "organizationalvalueid");
 
                     b.HasIndex(new[] { "ReportObjectId" }, "reportid")
-                        .IsUnique()
-                        .HasDatabaseName("reportid3");
+                        .IsUnique();
 
                     b.HasIndex(new[] { "Requester" }, "requester");
 
@@ -1183,7 +1174,7 @@ namespace Atlas_Web.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("LinkId"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("LinkId"));
 
                     b.Property<int>("FragilityTagId")
                         .HasColumnType("int");
@@ -1207,7 +1198,7 @@ namespace Atlas_Web.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("LinkId"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("LinkId"));
 
                     b.Property<int>("ReportObjectId")
                         .HasColumnType("int");
@@ -1259,7 +1250,7 @@ namespace Atlas_Web.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ImageId"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ImageId"));
 
                     b.Property<byte[]>("ImageData")
                         .IsRequired()
@@ -1279,8 +1270,7 @@ namespace Atlas_Web.Migrations
                     b.HasKey("ImageId")
                         .HasName("PK__ReportOb__7516F4ECD36AFC26");
 
-                    b.HasIndex(new[] { "ReportObjectId" }, "reportid")
-                        .HasDatabaseName("reportid4");
+                    b.HasIndex(new[] { "ReportObjectId" }, "reportid");
 
                     b.ToTable("ReportObjectImages_doc", "app");
                 });
@@ -1291,7 +1281,7 @@ namespace Atlas_Web.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ReportObjectParameterId"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ReportObjectParameterId"));
 
                     b.Property<string>("ParameterName")
                         .HasColumnType("nvarchar(max)");
@@ -1315,7 +1305,7 @@ namespace Atlas_Web.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ReportObjectQueryId"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ReportObjectQueryId"));
 
                     b.Property<string>("Language")
                         .HasColumnType("nvarchar(max)");
@@ -1341,8 +1331,7 @@ namespace Atlas_Web.Migrations
 
                     b.HasIndex(new[] { "ReportObjectQueryId" }, "queryid");
 
-                    b.HasIndex(new[] { "ReportObjectId" }, "reportobjectid")
-                        .HasDatabaseName("reportobjectid1");
+                    b.HasIndex(new[] { "ReportObjectId" }, "reportobjectid");
 
                     b.ToTable("ReportObjectQuery", "dbo");
                 });
@@ -1353,7 +1342,7 @@ namespace Atlas_Web.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RunId"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RunId"));
 
                     b.Property<DateTime>("LastLoadDate")
                         .HasColumnType("datetime");
@@ -1439,7 +1428,7 @@ namespace Atlas_Web.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BridgeId"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BridgeId"));
 
                     b.Property<int>("Inherited")
                         .ValueGeneratedOnAdd()
@@ -1477,7 +1466,7 @@ namespace Atlas_Web.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ReportObjectSubscriptionsId"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ReportObjectSubscriptionsId"));
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
@@ -1526,10 +1515,10 @@ namespace Atlas_Web.Migrations
                         .HasColumnType("int")
                         .HasColumnName("TagID");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TagId"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TagId"));
 
                     b.Property<decimal?>("EpicTagId")
-                        .HasColumnType("numeric(18,0)")
+                        .HasColumnType("numeric(18, 0)")
                         .HasColumnName("EpicTagID");
 
                     b.Property<string>("TagName")
@@ -1551,7 +1540,7 @@ namespace Atlas_Web.Migrations
                         .HasColumnType("int")
                         .HasColumnName("TagMembershipID");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TagMembershipId"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TagMembershipId"));
 
                     b.Property<int?>("Line")
                         .HasColumnType("int");
@@ -1580,7 +1569,7 @@ namespace Atlas_Web.Migrations
                         .HasColumnType("int")
                         .HasColumnName("ReportObjectTypeID");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ReportObjectTypeId"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ReportObjectTypeId"));
 
                     b.Property<string>("DefaultEpicMasterFile")
                         .HasMaxLength(3)
@@ -1613,7 +1602,7 @@ namespace Atlas_Web.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ServiceRequestId"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ServiceRequestId"));
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
@@ -1630,8 +1619,7 @@ namespace Atlas_Web.Migrations
                     b.HasKey("ServiceRequestId")
                         .HasName("PK__ReportMa__97EB8BADB02592C9");
 
-                    b.HasIndex(new[] { "ReportObjectId" }, "reportobjectid")
-                        .HasDatabaseName("reportobjectid2");
+                    b.HasIndex(new[] { "ReportObjectId" }, "reportobjectid");
 
                     b.ToTable("ReportServiceRequests", "app");
                 });
@@ -1642,7 +1630,7 @@ namespace Atlas_Web.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ReportTagLinkId"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ReportTagLinkId"));
 
                     b.Property<int>("ReportId")
                         .HasColumnType("int");
@@ -1668,7 +1656,7 @@ namespace Atlas_Web.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RolePermissionsId"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RolePermissionsId"));
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
@@ -1688,7 +1676,7 @@ namespace Atlas_Web.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RolePermissionLinksId"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RolePermissionLinksId"));
 
                     b.Property<int>("RoleId")
                         .HasColumnType("int");
@@ -1712,7 +1700,7 @@ namespace Atlas_Web.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
@@ -1744,7 +1732,7 @@ namespace Atlas_Web.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("StarId"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("StarId"));
 
                     b.Property<int>("Collectionid")
                         .HasColumnType("int");
@@ -1779,7 +1767,7 @@ namespace Atlas_Web.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("StarId"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("StarId"));
 
                     b.Property<int?>("Folderid")
                         .HasColumnType("int");
@@ -1803,8 +1791,7 @@ namespace Atlas_Web.Migrations
                     b.HasIndex(new[] { "Groupid", "Ownerid" }, "groupid + ownerid");
 
                     b.HasIndex(new[] { "StarId" }, "starid")
-                        .IsUnique()
-                        .HasDatabaseName("starid1");
+                        .IsUnique();
 
                     b.ToTable("StarredGroups", "app");
                 });
@@ -1815,7 +1802,7 @@ namespace Atlas_Web.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("StarId"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("StarId"));
 
                     b.Property<int?>("Folderid")
                         .HasColumnType("int");
@@ -1834,14 +1821,12 @@ namespace Atlas_Web.Migrations
 
                     b.HasIndex("Ownerid");
 
-                    b.HasIndex(new[] { "Folderid" }, "folderid")
-                        .HasDatabaseName("folderid1");
+                    b.HasIndex(new[] { "Folderid" }, "folderid");
 
                     b.HasIndex(new[] { "Initiativeid", "Ownerid" }, "initiativeid + ownerid");
 
                     b.HasIndex(new[] { "StarId" }, "starid")
-                        .IsUnique()
-                        .HasDatabaseName("starid2");
+                        .IsUnique();
 
                     b.ToTable("StarredInitiatives", "app");
                 });
@@ -1852,7 +1837,7 @@ namespace Atlas_Web.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("StarId"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("StarId"));
 
                     b.Property<int?>("Folderid")
                         .HasColumnType("int");
@@ -1871,14 +1856,12 @@ namespace Atlas_Web.Migrations
 
                     b.HasIndex("Ownerid");
 
-                    b.HasIndex(new[] { "Folderid" }, "folderid")
-                        .HasDatabaseName("folderid2");
+                    b.HasIndex(new[] { "Folderid" }, "folderid");
 
                     b.HasIndex(new[] { "Reportid", "Ownerid" }, "reportid + ownerid");
 
                     b.HasIndex(new[] { "StarId" }, "starid")
-                        .IsUnique()
-                        .HasDatabaseName("starid3");
+                        .IsUnique();
 
                     b.ToTable("StarredReports", "app");
                 });
@@ -1889,7 +1872,7 @@ namespace Atlas_Web.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("StarId"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("StarId"));
 
                     b.Property<int?>("Folderid")
                         .HasColumnType("int");
@@ -1911,8 +1894,7 @@ namespace Atlas_Web.Migrations
                     b.HasIndex(new[] { "Ownerid" }, "ownerid");
 
                     b.HasIndex(new[] { "StarId" }, "starid")
-                        .IsUnique()
-                        .HasDatabaseName("starid4");
+                        .IsUnique();
 
                     b.ToTable("StarredSearches", "app");
                 });
@@ -1923,7 +1905,7 @@ namespace Atlas_Web.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("StarId"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("StarId"));
 
                     b.Property<int?>("Folderid")
                         .HasColumnType("int");
@@ -1942,12 +1924,10 @@ namespace Atlas_Web.Migrations
 
                     b.HasIndex("Ownerid");
 
-                    b.HasIndex(new[] { "Folderid" }, "folderid")
-                        .HasDatabaseName("folderid3");
+                    b.HasIndex(new[] { "Folderid" }, "folderid");
 
                     b.HasIndex(new[] { "StarId" }, "starid")
-                        .IsUnique()
-                        .HasDatabaseName("starid5");
+                        .IsUnique();
 
                     b.HasIndex(new[] { "Termid", "Ownerid" }, "termid + ownerid");
 
@@ -1960,7 +1940,7 @@ namespace Atlas_Web.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("StarId"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("StarId"));
 
                     b.Property<int?>("Folderid")
                         .HasColumnType("int");
@@ -1979,14 +1959,12 @@ namespace Atlas_Web.Migrations
 
                     b.HasIndex("Ownerid");
 
-                    b.HasIndex(new[] { "Folderid" }, "folderid")
-                        .HasDatabaseName("folderid4");
+                    b.HasIndex(new[] { "Folderid" }, "folderid");
 
                     b.HasIndex(new[] { "Userid", "Ownerid" }, "ownerid + userid");
 
                     b.HasIndex(new[] { "StarId" }, "starid")
-                        .IsUnique()
-                        .HasDatabaseName("starid6");
+                        .IsUnique();
 
                     b.ToTable("StarredUsers", "app");
                 });
@@ -1997,7 +1975,7 @@ namespace Atlas_Web.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
@@ -2015,7 +1993,7 @@ namespace Atlas_Web.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TagId"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TagId"));
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
@@ -2031,8 +2009,7 @@ namespace Atlas_Web.Migrations
 
                     b.HasKey("TagId");
 
-                    b.HasIndex(new[] { "TagId" }, "tagid")
-                        .HasDatabaseName("tagid1");
+                    b.HasIndex(new[] { "TagId" }, "tagid");
 
                     b.HasIndex(new[] { "Name" }, "tagname");
 
@@ -2045,7 +2022,7 @@ namespace Atlas_Web.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TermId"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TermId"));
 
                     b.Property<DateTime?>("ApprovalDateTime")
                         .HasColumnType("datetime");
@@ -2103,8 +2080,7 @@ namespace Atlas_Web.Migrations
                     b.HasIndex(new[] { "TermId" }, "termid")
                         .IsUnique();
 
-                    b.HasIndex(new[] { "UpdatedByUserId" }, "updatedby")
-                        .HasDatabaseName("updatedby1");
+                    b.HasIndex(new[] { "UpdatedByUserId" }, "updatedby");
 
                     b.HasIndex(new[] { "ValidFromDateTime" }, "validfrom");
 
@@ -2118,7 +2094,7 @@ namespace Atlas_Web.Migrations
                         .HasColumnType("int")
                         .HasColumnName("UserID");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserId"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserId"));
 
                     b.Property<string>("AccountName")
                         .HasColumnType("nvarchar(max)");
@@ -2168,6 +2144,9 @@ namespace Atlas_Web.Migrations
                     b.Property<string>("Phone")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("ProfilePhoto")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Title")
                         .HasColumnType("nvarchar(max)");
 
@@ -2178,8 +2157,7 @@ namespace Atlas_Web.Migrations
                     b.HasKey("UserId");
 
                     b.HasIndex(new[] { "UserId" }, "userid")
-                        .IsUnique()
-                        .HasDatabaseName("userid1");
+                        .IsUnique();
 
                     b.ToTable("User", "dbo");
                 });
@@ -2190,7 +2168,7 @@ namespace Atlas_Web.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserFavoriteFolderId"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserFavoriteFolderId"));
 
                     b.Property<string>("FolderName")
                         .HasColumnType("nvarchar(max)");
@@ -2203,8 +2181,7 @@ namespace Atlas_Web.Migrations
 
                     b.HasKey("UserFavoriteFolderId");
 
-                    b.HasIndex(new[] { "UserId" }, "userid")
-                        .HasDatabaseName("userid2");
+                    b.HasIndex(new[] { "UserId" }, "userid");
 
                     b.ToTable("UserFavoriteFolders", "app");
                 });
@@ -2215,7 +2192,7 @@ namespace Atlas_Web.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("GroupId"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("GroupId"));
 
                     b.Property<string>("AccountName")
                         .HasColumnType("nvarchar(max)");
@@ -2252,7 +2229,7 @@ namespace Atlas_Web.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MembershipId"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MembershipId"));
 
                     b.Property<int>("GroupId")
                         .HasColumnType("int");
@@ -2278,7 +2255,7 @@ namespace Atlas_Web.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserPreferenceId"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserPreferenceId"));
 
                     b.Property<int?>("ItemId")
                         .HasColumnType("int");
@@ -2307,7 +2284,7 @@ namespace Atlas_Web.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserRolesId"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserRolesId"));
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
@@ -2329,7 +2306,7 @@ namespace Atlas_Web.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserRoleLinksId"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserRoleLinksId"));
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
@@ -2353,7 +2330,7 @@ namespace Atlas_Web.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");

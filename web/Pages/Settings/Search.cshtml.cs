@@ -2,19 +2,16 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Atlas_Web.Models;
-using Microsoft.Extensions.Caching.Memory;
 
 namespace Atlas_Web.Pages.Settings
 {
     public class SearchModel : PageModel
     {
         private readonly Atlas_WebContext _context;
-        private readonly IMemoryCache _cache;
 
-        public SearchModel(Atlas_WebContext context, IMemoryCache cache)
+        public SearchModel(Atlas_WebContext context)
         {
             _context = context;
-            _cache = cache;
         }
 
         public GlobalSiteSetting UserVisibility { get; set; }

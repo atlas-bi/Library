@@ -5,6 +5,7 @@ using Microsoft.Extensions.Options;
 
 namespace Atlas_Web.Authentication
 {
+#pragma warning disable S2094
     public class DemoSchemeOptions : AuthenticationSchemeOptions { }
 
     public class DemoAuthHandler : AuthenticationHandler<DemoSchemeOptions>
@@ -14,7 +15,8 @@ namespace Atlas_Web.Authentication
             ILoggerFactory logger,
             UrlEncoder encoder,
             ISystemClock clock
-        ) : base(options, logger, encoder, clock) { }
+        )
+            : base(options, logger, encoder, clock) { }
 
         protected override Task<AuthenticateResult> HandleAuthenticateAsync()
         {

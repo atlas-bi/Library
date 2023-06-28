@@ -90,11 +90,15 @@ public class BasicTests : IClassFixture<BrowserFactory<Program>>
             driver.Navigate().GoToUrl(_baseAddress.ToString() + url);
         }
         // get session details
-        Object sessionObject = ((IJavaScriptExecutor)driver).ExecuteScript(
-            "browserstack_executor: {\"action\": \"getSessionDetails\"}"
+        string sessionObject = Convert.ToString(
+            ((IJavaScriptExecutor)driver).ExecuteScript(
+                "browserstack_executor: {\"action\": \"getSessionDetails\"}"
+            )
         );
 
-        var session_details = JObject.Parse(Convert.ToString(sessionObject));
+        Assert.NotNull(sessionObject);
+
+        var session_details = JObject.Parse(sessionObject);
 
         driver.Quit();
         local.stop();
@@ -140,7 +144,5 @@ public class BasicTests : IClassFixture<BrowserFactory<Program>>
         Assert.DoesNotContain("\"status\":407", networkLogs);
         Assert.DoesNotContain("\"status\":408", networkLogs);
         Assert.DoesNotContain("\"status\":409", networkLogs);
-
-
     }
 }

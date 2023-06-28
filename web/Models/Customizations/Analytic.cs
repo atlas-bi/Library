@@ -1,11 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.ComponentModel.DataAnnotations.Schema;
 using Atlas_Web.Helpers;
 
 namespace Atlas_Web.Models
 {
-    public class Analytics__Metadata { }
+    public interface Analytics__Metadata { }
 
     [ModelMetadataType(typeof(Analytics__Metadata))]
     public partial class Analytic

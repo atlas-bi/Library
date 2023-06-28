@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Atlas_Web.Models;
 using Microsoft.Extensions.Caching.Memory;
-using Microsoft.AspNetCore.Authorization;
 
 namespace Atlas_Web.Pages.Reports
 {
@@ -12,20 +11,10 @@ namespace Atlas_Web.Pages.Reports
         private readonly Atlas_WebContext _context;
         private readonly IMemoryCache _cache;
 
-        private readonly IConfiguration _config;
-        private readonly IAuthorizationService _authorizationService;
-
-        public IndexModel(
-            Atlas_WebContext context,
-            IMemoryCache cache,
-            IConfiguration config,
-            IAuthorizationService authorizationService
-        )
+        public IndexModel(Atlas_WebContext context, IMemoryCache cache)
         {
             _context = context;
             _cache = cache;
-            _config = config;
-            _authorizationService = authorizationService;
         }
 
         public class MaintStatus
@@ -329,7 +318,8 @@ namespace Atlas_Web.Pages.Reports
                                             .Select(x => x.MaintenanceLogId)
                                             .Max()
                                 )
-                                .First().MaintenanceDate,
+                                .First()
+                                .MaintenanceDate,
                             x.ReportObjectId,
                             name = x.ReportObject.DisplayName
                         }
@@ -340,16 +330,16 @@ namespace Atlas_Web.Pages.Reports
                         NextDate = l.sch == 1
                             ? (l.thiss ?? Today).AddMonths(3)
                             : // quarterly
-                              l.sch == 2
+                            l.sch == 2
                                 ? (l.thiss ?? Today).AddMonths(6)
                                 : // twice a year
-                                  l.sch == 3
+                                l.sch == 3
                                     ? (l.thiss ?? Today).AddYears(1)
                                     : // yearly
-                                      l.sch == 4
+                                    l.sch == 4
                                         ? (l.thiss ?? Today).AddYears(2)
                                         : // every two years
-                                          (l.thiss ?? Today),
+                                        (l.thiss ?? Today),
                         Name = l.name
                     }
                 )

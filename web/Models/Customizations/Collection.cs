@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Atlas_Web.Models
 {
-    public class Collection__Metadata { }
+    public interface Collection__Metadata { }
 
     [ModelMetadataType(typeof(Collection__Metadata))]
     public partial class Collection

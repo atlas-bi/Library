@@ -1,11 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
 
 namespace Atlas_Web.Models
 {
-    public class MailDrafts__Metadata { }
+    public interface MailDrafts__Metadata { }
 
     [ModelMetadataType(typeof(MailDrafts__Metadata))]
     public partial class MailDraft
