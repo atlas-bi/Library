@@ -116,7 +116,5 @@ namespace Atlas_Web.Pages.Collections
 
             return RedirectToPage("/Collections/Index");
         }
-
-
     }
 }

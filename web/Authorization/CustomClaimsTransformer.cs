@@ -27,7 +27,6 @@ public class CustomClaimsTransformer : IClaimsTransformation
 #pragma warning disable S112
             throw new Exception("User " + principal.Identity.Name + " does not exist.");
 #pragma warning restore S112
-
         }
 
         var clone = principal.Clone();
@@ -172,14 +171,29 @@ public class CustomClaimsTransformer : IClaimsTransformation
 
         if (me == null)
         {
-            await _context.AddAsync(
-                new User
-                {
-                    Username = username,
-                    FullnameCalc = "Guest",
-                    FirstnameCalc = "Guest"
-                }
-            );
+            if (username.Contains("@"))
+            {
+                await _context.AddAsync(
+                    new User
+                    {
+                        Email = username,
+                        Username = username,
+                        FullnameCalc = "Guest",
+                        FirstnameCalc = "Guest"
+                    }
+                );
+            }
+            else
+            {
+                await _context.AddAsync(
+                    new User
+                    {
+                        Username = username,
+                        FullnameCalc = "Guest",
+                        FirstnameCalc = "Guest"
+                    }
+                );
+            }
             await _context.SaveChangesAsync();
 
             // if this is the first user in the db (new install), make them an admin.
@@ -188,11 +202,19 @@ public class CustomClaimsTransformer : IClaimsTransformation
                 await _context.AddAsync(
                     new UserRoleLink
                     {
-                        UserId = _context.Users.Where(x => x.Username == username).First().UserId,
-                        UserRolesId =
-                            _context.UserRoles
-                                .Where(x => x.Name == "Administrator")
-                                .First().UserRolesId
+                        UserId = _context.Users
+                            .Where(
+                                x =>
+                                    username.Contains("@")
+                                        ? x.Email == username
+                                        : x.Username == username
+                            )
+                            .First()
+                            .UserId,
+                        UserRolesId = _context.UserRoles
+                            .Where(x => x.Name == "Administrator")
+                            .First()
+                            .UserRolesId
                     }
                 );
                 await _context.SaveChangesAsync();

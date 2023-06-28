@@ -49,6 +49,7 @@
     "jsnlog": "2.30.0",
     "lint-staged": "^13.2.2",
     "markdown-it": "13.0.1",
+    "npm-run-all": "^4.1.5",
     "open": "8.4.2",
     "postcss": "^8.4.24",
     "prettier": "^2.8.8",
@@ -74,6 +75,7 @@
   "scripts": {
     "install": "dotnet tool update --global dotnet-ef",
     "start": "gulp start",
+    "start:saml": "run-p dev:saml start",
     "build": "gulp build",
     "watch": "gulp watch",
     "pre-commit": "lint-staged",

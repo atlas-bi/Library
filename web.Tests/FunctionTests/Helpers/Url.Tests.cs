@@ -20,7 +20,6 @@ public class ModelHelpersTests : IClassFixture<TestDatabaseFixture>
         //var controller = new BloggingController(context);
         // var blog = controller.GetBlog("Blog2").Value;
         // Assert.Equal("http://blog2.com", blog.Url);
-
     }
 }
 

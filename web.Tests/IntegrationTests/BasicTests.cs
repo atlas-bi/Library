@@ -45,7 +45,5 @@ namespace web.Tests.IntegrationTests
             //     response.Content.Headers.ContentType.ToString()
             // );
         }
-
-
     }
 }

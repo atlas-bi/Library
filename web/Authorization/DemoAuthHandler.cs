@@ -15,7 +15,8 @@ namespace Atlas_Web.Authentication
             ILoggerFactory logger,
             UrlEncoder encoder,
             ISystemClock clock
-        ) : base(options, logger, encoder, clock) { }
+        )
+            : base(options, logger, encoder, clock) { }
 
         protected override Task<AuthenticateResult> HandleAuthenticateAsync()
         {

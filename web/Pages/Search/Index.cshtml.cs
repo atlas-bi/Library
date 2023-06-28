@@ -22,8 +22,6 @@ namespace Atlas_Web.Pages.Search
             ObjectId = Id;
             Name = Value;
         }
-
-
     }
 
     [ResponseCache(NoStore = true)]
@@ -391,118 +389,116 @@ namespace Atlas_Web.Pages.Search
                                     report =
                                         x.Type == "reports"
                                             ? _cache.GetOrCreate<ReportObject>(
-                                                  "search-report-" + x.AtlasId,
-                                                  cacheEntry =>
-                                                  {
-                                                      cacheEntry.AbsoluteExpirationRelativeToNow =
-                                                          TimeSpan.FromMinutes(20);
-                                                      return _context.ReportObjects
-                                                          .Include(x => x.ReportObjectDoc)
-                                                          .Include(x => x.ReportObjectAttachments)
-                                                          .Include(x => x.StarredReports)
-                                                          .Include(x => x.ReportObjectType)
-                                                          .Include(x => x.ReportTagLinks)
-                                                          .ThenInclude(x => x.Tag)
-                                                          // for authentication
-                                                          .Include(
-                                                              x =>
-                                                                  x.ReportObjectHierarchyChildReportObjects
-                                                          )
-                                                          .ThenInclude(x => x.ParentReportObject)
-                                                          .ThenInclude(
-                                                              x => x.ReportGroupsMemberships
-                                                          )
-                                                          .AsSingleQuery()
-                                                          .AsNoTracking()
-                                                          .SingleOrDefault(
-                                                              y => y.ReportObjectId == x.AtlasId
-                                                          );
-                                                  }
-                                              )
+                                                "search-report-" + x.AtlasId,
+                                                cacheEntry =>
+                                                {
+                                                    cacheEntry.AbsoluteExpirationRelativeToNow =
+                                                        TimeSpan.FromMinutes(20);
+                                                    return _context.ReportObjects
+                                                        .Include(x => x.ReportObjectDoc)
+                                                        .Include(x => x.ReportObjectAttachments)
+                                                        .Include(x => x.StarredReports)
+                                                        .Include(x => x.ReportObjectType)
+                                                        .Include(x => x.ReportTagLinks)
+                                                        .ThenInclude(x => x.Tag)
+                                                        // for authentication
+                                                        .Include(
+                                                            x =>
+                                                                x.ReportObjectHierarchyChildReportObjects
+                                                        )
+                                                        .ThenInclude(x => x.ParentReportObject)
+                                                        .ThenInclude(x => x.ReportGroupsMemberships)
+                                                        .AsSingleQuery()
+                                                        .AsNoTracking()
+                                                        .SingleOrDefault(
+                                                            y => y.ReportObjectId == x.AtlasId
+                                                        );
+                                                }
+                                            )
                                             : null,
                                     collection =
                                         x.Type == "collections"
                                             ? _cache.GetOrCreate<Collection>(
-                                                  "search-collection-" + x.AtlasId,
-                                                  cacheEntry =>
-                                                  {
-                                                      cacheEntry.AbsoluteExpirationRelativeToNow =
-                                                          TimeSpan.FromMinutes(20);
-                                                      return _context.Collections
-                                                          .Include(x => x.StarredCollections)
-                                                          .AsSingleQuery()
-                                                          .AsNoTracking()
-                                                          .SingleOrDefault(
-                                                              y => y.CollectionId == x.AtlasId
-                                                          );
-                                                  }
-                                              )
+                                                "search-collection-" + x.AtlasId,
+                                                cacheEntry =>
+                                                {
+                                                    cacheEntry.AbsoluteExpirationRelativeToNow =
+                                                        TimeSpan.FromMinutes(20);
+                                                    return _context.Collections
+                                                        .Include(x => x.StarredCollections)
+                                                        .AsSingleQuery()
+                                                        .AsNoTracking()
+                                                        .SingleOrDefault(
+                                                            y => y.CollectionId == x.AtlasId
+                                                        );
+                                                }
+                                            )
                                             : null,
                                     term =
                                         x.Type == "terms"
                                             ? _cache.GetOrCreate<Term>(
-                                                  "search-term-" + x.AtlasId,
-                                                  cacheEntry =>
-                                                  {
-                                                      cacheEntry.AbsoluteExpirationRelativeToNow =
-                                                          TimeSpan.FromMinutes(20);
-                                                      return _context.Terms
-                                                          .Include(x => x.StarredTerms)
-                                                          .AsSingleQuery()
-                                                          .SingleOrDefault(
-                                                              y => y.TermId == x.AtlasId
-                                                          );
-                                                  }
-                                              )
+                                                "search-term-" + x.AtlasId,
+                                                cacheEntry =>
+                                                {
+                                                    cacheEntry.AbsoluteExpirationRelativeToNow =
+                                                        TimeSpan.FromMinutes(20);
+                                                    return _context.Terms
+                                                        .Include(x => x.StarredTerms)
+                                                        .AsSingleQuery()
+                                                        .SingleOrDefault(
+                                                            y => y.TermId == x.AtlasId
+                                                        );
+                                                }
+                                            )
                                             : null,
                                     initiative =
                                         x.Type == "initiatives"
                                             ? _cache.GetOrCreate<Initiative>(
-                                                  "search-initaitive-" + x.AtlasId,
-                                                  cacheEntry =>
-                                                  {
-                                                      cacheEntry.AbsoluteExpirationRelativeToNow =
-                                                          TimeSpan.FromMinutes(20);
-                                                      return _context.Initiatives
-                                                          .Include(x => x.StarredInitiatives)
-                                                          .AsSingleQuery()
-                                                          .SingleOrDefault(
-                                                              y => y.InitiativeId == x.AtlasId
-                                                          );
-                                                  }
-                                              )
+                                                "search-initaitive-" + x.AtlasId,
+                                                cacheEntry =>
+                                                {
+                                                    cacheEntry.AbsoluteExpirationRelativeToNow =
+                                                        TimeSpan.FromMinutes(20);
+                                                    return _context.Initiatives
+                                                        .Include(x => x.StarredInitiatives)
+                                                        .AsSingleQuery()
+                                                        .SingleOrDefault(
+                                                            y => y.InitiativeId == x.AtlasId
+                                                        );
+                                                }
+                                            )
                                             : null,
                                     user =
                                         x.Type == "users"
                                             ? _cache.GetOrCreate<User>(
-                                                  "search-user-" + x.AtlasId,
-                                                  cacheEntry =>
-                                                  {
-                                                      cacheEntry.AbsoluteExpirationRelativeToNow =
-                                                          TimeSpan.FromMinutes(20);
-                                                      return _context.Users
-                                                          .AsSingleQuery()
-                                                          .SingleOrDefault(
-                                                              y => y.UserId == x.AtlasId
-                                                          );
-                                                  }
-                                              )
+                                                "search-user-" + x.AtlasId,
+                                                cacheEntry =>
+                                                {
+                                                    cacheEntry.AbsoluteExpirationRelativeToNow =
+                                                        TimeSpan.FromMinutes(20);
+                                                    return _context.Users
+                                                        .AsSingleQuery()
+                                                        .SingleOrDefault(
+                                                            y => y.UserId == x.AtlasId
+                                                        );
+                                                }
+                                            )
                                             : null,
                                     group =
                                         x.Type == "groups"
                                             ? _cache.GetOrCreate<UserGroup>(
-                                                  "search-group-" + x.AtlasId,
-                                                  cacheEntry =>
-                                                  {
-                                                      cacheEntry.AbsoluteExpirationRelativeToNow =
-                                                          TimeSpan.FromMinutes(20);
-                                                      return _context.UserGroups
-                                                          .AsSingleQuery()
-                                                          .SingleOrDefault(
-                                                              y => y.GroupId == x.AtlasId
-                                                          );
-                                                  }
-                                              )
+                                                "search-group-" + x.AtlasId,
+                                                cacheEntry =>
+                                                {
+                                                    cacheEntry.AbsoluteExpirationRelativeToNow =
+                                                        TimeSpan.FromMinutes(20);
+                                                    return _context.UserGroups
+                                                        .AsSingleQuery()
+                                                        .SingleOrDefault(
+                                                            y => y.GroupId == x.AtlasId
+                                                        );
+                                                }
+                                            )
                                             : null
                                 }
                         )

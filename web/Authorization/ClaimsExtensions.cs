@@ -22,8 +22,8 @@ public static class ClaimsPrincipalExtensions
     public static string HasAdminEnabled(this ClaimsPrincipal principal)
     {
         return string.IsNullOrEmpty(principal.FindFirstValue("AdminEnabled"))
-          ? "Y"
-          : principal.FindFirstValue("AdminEnabled");
+            ? "Y"
+            : principal.FindFirstValue("AdminEnabled");
     }
 
     public static bool HasPermission(this ClaimsPrincipal principal, string claim)

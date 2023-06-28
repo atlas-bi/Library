@@ -15,8 +15,6 @@ namespace Atlas_Web.Pages.Reports
         {
             _context = context;
             _cache = cache;
-
-
         }
 
         public class MaintStatus
@@ -320,7 +318,8 @@ namespace Atlas_Web.Pages.Reports
                                             .Select(x => x.MaintenanceLogId)
                                             .Max()
                                 )
-                                .First().MaintenanceDate,
+                                .First()
+                                .MaintenanceDate,
                             x.ReportObjectId,
                             name = x.ReportObject.DisplayName
                         }
@@ -331,16 +330,16 @@ namespace Atlas_Web.Pages.Reports
                         NextDate = l.sch == 1
                             ? (l.thiss ?? Today).AddMonths(3)
                             : // quarterly
-                              l.sch == 2
+                            l.sch == 2
                                 ? (l.thiss ?? Today).AddMonths(6)
                                 : // twice a year
-                                  l.sch == 3
+                                l.sch == 3
                                     ? (l.thiss ?? Today).AddYears(1)
                                     : // yearly
-                                      l.sch == 4
+                                    l.sch == 4
                                         ? (l.thiss ?? Today).AddYears(2)
                                         : // every two years
-                                          (l.thiss ?? Today),
+                                        (l.thiss ?? Today),
                         Name = l.name
                     }
                 )

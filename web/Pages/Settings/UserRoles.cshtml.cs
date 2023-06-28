@@ -13,8 +13,6 @@ namespace Atlas_Web.Pages.Settings
         public UserRolesModel(Atlas_WebContext context)
         {
             _context = context;
-
-
         }
 
         public List<PrivilegedUsersData> PrivilegedUsers { get; set; }
