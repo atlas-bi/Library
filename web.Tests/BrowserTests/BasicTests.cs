@@ -144,7 +144,5 @@ public class BasicTests : IClassFixture<BrowserFactory<Program>>
         Assert.DoesNotContain("\"status\":407", networkLogs);
         Assert.DoesNotContain("\"status\":408", networkLogs);
         Assert.DoesNotContain("\"status\":409", networkLogs);
-
-
     }
 }

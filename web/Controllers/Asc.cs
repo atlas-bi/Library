@@ -42,8 +42,8 @@ namespace Atlas_Web.Controllers
 
             var relayStateQuery = binding.GetRelayStateQuery();
             var returnUrl = relayStateQuery.ContainsKey(relayStateReturnUrl)
-              ? relayStateQuery[relayStateReturnUrl]
-              : Url.Content("~/");
+                ? relayStateQuery[relayStateReturnUrl]
+                : Url.Content("~/");
             return Redirect(returnUrl);
         }
     }

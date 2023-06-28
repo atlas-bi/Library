@@ -79,9 +79,9 @@ namespace web.Tests.FunctionTests
 
         public Atlas_WebContext CreateContext() =>
             new Atlas_WebContext(
-                new DbContextOptionsBuilder<Atlas_WebContext>().UseSqlServer(
-                    ConnectionString
-                ).Options
+                new DbContextOptionsBuilder<Atlas_WebContext>()
+                    .UseSqlServer(ConnectionString)
+                    .Options
             );
 
         public IMemoryCache CreateCache() => new MemoryCache(new MemoryCacheOptions());

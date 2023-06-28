@@ -90,10 +90,5 @@ namespace Atlas_Web.Models
         }
 
         public int LastPage => (int)Math.Floor(((decimal)NumFound - 1) / Parameters.PageSize) + 1;
-
-
-
-
-
     }
 }

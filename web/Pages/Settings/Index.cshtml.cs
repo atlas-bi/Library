@@ -138,7 +138,5 @@ namespace Atlas_Web.Pages.Settings
 
             return RedirectToPage("/Settings/Index");
         }
-
-
     }
 }
