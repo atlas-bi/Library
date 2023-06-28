@@ -90,7 +90,7 @@ public class BasicTests : IClassFixture<BrowserFactory<Program>>
             driver.Navigate().GoToUrl(_baseAddress.ToString() + url);
         }
         // get session details
-        string? sessionObject = Convert.ToString(
+        string sessionObject = Convert.ToString(
             ((IJavaScriptExecutor)driver).ExecuteScript(
                 "browserstack_executor: {\"action\": \"getSessionDetails\"}"
             )

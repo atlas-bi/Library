@@ -17,7 +17,7 @@ jobs:
       - name: setup node
         uses: actions/setup-node@v3
         with:
-          node-version: '16.x'
+          node-version: '18.x'
 
       - name: install node deps
         run: npm install
@@ -41,7 +41,7 @@ jobs:
       - name: setup node
         uses: actions/setup-node@v3
         with:
-          node-version: '16.x'
+          node-version: '18.x'
       - name: install node deps
         run: npm install
       - name: node build
@@ -78,7 +78,7 @@ jobs:
       - name: setup node
         uses: actions/setup-node@v3
         with:
-          node-version: '16.x'
+          node-version: '18.x'
       - name: setup java
         uses: actions/setup-java@v3
         with:
@@ -137,7 +137,7 @@ jobs:
   #     - name: setup node
   #       uses: actions/setup-node@v3
   #       with:
-  #         node-version: '16.x'
+  #         node-version: '18.x'
   #     - name: setup java
   #       uses: actions/setup-java@v3
   #       with:
@@ -196,7 +196,7 @@ jobs:
       - name: setup node
         uses: actions/setup-node@v3
         with:
-          node-version: '16.x'
+          node-version: '18.x'
       - name: setup java
         uses: actions/setup-java@v3
         with:

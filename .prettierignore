@@ -20,3 +20,5 @@ web.Tests/obj/*
 web.Tests/*
 out/
 .lighthouseci/*
+idp/
+package-lock.json
