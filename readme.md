@@ -8,6 +8,8 @@
 
 <h4 align="center">Atlas BI Library | The unified report library.</h4>
 
+<h2 align="center">This branch is for IE 11 support. Documentation for this release can be found <a href="https://github.com/atlas-bi/website/tree/880a7195920ee2d68d0f9cfbe0a2de2e16950209" target="_blank">here.</a></h2>
+
 <p align="center">
     <a href="https://www.atlas.bi" target="_blank">Website</a> • <a href="https://demo.atlas.bi" target="_blank">Demo</a> • <a href="https://www.atlas.bi/docs/bi-library/" target="_blank">Documentation</a> • <a href="https://discord.gg/hdz2cpygQD" target="_blank">Chat</a>
 </p>
