@@ -5,7 +5,8 @@
       "name": "Atlas Debugger",
       "type": "coreclr",
       "request": "attach",
-      "processName": "Atlas_Web.exe",
+      "processId": "${command:pickProcess}",
+      // "processName": "Atlas_Web.exe",
       "requireExactSource": false
     }
   ]
