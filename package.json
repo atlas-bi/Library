@@ -60,7 +60,7 @@
     "semantic-release": "^21.0.5",
     "stylelint": "^15.8.0",
     "stylelint-config-prettier-scss": "1.0.0",
-    "stylelint-config-standard-scss": "^9.0.0",
+    "stylelint-config-standard-scss": "^10.0.0",
     "stylelint-scss": "^5.0.0",
     "xo": "^0.54.2"
   },
@@ -162,5 +162,5 @@
       "unicorn/no-typeof-undefined": "off"
     }
   },
-  "version": "3.12.23"
+  "version": "3.12.24"
 }
