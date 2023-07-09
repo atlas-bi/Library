@@ -52,7 +52,7 @@
     "npm-run-all": "^4.1.5",
     "open": "8.4.2",
     "postcss": "^8.4.24",
-    "prettier": "^2.8.8",
+    "prettier": "^3.0.0",
     "proxy-polyfill": "0.3.2",
     "regenerator-runtime": "^0.13.11",
     "rollup": "^3.25.3",
@@ -162,5 +162,5 @@
       "unicorn/no-typeof-undefined": "off"
     }
   },
-  "version": "3.12.25"
+  "version": "3.12.26"
 }
