@@ -20,7 +20,7 @@
     "@semantic-release/git": "10.0.1",
     "@semantic-release/github": "^9.0.0",
     "@semantic-release/npm": "^10.0.4",
-    "@semantic-release/release-notes-generator": "11.0.3",
+    "@semantic-release/release-notes-generator": "11.0.4",
     "@toycode/markdown-it-class": "1.2.4",
     "bulma": "0.9.4",
     "bulma-checkradio": "2.1.3",
@@ -162,5 +162,5 @@
       "unicorn/no-typeof-undefined": "off"
     }
   },
-  "version": "3.12.24"
+  "version": "3.12.25"
 }
