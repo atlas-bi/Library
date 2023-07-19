@@ -11,7 +11,7 @@ using SixLabors.ImageSharp.Formats.Webp;
 
 namespace Atlas_Web.Pages.Data
 {
-    [ResponseCache(Duration = 20 * 60)]
+    [ResponseCache(NoStore = true)]
     public class ImgModel : PageModel
     {
         private readonly Atlas_WebContext _context;
