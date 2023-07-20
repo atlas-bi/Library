@@ -136,11 +136,13 @@ $card-colors: (
 );
 @each $code, $color in $card-colors {
   .card.is-#{$code} {
-    box-shadow: 0 0.5em 1em -0.125em rgba($color, 0.7),
+    box-shadow:
+      0 0.5em 1em -0.125em rgba($color, 0.7),
       0 0 0 1px rgba($scheme-invert, 0.02);
   }
   .card.is-#{$code}:hover {
-    box-shadow: 0 0 1.5em -0.125em rgba($color, 0.7),
+    box-shadow:
+      0 0 1.5em -0.125em rgba($color, 0.7),
       0 0 0 2px rgba($scheme-invert, 0.02);
   }
 }
@@ -340,7 +342,8 @@ button.is-ghost:not(.button) {
 }
 
 .has-shadow-gold {
-  box-shadow: 0 0.5em 1em -0.125em rgba(255 215 0 / 10%),
+  box-shadow:
+    0 0.5em 1em -0.125em rgba(255 215 0 / 10%),
     0 0 0 1px rgba(255 215 0 / 2%);
   border: 1px solid rgb(255 215 0);
 }
@@ -424,7 +427,9 @@ button.is-ghost:not(.button) {
 
 .bar-data-wrapper {
   visibility: hidden;
-  transition: visibiliy 0.2s, opacity 0.2s;
+  transition:
+    visibiliy 0.2s,
+    opacity 0.2s;
 }
 
 .is-middle {

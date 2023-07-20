@@ -215,8 +215,7 @@ namespace Atlas_Web.Pages.Users
                     var id = (int)l.FolderId;
                     _context.UserFavoriteFolders
                         .Where(x => x.UserFavoriteFolderId == id && x.UserId == User.GetUserId())
-                        .First()
-                        .FolderRank = l.FolderRank;
+                        .First().FolderRank = l.FolderRank;
                 }
                 _context.SaveChanges();
                 _cache.Remove("FavoriteFolders-" + User.GetUserId());
@@ -429,7 +428,7 @@ namespace Atlas_Web.Pages.Users
                                 where m.UserId == UserId
                                 select s
                             )
-                        orderby r.InactiveFlags, r.LastRunTime descending
+                        orderby r.InactiveFlags ,r.LastRunTime descending
                         select new SubscribedReportsData
                         {
                             Name = r.ReportObject.DisplayName,

@@ -11,6 +11,7 @@ using SixLabors.ImageSharp.Formats.Webp;
 
 namespace Atlas_Web.Pages.Data
 {
+    // added no store as IE11 doesn't seem to connect cache to url params.
     [ResponseCache(NoStore = true)]
     public class ImgModel : PageModel
     {
