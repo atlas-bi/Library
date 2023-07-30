@@ -37,7 +37,7 @@
     <PackageReference Include="System.Threading" Version="4.3.0" />
     <PackageReference Include="System.Runtime.Handles" Version="4.3.0" />
     <PackageReference Include="System.Diagnostics.Tracing" Version="4.3.0" />
-    <PackageReference Include="Hangfire" Version="1.8.3" />
+    <PackageReference Include="Hangfire" Version="1.8.4" />
     <PackageReference Include="Hangfire.InMemory" Version="0.5.1" />
     <PackageReference Include="HtmlSanitizer" Version="8.0.645" />
     <PackageReference Include="LigerShark.WebOptimizer.AutoPrefixer" Version="7.1.8-beta" />
@@ -62,7 +62,7 @@
     <PackageReference Include="System.Text.Json" Version="7.0.3" />
     <PackageReference Include="UAParser" Version="3.1.47" />
     <PackageReference Include="WebMarkupMin.AspNetCore5" Version="2.14.1" />
-    <PackageReference Include="SonarAnalyzer.CSharp" Version="9.5.0.73987">
+    <PackageReference Include="SonarAnalyzer.CSharp" Version="9.6.0.74858">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
