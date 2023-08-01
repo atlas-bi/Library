@@ -20,7 +20,14 @@
       console.log('AGL handshake succeeded');
       window.aglToken = event.data.token;
       setCookie('EPIC', 1, 99);
-      setCookie('AGL', 1, 99);
+
+      // if agl cookie was not set, then set it
+      // and refresh so the server regenerates any links
+
+      if (!getCookie('AGL')) {
+        setCookie('AGL', 1, 99);
+        window.location.reload();
+      }
 
       document.addEventListener('click', function (event) {
         if (event.target.closest('a[href]')) {

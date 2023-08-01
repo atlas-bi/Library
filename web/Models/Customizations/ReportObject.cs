@@ -272,7 +272,6 @@ namespace Atlas_Web.Models
                     || (
                         ReportType != "SSRS Report"
                         && ReportType != "SSRS File"
-                        && Epic
                         && ReportType != "Source Radar Dashboard Component"
                     )
                 )
@@ -312,6 +311,11 @@ namespace Atlas_Web.Models
                 {
                     NewUrl = "BI_ITM_SLICERDICER";
                 }
+                // after migration fully to hyperdrive this can be removed
+                // it is kept so that tableau links are
+                // else if (!string.IsNullOrEmpty(Url)) {
+                //     NewUrl = "CST_WEB_BROWSER";
+                // }
             }
 
             return NewUrl;
