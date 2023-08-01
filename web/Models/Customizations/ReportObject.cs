@@ -257,7 +257,7 @@ namespace Atlas_Web.Models
             string EnabledForHyperspace =
                 (report.ReportObjectDoc != null ? report.ReportObjectDoc.EnabledForHyperspace : "N")
                 ?? "N";
-            string NewUrl = null;
+            string NewUrl = Url;
             if (Name is null)
             {
                 return null;
@@ -311,10 +311,6 @@ namespace Atlas_Web.Models
                 else if (ReportType == "SlicerDicer Session" && EpicRecordId != null)
                 {
                     NewUrl = "BI_ITM_SLICERDICER";
-                }
-                else
-                {
-                    NewUrl = Url;
                 }
             }
 
