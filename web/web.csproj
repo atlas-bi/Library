@@ -62,7 +62,7 @@
     <PackageReference Include="System.Text.Json" Version="7.0.3" />
     <PackageReference Include="UAParser" Version="3.1.47" />
     <PackageReference Include="WebMarkupMin.AspNetCore5" Version="2.14.1" />
-    <PackageReference Include="SonarAnalyzer.CSharp" Version="9.7.0.75501">
+    <PackageReference Include="SonarAnalyzer.CSharp" Version="9.8.0.76515">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
