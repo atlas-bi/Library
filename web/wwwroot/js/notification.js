@@ -12,7 +12,10 @@
 
     notification.append(button);
     notification.insertAdjacentHTML('beforeend', DOMPurify.sanitize(message));
-    notificationWrapper.prepend(notification);
+    notificationWrapper.insertBefore(
+      notification,
+      notificationWrapper.childNodes[0],
+    );
 
     setTimeout(function () {
       notification.remove();
