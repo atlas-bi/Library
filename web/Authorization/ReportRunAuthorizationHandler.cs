@@ -13,7 +13,10 @@ namespace Atlas_Web.Authorization
         )
         {
             // Only catch - Crystal Report (3) & Reporting Workbench (17)
-            if (report.ReportObjectTypeId != 3 && report.ReportObjectTypeId != 17)
+            if (
+                report.ReportObjectType.Name != "Epic-Crystal Report"
+                && report.ReportObjectType.Name != "Reporting Workbench Report"
+            )
             {
                 context.Succeed(requirement);
                 return Task.CompletedTask;

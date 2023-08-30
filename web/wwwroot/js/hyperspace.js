@@ -19,7 +19,15 @@
     ) {
       console.log('AGL handshake succeeded');
       window.aglToken = event.data.token;
-      setCookie('AGL', 1, 99);
+      setCookie('EPIC', 1, 99);
+
+      // if agl cookie was not set, then set it
+      // and refresh so the server regenerates any links
+
+      if (!getCookie('AGL')) {
+        setCookie('AGL', 1, 99);
+        window.location.reload();
+      }
 
       document.addEventListener('click', function (event) {
         if (event.target.closest('a[href]')) {
@@ -117,22 +125,21 @@
           }
         }
       });
+    } else if (window.aglToken !== undefined) {
+      console.log('agl already connected.');
+    } else {
+      console.log('no agl listener found.');
     }
   }
 
-  window.aglToken = undefined;
-  if (Number(getUrlVars().EPIC) === 1 || Number(getCookie('EPIC')) === 1) {
-    setCookie('EPIC', 1, 99);
+  if (window.aglToken === undefined) {
+    // AGL Listener
+    window.addEventListener('message', AglListener, false);
 
-    if (window.aglToken === undefined) {
-      // AGL Listener
-      window.addEventListener('message', AglListener, false);
-
-      // Shake hands
-      window.parent.postMessage(
-        { action: 'Epic.Clinical.Informatics.Web.InitiateHandshake' },
-        '*',
-      );
-    }
+    // Shake hands
+    window.parent.postMessage(
+      { action: 'Epic.Clinical.Informatics.Web.InitiateHandshake' },
+      '*',
+    );
   }
 })();
