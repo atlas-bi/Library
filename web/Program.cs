@@ -21,6 +21,9 @@ using ITfoxtec.Identity.Saml2.Schemas.Metadata;
 using ITfoxtec.Identity.Saml2.MvcCore.Configuration;
 using ITfoxtec.Identity.Saml2.MvcCore;
 using System.Security.Cryptography.X509Certificates;
+using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel;
+using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Configuration.AddJsonFile("appsettings.cust.json", optional: true, reloadOnChange: true);
@@ -54,21 +57,6 @@ builder.Services.Configure<CookiePolicyOptions>(
     }
 );
 builder.Services.AddResponseCaching();
-
-builder.Services
-    .AddRazorPages()
-    .AddRazorPagesOptions(
-        options =>
-        {
-            options.Conventions.AddPageRoute("/Index/Index", "");
-            options.Conventions.AddPageRoute("/Index/About", "about_analytics");
-            options.Conventions.ConfigureFilter(new IgnoreAntiforgeryTokenAttribute());
-        }
-    )
-    .AddRazorRuntimeCompilation();
-builder.Services.AddControllers();
-builder.Services.AddSolrNet<SolrAtlas>(builder.Configuration["solr:atlas_address"]);
-builder.Services.AddSolrNet<SolrAtlasLookups>(builder.Configuration["solr:atlas_lookups_address"]);
 
 // for linq queries
 builder.Services.AddDbContext<Atlas_WebContext>(
@@ -105,6 +93,16 @@ builder.Services.AddResponseCompression(
 );
 
 builder.Services.AddMemoryCache();
+
+builder.Services
+    .AddDataProtection()
+    .UseCryptographicAlgorithms(
+        new AuthenticatedEncryptorConfiguration()
+        {
+            EncryptionAlgorithm = EncryptionAlgorithm.AES_256_CBC,
+            ValidationAlgorithm = ValidationAlgorithm.HMACSHA256
+        }
+    );
 
 var cssSettings = new CssBundlingSettings { Minify = true, FingerprintUrls = true, };
 var codeSettings = new CodeBundlingSettings { Minify = true, };
@@ -306,6 +304,21 @@ builder.Services.Configure<IISServerOptions>(
     }
 );
 
+builder.Services
+    .AddRazorPages()
+    .AddRazorPagesOptions(
+        options =>
+        {
+            options.Conventions.AddPageRoute("/Index/Index", "");
+            options.Conventions.AddPageRoute("/Index/About", "about_analytics");
+            options.Conventions.ConfigureFilter(new IgnoreAntiforgeryTokenAttribute());
+        }
+    )
+    .AddRazorRuntimeCompilation();
+builder.Services.AddControllers();
+builder.Services.AddSolrNet<SolrAtlas>(builder.Configuration["solr:atlas_address"]);
+builder.Services.AddSolrNet<SolrAtlasLookups>(builder.Configuration["solr:atlas_lookups_address"]);
+
 var app = builder.Build();
 
 app.UseResponseCompression();
@@ -347,20 +360,6 @@ app.UseAuthorization();
 
 app.MapRazorPages();
 app.MapControllers();
-
-app.UseResponseCaching();
-app.Use(
-    async (context, next) =>
-    {
-        context.Response.GetTypedHeaders().CacheControl =
-            new Microsoft.Net.Http.Headers.CacheControlHeaderValue
-            {
-                Public = true,
-                MaxAge = TimeSpan.FromMinutes(20)
-            };
-        await next();
-    }
-);
 
 app.Use(
     async (context, next) =>
