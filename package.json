@@ -161,7 +161,7 @@
       "unicorn/no-typeof-undefined": "off"
     }
   },
-  "version": "3.13.1",
+  "version": "3.13.2",
   "dependencies": {
     "sass": "^1.63.6"
   }
