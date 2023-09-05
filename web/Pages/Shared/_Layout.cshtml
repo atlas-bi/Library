@@ -172,6 +172,11 @@
                             {
                                 <a class="navbar-item" href="/terms">Terms</a>
                             }
+                            @if(Configuration.GetSection("nav:links").GetChildren().Count() > 0){
+                                @foreach(var l in Configuration.GetSection("nav:links").GetChildren()){
+                                    <a class="navbar-item"href="@l.Value" target="_blank">@l.Key</a>
+                                }
+                            }
                             <hr class="dropdown-divider">
                             <a class="navbar-item" href="/about_analytics">About Analytics</a>
                         </div>
