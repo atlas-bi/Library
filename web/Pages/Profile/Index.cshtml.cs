@@ -169,8 +169,8 @@ namespace Atlas_Web.Pages.Profile
                 {
                     Name = grp.Key.Name,
                     Type = string.IsNullOrEmpty(grp.Key.ShortName)
-                      ? grp.Key.ReportTypeName
-                      : grp.Key.ShortName,
+                        ? grp.Key.ReportTypeName
+                        : grp.Key.ShortName,
                     Url = $"\\reports?id={grp.Key.ReportObjectId}",
                     Runs = grp.Sum(x => x.b.Runs),
                     LastRun = grp.Max(x => x.d.RunStartTime).ToShortDateString(),
@@ -539,8 +539,8 @@ namespace Atlas_Web.Pages.Profile
                         {
                             Key = "masterFile",
                             Value = string.IsNullOrEmpty(x.r.EpicMasterFile)
-                              ? "None"
-                              : x.r.EpicMasterFile,
+                                ? "None"
+                                : x.r.EpicMasterFile,
                         }
                 )
                 .Select(
@@ -602,8 +602,8 @@ namespace Atlas_Web.Pages.Profile
                         {
                             Key = "availability",
                             Value = string.IsNullOrEmpty(x.r.Availability)
-                              ? "Public"
-                              : x.r.Availability
+                                ? "Public"
+                                : x.r.Availability
                         }
                 )
                 .Select(

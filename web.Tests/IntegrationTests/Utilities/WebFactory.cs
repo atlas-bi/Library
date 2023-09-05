@@ -9,56 +9,51 @@ using Atlas_Web.Models;
 
 namespace web.Tests.IntegrationTests
 {
-    public class WebFactory<TStartup> : WebApplicationFactory<TStartup> where TStartup : class
+    public class WebFactory<TStartup> : WebApplicationFactory<TStartup>
+        where TStartup : class
     {
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
-            builder.ConfigureServices(
-                services =>
+            builder.ConfigureServices(services =>
+            {
+                var descriptor = services.SingleOrDefault(
+                    d => d.ServiceType == typeof(DbContextOptions<Atlas_WebContext>)
+                );
+
+                if (descriptor != null)
+                    services.Remove(descriptor);
+
+                services.AddDbContext<Atlas_WebContext>(options =>
                 {
-                    var descriptor = services.SingleOrDefault(
-                        d => d.ServiceType == typeof(DbContextOptions<Atlas_WebContext>)
-                    );
+                    options.UseInMemoryDatabase("AtlasIntegrationDb");
+                });
 
-                    if (descriptor != null)
-                        services.Remove(descriptor);
+                var sp = services.BuildServiceProvider();
 
-                    services.AddDbContext<Atlas_WebContext>(
-                        options =>
-                        {
-                            options.UseInMemoryDatabase("AtlasIntegrationDb");
-                        }
-                    );
+                using (var scope = sp.CreateScope())
+                {
+                    var scopedServices = scope.ServiceProvider;
+                    var db = scopedServices.GetRequiredService<Atlas_WebContext>();
+                    var logger = scopedServices.GetRequiredService<ILogger<WebFactory<TStartup>>>();
 
-                    var sp = services.BuildServiceProvider();
+                    db.Database.EnsureCreated();
 
-                    using (var scope = sp.CreateScope())
+                    try
                     {
-                        var scopedServices = scope.ServiceProvider;
-                        var db = scopedServices.GetRequiredService<Atlas_WebContext>();
-                        var logger = scopedServices.GetRequiredService<
-                            ILogger<WebFactory<TStartup>>
-                        >();
-
-                        db.Database.EnsureCreated();
-
-                        try
-                        {
-                            web.Tests.FunctionTests.Utilities.InitializeDbForTests(db);
-                            logger.LogWarning("Test database initialized");
-                        }
-                        catch (Exception ex)
-                        {
-                            logger.LogError(
-                                ex,
-                                "An error occurred seeding the "
-                                    + "database with test messages. Error: {Message}",
-                                ex.Message
-                            );
-                        }
+                        web.Tests.FunctionTests.Utilities.InitializeDbForTests(db);
+                        logger.LogWarning("Test database initialized");
+                    }
+                    catch (Exception ex)
+                    {
+                        logger.LogError(
+                            ex,
+                            "An error occurred seeding the "
+                                + "database with test messages. Error: {Message}",
+                            ex.Message
+                        );
                     }
                 }
-            );
+            });
         }
     }
 }
