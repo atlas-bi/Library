@@ -74,7 +74,7 @@
   "scripts": {
     "install": "dotnet tool update --global dotnet-ef",
     "start": "gulp start",
-    "start:saml": "run-p dev:saml start",
+    "start:saml": "run-p dev:saml dev:solr start",
     "build": "gulp build",
     "watch": "gulp watch",
     "pre-commit": "lint-staged",
@@ -95,6 +95,7 @@
     "test:dev": "npm run dotnet:build && (npm run test || true) && npm run test:report_html",
     "commit": "git add . && npm run pre-commit && cz --no-verify",
     "dev:saml": "node ./idp/bin/run.js --acsUrl https://localhost:5001/Auth/Asc --audience atlas-library",
+    "dev:solr": "./web/solr/bin/solr start -f",
     "saml:cert": "openssl req -x509 -new -newkey rsa:2048 -nodes -subj '/C=US/ST=California/L=San Francisco/O=JankyCo/CN=Test Identity Provider' -keyout idp/idp-private-key.pem -out idp/idp-public-cert.pem -days 7300",
     "saml:setup": "git submodule update --rebase --remote; cd idp/; npm install"
   },

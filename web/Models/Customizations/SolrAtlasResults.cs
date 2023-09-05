@@ -12,6 +12,7 @@ namespace Atlas_Web.Models
         public Term term { get; set; }
         public User user { get; set; }
         public UserGroup group { get; set; }
+        public SolrAtlas external { get; set; }
         public string Id { get; set; }
     };
 

@@ -1,0 +1,269 @@
+2023-09-05 08:51:32.794 INFO  (main) [   ] o.e.j.u.log Logging initialized @1276ms to org.eclipse.jetty.util.log.Slf4jLog
+2023-09-05 08:51:33.136 INFO  (main) [   ] o.e.j.s.Server jetty-9.4.44.v20210927; built: 2021-09-27T23:02:44.612Z; git: 8da83308eeca865e495e53ef315a249d63ba9332; jvm 11.0.11+9
+2023-09-05 08:51:33.155 INFO  (main) [   ] o.e.j.d.p.ScanningAppProvider Deployment monitor [file:///Users/christopherpickering/Documents/rmc/atlas/library/web/solr/server/contexts/] at interval 0
+2023-09-05 08:51:33.521 INFO  (main) [   ] o.e.j.w.StandardDescriptorProcessor NO JSP Support for /solr, did not find org.apache.jasper.servlet.JspServlet
+2023-09-05 08:51:33.535 INFO  (main) [   ] o.e.j.s.session DefaultSessionIdManager workerName=node0
+2023-09-05 08:51:33.535 INFO  (main) [   ] o.e.j.s.session No SessionScavenger set, using defaults
+2023-09-05 08:51:33.540 INFO  (main) [   ] o.e.j.s.session node0 Scavenging every 600000ms
+2023-09-05 08:51:33.620 INFO  (main) [   ] o.a.s.s.SolrDispatchFilter Using logger factory org.apache.logging.slf4j.Log4jLoggerFactory
+2023-09-05 08:51:33.625 INFO  (main) [   ] o.a.s.s.SolrDispatchFilter  ___      _       Welcome to Apache Solr™ version 8.11.1
+2023-09-05 08:51:33.625 INFO  (main) [   ] o.a.s.s.SolrDispatchFilter / __| ___| |_ _   Starting in standalone mode on port 8983
+2023-09-05 08:51:33.626 INFO  (main) [   ] o.a.s.s.SolrDispatchFilter \__ \/ _ \ | '_|  Install dir: /Users/christopherpickering/Documents/rmc/atlas/library/web/solr
+2023-09-05 08:51:33.626 INFO  (main) [   ] o.a.s.s.SolrDispatchFilter |___/\___/_|_|    Start time: 2023-09-05T08:51:33.626173Z
+2023-09-05 08:51:33.659 INFO  (main) [   ] o.a.s.c.SolrPaths Using system property solr.solr.home: /Users/christopherpickering/Documents/rmc/atlas/library/web/solr/server/solr
+2023-09-05 08:51:33.659 INFO  (main) [   ] o.a.s.c.SolrXmlConfig Loading container configuration from /Users/christopherpickering/Documents/rmc/atlas/library/web/solr/server/solr/solr.xml
+2023-09-05 08:51:33.771 INFO  (main) [   ] o.a.s.c.SolrXmlConfig MBean server found: com.sun.jmx.mbeanserver.JmxMBeanServer@545b995e, but no JMX reporters were configured - adding default JMX reporter.
+2023-09-05 08:51:34.636 INFO  (main) [   ] o.a.s.h.c.HttpShardHandlerFactory Host whitelist initialized: WhitelistHostChecker [whitelistHosts=null, whitelistHostCheckingEnabled=true]
+2023-09-05 08:51:34.912 WARN  (main) [   ] o.e.j.u.s.S.config Trusting all certificates configured for Client@323f3c96[provider=null,keyStore=null,trustStore=null]
+2023-09-05 08:51:34.912 WARN  (main) [   ] o.e.j.u.s.S.config No Client EndPointIdentificationAlgorithm configured for Client@323f3c96[provider=null,keyStore=null,trustStore=null]
+2023-09-05 08:51:35.156 WARN  (main) [   ] o.e.j.u.s.S.config Trusting all certificates configured for Client@714f3da4[provider=null,keyStore=null,trustStore=null]
+2023-09-05 08:51:35.157 WARN  (main) [   ] o.e.j.u.s.S.config No Client EndPointIdentificationAlgorithm configured for Client@714f3da4[provider=null,keyStore=null,trustStore=null]
+2023-09-05 08:51:35.227 WARN  (main) [   ] o.a.s.c.CoreContainer Not all security plugins configured!  authentication=disabled authorization=disabled.  Solr is only as secure as you make it. Consider configuring authentication/authorization before exposing Solr to users internal or external.  See https://s.apache.org/solrsecurity for more info
+2023-09-05 08:51:35.503 INFO  (main) [   ] o.a.s.c.TransientSolrCoreCacheDefault Allocating transient core cache for max 2147483647 cores with initial capacity of 1024
+2023-09-05 08:51:35.525 INFO  (main) [   ] o.a.s.h.a.MetricsHistoryHandler No .system collection, keeping metrics history in memory.
+2023-09-05 08:51:35.604 INFO  (main) [   ] o.a.s.m.r.SolrJmxReporter JMX monitoring for 'solr.node' (registry 'solr.node') enabled at server: com.sun.jmx.mbeanserver.JmxMBeanServer@545b995e
+2023-09-05 08:51:35.605 INFO  (main) [   ] o.a.s.m.r.SolrJmxReporter JMX monitoring for 'solr.jvm' (registry 'solr.jvm') enabled at server: com.sun.jmx.mbeanserver.JmxMBeanServer@545b995e
+2023-09-05 08:51:35.606 INFO  (main) [   ] o.a.s.m.r.SolrJmxReporter JMX monitoring for 'solr.jetty' (registry 'solr.jetty') enabled at server: com.sun.jmx.mbeanserver.JmxMBeanServer@545b995e
+2023-09-05 08:51:35.652 INFO  (main) [   ] o.a.s.c.CorePropertiesLocator Found 2 core definitions underneath /Users/christopherpickering/Documents/rmc/atlas/library/web/solr/server/solr
+2023-09-05 08:51:35.652 INFO  (main) [   ] o.a.s.c.CorePropertiesLocator Cores are: [atlas_lookups, atlas]
+2023-09-05 08:51:35.710 INFO  (coreLoadExecutor-13-thread-2) [   x:atlas] o.a.s.c.SolrConfig Using Lucene MatchVersion: 8.7.0
+2023-09-05 08:51:35.710 INFO  (coreLoadExecutor-13-thread-1) [   x:atlas_lookups] o.a.s.c.SolrConfig Using Lucene MatchVersion: 8.7.0
+2023-09-05 08:51:35.747 INFO  (main) [   ] o.e.j.s.h.ContextHandler Started o.e.j.w.WebAppContext@10567255{/solr,file:///Users/christopherpickering/Documents/rmc/atlas/library/web/solr/server/solr-webapp/webapp/,AVAILABLE}{/Users/christopherpickering/Documents/rmc/atlas/library/web/solr/server/solr-webapp/webapp}
+2023-09-05 08:51:35.776 WARN  (coreLoadExecutor-13-thread-1) [   x:atlas_lookups] o.a.s.c.SolrConfig solrconfig.xml: <jmx> is no longer supported, use solr.xml:/metrics/reporter section instead
+2023-09-05 08:51:35.776 WARN  (coreLoadExecutor-13-thread-2) [   x:atlas] o.a.s.c.SolrConfig solrconfig.xml: <jmx> is no longer supported, use solr.xml:/metrics/reporter section instead
+2023-09-05 08:51:35.785 INFO  (main) [   ] o.e.j.s.AbstractConnector Started ServerConnector@476aac9{HTTP/1.1, (http/1.1, h2c)}{0.0.0.0:8983}
+2023-09-05 08:51:35.785 INFO  (main) [   ] o.e.j.s.Server Started @4271ms
+2023-09-05 08:51:35.842 INFO  (coreLoadExecutor-13-thread-1) [   x:atlas_lookups] o.a.s.s.IndexSchema Schema name=default-config
+2023-09-05 08:51:35.852 INFO  (coreLoadExecutor-13-thread-2) [   x:atlas] o.a.s.s.IndexSchema Schema name=default-config
+2023-09-05 08:51:36.155 WARN  (coreLoadExecutor-13-thread-2) [   x:atlas] o.a.s.D.s.WordDelimiterFilterFactory Solr loaded a deprecated plugin/analysis class [solr.WordDelimiterFilterFactory]. Please consult documentation how to replace it accordingly.
+2023-09-05 08:51:36.207 WARN  (coreLoadExecutor-13-thread-2) [   x:atlas] o.a.s.s.AbstractSpatialPrefixTreeFieldType FieldType SpatialRecursivePrefixTreeFieldType does not allow omitNorms to be specified in schema, hardcoded behavior is omitNorms=true
+2023-09-05 08:51:36.207 WARN  (coreLoadExecutor-13-thread-1) [   x:atlas_lookups] o.a.s.s.AbstractSpatialPrefixTreeFieldType FieldType SpatialRecursivePrefixTreeFieldType does not allow omitNorms to be specified in schema, hardcoded behavior is omitNorms=true
+2023-09-05 08:51:36.207 WARN  (coreLoadExecutor-13-thread-2) [   x:atlas] o.a.s.s.AbstractSpatialPrefixTreeFieldType FieldType SpatialRecursivePrefixTreeFieldType does not allow omitTermFreqAndPositions to be specified in schema, hardcoded behavior is omitTermFreqAndPositions=true
+2023-09-05 08:51:36.207 WARN  (coreLoadExecutor-13-thread-2) [   x:atlas] o.a.s.s.AbstractSpatialPrefixTreeFieldType FieldType SpatialRecursivePrefixTreeFieldType does not allow termOffsets to be specified in schema, hardcoded behavior is termOffsets=false
+2023-09-05 08:51:36.207 WARN  (coreLoadExecutor-13-thread-2) [   x:atlas] o.a.s.s.AbstractSpatialPrefixTreeFieldType FieldType SpatialRecursivePrefixTreeFieldType does not allow termPositions to be specified in schema, hardcoded behavior is termPositions=false
+2023-09-05 08:51:36.207 WARN  (coreLoadExecutor-13-thread-2) [   x:atlas] o.a.s.s.AbstractSpatialPrefixTreeFieldType FieldType SpatialRecursivePrefixTreeFieldType does not allow omitPositions to be specified in schema, hardcoded behavior is omitPositions=true
+2023-09-05 08:51:36.207 WARN  (coreLoadExecutor-13-thread-1) [   x:atlas_lookups] o.a.s.s.AbstractSpatialPrefixTreeFieldType FieldType SpatialRecursivePrefixTreeFieldType does not allow omitTermFreqAndPositions to be specified in schema, hardcoded behavior is omitTermFreqAndPositions=true
+2023-09-05 08:51:36.207 WARN  (coreLoadExecutor-13-thread-1) [   x:atlas_lookups] o.a.s.s.AbstractSpatialPrefixTreeFieldType FieldType SpatialRecursivePrefixTreeFieldType does not allow termOffsets to be specified in schema, hardcoded behavior is termOffsets=false
+2023-09-05 08:51:36.207 WARN  (coreLoadExecutor-13-thread-1) [   x:atlas_lookups] o.a.s.s.AbstractSpatialPrefixTreeFieldType FieldType SpatialRecursivePrefixTreeFieldType does not allow termPositions to be specified in schema, hardcoded behavior is termPositions=false
+2023-09-05 08:51:36.207 WARN  (coreLoadExecutor-13-thread-1) [   x:atlas_lookups] o.a.s.s.AbstractSpatialPrefixTreeFieldType FieldType SpatialRecursivePrefixTreeFieldType does not allow omitPositions to be specified in schema, hardcoded behavior is omitPositions=true
+2023-09-05 08:51:36.347 INFO  (coreLoadExecutor-13-thread-1) [   x:atlas_lookups] o.a.s.s.IndexSchema Loaded schema default-config/1.6 with uniqueid field id
+2023-09-05 08:51:36.365 INFO  (coreLoadExecutor-13-thread-1) [   x:atlas_lookups] o.a.s.c.CoreContainer Creating SolrCore 'atlas_lookups' using configuration from instancedir /Users/christopherpickering/Documents/rmc/atlas/library/web/solr/server/solr/atlas_lookups, trusted=true
+2023-09-05 08:51:36.417 INFO  (coreLoadExecutor-13-thread-2) [   x:atlas] o.a.s.s.IndexSchema Loaded schema default-config/1.6 with uniqueid field id
+2023-09-05 08:51:36.419 INFO  (coreLoadExecutor-13-thread-1) [   x:atlas_lookups] o.a.s.m.r.SolrJmxReporter JMX monitoring for 'solr.core.atlas_lookups' (registry 'solr.core.atlas_lookups') enabled at server: com.sun.jmx.mbeanserver.JmxMBeanServer@545b995e
+2023-09-05 08:51:36.446 INFO  (coreLoadExecutor-13-thread-1) [   x:atlas_lookups] o.a.s.c.SolrCore [[atlas_lookups] ] Opening new SolrCore at [/Users/christopherpickering/Documents/rmc/atlas/library/web/solr/server/solr/atlas_lookups], dataDir=[/Users/christopherpickering/Documents/rmc/atlas/library/web/solr/server/solr/atlas_lookups/data/]
+2023-09-05 08:51:36.482 INFO  (coreLoadExecutor-13-thread-2) [   x:atlas] o.a.s.c.CoreContainer Creating SolrCore 'atlas' using configuration from instancedir /Users/christopherpickering/Documents/rmc/atlas/library/web/solr/server/solr/atlas, trusted=true
+2023-09-05 08:51:36.482 INFO  (coreLoadExecutor-13-thread-2) [   x:atlas] o.a.s.m.r.SolrJmxReporter JMX monitoring for 'solr.core.atlas' (registry 'solr.core.atlas') enabled at server: com.sun.jmx.mbeanserver.JmxMBeanServer@545b995e
+2023-09-05 08:51:36.482 INFO  (coreLoadExecutor-13-thread-2) [   x:atlas] o.a.s.c.SolrCore [[atlas] ] Opening new SolrCore at [/Users/christopherpickering/Documents/rmc/atlas/library/web/solr/server/solr/atlas], dataDir=[/Users/christopherpickering/Documents/rmc/atlas/library/web/solr/server/solr/atlas/data/]
+2023-09-05 08:51:37.249 INFO  (coreLoadExecutor-13-thread-2) [   x:atlas] o.a.s.u.UpdateHandler Using UpdateLog implementation: org.apache.solr.update.UpdateLog
+2023-09-05 08:51:37.249 INFO  (coreLoadExecutor-13-thread-1) [   x:atlas_lookups] o.a.s.u.UpdateHandler Using UpdateLog implementation: org.apache.solr.update.UpdateLog
+2023-09-05 08:51:37.249 INFO  (coreLoadExecutor-13-thread-2) [   x:atlas] o.a.s.u.UpdateLog Initializing UpdateLog: dataDir= defaultSyncLevel=FLUSH numRecordsToKeep=100 maxNumLogsToKeep=10 numVersionBuckets=65536
+2023-09-05 08:51:37.249 INFO  (coreLoadExecutor-13-thread-1) [   x:atlas_lookups] o.a.s.u.UpdateLog Initializing UpdateLog: dataDir= defaultSyncLevel=FLUSH numRecordsToKeep=100 maxNumLogsToKeep=10 numVersionBuckets=65536
+2023-09-05 08:51:37.266 INFO  (coreLoadExecutor-13-thread-2) [   x:atlas] o.a.s.u.CommitTracker Hard AutoCommit: if uncommitted for 15000ms; 
+2023-09-05 08:51:37.266 INFO  (coreLoadExecutor-13-thread-1) [   x:atlas_lookups] o.a.s.u.CommitTracker Hard AutoCommit: if uncommitted for 15000ms; 
+2023-09-05 08:51:37.266 INFO  (coreLoadExecutor-13-thread-2) [   x:atlas] o.a.s.u.CommitTracker Soft AutoCommit: disabled
+2023-09-05 08:51:37.266 INFO  (coreLoadExecutor-13-thread-1) [   x:atlas_lookups] o.a.s.u.CommitTracker Soft AutoCommit: disabled
+2023-09-05 08:51:37.416 INFO  (coreLoadExecutor-13-thread-2) [   x:atlas] o.a.s.r.ManagedResourceStorage File-based storage initialized to use dir: /Users/christopherpickering/Documents/rmc/atlas/library/web/solr/server/solr/atlas/conf
+2023-09-05 08:51:37.416 INFO  (coreLoadExecutor-13-thread-1) [   x:atlas_lookups] o.a.s.r.ManagedResourceStorage File-based storage initialized to use dir: /Users/christopherpickering/Documents/rmc/atlas/library/web/solr/server/solr/atlas_lookups/conf
+2023-09-05 08:51:37.437 INFO  (coreLoadExecutor-13-thread-2) [   x:atlas] o.a.s.h.c.SpellCheckComponent Initializing spell checkers
+2023-09-05 08:51:37.437 INFO  (coreLoadExecutor-13-thread-1) [   x:atlas_lookups] o.a.s.h.c.SpellCheckComponent Initializing spell checkers
+2023-09-05 08:51:37.450 INFO  (coreLoadExecutor-13-thread-2) [   x:atlas] o.a.s.s.DirectSolrSpellChecker init: {name=default,field=_text_,classname=solr.DirectSolrSpellChecker,distanceMeasure=internal,accuracy=0.5,maxQueryFrequency=0.01,maxEdits=2,minPrefix=1,maxInspections=5,minQueryLength=4}
+2023-09-05 08:51:37.450 INFO  (coreLoadExecutor-13-thread-1) [   x:atlas_lookups] o.a.s.s.DirectSolrSpellChecker init: {name=default,field=_text_,classname=solr.DirectSolrSpellChecker,distanceMeasure=internal,accuracy=0.5,maxQueryFrequency=0.01,maxEdits=2,minPrefix=1,maxInspections=5,minQueryLength=4}
+2023-09-05 08:51:37.470 INFO  (coreLoadExecutor-13-thread-1) [   x:atlas_lookups] o.a.s.h.ReplicationHandler Commits will be reserved for 10000 ms
+2023-09-05 08:51:37.470 INFO  (coreLoadExecutor-13-thread-2) [   x:atlas] o.a.s.h.ReplicationHandler Commits will be reserved for 10000 ms
+2023-09-05 08:51:37.479 INFO  (coreLoadExecutor-13-thread-2) [   x:atlas] o.a.s.u.UpdateLog Could not find max version in index or recent updates, using new clock 1776186973202939904
+2023-09-05 08:51:37.480 INFO  (coreLoadExecutor-13-thread-1) [   x:atlas_lookups] o.a.s.u.UpdateLog Could not find max version in index or recent updates, using new clock 1776186973203988480
+2023-09-05 08:51:37.485 INFO  (searcherExecutor-15-thread-1-processing-x:atlas_lookups) [   x:atlas_lookups] o.a.s.c.QuerySenderListener QuerySenderListener done.
+2023-09-05 08:51:37.485 INFO  (searcherExecutor-17-thread-1-processing-x:atlas) [   x:atlas] o.a.s.c.QuerySenderListener QuerySenderListener done.
+2023-09-05 08:51:37.485 INFO  (searcherExecutor-15-thread-1-processing-x:atlas_lookups) [   x:atlas_lookups] o.a.s.h.c.SpellCheckComponent Loading spell index for spellchecker: default
+2023-09-05 08:51:37.486 INFO  (searcherExecutor-17-thread-1-processing-x:atlas) [   x:atlas] o.a.s.h.c.SpellCheckComponent Loading spell index for spellchecker: default
+2023-09-05 08:51:37.495 INFO  (searcherExecutor-15-thread-1-processing-x:atlas_lookups) [   x:atlas_lookups] o.a.s.c.SolrCore [atlas_lookups]  Registered new searcher autowarm time: 0 ms
+2023-09-05 08:51:37.495 INFO  (searcherExecutor-17-thread-1-processing-x:atlas) [   x:atlas] o.a.s.c.SolrCore [atlas]  Registered new searcher autowarm time: 0 ms
+2023-09-05 09:48:30.478 INFO  (searcherExecutor-17-thread-1-processing-x:atlas) [   x:atlas] o.a.s.c.QuerySenderListener QuerySenderListener done.
+2023-09-05 09:48:30.485 INFO  (searcherExecutor-17-thread-1-processing-x:atlas) [   x:atlas] o.a.s.c.SolrCore [atlas]  Registered new searcher autowarm time: 1 ms
+2023-09-05 09:48:30.494 INFO  (qtp79290250-23) [   x:atlas] o.a.s.u.p.LogUpdateProcessorFactory [atlas]  webapp=/solr path=/update params={commit=true}{add=[https://docs.riversidehealthcare.net/books/clarity-upgrades/page/wow-this-is-cool (1776190551433936896), https://docs.riversidehealthcare.net/books/clarity-upgrades/page/another-test-page (1776190551520968704)],commit=} 0 581
+2023-09-05 09:48:43.772 INFO  (qtp79290250-17) [   ] o.a.s.s.HttpSolrCall [admin] webapp=null path=/admin/cores params={indexInfo=false&wt=json&_=1693907323689} status=0 QTime=0
+2023-09-05 09:48:43.781 INFO  (qtp79290250-23) [   ] o.a.s.s.HttpSolrCall [admin] webapp=null path=/admin/info/system params={wt=json&_=1693907323689} status=0 QTime=9
+2023-09-05 09:48:45.745 INFO  (qtp79290250-46) [   ] o.a.s.s.HttpSolrCall [admin] webapp=null path=/admin/cores params={indexInfo=false&wt=json&_=1693907323689} status=0 QTime=0
+2023-09-05 09:48:45.750 INFO  (qtp79290250-23) [   ] o.a.s.s.HttpSolrCall [admin] webapp=null path=/admin/info/system params={wt=json&_=1693907323689} status=0 QTime=4
+2023-09-05 09:48:45.773 INFO  (qtp79290250-17) [   x:atlas] o.a.s.c.S.Request [atlas]  webapp=/solr path=/replication params={wt=json&command=details&_=1693907325739} status=0 QTime=24
+2023-09-05 09:48:45.773 INFO  (qtp79290250-19) [   x:atlas] o.a.s.c.S.Request [atlas]  webapp=/solr path=/admin/ping params={action=status&wt=json&_=1693907323689&ts=1693907323689} status=503 QTime=19
+2023-09-05 09:48:45.778 INFO  (qtp79290250-20) [   x:atlas] o.a.s.c.S.Request [atlas]  webapp=/solr path=/admin/luke params={numTerms=0&show=index&wt=json&_=1693907325739} status=0 QTime=29
+2023-09-05 09:48:45.779 INFO  (qtp79290250-22) [   x:atlas] o.a.s.c.S.Request [atlas]  webapp=/solr path=/admin/system params={wt=json&_=1693907325739} status=0 QTime=26
+2023-09-05 09:48:47.677 INFO  (qtp79290250-22) [   ] o.a.s.s.HttpSolrCall [admin] webapp=null path=/admin/cores params={indexInfo=false&wt=json&_=1693907323689} status=0 QTime=0
+2023-09-05 09:48:47.682 INFO  (qtp79290250-23) [   ] o.a.s.s.HttpSolrCall [admin] webapp=null path=/admin/info/system params={wt=json&_=1693907323689} status=0 QTime=4
+2023-09-05 09:48:49.663 INFO  (qtp79290250-23) [   x:atlas] o.a.s.c.S.Request [atlas]  webapp=/solr path=/select params={q=*:*&indent=true&q.op=OR&_=1693907327645} hits=2 status=0 QTime=79
+2023-09-05 09:48:49.709 INFO  (qtp79290250-46) [   ] o.a.s.s.HttpSolrCall [admin] webapp=null path=/admin/cores params={indexInfo=false&wt=json&_=1693907323689} status=0 QTime=0
+2023-09-05 09:48:49.715 INFO  (qtp79290250-22) [   ] o.a.s.s.HttpSolrCall [admin] webapp=null path=/admin/info/system params={wt=json&_=1693907323689} status=0 QTime=5
+2023-09-05 09:48:49.718 INFO  (qtp79290250-20) [   x:atlas] o.a.s.c.S.Request [atlas]  webapp=/solr path=/select params={q=*:*&indent=true&q.op=OR&_=1693907327645} hits=2 status=0 QTime=6
+2023-09-05 09:49:05.812 ERROR (qtp79290250-20) [   x:atlas] o.a.s.h.RequestHandlerBase org.apache.solr.common.SolrException: undefined field * => org.apache.solr.common.SolrException: undefined field *
+	at org.apache.solr.schema.IndexSchema.getDynamicFieldType(IndexSchema.java:1318)
+org.apache.solr.common.SolrException: undefined field *
+	at org.apache.solr.schema.IndexSchema.getDynamicFieldType(IndexSchema.java:1318) ~[?:?]
+	at org.apache.solr.schema.IndexSchema$SolrQueryAnalyzer.getWrappedAnalyzer(IndexSchema.java:494) ~[?:?]
+	at org.apache.lucene.analysis.DelegatingAnalyzerWrapper$DelegatingReuseStrategy.getReusableComponents(DelegatingAnalyzerWrapper.java:86) ~[?:?]
+	at org.apache.lucene.analysis.Analyzer.tokenStream(Analyzer.java:192) ~[?:?]
+	at org.apache.lucene.util.QueryBuilder.createFieldQuery(QueryBuilder.java:259) ~[?:?]
+	at org.apache.solr.parser.SolrQueryParserBase.newFieldQuery(SolrQueryParserBase.java:534) ~[?:?]
+	at org.apache.solr.parser.QueryParser.newFieldQuery(QueryParser.java:62) ~[?:?]
+	at org.apache.solr.parser.SolrQueryParserBase.getFieldQuery(SolrQueryParserBase.java:1109) ~[?:?]
+	at org.apache.solr.parser.SolrQueryParserBase.handleBareTokenQuery(SolrQueryParserBase.java:832) ~[?:?]
+	at org.apache.solr.parser.QueryParser.Term(QueryParser.java:421) ~[?:?]
+	at org.apache.solr.parser.QueryParser.Clause(QueryParser.java:278) ~[?:?]
+	at org.apache.solr.parser.QueryParser.Query(QueryParser.java:162) ~[?:?]
+	at org.apache.solr.parser.QueryParser.TopLevelQuery(QueryParser.java:131) ~[?:?]
+	at org.apache.solr.parser.SolrQueryParserBase.parse(SolrQueryParserBase.java:270) ~[?:?]
+	at org.apache.solr.search.LuceneQParser.parse(LuceneQParser.java:49) ~[?:?]
+	at org.apache.solr.search.QParser.getQuery(QParser.java:174) ~[?:?]
+	at org.apache.solr.handler.component.QueryComponent.prepare(QueryComponent.java:162) ~[?:?]
+	at org.apache.solr.handler.component.SearchHandler.handleRequestBody(SearchHandler.java:333) ~[?:?]
+	at org.apache.solr.handler.RequestHandlerBase.handleRequest(RequestHandlerBase.java:216) ~[?:?]
+	at org.apache.solr.core.SolrCore.execute(SolrCore.java:2637) ~[?:?]
+	at org.apache.solr.servlet.HttpSolrCall.execute(HttpSolrCall.java:794) ~[?:?]
+	at org.apache.solr.servlet.HttpSolrCall.call(HttpSolrCall.java:567) ~[?:?]
+	at org.apache.solr.servlet.SolrDispatchFilter.doFilter(SolrDispatchFilter.java:427) ~[?:?]
+	at org.apache.solr.servlet.SolrDispatchFilter.doFilter(SolrDispatchFilter.java:357) ~[?:?]
+	at org.eclipse.jetty.servlet.FilterHolder.doFilter(FilterHolder.java:201) ~[jetty-servlet-9.4.44.v20210927.jar:9.4.44.v20210927]
+	at org.eclipse.jetty.servlet.ServletHandler$Chain.doFilter(ServletHandler.java:1601) ~[jetty-servlet-9.4.44.v20210927.jar:9.4.44.v20210927]
+	at org.eclipse.jetty.servlet.ServletHandler.doHandle(ServletHandler.java:548) ~[jetty-servlet-9.4.44.v20210927.jar:9.4.44.v20210927]
+	at org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.java:143) ~[jetty-server-9.4.44.v20210927.jar:9.4.44.v20210927]
+	at org.eclipse.jetty.security.SecurityHandler.handle(SecurityHandler.java:600) ~[jetty-security-9.4.44.v20210927.jar:9.4.44.v20210927]
+	at org.eclipse.jetty.server.handler.HandlerWrapper.handle(HandlerWrapper.java:127) ~[jetty-server-9.4.44.v20210927.jar:9.4.44.v20210927]
+	at org.eclipse.jetty.server.handler.ScopedHandler.nextHandle(ScopedHandler.java:235) ~[jetty-server-9.4.44.v20210927.jar:9.4.44.v20210927]
+	at org.eclipse.jetty.server.session.SessionHandler.doHandle(SessionHandler.java:1624) ~[jetty-server-9.4.44.v20210927.jar:9.4.44.v20210927]
+	at org.eclipse.jetty.server.handler.ScopedHandler.nextHandle(ScopedHandler.java:233) ~[jetty-server-9.4.44.v20210927.jar:9.4.44.v20210927]
+	at org.eclipse.jetty.server.handler.ContextHandler.doHandle(ContextHandler.java:1434) ~[jetty-server-9.4.44.v20210927.jar:9.4.44.v20210927]
+	at org.eclipse.jetty.server.handler.ScopedHandler.nextScope(ScopedHandler.java:188) ~[jetty-server-9.4.44.v20210927.jar:9.4.44.v20210927]
+	at org.eclipse.jetty.servlet.ServletHandler.doScope(ServletHandler.java:501) ~[jetty-servlet-9.4.44.v20210927.jar:9.4.44.v20210927]
+	at org.eclipse.jetty.server.session.SessionHandler.doScope(SessionHandler.java:1594) ~[jetty-server-9.4.44.v20210927.jar:9.4.44.v20210927]
+	at org.eclipse.jetty.server.handler.ScopedHandler.nextScope(ScopedHandler.java:186) ~[jetty-server-9.4.44.v20210927.jar:9.4.44.v20210927]
+	at org.eclipse.jetty.server.handler.ContextHandler.doScope(ContextHandler.java:1349) ~[jetty-server-9.4.44.v20210927.jar:9.4.44.v20210927]
+	at org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.java:141) ~[jetty-server-9.4.44.v20210927.jar:9.4.44.v20210927]
+	at org.eclipse.jetty.server.handler.ContextHandlerCollection.handle(ContextHandlerCollection.java:191) ~[jetty-server-9.4.44.v20210927.jar:9.4.44.v20210927]
+	at org.eclipse.jetty.server.handler.InetAccessHandler.handle(InetAccessHandler.java:177) ~[jetty-server-9.4.44.v20210927.jar:9.4.44.v20210927]
+	at org.eclipse.jetty.server.handler.HandlerCollection.handle(HandlerCollection.java:146) ~[jetty-server-9.4.44.v20210927.jar:9.4.44.v20210927]
+	at org.eclipse.jetty.server.handler.HandlerWrapper.handle(HandlerWrapper.java:127) ~[jetty-server-9.4.44.v20210927.jar:9.4.44.v20210927]
+	at org.eclipse.jetty.rewrite.handler.RewriteHandler.handle(RewriteHandler.java:322) ~[jetty-rewrite-9.4.44.v20210927.jar:9.4.44.v20210927]
+	at org.eclipse.jetty.server.handler.gzip.GzipHandler.handle(GzipHandler.java:763) ~[jetty-server-9.4.44.v20210927.jar:9.4.44.v20210927]
+	at org.eclipse.jetty.server.handler.HandlerWrapper.handle(HandlerWrapper.java:127) ~[jetty-server-9.4.44.v20210927.jar:9.4.44.v20210927]
+	at org.eclipse.jetty.server.Server.handle(Server.java:516) ~[jetty-server-9.4.44.v20210927.jar:9.4.44.v20210927]
+	at org.eclipse.jetty.server.HttpChannel.lambda$handle$1(HttpChannel.java:400) ~[jetty-server-9.4.44.v20210927.jar:9.4.44.v20210927]
+	at org.eclipse.jetty.server.HttpChannel.dispatch(HttpChannel.java:645) ~[jetty-server-9.4.44.v20210927.jar:9.4.44.v20210927]
+	at org.eclipse.jetty.server.HttpChannel.handle(HttpChannel.java:392) ~[jetty-server-9.4.44.v20210927.jar:9.4.44.v20210927]
+	at org.eclipse.jetty.server.HttpConnection.onFillable(HttpConnection.java:277) ~[jetty-server-9.4.44.v20210927.jar:9.4.44.v20210927]
+	at org.eclipse.jetty.io.AbstractConnection$ReadCallback.succeeded(AbstractConnection.java:311) ~[jetty-io-9.4.44.v20210927.jar:9.4.44.v20210927]
+	at org.eclipse.jetty.io.FillInterest.fillable(FillInterest.java:105) ~[jetty-io-9.4.44.v20210927.jar:9.4.44.v20210927]
+	at org.eclipse.jetty.io.ChannelEndPoint$1.run(ChannelEndPoint.java:104) ~[jetty-io-9.4.44.v20210927.jar:9.4.44.v20210927]
+	at org.eclipse.jetty.util.thread.strategy.EatWhatYouKill.runTask(EatWhatYouKill.java:338) ~[jetty-util-9.4.44.v20210927.jar:9.4.44.v20210927]
+	at org.eclipse.jetty.util.thread.strategy.EatWhatYouKill.doProduce(EatWhatYouKill.java:315) ~[jetty-util-9.4.44.v20210927.jar:9.4.44.v20210927]
+	at org.eclipse.jetty.util.thread.strategy.EatWhatYouKill.tryProduce(EatWhatYouKill.java:173) ~[jetty-util-9.4.44.v20210927.jar:9.4.44.v20210927]
+	at org.eclipse.jetty.util.thread.strategy.EatWhatYouKill.run(EatWhatYouKill.java:131) ~[jetty-util-9.4.44.v20210927.jar:9.4.44.v20210927]
+	at org.eclipse.jetty.util.thread.ReservedThreadExecutor$ReservedThread.run(ReservedThreadExecutor.java:409) ~[jetty-util-9.4.44.v20210927.jar:9.4.44.v20210927]
+	at org.eclipse.jetty.util.thread.QueuedThreadPool.runJob(QueuedThreadPool.java:883) ~[jetty-util-9.4.44.v20210927.jar:9.4.44.v20210927]
+	at org.eclipse.jetty.util.thread.QueuedThreadPool$Runner.run(QueuedThreadPool.java:1034) ~[jetty-util-9.4.44.v20210927.jar:9.4.44.v20210927]
+	at java.lang.Thread.run(Thread.java:829) [?:?]
+2023-09-05 09:49:05.813 INFO  (qtp79290250-20) [   x:atlas] o.a.s.c.S.Request [atlas]  webapp=/solr path=/select params={q=*:wow&indent=true&q.op=OR&_=1693907327645} status=400 QTime=1
+2023-09-05 09:49:05.873 INFO  (qtp79290250-23) [   ] o.a.s.s.HttpSolrCall [admin] webapp=null path=/admin/cores params={indexInfo=false&wt=json&_=1693907323689} status=0 QTime=0
+2023-09-05 09:49:05.875 ERROR (qtp79290250-46) [   x:atlas] o.a.s.h.RequestHandlerBase org.apache.solr.common.SolrException: undefined field * => org.apache.solr.common.SolrException: undefined field *
+	at org.apache.solr.schema.IndexSchema.getDynamicFieldType(IndexSchema.java:1318)
+org.apache.solr.common.SolrException: undefined field *
+	at org.apache.solr.schema.IndexSchema.getDynamicFieldType(IndexSchema.java:1318) ~[?:?]
+	at org.apache.solr.schema.IndexSchema$SolrQueryAnalyzer.getWrappedAnalyzer(IndexSchema.java:494) ~[?:?]
+	at org.apache.lucene.analysis.DelegatingAnalyzerWrapper$DelegatingReuseStrategy.getReusableComponents(DelegatingAnalyzerWrapper.java:86) ~[?:?]
+	at org.apache.lucene.analysis.Analyzer.tokenStream(Analyzer.java:192) ~[?:?]
+	at org.apache.lucene.util.QueryBuilder.createFieldQuery(QueryBuilder.java:259) ~[?:?]
+	at org.apache.solr.parser.SolrQueryParserBase.newFieldQuery(SolrQueryParserBase.java:534) ~[?:?]
+	at org.apache.solr.parser.QueryParser.newFieldQuery(QueryParser.java:62) ~[?:?]
+	at org.apache.solr.parser.SolrQueryParserBase.getFieldQuery(SolrQueryParserBase.java:1109) ~[?:?]
+	at org.apache.solr.parser.SolrQueryParserBase.handleBareTokenQuery(SolrQueryParserBase.java:832) ~[?:?]
+	at org.apache.solr.parser.QueryParser.Term(QueryParser.java:421) ~[?:?]
+	at org.apache.solr.parser.QueryParser.Clause(QueryParser.java:278) ~[?:?]
+	at org.apache.solr.parser.QueryParser.Query(QueryParser.java:162) ~[?:?]
+	at org.apache.solr.parser.QueryParser.TopLevelQuery(QueryParser.java:131) ~[?:?]
+	at org.apache.solr.parser.SolrQueryParserBase.parse(SolrQueryParserBase.java:270) ~[?:?]
+	at org.apache.solr.search.LuceneQParser.parse(LuceneQParser.java:49) ~[?:?]
+	at org.apache.solr.search.QParser.getQuery(QParser.java:174) ~[?:?]
+	at org.apache.solr.handler.component.QueryComponent.prepare(QueryComponent.java:162) ~[?:?]
+	at org.apache.solr.handler.component.SearchHandler.handleRequestBody(SearchHandler.java:333) ~[?:?]
+	at org.apache.solr.handler.RequestHandlerBase.handleRequest(RequestHandlerBase.java:216) ~[?:?]
+	at org.apache.solr.core.SolrCore.execute(SolrCore.java:2637) ~[?:?]
+	at org.apache.solr.servlet.HttpSolrCall.execute(HttpSolrCall.java:794) ~[?:?]
+	at org.apache.solr.servlet.HttpSolrCall.call(HttpSolrCall.java:567) ~[?:?]
+	at org.apache.solr.servlet.SolrDispatchFilter.doFilter(SolrDispatchFilter.java:427) ~[?:?]
+	at org.apache.solr.servlet.SolrDispatchFilter.doFilter(SolrDispatchFilter.java:357) ~[?:?]
+	at org.eclipse.jetty.servlet.FilterHolder.doFilter(FilterHolder.java:201) ~[jetty-servlet-9.4.44.v20210927.jar:9.4.44.v20210927]
+	at org.eclipse.jetty.servlet.ServletHandler$Chain.doFilter(ServletHandler.java:1601) ~[jetty-servlet-9.4.44.v20210927.jar:9.4.44.v20210927]
+	at org.eclipse.jetty.servlet.ServletHandler.doHandle(ServletHandler.java:548) ~[jetty-servlet-9.4.44.v20210927.jar:9.4.44.v20210927]
+	at org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.java:143) ~[jetty-server-9.4.44.v20210927.jar:9.4.44.v20210927]
+	at org.eclipse.jetty.security.SecurityHandler.handle(SecurityHandler.java:600) ~[jetty-security-9.4.44.v20210927.jar:9.4.44.v20210927]
+	at org.eclipse.jetty.server.handler.HandlerWrapper.handle(HandlerWrapper.java:127) ~[jetty-server-9.4.44.v20210927.jar:9.4.44.v20210927]
+	at org.eclipse.jetty.server.handler.ScopedHandler.nextHandle(ScopedHandler.java:235) ~[jetty-server-9.4.44.v20210927.jar:9.4.44.v20210927]
+	at org.eclipse.jetty.server.session.SessionHandler.doHandle(SessionHandler.java:1624) ~[jetty-server-9.4.44.v20210927.jar:9.4.44.v20210927]
+	at org.eclipse.jetty.server.handler.ScopedHandler.nextHandle(ScopedHandler.java:233) ~[jetty-server-9.4.44.v20210927.jar:9.4.44.v20210927]
+	at org.eclipse.jetty.server.handler.ContextHandler.doHandle(ContextHandler.java:1434) ~[jetty-server-9.4.44.v20210927.jar:9.4.44.v20210927]
+	at org.eclipse.jetty.server.handler.ScopedHandler.nextScope(ScopedHandler.java:188) ~[jetty-server-9.4.44.v20210927.jar:9.4.44.v20210927]
+	at org.eclipse.jetty.servlet.ServletHandler.doScope(ServletHandler.java:501) ~[jetty-servlet-9.4.44.v20210927.jar:9.4.44.v20210927]
+	at org.eclipse.jetty.server.session.SessionHandler.doScope(SessionHandler.java:1594) ~[jetty-server-9.4.44.v20210927.jar:9.4.44.v20210927]
+	at org.eclipse.jetty.server.handler.ScopedHandler.nextScope(ScopedHandler.java:186) ~[jetty-server-9.4.44.v20210927.jar:9.4.44.v20210927]
+	at org.eclipse.jetty.server.handler.ContextHandler.doScope(ContextHandler.java:1349) ~[jetty-server-9.4.44.v20210927.jar:9.4.44.v20210927]
+	at org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.java:141) ~[jetty-server-9.4.44.v20210927.jar:9.4.44.v20210927]
+	at org.eclipse.jetty.server.handler.ContextHandlerCollection.handle(ContextHandlerCollection.java:191) ~[jetty-server-9.4.44.v20210927.jar:9.4.44.v20210927]
+	at org.eclipse.jetty.server.handler.InetAccessHandler.handle(InetAccessHandler.java:177) ~[jetty-server-9.4.44.v20210927.jar:9.4.44.v20210927]
+	at org.eclipse.jetty.server.handler.HandlerCollection.handle(HandlerCollection.java:146) ~[jetty-server-9.4.44.v20210927.jar:9.4.44.v20210927]
+	at org.eclipse.jetty.server.handler.HandlerWrapper.handle(HandlerWrapper.java:127) ~[jetty-server-9.4.44.v20210927.jar:9.4.44.v20210927]
+	at org.eclipse.jetty.rewrite.handler.RewriteHandler.handle(RewriteHandler.java:322) ~[jetty-rewrite-9.4.44.v20210927.jar:9.4.44.v20210927]
+	at org.eclipse.jetty.server.handler.gzip.GzipHandler.handle(GzipHandler.java:763) ~[jetty-server-9.4.44.v20210927.jar:9.4.44.v20210927]
+	at org.eclipse.jetty.server.handler.HandlerWrapper.handle(HandlerWrapper.java:127) ~[jetty-server-9.4.44.v20210927.jar:9.4.44.v20210927]
+	at org.eclipse.jetty.server.Server.handle(Server.java:516) ~[jetty-server-9.4.44.v20210927.jar:9.4.44.v20210927]
+	at org.eclipse.jetty.server.HttpChannel.lambda$handle$1(HttpChannel.java:400) ~[jetty-server-9.4.44.v20210927.jar:9.4.44.v20210927]
+	at org.eclipse.jetty.server.HttpChannel.dispatch(HttpChannel.java:645) ~[jetty-server-9.4.44.v20210927.jar:9.4.44.v20210927]
+	at org.eclipse.jetty.server.HttpChannel.handle(HttpChannel.java:392) ~[jetty-server-9.4.44.v20210927.jar:9.4.44.v20210927]
+	at org.eclipse.jetty.server.HttpConnection.onFillable(HttpConnection.java:277) ~[jetty-server-9.4.44.v20210927.jar:9.4.44.v20210927]
+	at org.eclipse.jetty.io.AbstractConnection$ReadCallback.succeeded(AbstractConnection.java:311) ~[jetty-io-9.4.44.v20210927.jar:9.4.44.v20210927]
+	at org.eclipse.jetty.io.FillInterest.fillable(FillInterest.java:105) ~[jetty-io-9.4.44.v20210927.jar:9.4.44.v20210927]
+	at org.eclipse.jetty.io.ChannelEndPoint$1.run(ChannelEndPoint.java:104) ~[jetty-io-9.4.44.v20210927.jar:9.4.44.v20210927]
+	at org.eclipse.jetty.util.thread.strategy.EatWhatYouKill.runTask(EatWhatYouKill.java:338) ~[jetty-util-9.4.44.v20210927.jar:9.4.44.v20210927]
+	at org.eclipse.jetty.util.thread.strategy.EatWhatYouKill.doProduce(EatWhatYouKill.java:315) ~[jetty-util-9.4.44.v20210927.jar:9.4.44.v20210927]
+	at org.eclipse.jetty.util.thread.strategy.EatWhatYouKill.tryProduce(EatWhatYouKill.java:173) ~[jetty-util-9.4.44.v20210927.jar:9.4.44.v20210927]
+	at org.eclipse.jetty.util.thread.strategy.EatWhatYouKill.run(EatWhatYouKill.java:131) ~[jetty-util-9.4.44.v20210927.jar:9.4.44.v20210927]
+	at org.eclipse.jetty.util.thread.ReservedThreadExecutor$ReservedThread.run(ReservedThreadExecutor.java:409) ~[jetty-util-9.4.44.v20210927.jar:9.4.44.v20210927]
+	at org.eclipse.jetty.util.thread.QueuedThreadPool.runJob(QueuedThreadPool.java:883) ~[jetty-util-9.4.44.v20210927.jar:9.4.44.v20210927]
+	at org.eclipse.jetty.util.thread.QueuedThreadPool$Runner.run(QueuedThreadPool.java:1034) ~[jetty-util-9.4.44.v20210927.jar:9.4.44.v20210927]
+	at java.lang.Thread.run(Thread.java:829) [?:?]
+2023-09-05 09:49:05.875 INFO  (qtp79290250-46) [   x:atlas] o.a.s.c.S.Request [atlas]  webapp=/solr path=/select params={q=*:wow&indent=true&q.op=OR&_=1693907327645} status=400 QTime=0
+2023-09-05 09:49:05.877 INFO  (qtp79290250-47) [   ] o.a.s.s.HttpSolrCall [admin] webapp=null path=/admin/info/system params={wt=json&_=1693907323689} status=0 QTime=3
+2023-09-05 09:49:13.542 INFO  (qtp79290250-20) [   x:atlas] o.a.s.c.S.Request [atlas]  webapp=/solr path=/select params={q=description:wow&indent=true&q.op=OR&_=1693907327645} hits=2 status=0 QTime=25
+2023-09-05 09:49:13.577 INFO  (qtp79290250-47) [   ] o.a.s.s.HttpSolrCall [admin] webapp=null path=/admin/cores params={indexInfo=false&wt=json&_=1693907323689} status=0 QTime=0
+2023-09-05 09:49:13.581 INFO  (qtp79290250-22) [   ] o.a.s.s.HttpSolrCall [admin] webapp=null path=/admin/info/system params={wt=json&_=1693907323689} status=0 QTime=3
+2023-09-05 09:49:13.584 INFO  (qtp79290250-23) [   x:atlas] o.a.s.c.S.Request [atlas]  webapp=/solr path=/select params={q=description:wow&indent=true&q.op=OR&_=1693907327645} hits=2 status=0 QTime=4
+2023-09-05 09:50:50.090 INFO  (searcherExecutor-17-thread-1-processing-x:atlas) [   x:atlas] o.a.s.c.QuerySenderListener QuerySenderListener done.
+2023-09-05 09:50:50.096 INFO  (searcherExecutor-17-thread-1-processing-x:atlas) [   x:atlas] o.a.s.c.SolrCore [atlas]  Registered new searcher autowarm time: 0 ms
+2023-09-05 09:50:50.102 INFO  (qtp79290250-18) [   x:atlas] o.a.s.u.p.LogUpdateProcessorFactory [atlas]  webapp=/solr path=/update params={commit=true}{add=[https://docs.riversidehealthcare.net/books/clarity-upgrades/page/wow-this-is-cool (1776190697988161536), https://docs.riversidehealthcare.net/books/clarity-upgrades/page/another-test-page (1776190697992355840)],commit=} 0 392
+2023-09-05 09:50:53.306 INFO  (qtp79290250-23) [   x:atlas] o.a.s.c.S.Request [atlas]  webapp=/solr path=/select params={q=description:wow&indent=true&q.op=OR&_=1693907327645} hits=0 status=0 QTime=1
+2023-09-05 09:50:54.788 INFO  (qtp79290250-47) [   x:atlas] o.a.s.c.S.Request [atlas]  webapp=/solr path=/select params={q=description:wow&indent=true&q.op=OR&_=1693907327645} hits=0 status=0 QTime=1
+2023-09-05 09:50:59.282 INFO  (qtp79290250-23) [   x:atlas] o.a.s.c.S.Request [atlas]  webapp=/solr path=/select params={q=*:*&indent=true&q.op=OR&_=1693907327645} hits=2 status=0 QTime=6
+2023-09-05 09:50:59.322 INFO  (qtp79290250-47) [   ] o.a.s.s.HttpSolrCall [admin] webapp=null path=/admin/cores params={indexInfo=false&wt=json&_=1693907323689} status=0 QTime=0
+2023-09-05 09:50:59.329 INFO  (qtp79290250-22) [   x:atlas] o.a.s.c.S.Request [atlas]  webapp=/solr path=/select params={q=*:*&indent=true&q.op=OR&_=1693907327645} hits=2 status=0 QTime=2
+2023-09-05 09:50:59.332 INFO  (qtp79290250-20) [   ] o.a.s.s.HttpSolrCall [admin] webapp=null path=/admin/info/system params={wt=json&_=1693907323689} status=0 QTime=7
+2023-09-05 09:51:14.256 INFO  (qtp79290250-23) [   x:atlas] o.a.s.c.S.Request [atlas]  webapp=/solr path=/select params={q=*:*&indent=true&q.op=OR&_=1693907327645} hits=2 status=0 QTime=3
+2023-09-05 09:51:15.453 INFO  (searcherExecutor-17-thread-1-processing-x:atlas) [   x:atlas] o.a.s.c.QuerySenderListener QuerySenderListener done.
+2023-09-05 09:51:15.457 INFO  (searcherExecutor-17-thread-1-processing-x:atlas) [   x:atlas] o.a.s.c.SolrCore [atlas]  Registered new searcher autowarm time: 0 ms
+2023-09-05 09:51:15.462 INFO  (qtp79290250-46) [   x:atlas] o.a.s.u.p.LogUpdateProcessorFactory [atlas]  webapp=/solr path=/update params={commit=true}{add=[https://docs.riversidehealthcare.net/books/clarity-upgrades/page/wow-this-is-cool (1776190724518182912), https://docs.riversidehealthcare.net/books/clarity-upgrades/page/another-test-page (1776190724524474368)],commit=} 0 450
+2023-09-05 09:51:15.723 INFO  (qtp79290250-20) [   x:atlas] o.a.s.c.S.Request [atlas]  webapp=/solr path=/select params={q=*:*&indent=true&q.op=OR&_=1693907327645} hits=2 status=0 QTime=4
+2023-09-05 10:08:31.982 INFO  (JettyShutdownThread) [   ] o.e.j.s.AbstractConnector Stopped ServerConnector@476aac9{HTTP/1.1, (http/1.1, h2c)}{0.0.0.0:8983}
+2023-09-05 10:08:31.982 INFO  (JettyShutdownThread) [   ] o.e.j.s.session node0 Stopped scavenging
+2023-09-05 10:08:31.987 INFO  (JettyShutdownThread) [   ] o.a.s.c.CoreContainer Shutting down CoreContainer instance=430983166
+2023-09-05 10:08:32.002 INFO  (coreCloseExecutor-27-thread-1) [   ] o.a.s.c.SolrCore [atlas]  CLOSING SolrCore org.apache.solr.core.SolrCore@577e45e0
+2023-09-05 10:08:32.002 INFO  (coreCloseExecutor-27-thread-2) [   ] o.a.s.c.SolrCore [atlas_lookups]  CLOSING SolrCore org.apache.solr.core.SolrCore@3cc7652f
+2023-09-05 10:08:32.002 INFO  (coreCloseExecutor-27-thread-2) [   ] o.a.s.m.SolrMetricManager Closing metric reporters for registry=solr.core.atlas_lookups tag=SolrCore@3cc7652f
+2023-09-05 10:08:32.003 INFO  (coreCloseExecutor-27-thread-2) [   ] o.a.s.m.r.SolrJmxReporter Closing reporter [org.apache.solr.metrics.reporters.SolrJmxReporter@3a9c9539: rootName = null, domain = solr.core.atlas_lookups, service url = null, agent id = null] for registry solr.core.atlas_lookups/com.codahale.metrics.MetricRegistry@51c1463a
+2023-09-05 10:08:32.029 INFO  (coreCloseExecutor-27-thread-1) [   ] o.a.s.m.SolrMetricManager Closing metric reporters for registry=solr.core.atlas tag=SolrCore@577e45e0
+2023-09-05 10:08:32.029 INFO  (coreCloseExecutor-27-thread-1) [   ] o.a.s.m.r.SolrJmxReporter Closing reporter [org.apache.solr.metrics.reporters.SolrJmxReporter@4b75b8dc: rootName = null, domain = solr.core.atlas, service url = null, agent id = null] for registry solr.core.atlas/com.codahale.metrics.MetricRegistry@55cde503
+2023-09-05 10:08:32.033 INFO  (coreCloseExecutor-27-thread-2) [   ] o.a.s.u.DirectUpdateHandler2 Committing on IndexWriter.close()  ... SKIPPED (unnecessary).
+2023-09-05 10:08:32.046 INFO  (coreCloseExecutor-27-thread-1) [   ] o.a.s.u.DirectUpdateHandler2 Committing on IndexWriter.close()  ... SKIPPED (unnecessary).
+2023-09-05 10:08:32.074 INFO  (JettyShutdownThread) [   ] o.a.s.m.SolrMetricManager Closing metric reporters for registry=solr.node tag=null
+2023-09-05 10:08:32.075 INFO  (JettyShutdownThread) [   ] o.a.s.m.r.SolrJmxReporter Closing reporter [org.apache.solr.metrics.reporters.SolrJmxReporter@52a33c3f: rootName = null, domain = solr.node, service url = null, agent id = null] for registry solr.node/com.codahale.metrics.MetricRegistry@3dd1f660
+2023-09-05 10:08:32.080 INFO  (JettyShutdownThread) [   ] o.a.s.m.SolrMetricManager Closing metric reporters for registry=solr.jvm tag=null
+2023-09-05 10:08:32.081 INFO  (JettyShutdownThread) [   ] o.a.s.m.r.SolrJmxReporter Closing reporter [org.apache.solr.metrics.reporters.SolrJmxReporter@465b38e6: rootName = null, domain = solr.jvm, service url = null, agent id = null] for registry solr.jvm/com.codahale.metrics.MetricRegistry@47bfe9ed
+2023-09-05 10:08:32.082 INFO  (JettyShutdownThread) [   ] o.a.s.m.SolrMetricManager Closing metric reporters for registry=solr.jetty tag=null
+2023-09-05 10:08:32.082 INFO  (JettyShutdownThread) [   ] o.a.s.m.r.SolrJmxReporter Closing reporter [org.apache.solr.metrics.reporters.SolrJmxReporter@4b960b5b: rootName = null, domain = solr.jetty, service url = null, agent id = null] for registry solr.jetty/com.codahale.metrics.MetricRegistry@5ab4a76c
+2023-09-05 10:08:32.115 INFO  (JettyShutdownThread) [   ] o.e.j.s.h.ContextHandler Stopped o.e.j.w.WebAppContext@10567255{/solr,null,STOPPED}{/Users/christopherpickering/Documents/rmc/atlas/library/web/solr/server/solr-webapp/webapp}
