@@ -4,7 +4,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Atlas_Web.Models
 {
-    [NotMapped]
     public class SolrAtlas
     {
         [SolrUniqueKey("id")]

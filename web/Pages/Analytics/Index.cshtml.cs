@@ -56,7 +56,12 @@ namespace Atlas_Web.Pages.Analytics
                         Pages = grp.Count()
                     }
                 )
-                    on new { b.UserId, b.SessionId, time = b.UpdateTime } equals new
+                    on new
+                    {
+                        b.UserId,
+                        b.SessionId,
+                        time = b.UpdateTime
+                    } equals new
                     {
                         sub.UserId,
                         sub.SessionId,

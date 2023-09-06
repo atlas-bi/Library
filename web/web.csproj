@@ -42,7 +42,7 @@
     <PackageReference Include="HtmlSanitizer" Version="8.0.692" />
     <PackageReference Include="LigerShark.WebOptimizer.AutoPrefixer" Version="7.1.8-beta" />
     <PackageReference Include="LigerShark.WebOptimizer.Core" Version="3.0.386" />
-    <PackageReference Include="Markdig" Version="0.32.0" />
+    <PackageReference Include="Markdig" Version="0.33.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Negotiate" Version="7.0.10" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="7.0.10" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="7.0.10" />
@@ -53,7 +53,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="NUglify" Version="1.20.7" />
-    <PackageReference Include="SixLabors.ImageSharp" Version="3.0.1" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="3.0.2" />
     <PackageReference Include="Slugify.Core" Version="4.0.1" />
     <PackageReference Include="SolrNet" Version="1.1.1" />
     <PackageReference Include="SolrNet.Core" Version="1.1.1" />
