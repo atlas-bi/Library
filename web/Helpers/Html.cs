@@ -90,8 +90,8 @@ namespace Atlas_Web.Helpers
                 Markdown.ToHtml(text, pipeline),
                 (
                     string.IsNullOrEmpty(_config["AppSettings:base_url"])
-                      ? ""
-                      : _config["AppSettings:base_url"]
+                        ? ""
+                        : _config["AppSettings:base_url"]
                 )
             );
         }

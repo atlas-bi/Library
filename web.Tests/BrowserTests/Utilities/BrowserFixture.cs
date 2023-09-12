@@ -24,10 +24,8 @@ public class BrowserFixture
                 OpenQA.Selenium.Safari.SafariOptions safariCapability =
                     new OpenQA.Selenium.Safari.SafariOptions();
                 safariCapability.BrowserVersion = Options.BrowserVersion;
-                Dictionary<string, object> browserstackSafariOptions = new Dictionary<
-                    string,
-                    object
-                >();
+                Dictionary<string, object> browserstackSafariOptions =
+                    new Dictionary<string, object>();
                 browserstackSafariOptions.Add("osVersion", Options.OperatingSystemVersion);
                 browserstackSafariOptions.Add("os", Options.OperatingSystem);
                 browserstackSafariOptions.Add("projectName", Options.ProjectName);
@@ -48,10 +46,8 @@ public class BrowserFixture
                 OpenQA.Selenium.Chrome.ChromeOptions chromeCapability =
                     new OpenQA.Selenium.Chrome.ChromeOptions();
                 chromeCapability.BrowserVersion = Options.BrowserVersion;
-                Dictionary<string, object> browserstackChromeOptions = new Dictionary<
-                    string,
-                    object
-                >();
+                Dictionary<string, object> browserstackChromeOptions =
+                    new Dictionary<string, object>();
                 browserstackChromeOptions.Add("os", Options.OperatingSystem);
                 browserstackChromeOptions.Add("osVersion", Options.OperatingSystemVersion);
                 browserstackChromeOptions.Add("local", "true");
@@ -71,10 +67,8 @@ public class BrowserFixture
                 OpenQA.Selenium.Firefox.FirefoxOptions firefoxCapability =
                     new OpenQA.Selenium.Firefox.FirefoxOptions();
                 firefoxCapability.BrowserVersion = Options.BrowserVersion;
-                Dictionary<string, object> browserstackFirefoxOptions = new Dictionary<
-                    string,
-                    object
-                >();
+                Dictionary<string, object> browserstackFirefoxOptions =
+                    new Dictionary<string, object>();
                 browserstackFirefoxOptions.Add("osVersion", Options.OperatingSystemVersion);
                 browserstackFirefoxOptions.Add("os", Options.OperatingSystem);
                 browserstackFirefoxOptions.Add("projectName", Options.ProjectName);
@@ -97,10 +91,8 @@ public class BrowserFixture
                 OpenQA.Selenium.Edge.EdgeOptions edgeCapability =
                     new OpenQA.Selenium.Edge.EdgeOptions();
                 edgeCapability.BrowserVersion = Options.BrowserVersion;
-                Dictionary<string, object> browserstackEdgeOptions = new Dictionary<
-                    string,
-                    object
-                >();
+                Dictionary<string, object> browserstackEdgeOptions =
+                    new Dictionary<string, object>();
                 browserstackEdgeOptions.Add("osVersion", Options.OperatingSystemVersion);
                 browserstackEdgeOptions.Add("os", Options.OperatingSystem);
                 browserstackEdgeOptions.Add("projectName", Options.ProjectName);
@@ -139,10 +131,8 @@ public class BrowserFixture
             case "ios":
                 OpenQA.Selenium.Safari.SafariOptions iosCapability =
                     new OpenQA.Selenium.Safari.SafariOptions();
-                Dictionary<string, object> browserstackIosOptions = new Dictionary<
-                    string,
-                    object
-                >();
+                Dictionary<string, object> browserstackIosOptions =
+                    new Dictionary<string, object>();
 
                 // for example, iPhone 12
                 browserstackIosOptions.Add("deviceName", Options.OperatingSystem);
@@ -164,10 +154,8 @@ public class BrowserFixture
                 OpenQA.Selenium.Chrome.ChromeOptions androidCapability =
                     new OpenQA.Selenium.Chrome.ChromeOptions();
 
-                Dictionary<string, object> browserstackAndroidOptions = new Dictionary<
-                    string,
-                    object
-                >();
+                Dictionary<string, object> browserstackAndroidOptions =
+                    new Dictionary<string, object>();
 
                 // for example, Samsung Galaxy Tab S5e
                 browserstackAndroidOptions.Add("deviceName", Options.OperatingSystem);
@@ -197,10 +185,8 @@ public class BrowserFixture
         OpenQA.Selenium.Chrome.ChromeOptions chromeCapabilityDefault =
             new OpenQA.Selenium.Chrome.ChromeOptions();
         chromeCapabilityDefault.BrowserVersion = Options.BrowserVersion;
-        Dictionary<string, object> browserstackChromeOptionsDefault = new Dictionary<
-            string,
-            object
-        >();
+        Dictionary<string, object> browserstackChromeOptionsDefault =
+            new Dictionary<string, object>();
         browserstackChromeOptionsDefault.Add("os", Options.OperatingSystem);
         browserstackChromeOptionsDefault.Add("osVersion", Options.OperatingSystemVersion);
         browserstackChromeOptionsDefault.Add("local", "true");
