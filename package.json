@@ -59,7 +59,7 @@
     "semantic-release": "^21.0.5",
     "stylelint": "^15.8.0",
     "stylelint-config-prettier-scss": "1.0.0",
-    "stylelint-config-standard-scss": "^10.0.0",
+    "stylelint-config-standard-scss": "^11.0.0",
     "stylelint-scss": "^5.0.0",
     "xo": "^0.56.0"
   },
@@ -162,7 +162,7 @@
       "unicorn/no-typeof-undefined": "off"
     }
   },
-  "version": "3.13.4",
+  "version": "3.13.2",
   "dependencies": {
     "sass": "^1.63.6"
   }
