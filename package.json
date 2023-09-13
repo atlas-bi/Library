@@ -59,7 +59,7 @@
     "semantic-release": "^21.0.5",
     "stylelint": "^15.8.0",
     "stylelint-config-prettier-scss": "1.0.0",
-    "stylelint-config-standard-scss": "^10.0.0",
+    "stylelint-config-standard-scss": "^11.0.0",
     "stylelint-scss": "^5.0.0",
     "xo": "^0.56.0"
   },
@@ -74,7 +74,7 @@
   "scripts": {
     "install": "dotnet tool update --global dotnet-ef",
     "start": "gulp start",
-    "start:saml": "run-p dev:saml dev:solr start",
+    "dev": "run-p dev:* start",
     "build": "gulp build",
     "watch": "gulp watch",
     "pre-commit": "lint-staged",
