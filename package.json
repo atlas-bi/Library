@@ -74,7 +74,7 @@
   "scripts": {
     "install": "dotnet tool update --global dotnet-ef",
     "start": "gulp start",
-    "start:saml": "run-p dev:saml dev:solr start",
+    "dev": "run-p dev:* start",
     "build": "gulp build",
     "watch": "gulp watch",
     "pre-commit": "lint-staged",
