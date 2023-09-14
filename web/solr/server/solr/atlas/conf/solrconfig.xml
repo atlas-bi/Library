@@ -981,6 +981,24 @@
       <str name="facet.range.gap">+1MONTH</str>
     </lst>
   </requestHandler>
+  <requestHandler name="/external" class="solr.SearchHandler">
+    <lst name="appends">
+      <str name="fq">{!tag=dt}type:external</str>
+    </lst>
+    <lst name="defaults">
+      <str name="echoParams">explicit</str>
+      <str name="wt">json</str>
+      <str name="indent">true</str>
+      <str name="fl">id name description type atlas_id</str>
+      <str name="facet">on</str>
+      <str name="facet.limit">10</str>
+	  <str name="facet.mincount">1</str>
+      <str name="facet.field">{!ex=dt}type</str>
+	  <str name="f.type.facet.mincount">0</str>
+	  <str name="facet.field">{!ex=visible_text}visible_text</str>
+	  <str name="f.visible_text.facet.mincount">0</str>
+    </lst>
+  </requestHandler>
   <requestHandler name="/users" class="solr.SearchHandler">
     <lst name="appends">
       <str name="fq">{!tag=dt}type:users</str>
@@ -1021,7 +1039,7 @@
     </lst>
   </requestHandler>
 
-  <initParams path="/update/**,/query,/select,/spell,/reports,/collections,/initiatives,/users,/groups,/aterms">
+  <initParams path="/update/**,/query,/select,/spell,/reports,/external,/collections,/initiatives,/users,/groups,/aterms">
     <lst name="defaults">
       <str name="df">all_text</str>
 	  <str name="hl">true</str>

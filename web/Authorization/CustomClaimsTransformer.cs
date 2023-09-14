@@ -202,19 +202,19 @@ public class CustomClaimsTransformer : IClaimsTransformation
                 await _context.AddAsync(
                     new UserRoleLink
                     {
-                        UserId = _context.Users
-                            .Where(
-                                x =>
-                                    username.Contains("@")
-                                        ? x.Email == username
-                                        : x.Username == username
-                            )
-                            .First()
-                            .UserId,
-                        UserRolesId = _context.UserRoles
-                            .Where(x => x.Name == "Administrator")
-                            .First()
-                            .UserRolesId
+                        UserId =
+                            _context.Users
+                                .Where(
+                                    x =>
+                                        username.Contains("@")
+                                          ? x.Email == username
+                                          : x.Username == username
+                                )
+                                .First().UserId,
+                        UserRolesId =
+                            _context.UserRoles
+                                .Where(x => x.Name == "Administrator")
+                                .First().UserRolesId
                     }
                 );
                 await _context.SaveChangesAsync();
