@@ -27,8 +27,8 @@ namespace Atlas_Web.Controllers
             var saml2AuthnResponse = new Saml2AuthnResponse(config);
             var relayStateQuery = binding.GetRelayStateQuery();
             var returnUrl = relayStateQuery.ContainsKey(relayStateReturnUrl)
-                ? relayStateQuery[relayStateReturnUrl]
-                : Url.Content("~/");
+              ? relayStateQuery[relayStateReturnUrl]
+              : Url.Content("~/");
 
             // if a login existed.. use it
             if (User.Identity.IsAuthenticated)
