@@ -56,7 +56,7 @@
     "proxy-polyfill": "0.3.2",
     "regenerator-runtime": "^0.14.0",
     "rollup": "^3.25.3",
-    "semantic-release": "^21.0.5",
+    "semantic-release": "^22.0.0",
     "stylelint": "^15.8.0",
     "stylelint-config-prettier-scss": "1.0.0",
     "stylelint-config-standard-scss": "^11.0.0",
@@ -162,7 +162,7 @@
       "unicorn/no-typeof-undefined": "off"
     }
   },
-  "version": "3.13.3",
+  "version": "3.13.4",
   "dependencies": {
     "sass": "^1.63.6"
   }
