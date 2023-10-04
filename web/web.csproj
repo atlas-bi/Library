@@ -39,7 +39,7 @@
     <PackageReference Include="System.Diagnostics.Tracing" Version="4.3.0" />
     <PackageReference Include="Hangfire" Version="1.8.5" />
     <PackageReference Include="Hangfire.InMemory" Version="0.5.1" />
-    <PackageReference Include="HtmlSanitizer" Version="8.0.692" />
+    <PackageReference Include="HtmlSanitizer" Version="8.0.723" />
     <PackageReference Include="LigerShark.WebOptimizer.AutoPrefixer" Version="7.1.8-beta" />
     <PackageReference Include="LigerShark.WebOptimizer.Core" Version="3.0.391" />
     <PackageReference Include="Markdig" Version="0.33.0" />
