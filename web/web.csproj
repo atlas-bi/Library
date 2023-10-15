@@ -41,14 +41,14 @@
     <PackageReference Include="Hangfire.InMemory" Version="0.5.1" />
     <PackageReference Include="HtmlSanitizer" Version="8.0.723" />
     <PackageReference Include="LigerShark.WebOptimizer.AutoPrefixer" Version="7.1.8-beta" />
-    <PackageReference Include="LigerShark.WebOptimizer.Core" Version="3.0.391" />
+    <PackageReference Include="LigerShark.WebOptimizer.Core" Version="3.0.396" />
     <PackageReference Include="Markdig" Version="0.33.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.Negotiate" Version="7.0.11" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="7.0.11" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="7.0.11" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.11" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.11" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.11">
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Negotiate" Version="7.0.12" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="7.0.12" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="7.0.12" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.12" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.12" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.12">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
@@ -62,7 +62,7 @@
     <PackageReference Include="System.Text.Json" Version="7.0.3" />
     <PackageReference Include="UAParser" Version="3.1.47" />
     <PackageReference Include="WebMarkupMin.AspNetCore5" Version="2.15.0" />
-    <PackageReference Include="SonarAnalyzer.CSharp" Version="9.11.0.78383">
+    <PackageReference Include="SonarAnalyzer.CSharp" Version="9.12.0.78982">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
