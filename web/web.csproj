@@ -28,8 +28,8 @@
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
-   <PackageReference Include="ITfoxtec.Identity.Saml2" Version="4.8.8" />
-   <PackageReference Include="ITfoxtec.Identity.Saml2.MvcCore" Version="4.8.8" />
+   <PackageReference Include="ITfoxtec.Identity.Saml2" Version="4.10.1" />
+   <PackageReference Include="ITfoxtec.Identity.Saml2.MvcCore" Version="4.10.1" />
    <PackageReference Include="System.Net.Primitives" Version="4.3.1" />
     <PackageReference Include="System.Net.NameResolution" Version="4.3.0" />
     <PackageReference Include="System.IO.FileSystem" Version="4.3.0" />
@@ -37,7 +37,7 @@
     <PackageReference Include="System.Threading" Version="4.3.0" />
     <PackageReference Include="System.Runtime.Handles" Version="4.3.0" />
     <PackageReference Include="System.Diagnostics.Tracing" Version="4.3.0" />
-    <PackageReference Include="Hangfire" Version="1.8.5" />
+    <PackageReference Include="Hangfire" Version="1.8.6" />
     <PackageReference Include="Hangfire.InMemory" Version="0.5.1" />
     <PackageReference Include="HtmlSanitizer" Version="8.0.723" />
     <PackageReference Include="LigerShark.WebOptimizer.AutoPrefixer" Version="7.1.8-beta" />
