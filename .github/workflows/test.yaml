@@ -80,7 +80,7 @@ jobs:
         with:
           node-version: '18.x'
       - name: setup java
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           distribution: 'microsoft'
           java-version: '17'
@@ -198,7 +198,7 @@ jobs:
         with:
           node-version: '18.x'
       - name: setup java
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           distribution: 'microsoft'
           java-version: '17'
