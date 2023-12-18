@@ -21,8 +21,8 @@
       window.aglToken = event.data.token;
       setCookie('EPIC', 1, 99);
 
-      // if agl cookie was not set, then set it
-      // and refresh so the server regenerates any links
+      // If agl cookie was not set, then set it
+      // And refresh so the server regenerates any links
 
       if (!getCookie('AGL')) {
         setCookie('AGL', 1, 99);
@@ -125,7 +125,7 @@
           }
         }
       });
-    } else if (window.aglToken !== undefined) {
+    } else if (window.aglToken) {
       console.log('agl already connected.');
     } else {
       console.log('no agl listener found.');

@@ -49,8 +49,8 @@ Element.prototype.matches ||
               return isNaN(e)
                 ? 0
                 : 0 !== e && isFinite(e)
-                ? (e > 0 ? 1 : -1) * Math.floor(Math.abs(e))
-                : e;
+                  ? (e > 0 ? 1 : -1) * Math.floor(Math.abs(e))
+                  : e;
             })(t);
 
             return Math.min(Math.max(e, 0), n);
