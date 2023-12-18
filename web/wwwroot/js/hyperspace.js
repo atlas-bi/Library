@@ -59,7 +59,7 @@
               if (target.dataset.ini === 'FDM') {
                 load.DataModelID = target.dataset.id;
               } else {
-                load.ReportRunID = target.dataset.id;
+                load.ReportID = target.dataset.id;
               }
 
               break;

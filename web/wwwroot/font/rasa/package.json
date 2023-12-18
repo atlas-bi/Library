@@ -1,9 +1,38 @@
 {
-  "name": "@fontsource/rasa",
-  "version": "5.0.3",
+  "_from": "@fontsource/rasa@^5.0.0",
+  "_id": "@fontsource/rasa@5.0.18",
+  "_inBundle": false,
+  "_integrity": "sha512-hYKxVZGbGQRv5k+8vZd/BN2+gFRu2a4ebCDqIxkB0ubbPKQ1BmakQYcmz59ju+AUD8+Q649gi4wzQFp4iJczYw==",
+  "_location": "/@fontsource/rasa",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "range",
+    "registry": true,
+    "raw": "@fontsource/rasa@^5.0.0",
+    "name": "@fontsource/rasa",
+    "escapedName": "@fontsource%2frasa",
+    "scope": "@fontsource",
+    "rawSpec": "^5.0.0",
+    "saveSpec": null,
+    "fetchSpec": "^5.0.0"
+  },
+  "_requiredBy": [
+    "#DEV:/"
+  ],
+  "_resolved": "https://registry.npmjs.org/@fontsource/rasa/-/rasa-5.0.18.tgz",
+  "_shasum": "b2d2be0c29e64dc657c162ec374bfcf9b3092706",
+  "_spec": "@fontsource/rasa@^5.0.0",
+  "_where": "C:\\Users\\Sean-Pickering\\Documents\\SeanSourceCode\\atlaslib\\library",
+  "author": {
+    "name": "Google Inc."
+  },
+  "bugs": {
+    "url": "https://github.com/fontsource/font-files/issues"
+  },
+  "bundleDependencies": false,
+  "deprecated": false,
   "description": "Self-host the Rasa font in a neatly bundled NPM package.",
-  "main": "index.css",
-  "publishConfig": {"access": "public"},
+  "homepage": "https://fontsource.org/fonts/rasa",
   "keywords": [
     "fontsource",
     "font",
@@ -18,13 +47,17 @@
     "typeface",
     "variable"
   ],
-  "author": "Google Inc.",
   "license": "OFL-1.1",
-  "homepage": "https://fontsource.org/fonts/rasa",
+  "main": "index.css",
+  "name": "@fontsource/rasa",
+  "publishConfig": {
+    "access": "public"
+  },
+  "publishHash": "afc800b4cafba8c2",
   "repository": {
     "type": "git",
-    "url": "https://github.com/fontsource/font-files.git",
+    "url": "git+https://github.com/fontsource/font-files.git",
     "directory": "fonts/google/rasa"
   },
-  "publishHash": "d06bed800a4e0ec6"
+  "version": "5.0.18"
 }
