@@ -28,8 +28,8 @@
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
-   <PackageReference Include="ITfoxtec.Identity.Saml2" Version="4.8.8" />
-   <PackageReference Include="ITfoxtec.Identity.Saml2.MvcCore" Version="4.8.8" />
+   <PackageReference Include="ITfoxtec.Identity.Saml2" Version="4.10.7" />
+   <PackageReference Include="ITfoxtec.Identity.Saml2.MvcCore" Version="4.10.7" />
    <PackageReference Include="System.Net.Primitives" Version="4.3.1" />
     <PackageReference Include="System.Net.NameResolution" Version="4.3.0" />
     <PackageReference Include="System.IO.FileSystem" Version="4.3.0" />
@@ -37,32 +37,32 @@
     <PackageReference Include="System.Threading" Version="4.3.0" />
     <PackageReference Include="System.Runtime.Handles" Version="4.3.0" />
     <PackageReference Include="System.Diagnostics.Tracing" Version="4.3.0" />
-    <PackageReference Include="Hangfire" Version="1.8.5" />
-    <PackageReference Include="Hangfire.InMemory" Version="0.5.1" />
-    <PackageReference Include="HtmlSanitizer" Version="8.0.692" />
+    <PackageReference Include="Hangfire" Version="1.8.6" />
+    <PackageReference Include="Hangfire.InMemory" Version="0.6.0" />
+    <PackageReference Include="HtmlSanitizer" Version="8.0.795" />
     <PackageReference Include="LigerShark.WebOptimizer.AutoPrefixer" Version="7.1.8-beta" />
-    <PackageReference Include="LigerShark.WebOptimizer.Core" Version="3.0.391" />
-    <PackageReference Include="Markdig" Version="0.33.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.Negotiate" Version="7.0.10" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="7.0.10" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="7.0.10" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.10" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.10" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.10">
+    <PackageReference Include="LigerShark.WebOptimizer.Core" Version="3.0.396" />
+    <PackageReference Include="Markdig" Version="0.34.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Negotiate" Version="7.0.14" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="7.0.14" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="7.0.14" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.14" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.14" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.14">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="NUglify" Version="1.20.7" />
-    <PackageReference Include="SixLabors.ImageSharp" Version="3.0.2" />
+    <PackageReference Include="NUglify" Version="1.21.2" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="3.1.1" />
     <PackageReference Include="Slugify.Core" Version="4.0.1" />
     <PackageReference Include="SolrNet" Version="1.1.1" />
     <PackageReference Include="SolrNet.Core" Version="1.1.1" />
     <PackageReference Include="SolrNet.Microsoft.DependencyInjection" Version="1.1.1" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.5" />
-    <PackageReference Include="System.Text.Json" Version="7.0.3" />
+    <PackageReference Include="System.Text.Json" Version="7.0.4" />
     <PackageReference Include="UAParser" Version="3.1.47" />
-    <PackageReference Include="WebMarkupMin.AspNetCore5" Version="2.14.1" />
-    <PackageReference Include="SonarAnalyzer.CSharp" Version="9.9.0.77355">
+    <PackageReference Include="WebMarkupMin.AspNetCore5" Version="2.15.0" />
+    <PackageReference Include="SonarAnalyzer.CSharp" Version="9.15.0.81779">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
