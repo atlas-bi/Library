@@ -534,3 +534,36 @@ input.css-collapse {
 .css-collapse:checked ~ div ~ .css-collapse-label::before {
   content: 'show less';
 }
+
+.logo {
+  min-width: 35px;
+  min-height: 35px;
+  background-size: cover;
+  background-position: center center;
+  animation-duration: 0.125s;
+  display: block;
+  vertical-align: middle;
+}
+
+.logo-text {
+  transition-property: color, background-color, border-color,
+    text-decoration-color, fill, stroke;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 0.15s;
+  color: rgb(51 65 85);
+  font-weight: 500;
+  font-size: 1.5rem;
+  line-height: 2rem;
+  scroll-margin: 5rem;
+  margin: 0;
+
+  &:hover {
+    color: rgb(15 23 42);
+  }
+
+  .logo-text-slash {
+    color: rgb(203 213 225);
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+  }
+}
