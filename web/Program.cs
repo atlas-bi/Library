@@ -396,14 +396,14 @@ using (var scope = app.Services.CreateScope())
         }
         catch
         {
-            cache.Set("logo", "/img/thinking-face-text-133x40.png");
-            cache.Set("logo_path", "wwwroot/img/thinking-face-text-133x40.png");
+            // cache.Set("logo", "/img/atlas-a-logo.svg");
+            // cache.Set("logo_path", "wwwroot/img/atlas-a-logo.svg");
         }
     }
     else
     {
-        cache.Set("logo", "/img/thinking-face-text-133x40.png");
-        cache.Set("logo_path", "wwwroot/img/thinking-face-text-133x40.png");
+        // cache.Set("logo", "/img/atlas-a-logo.svg");
+        // cache.Set("logo_path", "wwwroot/img/atlas-a-logo.svg");
     }
 
     // set version
