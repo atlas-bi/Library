@@ -213,8 +213,8 @@
                   m.top <= this._limits.start
                     ? 'start'
                     : m.top >= this._limits.end
-                      ? 'end'
-                      : 'middle';
+                    ? 'end'
+                    : 'middle';
                 if (this._stickyMode != a) {
                   switch (a) {
                     case 'start':
