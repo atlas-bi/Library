@@ -13,7 +13,7 @@ stages:
   - publish
 
 precommit:
-  image: mcr.microsoft.com/dotnet/sdk:7.0-alpine
+  image: mcr.microsoft.com/dotnet/sdk:8.0-alpine
   stage: test
   except:
     - public
@@ -40,7 +40,7 @@ precommit:
     - pre-commit run stylelint --all-files
 
 build_web:
-  image: mcr.microsoft.com/dotnet/sdk:7.0-alpine
+  image: mcr.microsoft.com/dotnet/sdk:8.0-alpine
   stage: build
   except:
     - public
@@ -73,7 +73,7 @@ deploy_test:
 
 public:
   stage: publish
-  image: python:3.11
+  image: python:3.12
   needs:
     - job: build_web
       artifacts: false
@@ -116,7 +116,7 @@ github:
   only:
     - public # public branch
   stage: publish
-  image: python:3.11
+  image: python:3.12
   before_script:
     - 'command -v ssh-agent >/dev/null || ( apt-get update -y && apt-get install openssh-client -y )'
     - eval $(ssh-agent -s)
