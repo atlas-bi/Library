@@ -1,9 +1,38 @@
 {
-  "name": "@fontsource/inter",
-  "version": "5.0.16",
+  "_from": "@fontsource/inter@^5.0.0",
+  "_id": "@fontsource/inter@5.0.16",
+  "_inBundle": false,
+  "_integrity": "sha512-qF0aH5UiZvCmneX5orJbVRoc2VTyLTV3X/7laMp03Qt28L+B9tFlZODOGUL64wDWc69YVdi1LeJB0cIgd51lvw==",
+  "_location": "/@fontsource/inter",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "range",
+    "registry": true,
+    "raw": "@fontsource/inter@^5.0.0",
+    "name": "@fontsource/inter",
+    "escapedName": "@fontsource%2finter",
+    "scope": "@fontsource",
+    "rawSpec": "^5.0.0",
+    "saveSpec": null,
+    "fetchSpec": "^5.0.0"
+  },
+  "_requiredBy": [
+    "#DEV:/"
+  ],
+  "_resolved": "https://registry.npmjs.org/@fontsource/inter/-/inter-5.0.16.tgz",
+  "_shasum": "b858508cdb56dcbbf3166903122851e2fbd16b50",
+  "_spec": "@fontsource/inter@^5.0.0",
+  "_where": "C:\\Users\\Sean-Pickering\\Documents\\SeanSourceCode\\atlaslib\\library",
+  "author": {
+    "name": "Google Inc."
+  },
+  "bugs": {
+    "url": "https://github.com/fontsource/font-files/issues"
+  },
+  "bundleDependencies": false,
+  "deprecated": false,
   "description": "Self-host the Inter font in a neatly bundled NPM package.",
-  "main": "index.css",
-  "publishConfig": {"access": "public"},
+  "homepage": "https://fontsource.org/fonts/inter",
   "keywords": [
     "fontsource",
     "font",
@@ -18,13 +47,17 @@
     "typeface",
     "variable"
   ],
-  "author": "Google Inc.",
   "license": "OFL-1.1",
-  "homepage": "https://fontsource.org/fonts/inter",
+  "main": "index.css",
+  "name": "@fontsource/inter",
+  "publishConfig": {
+    "access": "public"
+  },
+  "publishHash": "29f83684e243ab2f",
   "repository": {
     "type": "git",
-    "url": "https://github.com/fontsource/font-files.git",
+    "url": "git+https://github.com/fontsource/font-files.git",
     "directory": "fonts/google/inter"
   },
-  "publishHash": "29f83684e243ab2f"
+  "version": "5.0.16"
 }

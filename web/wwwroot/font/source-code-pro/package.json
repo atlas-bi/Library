@@ -1,9 +1,38 @@
 {
-  "name": "@fontsource/source-code-pro",
-  "version": "5.0.16",
+  "_from": "@fontsource/source-code-pro@^5.0.0",
+  "_id": "@fontsource/source-code-pro@5.0.16",
+  "_inBundle": false,
+  "_integrity": "sha512-ErErGXjKo9/fAJE49fyU8M6DuJUpdqR5YLM8jGJOC5ZcKIDSTQ5m+R3DTa0VYHAGGFbk2qLWVWD/r5sfCLA/jQ==",
+  "_location": "/@fontsource/source-code-pro",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "range",
+    "registry": true,
+    "raw": "@fontsource/source-code-pro@^5.0.0",
+    "name": "@fontsource/source-code-pro",
+    "escapedName": "@fontsource%2fsource-code-pro",
+    "scope": "@fontsource",
+    "rawSpec": "^5.0.0",
+    "saveSpec": null,
+    "fetchSpec": "^5.0.0"
+  },
+  "_requiredBy": [
+    "#DEV:/"
+  ],
+  "_resolved": "https://registry.npmjs.org/@fontsource/source-code-pro/-/source-code-pro-5.0.16.tgz",
+  "_shasum": "5943c67cfec5493b0f1a5bc416e14ab7d5ebe760",
+  "_spec": "@fontsource/source-code-pro@^5.0.0",
+  "_where": "C:\\Users\\Sean-Pickering\\Documents\\SeanSourceCode\\atlaslib\\library",
+  "author": {
+    "name": "Google Inc."
+  },
+  "bugs": {
+    "url": "https://github.com/fontsource/font-files/issues"
+  },
+  "bundleDependencies": false,
+  "deprecated": false,
   "description": "Self-host the Source Code Pro font in a neatly bundled NPM package.",
-  "main": "index.css",
-  "publishConfig": {"access": "public"},
+  "homepage": "https://fontsource.org/fonts/source-code-pro",
   "keywords": [
     "fontsource",
     "font",
@@ -18,13 +47,17 @@
     "typeface",
     "variable"
   ],
-  "author": "Google Inc.",
   "license": "OFL-1.1",
-  "homepage": "https://fontsource.org/fonts/source-code-pro",
+  "main": "index.css",
+  "name": "@fontsource/source-code-pro",
+  "publishConfig": {
+    "access": "public"
+  },
+  "publishHash": "701718a828c04410",
   "repository": {
     "type": "git",
-    "url": "https://github.com/fontsource/font-files.git",
+    "url": "git+https://github.com/fontsource/font-files.git",
     "directory": "fonts/google/source-code-pro"
   },
-  "publishHash": "701718a828c04410"
+  "version": "5.0.16"
 }

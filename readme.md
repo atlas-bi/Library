@@ -40,7 +40,7 @@ Atlas business intelligence library plugs in to your existing reporting platform
 
 ## 🏃 Getting Started
 
-> Atlas BI Library is built with [.Net 7.0](https://dotnet.microsoft.com/download/dotnet/7.0) and [Node](https://nodejs.org/en/download/). \
+> Atlas BI Library is built with [.Net 8.0](https://dotnet.microsoft.com/download/dotnet/8.0) and [Node](https://nodejs.org/en/download/). \
 > Aside from those installs you will need to install ef core tools `dotnet tool install -g dotnet-ef`. \
 > These guide can be run with [Visual Studio Code](https://code.visualstudio.com/download) and the built in terminal.
 
