@@ -37,7 +37,7 @@ jobs:
       - name: setup dotnet
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '7.0.x'
+          dotnet-version: '8.0.x'
       - name: setup node
         uses: actions/setup-node@v4
         with:
@@ -74,7 +74,7 @@ jobs:
       - name: setup dotnet
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '7.0.x'
+          dotnet-version: '8.0.x'
       - name: setup node
         uses: actions/setup-node@v4
         with:
@@ -192,7 +192,7 @@ jobs:
       - name: setup dotnet
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '7.0.x'
+          dotnet-version: '8.0.x'
       - name: setup node
         uses: actions/setup-node@v4
         with:
