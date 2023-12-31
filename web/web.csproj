@@ -37,7 +37,7 @@
     <PackageReference Include="System.Threading" Version="4.3.0" />
     <PackageReference Include="System.Runtime.Handles" Version="4.3.0" />
     <PackageReference Include="System.Diagnostics.Tracing" Version="4.3.0" />
-    <PackageReference Include="Hangfire" Version="1.8.6" />
+    <PackageReference Include="Hangfire" Version="1.8.7" />
     <PackageReference Include="Hangfire.InMemory" Version="0.6.0" />
     <PackageReference Include="HtmlSanitizer" Version="8.0.811" />
     <PackageReference Include="LigerShark.WebOptimizer.AutoPrefixer" Version="7.1.8-beta" />
