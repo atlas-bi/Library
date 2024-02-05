@@ -12,7 +12,7 @@
 </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="BrowserStackLocal" Version="2.3.1" />
-    <PackageReference Include="MartinCostello.BrowserStack.Automate" Version="3.0.3" />
+    <PackageReference Include="MartinCostello.BrowserStack.Automate" Version="4.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="8.0.1" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
 
