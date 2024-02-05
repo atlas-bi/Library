@@ -1,9 +1,9 @@
+using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using WebOptimizer;
-using Microsoft.Net.Http.Headers;
 using Microsoft.Extensions.Options;
-using System.Text;
+using Microsoft.Net.Http.Headers;
+using WebOptimizer;
 
 namespace Atlas_Web.Pages.Data
 {

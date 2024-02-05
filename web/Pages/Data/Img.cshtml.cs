@@ -1,13 +1,13 @@
+using System.Text.RegularExpressions;
+using Atlas_Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Atlas_Web.Models;
 using Microsoft.Extensions.Caching.Memory;
 using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Processing;
-using SixLabors.ImageSharp.PixelFormats;
-using System.Text.RegularExpressions;
 using SixLabors.ImageSharp.Formats.Jpeg;
 using SixLabors.ImageSharp.Formats.Webp;
+using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp.Processing;
 
 namespace Atlas_Web.Pages.Data
 {
@@ -90,14 +90,14 @@ namespace Atlas_Web.Pages.Data
 
             if (imgId.HasValue)
             {
-                img = _context.ReportObjectImagesDocs
-                    .Where(x => x.ImageId == imgId)
+                img = _context
+                    .ReportObjectImagesDocs.Where(x => x.ImageId == imgId)
                     .FirstOrDefault();
             }
             else
             {
-                img = _context.ReportObjectImagesDocs
-                    .Where(x => x.ReportObjectId == id)
+                img = _context
+                    .ReportObjectImagesDocs.Where(x => x.ReportObjectId == id)
                     .FirstOrDefault();
             }
 

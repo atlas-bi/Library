@@ -1,7 +1,7 @@
-using Xunit;
+using System;
 using Atlas_Web.Helpers;
 using Atlas_Web.Models;
-using System;
+using Xunit;
 
 namespace web.Tests.FunctionTests;
 

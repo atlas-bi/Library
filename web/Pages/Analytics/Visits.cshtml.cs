@@ -62,10 +62,9 @@ namespace Atlas_Web.Pages.Analytics
             when using all time, get first day and last day and use the above rules
             */
             DateTime MinDate = new DateTime(1900, 01, 01, 00, 00, 00);
-            var subquery = _context.Analytics.Where(
-                x =>
-                    x.AccessDateTime >= DateTime.Now.AddSeconds(start_at)
-                    && x.AccessDateTime <= DateTime.Now.AddSeconds(end_at)
+            var subquery = _context.Analytics.Where(x =>
+                x.AccessDateTime >= DateTime.Now.AddSeconds(start_at)
+                && x.AccessDateTime <= DateTime.Now.AddSeconds(end_at)
             );
 
             if (userId > 0 && await _context.Users.AnyAsync(x => x.UserId == userId))
@@ -75,8 +74,8 @@ namespace Atlas_Web.Pages.Analytics
 
             if (groupId > 0 && await _context.UserGroups.AnyAsync(x => x.GroupId == groupId))
             {
-                subquery = subquery.Where(
-                    x => x.User.UserGroupsMemberships.Any(y => y.GroupId == groupId)
+                subquery = subquery.Where(x =>
+                    x.User.UserGroupsMemberships.Any(y => y.GroupId == groupId)
                 );
             }
 
@@ -195,10 +194,9 @@ namespace Atlas_Web.Pages.Analytics
         )
         {
             var uaParser = Parser.GetDefault();
-            var subquery = _context.Analytics.Where(
-                x =>
-                    x.AccessDateTime >= DateTime.Now.AddSeconds(start_at)
-                    && x.AccessDateTime <= DateTime.Now.AddSeconds(end_at)
+            var subquery = _context.Analytics.Where(x =>
+                x.AccessDateTime >= DateTime.Now.AddSeconds(start_at)
+                && x.AccessDateTime <= DateTime.Now.AddSeconds(end_at)
             );
 
             if (userId > 0 && await _context.Users.AnyAsync(x => x.UserId == userId))
@@ -208,8 +206,8 @@ namespace Atlas_Web.Pages.Analytics
 
             if (groupId > 0 && await _context.UserGroups.AnyAsync(x => x.GroupId == groupId))
             {
-                subquery = subquery.Where(
-                    x => x.User.UserGroupsMemberships.Any(y => y.GroupId == groupId)
+                subquery = subquery.Where(x =>
+                    x.User.UserGroupsMemberships.Any(y => y.GroupId == groupId)
                 );
             }
 
@@ -242,10 +240,9 @@ namespace Atlas_Web.Pages.Analytics
         )
         {
             var uaParser = Parser.GetDefault();
-            var subquery = _context.Analytics.Where(
-                x =>
-                    x.AccessDateTime >= DateTime.Now.AddSeconds(start_at)
-                    && x.AccessDateTime <= DateTime.Now.AddSeconds(end_at)
+            var subquery = _context.Analytics.Where(x =>
+                x.AccessDateTime >= DateTime.Now.AddSeconds(start_at)
+                && x.AccessDateTime <= DateTime.Now.AddSeconds(end_at)
             );
 
             if (userId > 0 && await _context.Users.AnyAsync(x => x.UserId == userId))
@@ -255,8 +252,8 @@ namespace Atlas_Web.Pages.Analytics
 
             if (groupId > 0 && await _context.UserGroups.AnyAsync(x => x.GroupId == groupId))
             {
-                subquery = subquery.Where(
-                    x => x.User.UserGroupsMemberships.Any(y => y.GroupId == groupId)
+                subquery = subquery.Where(x =>
+                    x.User.UserGroupsMemberships.Any(y => y.GroupId == groupId)
                 );
             }
 
@@ -288,10 +285,9 @@ namespace Atlas_Web.Pages.Analytics
             int? groupId = -1
         )
         {
-            var subquery = _context.Analytics.Where(
-                x =>
-                    x.AccessDateTime >= DateTime.Now.AddSeconds(start_at)
-                    && x.AccessDateTime <= DateTime.Now.AddSeconds(end_at)
+            var subquery = _context.Analytics.Where(x =>
+                x.AccessDateTime >= DateTime.Now.AddSeconds(start_at)
+                && x.AccessDateTime <= DateTime.Now.AddSeconds(end_at)
             );
 
             if (userId > 0 && await _context.Users.AnyAsync(x => x.UserId == userId))
@@ -301,8 +297,8 @@ namespace Atlas_Web.Pages.Analytics
 
             if (groupId > 0 && await _context.UserGroups.AnyAsync(x => x.GroupId == groupId))
             {
-                subquery = subquery.Where(
-                    x => x.User.UserGroupsMemberships.Any(y => y.GroupId == groupId)
+                subquery = subquery.Where(x =>
+                    x.User.UserGroupsMemberships.Any(y => y.GroupId == groupId)
                 );
             }
 
@@ -330,10 +326,9 @@ namespace Atlas_Web.Pages.Analytics
             int? groupId = -1
         )
         {
-            var subquery = _context.Analytics.Where(
-                x =>
-                    x.AccessDateTime >= DateTime.Now.AddSeconds(start_at)
-                    && x.AccessDateTime <= DateTime.Now.AddSeconds(end_at)
+            var subquery = _context.Analytics.Where(x =>
+                x.AccessDateTime >= DateTime.Now.AddSeconds(start_at)
+                && x.AccessDateTime <= DateTime.Now.AddSeconds(end_at)
             );
 
             if (userId > 0 && await _context.Users.AnyAsync(x => x.UserId == userId))
@@ -343,8 +338,8 @@ namespace Atlas_Web.Pages.Analytics
 
             if (groupId > 0 && await _context.UserGroups.AnyAsync(x => x.GroupId == groupId))
             {
-                subquery = subquery.Where(
-                    x => x.User.UserGroupsMemberships.Any(y => y.GroupId == groupId)
+                subquery = subquery.Where(x =>
+                    x.User.UserGroupsMemberships.Any(y => y.GroupId == groupId)
                 );
             }
 
@@ -380,10 +375,9 @@ namespace Atlas_Web.Pages.Analytics
             int? groupId = -1
         )
         {
-            var subquery = _context.Analytics.Where(
-                x =>
-                    x.AccessDateTime >= DateTime.Now.AddSeconds(start_at)
-                    && x.AccessDateTime <= DateTime.Now.AddSeconds(end_at)
+            var subquery = _context.Analytics.Where(x =>
+                x.AccessDateTime >= DateTime.Now.AddSeconds(start_at)
+                && x.AccessDateTime <= DateTime.Now.AddSeconds(end_at)
             );
 
             if (userId > 0 && await _context.Users.AnyAsync(x => x.UserId == userId))
@@ -393,8 +387,8 @@ namespace Atlas_Web.Pages.Analytics
 
             if (groupId > 0 && await _context.UserGroups.AnyAsync(x => x.GroupId == groupId))
             {
-                subquery = subquery.Where(
-                    x => x.User.UserGroupsMemberships.Any(y => y.GroupId == groupId)
+                subquery = subquery.Where(x =>
+                    x.User.UserGroupsMemberships.Any(y => y.GroupId == groupId)
                 );
             }
 

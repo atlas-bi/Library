@@ -1,8 +1,8 @@
+using Atlas_Web.Authorization;
+using Atlas_Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using Atlas_Web.Models;
-using Atlas_Web.Authorization;
 using Microsoft.Extensions.Caching.Memory;
 
 namespace Atlas_Web.Pages.Collections
@@ -33,8 +33,8 @@ namespace Atlas_Web.Pages.Collections
                     cacheEntry =>
                     {
                         cacheEntry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20);
-                        return _context.Collections
-                            .Include(x => x.LastUpdateUserNavigation)
+                        return _context
+                            .Collections.Include(x => x.LastUpdateUserNavigation)
                             .Include(x => x.CollectionTerms)
                             .ThenInclude(x => x.Term)
                             .Include(x => x.CollectionTerms)

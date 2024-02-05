@@ -22,8 +22,8 @@ namespace Atlas_Web.Authorization
                 return Task.CompletedTask;
             }
 
-            var groups = context.User.Claims
-                .Where(x => x.Type == "Group")
+            var groups = context
+                .User.Claims.Where(x => x.Type == "Group")
                 .Select(x => x.Value)
                 .ToList();
 
@@ -36,11 +36,10 @@ namespace Atlas_Web.Authorization
 
             // check hrg
             if (
-                report.ReportObjectHierarchyChildReportObjects.Any(
-                    x =>
-                        x.ParentReportObject.ReportGroupsMemberships.Any(
-                            y => groups.Contains(y.GroupId.ToString())
-                        )
+                report.ReportObjectHierarchyChildReportObjects.Any(x =>
+                    x.ParentReportObject.ReportGroupsMemberships.Any(y =>
+                        groups.Contains(y.GroupId.ToString())
+                    )
                 )
             )
             {

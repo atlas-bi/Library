@@ -1,7 +1,7 @@
+using Atlas_Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using Atlas_Web.Models;
 
 namespace Atlas_Web.Pages.Settings
 {
@@ -26,20 +26,20 @@ namespace Atlas_Web.Pages.Settings
         {
             ReportTypes = await _context.ReportObjectTypes.ToListAsync();
 
-            UserVisibility = await _context.GlobalSiteSettings.SingleOrDefaultAsync(
-                x => x.Name == "users_search_visibility"
+            UserVisibility = await _context.GlobalSiteSettings.SingleOrDefaultAsync(x =>
+                x.Name == "users_search_visibility"
             );
-            GroupVisibility = await _context.GlobalSiteSettings.SingleOrDefaultAsync(
-                x => x.Name == "groups_search_visibility"
+            GroupVisibility = await _context.GlobalSiteSettings.SingleOrDefaultAsync(x =>
+                x.Name == "groups_search_visibility"
             );
-            TermVisibility = await _context.GlobalSiteSettings.SingleOrDefaultAsync(
-                x => x.Name == "terms_search_visibility"
+            TermVisibility = await _context.GlobalSiteSettings.SingleOrDefaultAsync(x =>
+                x.Name == "terms_search_visibility"
             );
-            InitiativeVisibility = await _context.GlobalSiteSettings.SingleOrDefaultAsync(
-                x => x.Name == "initiatives_search_visibility"
+            InitiativeVisibility = await _context.GlobalSiteSettings.SingleOrDefaultAsync(x =>
+                x.Name == "initiatives_search_visibility"
             );
-            CollectionVisibility = await _context.GlobalSiteSettings.SingleOrDefaultAsync(
-                x => x.Name == "collections_search_visibility"
+            CollectionVisibility = await _context.GlobalSiteSettings.SingleOrDefaultAsync(x =>
+                x.Name == "collections_search_visibility"
             );
 
             return Page();
@@ -56,8 +56,8 @@ namespace Atlas_Web.Pages.Settings
 
             if (TypeId == "reports" && GroupId != null)
             {
-                var report_type = await _context.ReportObjectTypes
-                    .Where(x => x.ReportObjectTypeId == GroupId)
+                var report_type = await _context
+                    .ReportObjectTypes.Where(x => x.ReportObjectTypeId == GroupId)
                     .FirstOrDefaultAsync();
                 if (report_type != null && Type == 2)
                 {
@@ -70,8 +70,8 @@ namespace Atlas_Web.Pages.Settings
             }
             else
             {
-                var current_vis = await _context.GlobalSiteSettings
-                    .Where(x => x.Name == TypeId + "_search_visibility")
+                var current_vis = await _context
+                    .GlobalSiteSettings.Where(x => x.Name == TypeId + "_search_visibility")
                     .FirstOrDefaultAsync();
 
                 if (current_vis == null)
@@ -98,8 +98,8 @@ namespace Atlas_Web.Pages.Settings
 
         public async Task<IActionResult> OnPostSearchUpdateText(int id, string text)
         {
-            var report_type = await _context.ReportObjectTypes
-                .Where(x => x.ReportObjectTypeId == id)
+            var report_type = await _context
+                .ReportObjectTypes.Where(x => x.ReportObjectTypeId == id)
                 .FirstOrDefaultAsync();
 
             report_type.ShortName = text;

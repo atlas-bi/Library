@@ -1,8 +1,8 @@
+using System.Diagnostics.Contracts;
+using System.Security.Cryptography;
 using Atlas_Web.Models;
 using Microsoft.AspNetCore.WebUtilities;
-using System.Diagnostics.Contracts;
 using Microsoft.Extensions.Caching.Memory;
-using System.Security.Cryptography;
 
 namespace Atlas_Web.Helpers
 {

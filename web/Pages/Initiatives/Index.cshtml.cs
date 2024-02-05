@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Atlas_Web.Authorization;
+using Atlas_Web.Models;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using Atlas_Web.Models;
-using Atlas_Web.Authorization;
 using Microsoft.Extensions.Caching.Memory;
 
 namespace Atlas_Web.Pages.Initiatives
@@ -33,8 +33,8 @@ namespace Atlas_Web.Pages.Initiatives
                     {
                         cacheEntry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20);
 
-                        return _context.Initiatives
-                            .Include(x => x.Collections)
+                        return _context
+                            .Initiatives.Include(x => x.Collections)
                             .ThenInclude(x => x.CollectionReports)
                             .Include(x => x.OperationOwner)
                             .Include(x => x.ExecutiveOwner)
@@ -59,8 +59,8 @@ namespace Atlas_Web.Pages.Initiatives
                 {
                     cacheEntry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20);
 
-                    return _context.Initiatives
-                        .Include(x => x.Collections)
+                    return _context
+                        .Initiatives.Include(x => x.Collections)
                         .Include(x => x.StarredInitiatives)
                         .ToListAsync();
                 }
@@ -80,8 +80,8 @@ namespace Atlas_Web.Pages.Initiatives
             }
 
             // remove collection links, contacts and remove initiative.
-            (await _context.Collections.Where(d => d.InitiativeId == Id).ToListAsync()).ForEach(
-                x => x.InitiativeId = null
+            (await _context.Collections.Where(d => d.InitiativeId == Id).ToListAsync()).ForEach(x =>
+                x.InitiativeId = null
             );
 
             _context.Remove(

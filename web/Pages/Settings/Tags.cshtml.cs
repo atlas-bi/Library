@@ -1,8 +1,8 @@
+using Atlas_Web.Authorization;
+using Atlas_Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using Atlas_Web.Models;
-using Atlas_Web.Authorization;
 using Microsoft.Extensions.Caching.Memory;
 
 namespace Atlas_Web.Pages.Settings
@@ -250,8 +250,10 @@ namespace Atlas_Web.Pages.Settings
                 && User.HasPermission("Delete Parameters")
             )
             {
-                _context.ReportObjectDocs
-                    .Where(x => x.OrganizationalValueId.Equals(OrganizationalValue.Id))
+                _context
+                    .ReportObjectDocs.Where(x =>
+                        x.OrganizationalValueId.Equals(OrganizationalValue.Id)
+                    )
                     .ToList()
                     .ForEach(q => q.OrganizationalValueId = null);
                 _context.Remove(OrganizationalValue);
@@ -295,8 +297,10 @@ namespace Atlas_Web.Pages.Settings
                 && User.HasPermission("Delete Parameters")
             )
             {
-                _context.ReportObjectDocs
-                    .Where(x => x.EstimatedRunFrequencyId.Equals(EstimatedRunFrequency.Id))
+                _context
+                    .ReportObjectDocs.Where(x =>
+                        x.EstimatedRunFrequencyId.Equals(EstimatedRunFrequency.Id)
+                    )
                     .ToList()
                     .ForEach(q => q.EstimatedRunFrequencyId = null);
                 _context.Remove(EstimatedRunFrequency);
@@ -337,8 +341,8 @@ namespace Atlas_Web.Pages.Settings
         {
             if (ModelState.IsValid && Fragility.Id > 0 && User.HasPermission("Delete Parameters"))
             {
-                _context.ReportObjectDocs
-                    .Where(x => x.FragilityId.Equals(Fragility.Id))
+                _context
+                    .ReportObjectDocs.Where(x => x.FragilityId.Equals(Fragility.Id))
                     .ToList()
                     .ForEach(q => q.FragilityId = null);
                 _context.Remove(Fragility);
@@ -371,8 +375,10 @@ namespace Atlas_Web.Pages.Settings
                 && User.HasPermission("Delete Parameters")
             )
             {
-                _context.ReportObjectDocs
-                    .Where(x => x.MaintenanceScheduleId.Equals(MaintenanceSchedule.Id))
+                _context
+                    .ReportObjectDocs.Where(x =>
+                        x.MaintenanceScheduleId.Equals(MaintenanceSchedule.Id)
+                    )
                     .ToList()
                     .ForEach(q => q.MaintenanceScheduleId = null);
                 _context.Remove(MaintenanceSchedule);
@@ -400,12 +406,14 @@ namespace Atlas_Web.Pages.Settings
         public ActionResult OnPostDeleteFragilityTag()
         {
             if (
-                ModelState.IsValid && FragilityTag.Id > 0 && User.HasPermission("Delete Parameters")
+                ModelState.IsValid
+                && FragilityTag.Id > 0
+                && User.HasPermission("Delete Parameters")
             )
             {
                 _context.RemoveRange(
-                    _context.ReportObjectDocFragilityTags.Where(
-                        x => x.FragilityTagId.Equals(FragilityTag.Id)
+                    _context.ReportObjectDocFragilityTags.Where(x =>
+                        x.FragilityTagId.Equals(FragilityTag.Id)
                     )
                 );
                 _context.Remove(FragilityTag);
@@ -439,8 +447,8 @@ namespace Atlas_Web.Pages.Settings
             )
             {
                 _context.RemoveRange(
-                    _context.MaintenanceLogs.Where(
-                        x => x.MaintenanceLogStatusId.Equals(MaintenanceLogStatus.Id)
+                    _context.MaintenanceLogs.Where(x =>
+                        x.MaintenanceLogStatusId.Equals(MaintenanceLogStatus.Id)
                     )
                 );
                 _context.Remove(MaintenanceLogStatus);
@@ -473,12 +481,12 @@ namespace Atlas_Web.Pages.Settings
                 && User.HasPermission("Delete Parameters")
             )
             {
-                _context.Collections
-                    .Where(x => x.FinancialImpact.Equals(FinancialImpact.Id))
+                _context
+                    .Collections.Where(x => x.FinancialImpact.Equals(FinancialImpact.Id))
                     .ToList()
                     .ForEach(q => q.FinancialImpact = null);
-                _context.Initiatives
-                    .Where(x => x.FinancialImpact.Equals(FinancialImpact.Id))
+                _context
+                    .Initiatives.Where(x => x.FinancialImpact.Equals(FinancialImpact.Id))
                     .ToList()
                     .ForEach(q => q.FinancialImpact = null);
                 _context.Remove(FinancialImpact);
@@ -511,12 +519,12 @@ namespace Atlas_Web.Pages.Settings
                 && User.HasPermission("Delete Parameters")
             )
             {
-                _context.Collections
-                    .Where(x => x.StrategicImportance.Equals(StrategicImportance.Id))
+                _context
+                    .Collections.Where(x => x.StrategicImportance.Equals(StrategicImportance.Id))
                     .ToList()
                     .ForEach(q => q.StrategicImportance = null);
-                _context.Initiatives
-                    .Where(x => x.StrategicImportance.Equals(StrategicImportance.Id))
+                _context
+                    .Initiatives.Where(x => x.StrategicImportance.Equals(StrategicImportance.Id))
                     .ToList()
                     .ForEach(q => q.StrategicImportance = null);
                 _context.Remove(StrategicImportance);

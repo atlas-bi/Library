@@ -1,8 +1,8 @@
+using Atlas_Web.Authorization;
+using Atlas_Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using Atlas_Web.Models;
-using Atlas_Web.Authorization;
 
 namespace Atlas_Web.Pages.Settings
 {
@@ -100,8 +100,8 @@ namespace Atlas_Web.Pages.Settings
                 // type 2 = remove
 
                 _context.RemoveRange(
-                    _context.RolePermissionLinks.Where(
-                        x => x.RoleId.Equals(RoleId) && x.RolePermissionsId.Equals(PermissionId)
+                    _context.RolePermissionLinks.Where(x =>
+                        x.RoleId.Equals(RoleId) && x.RolePermissionsId.Equals(PermissionId)
                     )
                 );
 

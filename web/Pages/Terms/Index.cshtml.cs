@@ -1,5 +1,5 @@
-using Atlas_Web.Models;
 using Atlas_Web.Authorization;
+using Atlas_Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
@@ -44,8 +44,8 @@ namespace Atlas_Web.Pages.Terms
                     cacheEntry =>
                     {
                         cacheEntry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20);
-                        return _context.Terms
-                            .Include(x => x.ApprovedByUser)
+                        return _context
+                            .Terms.Include(x => x.ApprovedByUser)
                             .Include(x => x.UpdatedByUser)
                             .Include(x => x.StarredTerms)
                             .AsNoTracking()
@@ -61,8 +61,8 @@ namespace Atlas_Web.Pages.Terms
                 cacheEntry =>
                 {
                     cacheEntry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20);
-                    return _context.Terms
-                        .Include(x => x.ApprovedByUser)
+                    return _context
+                        .Terms.Include(x => x.ApprovedByUser)
                         .Include(x => x.UpdatedByUser)
                         .Include(x => x.StarredTerms)
                         .AsNoTracking()
@@ -76,8 +76,10 @@ namespace Atlas_Web.Pages.Terms
                 {
                     cacheEntry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20);
 
-                    var level_one = _context.ReportObjects
-                        .Where(x => x.ReportObjectDoc.ReportObjectDocTerms.Any(y => y.TermId == id))
+                    var level_one = _context
+                        .ReportObjects.Where(x =>
+                            x.ReportObjectDoc.ReportObjectDocTerms.Any(y => y.TermId == id)
+                        )
                         .Where(x => (x.ReportObjectDoc.Hidden ?? "N") == "N")
                         .Where(x => x.DefaultVisibilityYn == "Y")
                         .Include(x => x.ReportObjectType)
@@ -92,15 +94,13 @@ namespace Atlas_Web.Pages.Terms
                         .AsNoTracking()
                         .ToList();
 
-                    var level_two = _context.ReportObjects
-                        .Where(
-                            x =>
-                                x.ReportObjectHierarchyParentReportObjects.Any(
-                                    y =>
-                                        y.ChildReportObject.ReportObjectDoc.ReportObjectDocTerms.Any(
-                                            z => z.TermId == id
-                                        )
+                    var level_two = _context
+                        .ReportObjects.Where(x =>
+                            x.ReportObjectHierarchyParentReportObjects.Any(y =>
+                                y.ChildReportObject.ReportObjectDoc.ReportObjectDocTerms.Any(z =>
+                                    z.TermId == id
                                 )
+                            )
                         )
                         .Where(x => (x.ReportObjectDoc.Hidden ?? "N") == "N")
                         .Where(x => x.DefaultVisibilityYn == "Y")
@@ -115,10 +115,34 @@ namespace Atlas_Web.Pages.Terms
                         .ThenInclude(x => x.ReportGroupsMemberships)
                         .AsNoTracking()
                         .ToList();
-                    var level_three = _context.ReportObjects
-                        .Where(
-                            x =>
-                                x.ReportObjectHierarchyParentReportObjects.Any(
+                    var level_three = _context
+                        .ReportObjects.Where(x =>
+                            x.ReportObjectHierarchyParentReportObjects.Any(g =>
+                                g.ChildReportObject.ReportObjectHierarchyParentReportObjects.Any(
+                                    y =>
+                                        y.ChildReportObject.ReportObjectDoc.ReportObjectDocTerms.Any(
+                                            z => z.TermId == id
+                                        )
+                                )
+                            )
+                        )
+                        .Where(x => (x.ReportObjectDoc.Hidden ?? "N") == "N")
+                        .Where(x => x.DefaultVisibilityYn == "Y")
+                        .Include(x => x.ReportObjectType)
+                        .Include(x => x.ReportObjectDoc)
+                        .Include(x => x.ReportObjectAttachments)
+                        .Include(x => x.ReportTagLinks)
+                        .ThenInclude(x => x.Tag)
+                        // for authentication
+                        .Include(x => x.ReportObjectHierarchyChildReportObjects)
+                        .ThenInclude(x => x.ParentReportObject)
+                        .ThenInclude(x => x.ReportGroupsMemberships)
+                        .AsNoTracking()
+                        .ToList();
+                    var level_four = _context
+                        .ReportObjects.Where(x =>
+                            x.ReportObjectHierarchyParentReportObjects.Any(gg =>
+                                gg.ChildReportObject.ReportObjectHierarchyParentReportObjects.Any(
                                     g =>
                                         g.ChildReportObject.ReportObjectHierarchyParentReportObjects.Any(
                                             y =>
@@ -127,35 +151,7 @@ namespace Atlas_Web.Pages.Terms
                                                 )
                                         )
                                 )
-                        )
-                        .Where(x => (x.ReportObjectDoc.Hidden ?? "N") == "N")
-                        .Where(x => x.DefaultVisibilityYn == "Y")
-                        .Include(x => x.ReportObjectType)
-                        .Include(x => x.ReportObjectDoc)
-                        .Include(x => x.ReportObjectAttachments)
-                        .Include(x => x.ReportTagLinks)
-                        .ThenInclude(x => x.Tag)
-                        // for authentication
-                        .Include(x => x.ReportObjectHierarchyChildReportObjects)
-                        .ThenInclude(x => x.ParentReportObject)
-                        .ThenInclude(x => x.ReportGroupsMemberships)
-                        .AsNoTracking()
-                        .ToList();
-                    var level_four = _context.ReportObjects
-                        .Where(
-                            x =>
-                                x.ReportObjectHierarchyParentReportObjects.Any(
-                                    gg =>
-                                        gg.ChildReportObject.ReportObjectHierarchyParentReportObjects.Any(
-                                            g =>
-                                                g.ChildReportObject.ReportObjectHierarchyParentReportObjects.Any(
-                                                    y =>
-                                                        y.ChildReportObject.ReportObjectDoc.ReportObjectDocTerms.Any(
-                                                            z => z.TermId == id
-                                                        )
-                                                )
-                                        )
-                                )
+                            )
                         )
                         .Where(x => (x.ReportObjectDoc.Hidden ?? "N") == "N")
                         .Where(x => x.DefaultVisibilityYn == "Y")

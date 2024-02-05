@@ -1,9 +1,9 @@
+using System.Text;
+using Atlas_Web.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using Atlas_Web.Models;
-using System.Text;
-using Microsoft.AspNetCore.Authorization;
 
 namespace Atlas_Web.Pages.Data
 {
@@ -33,8 +33,8 @@ namespace Atlas_Web.Pages.Data
         public async Task<ActionResult> OnGetCrystalRun(int id)
         {
             // check permissions first!
-            var attachment = await _context.ReportObjectAttachments
-                .Where(x => x.ReportObjectAttachmentId.Equals(id))
+            var attachment = await _context
+                .ReportObjectAttachments.Where(x => x.ReportObjectAttachmentId.Equals(id))
                 .FirstOrDefaultAsync();
 
             if (attachment == null)

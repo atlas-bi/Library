@@ -29,12 +29,11 @@ namespace Atlas_Web.Pages.Analytics
         )
         {
             var page_size = 10;
-            var root = _context.AnalyticsErrors
-                .Where(x => x.UserAgent != null)
-                .Where(
-                    x =>
-                        x.LogDateTime >= DateTime.Now.AddSeconds(start_at)
-                        && x.LogDateTime <= DateTime.Now.AddSeconds(end_at)
+            var root = _context
+                .AnalyticsErrors.Where(x => x.UserAgent != null)
+                .Where(x =>
+                    x.LogDateTime >= DateTime.Now.AddSeconds(start_at)
+                    && x.LogDateTime <= DateTime.Now.AddSeconds(end_at)
                 );
 
             if (userId > 0 && await _context.Users.AnyAsync(x => x.UserId == userId))
@@ -71,8 +70,8 @@ namespace Atlas_Web.Pages.Analytics
 
         public async Task<ActionResult> OnPostResolved(int Id, int Type)
         {
-            AnalyticsError Error = await _context.AnalyticsErrors.SingleOrDefaultAsync(
-                x => x.Id == Id
+            AnalyticsError Error = await _context.AnalyticsErrors.SingleOrDefaultAsync(x =>
+                x.Id == Id
             );
             if (Error != null)
             {
