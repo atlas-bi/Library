@@ -1,7 +1,7 @@
+using Atlas_Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using Atlas_Web.Models;
 
 namespace Atlas_Web.Pages.Tasks
 {
@@ -157,16 +157,15 @@ namespace Atlas_Web.Pages.Tasks
         public async Task<IActionResult> OnGetUnused()
         {
             ViewData["Dead"] = await (
-                from r in _context.ReportObjects.Where(
-                    x =>
-                        (
-                            x.ReportObjectTypeId == 3
-                            || x.ReportObjectTypeId == 17
-                            || x.ReportObjectTypeId == 20
-                            || x.ReportObjectTypeId == 28
-                        )
-                        && x.DefaultVisibilityYn == "Y"
-                        && x.OrphanedReportObjectYn == "N"
+                from r in _context.ReportObjects.Where(x =>
+                    (
+                        x.ReportObjectTypeId == 3
+                        || x.ReportObjectTypeId == 17
+                        || x.ReportObjectTypeId == 20
+                        || x.ReportObjectTypeId == 28
+                    )
+                    && x.DefaultVisibilityYn == "Y"
+                    && x.OrphanedReportObjectYn == "N"
                 )
                 join d in _context.ReportObjectRunDataBridges
                     on r.ReportObjectId equals d.ReportObjectId
@@ -231,27 +230,27 @@ namespace Atlas_Web.Pages.Tasks
                         NextDate = d.MaintenanceScheduleId == 1
                             ? (ttwo.MaintenanceDate ?? d.LastUpdateDateTime ?? Today).AddMonths(3)
                             : // quarterly
-                              d.MaintenanceScheduleId == 2
+                            d.MaintenanceScheduleId == 2
                                 ? (ttwo.MaintenanceDate ?? d.LastUpdateDateTime ?? Today).AddMonths(
-                                      6
-                                  )
+                                    6
+                                )
                                 : // twice a year
-                                  d.MaintenanceScheduleId == 3
+                                d.MaintenanceScheduleId == 3
                                     ? (
-                                          ttwo.MaintenanceDate ?? d.LastUpdateDateTime ?? Today
-                                      ).AddYears(1)
+                                        ttwo.MaintenanceDate ?? d.LastUpdateDateTime ?? Today
+                                    ).AddYears(1)
                                     : // yearly
-                                      d.MaintenanceScheduleId == 4
+                                    d.MaintenanceScheduleId == 4
                                         ? (
-                                              ttwo.MaintenanceDate ?? d.LastUpdateDateTime ?? Today
-                                          ).AddYears(2)
+                                            ttwo.MaintenanceDate ?? d.LastUpdateDateTime ?? Today
+                                        ).AddYears(2)
                                         : // every two years
-                                          (
-                                              ttwo.MaintenanceDate
-                                              ?? d.LastUpdateDateTime
-                                              ?? d.CreatedDateTime
-                                              ?? Today
-                                          ),
+                                        (
+                                            ttwo.MaintenanceDate
+                                            ?? d.LastUpdateDateTime
+                                            ?? d.CreatedDateTime
+                                            ?? Today
+                                        ),
                         Name = d.ReportObject.DisplayName,
                         LastUser = (
                             ttwo.Maintainer.FullnameCalc != "user not found"
@@ -310,27 +309,27 @@ namespace Atlas_Web.Pages.Tasks
                         NextDate = d.MaintenanceScheduleId == 1
                             ? (ttwo.MaintenanceDate ?? d.LastUpdateDateTime ?? Today).AddMonths(3)
                             : // quarterly
-                              d.MaintenanceScheduleId == 2
+                            d.MaintenanceScheduleId == 2
                                 ? (ttwo.MaintenanceDate ?? d.LastUpdateDateTime ?? Today).AddMonths(
-                                      6
-                                  )
+                                    6
+                                )
                                 : // twice a year
-                                  d.MaintenanceScheduleId == 3
+                                d.MaintenanceScheduleId == 3
                                     ? (
-                                          ttwo.MaintenanceDate ?? d.LastUpdateDateTime ?? Today
-                                      ).AddYears(1)
+                                        ttwo.MaintenanceDate ?? d.LastUpdateDateTime ?? Today
+                                    ).AddYears(1)
                                     : // yearly
-                                      d.MaintenanceScheduleId == 4
+                                    d.MaintenanceScheduleId == 4
                                         ? (
-                                              ttwo.MaintenanceDate ?? d.LastUpdateDateTime ?? Today
-                                          ).AddYears(2)
+                                            ttwo.MaintenanceDate ?? d.LastUpdateDateTime ?? Today
+                                        ).AddYears(2)
                                         : // every two years
-                                          (
-                                              ttwo.MaintenanceDate
-                                              ?? d.LastUpdateDateTime
-                                              ?? d.CreatedDateTime
-                                              ?? Today
-                                          ),
+                                        (
+                                            ttwo.MaintenanceDate
+                                            ?? d.LastUpdateDateTime
+                                            ?? d.CreatedDateTime
+                                            ?? Today
+                                        ),
                         Name = d.ReportObject.DisplayName,
                         LastUser = (
                             ttwo.Maintainer.FullnameCalc != "user not found"

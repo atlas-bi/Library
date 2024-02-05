@@ -1,6 +1,6 @@
+using System.ComponentModel.DataAnnotations.Schema;
 using Atlas_Web.Helpers;
 using Microsoft.AspNetCore.Mvc;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Atlas_Web.Models
 {

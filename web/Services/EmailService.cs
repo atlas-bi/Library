@@ -1,6 +1,6 @@
+using System.Net;
 using System.Net.Mail;
 using System.Net.Mime;
-using System.Net;
 using Microsoft.Extensions.Caching.Memory;
 
 namespace Atlas_Web.Services

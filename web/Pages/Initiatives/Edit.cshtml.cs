@@ -1,5 +1,5 @@
-using Atlas_Web.Models;
 using Atlas_Web.Authorization;
+using Atlas_Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
@@ -34,8 +34,8 @@ namespace Atlas_Web.Pages.Initiatives
                 );
             }
 
-            Initiative = await _context.Initiatives
-                .Include(x => x.Collections)
+            Initiative = await _context
+                .Initiatives.Include(x => x.Collections)
                 .ThenInclude(x => x.CollectionReports)
                 .Include(x => x.OperationOwner)
                 .Include(x => x.ExecutiveOwner)
@@ -65,8 +65,8 @@ namespace Atlas_Web.Pages.Initiatives
             }
 
             // we get a copy of the initiative and then will only update several fields.
-            Initiative NewInitiative = await _context.Initiatives
-                .Where(m => m.InitiativeId == Initiative.InitiativeId)
+            Initiative NewInitiative = await _context
+                .Initiatives.Where(m => m.InitiativeId == Initiative.InitiativeId)
                 .FirstOrDefaultAsync();
 
             // update last update values & values that were posted
@@ -84,8 +84,10 @@ namespace Atlas_Web.Pages.Initiatives
             await _context.SaveChangesAsync();
 
             // updated any linked collections that were added and remove any that were delinked.
-            var AddedCollections = await _context.Collections
-                .Where(d => Collections.Select(x => x.CollectionId).Contains(d.CollectionId))
+            var AddedCollections = await _context
+                .Collections.Where(d =>
+                    Collections.Select(x => x.CollectionId).Contains(d.CollectionId)
+                )
                 .ToListAsync();
 
             _cache.Remove("collections");
@@ -97,8 +99,8 @@ namespace Atlas_Web.Pages.Initiatives
                 await _context.SaveChangesAsync();
             }
 
-            var RemovedCollections = await _context.Collections
-                .Where(d => d.InitiativeId == Initiative.InitiativeId)
+            var RemovedCollections = await _context
+                .Collections.Where(d => d.InitiativeId == Initiative.InitiativeId)
                 .Where(d => !Collections.Select(x => x.CollectionId).Contains(d.CollectionId))
                 .ToListAsync();
 

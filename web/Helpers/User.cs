@@ -17,8 +17,8 @@ namespace Atlas_Web.Helpers
                 cacheEntry =>
                 {
                     cacheEntry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20);
-                    return _context.UserPreferences
-                        .Where(x => x.User.Username == username)
+                    return _context
+                        .UserPreferences.Where(x => x.User.Username == username)
                         .ToList();
                 }
             );

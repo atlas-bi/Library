@@ -1,6 +1,6 @@
-using Microsoft.AspNetCore.Authentication;
-using System.Text.Encodings.Web;
 using System.Security.Claims;
+using System.Text.Encodings.Web;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Options;
 
 namespace Atlas_Web.Authentication
@@ -15,7 +15,8 @@ namespace Atlas_Web.Authentication
             ILoggerFactory logger,
             UrlEncoder encoder,
             ISystemClock clock
-        ) : base(options, logger, encoder, clock) { }
+        )
+            : base(options, logger, encoder, clock) { }
 
         protected override Task<AuthenticateResult> HandleAuthenticateAsync()
         {

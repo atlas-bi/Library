@@ -1,9 +1,9 @@
-using Atlas_Web.Helpers;
-using Atlas_Web.Services;
-using Microsoft.AspNetCore.Mvc;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Atlas_Web.Helpers;
+using Atlas_Web.Services;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Atlas_Web.Models
 {

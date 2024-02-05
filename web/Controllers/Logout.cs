@@ -1,6 +1,6 @@
-using Microsoft.AspNetCore.Authorization;
 using ITfoxtec.Identity.Saml2;
 using ITfoxtec.Identity.Saml2.MvcCore;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Atlas_Web.Controllers

@@ -1,14 +1,13 @@
-using Atlas_Web.Models;
 using Atlas_Web.Authorization;
+using Atlas_Web.Helpers;
+using Atlas_Web.Models;
+using Atlas_Web.Services;
+using Hangfire;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using Atlas_Web.Helpers;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Atlas_Web.Services;
-
-using Hangfire;
 
 namespace Atlas_Web.Pages.Mail
 {
@@ -80,12 +79,12 @@ namespace Atlas_Web.Pages.Mail
                 .ToList();
 
             // query db for User details
-            var UserList = await _context.Users
-                .Where(x => UserIds.Contains(x.UserId))
+            var UserList = await _context
+                .Users.Where(x => UserIds.Contains(x.UserId))
                 .ToListAsync();
 
-            var GroupUserList = await _context.UserGroupsMemberships
-                .Where(m => GroupIds.Contains(m.GroupId))
+            var GroupUserList = await _context
+                .UserGroupsMemberships.Where(m => GroupIds.Contains(m.GroupId))
                 .ToListAsync();
 
             if (!UserIds.Any() && !GroupUserList.Any())
@@ -108,23 +107,22 @@ namespace Atlas_Web.Pages.Mail
 
             // add users
             await _context.AddRangeAsync(
-                UserList.Select(
-                    x => new MailRecipient { MessageId = newMessage.MessageId, ToUserId = x.UserId }
-                )
+                UserList.Select(x => new MailRecipient
+                {
+                    MessageId = newMessage.MessageId,
+                    ToUserId = x.UserId
+                })
             );
             await _context.SaveChangesAsync();
 
             // add group users
             await _context.AddRangeAsync(
-                GroupUserList.Select(
-                    x =>
-                        new MailRecipient
-                        {
-                            MessageId = newMessage.MessageId,
-                            ToUserId = x.UserId,
-                            ToGroupId = x.GroupId
-                        }
-                )
+                GroupUserList.Select(x => new MailRecipient
+                {
+                    MessageId = newMessage.MessageId,
+                    ToUserId = x.UserId,
+                    ToGroupId = x.GroupId
+                })
             );
             await _context.SaveChangesAsync();
 
@@ -153,8 +151,10 @@ namespace Atlas_Web.Pages.Mail
                     await _context.AddAsync(newShare);
                     await _context.SaveChangesAsync();
 
-                    var UserSetting = await _context.UserSettings
-                        .Where(x => x.Name == "share_notification" && x.UserId == recipient.UserId)
+                    var UserSetting = await _context
+                        .UserSettings.Where(x =>
+                            x.Name == "share_notification" && x.UserId == recipient.UserId
+                        )
                         .Select(x => x.Value)
                         .FirstOrDefaultAsync();
 
@@ -170,14 +170,13 @@ namespace Atlas_Web.Pages.Mail
                             ViewData
                         );
 
-                        BackgroundJob.Enqueue<IEmailService>(
-                            x =>
-                                x.SendAsync(
-                                    $"New share from {sender.FullnameCalc}",
-                                    HtmlHelpers.MinifyHtml(msgbody),
-                                    sender.Email,
-                                    recipient.Email
-                                )
+                        BackgroundJob.Enqueue<IEmailService>(x =>
+                            x.SendAsync(
+                                $"New share from {sender.FullnameCalc}",
+                                HtmlHelpers.MinifyHtml(msgbody),
+                                sender.Email,
+                                recipient.Email
+                            )
                         );
                     }
                 }
@@ -196,8 +195,10 @@ namespace Atlas_Web.Pages.Mail
                     await _context.AddAsync(newShare);
                     await _context.SaveChangesAsync();
 
-                    var GroupUserSetting = await _context.UserSettings
-                        .Where(x => x.Name == "share_notification" && x.UserId == group.UserId)
+                    var GroupUserSetting = await _context
+                        .UserSettings.Where(x =>
+                            x.Name == "share_notification" && x.UserId == group.UserId
+                        )
                         .Select(x => x.Value)
                         .FirstOrDefaultAsync();
 
