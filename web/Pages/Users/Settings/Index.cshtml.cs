@@ -1,8 +1,8 @@
+using Atlas_Web.Authorization;
+using Atlas_Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using Atlas_Web.Models;
-using Atlas_Web.Authorization;
 
 namespace Atlas_Web.Pages.Users.Settings
 {
@@ -19,8 +19,8 @@ namespace Atlas_Web.Pages.Users.Settings
 
         public async Task<ActionResult> OnGetAsync()
         {
-            EnableShareNotifications = await _context.UserSettings.SingleOrDefaultAsync(
-                x => x.Name == "share_notification" && x.UserId == User.GetUserId()
+            EnableShareNotifications = await _context.UserSettings.SingleOrDefaultAsync(x =>
+                x.Name == "share_notification" && x.UserId == User.GetUserId()
             );
 
             return Page();
@@ -28,8 +28,8 @@ namespace Atlas_Web.Pages.Users.Settings
 
         public async Task<ActionResult> OnGetEnableShareNotification(string value)
         {
-            var shareNotification = await _context.UserSettings.SingleOrDefaultAsync(
-                x => x.Name == "share_notification" && x.UserId == User.GetUserId()
+            var shareNotification = await _context.UserSettings.SingleOrDefaultAsync(x =>
+                x.Name == "share_notification" && x.UserId == User.GetUserId()
             );
 
             if (shareNotification != null)

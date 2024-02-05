@@ -1,13 +1,13 @@
-using Xunit;
-using Xunit.Abstractions;
-using System.Threading.Tasks;
 using System;
-using OpenQA.Selenium;
-using OpenQA.Selenium.Remote;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using BrowserStack;
 using MartinCostello.BrowserStack.Automate;
 using Newtonsoft.Json.Linq;
+using OpenQA.Selenium;
+using OpenQA.Selenium.Remote;
+using Xunit;
+using Xunit.Abstractions;
 
 namespace web.Tests.BrowserTests;
 

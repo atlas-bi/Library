@@ -1,6 +1,6 @@
 using System.Security.Claims;
-using Microsoft.AspNetCore.Authentication;
 using Atlas_Web.Models;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
 
 namespace Atlas_Web.Authorization;
@@ -41,11 +41,11 @@ public class CustomClaimsTransformer : IClaimsTransformation
 
         // add user roles + group roles
         foreach (
-            var role in userData.UserRoleLinks
-                .Select(x => x.UserRoles)
+            var role in userData
+                .UserRoleLinks.Select(x => x.UserRoles)
                 .Union(
-                    userData.UserGroupsMemberships
-                        .Select(x => x.Group)
+                    userData
+                        .UserGroupsMemberships.Select(x => x.Group)
                         .SelectMany(x => x.GroupRoleLinks)
                         .Select(x => x.UserRoles)
                 )
@@ -60,13 +60,13 @@ public class CustomClaimsTransformer : IClaimsTransformation
         // if they are an admin
         var isAdmin =
             userData.UserRoleLinks.Any(x => x.UserRoles.Name == "Administrator")
-            || userData.UserGroupsMemberships.Any(
-                x => x.Group.GroupRoleLinks.Any(x => x.UserRoles.Name == "Administrator")
+            || userData.UserGroupsMemberships.Any(x =>
+                x.Group.GroupRoleLinks.Any(x => x.UserRoles.Name == "Administrator")
             );
 
         // add active role
-        var adminDisabled = userData.UserPreferences.FirstOrDefault(
-            x => x.ItemType == "AdminDisabled"
+        var adminDisabled = userData.UserPreferences.FirstOrDefault(x =>
+            x.ItemType == "AdminDisabled"
         );
 
         // 1. All ways add the security points for the role "user"
@@ -75,25 +75,27 @@ public class CustomClaimsTransformer : IClaimsTransformation
         // add users permission points as roles
         foreach (
             // permissions from the users roles
-            var role in userData.UserRoleLinks
-                .Where(x => x.UserRoles.Name != "User" && x.UserRoles.Name != "Administrator")
+            var role in userData
+                .UserRoleLinks.Where(x =>
+                    x.UserRoles.Name != "User" && x.UserRoles.Name != "Administrator"
+                )
                 .Select(x => x.UserRoles)
                 .SelectMany(x => x.RolePermissionLinks)
                 .Select(x => x.RolePermissions)
                 // union in the base user permissions
                 .Union(
-                    _context.RolePermissionLinks
-                        .Where(x => x.Role.Name == "User")
+                    _context
+                        .RolePermissionLinks.Where(x => x.Role.Name == "User")
                         .Select(x => x.RolePermissions)
                 )
                 // if user is admin, add all admin permissions
                 .Union(_context.RolePermissions.Where(x => isAdmin && adminDisabled == null))
                 // if user is in a group, add the groups permissions (excluding user and admin)
                 .Union(
-                    userData.UserGroupsMemberships
-                        .SelectMany(x => x.Group.GroupRoleLinks)
-                        .Where(
-                            x => x.UserRoles.Name != "Administrator" && x.UserRoles.Name != "User"
+                    userData
+                        .UserGroupsMemberships.SelectMany(x => x.Group.GroupRoleLinks)
+                        .Where(x =>
+                            x.UserRoles.Name != "Administrator" && x.UserRoles.Name != "User"
                         )
                         .Select(x => x.UserRoles)
                         .SelectMany(x => x.RolePermissionLinks)
@@ -136,8 +138,8 @@ public class CustomClaimsTransformer : IClaimsTransformation
         // saml returns email address.
         if (username.Contains("@"))
         {
-            me = await _context.Users
-                .Include(x => x.UserRoleLinks)
+            me = await _context
+                .Users.Include(x => x.UserRoleLinks)
                 .ThenInclude(x => x.UserRoles)
                 .ThenInclude(x => x.RolePermissionLinks)
                 .ThenInclude(x => x.RolePermissions)
@@ -153,8 +155,8 @@ public class CustomClaimsTransformer : IClaimsTransformation
         }
         else
         {
-            me = await _context.Users
-                .Include(x => x.UserRoleLinks)
+            me = await _context
+                .Users.Include(x => x.UserRoleLinks)
                 .ThenInclude(x => x.UserRoles)
                 .ThenInclude(x => x.RolePermissionLinks)
                 .ThenInclude(x => x.RolePermissions)
@@ -202,26 +204,25 @@ public class CustomClaimsTransformer : IClaimsTransformation
                 await _context.AddAsync(
                     new UserRoleLink
                     {
-                        UserId =
-                            _context.Users
-                                .Where(
-                                    x =>
-                                        username.Contains("@")
-                                          ? x.Email == username
-                                          : x.Username == username
-                                )
-                                .First().UserId,
-                        UserRolesId =
-                            _context.UserRoles
-                                .Where(x => x.Name == "Administrator")
-                                .First().UserRolesId
+                        UserId = _context
+                            .Users.Where(x =>
+                                username.Contains("@")
+                                    ? x.Email == username
+                                    : x.Username == username
+                            )
+                            .First()
+                            .UserId,
+                        UserRolesId = _context
+                            .UserRoles.Where(x => x.Name == "Administrator")
+                            .First()
+                            .UserRolesId
                     }
                 );
                 await _context.SaveChangesAsync();
             }
 
-            me = await _context.Users
-                .Include(x => x.UserRoleLinks)
+            me = await _context
+                .Users.Include(x => x.UserRoleLinks)
                 .ThenInclude(x => x.UserRoles)
                 .ThenInclude(x => x.RolePermissionLinks)
                 .ThenInclude(x => x.RolePermissions)

@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Atlas_Web.Authorization;
+using Atlas_Web.Models;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using Atlas_Web.Models;
-using Atlas_Web.Authorization;
 using Microsoft.Extensions.Caching.Memory;
 
 namespace Atlas_Web.Pages.Settings
@@ -60,8 +60,8 @@ namespace Atlas_Web.Pages.Settings
 
         public async Task<IActionResult> OnGetEtl()
         {
-            ViewData["ReportTagEtl"] = await _context.GlobalSiteSettings
-                .Where(x => x.Name == "report_tag_etl")
+            ViewData["ReportTagEtl"] = await _context
+                .GlobalSiteSettings.Where(x => x.Name == "report_tag_etl")
                 .Select(x => x.Value)
                 .FirstOrDefaultAsync();
 
@@ -70,8 +70,8 @@ namespace Atlas_Web.Pages.Settings
 
         public async Task<IActionResult> OnPostUpdateReportTagsEtl()
         {
-            var report_tag_etl = await _context.GlobalSiteSettings
-                .Where(x => x.Name == "report_tag_etl")
+            var report_tag_etl = await _context
+                .GlobalSiteSettings.Where(x => x.Name == "report_tag_etl")
                 .FirstOrDefaultAsync();
 
             if (report_tag_etl != null)
@@ -107,8 +107,8 @@ namespace Atlas_Web.Pages.Settings
 
         public async Task<IActionResult> OnGetTheme()
         {
-            ViewData["GlobalCss"] = await _context.GlobalSiteSettings
-                .Where(x => x.Name == "global_css")
+            ViewData["GlobalCss"] = await _context
+                .GlobalSiteSettings.Where(x => x.Name == "global_css")
                 .Select(x => x.Value)
                 .FirstOrDefaultAsync();
 
@@ -117,8 +117,8 @@ namespace Atlas_Web.Pages.Settings
 
         public ActionResult OnPostUpdateGlobalCss()
         {
-            var global_css = _context.GlobalSiteSettings
-                .Where(x => x.Name == "global_css")
+            var global_css = _context
+                .GlobalSiteSettings.Where(x => x.Name == "global_css")
                 .FirstOrDefault();
 
             if (global_css != null)

@@ -1,7 +1,7 @@
+using Atlas_Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using Atlas_Web.Models;
 using Microsoft.Extensions.Caching.Memory;
 
 namespace Atlas_Web.Pages.Groups
@@ -119,8 +119,8 @@ namespace Atlas_Web.Pages.Groups
                 }
             );
 
-            ViewData["DefaultReportTypes"] = await _context.ReportObjectTypes
-                .Where(v => v.Visible == "Y")
+            ViewData["DefaultReportTypes"] = await _context
+                .ReportObjectTypes.Where(v => v.Visible == "Y")
                 .Select(x => x.ReportObjectTypeId)
                 .ToListAsync();
 

@@ -1,6 +1,6 @@
+using System.Security.Cryptography;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Net.Http.Headers;
-using System.Security.Cryptography;
 
 namespace Atlas_Web.Middleware
 {

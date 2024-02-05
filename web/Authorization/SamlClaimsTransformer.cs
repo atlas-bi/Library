@@ -1,7 +1,7 @@
-using ITfoxtec.Identity.Saml2.Claims;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using ITfoxtec.Identity.Saml2.Claims;
 
 namespace Atlas_Web.Authorization
 {
@@ -50,8 +50,8 @@ namespace Atlas_Web.Authorization
 
         private static Claim GetClaim(ClaimsPrincipal principal, string claimType)
         {
-            return ((ClaimsIdentity)principal.Identity).Claims
-                .Where(c => c.Type == claimType)
+            return ((ClaimsIdentity)principal.Identity)
+                .Claims.Where(c => c.Type == claimType)
                 .FirstOrDefault();
         }
 

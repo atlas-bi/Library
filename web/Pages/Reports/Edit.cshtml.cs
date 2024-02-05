@@ -1,8 +1,8 @@
+using Atlas_Web.Authorization;
+using Atlas_Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using Atlas_Web.Models;
-using Atlas_Web.Authorization;
 using Microsoft.Extensions.Caching.Memory;
 using Newtonsoft.Json;
 
@@ -66,8 +66,8 @@ namespace Atlas_Web.Pages.Reports
                 await _context.SaveChangesAsync();
             }
 
-            Report = await _context.ReportObjectDocs
-                .Include(x => x.ReportObject)
+            Report = await _context
+                .ReportObjectDocs.Include(x => x.ReportObject)
                 .ThenInclude(x => x.ReportObjectType)
                 /* images */
                 .Include(x => x.ReportObject)
@@ -116,8 +116,8 @@ namespace Atlas_Web.Pages.Reports
             _cache.Remove("report-terms-" + id);
             _cache.Remove("search-report-" + id);
 
-            ReportObjectDoc OldReport = await _context.ReportObjectDocs.SingleOrDefaultAsync(
-                x => x.ReportObjectId == id
+            ReportObjectDoc OldReport = await _context.ReportObjectDocs.SingleOrDefaultAsync(x =>
+                x.ReportObjectId == id
             );
 
             OldReport.DeveloperDescription = Report.DeveloperDescription;
@@ -146,8 +146,8 @@ namespace Atlas_Web.Pages.Reports
                 term.ReportObjectId = id;
 
                 if (
-                    !await _context.ReportObjectDocTerms.AnyAsync(
-                        x => x.TermId == term.TermId && x.ReportObjectId == term.ReportObjectId
+                    !await _context.ReportObjectDocTerms.AnyAsync(x =>
+                        x.TermId == term.TermId && x.ReportObjectId == term.ReportObjectId
                     )
                 )
                 {
@@ -156,8 +156,8 @@ namespace Atlas_Web.Pages.Reports
             }
             await _context.SaveChangesAsync();
 
-            var RemovedTerms = _context.ReportObjectDocTerms
-                .Where(d => d.ReportObjectId == id)
+            var RemovedTerms = _context
+                .ReportObjectDocTerms.Where(d => d.ReportObjectId == id)
                 .Where(d => !Terms.Select(x => x.TermId).Contains(d.TermId));
 
             foreach (var term in await RemovedTerms.ToListAsync())
@@ -180,11 +180,10 @@ namespace Atlas_Web.Pages.Reports
                 collection.Rank = i;
 
                 // if annotation exists, update rank and text
-                CollectionReport oldCollection = await _context.CollectionReports
-                    .Where(
-                        x =>
-                            x.ReportId == collection.ReportId
-                            && x.CollectionId == collection.CollectionId
+                CollectionReport oldCollection = await _context
+                    .CollectionReports.Where(x =>
+                        x.ReportId == collection.ReportId
+                        && x.CollectionId == collection.CollectionId
                     )
                     .FirstOrDefaultAsync();
                 if (oldCollection != null)
@@ -201,8 +200,8 @@ namespace Atlas_Web.Pages.Reports
                 await _context.SaveChangesAsync();
             }
 
-            var RemovedCollections = _context.CollectionReports
-                .Where(d => d.ReportId == id)
+            var RemovedCollections = _context
+                .CollectionReports.Where(d => d.ReportId == id)
                 .Where(d => !Collections.Select(x => x.CollectionId).Contains(d.CollectionId));
 
             foreach (var collection in await RemovedCollections.ToListAsync())
@@ -221,10 +220,9 @@ namespace Atlas_Web.Pages.Reports
                 tag.ReportObjectId = id;
 
                 if (
-                    !await _context.ReportObjectDocFragilityTags.AnyAsync(
-                        x =>
-                            x.FragilityTagId == tag.FragilityTagId
-                            && x.ReportObjectId == tag.ReportObjectId
+                    !await _context.ReportObjectDocFragilityTags.AnyAsync(x =>
+                        x.FragilityTagId == tag.FragilityTagId
+                        && x.ReportObjectId == tag.ReportObjectId
                     )
                 )
                 {
@@ -234,18 +232,18 @@ namespace Atlas_Web.Pages.Reports
             await _context.SaveChangesAsync();
 
             _context.RemoveRange(
-                _context.ReportObjectDocFragilityTags
-                    .Where(d => d.ReportObjectId == id)
-                    .Where(
-                        d => !FragilityTags.Select(x => x.FragilityTagId).Contains(d.FragilityTagId)
+                _context
+                    .ReportObjectDocFragilityTags.Where(d => d.ReportObjectId == id)
+                    .Where(d =>
+                        !FragilityTags.Select(x => x.FragilityTagId).Contains(d.FragilityTagId)
                     )
             );
             await _context.SaveChangesAsync();
 
             // remove removed images
             _context.RemoveRange(
-                _context.ReportObjectImagesDocs
-                    .Where(d => d.ReportObjectId == id)
+                _context
+                    .ReportObjectImagesDocs.Where(d => d.ReportObjectId == id)
                     .Where(d => !Images.Select(x => x.ImageId).Contains(d.ImageId))
             );
             await _context.SaveChangesAsync();
@@ -253,8 +251,10 @@ namespace Atlas_Web.Pages.Reports
             // update image rank
             for (int i = 0; i < Images.Count; i++)
             {
-                ReportObjectImagesDoc image = await _context.ReportObjectImagesDocs
-                    .Where(x => x.ImageId == Images[i].ImageId && x.ReportObjectId == id)
+                ReportObjectImagesDoc image = await _context
+                    .ReportObjectImagesDocs.Where(x =>
+                        x.ImageId == Images[i].ImageId && x.ReportObjectId == id
+                    )
                     .FirstOrDefaultAsync();
                 if (image != null)
                 {
@@ -275,13 +275,12 @@ namespace Atlas_Web.Pages.Reports
 
             // remove deleted service requests
             _context.RemoveRange(
-                _context.ReportServiceRequests
-                    .Where(d => d.ReportObjectId == id)
-                    .Where(
-                        d =>
-                            !ServiceRequests
-                                .Select(x => x.ServiceRequestId)
-                                .Contains(d.ServiceRequestId)
+                _context
+                    .ReportServiceRequests.Where(d => d.ReportObjectId == id)
+                    .Where(d =>
+                        !ServiceRequests
+                            .Select(x => x.ServiceRequestId)
+                            .Contains(d.ServiceRequestId)
                     )
             );
             await _context.SaveChangesAsync();

@@ -1,5 +1,5 @@
-using Atlas_Web.Models;
 using Atlas_Web.Authorization;
+using Atlas_Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
@@ -65,8 +65,10 @@ namespace Atlas_Web.Pages.Initiatives
             // updated any linked collections that were added and remove any that were delinked.
             _cache.Remove("collections");
 
-            var AddedCollections = await _context.Collections
-                .Where(d => Collections.Select(x => x.CollectionId).Contains(d.CollectionId))
+            var AddedCollections = await _context
+                .Collections.Where(d =>
+                    Collections.Select(x => x.CollectionId).Contains(d.CollectionId)
+                )
                 .ToListAsync();
 
             foreach (var collection in AddedCollections)

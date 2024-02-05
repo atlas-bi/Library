@@ -31,8 +31,8 @@ namespace Atlas_Web.Pages
             };
             ViewData["AdLists"] = AdLists;
 
-            ViewData["DefaultReportTypes"] = await _context.ReportObjectTypes
-                .Where(v => v.Visible == "Y")
+            ViewData["DefaultReportTypes"] = await _context
+                .ReportObjectTypes.Where(v => v.Visible == "Y")
                 .Select(x => x.ReportObjectTypeId)
                 .ToListAsync();
 
