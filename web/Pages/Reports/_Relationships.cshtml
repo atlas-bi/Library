@@ -56,7 +56,16 @@
 
     @if (Model.Parents.Count() > 0)
     {
+    @if (@Model.Report.ReportObjectType.Name == "Tableau Workbook" || @Model.Report.ReportObjectType.Name == "Tableau Project")
+    {
+
+        <h3 class="title is-3">Projects this @Model.Report.ReportObjectType.Name is in.</h3>
+
+    }
+    else
+    {
         <h3 class="title is-3">Reports that include this report.</h3>
+    }
         <div class="columns is-multiline">
         @foreach (var parent in Model.Parents.ToList())
         {

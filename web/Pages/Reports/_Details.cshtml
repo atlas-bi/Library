@@ -19,6 +19,14 @@
                 <td>Report Type</td>
                 <td>@Model.Report.ReportObjectType.Name</td>
             </tr>
+            @* if it is a tableau workbook or project.. Let's show the parent project in the details *@
+            @if ((@Model.Report.ReportObjectType.Name == "Tableau Workbook" || @Model.Report.ReportObjectType.Name == "Tableau Project") && @Model.Parents.Count() > 0 )
+            {
+                <tr>
+                    <td>Project</td>
+                    <td> @Model.Parents.First().Name </td>
+                </tr>
+            }
 
             @if (@Model.Report.LastLoadDate != null)
             {

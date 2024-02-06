@@ -163,8 +163,7 @@ namespace Atlas_Web.Pages.Users
                         x =>
                             x.ReportObjectRunDataBridges
                                 .Where(y => y.RunData.RunUserId == UserId)
-                                .Sum(x => x.Runs)
-                    )
+                                .Sum(x => x.Runs))
                     .Take(30)
                     .ToListAsync();
             }

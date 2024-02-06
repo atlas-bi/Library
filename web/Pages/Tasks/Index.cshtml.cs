@@ -160,8 +160,9 @@ namespace Atlas_Web.Pages.Tasks
                 from r in _context.ReportObjects.Where(
                     x =>
                         (
-                            x.ReportObjectTypeId == 3
-                            || x.ReportObjectTypeId == 17
+                            //x.ReportObjectTypeId == 3 --don't include epic-crystal
+                           // || 
+                           x.ReportObjectTypeId == 17
                             || x.ReportObjectTypeId == 20
                             || x.ReportObjectTypeId == 28
                         )
@@ -462,7 +463,7 @@ namespace Atlas_Web.Pages.Tasks
 
         public ActionResult OnGetTopUndocumented()
         {
-            int[] rpts = { 17, 28, 3, 20 };
+            int[] rpts = { 17, 28, 20 };
             ViewData["Undocumented"] = (
                 from r in _context.ReportObjects
                 join t in _context.ReportObjectTypes
@@ -519,7 +520,7 @@ namespace Atlas_Web.Pages.Tasks
 
         public ActionResult OnGetNewUndocumented()
         {
-            int[] rpts = { 17, 28, 3, 20 };
+            int[] rpts = { 17, 28, 20 };
             ViewData["NewUndocumented"] = (
                 from r in _context.ReportObjects
                 join t in _context.ReportObjectTypes
