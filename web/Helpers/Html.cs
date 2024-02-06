@@ -1,10 +1,10 @@
 using Atlas_Web.Models;
+using Ganss.Xss;
 using Markdig;
 using Microsoft.AspNetCore.Mvc.Razor;
-using WebOptimizer;
 using Slugify;
-using Ganss.Xss;
 using WebMarkupMin.Core;
+using WebOptimizer;
 
 namespace Atlas_Web.Helpers
 {
@@ -40,8 +40,8 @@ namespace Atlas_Web.Helpers
         {
             string text = "";
             // site wide message
-            GlobalSiteSetting msg = _context.GlobalSiteSettings
-                .Where(x => x.Name == "msg" && x.Value == null)
+            GlobalSiteSetting msg = _context
+                .GlobalSiteSettings.Where(x => x.Name == "msg" && x.Value == null)
                 .FirstOrDefault();
 
             if (msg != null && msg.Description != null && msg.Description != "")
@@ -52,12 +52,11 @@ namespace Atlas_Web.Helpers
             if (_httpContext.Request.Query["msg"].ToString() != "")
             {
                 // url message
-                msg = _context.GlobalSiteSettings
-                    .Where(
-                        x =>
-                            x.Name == "msg"
-                            && x.Value == _httpContext.Request.Query["msg"].ToString()
-                            && x.Value != null
+                msg = _context
+                    .GlobalSiteSettings.Where(x =>
+                        x.Name == "msg"
+                        && x.Value == _httpContext.Request.Query["msg"].ToString()
+                        && x.Value != null
                     )
                     .FirstOrDefault();
 

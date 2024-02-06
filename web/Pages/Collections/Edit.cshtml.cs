@@ -1,9 +1,9 @@
+using Atlas_Web.Authorization;
 using Atlas_Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
-using Atlas_Web.Authorization;
 
 namespace Atlas_Web.Pages.Collections
 {
@@ -37,8 +37,8 @@ namespace Atlas_Web.Pages.Collections
                 );
             }
 
-            Collection = await _context.Collections
-                .Include(x => x.CollectionReports)
+            Collection = await _context
+                .Collections.Include(x => x.CollectionReports)
                 .ThenInclude(x => x.Report)
                 .Include(x => x.CollectionTerms)
                 .ThenInclude(x => x.Term)
@@ -87,8 +87,8 @@ namespace Atlas_Web.Pages.Collections
                 term.CollectionId = NewCollection.CollectionId;
 
                 if (
-                    !await _context.CollectionTerms.AnyAsync(
-                        x => x.TermId == term.TermId && x.CollectionId == term.CollectionId
+                    !await _context.CollectionTerms.AnyAsync(x =>
+                        x.TermId == term.TermId && x.CollectionId == term.CollectionId
                     )
                 )
                 {
@@ -99,8 +99,8 @@ namespace Atlas_Web.Pages.Collections
             }
             await _context.SaveChangesAsync();
 
-            var RemovedTerms = _context.CollectionTerms
-                .Where(d => d.CollectionId == NewCollection.CollectionId)
+            var RemovedTerms = _context
+                .CollectionTerms.Where(d => d.CollectionId == NewCollection.CollectionId)
                 .Where(d => !Terms.Select(x => x.TermId).Contains(d.TermId));
 
             foreach (var term in await RemovedTerms.ToListAsync())
@@ -123,9 +123,9 @@ namespace Atlas_Web.Pages.Collections
                 report.Rank = i;
 
                 // if annotation exists, update rank and text
-                CollectionReport oldReport = await _context.CollectionReports
-                    .Where(
-                        x => x.ReportId == report.ReportId && x.CollectionId == report.CollectionId
+                CollectionReport oldReport = await _context
+                    .CollectionReports.Where(x =>
+                        x.ReportId == report.ReportId && x.CollectionId == report.CollectionId
                     )
                     .FirstOrDefaultAsync();
                 if (oldReport != null)
@@ -140,8 +140,8 @@ namespace Atlas_Web.Pages.Collections
                 await _context.SaveChangesAsync();
             }
 
-            var RemovedReports = _context.CollectionReports
-                .Where(d => d.CollectionId == NewCollection.CollectionId)
+            var RemovedReports = _context
+                .CollectionReports.Where(d => d.CollectionId == NewCollection.CollectionId)
                 .Where(d => !Reports.Select(x => x.ReportId).Contains(d.ReportId));
 
             foreach (var report in await RemovedReports.ToListAsync())

@@ -1,7 +1,7 @@
+using Atlas_Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using Atlas_Web.Models;
 
 namespace Atlas_Web.Pages.Tasks
 {

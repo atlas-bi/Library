@@ -1,6 +1,6 @@
-using Xunit.Abstractions;
 using System.Collections.Generic;
 using OpenQA.Selenium;
+using Xunit.Abstractions;
 
 namespace web.Tests.BrowserTests;
 

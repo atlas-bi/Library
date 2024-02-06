@@ -13,14 +13,17 @@ namespace Atlas_Web.Authorization
         )
         {
             // Only catch - Crystal Report (3) & Reporting Workbench (17)
-            if (report.ReportObjectTypeId != 3 && report.ReportObjectTypeId != 17)
+            if (
+                report.ReportObjectType.Name != "Epic-Crystal Report"
+                && report.ReportObjectType.Name != "Reporting Workbench Report"
+            )
             {
                 context.Succeed(requirement);
                 return Task.CompletedTask;
             }
 
-            var groups = context.User.Claims
-                .Where(x => x.Type == "Group")
+            var groups = context
+                .User.Claims.Where(x => x.Type == "Group")
                 .Select(x => x.Value)
                 .ToList();
 
@@ -33,11 +36,10 @@ namespace Atlas_Web.Authorization
 
             // check hrg
             if (
-                report.ReportObjectHierarchyChildReportObjects.Any(
-                    x =>
-                        x.ParentReportObject.ReportGroupsMemberships.Any(
-                            y => groups.Contains(y.GroupId.ToString())
-                        )
+                report.ReportObjectHierarchyChildReportObjects.Any(x =>
+                    x.ParentReportObject.ReportGroupsMemberships.Any(y =>
+                        groups.Contains(y.GroupId.ToString())
+                    )
                 )
             )
             {

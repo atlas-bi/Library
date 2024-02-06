@@ -163,7 +163,7 @@
                 var RecordViewerUrl = Model.Report.RecordViewerUrl(Context);
                 <tr>
                     <td>Epic Identifier</td>
-                    <td>@if (RecordViewerUrl != null)
+                    <td>@if (Context.IsAgl())
                     {
                     @:<a data-agl="AR_ITM_RECORDVIEWER" data-ini="@Model.Report.EpicMasterFile" data-id="@Model.Report.EpicRecordId" href="@RecordViewerUrl">
                     }

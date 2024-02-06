@@ -1,5 +1,5 @@
-using Atlas_Web.Models;
 using Atlas_Web.Authorization;
+using Atlas_Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
@@ -31,12 +31,11 @@ namespace Atlas_Web.Pages.Analytics
         )
         {
             var page_size = 10;
-            var root = _context.AnalyticsTraces
-                .Where(x => x.UserAgent != null)
-                .Where(
-                    x =>
-                        x.LogDateTime >= DateTime.Now.AddSeconds(start_at)
-                        && x.LogDateTime <= DateTime.Now.AddSeconds(end_at)
+            var root = _context
+                .AnalyticsTraces.Where(x => x.UserAgent != null)
+                .Where(x =>
+                    x.LogDateTime >= DateTime.Now.AddSeconds(start_at)
+                    && x.LogDateTime <= DateTime.Now.AddSeconds(end_at)
                 );
 
             if (userId > 0 && await _context.Users.AnyAsync(x => x.UserId == userId))
@@ -104,8 +103,8 @@ namespace Atlas_Web.Pages.Analytics
 
         public async Task<ActionResult> OnPostResolved(int Id, int Type)
         {
-            AnalyticsTrace Trace = await _context.AnalyticsTraces.SingleOrDefaultAsync(
-                x => x.Id == Id
+            AnalyticsTrace Trace = await _context.AnalyticsTraces.SingleOrDefaultAsync(x =>
+                x.Id == Id
             );
             if (Trace != null)
             {

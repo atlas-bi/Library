@@ -1,0 +1,54 @@
+@model Atlas_Web.Models.SolrAtlas
+
+<div class="card">
+    <div class="card-header">
+        <div class="card-header-title py-2 is-justify-content-space-between">
+
+            <a class="has-text-dark" href="@Model.Id" target="_blank">@Model.Name
+                <div class="fa-layers ml-2 fa-lg">
+                    <span class="icon has-text-info "><i class="fas fa-certificate"></i></span>
+                    <span class="icon has-text-white fa-transform"><i class="fas fa-check shrink-5"></i></span>
+                </div>
+            </a>
+
+            <span class="tags">
+                <span class="tag">link</span>
+                @if(!string.IsNullOrEmpty(ViewBag.SearchMatch))
+                {
+                    <div class="tags has-addons mb-0">
+                        <span class="tag is-info is-light">Matched</span>
+                        <span class="tag is-info">@ViewBag.SearchMatch</span>
+                    </div>
+                }
+            </span>
+        </div>
+    </div>
+    <div class="card-content pt-3 pb-2">
+        <div class="media">
+            <div class="media-left">
+                <figure class="image is-128x128">
+                    <picture>
+                        <source srcset="/img/report_placeholder_128x128.webp" type="image/webp" loading="lazy">
+                        <img src="/img/report_placeholder_128x128.png" alt="placeholder image" loading="lazy">
+                    </picture>
+                </figure>
+            </div>
+
+            <div class="is-flex is-flex-direction-column is-flex-grow-1">
+                <a target="_blank" class="media-content is-flex is-justify-content-space-between is-flex-direction-column is-min-h-96  has-text-dark" href="@Model.Id" >
+                    <p>
+                        @if (!string.IsNullOrEmpty(Model.Description.FirstOrDefault()))
+                        {
+                            @(Model.Description.First().Substring(0, Math.Min(160, Model.Description.First().Length)) +"... ")
+                            <span class="has-text-link">read more</span>
+                        }
+                        else
+                        {
+                            <span class="has-text-link">Open to view details.</span>
+                        }
+                    </p>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

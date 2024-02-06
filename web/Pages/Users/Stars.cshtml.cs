@@ -1,11 +1,11 @@
+using System.Text.Json;
+using Atlas_Web.Authorization;
+using Atlas_Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using Atlas_Web.Models;
-using Atlas_Web.Authorization;
 using Microsoft.Extensions.Caching.Memory;
 using Newtonsoft.Json.Linq;
-using System.Text.Json;
 
 #pragma warning disable S2259
 namespace Atlas_Web.Pages.Users
@@ -66,8 +66,8 @@ namespace Atlas_Web.Pages.Users
                 UserId = id ?? UserId;
             }
 
-            Folders = await _context.UserFavoriteFolders
-                .Where(x => x.UserId == UserId)
+            Folders = await _context
+                .UserFavoriteFolders.Where(x => x.UserId == UserId)
                 .Include(x => x.StarredCollections)
                 .Include(x => x.StarredGroups)
                 .Include(x => x.StarredReports)
@@ -77,14 +77,14 @@ namespace Atlas_Web.Pages.Users
                 .AsNoTracking()
                 .ToListAsync();
 
-            Collections = await _context.StarredCollections
-                .Where(x => x.Ownerid == UserId)
+            Collections = await _context
+                .StarredCollections.Where(x => x.Ownerid == UserId)
                 .Include(x => x.Collection)
                 .ThenInclude(x => x.StarredCollections)
                 .ToListAsync();
 
-            Reports = await _context.StarredReports
-                .Where(x => x.Ownerid == UserId)
+            Reports = await _context
+                .StarredReports.Where(x => x.Ownerid == UserId)
                 .Include(x => x.Report)
                 .ThenInclude(x => x.ReportObjectDoc)
                 .Include(x => x.Report)
@@ -101,30 +101,32 @@ namespace Atlas_Web.Pages.Users
                 .ThenInclude(x => x.ReportObjectHierarchyChildReportObjects)
                 .ThenInclude(x => x.ParentReportObject)
                 .ThenInclude(x => x.ReportGroupsMemberships)
+                .Include(x => x.Report)
+                .ThenInclude(x => x.ReportGroupsMemberships)
                 .ToListAsync();
 
-            Initiatives = await _context.StarredInitiatives
-                .Where(x => x.Ownerid == UserId)
+            Initiatives = await _context
+                .StarredInitiatives.Where(x => x.Ownerid == UserId)
                 .Include(x => x.Initiative)
                 .ThenInclude(x => x.StarredInitiatives)
                 .ToListAsync();
 
-            Terms = await _context.StarredTerms
-                .Where(x => x.Ownerid == UserId)
+            Terms = await _context
+                .StarredTerms.Where(x => x.Ownerid == UserId)
                 .Include(x => x.Term)
                 .ThenInclude(x => x.StarredTerms)
                 .ToListAsync();
 
-            Groups = await _context.StarredGroups
-                .Where(x => x.Ownerid == UserId)
+            Groups = await _context
+                .StarredGroups.Where(x => x.Ownerid == UserId)
                 .Include(x => x.Group)
                 .ThenInclude(x => x.StarredGroups)
                 .ToListAsync();
 
             Searches = await _context.StarredSearches.Where(x => x.Ownerid == UserId).ToListAsync();
 
-            Users = await _context.StarredUsers
-                .Where(x => x.Ownerid == UserId)
+            Users = await _context
+                .StarredUsers.Where(x => x.Ownerid == UserId)
                 .Include(x => x.User)
                 .ToListAsync();
 
@@ -145,11 +147,10 @@ namespace Atlas_Web.Pages.Users
                 == 0
             )
             {
-                RunReports = await _context.ReportObjects
-                    .Where(
-                        x =>
-                            x.ReportObjectRunDataBridges.Any(y => y.RunData.RunUserId == UserId)
-                            && x.ReportObjectType.Visible == "Y"
+                RunReports = await _context
+                    .ReportObjects.Where(x =>
+                        x.ReportObjectRunDataBridges.Any(y => y.RunData.RunUserId == UserId)
+                        && x.ReportObjectType.Visible == "Y"
                     )
                     .Include(x => x.ReportObjectDoc)
                     .Include(x => x.ReportObjectType)
@@ -159,11 +160,10 @@ namespace Atlas_Web.Pages.Users
                     .Include(x => x.ReportObjectHierarchyChildReportObjects)
                     .ThenInclude(x => x.ParentReportObject)
                     .ThenInclude(x => x.ReportGroupsMemberships)
-                    .OrderByDescending(
-                        x =>
-                            x.ReportObjectRunDataBridges
-                                .Where(y => y.RunData.RunUserId == UserId)
-                                .Sum(x => x.Runs))
+                    .OrderByDescending(x =>
+                        x.ReportObjectRunDataBridges.Where(y => y.RunData.RunUserId == UserId)
+                            .Sum(x => x.Runs)
+                    )
                     .Take(30)
                     .ToListAsync();
             }
@@ -200,8 +200,8 @@ namespace Atlas_Web.Pages.Users
                 if (_context.StarredCollections.Any(x => x.Ownerid == MyId && x.Collectionid == id))
                 {
                     _context.RemoveRange(
-                        _context.StarredCollections.Where(
-                            x => x.Ownerid == MyId && x.Collectionid == id
+                        _context.StarredCollections.Where(x =>
+                            x.Ownerid == MyId && x.Collectionid == id
                         )
                     );
                     _context.SaveChanges();
@@ -223,8 +223,8 @@ namespace Atlas_Web.Pages.Users
                 if (_context.StarredInitiatives.Any(x => x.Ownerid == MyId && x.Initiativeid == id))
                 {
                     _context.RemoveRange(
-                        _context.StarredInitiatives.Where(
-                            x => x.Ownerid == MyId && x.Initiativeid == id
+                        _context.StarredInitiatives.Where(x =>
+                            x.Ownerid == MyId && x.Initiativeid == id
                         )
                     );
                     _context.SaveChanges();
@@ -303,8 +303,8 @@ namespace Atlas_Web.Pages.Users
                 if (_context.StarredSearches.Any(x => x.Ownerid == MyId && x.Search == search))
                 {
                     _context.RemoveRange(
-                        _context.StarredSearches.Where(
-                            x => x.Ownerid == UserId && x.Search == search
+                        _context.StarredSearches.Where(x =>
+                            x.Ownerid == UserId && x.Search == search
                         )
                     );
                     _context.SaveChanges();
@@ -332,8 +332,8 @@ namespace Atlas_Web.Pages.Users
 
         public ActionResult OnPostEditFolder(int id, string name)
         {
-            var folder = _context.UserFavoriteFolders.SingleOrDefault(
-                x => x.UserFavoriteFolderId == id && x.UserId == User.GetUserId()
+            var folder = _context.UserFavoriteFolders.SingleOrDefault(x =>
+                x.UserFavoriteFolderId == id && x.UserId == User.GetUserId()
             );
 
             if (folder != null)
@@ -347,32 +347,32 @@ namespace Atlas_Web.Pages.Users
 
         public ActionResult OnPostDeleteFolder(int id)
         {
-            _context.StarredCollections
-                .Where(x => x.Folderid == id && x.Ownerid == User.GetUserId())
+            _context
+                .StarredCollections.Where(x => x.Folderid == id && x.Ownerid == User.GetUserId())
                 .ToList()
                 .ForEach(x => x.Folderid = null);
-            _context.StarredReports
-                .Where(x => x.Folderid == id && x.Ownerid == User.GetUserId())
+            _context
+                .StarredReports.Where(x => x.Folderid == id && x.Ownerid == User.GetUserId())
                 .ToList()
                 .ForEach(x => x.Folderid = null);
-            _context.StarredInitiatives
-                .Where(x => x.Folderid == id && x.Ownerid == User.GetUserId())
+            _context
+                .StarredInitiatives.Where(x => x.Folderid == id && x.Ownerid == User.GetUserId())
                 .ToList()
                 .ForEach(x => x.Folderid = null);
-            _context.StarredTerms
-                .Where(x => x.Folderid == id && x.Ownerid == User.GetUserId())
+            _context
+                .StarredTerms.Where(x => x.Folderid == id && x.Ownerid == User.GetUserId())
                 .ToList()
                 .ForEach(x => x.Folderid = null);
-            _context.StarredUsers
-                .Where(x => x.Folderid == id && x.Ownerid == User.GetUserId())
+            _context
+                .StarredUsers.Where(x => x.Folderid == id && x.Ownerid == User.GetUserId())
                 .ToList()
                 .ForEach(x => x.Folderid = null);
-            _context.StarredGroups
-                .Where(x => x.Folderid == id && x.Ownerid == User.GetUserId())
+            _context
+                .StarredGroups.Where(x => x.Folderid == id && x.Ownerid == User.GetUserId())
                 .ToList()
                 .ForEach(x => x.Folderid = null);
-            _context.StarredSearches
-                .Where(x => x.Folderid == id && x.Ownerid == User.GetUserId())
+            _context
+                .StarredSearches.Where(x => x.Folderid == id && x.Ownerid == User.GetUserId())
                 .ToList()
                 .ForEach(x => x.Folderid = null);
             _context.SaveChanges();
@@ -392,44 +392,50 @@ namespace Atlas_Web.Pages.Users
                 int id = Int32.Parse(l.FavoriteId);
                 if (l.FavoriteType == "report")
                 {
-                    _context.StarredReports
-                        .Single(x => x.StarId == id && x.Ownerid == User.GetUserId())
+                    _context
+                        .StarredReports.Single(x => x.StarId == id && x.Ownerid == User.GetUserId())
                         .Rank = l.FavoriteRank;
                 }
                 else if (l.FavoriteType == "collection")
                 {
-                    _context.StarredCollections
-                        .Single(x => x.StarId == id && x.Ownerid == User.GetUserId())
+                    _context
+                        .StarredCollections.Single(x =>
+                            x.StarId == id && x.Ownerid == User.GetUserId()
+                        )
                         .Rank = l.FavoriteRank;
                 }
                 else if (l.FavoriteType == "initiative")
                 {
-                    _context.StarredInitiatives
-                        .Single(x => x.StarId == id && x.Ownerid == User.GetUserId())
+                    _context
+                        .StarredInitiatives.Single(x =>
+                            x.StarId == id && x.Ownerid == User.GetUserId()
+                        )
                         .Rank = l.FavoriteRank;
                 }
                 else if (l.FavoriteType == "term")
                 {
-                    _context.StarredTerms
-                        .Single(x => x.StarId == id && x.Ownerid == User.GetUserId())
+                    _context
+                        .StarredTerms.Single(x => x.StarId == id && x.Ownerid == User.GetUserId())
                         .Rank = l.FavoriteRank;
                 }
                 else if (l.FavoriteType == "user")
                 {
-                    _context.StarredUsers
-                        .Single(x => x.StarId == id && x.Ownerid == User.GetUserId())
+                    _context
+                        .StarredUsers.Single(x => x.StarId == id && x.Ownerid == User.GetUserId())
                         .Rank = l.FavoriteRank;
                 }
                 else if (l.FavoriteType == "group")
                 {
-                    _context.StarredGroups
-                        .Single(x => x.StarId == id && x.Ownerid == User.GetUserId())
+                    _context
+                        .StarredGroups.Single(x => x.StarId == id && x.Ownerid == User.GetUserId())
                         .Rank = l.FavoriteRank;
                 }
                 else if (l.FavoriteType == "search")
                 {
-                    _context.StarredSearches
-                        .Single(x => x.StarId == id && x.Ownerid == User.GetUserId())
+                    _context
+                        .StarredSearches.Single(x =>
+                            x.StarId == id && x.Ownerid == User.GetUserId()
+                        )
                         .Rank = l.FavoriteRank;
                 }
             }
@@ -455,44 +461,58 @@ namespace Atlas_Web.Pages.Users
 
             if (FavoriteType == "report")
             {
-                _context.StarredReports
-                    .SingleOrDefault(x => x.StarId == FavoriteId && x.Ownerid == User.GetUserId())
+                _context
+                    .StarredReports.SingleOrDefault(x =>
+                        x.StarId == FavoriteId && x.Ownerid == User.GetUserId()
+                    )
                     .Folderid = FolderId;
             }
             else if (FavoriteType == "collection")
             {
-                _context.StarredCollections
-                    .SingleOrDefault(x => x.StarId == FavoriteId && x.Ownerid == User.GetUserId())
+                _context
+                    .StarredCollections.SingleOrDefault(x =>
+                        x.StarId == FavoriteId && x.Ownerid == User.GetUserId()
+                    )
                     .Folderid = FolderId;
             }
             else if (FavoriteType == "initiative")
             {
-                _context.StarredInitiatives
-                    .SingleOrDefault(x => x.StarId == FavoriteId && x.Ownerid == User.GetUserId())
+                _context
+                    .StarredInitiatives.SingleOrDefault(x =>
+                        x.StarId == FavoriteId && x.Ownerid == User.GetUserId()
+                    )
                     .Folderid = FolderId;
             }
             else if (FavoriteType == "term")
             {
-                _context.StarredTerms
-                    .SingleOrDefault(x => x.StarId == FavoriteId && x.Ownerid == User.GetUserId())
+                _context
+                    .StarredTerms.SingleOrDefault(x =>
+                        x.StarId == FavoriteId && x.Ownerid == User.GetUserId()
+                    )
                     .Folderid = FolderId;
             }
             else if (FavoriteType == "user")
             {
-                _context.StarredUsers
-                    .SingleOrDefault(x => x.StarId == FavoriteId && x.Ownerid == User.GetUserId())
+                _context
+                    .StarredUsers.SingleOrDefault(x =>
+                        x.StarId == FavoriteId && x.Ownerid == User.GetUserId()
+                    )
                     .Folderid = FolderId;
             }
             else if (FavoriteType == "group")
             {
-                _context.StarredGroups
-                    .SingleOrDefault(x => x.StarId == FavoriteId && x.Ownerid == User.GetUserId())
+                _context
+                    .StarredGroups.SingleOrDefault(x =>
+                        x.StarId == FavoriteId && x.Ownerid == User.GetUserId()
+                    )
                     .Folderid = FolderId;
             }
             else if (FavoriteType == "search")
             {
-                _context.StarredSearches
-                    .SingleOrDefault(x => x.StarId == FavoriteId && x.Ownerid == User.GetUserId())
+                _context
+                    .StarredSearches.SingleOrDefault(x =>
+                        x.StarId == FavoriteId && x.Ownerid == User.GetUserId()
+                    )
                     .Folderid = FolderId;
             }
 
@@ -506,8 +526,10 @@ namespace Atlas_Web.Pages.Users
             foreach (var l in JsonSerializer.Deserialize<List<FavoiteFolderRank>>(package))
             {
                 int id = Int32.Parse(l.FolderId);
-                _context.UserFavoriteFolders
-                    .Where(x => x.UserFavoriteFolderId == id && x.UserId == User.GetUserId())
+                _context
+                    .UserFavoriteFolders.Where(x =>
+                        x.UserFavoriteFolderId == id && x.UserId == User.GetUserId()
+                    )
                     .FirstOrDefault()
                     .FolderRank = l.FolderRank;
             }

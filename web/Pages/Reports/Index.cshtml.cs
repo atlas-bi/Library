@@ -1,7 +1,7 @@
+using Atlas_Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using Atlas_Web.Models;
 using Microsoft.Extensions.Caching.Memory;
 
 namespace Atlas_Web.Pages.Reports
@@ -37,7 +37,8 @@ namespace Atlas_Web.Pages.Reports
                 {
                     cacheEntry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20);
 
-                    return _context.ReportObjects
+                    return _context
+                        .ReportObjects
                         /* run the 1:1 as a single query */
                         .Include(x => x.ReportObjectImagesDocs)
                         .Include(x => x.ReportObjectDoc)
@@ -94,42 +95,54 @@ namespace Atlas_Web.Pages.Reports
                 cacheEntry =>
                 {
                     cacheEntry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20);
-                    return _context.Terms
-                        .Where(x => x.ReportObjectDocTerms.Any(x => x.ReportObjectId == id))
+                    return _context
+                        .Terms.Where(x => x.ReportObjectDocTerms.Any(x => x.ReportObjectId == id))
                         // from first children
                         .Union(
-                            _context.Terms.Where(
-                                x =>
-                                    x.ReportObjectDocTerms.Any(
-                                        x =>
-                                            x.ReportObject.ReportObject.ReportObjectHierarchyChildReportObjects.Any(
-                                                x => x.ParentReportObjectId == id
-                                            )
+                            _context.Terms.Where(x =>
+                                x.ReportObjectDocTerms.Any(x =>
+                                    x.ReportObject.ReportObject.ReportObjectHierarchyChildReportObjects.Any(
+                                        x => x.ParentReportObjectId == id
                                     )
+                                )
                             )
                         // second level children
                         )
                         .Union(
-                            _context.Terms.Where(
-                                x =>
-                                    x.ReportObjectDocTerms.Any(
+                            _context.Terms.Where(x =>
+                                x.ReportObjectDocTerms.Any(x =>
+                                    x.ReportObject.ReportObject.ReportObjectHierarchyChildReportObjects.Any(
                                         x =>
-                                            x.ReportObject.ReportObject.ReportObjectHierarchyChildReportObjects.Any(
+                                            x.ParentReportObject.ReportObjectHierarchyChildReportObjects.Any(
+                                                x => x.ParentReportObjectId == id
+                                            )
+                                    )
+                                )
+                            )
+                        // third level children
+                        )
+                        .Union(
+                            _context.Terms.Where(x =>
+                                x.ReportObjectDocTerms.Any(x =>
+                                    x.ReportObject.ReportObject.ReportObjectHierarchyChildReportObjects.Any(
+                                        x =>
+                                            x.ParentReportObject.ReportObjectHierarchyChildReportObjects.Any(
                                                 x =>
                                                     x.ParentReportObject.ReportObjectHierarchyChildReportObjects.Any(
                                                         x => x.ParentReportObjectId == id
                                                     )
                                             )
                                     )
+                                )
                             )
-                        // third level children
+                        // fourth level children
                         )
                         .Union(
-                            _context.Terms.Where(
-                                x =>
-                                    x.ReportObjectDocTerms.Any(
+                            _context.Terms.Where(x =>
+                                x.ReportObjectDocTerms.Any(x =>
+                                    x.ReportObject.ReportObject.ReportObjectHierarchyChildReportObjects.Any(
                                         x =>
-                                            x.ReportObject.ReportObject.ReportObjectHierarchyChildReportObjects.Any(
+                                            x.ParentReportObject.ReportObjectHierarchyChildReportObjects.Any(
                                                 x =>
                                                     x.ParentReportObject.ReportObjectHierarchyChildReportObjects.Any(
                                                         x =>
@@ -139,29 +152,7 @@ namespace Atlas_Web.Pages.Reports
                                                     )
                                             )
                                     )
-                            )
-                        // fourth level children
-                        )
-                        .Union(
-                            _context.Terms.Where(
-                                x =>
-                                    x.ReportObjectDocTerms.Any(
-                                        x =>
-                                            x.ReportObject.ReportObject.ReportObjectHierarchyChildReportObjects.Any(
-                                                x =>
-                                                    x.ParentReportObject.ReportObjectHierarchyChildReportObjects.Any(
-                                                        x =>
-                                                            x.ParentReportObject.ReportObjectHierarchyChildReportObjects.Any(
-                                                                x =>
-                                                                    x.ParentReportObject.ReportObjectHierarchyChildReportObjects.Any(
-                                                                        x =>
-                                                                            x.ParentReportObjectId
-                                                                            == id
-                                                                    )
-                                                            )
-                                                    )
-                                            )
-                                    )
+                                )
                             )
                         )
                         .Distinct()
@@ -175,17 +166,15 @@ namespace Atlas_Web.Pages.Reports
                 cacheEntry =>
                 {
                     cacheEntry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20);
-                    return _context.ReportObjectQueries
-                        .Where(
-                            x =>
-                                x.ReportObject.ReportObjectHierarchyChildReportObjects.Any(
+                    return _context
+                        .ReportObjectQueries.Where(x =>
+                            x.ReportObject.ReportObjectHierarchyChildReportObjects.Any(x =>
+                                x.ParentReportObject.ReportObjectHierarchyChildReportObjects.Any(
                                     x =>
-                                        x.ParentReportObject.ReportObjectHierarchyChildReportObjects.Any(
-                                            x =>
-                                                x.ParentReportObjectId == id
-                                                && x.ParentReportObject.EpicMasterFile == "IDB"
-                                        )
+                                        x.ParentReportObjectId == id
+                                        && x.ParentReportObject.EpicMasterFile == "IDB"
                                 )
+                            )
                         )
                         .Include(x => x.ReportObject)
                         .AsNoTracking()
@@ -201,12 +190,11 @@ namespace Atlas_Web.Pages.Reports
                 cacheEntry =>
                 {
                     cacheEntry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20);
-                    return _context.ReportObjects
-                        .Where(
-                            x =>
-                                x.ReportObjectHierarchyChildReportObjects.Any(
-                                    y => y.ParentReportObjectId == id
-                                )
+                    return _context
+                        .ReportObjects.Where(x =>
+                            x.ReportObjectHierarchyChildReportObjects.Any(y =>
+                                y.ParentReportObjectId == id
+                            )
                         )
                         .Where(x => x.EpicMasterFile != "IDK")
                         .Where(x => (x.ReportObjectDoc.Hidden ?? "N") == "N")
@@ -215,19 +203,16 @@ namespace Atlas_Web.Pages.Reports
                         .Include(x => x.ReportObjectType)
                         .Include(x => x.ReportObjectAttachments)
                         .Union(
-                            _context.ReportObjects
-                                .Where(
-                                    x =>
-                                        x.ReportObjectHierarchyChildReportObjects.Any(
-                                            y =>
-                                                y.ParentReportObject.ReportObjectHierarchyChildReportObjects.Any(
-                                                    g =>
-                                                        g.ParentReportObjectId == id
-                                                        && g.ParentReportObject.DefaultVisibilityYn
-                                                            == "Y"
-                                                )
-                                                && y.ParentReportObject.EpicMasterFile == "IDK"
+                            _context
+                                .ReportObjects.Where(x =>
+                                    x.ReportObjectHierarchyChildReportObjects.Any(y =>
+                                        y.ParentReportObject.ReportObjectHierarchyChildReportObjects.Any(
+                                            g =>
+                                                g.ParentReportObjectId == id
+                                                && g.ParentReportObject.DefaultVisibilityYn == "Y"
                                         )
+                                        && y.ParentReportObject.EpicMasterFile == "IDK"
+                                    )
                                 )
                                 .Where(x => x.EpicMasterFile == "IDN")
                                 .Where(x => (x.ReportObjectDoc.Hidden ?? "N") == "N")
@@ -249,12 +234,11 @@ namespace Atlas_Web.Pages.Reports
                 cacheEntry =>
                 {
                     cacheEntry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20);
-                    return _context.ReportObjects
-                        .Where(
-                            x =>
-                                x.ReportObjectHierarchyParentReportObjects.Any(
-                                    y => y.ChildReportObjectId == id
-                                )
+                    return _context
+                        .ReportObjects.Where(x =>
+                            x.ReportObjectHierarchyParentReportObjects.Any(y =>
+                                y.ChildReportObjectId == id
+                            )
                         )
                         .Where(x => x.ReportObjectTypeId != 12) //Personal dashboard
                         .Where(x => x.EpicMasterFile != "IDK")
@@ -265,16 +249,14 @@ namespace Atlas_Web.Pages.Reports
                         .Include(x => x.ReportObjectType)
                         .Include(x => x.ReportObjectAttachments)
                         .Union(
-                            _context.ReportObjects
-                                .Where(
-                                    x =>
-                                        x.ReportObjectHierarchyParentReportObjects.Any(
-                                            y =>
-                                                y.ChildReportObject.ReportObjectHierarchyParentReportObjects.Any(
-                                                    g => g.ChildReportObjectId == id
-                                                )
-                                                && y.ChildReportObject.EpicMasterFile == "IDK"
+                            _context
+                                .ReportObjects.Where(x =>
+                                    x.ReportObjectHierarchyParentReportObjects.Any(y =>
+                                        y.ChildReportObject.ReportObjectHierarchyParentReportObjects.Any(
+                                            g => g.ChildReportObjectId == id
                                         )
+                                        && y.ChildReportObject.EpicMasterFile == "IDK"
+                                    )
                                 )
                                 .Where(x => x.EpicMasterFile == "IDB")
                                 //let's show parent even if it is has default visibility set to N
@@ -312,13 +294,12 @@ namespace Atlas_Web.Pages.Reports
                         select new
                         {
                             sch = x.MaintenanceScheduleId,
-                            thiss = _context.MaintenanceLogs
-                                .Where(
-                                    x =>
-                                        x.MaintainerId
-                                        == _context.MaintenanceLogs
-                                            .Select(x => x.MaintenanceLogId)
-                                            .Max()
+                            thiss = _context
+                                .MaintenanceLogs.Where(x =>
+                                    x.MaintainerId
+                                    == _context
+                                        .MaintenanceLogs.Select(x => x.MaintenanceLogId)
+                                        .Max()
                                 )
                                 .First()
                                 .MaintenanceDate,

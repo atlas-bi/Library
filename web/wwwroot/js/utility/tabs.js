@@ -95,19 +95,19 @@
        div.tab-dta#tab2
      */
 
-  (document.querySelectorAll('.panel-tab[href]') || []).forEach(function (
-    $element,
-  ) {
-    $element.addEventListener(
-      'click',
-      function ($event) {
-        $event.preventDefault();
+  (document.querySelectorAll('.panel-tab[href]') || []).forEach(
+    function ($element) {
+      $element.addEventListener(
+        'click',
+        function ($event) {
+          $event.preventDefault();
 
-        o($element);
-      },
-      false,
-    );
-  });
+          o($element);
+        },
+        false,
+      );
+    },
+  );
 
   const d = document;
 
@@ -188,19 +188,19 @@
        div.tab-dta#tab2
      */
 
-  (document.querySelectorAll('.step-tab[href]') || []).forEach(function (
-    $element,
-  ) {
-    $element.addEventListener(
-      'click',
-      function ($event) {
-        $event.preventDefault();
+  (document.querySelectorAll('.step-tab[href]') || []).forEach(
+    function ($element) {
+      $element.addEventListener(
+        'click',
+        function ($event) {
+          $event.preventDefault();
 
-        o($element);
-      },
-      false,
-    );
-  });
+          o($element);
+        },
+        false,
+      );
+    },
+  );
 
   const d = document;
 

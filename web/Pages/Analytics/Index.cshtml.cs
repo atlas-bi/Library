@@ -1,6 +1,6 @@
-using Atlas_Web.Models;
-using Atlas_Web.Helpers;
 using Atlas_Web.Authorization;
+using Atlas_Web.Helpers;
+using Atlas_Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
@@ -119,12 +119,11 @@ namespace Atlas_Web.Pages.Analytics
                 * if no > create
                 *
             */
-            var oldAna = await _context.Analytics
-                .Where(
-                    x =>
-                        x.UserId == User.GetUserId()
-                        && x.SessionId == package.Value<string>("sessionId")
-                        && x.PageId == package.Value<string>("pageId")
+            var oldAna = await _context
+                .Analytics.Where(x =>
+                    x.UserId == User.GetUserId()
+                    && x.SessionId == package.Value<string>("sessionId")
+                    && x.PageId == package.Value<string>("pageId")
                 )
                 .ToListAsync();
             if (oldAna.Count > 0)

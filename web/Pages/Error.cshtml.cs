@@ -1,8 +1,8 @@
+using Atlas_Web.Authorization;
 using Atlas_Web.Models;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Atlas_Web.Authorization;
-using Microsoft.AspNetCore.Diagnostics;
 
 namespace Atlas_Web.Pages
 {

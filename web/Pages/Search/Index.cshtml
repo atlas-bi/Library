@@ -111,6 +111,12 @@
                             <partial name="Groups/_Snippet" model="record.group" />
                         </div>
                     }
+                    if (record.external != null)
+                    {
+                        <div class="column is-full group">
+                            <partial name="Partials/_ExternalSnippet" model="record.external" />
+                        </div>
+                    }
 
                 }
             </div>

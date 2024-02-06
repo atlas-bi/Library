@@ -1,11 +1,11 @@
-using Microsoft.AspNetCore.Authorization;
-using ITfoxtec.Identity.Saml2;
-using ITfoxtec.Identity.Saml2.MvcCore;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using ITfoxtec.Identity.Saml2.Schemas;
 using System.Security.Authentication;
 using Atlas_Web.Authorization;
+using ITfoxtec.Identity.Saml2;
+using ITfoxtec.Identity.Saml2.MvcCore;
+using ITfoxtec.Identity.Saml2.Schemas;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Atlas_Web.Controllers
 {
@@ -25,6 +25,16 @@ namespace Atlas_Web.Controllers
         {
             var binding = new Saml2PostBinding();
             var saml2AuthnResponse = new Saml2AuthnResponse(config);
+            var relayStateQuery = binding.GetRelayStateQuery();
+            var returnUrl = relayStateQuery.ContainsKey(relayStateReturnUrl)
+                ? relayStateQuery[relayStateReturnUrl]
+                : Url.Content("~/");
+
+            // if a login existed.. use it
+            if (User.Identity.IsAuthenticated)
+            {
+                return Redirect(returnUrl);
+            }
 
             binding.ReadSamlResponse(Request.ToGenericHttpRequest(), saml2AuthnResponse);
             if (saml2AuthnResponse.Status != Saml2StatusCodes.Success)
@@ -35,15 +45,12 @@ namespace Atlas_Web.Controllers
             }
 
             binding.Unbind(Request.ToGenericHttpRequest(), saml2AuthnResponse);
+
             await saml2AuthnResponse.CreateSession(
                 HttpContext,
                 claimsTransform: (claimsPrincipal) => ClaimsTransform.Transform(claimsPrincipal)
             );
 
-            var relayStateQuery = binding.GetRelayStateQuery();
-            var returnUrl = relayStateQuery.ContainsKey(relayStateReturnUrl)
-                ? relayStateQuery[relayStateReturnUrl]
-                : Url.Content("~/");
             return Redirect(returnUrl);
         }
     }

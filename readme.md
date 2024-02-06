@@ -1,11 +1,23 @@
 <h1 align="center">
     <br>
     <a href="https://www.atlas.bi">
-        <img alt="atlas logo" src="https://raw.githubusercontent.com/atlas-bi/atlas-bi-library/master/web/wwwroot/img/atlas-logo-smooth.png" width=420 />
+        <img alt="atlas logo" src="https://avatars.githubusercontent.com/u/90376906?v=4" width=120 /> <span style="color:grey"> / </span> Atlas
     </a>
     <br>
 </h1>
+<p align="center">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 25" fill="none">
+<style>
+.text {font:16px sans-serif; user-select:none;fill:rgb(51 65 85)}
+.slash {font:20px sans-serif; user-select:none;fill:rgb(203 213 225)}
+.slash:hover, *:hover > .slash {fill:rgb(14, 165, 233);}
 
+</style>
+ <image xlink:href="https://avatars.githubusercontent.com/u/90376906?v=4" width=20 x=0 y=0></image>
+<text x="23" y="17" class="slash">/</text>
+<text x="33" y="16" class="text">library</text>
+</svg></p>
+https://avatars.githubusercontent.com/u/90376906?s=400&u=7592339d75e23b1e5b5db486c48271f6491d1422&v=4
 <h4 align="center">Atlas BI Library | The unified report library.</h4>
 
 <p align="center">
@@ -28,7 +40,7 @@ Atlas business intelligence library plugs in to your existing reporting platform
 
 ## 🏃 Getting Started
 
-> Atlas BI Library is built with [.Net 7.0](https://dotnet.microsoft.com/download/dotnet/7.0) and [Node](https://nodejs.org/en/download/). \
+> Atlas BI Library is built with [.Net 8.0](https://dotnet.microsoft.com/download/dotnet/8.0) and [Node](https://nodejs.org/en/download/). \
 > Aside from those installs you will need to install ef core tools `dotnet tool install -g dotnet-ef`. \
 > These guide can be run with [Visual Studio Code](https://code.visualstudio.com/download) and the built in terminal.
 

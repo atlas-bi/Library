@@ -1,11 +1,11 @@
 using System;
 using System.Linq;
+using Atlas_Web.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Atlas_Web.Models;
 
 namespace web.Tests.IntegrationTests
 {
@@ -16,8 +16,8 @@ namespace web.Tests.IntegrationTests
         {
             builder.ConfigureServices(services =>
             {
-                var descriptor = services.SingleOrDefault(
-                    d => d.ServiceType == typeof(DbContextOptions<Atlas_WebContext>)
+                var descriptor = services.SingleOrDefault(d =>
+                    d.ServiceType == typeof(DbContextOptions<Atlas_WebContext>)
                 );
 
                 if (descriptor != null)

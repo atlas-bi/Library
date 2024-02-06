@@ -1,10 +1,9 @@
-using SolrNet.Attributes;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using SolrNet.Attributes;
 
 namespace Atlas_Web.Models
 {
-    [NotMapped]
     public class SolrAtlas
     {
         [SolrUniqueKey("id")]

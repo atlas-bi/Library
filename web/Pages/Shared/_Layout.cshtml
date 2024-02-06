@@ -80,7 +80,16 @@
         <div class="container">
             <div class="navbar-brand">
                 <a class="navbar-item" href="/">
-                    <img src="@Cache.Get("logo")" width="133" height="40" alt="site logo" />
+                 @if(!string.IsNullOrEmpty(Cache.Get<string>("logo")))
+                                {
+                                   <img src="@Cache.Get("logo")" width="133" height="40" alt="site logo" />
+                                } else {
+                                    <img class="logo" src="/img/atlas-a-logo.svg" width="35" height="35" alt="site logo" />
+                                    <h2 class="logo-text">
+                                    <span class="logo-text-slash">/</span>
+                                    library
+                                </h2>
+                                }
                 </a>
                 <a role="button"
                    class="navbar-burger"
@@ -171,6 +180,11 @@
                             @if (@Configuration["features:enable_terms"] == null || @Configuration["features:enable_terms"].ToString().ToLower() != "false")
                             {
                                 <a class="navbar-item" href="/terms">Terms</a>
+                            }
+                            @if(Configuration.GetSection("nav:links").GetChildren().Count() > 0){
+                                @foreach(var l in Configuration.GetSection("nav:links").GetChildren()){
+                                    <a class="navbar-item"href="@l.Value" target="_blank">@l.Key</a>
+                                }
                             }
                             <hr class="dropdown-divider">
                             <a class="navbar-item" href="/about_analytics">About Analytics</a>
@@ -307,6 +321,5 @@
         })()
     </script>
     @RenderSection("js", required: false)
-
 </body>
 </html>

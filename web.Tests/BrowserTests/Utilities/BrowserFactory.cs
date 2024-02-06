@@ -1,15 +1,15 @@
 using System;
 using System.Linq;
+using Atlas_Web.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.Hosting.Server.Features;
 using Microsoft.AspNetCore.TestHost;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
-using web.Tests.FunctionTests;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Atlas_Web.Models;
+using web.Tests.FunctionTests;
 
 namespace web.Tests.BrowserTests
 {
@@ -35,8 +35,8 @@ namespace web.Tests.BrowserTests
                 })
                 .ConfigureServices(services =>
                 {
-                    var descriptor = services.SingleOrDefault(
-                        d => d.ServiceType == typeof(DbContextOptions<Atlas_WebContext>)
+                    var descriptor = services.SingleOrDefault(d =>
+                        d.ServiceType == typeof(DbContextOptions<Atlas_WebContext>)
                     );
 
                     if (descriptor != null)

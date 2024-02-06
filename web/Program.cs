@@ -1,26 +1,29 @@
-using Microsoft.EntityFrameworkCore;
-using Atlas_Web.Models;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Net.Http.Headers;
 using System.IO.Compression;
-using WebMarkupMin.AspNet.Common.Compressors;
-using WebMarkupMin.AspNetCore5;
-using SolrNet;
-using Microsoft.Extensions.Caching.Memory;
+using System.Security.Cryptography.X509Certificates;
+using Atlas_Web.Authentication;
+using Atlas_Web.Authorization;
 using Atlas_Web.Middleware;
+using Atlas_Web.Models;
 using Atlas_Web.Services;
 using Hangfire;
+using ITfoxtec.Identity.Saml2;
+using ITfoxtec.Identity.Saml2.MvcCore;
+using ITfoxtec.Identity.Saml2.MvcCore.Configuration;
+using ITfoxtec.Identity.Saml2.Schemas.Metadata;
+using ITfoxtec.Identity.Saml2.Util;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Negotiate;
 using Microsoft.AspNetCore.Authorization;
-using Atlas_Web.Authorization;
-using Atlas_Web.Authentication;
-using ITfoxtec.Identity.Saml2;
-using ITfoxtec.Identity.Saml2.Util;
-using ITfoxtec.Identity.Saml2.Schemas.Metadata;
-using ITfoxtec.Identity.Saml2.MvcCore.Configuration;
-using ITfoxtec.Identity.Saml2.MvcCore;
-using System.Security.Cryptography.X509Certificates;
+using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption;
+using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Net.Http.Headers;
+using SolrNet;
+using WebMarkupMin.AspNet.Common.Compressors;
+using WebMarkupMin.AspNetCore5;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Configuration.AddJsonFile("appsettings.cust.json", optional: true, reloadOnChange: true);
@@ -33,14 +36,13 @@ builder.Configuration.AddEnvironmentVariables();
 
 builder.WebHost.CaptureStartupErrors(true);
 
-builder.Services.AddHangfire(
-    configuration =>
-        configuration
-            //.SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
-            .UseSimpleAssemblyNameTypeSerializer()
-            .UseRecommendedSerializerSettings()
-            .UseInMemoryStorage()
-            .WithJobExpirationTimeout(TimeSpan.FromHours(1))
+builder.Services.AddHangfire(configuration =>
+    configuration
+        //.SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
+        .UseSimpleAssemblyNameTypeSerializer()
+        .UseRecommendedSerializerSettings()
+        .UseInMemoryStorage()
+        .WithJobExpirationTimeout(TimeSpan.FromHours(1))
 );
 
 builder.Services.AddHangfireServer();
@@ -53,27 +55,12 @@ builder.Services.Configure<CookiePolicyOptions>(options =>
 });
 builder.Services.AddResponseCaching();
 
-builder.Services
-    .AddRazorPages()
-    .AddRazorPagesOptions(options =>
-    {
-        options.Conventions.AddPageRoute("/Index/Index", "");
-        options.Conventions.AddPageRoute("/Index/About", "about_analytics");
-        options.Conventions.ConfigureFilter(new IgnoreAntiforgeryTokenAttribute());
-    })
-    .AddRazorRuntimeCompilation();
-builder.Services.AddControllers();
-builder.Services.AddSolrNet<SolrAtlas>(builder.Configuration["solr:atlas_address"]);
-builder.Services.AddSolrNet<SolrAtlasLookups>(builder.Configuration["solr:atlas_lookups_address"]);
-
 // for linq queries
-builder.Services.AddDbContext<Atlas_WebContext>(
-    options =>
-        options.UseSqlServer(
-            builder.Configuration.GetConnectionString("AtlasDatabase"),
-            o =>
-                o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery).CommandTimeout(60000)
-        )
+builder.Services.AddDbContext<Atlas_WebContext>(options =>
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString("AtlasDatabase"),
+        o => o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery).CommandTimeout(60000)
+    )
 );
 
 builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
@@ -99,6 +86,16 @@ builder.Services.AddResponseCompression(options =>
 });
 
 builder.Services.AddMemoryCache();
+
+builder
+    .Services.AddDataProtection()
+    .UseCryptographicAlgorithms(
+        new AuthenticatedEncryptorConfiguration()
+        {
+            EncryptionAlgorithm = EncryptionAlgorithm.AES_256_CBC,
+            ValidationAlgorithm = ValidationAlgorithm.HMACSHA256
+        }
+    );
 
 var cssSettings = new CssBundlingSettings { Minify = true, FingerprintUrls = true, };
 var codeSettings = new CodeBundlingSettings { Minify = true, };
@@ -166,8 +163,8 @@ builder.Services.AddWebOptimizer(
     }
 );
 
-builder.Services
-    .AddWebMarkupMin(options =>
+builder
+    .Services.AddWebMarkupMin(options =>
     {
         options.AllowMinificationInDevelopmentEnvironment = true;
         options.AllowCompressionInDevelopmentEnvironment = true;
@@ -197,8 +194,8 @@ builder.Services.AddTransient<IRazorPartialToStringRenderer, RazorPartialToStrin
 if (builder.Configuration["Demo"] == "True")
 {
 # pragma warning disable S1116
-    builder.Services
-        .AddAuthentication(options => options.DefaultScheme = "Demo")
+    builder
+        .Services.AddAuthentication(options => options.DefaultScheme = "Demo")
         .AddScheme<DemoSchemeOptions, DemoAuthHandler>("Demo", options => { });
     ;
 }
@@ -215,7 +212,6 @@ if (builder.Configuration.GetSection("Saml2").Exists())
         (serviceProvider, saml2Configuration) =>
         {
             //saml2Configuration.SignAuthnRequest = true;
-            var l = builder.Configuration["Saml2:SigningCertificateFile"];
             saml2Configuration.SigningCertificate = CertificateUtil.Load(
                 builder.Environment.MapToPhysicalFilePath(
                     builder.Configuration["Saml2:SigningCertificateFile"]
@@ -239,8 +235,9 @@ if (builder.Configuration.GetSection("Saml2").Exists())
             if (entityDescriptor.IdPSsoDescriptor != null)
             {
                 saml2Configuration.AllowedIssuer = entityDescriptor.EntityId;
-                saml2Configuration.SingleSignOnDestination =
-                    entityDescriptor.IdPSsoDescriptor.SingleSignOnServices.First().Location;
+                saml2Configuration.SingleSignOnDestination = entityDescriptor
+                    .IdPSsoDescriptor.SingleSignOnServices.First()
+                    .Location;
                 // saml2Configuration.SingleLogoutDestination = entityDescriptor.IdPSsoDescriptor.SingleLogoutServices.First().Location;
                 foreach (
                     var signingCertificate in entityDescriptor.IdPSsoDescriptor.SigningCertificates
@@ -291,6 +288,19 @@ builder.Services.Configure<IISServerOptions>(options =>
     options.AllowSynchronousIO = true;
 });
 
+builder
+    .Services.AddRazorPages()
+    .AddRazorPagesOptions(options =>
+    {
+        options.Conventions.AddPageRoute("/Index/Index", "");
+        options.Conventions.AddPageRoute("/Index/About", "about_analytics");
+        options.Conventions.ConfigureFilter(new IgnoreAntiforgeryTokenAttribute());
+    })
+    .AddRazorRuntimeCompilation();
+builder.Services.AddControllers();
+builder.Services.AddSolrNet<SolrAtlas>(builder.Configuration["solr:atlas_address"]);
+builder.Services.AddSolrNet<SolrAtlasLookups>(builder.Configuration["solr:atlas_lookups_address"]);
+
 var app = builder.Build();
 
 app.UseResponseCompression();
@@ -333,20 +343,6 @@ app.UseAuthorization();
 app.MapRazorPages();
 app.MapControllers();
 
-app.UseResponseCaching();
-app.Use(
-    async (context, next) =>
-    {
-        context.Response.GetTypedHeaders().CacheControl =
-            new Microsoft.Net.Http.Headers.CacheControlHeaderValue
-            {
-                Public = true,
-                MaxAge = TimeSpan.FromMinutes(20)
-            };
-        await next();
-    }
-);
-
 app.Use(
     async (context, next) =>
     {
@@ -361,8 +357,8 @@ using (var scope = app.Services.CreateScope())
     Atlas_WebContext context = scope.ServiceProvider.GetRequiredService<Atlas_WebContext>();
 
     // load override css
-    var css = context.GlobalSiteSettings
-        .Where(x => x.Name == "global_css")
+    var css = context
+        .GlobalSiteSettings.Where(x => x.Name == "global_css")
         .Select(x => x.Value)
         .FirstOrDefault();
     if (css != null)
@@ -382,14 +378,14 @@ using (var scope = app.Services.CreateScope())
         }
         catch
         {
-            cache.Set("logo", "/img/thinking-face-text-133x40.png");
-            cache.Set("logo_path", "wwwroot/img/thinking-face-text-133x40.png");
+            // cache.Set("logo", "/img/atlas-a-logo.svg");
+            // cache.Set("logo_path", "wwwroot/img/atlas-a-logo.svg");
         }
     }
     else
     {
-        cache.Set("logo", "/img/thinking-face-text-133x40.png");
-        cache.Set("logo_path", "wwwroot/img/thinking-face-text-133x40.png");
+        // cache.Set("logo", "/img/atlas-a-logo.svg");
+        // cache.Set("logo_path", "wwwroot/img/atlas-a-logo.svg");
     }
 
     // set version

@@ -51,6 +51,7 @@ gulp.task('js:polyfill', function () {
       'web/wwwroot/js/polyfill/remove.js',
       'web/wwwroot/js/polyfill/includes.js',
       'web/wwwroot/js/polyfill/trunc.js',
+      'web/wwwroot/js/polyfill/object.js',
     ])
     .pipe(concat('polyfill.min.js'))
     .pipe(uglify(uglifyConfig))

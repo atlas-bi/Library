@@ -1,10 +1,10 @@
+using System.Text.RegularExpressions;
+using Atlas_Web.Authorization;
+using Atlas_Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using Atlas_Web.Models;
-using System.Text.RegularExpressions;
 using Microsoft.Extensions.Caching.Memory;
-using Atlas_Web.Authorization;
 
 namespace Atlas_Web.Pages.Users
 {
@@ -170,8 +170,8 @@ namespace Atlas_Web.Pages.Users
 
             UserDetails = await _context.Users.Where(x => x.UserId == UserId).FirstOrDefaultAsync();
 
-            ViewData["DefaultReportTypes"] = await _context.ReportObjectTypes
-                .Where(v => v.Visible == "Y")
+            ViewData["DefaultReportTypes"] = await _context
+                .ReportObjectTypes.Where(v => v.Visible == "Y")
                 .Select(x => x.ReportObjectTypeId)
                 .ToListAsync();
 
@@ -213,8 +213,10 @@ namespace Atlas_Web.Pages.Users
                 foreach (var l in package)
                 {
                     var id = (int)l.FolderId;
-                    _context.UserFavoriteFolders
-                        .Where(x => x.UserFavoriteFolderId == id && x.UserId == User.GetUserId())
+                    _context
+                        .UserFavoriteFolders.Where(x =>
+                            x.UserFavoriteFolderId == id && x.UserId == User.GetUserId()
+                        )
                         .First()
                         .FolderRank = l.FolderRank;
                 }
@@ -237,10 +239,10 @@ namespace Atlas_Web.Pages.Users
                 select new SearchHistoryData
                 {
                     SearchUrl = a.Search.Replace("%25", "%"),
-                    SearchString = Regex.Match(a.Search + " ", @"Query=(.*?)[&|?|\s]").Groups[
-                        1
-                    ].Value
-                        .Replace("%25", "%")
+                    SearchString = Regex
+                        .Match(a.Search + " ", @"Query=(.*?)[&|?|\s]")
+                        .Groups[1]
+                        .Value.Replace("%25", "%")
                         .Replace("%20", " ")
                         .Replace("%2C", ","),
                 }
@@ -272,8 +274,8 @@ namespace Atlas_Web.Pages.Users
                 return Redirect(Url);
             }
 
-            var adminDisabled = await _context.UserPreferences.SingleOrDefaultAsync(
-                x => x.UserId == User.GetUserId() && x.ItemType == "AdminDisabled"
+            var adminDisabled = await _context.UserPreferences.SingleOrDefaultAsync(x =>
+                x.UserId == User.GetUserId() && x.ItemType == "AdminDisabled"
             );
 
             if (adminDisabled == null)
@@ -286,8 +288,10 @@ namespace Atlas_Web.Pages.Users
             else
             {
                 _context.RemoveRange(
-                    _context.UserPreferences
-                        .Where(x => x.UserId == User.GetUserId() && x.ItemType == "AdminDisabled")
+                    _context
+                        .UserPreferences.Where(x =>
+                            x.UserId == User.GetUserId() && x.ItemType == "AdminDisabled"
+                        )
                         .ToList()
                 );
                 await _context.SaveChangesAsync();
@@ -420,8 +424,8 @@ namespace Atlas_Web.Pages.Users
                 {
                     cacheEntry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20);
                     return (
-                        from r in _context.ReportObjectSubscriptions
-                            .Where(x => x.UserId == UserId)
+                        from r in _context
+                            .ReportObjectSubscriptions.Where(x => x.UserId == UserId)
                             .Union(
                                 from m in _context.UserGroupsMemberships
                                 join s in _context.ReportObjectSubscriptions

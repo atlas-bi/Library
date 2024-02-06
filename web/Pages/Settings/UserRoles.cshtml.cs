@@ -1,8 +1,8 @@
+using Atlas_Web.Authorization;
+using Atlas_Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using Atlas_Web.Models;
-using Atlas_Web.Authorization;
 
 namespace Atlas_Web.Pages.Settings
 {
@@ -61,8 +61,8 @@ namespace Atlas_Web.Pages.Settings
             if (User.HasPermission("Edit User Permissions"))
             {
                 _context.RemoveRange(
-                    _context.UserRoleLinks.Where(
-                        x => x.UserId.Equals(UserId) && x.UserRolesId.Equals(Id)
+                    _context.UserRoleLinks.Where(x =>
+                        x.UserId.Equals(UserId) && x.UserRolesId.Equals(Id)
                     )
                 );
                 _context.SaveChanges();
@@ -76,8 +76,8 @@ namespace Atlas_Web.Pages.Settings
             if (
                 ModelState.IsValid
                 && User.HasPermission("Edit User Permissions")
-                && !_context.UserRoleLinks.Any(
-                    x => x.UserId == NewUserRole.UserId && x.UserRolesId == NewUserRole.UserRolesId
+                && !_context.UserRoleLinks.Any(x =>
+                    x.UserId == NewUserRole.UserId && x.UserRolesId == NewUserRole.UserRolesId
                 )
             )
             {
