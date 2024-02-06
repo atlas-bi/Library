@@ -45,6 +45,7 @@ gulp.task('css:build', function () {
           'editor-liveEditorPrev',
           'analytics-reviewed',
           'epic-released',
+          'documentation-pending',
           'legacy',
           'high-risk',
           'self-service',
