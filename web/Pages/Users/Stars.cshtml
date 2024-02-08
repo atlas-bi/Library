@@ -108,27 +108,6 @@
                             <div class="favorite-folder-controls button is-light is-rounded is-warning has-text-dark is-active">
                                 <span class="icon js-modal-trigger" data-target="favorite-folder-new"><i class="fas fa-plus"></i></span>
                             </div>
-                            <script>
-                                (function(){
-                                    document.querySelector('body').insertAdjacentHTML('beforeend', '<div class="modal" id="favorite-folder-new"> \
-                                    <div class="modal-background"></div> \
-                                    <div class="modal-content"> \
-                                        <div class="box"> \
-                                            <strong class="mb-5">New Folder</strong> \
-                                            <form method="post" action="/Users/stars/?handler=NewFolder" class="favorite-folder-new">  \
-                                                <div class="field"> \
-                                                    <div class="control"> \
-                                                        <input class="input" name="favorite-folder-name"/> \
-                                                    </div> \
-                                                </div> \
-                                                    <button class="button pt-3">Save</button> \
-                                            </form> \
-                                        </div> \
-                                    </div> \
-                                    <button class="modal-close is-large" aria-label="close"></button> \
-                                </div>')
-                                })()
-                            </script>
                         }
                     </div>
 
@@ -168,28 +147,7 @@
                                     <span class="icon js-modal-trigger" data-target="favorite-folder-@f.UserFavoriteFolderId"><i class="fas fa-pen-to-square"></i></span>
                                     <span class="icon favorite-folder-delete" data-folderid="@f.UserFavoriteFolderId"><i class="fas fa-trash"></i></span>
                                     <span class="icon drg-hdl"><i class="fas fa-up-down-left-right"></i></span>
-                                </div>
-                                <script>
-                                    (function(){
-                                        document.querySelector('body').insertAdjacentHTML('beforeend', '<div class="modal" id="favorite-folder-@f.UserFavoriteFolderId"> \
-                                        <div class="modal-background"></div> \
-                                        <div class="modal-content"> \
-                                            <div class="box"> \
-                                                <strong class="mb-5">Rename Folder</strong> \
-                                                <form method="post" action="/Users/stars/?handler=EditFolder&id=@f.UserFavoriteFolderId" class="favorite-folder-rename" data-folderid="@f.UserFavoriteFolderId"> \
-                                                    <div class="field"> \
-                                                        <div class="control"> \
-                                                            <input class="input" name="favorite-folder-name" value="@f.FolderName" /> \
-                                                        </div> \
-                                                    </div> \
-                                                     <button class="button pt-3">Save</button> \
-                                                </form> \
-                                            </div> \
-                                        </div> \
-                                        <button class="modal-close is-large" aria-label="close"></button> \
-                                    </div>')
-                                    })()
-                                </script>
+                                </div>    
                             }
                         </div>
                     }
@@ -297,6 +255,46 @@
                         </div>
                     }
                 </div>
+                @if (ViewBag.IsMe || User.HasPermission("Edit Other Users"))
+                {
+                    <div class="modal" id="favorite-folder-new"> 
+                        <div class="modal-background"></div> 
+                        <div class="modal-content"> 
+                            <div class="box"> 
+                                <strong class="mb-5">New Folder</strong> 
+                                <form method="post" action="/users/stars/?handler=NewFolder" class="favorite-folder-new">  
+                                    <div class="field"> 
+                                        <div class="control"> 
+                                            <input class="input" name="favorite-folder-name"/> 
+                                        </div> 
+                                    </div> 
+                                        <button class="button pt-3">Save</button> 
+                                </form> 
+                            </div> 
+                        </div> 
+                        <button class="modal-close is-large" aria-label="close"></button>
+                    </div>
+                    @foreach (var f in Model.Folders.OrderBy(x => x.FolderRank).ToList())
+                    {
+                        <div class="modal" id="favorite-folder-@f.UserFavoriteFolderId"> 
+                            <div class="modal-background"></div> 
+                            <div class="modal-content"> 
+                                <div class="box"> 
+                                    <strong class="mb-5">Rename Folder</strong> 
+                                    <form method="post" action="/users/stars/?handler=EditFolder&id=@f.UserFavoriteFolderId" class="favorite-folder-rename" data-folderid="@f.UserFavoriteFolderId"> 
+                                        <div class="field"> 
+                                            <div class="control"> 
+                                                <input class="input" name="favorite-folder-name" value="@f.FolderName" /> 
+                                            </div> 
+                                        </div> 
+                                            <button class="button pt-3">Save</button> 
+                                    </form> 
+                                </div> 
+                            </div> 
+                            <button class="modal-close is-large" aria-label="close"></button> 
+                        </div>
+                    }
+                }
                 <script>
                     (function() {
 
