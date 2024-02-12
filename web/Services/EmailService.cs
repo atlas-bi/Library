@@ -57,11 +57,12 @@ namespace Atlas_Web.Services
                     System.Text.Encoding.UTF8,
                     MediaTypeNames.Text.Html
                 );
-
-                LinkedResource MyImage = new LinkedResource(
-                    _cache.Get("logo_path").ToString(),
-                    "image/png"
-                )
+                string logo = "wwwroot/img/atlas-a-logo.svg";
+                if (_cache.Get("logo_path") != null)
+                {
+                    logo = _cache.Get("logo_path").ToString();
+                }
+                LinkedResource MyImage = new LinkedResource(logo, "image/png")
                 {
                     ContentId = "atlas_logo",
                     TransferEncoding = TransferEncoding.Base64,
