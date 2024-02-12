@@ -47,7 +47,7 @@
     "gulp-sass": "5.1.0",
     "gulp-uglify": "3.0.2",
     "jsnlog": "2.30.0",
-    "lint-staged": "^15.0.0",
+    "lint-staged": "^15.2.2",
     "markdown-it": "14.0.0",
     "npm-run-all2": "^6.0.0",
     "open": "8.4.2",
@@ -164,7 +164,7 @@
       "unicorn/prefer-at": "warn"
     }
   },
-  "version": "3.15.0-alpha.2",
+  "version": "3.15.1",
   "dependencies": {
     "sass": "^1.63.6"
   }
