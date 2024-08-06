@@ -53,7 +53,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="NUglify" Version="1.21.7" />
-    <PackageReference Include="SixLabors.ImageSharp" Version="3.1.4" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="3.1.5" />
     <PackageReference Include="Slugify.Core" Version="4.0.1" />
     <PackageReference Include="SolrNet" Version="1.1.1" />
     <PackageReference Include="SolrNet.Core" Version="1.1.1" />
