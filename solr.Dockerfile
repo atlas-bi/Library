@@ -37,23 +37,42 @@ RUN echo '#!/bin/bash' > /start.sh && \
     echo 'PORT=${PORT:-8983}' >> /start.sh && \
     echo 'cd /app/etl' >> /start.sh && \
     echo 'echo "Generating .env..."' >> /start.sh && \
+    echo 'echo "Debug: HOST=$HOST USER=$USER"' >> /start.sh && \
     echo 'echo "SOLRURL = \"http://localhost:$PORT/solr/atlas\"" > .env' >> /start.sh && \
     echo 'echo "SOLRLOOKUPURL = \"http://localhost:$PORT/solr/atlas_lookups\"" >> .env' >> /start.sh && \
-    echo 'echo "ATLASDATABASE = \"DRIVER={ODBC Driver 18 for SQL Server};SERVER=$HOST;DATABASE=atlas;UID=$USER;PWD=$PASSWORD;TrustServerCertificate=YES\"" >> .env' >> /start.sh && \
+    echo 'echo "ATLASDATABASE = \"DRIVER={ODBC Driver 18 for SQL Server};SERVER=$HOST;DATABASE=atlas;UID=$USER;PWD=$PASSWORD;TrustServerCertificate=YES;LoginTimeout=60\"" >> .env' >> /start.sh && \
     echo 'cd /app' >> /start.sh && \
     echo 'echo "Starting Solr in background..."' >> /start.sh && \
     echo 'bin/solr start -force -noprompt -p $PORT' >> /start.sh && \
     echo 'echo "Waiting for Solr..."' >> /start.sh && \
     echo 'sleep 15' >> /start.sh && \
-    echo 'echo "Running ETL..."' >> /start.sh && \
-    echo 'cd /app/etl' >> /start.sh && \
-    echo 'python3 atlas_collections.py || echo "Failed atlas_collections.py"' >> /start.sh && \
-    echo 'python3 atlas_groups.py || echo "Failed atlas_groups.py"' >> /start.sh && \
-    echo 'python3 atlas_initiatives.py || echo "Failed atlas_initiatives.py"' >> /start.sh && \
-    echo 'python3 atlas_lookups.py || echo "Failed atlas_lookups.py"' >> /start.sh && \
-    echo 'python3 atlas_reports.py || echo "Failed atlas_reports.py"' >> /start.sh && \
-    echo 'python3 atlas_terms.py || echo "Failed atlas_terms.py"' >> /start.sh && \
-    echo 'python3 atlas_users.py || echo "Failed atlas_users.py"' >> /start.sh && \
+    echo 'echo "Checking SQL Server connectivity..."' >> /start.sh && \
+    echo 'python3 -c "import pyodbc, os, time; ' >> /start.sh && \
+    echo 'conn_str = os.environ.get(\"ATLASDATABASE\"); ' >> /start.sh && \
+    echo 'print(f\"Attempting connection to SQL Server...\"); ' >> /start.sh && \
+    echo 'for i in range(30): ' >> /start.sh && \
+    echo '    try: ' >> /start.sh && \
+    echo '        pyodbc.connect(conn_str); ' >> /start.sh && \
+    echo '        print(\"Successfully connected to SQL Server\"); ' >> /start.sh && \
+    echo '        exit(0); ' >> /start.sh && \
+    echo '    except Exception as e: ' >> /start.sh && \
+    echo '        print(f\"Connection attempt {i+1} failed: {e}\"); ' >> /start.sh && \
+    echo '        time.sleep(5); ' >> /start.sh && \
+    echo 'print(\"Could not connect to SQL Server after retries\"); ' >> /start.sh && \
+    echo 'exit(1)"' >> /start.sh && \
+    echo 'if [ $? -eq 0 ]; then' >> /start.sh && \
+    echo '    echo "Running ETL..."' >> /start.sh && \
+    echo '    cd /app/etl' >> /start.sh && \
+    echo '    python3 atlas_collections.py || echo "Failed atlas_collections.py"' >> /start.sh && \
+    echo '    python3 atlas_groups.py || echo "Failed atlas_groups.py"' >> /start.sh && \
+    echo '    python3 atlas_initiatives.py || echo "Failed atlas_initiatives.py"' >> /start.sh && \
+    echo '    python3 atlas_lookups.py || echo "Failed atlas_lookups.py"' >> /start.sh && \
+    echo '    python3 atlas_reports.py || echo "Failed atlas_reports.py"' >> /start.sh && \
+    echo '    python3 atlas_terms.py || echo "Failed atlas_terms.py"' >> /start.sh && \
+    echo '    python3 atlas_users.py || echo "Failed atlas_users.py"' >> /start.sh && \
+    echo 'else' >> /start.sh && \
+    echo '    echo "Skipping ETL due to DB connection failure"' >> /start.sh && \
+    echo 'fi' >> /start.sh && \
     echo 'cd /app' >> /start.sh && \
     echo 'echo "Restarting Solr in foreground..."' >> /start.sh && \
     echo 'bin/solr stop -p $PORT' >> /start.sh && \
