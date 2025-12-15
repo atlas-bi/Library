@@ -20,8 +20,10 @@ using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationM
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Net.Http.Headers;
 using SolrNet;
+using System.Data.SqlClient;
 using WebMarkupMin.AspNet.Common.Compressors;
 using WebMarkupMin.AspNetCore5;
 
@@ -355,6 +357,26 @@ using (var scope = app.Services.CreateScope())
 {
     IMemoryCache cache = scope.ServiceProvider.GetRequiredService<IMemoryCache>();
     Atlas_WebContext context = scope.ServiceProvider.GetRequiredService<Atlas_WebContext>();
+
+    try
+    {
+        context.Database.Migrate();
+    }
+    catch (SqlException ex) when (ex.Number == 4060)
+    {
+        var connStr = app.Configuration.GetConnectionString("AtlasDatabase");
+        var csb = new SqlConnectionStringBuilder(connStr) { InitialCatalog = "master" };
+
+        using (var conn = new SqlConnection(csb.ConnectionString))
+        {
+            conn.Open();
+            using var cmd = conn.CreateCommand();
+            cmd.CommandText = "IF DB_ID(N'atlas') IS NULL CREATE DATABASE [atlas];";
+            cmd.ExecuteNonQuery();
+        }
+
+        context.Database.Migrate();
+    }
 
     // load override css
     var css = context
