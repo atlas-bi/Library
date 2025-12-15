@@ -50,7 +50,7 @@ RUN echo '#!/bin/bash' > /start.sh && \
     echo 'echo "Waiting for Solr..."' >> /start.sh && \
     echo 'sleep 15' >> /start.sh && \
     echo 'echo "Checking SQL Server connectivity..."' >> /start.sh && \
-    echo 'python3 -c "import pyodbc, os, time; ' >> /start.sh && \
+    echo 'python3 -u -c "import pyodbc, os, time; ' >> /start.sh && \
     echo 'conn_str = os.environ.get(\"ATLASDATABASE\"); ' >> /start.sh && \
     echo 'if not conn_str: print(\"Error: ATLASDATABASE env var is missing\"); exit(1); ' >> /start.sh && \
     echo 'print(f\"Attempting connection to SQL Server...\"); ' >> /start.sh && \
@@ -67,13 +67,13 @@ RUN echo '#!/bin/bash' > /start.sh && \
     echo 'if [ $? -eq 0 ]; then' >> /start.sh && \
     echo '    echo "Running ETL..."' >> /start.sh && \
     echo '    cd /app/etl' >> /start.sh && \
-    echo '    python3 atlas_collections.py || echo "Failed atlas_collections.py"' >> /start.sh && \
-    echo '    python3 atlas_groups.py || echo "Failed atlas_groups.py"' >> /start.sh && \
-    echo '    python3 atlas_initiatives.py || echo "Failed atlas_initiatives.py"' >> /start.sh && \
-    echo '    python3 atlas_lookups.py || echo "Failed atlas_lookups.py"' >> /start.sh && \
-    echo '    python3 atlas_reports.py || echo "Failed atlas_reports.py"' >> /start.sh && \
-    echo '    python3 atlas_terms.py || echo "Failed atlas_terms.py"' >> /start.sh && \
-    echo '    python3 atlas_users.py || echo "Failed atlas_users.py"' >> /start.sh && \
+    echo '    python3 -u atlas_collections.py || echo "Failed atlas_collections.py"' >> /start.sh && \
+    echo '    python3 -u atlas_groups.py || echo "Failed atlas_groups.py"' >> /start.sh && \
+    echo '    python3 -u atlas_initiatives.py || echo "Failed atlas_initiatives.py"' >> /start.sh && \
+    echo '    python3 -u atlas_lookups.py || echo "Failed atlas_lookups.py"' >> /start.sh && \
+    echo '    python3 -u atlas_reports.py || echo "Failed atlas_reports.py"' >> /start.sh && \
+    echo '    python3 -u atlas_terms.py || echo "Failed atlas_terms.py"' >> /start.sh && \
+    echo '    python3 -u atlas_users.py || echo "Failed atlas_users.py"' >> /start.sh && \
     echo 'else' >> /start.sh && \
     echo '    echo "Skipping ETL due to DB connection failure"' >> /start.sh && \
     echo 'fi' >> /start.sh && \
