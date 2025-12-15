@@ -45,8 +45,9 @@ RUN echo '#!/bin/bash' > /start.sh && \
     echo 'export ATLASDATABASE="DRIVER={ODBC Driver 18 for SQL Server};SERVER=$HOST;DATABASE=atlas;UID=$USER;PWD=$PASSWORD;TrustServerCertificate=YES;LoginTimeout=60"' >> /start.sh && \
     echo 'echo "ATLASDATABASE = \"$ATLASDATABASE\"" >> .env' >> /start.sh && \
     echo 'cd /app' >> /start.sh && \
-    echo 'echo "Starting Solr in background..."' >> /start.sh && \
-    echo 'bin/solr start -force -noprompt -p $PORT' >> /start.sh && \
+    echo 'echo "Starting Solr (foreground mode, managed by container)..."' >> /start.sh && \
+    echo 'bin/solr start -force -noprompt -f -p $PORT & SOLR_PID=$!' >> /start.sh && \
+    echo 'echo "Solr PID: $SOLR_PID"' >> /start.sh && \
     echo 'echo "Waiting for Solr..."' >> /start.sh && \
     echo 'sleep 15' >> /start.sh && \
     echo 'echo "Checking SQL Server connectivity..."' >> /start.sh && \
@@ -78,9 +79,8 @@ RUN echo '#!/bin/bash' > /start.sh && \
     echo '    echo "Skipping ETL due to DB connection failure"' >> /start.sh && \
     echo 'fi' >> /start.sh && \
     echo 'cd /app' >> /start.sh && \
-    echo 'echo "Restarting Solr in foreground..."' >> /start.sh && \
-    echo 'bin/solr stop -p $PORT' >> /start.sh && \
-    echo 'exec bin/solr start -force -noprompt -f -p $PORT' >> /start.sh && \
+    echo 'echo "Solr is running; waiting on PID $SOLR_PID..."' >> /start.sh && \
+    echo 'wait $SOLR_PID' >> /start.sh && \
     chmod +x /start.sh
 
 CMD ["/start.sh"]
