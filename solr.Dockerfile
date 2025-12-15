@@ -14,7 +14,7 @@ FROM python:3.12-alpine as search
 WORKDIR /app
 
 # startup search and load data
-RUN apk add --no-cache openjdk11 bash lsof python3-dev curl gcc git py3-pip gcc libc-dev g++ libffi-dev libxml2 unixodbc-dev && \
+RUN apk add --no-cache openjdk11 bash lsof procps python3-dev curl gcc git py3-pip gcc libc-dev g++ libffi-dev libxml2 unixodbc-dev && \
     pip3 install pyodbc pysolr pytz python-dotenv
 
 # install sql server driver
@@ -51,6 +51,7 @@ RUN echo '#!/bin/bash' > /start.sh && \
     echo 'echo "Waiting for Solr..."' >> /start.sh && \
     echo 'sleep 15' >> /start.sh && \
     echo 'echo "Checking SQL Server connectivity..."' >> /start.sh && \
+    echo 'set +e' >> /start.sh && \
     echo 'python3 -u -c "import pyodbc, os, time; ' >> /start.sh && \
     echo 'conn_str = os.environ.get(\"ATLASDATABASE\"); ' >> /start.sh && \
     echo 'if not conn_str: print(\"Error: ATLASDATABASE env var is missing\"); exit(1); ' >> /start.sh && \
@@ -65,7 +66,9 @@ RUN echo '#!/bin/bash' > /start.sh && \
     echo '        time.sleep(5); ' >> /start.sh && \
     echo 'print(\"Could not connect to SQL Server after retries\"); ' >> /start.sh && \
     echo 'exit(1)"' >> /start.sh && \
-    echo 'if [ $? -eq 0 ]; then' >> /start.sh && \
+    echo 'DB_CHECK_EXIT=$?' >> /start.sh && \
+    echo 'set -e' >> /start.sh && \
+    echo 'if [ $DB_CHECK_EXIT -eq 0 ]; then' >> /start.sh && \
     echo '    echo "Running ETL..."' >> /start.sh && \
     echo '    cd /app/etl' >> /start.sh && \
     echo '    python3 -u atlas_collections.py || echo "Failed atlas_collections.py"' >> /start.sh && \
