@@ -38,9 +38,12 @@ RUN echo '#!/bin/bash' > /start.sh && \
     echo 'cd /app/etl' >> /start.sh && \
     echo 'echo "Generating .env..."' >> /start.sh && \
     echo 'echo "Debug: HOST=$HOST USER=$USER"' >> /start.sh && \
-    echo 'echo "SOLRURL = \"http://localhost:$PORT/solr/atlas\"" > .env' >> /start.sh && \
-    echo 'echo "SOLRLOOKUPURL = \"http://localhost:$PORT/solr/atlas_lookups\"" >> .env' >> /start.sh && \
-    echo 'echo "ATLASDATABASE = \"DRIVER={ODBC Driver 18 for SQL Server};SERVER=$HOST;DATABASE=atlas;UID=$USER;PWD=$PASSWORD;TrustServerCertificate=YES;LoginTimeout=60\"" >> .env' >> /start.sh && \
+    echo 'export SOLRURL="http://localhost:$PORT/solr/atlas"' >> /start.sh && \
+    echo 'export SOLRLOOKUPURL="http://localhost:$PORT/solr/atlas_lookups"' >> /start.sh && \
+    echo 'echo "SOLRURL = \"$SOLRURL\"" > .env' >> /start.sh && \
+    echo 'echo "SOLRLOOKUPURL = \"$SOLRLOOKUPURL\"" >> .env' >> /start.sh && \
+    echo 'export ATLASDATABASE="DRIVER={ODBC Driver 18 for SQL Server};SERVER=$HOST;DATABASE=atlas;UID=$USER;PWD=$PASSWORD;TrustServerCertificate=YES;LoginTimeout=60"' >> /start.sh && \
+    echo 'echo "ATLASDATABASE = \"$ATLASDATABASE\"" >> .env' >> /start.sh && \
     echo 'cd /app' >> /start.sh && \
     echo 'echo "Starting Solr in background..."' >> /start.sh && \
     echo 'bin/solr start -force -noprompt -p $PORT' >> /start.sh && \
@@ -49,6 +52,7 @@ RUN echo '#!/bin/bash' > /start.sh && \
     echo 'echo "Checking SQL Server connectivity..."' >> /start.sh && \
     echo 'python3 -c "import pyodbc, os, time; ' >> /start.sh && \
     echo 'conn_str = os.environ.get(\"ATLASDATABASE\"); ' >> /start.sh && \
+    echo 'if not conn_str: print(\"Error: ATLASDATABASE env var is missing\"); exit(1); ' >> /start.sh && \
     echo 'print(f\"Attempting connection to SQL Server...\"); ' >> /start.sh && \
     echo 'for i in range(30): ' >> /start.sh && \
     echo '    try: ' >> /start.sh && \
