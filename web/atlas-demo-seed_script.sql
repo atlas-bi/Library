@@ -240,124 +240,177 @@ where not exists (
 );
 GO
 
-insert into [atlas].dbo.UserGroups (AccountName, GroupName, GroupEmail, GroupType) VALUES
-('Accident and Emergency Group','Accident and Emergency Group (Group)','Accident_and_Emergency@my_hospital.rocks','Email Distribution'),
-('Admissions Group','Admissions Group (Group)','Admissions@my_hospital.rocks','Email Distribution'),
-('Cardiology Group','Cardiology Group (Group)','Cardiology@my_hospital.rocks','Email Distribution'),
-('Oncology Group','Oncology Group (Group)','Oncology@my_hospital.rocks','Email Distribution'),
-('Pharmacy Group','Pharmacy Group (Group)','Pharmacy@my_hospital.rocks','Email Distribution'),
-('Radiotherapy Group','Radiotherapy Group (Group)','Radiotherapy@my_hospital.rocks','Email Distribution'),
-('Urology Group','Urology Group (Group)','Urology@my_hospital.rocks','Email Distribution'),
-('Analytics Group','Analytics Group (Group)','Analytics@my_hospital.rocks','Email Distribution'),
-('Ophthalmology Group','Ophthalmology Group (Group)','Ophthalmology@my_hospital.rocks','Email Distribution'),
-('Orthopaedics Group','Orthopaedics Group (Group)','Orthopaedics@my_hospital.rocks','Email Distribution')
+insert into [atlas].dbo.UserGroups (AccountName, GroupName, GroupEmail, GroupType)
+select v.AccountName, v.GroupName, v.GroupEmail, v.GroupType
+from (
+    values
+    ('Accident and Emergency Group','Accident and Emergency Group (Group)','Accident_and_Emergency@my_hospital.rocks','Email Distribution'),
+    ('Admissions Group','Admissions Group (Group)','Admissions@my_hospital.rocks','Email Distribution'),
+    ('Cardiology Group','Cardiology Group (Group)','Cardiology@my_hospital.rocks','Email Distribution'),
+    ('Oncology Group','Oncology Group (Group)','Oncology@my_hospital.rocks','Email Distribution'),
+    ('Pharmacy Group','Pharmacy Group (Group)','Pharmacy@my_hospital.rocks','Email Distribution'),
+    ('Radiotherapy Group','Radiotherapy Group (Group)','Radiotherapy@my_hospital.rocks','Email Distribution'),
+    ('Urology Group','Urology Group (Group)','Urology@my_hospital.rocks','Email Distribution'),
+    ('Analytics Group','Analytics Group (Group)','Analytics@my_hospital.rocks','Email Distribution'),
+    ('Ophthalmology Group','Ophthalmology Group (Group)','Ophthalmology@my_hospital.rocks','Email Distribution'),
+    ('Orthopaedics Group','Orthopaedics Group (Group)','Orthopaedics@my_hospital.rocks','Email Distribution')
+) v(AccountName, GroupName, GroupEmail, GroupType)
+where not exists (
+    select 1
+    from [atlas].dbo.UserGroups ug
+    where ug.GroupName = v.GroupName
+);
 GO
 
-insert into [atlas].dbo.UserGroupsMembership (UserId,GroupId) values
-(1,1),
-(2,1),
-(3,1),
-(4,1),
-(5,1),
-(6,1),
-(7,1),
-(8,1),
-(9,1),
-(10,1),
-(11,1),
-(12,1),
-(13,1),
-(14,1),
-(15,1),
-(16,2),
-(17,2),
-(18,2),
-(19,2),
-(20,2),
-(21,2),
-(22,2),
-(23,2),
-(24,2),
-(25,2),
-(26,2),
-(27,3),
-(28,3),
-(29,3),
-(30,3),
-(31,3),
-(32,4),
-(33,4),
-(34,4),
-(35,4),
-(36,4),
-(37,4),
-(38,4),
-(39,5),
-(40,5),
-(41,5),
-(42,5),
-(43,5),
-(44,5),
-(45,5),
-(46,5),
-(47,6),
-(48,6),
-(49,6),
-(50,6),
-(51,6),
-(52,6),
-(53,6),
-(54,6),
-(55,6),
-(56,6),
-(57,6),
-(58,6),
-(59,7),
-(60,7),
-(61,7),
-(62,7),
-(63,7),
-(64,7),
-(65,7),
-(66,7),
-(67,8),
-(68,8),
-(69,8),
-(70,8),
-(71,8),
-(72,8),
-(73,8),
-(74,8),
-(75,8),
-(76,8),
-(77,8),
-(78,8),
-(79,8),
-(80,9),
-(81,9),
-(82,9),
-(83,9),
-(84,9),
-(85,9),
-(86,9),
-(87,10),
-(88,10),
-(89,10),
-(90,10),
-(91,10),
-(92,10),
-(93,10),
-(94,10),
-(95,10),
-(96,10),
-(97,10),
-(98,10),
-(99,10),
-(100,10)
+insert into [atlas].dbo.UserGroupsMembership (UserId, GroupId)
+select v.UserId, ug.GroupId
+from (
+    values
+    (1,1),
+    (2,1),
+    (3,1),
+    (4,1),
+    (5,1),
+    (6,1),
+    (7,1),
+    (8,1),
+    (9,1),
+    (10,1),
+    (11,1),
+    (12,1),
+    (13,1),
+    (14,1),
+    (15,1),
+    (16,2),
+    (17,2),
+    (18,2),
+    (19,2),
+    (20,2),
+    (21,2),
+    (22,2),
+    (23,2),
+    (24,2),
+    (25,2),
+    (26,2),
+    (27,3),
+    (28,3),
+    (29,3),
+    (30,3),
+    (31,3),
+    (32,4),
+    (33,4),
+    (34,4),
+    (35,4),
+    (36,4),
+    (37,4),
+    (38,4),
+    (39,5),
+    (40,5),
+    (41,5),
+    (42,5),
+    (43,5),
+    (44,5),
+    (45,5),
+    (46,5),
+    (47,6),
+    (48,6),
+    (49,6),
+    (50,6),
+    (51,6),
+    (52,6),
+    (53,6),
+    (54,6),
+    (55,6),
+    (56,6),
+    (57,6),
+    (58,6),
+    (59,7),
+    (60,7),
+    (61,7),
+    (62,7),
+    (63,7),
+    (64,7),
+    (65,7),
+    (66,7),
+    (67,8),
+    (68,8),
+    (69,8),
+    (70,8),
+    (71,8),
+    (72,8),
+    (73,8),
+    (74,8),
+    (75,8),
+    (76,8),
+    (77,8),
+    (78,8),
+    (79,8),
+    (80,9),
+    (81,9),
+    (82,9),
+    (83,9),
+    (84,9),
+    (85,9),
+    (86,9),
+    (87,10),
+    (88,10),
+    (89,10),
+    (90,10),
+    (91,10),
+    (92,10),
+    (93,10),
+    (94,10),
+    (95,10),
+    (96,10),
+    (97,10),
+    (98,10),
+    (99,10),
+    (100,10)
+) v(UserId, SeedGroupNum)
+inner join [atlas].dbo.UserGroups ug
+    on ug.GroupName = case v.SeedGroupNum
+        when 1 then 'Accident and Emergency Group (Group)'
+        when 2 then 'Admissions Group (Group)'
+        when 3 then 'Cardiology Group (Group)'
+        when 4 then 'Oncology Group (Group)'
+        when 5 then 'Pharmacy Group (Group)'
+        when 6 then 'Radiotherapy Group (Group)'
+        when 7 then 'Urology Group (Group)'
+        when 8 then 'Analytics Group (Group)'
+        when 9 then 'Ophthalmology Group (Group)'
+        when 10 then 'Orthopaedics Group (Group)'
+    end
+where not exists (
+    select 1
+    from [atlas].dbo.UserGroupsMembership ugm
+    where ugm.UserId = v.UserId and ugm.GroupId = ug.GroupId
+);
 GO
 
 -- demo reports
-insert into reportobject (ReportObjectBizKey, SourceServer, SourceDB, SourceTable, Name, Description, DetailedDescription, ReportObjectTypeID, AuthorUserID, LastModifiedByUserID, LastModifiedDate, ReportObjectURL, EpicMasterFile, EpicRecordID, ReportServerCatalogID, DefaultVisibilityYN, OrphanedReportObjectYN, ReportServerPath) values
+DECLARE @SeedReportObjects TABLE (
+    SeedReportObjectId int IDENTITY(1,1) NOT NULL,
+    ReportObjectBizKey nvarchar(max) NULL,
+    SourceServer nvarchar(max) NULL,
+    SourceDB nvarchar(max) NULL,
+    SourceTable nvarchar(max) NULL,
+    Name nvarchar(max) NULL,
+    Description nvarchar(max) NULL,
+    DetailedDescription nvarchar(max) NULL,
+    ReportObjectTypeID int NULL,
+    AuthorUserID int NULL,
+    LastModifiedByUserID int NULL,
+    LastModifiedDate datetime NULL,
+    ReportObjectURL nvarchar(max) NULL,
+    EpicMasterFile nvarchar(max) NULL,
+    EpicRecordID nvarchar(max) NULL,
+    ReportServerCatalogID int NULL,
+    DefaultVisibilityYN nvarchar(max) NULL,
+    OrphanedReportObjectYN nvarchar(max) NULL,
+    ReportServerPath nvarchar(max) NULL
+);
+
+insert into @SeedReportObjects (ReportObjectBizKey, SourceServer, SourceDB, SourceTable, Name, Description, DetailedDescription, ReportObjectTypeID, AuthorUserID, LastModifiedByUserID, LastModifiedDate, ReportObjectURL, EpicMasterFile, EpicRecordID, ReportServerCatalogID, DefaultVisibilityYN, OrphanedReportObjectYN, ReportServerPath) values
 ('123456789','my_server_01','otherreport','component','Workqueue Monitoring - Users Supervised WQs','This component shows information about workqueues that are supervised by the logged in user.','','3','64','75','2019-12-03 06:13:49.008','http://google.com','ABC','1','','Y','N','http://test'),
 ('123456790','my_server_01','otherreport','report','Billing Workqueue Monitoring - Users Supervised Workqueues','Identifies workqueues supervised by the report user. It is intended to give users an overview of the health of their supervised workqueues. ','','17','80','31','2019-11-14 12:50:54.649','http://google.com','EFG','2','','Y','N','http://test'),
 ('123456791','my_server_01','otherreport','report','User Pt WQ Contacts Added Today ','This report is for  My Account Errors for Today component.  It will show any errors that were not resolved in 48 hours.','','20','83','51','2019-09-23 00:43:53.215','http://google.com','HIJ','3','','Y','N','http://test'),
@@ -407,8 +460,20 @@ insert into reportobject (ReportObjectBizKey, SourceServer, SourceDB, SourceTabl
 ('123456835','my_server_02','reportserver','report','Hours in Observation','Length of stay for patients in observaton','','17','17','11','2019-08-27 13:46:17.112','http://google.com','EFG','47','','N','Y','http://test'),
 ('123456836','my_server_02','reportserver','catalog','New ECW Transactions','','','20','61','19','2019-07-01 01:13:21.759','http://google.com','HIJ','48','','N','Y','http://test'),
 ('123456837','my_server_02','reportserver','report','IP Central Line Days','This  report will show all patients with an active CVC (central venous catheter) or PICC (peripherally inserted central catheter) line.','','21','98','59','2019-06-14 00:10:32.341','http://google.com','ABC','49','','N','Y','http://test'),
-('123456838','my_server_01','reportserver','catalog','IP Readmission Rates by Year and Month - MEDICARE','','','28','44','80','2019-11-27 00:37:18.289','http://google.com','EFG','50','','N','Y','http://test')
+('123456838','my_server_01','reportserver','catalog','IP Readmission Rates by Year and Month - MEDICARE','','','28','44','80','2019-11-27 00:37:18.289','http://google.com','EFG','50','','N','Y','http://test');
+
+SET IDENTITY_INSERT dbo.reportobject ON;
+insert into dbo.reportobject (ReportObjectID, ReportObjectBizKey, SourceServer, SourceDB, SourceTable, Name, Description, DetailedDescription, ReportObjectTypeID, AuthorUserID, LastModifiedByUserID, LastModifiedDate, ReportObjectURL, EpicMasterFile, EpicRecordID, ReportServerCatalogID, DefaultVisibilityYN, OrphanedReportObjectYN, ReportServerPath)
+select sro.SeedReportObjectId, sro.ReportObjectBizKey, sro.SourceServer, sro.SourceDB, sro.SourceTable, sro.Name, sro.Description, sro.DetailedDescription, sro.ReportObjectTypeID, sro.AuthorUserID, sro.LastModifiedByUserID, sro.LastModifiedDate, sro.ReportObjectURL, sro.EpicMasterFile, sro.EpicRecordID, sro.ReportServerCatalogID, sro.DefaultVisibilityYN, sro.OrphanedReportObjectYN, sro.ReportServerPath
+from @SeedReportObjects sro
+where not exists (
+    select 1
+    from dbo.reportobject ro
+    where ro.ReportObjectID = sro.SeedReportObjectId
+);
+SET IDENTITY_INSERT dbo.reportobject OFF;
 GO
+
 -- documentation
 insert into app.ReportObject_doc (ReportObjectId, OperationalOwnerUserID, Requester, DeveloperDescription, KeyAssumptions, OrganizationalValueID, EstimatedRunFrequencyID, FragilityID, ExecutiveVisibilityYN, MaintenanceScheduleID, LastUpdateDateTime, CreatedDateTime, CreatedBy, UpdatedBy) values
 (1,'11','60','This component displays a list of workqueues supervised by the user running the report. Data is populated by the report. See reports Atlas entry for a list of dashboards where it appears.','','1','5','1','Y','1','2020-05-02 17:02:10.805','2020-02-14 05:28:16.101','29','85'),
