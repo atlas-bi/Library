@@ -2,11 +2,9 @@ USE [atlas]
 GO
 
 -- insert seed records
-insert into [atlas].app.UserRoleLinks (UserId, UserRolesId) values (1,1)
-GO
 -- thanks http://random-name-generator.info/index.php?n=100&g=1&st=3
 insert into dbo.[User] (Username, FullName, FirstName, LastName, Department, Title, Email) values
-	('Hertha-Barham','Hertha Barham','Hertha','Barham','Accident and Emergency','Boss','hBarham@my_hosptital.rocks'),
+    ('Hertha-Barham','Hertha Barham','Hertha','Barham','Accident and Emergency','Boss','hBarham@my_hosptital.rocks'),
 ('Amada-Tisdale','Amada Tisdale','Amada','Tisdale','Accident and Emergency','Worker','aTisdale@my_hosptital.rocks'),
 ('Bryce-Bayne','Bryce Bayne','Bryce','Bayne','Accident and Emergency','Manager','bBayne@my_hosptital.rocks'),
 ('Hae-Weiner','Hae Weiner','Hae','Weiner','Accident and Emergency','Mr Cool','hWeiner@my_hosptital.rocks'),
@@ -106,6 +104,13 @@ insert into dbo.[User] (Username, FullName, FirstName, LastName, Department, Tit
 ('Oma-Esposito','Oma Esposito','Oma','Esposito','Orthopaedics','Worker','oEsposito@my_hosptital.rocks'),
 ('Carisa-Forbes','Carisa Forbes','Carisa','Forbes','Orthopaedics','Worker','cForbes@my_hosptital.rocks'),
 ('Marti-Winter','Marti Winter','Marti','Winter','Orthopaedics','Boss','mWinter@my_hosptital.rocks')
+GO
+
+IF EXISTS (SELECT 1 FROM dbo.[User] WHERE UserID = 1)
+    AND NOT EXISTS (SELECT 1 FROM [atlas].app.UserRoleLinks WHERE UserId = 1 AND UserRolesId = 1)
+BEGIN
+    insert into [atlas].app.UserRoleLinks (UserId, UserRolesId) values (1,1)
+END
 GO
 insert into [atlas].app.UserRoleLinks (UserId, UserRolesId) values
 (1,2),
@@ -222,11 +227,8 @@ insert into [atlas].dbo.UserGroups (AccountName, GroupName, GroupEmail, GroupTyp
 ('Ophthalmology Group','Ophthalmology Group (Group)','Ophthalmology@my_hospital.rocks','Email Distribution'),
 ('Orthopaedics Group','Orthopaedics Group (Group)','Orthopaedics@my_hospital.rocks','Email Distribution')
 GO
-<<<<<<< HEAD
+
 insert into [atlas].dbo.UserGroupsMembership (UserId,GroupId) values
-=======
-insert into [Data_Governance_Pub].dbo.UserGroupsMembership (UserId,GroupId) values
->>>>>>> dev
 (1,1),
 (2,1),
 (3,1),
