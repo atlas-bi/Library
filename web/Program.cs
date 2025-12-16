@@ -24,6 +24,7 @@ using Microsoft.Extensions.FileProviders;
 using Microsoft.Net.Http.Headers;
 using SolrNet;
 using System.Data.SqlClient;
+using System.Text.RegularExpressions;
 using WebMarkupMin.AspNet.Common.Compressors;
 using WebMarkupMin.AspNetCore5;
 
@@ -376,6 +377,70 @@ using (var scope = app.Services.CreateScope())
         }
 
         context.Database.Migrate();
+    }
+
+    var seedDemoRaw = app.Configuration["SEED_DEMO"] ?? Environment.GetEnvironmentVariable("SEED_DEMO");
+    var shouldSeedDemo =
+        !string.IsNullOrWhiteSpace(seedDemoRaw)
+        && (
+            string.Equals(seedDemoRaw, "true", StringComparison.OrdinalIgnoreCase)
+            || string.Equals(seedDemoRaw, "1", StringComparison.OrdinalIgnoreCase)
+            || string.Equals(seedDemoRaw, "yes", StringComparison.OrdinalIgnoreCase)
+        );
+
+    if (shouldSeedDemo)
+    {
+        const string seedMarkerName = "demo_seed_applied";
+        var alreadySeeded = context.GlobalSiteSettings.Any(x => x.Name == seedMarkerName);
+
+        if (!alreadySeeded)
+        {
+            var seedScriptPath = Path.Combine(AppContext.BaseDirectory, "atlas-demo-seed_script.sql");
+            if (File.Exists(seedScriptPath))
+            {
+                var seedSql = File.ReadAllText(seedScriptPath);
+                var batches = Regex.Split(seedSql, @"^\s*GO\s*$", RegexOptions.Multiline | RegexOptions.IgnoreCase);
+
+                using var connection = new SqlConnection(app.Configuration.GetConnectionString("AtlasDatabase"));
+                connection.Open();
+
+                using var tx = connection.BeginTransaction();
+                try
+                {
+                    foreach (var batch in batches)
+                    {
+                        var sql = batch?.Trim();
+                        if (string.IsNullOrWhiteSpace(sql))
+                        {
+                            continue;
+                        }
+
+                        using var cmd = connection.CreateCommand();
+                        cmd.Transaction = tx;
+                        cmd.CommandTimeout = 60000;
+                        cmd.CommandText = sql;
+                        cmd.ExecuteNonQuery();
+                    }
+
+                    context.GlobalSiteSettings.Add(
+                        new GlobalSiteSetting
+                        {
+                            Name = seedMarkerName,
+                            Description = "",
+                            Value = DateTimeOffset.UtcNow.ToString("O")
+                        }
+                    );
+                    context.SaveChanges();
+
+                    tx.Commit();
+                }
+                catch
+                {
+                    tx.Rollback();
+                    throw;
+                }
+            }
+        }
     }
 
     // load override css
