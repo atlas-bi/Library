@@ -20,7 +20,7 @@ jobs:
           node-version: '18.x'
 
       - name: install node deps
-        run: npm install
+        run: npm install --ignore-scripts --no-audit --no-fund
 
       - name: lint
         run: npm run lint
@@ -38,12 +38,14 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.0.x'
+      - name: setup dotnet ef
+        run: dotnet tool install --tool-path .\.dotnet-tools dotnet-ef --version 8.0.6
       - name: setup node
         uses: actions/setup-node@v4
         with:
           node-version: '18.x'
       - name: install node deps
-        run: npm install
+        run: npm install --ignore-scripts --no-audit --no-fund
       - name: node build
         run: npm run build
       - name: create settings file
@@ -59,7 +61,7 @@ jobs:
         with:
           install: localdb
       - name: migrate
-        run: dotnet ef database update --project web/web.csproj
+        run: .\.dotnet-tools\dotnet-ef database update --project web/web.csproj
 
   integration_tests:
     name: 'integration tests'
@@ -85,7 +87,7 @@ jobs:
           distribution: 'microsoft'
           java-version: '17'
       - name: install node deps
-        run: npm install
+        run: npm install --ignore-scripts --no-audit --no-fund
       - name: node build
         run: npm run build
       - name: install dotnet deps
@@ -203,7 +205,7 @@ jobs:
           distribution: 'microsoft'
           java-version: '17'
       - name: install node deps
-        run: npm install
+        run: npm install --ignore-scripts --no-audit --no-fund
       - name: node build
         run: npm run build
       - name: install dotnet deps

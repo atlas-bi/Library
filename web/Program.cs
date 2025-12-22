@@ -359,24 +359,27 @@ using (var scope = app.Services.CreateScope())
     IMemoryCache cache = scope.ServiceProvider.GetRequiredService<IMemoryCache>();
     Atlas_WebContext context = scope.ServiceProvider.GetRequiredService<Atlas_WebContext>();
 
-    try
+    if (context.Database.IsRelational())
     {
-        context.Database.Migrate();
-    }
-    catch (SqlException ex) when (ex.Number == 4060)
-    {
-        var connStr = app.Configuration.GetConnectionString("AtlasDatabase");
-        var csb = new SqlConnectionStringBuilder(connStr) { InitialCatalog = "master" };
-
-        using (var conn = new SqlConnection(csb.ConnectionString))
+        try
         {
-            conn.Open();
-            using var cmd = conn.CreateCommand();
-            cmd.CommandText = "IF DB_ID(N'atlas') IS NULL CREATE DATABASE [atlas];";
-            cmd.ExecuteNonQuery();
+            context.Database.Migrate();
         }
+        catch (SqlException ex) when (ex.Number == 4060)
+        {
+            var connStr = app.Configuration.GetConnectionString("AtlasDatabase");
+            var csb = new SqlConnectionStringBuilder(connStr) { InitialCatalog = "master" };
 
-        context.Database.Migrate();
+            using (var conn = new SqlConnection(csb.ConnectionString))
+            {
+                conn.Open();
+                using var cmd = conn.CreateCommand();
+                cmd.CommandText = "IF DB_ID(N'atlas') IS NULL CREATE DATABASE [atlas];";
+                cmd.ExecuteNonQuery();
+            }
+
+            context.Database.Migrate();
+        }
     }
 
     var seedDemoRaw = app.Configuration["SEED_DEMO"] ?? Environment.GetEnvironmentVariable("SEED_DEMO");
