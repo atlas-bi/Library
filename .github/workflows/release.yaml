@@ -23,11 +23,7 @@ jobs:
       - name: Semantic Release
         uses: cycjimmy/semantic-release-action@v3
         with:
-          semantic_version: 18
-          extra_plugins: |
-            @semantic-release/changelog@6
-            @semantic-release/exec
-            @semantic-release/git@10
+          semantic_version: 24
         env:
           NPM_CONFIG_LEGACY_PEER_DEPS: true
           NPM_CONFIG_AUDIT: false
