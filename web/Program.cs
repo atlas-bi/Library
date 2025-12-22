@@ -399,7 +399,12 @@ using (var scope = app.Services.CreateScope())
             if (File.Exists(seedScriptPath))
             {
                 var seedSql = File.ReadAllText(seedScriptPath);
-                var batches = Regex.Split(seedSql, @"^\s*GO\s*$", RegexOptions.Multiline | RegexOptions.IgnoreCase);
+                var batches = Regex.Split(
+                    seedSql,
+                    @"^\s*GO\s*$",
+                    RegexOptions.Multiline | RegexOptions.IgnoreCase,
+                    TimeSpan.FromSeconds(5)
+                );
 
                 using var connection = new SqlConnection(app.Configuration.GetConnectionString("AtlasDatabase"));
                 connection.Open();
