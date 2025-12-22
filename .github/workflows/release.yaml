@@ -16,6 +16,10 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
+      - name: setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
       - name: Semantic Release
         uses: cycjimmy/semantic-release-action@v3
         with:
@@ -25,4 +29,7 @@ jobs:
             @semantic-release/exec
             @semantic-release/git@10
         env:
+          NPM_CONFIG_LEGACY_PEER_DEPS: true
+          NPM_CONFIG_AUDIT: false
+          NPM_CONFIG_FUND: false
           GITHUB_TOKEN: ${{ secrets.RELEASE_PAT }}
