@@ -41,4 +41,8 @@ ENV DOTNET_CLI_TELEMETRY_OPTOUT=1
 WORKDIR /app
 COPY --from=build ["/app/web/out", "./"]
 
+RUN addgroup -S app && adduser -S -G app app && chown -R app:app /app
+
+USER app
+
 CMD ASPNETCORE_URLS=http://*:$PORT dotnet "Atlas_Web.dll"
