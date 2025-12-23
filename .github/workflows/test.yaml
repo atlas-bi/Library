@@ -37,9 +37,9 @@ jobs:
       - name: setup dotnet
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.0.x'
+          dotnet-version: '9.0.x'
       - name: setup dotnet ef
-        run: dotnet tool install --tool-path .\.dotnet-tools dotnet-ef --version 8.0.6
+        run: dotnet tool install --tool-path .\.dotnet-tools dotnet-ef --version 9.0.11
       - name: setup node
         uses: actions/setup-node@v4
         with:
@@ -76,7 +76,7 @@ jobs:
       - name: setup dotnet
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.0.x'
+          dotnet-version: '9.0.x'
       - name: setup node
         uses: actions/setup-node@v4
         with:
@@ -194,7 +194,7 @@ jobs:
       - name: setup dotnet
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.0.x'
+          dotnet-version: '9.0.x'
       - name: setup node
         uses: actions/setup-node@v4
         with:
