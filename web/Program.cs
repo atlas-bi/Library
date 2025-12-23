@@ -20,8 +20,11 @@ using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationM
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Net.Http.Headers;
 using SolrNet;
+using System.Data.SqlClient;
+using System.Text.RegularExpressions;
 using WebMarkupMin.AspNet.Common.Compressors;
 using WebMarkupMin.AspNetCore5;
 
@@ -355,6 +358,98 @@ using (var scope = app.Services.CreateScope())
 {
     IMemoryCache cache = scope.ServiceProvider.GetRequiredService<IMemoryCache>();
     Atlas_WebContext context = scope.ServiceProvider.GetRequiredService<Atlas_WebContext>();
+
+    if (context.Database.IsRelational())
+    {
+        try
+        {
+            context.Database.Migrate();
+        }
+        catch (SqlException ex) when (ex.Number == 4060)
+        {
+            var connStr = app.Configuration.GetConnectionString("AtlasDatabase");
+            var csb = new SqlConnectionStringBuilder(connStr) { InitialCatalog = "master" };
+
+            using (var conn = new SqlConnection(csb.ConnectionString))
+            {
+                conn.Open();
+                using var cmd = conn.CreateCommand();
+                cmd.CommandText = "IF DB_ID(N'atlas') IS NULL CREATE DATABASE [atlas];";
+                cmd.ExecuteNonQuery();
+            }
+
+            context.Database.Migrate();
+        }
+    }
+
+    var seedDemoRaw = app.Configuration["SEED_DEMO"] ?? Environment.GetEnvironmentVariable("SEED_DEMO");
+    var shouldSeedDemo =
+        !string.IsNullOrWhiteSpace(seedDemoRaw)
+        && (
+            string.Equals(seedDemoRaw, "true", StringComparison.OrdinalIgnoreCase)
+            || string.Equals(seedDemoRaw, "1", StringComparison.OrdinalIgnoreCase)
+            || string.Equals(seedDemoRaw, "yes", StringComparison.OrdinalIgnoreCase)
+        );
+
+    if (shouldSeedDemo)
+    {
+        const string seedMarkerName = "demo_seed_applied";
+        var alreadySeeded = context.GlobalSiteSettings.Any(x => x.Name == seedMarkerName);
+
+        if (!alreadySeeded)
+        {
+            var seedScriptPath = Path.Combine(AppContext.BaseDirectory, "atlas-demo-seed_script.sql");
+            if (File.Exists(seedScriptPath))
+            {
+                var seedSql = File.ReadAllText(seedScriptPath);
+                var batches = Regex.Split(
+                    seedSql,
+                    @"^\s*GO\s*$",
+                    RegexOptions.Multiline | RegexOptions.IgnoreCase,
+                    TimeSpan.FromSeconds(5)
+                );
+
+                using var connection = new SqlConnection(app.Configuration.GetConnectionString("AtlasDatabase"));
+                connection.Open();
+
+                using var tx = connection.BeginTransaction();
+                try
+                {
+                    foreach (var batch in batches)
+                    {
+                        var sql = batch?.Trim();
+                        if (string.IsNullOrWhiteSpace(sql))
+                        {
+                            continue;
+                        }
+
+                        using var cmd = connection.CreateCommand();
+                        cmd.Transaction = tx;
+                        cmd.CommandTimeout = 60000;
+                        cmd.CommandText = sql;
+                        cmd.ExecuteNonQuery();
+                    }
+
+                    context.GlobalSiteSettings.Add(
+                        new GlobalSiteSetting
+                        {
+                            Name = seedMarkerName,
+                            Description = "",
+                            Value = DateTimeOffset.UtcNow.ToString("O")
+                        }
+                    );
+                    context.SaveChanges();
+
+                    tx.Commit();
+                }
+                catch
+                {
+                    tx.Rollback();
+                    throw;
+                }
+            }
+        }
+    }
 
     // load override css
     var css = context

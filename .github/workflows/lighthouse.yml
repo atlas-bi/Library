@@ -14,6 +14,8 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.0.x'
+      - name: setup dotnet ef
+        run: dotnet tool install --tool-path .\.dotnet-tools dotnet-ef --version 8.0.6
       - name: setup node
         uses: actions/setup-node@v4
         with:
@@ -35,7 +37,7 @@ jobs:
         with:
           install: localdb
       - name: migrate
-        run: dotnet ef database update --project web/web.csproj
+        run: .\.dotnet-tools\dotnet-ef database update --project web/web.csproj
       - name: run Lighthouse CI
         run: |
           npm install -g @lhci/cli@0.9.x
