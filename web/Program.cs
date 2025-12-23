@@ -359,7 +359,7 @@ using (var scope = app.Services.CreateScope())
     IMemoryCache cache = scope.ServiceProvider.GetRequiredService<IMemoryCache>();
     Atlas_WebContext context = scope.ServiceProvider.GetRequiredService<Atlas_WebContext>();
 
-    if (context.Database.IsRelational())
+    if (!app.Environment.IsEnvironment("Test") && context.Database.IsRelational())
     {
         try
         {

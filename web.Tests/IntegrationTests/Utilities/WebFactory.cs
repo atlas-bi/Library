@@ -15,6 +15,8 @@ namespace web.Tests.IntegrationTests
     {
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
+            builder.UseEnvironment("Test");
+
             builder.ConfigureServices(services =>
             {
                 services.RemoveAll<DbContextOptions<Atlas_WebContext>>();
