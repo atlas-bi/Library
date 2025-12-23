@@ -462,14 +462,15 @@ using (var scope = app.Services.CreateScope())
     }
 
     // set logo
-    if (System.IO.File.Exists(app.Configuration["logo"]))
+    var logoPath = app.Configuration["logo"];
+    if (!string.IsNullOrWhiteSpace(logoPath) && System.IO.File.Exists(logoPath))
     {
         try
         {
-            byte[] imageArray = System.IO.File.ReadAllBytes(app.Configuration["logo"]);
+            byte[] imageArray = System.IO.File.ReadAllBytes(logoPath);
             string base64ImageRepresentation = Convert.ToBase64String(imageArray);
             cache.Set("logo", "data:image/png;base64," + base64ImageRepresentation);
-            cache.Set("logo_path", app.Configuration["logo"]);
+            cache.Set("logo_path", logoPath);
         }
         catch
         {

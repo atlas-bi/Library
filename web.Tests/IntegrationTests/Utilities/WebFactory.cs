@@ -4,6 +4,7 @@ using Atlas_Web.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
@@ -21,13 +22,11 @@ namespace web.Tests.IntegrationTests
             {
                 services.RemoveAll<DbContextOptions<Atlas_WebContext>>();
                 services.RemoveAll<Atlas_WebContext>();
+                services.RemoveAll<IDatabaseProvider>();
 
                 services.AddDbContext<Atlas_WebContext>(options =>
                 {
                     options.UseInMemoryDatabase("AtlasIntegrationDb");
-                    options.UseInternalServiceProvider(
-                        new ServiceCollection().AddEntityFrameworkInMemoryDatabase().BuildServiceProvider()
-                    );
                 });
 
                 var sp = services.BuildServiceProvider();
