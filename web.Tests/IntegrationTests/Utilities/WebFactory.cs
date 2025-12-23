@@ -2,6 +2,7 @@ using System;
 using Atlas_Web.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -15,13 +16,23 @@ namespace web.Tests.IntegrationTests
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
             builder.UseEnvironment("Test");
+
+            builder.ConfigureTestServices(services =>
+            {
+                // Add InMemory database for testing
+                // Program.cs won't register SQL Server in Test environment, so no conflict
+                services.AddDbContext<Atlas_WebContext>(options =>
+                {
+                    options.UseInMemoryDatabase("AtlasIntegrationTestDb");
+                });
+            });
         }
 
         protected override IHost CreateHost(IHostBuilder builder)
         {
             var host = base.CreateHost(builder);
 
-            // Initialize and seed the test database
+            // Seed the database after host is created
             using (var scope = host.Services.CreateScope())
             {
                 var services = scope.ServiceProvider;
@@ -30,20 +41,16 @@ namespace web.Tests.IntegrationTests
 
                 try
                 {
+                try
+                {
                     // Ensure database is created
                     db.Database.EnsureCreated();
-                    
-                    // Seed test data
                     web.Tests.FunctionTests.Utilities.InitializeDbForTests(db);
                     logger.LogInformation("Test database initialized and seeded");
                 }
                 catch (Exception ex)
                 {
-                    logger.LogError(
-                        ex,
-                        "An error occurred initializing the test database. Error: {Message}",
-                        ex.Message
-                    );
+                    logger.LogError(ex, "An error occurred seeding the test database.");
                     throw;
                 }
             }

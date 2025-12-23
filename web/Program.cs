@@ -58,13 +58,16 @@ builder.Services.Configure<CookiePolicyOptions>(options =>
 });
 builder.Services.AddResponseCaching();
 
-// for linq queries
-builder.Services.AddDbContext<Atlas_WebContext>(options =>
-    options.UseSqlServer(
-        builder.Configuration.GetConnectionString("AtlasDatabase"),
-        o => o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery).CommandTimeout(60000)
-    )
-);
+// for linq queries - conditionally register based on environment
+if (!builder.Environment.IsEnvironment("Test"))
+{
+    builder.Services.AddDbContext<Atlas_WebContext>(options =>
+        options.UseSqlServer(
+            builder.Configuration.GetConnectionString("AtlasDatabase"),
+            o => o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery).CommandTimeout(60000)
+        )
+    );
+}
 
 builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
 
@@ -354,12 +357,15 @@ app.Use(
     }
 );
 
-using (var scope = app.Services.CreateScope())
+// Skip database initialization in Test environment to avoid provider conflicts
+if (!app.Environment.IsEnvironment("Test"))
 {
-    IMemoryCache cache = scope.ServiceProvider.GetRequiredService<IMemoryCache>();
-    Atlas_WebContext context = scope.ServiceProvider.GetRequiredService<Atlas_WebContext>();
+    using (var scope = app.Services.CreateScope())
+    {
+        IMemoryCache cache = scope.ServiceProvider.GetRequiredService<IMemoryCache>();
+        Atlas_WebContext context = scope.ServiceProvider.GetRequiredService<Atlas_WebContext>();
 
-    if (!app.Environment.IsEnvironment("Test") && context.Database.IsRelational())
+    if (context.Database.IsRelational())
     {
         try
         {
@@ -502,6 +508,7 @@ using (var scope = app.Services.CreateScope())
     catch
     {
         // not set
+    }
     }
 }
 
