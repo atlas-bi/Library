@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 
 namespace web.Tests.IntegrationTests
@@ -16,16 +17,15 @@ namespace web.Tests.IntegrationTests
         {
             builder.ConfigureServices(services =>
             {
-                var descriptor = services.SingleOrDefault(d =>
-                    d.ServiceType == typeof(DbContextOptions<Atlas_WebContext>)
-                );
-
-                if (descriptor != null)
-                    services.Remove(descriptor);
+                services.RemoveAll<DbContextOptions<Atlas_WebContext>>();
+                services.RemoveAll<Atlas_WebContext>();
 
                 services.AddDbContext<Atlas_WebContext>(options =>
                 {
                     options.UseInMemoryDatabase("AtlasIntegrationDb");
+                    options.UseInternalServiceProvider(
+                        new ServiceCollection().AddEntityFrameworkInMemoryDatabase().BuildServiceProvider()
+                    );
                 });
 
                 var sp = services.BuildServiceProvider();
