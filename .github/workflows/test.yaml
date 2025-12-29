@@ -60,6 +60,10 @@ jobs:
         uses: potatoqualitee/mssqlsuite@9a0136e208df60b8ecb62909f076bc34854fa55a
         with:
           install: localdb
+      - name: start localdb
+        run: |
+          sqllocaldb start mssqllocaldb
+          sqllocaldb info mssqllocaldb
       - name: migrate
         run: .\.dotnet-tools\dotnet-ef database update --project web/web.csproj
 
@@ -110,6 +114,10 @@ jobs:
         uses: potatoqualitee/mssqlsuite@9a0136e208df60b8ecb62909f076bc34854fa55a
         with:
           install: localdb
+      - name: start localdb
+        run: |
+          sqllocaldb start mssqllocaldb
+          sqllocaldb info mssqllocaldb
       - name: migrate
         run: .\.dotnet-tools\dotnet-ef database update --project web/web.csproj
       - name: start solr
