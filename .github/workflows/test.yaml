@@ -97,6 +97,19 @@ jobs:
           dotnet restore
       - name: build
         run: npm run dotnet:build
+      - name: setup appsettings
+        run: |
+          echo '{"ConnectionStrings":{' > appsettings.cust.json
+          echo '{"AtlasDatabase":' >> appsettings.cust.json
+          echo '"Server=(localdb)\\mssqllocaldb;Database=atlas_test;Trusted_Connection=True"' >> appsettings.cust.json
+          echo "}}" >> appsettings.cust.json
+          cat appsettings.cust.json
+      - name: install localdb
+        uses: potatoqualitee/mssqlsuite@v1.7
+        with:
+          install: localdb
+      - name: migrate
+        run: .\.dotnet-tools\dotnet-ef database update --project web/web.csproj
       - name: start solr
         run: ./web/solr/bin/solr start
 
