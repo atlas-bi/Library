@@ -53,7 +53,7 @@ jobs:
           cd web
           echo '{"ConnectionStrings":' > appsettings.cust.json
           echo '{"AtlasDatabase":' >> appsettings.cust.json
-          echo '"Server=(localdb)\\mssqllocaldb;Database=atlas_test;Trusted_Connection=True"' >> appsettings.cust.json
+          echo '"Server=(localdb)\\MSSQLLocalDB;Database=atlas_test;Trusted_Connection=True"' >> appsettings.cust.json
           echo "}}" >> appsettings.cust.json
           cat appsettings.cust.json
       - name: install localdb
@@ -65,10 +65,10 @@ jobs:
           Write-Host "Available LocalDB instances:"
           sqllocaldb versions
           Write-Host "`nCreating and starting instance:"
-          sqllocaldb create mssqllocaldb -s
-          sqllocaldb info mssqllocaldb
+          sqllocaldb create MSSQLLocalDB -s
+          sqllocaldb info MSSQLLocalDB
           Write-Host "`nTesting connection:"
-          sqlcmd -S "(localdb)\mssqllocaldb" -Q "SELECT @@VERSION"
+          sqlcmd -S "(localdb)\MSSQLLocalDB" -Q "SELECT @@VERSION"
       - name: migrate
         run: .\.dotnet-tools\dotnet-ef database update --project web/web.csproj
 
@@ -112,7 +112,7 @@ jobs:
         run: |
           echo '{"ConnectionStrings":{' > appsettings.cust.json
           echo '{"AtlasDatabase":' >> appsettings.cust.json
-          echo '"Server=(localdb)\\mssqllocaldb;Database=atlas_test;Trusted_Connection=True"' >> appsettings.cust.json
+          echo '"Server=(localdb)\\MSSQLLocalDB;Database=atlas_test;Trusted_Connection=True"' >> appsettings.cust.json
           echo "}}" >> appsettings.cust.json
           cat appsettings.cust.json
       - name: install localdb
@@ -124,10 +124,10 @@ jobs:
           Write-Host "Available LocalDB instances:"
           sqllocaldb versions
           Write-Host "`nCreating and starting instance:"
-          sqllocaldb create mssqllocaldb -s
-          sqllocaldb info mssqllocaldb
+          sqllocaldb create MSSQLLocalDB -s
+          sqllocaldb info MSSQLLocalDB
           Write-Host "`nTesting connection:"
-          sqlcmd -S "(localdb)\mssqllocaldb" -Q "SELECT @@VERSION"
+          sqlcmd -S "(localdb)\MSSQLLocalDB" -Q "SELECT @@VERSION"
       - name: migrate
         run: .\.dotnet-tools\dotnet-ef database update --project web/web.csproj
       - name: start solr
