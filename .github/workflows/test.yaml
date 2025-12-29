@@ -62,8 +62,13 @@ jobs:
           install: localdb
       - name: start localdb
         run: |
-          sqllocaldb start mssqllocaldb
+          Write-Host "Available LocalDB instances:"
+          sqllocaldb versions
+          Write-Host "`nCreating and starting instance:"
+          sqllocaldb create mssqllocaldb -s
           sqllocaldb info mssqllocaldb
+          Write-Host "`nTesting connection:"
+          sqlcmd -S "(localdb)\mssqllocaldb" -Q "SELECT @@VERSION"
       - name: migrate
         run: .\.dotnet-tools\dotnet-ef database update --project web/web.csproj
 
@@ -116,8 +121,13 @@ jobs:
           install: localdb
       - name: start localdb
         run: |
-          sqllocaldb start mssqllocaldb
+          Write-Host "Available LocalDB instances:"
+          sqllocaldb versions
+          Write-Host "`nCreating and starting instance:"
+          sqllocaldb create mssqllocaldb -s
           sqllocaldb info mssqllocaldb
+          Write-Host "`nTesting connection:"
+          sqlcmd -S "(localdb)\mssqllocaldb" -Q "SELECT @@VERSION"
       - name: migrate
         run: .\.dotnet-tools\dotnet-ef database update --project web/web.csproj
       - name: start solr
