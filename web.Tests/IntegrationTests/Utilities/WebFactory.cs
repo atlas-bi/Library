@@ -22,7 +22,6 @@ namespace web.Tests.IntegrationTests
             {
                 services.RemoveAll<DbContextOptions<Atlas_WebContext>>();
                 services.RemoveAll<Atlas_WebContext>();
-                services.RemoveAll<IDatabaseProvider>();
 
                 services.AddDbContext<Atlas_WebContext>(options =>
                 {

@@ -111,9 +111,13 @@ jobs:
         if: always()
         run: |
           # generate a report just to show in the action history
-          reportgenerator -reports:coverage.cobertura.xml -targetdir:coverage/ -reporttypes:textSummary
-          # print out the report
-          cat coverage/Summary.txt
+          if (Test-Path coverage.cobertura.xml) {
+            reportgenerator -reports:coverage.cobertura.xml -targetdir:coverage/ -reporttypes:textSummary
+            # print out the report
+            cat coverage/Summary.txt
+          } else {
+            Write-Host "Coverage file not found, skipping report generation"
+          }
 
       - name: upload cov
         if: always()
@@ -229,9 +233,13 @@ jobs:
         if: always()
         run: |
           # generate a report just to show in the action history
-          reportgenerator -reports:coverage.cobertura.xml -targetdir:coverage/ -reporttypes:textSummary
-          # print out the report
-          cat coverage/Summary.txt
+          if (Test-Path coverage.cobertura.xml) {
+            reportgenerator -reports:coverage.cobertura.xml -targetdir:coverage/ -reporttypes:textSummary
+            # print out the report
+            cat coverage/Summary.txt
+          } else {
+            Write-Host "Coverage file not found, skipping report generation"
+          }
 
       - name: upload cov
         if: always()
