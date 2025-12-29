@@ -51,10 +51,10 @@ jobs:
       - name: create settings file
         run: |
           cd web
-          echo '{"ConnectionStrings":' > appsettings.cust.json
-          echo '{"AtlasDatabase":' >> appsettings.cust.json
+          echo '{"ConnectionStrings":{' > appsettings.cust.json
+          echo '"AtlasDatabase":' >> appsettings.cust.json
           echo '"Server=(localdb)\\MSSQLLocalDB;Database=atlas_test;Trusted_Connection=True"' >> appsettings.cust.json
-          echo "}}" >> appsettings.cust.json
+          echo "}}}" >> appsettings.cust.json
           cat appsettings.cust.json
       - name: install localdb
         uses: potatoqualitee/mssqlsuite@9a0136e208df60b8ecb62909f076bc34854fa55a
@@ -111,9 +111,9 @@ jobs:
       - name: setup appsettings
         run: |
           echo '{"ConnectionStrings":{' > appsettings.cust.json
-          echo '{"AtlasDatabase":' >> appsettings.cust.json
+          echo '"AtlasDatabase":' >> appsettings.cust.json
           echo '"Server=(localdb)\\MSSQLLocalDB;Database=atlas_test;Trusted_Connection=True"' >> appsettings.cust.json
-          echo "}}" >> appsettings.cust.json
+          echo "}}}" >> appsettings.cust.json
           cat appsettings.cust.json
       - name: install localdb
         uses: potatoqualitee/mssqlsuite@9a0136e208df60b8ecb62909f076bc34854fa55a
