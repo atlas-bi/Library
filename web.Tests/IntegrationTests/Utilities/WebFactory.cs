@@ -20,8 +20,12 @@ namespace web.Tests.IntegrationTests
 
             builder.ConfigureServices(services =>
             {
-                services.RemoveAll<DbContextOptions<Atlas_WebContext>>();
-                services.RemoveAll<Atlas_WebContext>();
+                var descriptor = services.SingleOrDefault(
+                    d => d.ServiceType == typeof(DbContextOptions<Atlas_WebContext>));
+                if (descriptor != null)
+                {
+                    services.Remove(descriptor);
+                }
 
                 services.AddDbContext<Atlas_WebContext>(options =>
                 {
