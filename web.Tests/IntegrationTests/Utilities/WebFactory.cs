@@ -41,9 +41,6 @@ namespace web.Tests.IntegrationTests
 
                 try
                 {
-                try
-                {
-                    // Ensure database is created
                     db.Database.EnsureCreated();
                     web.Tests.FunctionTests.Utilities.InitializeDbForTests(db);
                     logger.LogInformation("Test database initialized and seeded");
