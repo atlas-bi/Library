@@ -66,6 +66,8 @@ services:
       SEED_DEMO: ${SEED_DEMO:-true}
     expose:
       - ${WEB_PORT:-3000}
+    ports:
+      - "${WEB_PORT:-3000}:${WEB_PORT:-3000}"
     healthcheck:
       test:
         [
