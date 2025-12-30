@@ -37,9 +37,7 @@ jobs:
       - name: setup dotnet
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.0.x'
-      - name: setup dotnet ef
-        run: dotnet tool install --tool-path .\.dotnet-tools dotnet-ef --version 8.0.6
+          dotnet-version: '9.0.x'
       - name: setup node
         uses: actions/setup-node@v4
         with:
@@ -60,6 +58,8 @@ jobs:
         uses: potatoqualitee/mssqlsuite@v1.7
         with:
           install: localdb
+      - name: setup dotnet ef
+        run: dotnet tool install --tool-path .\.dotnet-tools dotnet-ef --version 9.0.11
       - name: migrate
         run: .\.dotnet-tools\dotnet-ef database update --project web/web.csproj
 
@@ -76,7 +76,9 @@ jobs:
       - name: setup dotnet
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.0.x'
+          dotnet-version: '9.0.x'
+      - name: setup dotnet ef
+        run: dotnet tool install --tool-path .\.dotnet-tools dotnet-ef --version 9.0.11
       - name: setup node
         uses: actions/setup-node@v4
         with:
@@ -111,9 +113,13 @@ jobs:
         if: always()
         run: |
           # generate a report just to show in the action history
-          reportgenerator -reports:coverage.cobertura.xml -targetdir:coverage/ -reporttypes:textSummary
-          # print out the report
-          cat coverage/Summary.txt
+          if (Test-Path coverage.cobertura.xml) {
+            reportgenerator -reports:coverage.cobertura.xml -targetdir:coverage/ -reporttypes:textSummary
+            # print out the report
+            cat coverage/Summary.txt
+          } else {
+            Write-Host "Coverage file not found, skipping report generation"
+          }
 
       - name: upload cov
         if: always()
@@ -194,7 +200,7 @@ jobs:
       - name: setup dotnet
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.0.x'
+          dotnet-version: '9.0.x'
       - name: setup node
         uses: actions/setup-node@v4
         with:
@@ -229,9 +235,13 @@ jobs:
         if: always()
         run: |
           # generate a report just to show in the action history
-          reportgenerator -reports:coverage.cobertura.xml -targetdir:coverage/ -reporttypes:textSummary
-          # print out the report
-          cat coverage/Summary.txt
+          if (Test-Path coverage.cobertura.xml) {
+            reportgenerator -reports:coverage.cobertura.xml -targetdir:coverage/ -reporttypes:textSummary
+            # print out the report
+            cat coverage/Summary.txt
+          } else {
+            Write-Host "Coverage file not found, skipping report generation"
+          }
 
       - name: upload cov
         if: always()

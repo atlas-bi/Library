@@ -58,13 +58,16 @@ builder.Services.Configure<CookiePolicyOptions>(options =>
 });
 builder.Services.AddResponseCaching();
 
-// for linq queries
-builder.Services.AddDbContext<Atlas_WebContext>(options =>
-    options.UseSqlServer(
-        builder.Configuration.GetConnectionString("AtlasDatabase"),
-        o => o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery).CommandTimeout(60000)
-    )
-);
+// for linq queries - conditionally register based on environment
+if (!builder.Environment.IsEnvironment("Test"))
+{
+    builder.Services.AddDbContext<Atlas_WebContext>(options =>
+        options.UseSqlServer(
+            builder.Configuration.GetConnectionString("AtlasDatabase"),
+            o => o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery).CommandTimeout(60000)
+        )
+    );
+}
 
 builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
 
@@ -354,10 +357,13 @@ app.Use(
     }
 );
 
-using (var scope = app.Services.CreateScope())
+// Skip database initialization in Test environment to avoid provider conflicts
+if (!app.Environment.IsEnvironment("Test"))
 {
-    IMemoryCache cache = scope.ServiceProvider.GetRequiredService<IMemoryCache>();
-    Atlas_WebContext context = scope.ServiceProvider.GetRequiredService<Atlas_WebContext>();
+    using (var scope = app.Services.CreateScope())
+    {
+        IMemoryCache cache = scope.ServiceProvider.GetRequiredService<IMemoryCache>();
+        Atlas_WebContext context = scope.ServiceProvider.GetRequiredService<Atlas_WebContext>();
 
     if (context.Database.IsRelational())
     {
@@ -462,14 +468,15 @@ using (var scope = app.Services.CreateScope())
     }
 
     // set logo
-    if (System.IO.File.Exists(app.Configuration["logo"]))
+    var logoPath = app.Configuration["logo"];
+    if (!string.IsNullOrWhiteSpace(logoPath) && System.IO.File.Exists(logoPath))
     {
         try
         {
-            byte[] imageArray = System.IO.File.ReadAllBytes(app.Configuration["logo"]);
+            byte[] imageArray = System.IO.File.ReadAllBytes(logoPath);
             string base64ImageRepresentation = Convert.ToBase64String(imageArray);
             cache.Set("logo", "data:image/png;base64," + base64ImageRepresentation);
-            cache.Set("logo_path", app.Configuration["logo"]);
+            cache.Set("logo_path", logoPath);
         }
         catch
         {
@@ -501,6 +508,7 @@ using (var scope = app.Services.CreateScope())
     catch
     {
         // not set
+    }
     }
 }
 

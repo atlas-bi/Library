@@ -10,7 +10,7 @@
 # to access webapp
 # http://localhost:1234
 
-FROM mcr.microsoft.com/dotnet/sdk:8.0-alpine AS build
+FROM mcr.microsoft.com/dotnet/sdk:9.0-alpine AS build
 ENV DOTNET_CLI_TELEMETRY_OPTOUT=1
 
 WORKDIR /app
@@ -36,9 +36,13 @@ RUN echo "{\"Demo\": true, \"solr\": {\"atlas_address\": \"$SOLR/solr/atlas\", \
 
 RUN dotnet publish -c Release -o out web.csproj
 
-FROM mcr.microsoft.com/dotnet/sdk:8.0-alpine
+FROM mcr.microsoft.com/dotnet/sdk:9.0-alpine
 ENV DOTNET_CLI_TELEMETRY_OPTOUT=1
 WORKDIR /app
 COPY --from=build ["/app/web/out", "./"]
+
+RUN addgroup -S app && adduser -S -G app app && chown -R app:app /app
+
+USER app
 
 CMD ASPNETCORE_URLS=http://*:$PORT dotnet "Atlas_Web.dll"
