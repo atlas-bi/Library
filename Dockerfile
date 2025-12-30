@@ -41,7 +41,15 @@ ENV DOTNET_CLI_TELEMETRY_OPTOUT=1
 WORKDIR /app
 COPY --from=build ["/app/web/out", "./"]
 
-RUN addgroup -S app && adduser -S -G app app && chown -R app:app /app
+RUN if command -v addgroup >/dev/null 2>&1 && command -v adduser >/dev/null 2>&1; then \
+        addgroup -S app 2>/dev/null || true; \
+        adduser -S -G app app 2>/dev/null || true; \
+    else \
+        apk add --no-cache shadow; \
+        groupadd -r app 2>/dev/null || true; \
+        useradd -r -g app app 2>/dev/null || true; \
+    fi && \
+    chown -R app:app /app
 
 USER app
 
