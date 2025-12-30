@@ -31,17 +31,17 @@ services:
       sqlserver:
         condition: service_healthy
     environment:
-      PORT: 8983
+      SOLR_PORT: ${SOLR_PORT:-8983}
       HOST: sqlserver
       USER: sa
       PASSWORD: ${SERVICE_PASSWORD_SQLSERVER:-StrongPassword!123}
     expose:
-      - 8983
+      - ${SOLR_PORT:-8983}
     healthcheck:
       test:
         [
           "CMD-SHELL",
-          "wget -qO- http://localhost:8983/solr/admin/ping | grep -q '\"status\":\"OK\"'"
+          "wget -qO- http://localhost:${SOLR_PORT:-8983}/solr/admin/ping | grep -q '\"status\":\"OK\"'"
         ]
       interval: 15s
       timeout: 5s
@@ -56,21 +56,21 @@ services:
         HOST: sqlserver
         USER: sa
         PASSWORD: ${SERVICE_PASSWORD_SQLSERVER:-StrongPassword!123}
-        SOLR: http://solr:8983
+        SOLR: http://solr:${SOLR_PORT:-8983}
     container_name: atlas_web
     depends_on:
       - solr
       - sqlserver
     environment:
-      PORT: 3000
+      PORT: ${WEB_PORT:-3000}
       SEED_DEMO: ${SEED_DEMO:-true}
     expose:
-      - 3000
+      - ${WEB_PORT:-3000}
     healthcheck:
       test:
         [
           "CMD-SHELL",
-          "wget -qO- http://localhost:3000/ || exit 1"
+          "wget -qO- http://localhost:${WEB_PORT:-3000}/ || exit 1"
         ]
       interval: 15s
       timeout: 5s
