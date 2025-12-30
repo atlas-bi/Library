@@ -41,6 +41,7 @@ ENV DOTNET_CLI_TELEMETRY_OPTOUT=1
 WORKDIR /app
 COPY --from=build ["/app/web/out", "./"]
 
+
 RUN getent group app || addgroup -S app \
  && getent passwd app || adduser -S -G app app \
  && chown -R app:app /app
