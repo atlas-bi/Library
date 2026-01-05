@@ -17,7 +17,7 @@ jobs:
       - name: setup dotnet ef
         run: dotnet tool install --tool-path .\.dotnet-tools dotnet-ef --version 9.0.11
       - name: setup node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: '16.x'
       - name: install node deps
