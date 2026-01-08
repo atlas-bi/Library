@@ -10,7 +10,7 @@
 # to access webapp
 # http://localhost:8983
 
-FROM python:3.13-alpine AS search
+FROM python:3.14-alpine AS search
 WORKDIR /app
 
 # startup search and load data
