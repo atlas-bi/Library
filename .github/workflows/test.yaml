@@ -55,7 +55,7 @@ jobs:
           echo "}}" >> appsettings.cust.json
           cat appsettings.cust.json
       - name: install localdb
-        uses: potatoqualitee/mssqlsuite@v1.7
+        uses: potatoqualitee/mssqlsuite@7682f39841e862cde023c8bc97c55592c0af4eb0
         with:
           install: localdb
       - name: setup dotnet ef

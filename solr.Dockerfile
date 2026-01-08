@@ -10,7 +10,7 @@
 # to access webapp
 # http://localhost:8983
 
-FROM python:3.12-alpine as search
+FROM python:3.13-alpine AS search
 WORKDIR /app
 
 # startup search and load data
@@ -85,5 +85,10 @@ RUN echo '#!/bin/bash' > /start.sh && \
     echo 'echo "Solr is running; waiting on PID $SOLR_PID..."' >> /start.sh && \
     echo 'wait $SOLR_PID' >> /start.sh && \
     chmod +x /start.sh
+
+RUN addgroup -S app && adduser -S -G app app && \
+    chown -R app:app /app /start.sh
+
+USER app
 
 CMD ["/start.sh"]

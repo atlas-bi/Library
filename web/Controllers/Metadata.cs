@@ -56,7 +56,7 @@ namespace Atlas_Web.Controllers
                 {
                     new AttributeConsumingService
                     {
-                        ServiceName = new ServiceName("Some SP", "en"),
+                        ServiceNames = new[] { new LocalizedNameType("Some SP", "en") },
                         RequestedAttributes = CreateRequestedAttributes()
                     }
                 },
