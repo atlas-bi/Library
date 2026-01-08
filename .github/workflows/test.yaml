@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: setup node
         uses: actions/setup-node@v6
@@ -32,7 +32,7 @@ jobs:
 
     steps:
       - name: checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: setup dotnet
         uses: actions/setup-dotnet@2016bd2012dba4e32de620c46fe006a3ac9f0602
@@ -71,7 +71,7 @@ jobs:
 
     steps:
       - name: checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: setup dotnet
         uses: actions/setup-dotnet@2016bd2012dba4e32de620c46fe006a3ac9f0602
@@ -195,7 +195,7 @@ jobs:
 
     steps:
       - name: checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: setup dotnet
         uses: actions/setup-dotnet@2016bd2012dba4e32de620c46fe006a3ac9f0602
