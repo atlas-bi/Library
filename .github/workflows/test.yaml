@@ -84,7 +84,7 @@ jobs:
         with:
           node-version: '18.x'
       - name: setup java
-        uses: actions/setup-java@f2beeb24e141e01a676f977032f5a29d81c9e27e
+        uses: actions/setup-java@5d7b2146334bacf88728daaa70414a99f5164e0f
         with:
           distribution: 'microsoft'
           java-version: '17'
@@ -206,7 +206,7 @@ jobs:
         with:
           node-version: '18.x'
       - name: setup java
-        uses: actions/setup-java@f2beeb24e141e01a676f977032f5a29d81c9e27e
+        uses: actions/setup-java@5d7b2146334bacf88728daaa70414a99f5164e0f
         with:
           distribution: 'microsoft'
           java-version: '17'
