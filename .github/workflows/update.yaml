@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     if: github.ref_name == 'dev'
     steps:
-      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8
+      - uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
         with:
           ref: alpha
       - name: Reset promotion branch
@@ -28,7 +28,7 @@ jobs:
     runs-on: ubuntu-latest
     if: github.ref_name == 'alpha'
     steps:
-      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8
+      - uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
         with:
           ref: master
       - name: Reset promotion branch
