@@ -11,7 +11,7 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha }}
       - name: setup dotnet
-        uses: actions/setup-dotnet@25328d894dc34d01d191df4849cb7f5402e3f142
+        uses: actions/setup-dotnet@baa11fbfe1d6520db94683bd5c7a3818018e4309
         with:
           dotnet-version: '9.0.x'
       - name: setup dotnet ef
