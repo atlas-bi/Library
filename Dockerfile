@@ -37,10 +37,15 @@ RUN echo "{\"Demo\": true, \"solr\": {\"atlas_address\": \"$SOLR/solr/atlas\", \
 RUN dotnet publish -c Release -o out web.csproj
 
 FROM mcr.microsoft.com/dotnet/aspnet:9.0-alpine
-ENV DOTNET_CLI_TELEMETRY_OPTOUT=1
-WORKDIR /app
-COPY --from=build ["/app/web/out", "./"]
 
+ENV DOTNET_CLI_TELEMETRY_OPTOUT=1
+ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
+
+WORKDIR /app
+
+RUN apk add --no-cache icu-libs
+
+COPY --from=build ["/app/web/out", "./"]
 
 RUN getent group app || addgroup -S app \
  && getent passwd app || adduser -S -G app app \
