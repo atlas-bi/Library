@@ -18,7 +18,8 @@ WORKDIR /build
 RUN apk add --no-cache \
     gcc g++ libc-dev python3-dev \
     unixodbc-dev libffi-dev libxml2-dev \
-    git curl bash
+    git curl bash ca-certificates \
+    && update-ca-certificates
 
 RUN pip install --no-cache-dir \
     pyodbc pysolr pytz python-dotenv
