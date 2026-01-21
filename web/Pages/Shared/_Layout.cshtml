@@ -55,6 +55,78 @@
         JL.setOptions({
             "defaultAjaxUrl":"/analytics/trace"
         })
+
+        try {
+            var _atlasShouldIgnoreBrowserError = function (payload) {
+                try {
+                    var msg = (payload && payload.errorMsg) ? String(payload.errorMsg) : "";
+                    var url = (payload && payload.url) ? String(payload.url) : "";
+                    var trace = (payload && payload.trace) ? String(payload.trace) : "";
+
+                    var isExtensionUrl = function (u) {
+                        if (!u) {
+                            return false;
+                        }
+                        return (
+                            u.indexOf("chrome-extension://") === 0
+                            || u.indexOf("moz-extension://") === 0
+                            || u.indexOf("safari-extension://") === 0
+                            || u.indexOf("edge-extension://") === 0
+                        );
+                    };
+
+                    if (isExtensionUrl(url) || isExtensionUrl(trace)) {
+                        return true;
+                    }
+
+                    if (
+                        (msg === "Script error." || msg === "Script error")
+                        && (!url || url === ":" || url === "<anonymous>" || url === "null")
+                    ) {
+                        return true;
+                    }
+
+                    return false;
+                } catch (e) {
+                    return false;
+                }
+            };
+
+            if (typeof window !== 'undefined') {
+                window.onerror = function (errorMsg, url, lineNumber, column, errorObj) {
+                    var payload = {
+                        msg: "Uncaught Exception",
+                        errorMsg: errorMsg ? (errorMsg.message || errorMsg) : "",
+                        url: url,
+                        "line number": lineNumber,
+                        column: column,
+                        trace: errorObj && errorObj.stack ? errorObj.stack : "",
+                    };
+
+                    if (_atlasShouldIgnoreBrowserError(payload)) {
+                        return false;
+                    }
+
+                    JL("onerrorLogger").fatalException(payload, errorObj);
+                    return false;
+                };
+
+                window.onunhandledrejection = function (event) {
+                    var reason = event && event.reason ? event.reason : null;
+                    var payload = {
+                        msg: "unhandledrejection",
+                        errorMsg: reason ? (reason.message || String(reason)) : (event && event.message ? event.message : null),
+                        trace: reason && reason.stack ? reason.stack : "",
+                    };
+
+                    if (_atlasShouldIgnoreBrowserError(payload)) {
+                        return;
+                    }
+
+                    JL("onerrorLogger").fatalException(payload, reason);
+                };
+            }
+        } catch (e) {}
         };
         try { __jsnlog_configure(JL); } catch(e) {};
     </script>
