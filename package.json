@@ -61,7 +61,7 @@
     "stylelint-config-prettier-scss": "1.0.0",
     "stylelint-config-standard-scss": "^14.0.0",
     "stylelint-scss": "^7.0.0",
-    "xo": "^0.61.0"
+    "xo": "^1.0.0"
   },
   "homepage": "https://demo.atlas.bi",
   "license": "AGPL-3.0-or-later",
@@ -164,7 +164,7 @@
       "unicorn/prefer-at": "warn"
     }
   },
-  "version": "3.15.36",
+  "version": "3.15.37",
   "dependencies": {
     "sass": "^1.63.6"
   }
