@@ -1,10 +1,11 @@
 using System;
-using System.Linq;
 using Atlas_Web.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
 namespace web.Tests.IntegrationTests
@@ -14,46 +15,44 @@ namespace web.Tests.IntegrationTests
     {
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
-            builder.ConfigureServices(services =>
+            builder.UseEnvironment("Test");
+
+            builder.ConfigureTestServices(services =>
             {
-                var descriptor = services.SingleOrDefault(d =>
-                    d.ServiceType == typeof(DbContextOptions<Atlas_WebContext>)
-                );
-
-                if (descriptor != null)
-                    services.Remove(descriptor);
-
+                // Add InMemory database for testing
+                // Program.cs won't register SQL Server in Test environment, so no conflict
                 services.AddDbContext<Atlas_WebContext>(options =>
                 {
-                    options.UseInMemoryDatabase("AtlasIntegrationDb");
+                    options.UseInMemoryDatabase("AtlasIntegrationTestDb");
                 });
-
-                var sp = services.BuildServiceProvider();
-
-                using (var scope = sp.CreateScope())
-                {
-                    var scopedServices = scope.ServiceProvider;
-                    var db = scopedServices.GetRequiredService<Atlas_WebContext>();
-                    var logger = scopedServices.GetRequiredService<ILogger<WebFactory<TStartup>>>();
-
-                    db.Database.EnsureCreated();
-
-                    try
-                    {
-                        web.Tests.FunctionTests.Utilities.InitializeDbForTests(db);
-                        logger.LogWarning("Test database initialized");
-                    }
-                    catch (Exception ex)
-                    {
-                        logger.LogError(
-                            ex,
-                            "An error occurred seeding the "
-                                + "database with test messages. Error: {Message}",
-                            ex.Message
-                        );
-                    }
-                }
             });
+        }
+
+        protected override IHost CreateHost(IHostBuilder builder)
+        {
+            var host = base.CreateHost(builder);
+
+            // Seed the database after host is created
+            using (var scope = host.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                var db = services.GetRequiredService<Atlas_WebContext>();
+                var logger = services.GetRequiredService<ILogger<WebFactory<TStartup>>>();
+
+                try
+                {
+                    db.Database.EnsureCreated();
+                    web.Tests.FunctionTests.Utilities.InitializeDbForTests(db);
+                    logger.LogInformation("Test database initialized and seeded");
+                }
+                catch (Exception ex)
+                {
+                    logger.LogError(ex, "An error occurred seeding the test database.");
+                    throw;
+                }
+            }
+
+            return host;
         }
     }
 }

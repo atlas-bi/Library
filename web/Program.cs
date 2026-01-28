@@ -20,8 +20,11 @@ using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationM
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Net.Http.Headers;
 using SolrNet;
+using System.Data.SqlClient;
+using System.Text.RegularExpressions;
 using WebMarkupMin.AspNet.Common.Compressors;
 using WebMarkupMin.AspNetCore5;
 
@@ -55,13 +58,16 @@ builder.Services.Configure<CookiePolicyOptions>(options =>
 });
 builder.Services.AddResponseCaching();
 
-// for linq queries
-builder.Services.AddDbContext<Atlas_WebContext>(options =>
-    options.UseSqlServer(
-        builder.Configuration.GetConnectionString("AtlasDatabase"),
-        o => o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery).CommandTimeout(60000)
-    )
-);
+// for linq queries - conditionally register based on environment
+if (!builder.Environment.IsEnvironment("Test"))
+{
+    builder.Services.AddDbContext<Atlas_WebContext>(options =>
+        options.UseSqlServer(
+            builder.Configuration.GetConnectionString("AtlasDatabase"),
+            o => o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery).CommandTimeout(60000)
+        )
+    );
+}
 
 builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
 
@@ -351,10 +357,105 @@ app.Use(
     }
 );
 
-using (var scope = app.Services.CreateScope())
+// Skip database initialization in Test environment to avoid provider conflicts
+if (!app.Environment.IsEnvironment("Test"))
 {
-    IMemoryCache cache = scope.ServiceProvider.GetRequiredService<IMemoryCache>();
-    Atlas_WebContext context = scope.ServiceProvider.GetRequiredService<Atlas_WebContext>();
+    using (var scope = app.Services.CreateScope())
+    {
+        IMemoryCache cache = scope.ServiceProvider.GetRequiredService<IMemoryCache>();
+        Atlas_WebContext context = scope.ServiceProvider.GetRequiredService<Atlas_WebContext>();
+
+    if (context.Database.IsRelational())
+    {
+        try
+        {
+            context.Database.Migrate();
+        }
+        catch (SqlException ex) when (ex.Number == 4060)
+        {
+            var connStr = app.Configuration.GetConnectionString("AtlasDatabase");
+            var csb = new SqlConnectionStringBuilder(connStr) { InitialCatalog = "master" };
+
+            using (var conn = new SqlConnection(csb.ConnectionString))
+            {
+                conn.Open();
+                using var cmd = conn.CreateCommand();
+                cmd.CommandText = "IF DB_ID(N'atlas') IS NULL CREATE DATABASE [atlas];";
+                cmd.ExecuteNonQuery();
+            }
+
+            context.Database.Migrate();
+        }
+    }
+
+    var seedDemoRaw = app.Configuration["SEED_DEMO"] ?? Environment.GetEnvironmentVariable("SEED_DEMO");
+    var shouldSeedDemo =
+        !string.IsNullOrWhiteSpace(seedDemoRaw)
+        && (
+            string.Equals(seedDemoRaw, "true", StringComparison.OrdinalIgnoreCase)
+            || string.Equals(seedDemoRaw, "1", StringComparison.OrdinalIgnoreCase)
+            || string.Equals(seedDemoRaw, "yes", StringComparison.OrdinalIgnoreCase)
+        );
+
+    if (shouldSeedDemo)
+    {
+        const string seedMarkerName = "demo_seed_applied";
+        var alreadySeeded = context.GlobalSiteSettings.Any(x => x.Name == seedMarkerName);
+
+        if (!alreadySeeded)
+        {
+            var seedScriptPath = Path.Combine(AppContext.BaseDirectory, "atlas-demo-seed_script.sql");
+            if (File.Exists(seedScriptPath))
+            {
+                var seedSql = File.ReadAllText(seedScriptPath);
+                var batches = Regex.Split(
+                    seedSql,
+                    @"^\s*GO\s*$",
+                    RegexOptions.Multiline | RegexOptions.IgnoreCase,
+                    TimeSpan.FromSeconds(5)
+                );
+
+                using var connection = new SqlConnection(app.Configuration.GetConnectionString("AtlasDatabase"));
+                connection.Open();
+
+                using var tx = connection.BeginTransaction();
+                try
+                {
+                    foreach (var batch in batches)
+                    {
+                        var sql = batch?.Trim();
+                        if (string.IsNullOrWhiteSpace(sql))
+                        {
+                            continue;
+                        }
+
+                        using var cmd = connection.CreateCommand();
+                        cmd.Transaction = tx;
+                        cmd.CommandTimeout = 60000;
+                        cmd.CommandText = sql;
+                        cmd.ExecuteNonQuery();
+                    }
+
+                    context.GlobalSiteSettings.Add(
+                        new GlobalSiteSetting
+                        {
+                            Name = seedMarkerName,
+                            Description = "",
+                            Value = DateTimeOffset.UtcNow.ToString("O")
+                        }
+                    );
+                    context.SaveChanges();
+
+                    tx.Commit();
+                }
+                catch
+                {
+                    tx.Rollback();
+                    throw;
+                }
+            }
+        }
+    }
 
     // load override css
     var css = context
@@ -367,14 +468,15 @@ using (var scope = app.Services.CreateScope())
     }
 
     // set logo
-    if (System.IO.File.Exists(app.Configuration["logo"]))
+    var logoPath = app.Configuration["logo"];
+    if (!string.IsNullOrWhiteSpace(logoPath) && System.IO.File.Exists(logoPath))
     {
         try
         {
-            byte[] imageArray = System.IO.File.ReadAllBytes(app.Configuration["logo"]);
+            byte[] imageArray = System.IO.File.ReadAllBytes(logoPath);
             string base64ImageRepresentation = Convert.ToBase64String(imageArray);
             cache.Set("logo", "data:image/png;base64," + base64ImageRepresentation);
-            cache.Set("logo_path", app.Configuration["logo"]);
+            cache.Set("logo_path", logoPath);
         }
         catch
         {
@@ -406,6 +508,7 @@ using (var scope = app.Services.CreateScope())
     catch
     {
         // not set
+    }
     }
 }
 

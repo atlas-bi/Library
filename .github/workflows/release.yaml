@@ -11,18 +11,23 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
 
         with:
           fetch-depth: 0
           persist-credentials: false
-      - name: Semantic Release
-        uses: cycjimmy/semantic-release-action@v3
+      - name: setup node
+        uses: actions/setup-node@v6
         with:
-          semantic_version: 18
-          extra_plugins: |
-            @semantic-release/changelog@6
-            @semantic-release/exec
-            @semantic-release/git@10
+          node-version: '20.x'
+      - name: install node deps
+        run: npm install --ignore-scripts --no-audit --no-fund
+      - name: Semantic Release
+        uses: cycjimmy/semantic-release-action@cabafd6705eb809ac456919a7818dc7f1d0409ba
+        with:
+          semantic_version: 24
         env:
+          NPM_CONFIG_LEGACY_PEER_DEPS: true
+          NPM_CONFIG_AUDIT: false
+          NPM_CONFIG_FUND: false
           GITHUB_TOKEN: ${{ secrets.RELEASE_PAT }}
