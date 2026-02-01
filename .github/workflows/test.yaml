@@ -35,7 +35,7 @@ jobs:
         uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
 
       - name: setup dotnet
-        uses: actions/setup-dotnet@baa11fbfe1d6520db94683bd5c7a3818018e4309
+        uses: actions/setup-dotnet@131b410979e0b49e2162c0718030257b22d6dc2c
         with:
           dotnet-version: '9.0.x'
       - name: setup node
@@ -74,7 +74,7 @@ jobs:
         uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
 
       - name: setup dotnet
-        uses: actions/setup-dotnet@baa11fbfe1d6520db94683bd5c7a3818018e4309
+        uses: actions/setup-dotnet@131b410979e0b49e2162c0718030257b22d6dc2c
         with:
           dotnet-version: '9.0.x'
       - name: setup dotnet ef
@@ -198,7 +198,7 @@ jobs:
         uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
 
       - name: setup dotnet
-        uses: actions/setup-dotnet@baa11fbfe1d6520db94683bd5c7a3818018e4309
+        uses: actions/setup-dotnet@131b410979e0b49e2162c0718030257b22d6dc2c
         with:
           dotnet-version: '9.0.x'
       - name: setup node
