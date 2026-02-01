@@ -23,7 +23,7 @@ jobs:
       - name: install node deps
         run: npm install --ignore-scripts --no-audit --no-fund
       - name: Semantic Release
-        uses: cycjimmy/semantic-release-action@cabafd6705eb809ac456919a7818dc7f1d0409ba
+        uses: cycjimmy/semantic-release-action@acb3d1c02390fa94b82730a4bc94d6f9417348e5
         with:
           semantic_version: 24
         env:
