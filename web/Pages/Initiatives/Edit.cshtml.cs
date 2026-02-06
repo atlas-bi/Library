@@ -36,7 +36,7 @@ namespace Atlas_Web.Pages.Initiatives
 
             Initiative = await _context
                 .Initiatives.Include(x => x.Collections)
-                .ThenInclude(x => x.CollectionReports)
+                    .ThenInclude(x => x.CollectionReports)
                 .Include(x => x.OperationOwner)
                 .Include(x => x.ExecutiveOwner)
                 .Include(x => x.FinancialImpactNavigation)

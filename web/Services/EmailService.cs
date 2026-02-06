@@ -38,7 +38,7 @@ namespace Atlas_Web.Services
                         _config["AppSettings:smtp_sender_email"],
                         _config["AppSettings:smtp_sender_name"]
                     ),
-                    IsBodyHtml = true
+                    IsBodyHtml = true,
                 };
 
                 message.To.Add(receiver);

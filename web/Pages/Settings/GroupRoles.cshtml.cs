@@ -49,7 +49,7 @@ namespace Atlas_Web.Pages.Settings
                         {
                             Id = l.GroupRoleLinksId,
                             Name = l.UserRoles.Name,
-                        }
+                        },
                 }
             ).ToListAsync();
 
@@ -85,7 +85,7 @@ namespace Atlas_Web.Pages.Settings
                     new GroupRoleLink
                     {
                         GroupId = NewGroupRole.GroupId,
-                        UserRolesId = NewGroupRole.UserRolesId
+                        UserRolesId = NewGroupRole.UserRolesId,
                     }
                 );
                 _context.SaveChanges();

@@ -94,102 +94,103 @@ namespace Atlas_Web.Pages.Requests
             string directorName
         )
         {
-            string Result;
+            string Result; // <--- Make sure this matches below
             string xmlString;
 
+            // Build XML payload
             using (var stringWriter = new Utf8StringWriter())
             {
-                using var xmlWriter = new XmlTextWriter(stringWriter);
-                xmlWriter.Formatting = System.Xml.Formatting.Indented;
+                using var xmlWriter = new XmlTextWriter(stringWriter)
+                {
+                    Formatting = Formatting.Indented,
+                };
                 xmlWriter.WriteStartDocument();
                 xmlWriter.WriteStartElement("Operation");
                 xmlWriter.WriteStartElement("Details");
-                xmlWriter.WriteStartElement("parameter");
-                xmlWriter.WriteElementString("name", "requesttemplate");
-                xmlWriter.WriteElementString("value", "WebAPI");
-                xmlWriter.WriteEndElement();
-                xmlWriter.WriteStartElement("parameter");
-                xmlWriter.WriteElementString("name", "subject");
-                xmlWriter.WriteElementString("value", "Atlas Access Request");
-                xmlWriter.WriteEndElement();
-                xmlWriter.WriteStartElement("parameter");
-                xmlWriter.WriteElementString("name", "description");
-                xmlWriter.WriteElementString(
-                    "value",
-                    "I would like access to the report '" + reportName + "' from " + reportUrl
+
+                void WriteParameter(string name, string value)
+                {
+                    xmlWriter.WriteStartElement("parameter");
+                    xmlWriter.WriteElementString("name", name);
+                    xmlWriter.WriteElementString("value", value);
+                    xmlWriter.WriteEndElement();
+                }
+
+                WriteParameter("requesttemplate", "WebAPI");
+                WriteParameter("subject", "Atlas Access Request");
+                WriteParameter(
+                    "description",
+                    $"I would like access to the report '{reportName}' from {reportUrl}"
                 );
-                xmlWriter.WriteEndElement();
-                xmlWriter.WriteStartElement("parameter");
-                xmlWriter.WriteElementString("name", "purpose");
-                xmlWriter.WriteElementString(
-                    "value",
-                    "Atlas Access Request for '" + reportName + "'"
-                );
-                xmlWriter.WriteEndElement();
-                xmlWriter.WriteStartElement("parameter");
-                xmlWriter.WriteElementString("name", "Atlas Link");
-                xmlWriter.WriteElementString("value", reportUrl);
-                xmlWriter.WriteEndElement();
-                xmlWriter.WriteStartElement("parameter");
-                xmlWriter.WriteElementString("name", "category");
-                xmlWriter.WriteElementString("value", "Epic Request");
-                xmlWriter.WriteEndElement();
-                xmlWriter.WriteStartElement("parameter");
-                xmlWriter.WriteElementString("name", "requester");
-                xmlWriter.WriteElementString("value", User.GetUserName());
-                xmlWriter.WriteEndElement();
-                xmlWriter.WriteStartElement("parameter");
-                xmlWriter.WriteElementString("name", "item");
-                xmlWriter.WriteElementString("value", "Request Access");
-                xmlWriter.WriteEndElement();
-                xmlWriter.WriteStartElement("parameter");
-                xmlWriter.WriteElementString("name", "subcategory");
-                xmlWriter.WriteElementString("value", "Atlas");
-                xmlWriter.WriteEndElement();
-                xmlWriter.WriteStartElement("parameter");
-                xmlWriter.WriteElementString("name", "report_name");
-                xmlWriter.WriteElementString("value", reportName);
-                xmlWriter.WriteEndElement();
-                xmlWriter.WriteStartElement("parameter");
-                xmlWriter.WriteElementString("name", "responsibility");
-                xmlWriter.WriteElementString("value", "YES");
-                xmlWriter.WriteEndElement();
-                xmlWriter.WriteStartElement("parameter");
-                xmlWriter.WriteElementString("name", "requesteremail");
-                xmlWriter.WriteElementString("value", User.GetUserEmail());
-                xmlWriter.WriteEndElement();
-                xmlWriter.WriteStartElement("parameter");
-                xmlWriter.WriteElementString("name", "director");
-                xmlWriter.WriteElementString("value", directorName);
-                xmlWriter.WriteEndElement();
-                xmlWriter.WriteEndElement();
-                xmlWriter.WriteEndElement();
+                WriteParameter("Atlas Link", reportUrl);
+                WriteParameter("category", "Epic Request");
+                WriteParameter("requester", User.GetUserName());
+                WriteParameter("item", "Request Access");
+                WriteParameter("subcategory", "Atlas");
+                WriteParameter("report_name", reportName);
+                WriteParameter("requesteremail", User.GetUserEmail());
+                WriteParameter("director", directorName);
+
+                xmlWriter.WriteEndElement(); // Details
+                xmlWriter.WriteEndElement(); // Operation
                 xmlWriter.WriteEndDocument();
-                // Spit out the XML document
+
                 xmlString = stringWriter.ToString();
             }
 
-            using (var client = new HttpClient())
+            // HttpClient ignoring SSL errors
+            var handler = new HttpClientHandler
             {
-                // Compose the http POST request following the API guidelines
-                // https://www.manageengine.com/products/service-desk/help/adminguide/api/request-operations.html#add
-                var values = new Dictionary<string, string>
-                {
-                    { "OPERATION_NAME", "ADD_REQUEST" },
-                    { "TECHNICIAN_KEY", _config["AppSettings:manage_engine_tech_key"] },
-                    { "INPUT_DATA", xmlString }
-                };
+                ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true,
+            };
 
-                var httpRequest = new FormUrlEncodedContent(values);
-                // send the request asynchronously
-                var httpResponse = await client.PostAsync(
+            using var client = new HttpClient(handler);
+            var values = new Dictionary<string, string>
+            {
+                { "OPERATION_NAME", "ADD_REQUEST" },
+                { "TECHNICIAN_KEY", _config["AppSettings:manage_engine_tech_key"] },
+                { "INPUT_DATA", xmlString },
+            };
+
+            var httpRequest = new FormUrlEncodedContent(values);
+
+            HttpResponseMessage httpResponse;
+            try
+            {
+                httpResponse = await client.PostAsync(
                     _config["AppSettings:manage_engine_server"] + "/sdpapi/request/",
                     httpRequest
                 );
-                // notify the user of the response from the server http://stackoverflow.com/a/13550295/3900824
-                ApiResponse response = new(await httpResponse.Content.ReadAsStringAsync());
-                Result = response.Status + " - " + response.Message;
             }
+            catch (Exception ex)
+            {
+                return Content($"HTTP request failed: {ex.Message}");
+            }
+
+            string responseText = await httpResponse.Content.ReadAsStringAsync();
+
+            // DEBUG: log the response
+            Console.WriteLine("ManageEngine Response:");
+            Console.WriteLine(responseText);
+
+            // Try parse XML safely
+            try
+            {
+                if (responseText.TrimStart().StartsWith("<"))
+                {
+                    ApiResponse response = new(responseText);
+                    Result = $"{response.Status} - {response.Message}";
+                }
+                else
+                {
+                    Result = $"Server returned non-XML response:\n{responseText}";
+                }
+            }
+            catch (XmlException ex)
+            {
+                Result = $"Invalid XML received: {ex.Message}\n{responseText}";
+            }
+
             return Content(Result);
         }
 
@@ -283,7 +284,7 @@ namespace Atlas_Web.Pages.Requests
                 {
                     { "OPERATION_NAME", "ADD_REQUEST" },
                     { "TECHNICIAN_KEY", _config["AppSettings:manage_engine_tech_key"] },
-                    { "INPUT_DATA", xmlString }
+                    { "INPUT_DATA", xmlString },
                 };
 
                 var httpRequest = new FormUrlEncodedContent(values);

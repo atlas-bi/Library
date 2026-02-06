@@ -244,7 +244,7 @@ namespace Atlas_Web.Pages.Search
                     "visible_text",
                     "certification_text",
                     "report_type_text",
-                    "type"
+                    "type",
                 };
                 return facetResults
                     .OrderByDescending(x => Array.IndexOf(FacetOrder, x.Key))
@@ -284,7 +284,7 @@ namespace Atlas_Web.Pages.Search
                     "advanced",
                     "error",
                     "success",
-                    "warning"
+                    "warning",
                 };
 
                 foreach (string key in query.Keys)
@@ -346,8 +346,8 @@ namespace Atlas_Web.Pages.Search
                                 "(type:collections^1.2 OR type:reports^2 OR documented:Y^0.1 OR executive_visibility:Y^0.2  OR certification:\"Analytics Certified\"^0.4 OR certification:\"Analytics Reviewed\"^0.4)"
                             },
                             { "hl.fl", hl },
-                            { "hl.requireFieldMatch", hl_match }
-                        }
+                            { "hl.requireFieldMatch", hl_match },
+                        },
                     }
                 );
 
@@ -361,13 +361,12 @@ namespace Atlas_Web.Pages.Search
                     advanced = "Y";
                 }
 
-                SolrAtlasParameters parameters =
-                    new()
-                    {
-                        Query = Query,
-                        PageIndex = PageIndex,
-                        Filters = BuildFilterDict(Request.Query)
-                    };
+                SolrAtlasParameters parameters = new()
+                {
+                    Query = Query,
+                    PageIndex = PageIndex,
+                    Filters = BuildFilterDict(Request.Query),
+                };
 
                 SearchResults = new SolrAtlasResults(
                     results
@@ -389,13 +388,13 @@ namespace Atlas_Web.Pages.Search
                                                 .Include(x => x.StarredReports)
                                                 .Include(x => x.ReportObjectType)
                                                 .Include(x => x.ReportTagLinks)
-                                                .ThenInclude(x => x.Tag)
+                                                    .ThenInclude(x => x.Tag)
                                                 // for authentication
                                                 .Include(x =>
                                                     x.ReportObjectHierarchyChildReportObjects
                                                 )
-                                                .ThenInclude(x => x.ParentReportObject)
-                                                .ThenInclude(x => x.ReportGroupsMemberships)
+                                                    .ThenInclude(x => x.ParentReportObject)
+                                                        .ThenInclude(x => x.ReportGroupsMemberships)
                                                 .AsSingleQuery()
                                                 .AsNoTracking()
                                                 .SingleOrDefault(y =>
@@ -478,7 +477,7 @@ namespace Atlas_Web.Pages.Search
                                         }
                                     )
                                     : null,
-                            external = x.Type == "external" ? x : null
+                            external = x.Type == "external" ? x : null,
                         })
                         .ToList(),
                     BuildFacetModels(results.FacetFields),
@@ -516,7 +515,7 @@ namespace Atlas_Web.Pages.Search
                 {
                     ObjectId = x.AtlasId,
                     Name = x.Name,
-                    Description = x.Description != null ? x.Description.FirstOrDefault() : ""
+                    Description = x.Description != null ? x.Description.FirstOrDefault() : "",
                 })
                 .ToList();
             var json = JsonConvert.SerializeObject(ObjectSearch);
@@ -544,7 +543,7 @@ namespace Atlas_Web.Pages.Search
                 {
                     ObjectId = x.AtlasId,
                     Name = x.Name,
-                    Description = x.Description != null ? x.Description.FirstOrDefault() : ""
+                    Description = x.Description != null ? x.Description.FirstOrDefault() : "",
                 })
                 .ToList();
             var json = JsonConvert.SerializeObject(ObjectSearch);
@@ -573,7 +572,7 @@ namespace Atlas_Web.Pages.Search
                 {
                     ObjectId = x.AtlasId,
                     Name = x.Name,
-                    Description = x.Description != null ? x.Description.FirstOrDefault() : ""
+                    Description = x.Description != null ? x.Description.FirstOrDefault() : "",
                 })
                 .ToList();
 
@@ -603,7 +602,7 @@ namespace Atlas_Web.Pages.Search
                 {
                     ObjectId = x.AtlasId,
                     Name = x.Name + (!string.IsNullOrEmpty(x.Email) ? " (" + x.Email + ")" : ""),
-                    Type = "u"
+                    Type = "u",
                 })
                 .ToList();
 
@@ -633,7 +632,7 @@ namespace Atlas_Web.Pages.Search
                 {
                     ObjectId = x.AtlasId,
                     Name = x.Name + (!string.IsNullOrEmpty(x.Email) ? " (" + x.Email + ")" : ""),
-                    Type = "u"
+                    Type = "u",
                 })
                 .ToList();
 
@@ -663,7 +662,7 @@ namespace Atlas_Web.Pages.Search
                 {
                     ObjectId = x.AtlasId,
                     Name = x.Name,
-                    Type = "u"
+                    Type = "u",
                 })
                 .ToList();
 

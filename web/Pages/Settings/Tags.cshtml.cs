@@ -62,14 +62,14 @@ namespace Atlas_Web.Pages.Settings
                 {
                     Id = o.Id,
                     Name = o.Name,
-                    Used = o.ReportObjectDocs.Count
+                    Used = o.ReportObjectDocs.Count,
                 }
             ).ToListAsync();
 
             return new PartialViewResult
             {
                 ViewName = "Partials/_OrganizationalValueList",
-                ViewData = ViewData
+                ViewData = ViewData,
             };
         }
 
@@ -81,14 +81,14 @@ namespace Atlas_Web.Pages.Settings
                 {
                     Id = o.Id,
                     Name = o.Name,
-                    Used = o.ReportObjectDocs.Count
+                    Used = o.ReportObjectDocs.Count,
                 }
             ).ToListAsync();
 
             return new PartialViewResult
             {
                 ViewName = "Partials/_EstimatedRunFrequencyList",
-                ViewData = ViewData
+                ViewData = ViewData,
             };
         }
 
@@ -100,14 +100,14 @@ namespace Atlas_Web.Pages.Settings
                 {
                     Id = o.Id,
                     Name = o.Name,
-                    Used = o.ReportObjectDocs.Count
+                    Used = o.ReportObjectDocs.Count,
                 }
             ).ToListAsync();
 
             return new PartialViewResult
             {
                 ViewName = "Partials/_MaintenanceScheduleList",
-                ViewData = ViewData
+                ViewData = ViewData,
             };
         }
 
@@ -119,14 +119,14 @@ namespace Atlas_Web.Pages.Settings
                 {
                     Id = o.Id,
                     Name = o.Name,
-                    Used = o.ReportObjectDocs.Count
+                    Used = o.ReportObjectDocs.Count,
                 }
             ).ToListAsync();
 
             return new PartialViewResult
             {
                 ViewName = "Partials/_FragilityList",
-                ViewData = ViewData
+                ViewData = ViewData,
             };
         }
 
@@ -138,14 +138,14 @@ namespace Atlas_Web.Pages.Settings
                 {
                     Id = o.Id,
                     Name = o.Name,
-                    Used = o.ReportObjectDocFragilityTags.Count
+                    Used = o.ReportObjectDocFragilityTags.Count,
                 }
             ).ToListAsync();
 
             return new PartialViewResult
             {
                 ViewName = "Partials/_FragilityTagList",
-                ViewData = ViewData
+                ViewData = ViewData,
             };
         }
 
@@ -158,7 +158,7 @@ namespace Atlas_Web.Pages.Settings
                     Id = o.TagId,
                     Name = o.Name,
                     Description = o.Description,
-                    Used = o.ReportTagLinks.Count
+                    Used = o.ReportTagLinks.Count,
                 }
             ).ToListAsync();
 
@@ -173,14 +173,14 @@ namespace Atlas_Web.Pages.Settings
                 {
                     Id = o.Id,
                     Name = o.Name,
-                    Used = o.MaintenanceLogs.Count
+                    Used = o.MaintenanceLogs.Count,
                 }
             ).ToListAsync();
 
             return new PartialViewResult
             {
                 ViewName = "Partials/_MaintenanceLogStatusList",
-                ViewData = ViewData
+                ViewData = ViewData,
             };
         }
 
@@ -192,14 +192,14 @@ namespace Atlas_Web.Pages.Settings
                 {
                     Id = o.Id,
                     Name = o.Name,
-                    Used = o.Initiatives.Count + o.Collections.Count
+                    Used = o.Initiatives.Count + o.Collections.Count,
                 }
             ).ToListAsync();
 
             return new PartialViewResult
             {
                 ViewName = "Partials/_FinancialImpactList",
-                ViewData = ViewData
+                ViewData = ViewData,
             };
         }
 
@@ -211,14 +211,14 @@ namespace Atlas_Web.Pages.Settings
                 {
                     Id = o.Id,
                     Name = o.Name,
-                    Used = o.Initiatives.Count + o.Collections.Count
+                    Used = o.Initiatives.Count + o.Collections.Count,
                 }
             ).ToListAsync();
 
             return new PartialViewResult
             {
                 ViewName = "Partials/_StrategicImportanceList",
-                ViewData = ViewData
+                ViewData = ViewData,
             };
         }
 

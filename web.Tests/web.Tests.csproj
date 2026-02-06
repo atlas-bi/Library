@@ -1,5 +1,4 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
     <Nullable>disable</Nullable>
@@ -9,7 +8,7 @@
   <PropertyGroup>
     <!-- Exclude the project from analysis -->
     <SonarQubeExclude>true</SonarQubeExclude>
-</PropertyGroup>
+  </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="BrowserStackLocal" Version="2.4.0" />
     <PackageReference Include="MartinCostello.BrowserStack.Automate" Version="4.2.0" />
@@ -27,7 +26,6 @@
     </PackageReference>
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="9.0.12" />
     <PackageReference Include="xunit.runner.visualstudio" Version="3.1.5">
-
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
@@ -36,7 +34,7 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
   </ItemGroup>
-   <ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\web\web.csproj" />
   </ItemGroup>
   <ItemGroup>

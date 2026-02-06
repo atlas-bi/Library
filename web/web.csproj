@@ -28,9 +28,9 @@
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
-   <PackageReference Include="ITfoxtec.Identity.Saml2" Version="4.17.0" />
-   <PackageReference Include="ITfoxtec.Identity.Saml2.MvcCore" Version="4.17.0" />
-   <PackageReference Include="System.Net.Primitives" Version="4.3.1" />
+    <PackageReference Include="ITfoxtec.Identity.Saml2" Version="4.17.0" />
+    <PackageReference Include="ITfoxtec.Identity.Saml2.MvcCore" Version="4.17.0" />
+    <PackageReference Include="System.Net.Primitives" Version="4.3.1" />
     <PackageReference Include="System.Net.NameResolution" Version="4.3.0" />
     <PackageReference Include="System.IO.FileSystem" Version="4.3.0" />
     <PackageReference Include="System.IO.FileSystem.Primitives" Version="4.3.0" />
@@ -44,8 +44,14 @@
     <PackageReference Include="LigerShark.WebOptimizer.Core" Version="3.0.477" />
     <PackageReference Include="Markdig" Version="0.44.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Negotiate" Version="9.0.12" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.12" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="9.0.12" />
+    <PackageReference
+      Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore"
+      Version="9.0.12"
+    />
+    <PackageReference
+      Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation"
+      Version="9.0.12"
+    />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.12" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.12" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.12">
@@ -68,10 +74,10 @@
     </PackageReference>
   </ItemGroup>
   <PropertyGroup>
-  <DefaultItemExcludes>$(DefaultItemExcludes);solr\example\**\*</DefaultItemExcludes>
-</PropertyGroup>
-<!-- this will speed up builds when developing. Disable when doing a migration ;) -->
-<!-- <ItemGroup><Compile Remove="Migrations\**" /></ItemGroup> -->
+    <DefaultItemExcludes>$(DefaultItemExcludes);solr\example\**\*</DefaultItemExcludes>
+  </PropertyGroup>
+  <!-- this will speed up builds when developing. Disable when doing a migration ;) -->
+  <!-- <ItemGroup><Compile Remove="Migrations\**" /></ItemGroup> -->
   <ItemGroup>
     <None Include="solr\bin\**\*" CopyToPublishDirectory="PreserveNewest" />
     <None Include="solr\dist\**\*" CopyToPublishDirectory="PreserveNewest" />

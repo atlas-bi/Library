@@ -23,7 +23,7 @@ namespace Atlas_Web.Authentication
             var claims = new[]
             {
                 new Claim(ClaimTypes.Name, "Default"),
-                new Claim(ClaimTypes.NameIdentifier, Guid.NewGuid().ToString())
+                new Claim(ClaimTypes.NameIdentifier, Guid.NewGuid().ToString()),
             };
             var identity = new ClaimsIdentity(claims, "Default");
             var principal = new ClaimsPrincipal(identity);

@@ -65,7 +65,7 @@ namespace Atlas_Web.Services
                 Environment.NewLine,
                 new[]
                 {
-                    $"Unable to find partial '{partialName}'. The following locations were searched:"
+                    $"Unable to find partial '{partialName}'. The following locations were searched:",
                 }.Concat(searchedLocations)
             );
 

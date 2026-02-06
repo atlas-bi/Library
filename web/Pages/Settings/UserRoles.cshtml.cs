@@ -49,7 +49,7 @@ namespace Atlas_Web.Pages.Settings
                         {
                             Id = l.UserRolesId,
                             Name = l.UserRoles.Name,
-                        }
+                        },
                 }
             ).ToListAsync();
 
@@ -85,7 +85,7 @@ namespace Atlas_Web.Pages.Settings
                     new UserRoleLink
                     {
                         UserId = NewUserRole.UserId,
-                        UserRolesId = NewUserRole.UserRolesId
+                        UserRolesId = NewUserRole.UserRolesId,
                     }
                 );
                 _context.SaveChanges();

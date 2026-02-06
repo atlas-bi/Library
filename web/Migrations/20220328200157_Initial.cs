@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
@@ -3401,6 +3401,7 @@ namespace Atlas_Web.Migrations
                 ('Term Administrator','Term Admins can create, edit, approve and delete Terms.'),
                 ('Term Builder','Term Builders can create and edit Term documentation, but cannot approve them, edit them after approval, or link them to ReportObjects.'),
                 ('User','Users do not have any special permissions. They can navigate the site, comment, and view approved Terms and all non-hidden ReportObjects.')
+                ('Director','Director assigned to request tickets.')
             ");
 
             // create security points

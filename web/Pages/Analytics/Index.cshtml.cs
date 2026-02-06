@@ -1,7 +1,7 @@
+using System.Globalization;
 using Atlas_Web.Authorization;
 using Atlas_Web.Helpers;
 using Atlas_Web.Models;
-using System.Globalization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
@@ -54,19 +54,19 @@ namespace Atlas_Web.Pages.Analytics
                         grp.Key.SessionId,
                         Time = grp.Max(x => x.UpdateTime),
                         SessionTime = grp.Sum(x => x.PageTime ?? 0),
-                        Pages = grp.Count()
+                        Pages = grp.Count(),
                     }
                 )
                     on new
                     {
                         b.UserId,
                         b.SessionId,
-                        time = b.UpdateTime
+                        time = b.UpdateTime,
                     } equals new
                     {
                         sub.UserId,
                         sub.SessionId,
-                        time = sub.Time
+                        time = sub.Time,
                     }
                 join u in _context.Users on b.UserId equals u.UserId
                 select new
@@ -79,7 +79,7 @@ namespace Atlas_Web.Pages.Analytics
                     Href = b.Href,
                     AccessDateTime = b.AccessDateTime,
                     UpdateTime = b.UpdateTime,
-                    Pages = sub.Pages
+                    Pages = sub.Pages,
                 }
             ).ToListAsync();
 
@@ -104,7 +104,7 @@ namespace Atlas_Web.Pages.Analytics
                         @"M/d/yy h\:mm\:ss tt",
                         CultureInfo.InvariantCulture
                     ),
-                    Pages = x.Pages
+                    Pages = x.Pages,
                 })
                 .ToList();
 
@@ -126,7 +126,7 @@ namespace Atlas_Web.Pages.Analytics
             return new PartialViewResult
             {
                 ViewName = "Partials/_ActiveUsers",
-                ViewData = ViewData
+                ViewData = ViewData,
             };
         }
 
