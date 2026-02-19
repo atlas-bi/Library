@@ -30,7 +30,7 @@ namespace Atlas_Web.Pages.Settings
             return new PartialViewResult
             {
                 ViewName = "Partials/_SiteMessages",
-                ViewData = ViewData
+                ViewData = ViewData,
             };
         }
 
@@ -84,7 +84,7 @@ namespace Atlas_Web.Pages.Settings
                     new GlobalSiteSetting
                     {
                         Name = "report_tag_etl",
-                        Value = GlobalSiteSettings.Value
+                        Value = GlobalSiteSettings.Value,
                     }
                 );
             }

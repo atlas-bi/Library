@@ -47,8 +47,8 @@ namespace Atlas_Web.Pages.Settings
                         select new RolePermissionsData
                         {
                             Id = p.RolePermissionsId,
-                            Name = p.RolePermissions.Name
-                        }
+                            Name = p.RolePermissions.Name,
+                        },
                 }
             ).ToListAsync();
 

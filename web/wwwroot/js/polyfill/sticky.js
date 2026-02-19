@@ -16,7 +16,7 @@
     return parseFloat(a) || 0;
   }
   function f(a) {
-    for (var b = 0; a; ) (b += a.offsetTop), (a = a.offsetParent);
+    for (var b = 0; a; ) ((b += a.offsetTop), (a = a.offsetParent));
     return b;
   }
   function g() {
@@ -41,15 +41,15 @@
       clearInterval(f);
     }
     if (!k) {
-      (k = !0),
+      ((k = !0),
         c(),
         a.addEventListener('scroll', c),
         a.addEventListener('resize', p.refreshAll),
-        a.addEventListener('orientationchange', p.refreshAll);
+        a.addEventListener('orientationchange', p.refreshAll));
       var f = void 0,
         g = void 0,
         h = void 0;
-      'hidden' in b
+      ('hidden' in b
         ? ((g = 'hidden'), (h = 'visibilitychange'))
         : 'webkitHidden' in b &&
           ((g = 'webkitHidden'), (h = 'webkitvisibilitychange')),
@@ -58,21 +58,21 @@
             b.addEventListener(h, function () {
               b[g] ? e() : d();
             }))
-          : d();
+          : d());
     }
   }
   var h = (function () {
       function a(a, b) {
         for (var c = 0; c < b.length; c++) {
           var d = b[c];
-          (d.enumerable = d.enumerable || !1),
+          ((d.enumerable = d.enumerable || !1),
             (d.configurable = !0),
             'value' in d && (d.writable = !0),
-            Object.defineProperty(a, d.key, d);
+            Object.defineProperty(a, d.key, d));
         }
       }
       return function (b, c, d) {
-        return c && a(b.prototype, c), d && a(b, d), b;
+        return (c && a(b.prototype, c), d && a(b, d), b);
       };
     })(),
     i = !1,
@@ -102,11 +102,11 @@
           })
         )
           throw new Error('Stickyfill is already applied to this node');
-        (this._node = a),
+        ((this._node = a),
           (this._stickyMode = null),
           (this._active = !1),
           n.push(this),
-          this.refresh();
+          this.refresh());
       }
       return (
         h(g, [
@@ -141,7 +141,7 @@
                     n = c.getBoundingClientRect(),
                     o = m.getBoundingClientRect(),
                     p = getComputedStyle(m);
-                  (this._parent = {
+                  ((this._parent = {
                     node: m,
                     styles: { position: m.style.position },
                     offsetHeight: m.offsetHeight,
@@ -165,7 +165,7 @@
                       marginTop: c.style.marginTop,
                       marginLeft: c.style.marginLeft,
                       marginRight: c.style.marginRight,
-                    });
+                    }));
                   var q = e(h.top);
                   this._limits = {
                     start: n.top + a.pageYOffset - q,
@@ -179,12 +179,12 @@
                       e(h.marginBottom),
                   };
                   var r = p.position;
-                  'absolute' != r &&
+                  ('absolute' != r &&
                     'relative' != r &&
                     (m.style.position = 'relative'),
-                    this._recalcPosition();
+                    this._recalcPosition());
                   var s = (this._clone = {});
-                  (s.node = b.createElement('div')),
+                  ((s.node = b.createElement('div')),
                     d(s.node.style, {
                       width: n.right - n.left + 'px',
                       height: n.bottom - n.top + 'px',
@@ -200,7 +200,7 @@
                       position: 'static',
                     }),
                     k.insertBefore(s.node, c),
-                    (s.docOffsetTop = f(s.node));
+                    (s.docOffsetTop = f(s.node)));
                 }
               }
             },
@@ -300,11 +300,11 @@
             key: 'remove',
             value: function () {
               var a = this;
-              this._deactivate(),
+              (this._deactivate(),
                 n.some(function (b, c) {
-                  if (b._node === a._node) return n.splice(c, 1), !0;
+                  if (b._node === a._node) return (n.splice(c, 1), !0);
                 }),
-                (this._removed = !0);
+                (this._removed = !0));
             },
           },
         ]),
@@ -315,7 +315,7 @@
       stickies: n,
       Sticky: o,
       forceSticky: function () {
-        (i = !1), g(), this.refreshAll();
+        ((i = !1), g(), this.refreshAll());
       },
       addOne: function (a) {
         if (!(a instanceof HTMLElement)) {
@@ -333,7 +333,7 @@
                 var d = a[c];
                 return d instanceof HTMLElement
                   ? n.some(function (a) {
-                      if (a._node === d) return b.push(a), !0;
+                      if (a._node === d) return (b.push(a), !0);
                     })
                     ? 'continue'
                     : void b.push(new o(d))
@@ -359,7 +359,7 @@
           a = a[0];
         }
         n.some(function (b) {
-          if (b._node === a) return b.remove(), !0;
+          if (b._node === a) return (b.remove(), !0);
         });
       },
       remove: function (a) {
@@ -368,7 +368,7 @@
             var b = function (b) {
                 var c = a[b];
                 n.some(function (a) {
-                  if (a._node === c) return a.remove(), !0;
+                  if (a._node === c) return (a.remove(), !0);
                 });
               },
               c = 0;
@@ -381,10 +381,10 @@
         for (; n.length; ) n[0].remove();
       },
     };
-  i || g(),
+  (i || g(),
     'undefined' != typeof module && module.exports
       ? (module.exports = p)
-      : j && (a.Stickyfill = p);
+      : j && (a.Stickyfill = p));
 })(window, document);
 
 // only IE11

@@ -45,7 +45,7 @@ namespace Atlas_Web.Pages
                 from dp in _context.Terms
                 where dp.ApprovedYn == "Y" && dp.ValidFromDateTime > DateTime.Now.AddDays(-30)
                 orderby dp.ValidFromDateTime descending
-                select new BasicFavoriteData { Name = dp.Name, Id = dp.TermId, }
+                select new BasicFavoriteData { Name = dp.Name, Id = dp.TermId }
             )
                 .Take(10)
                 .ToListAsync();
@@ -58,7 +58,7 @@ namespace Atlas_Web.Pages
                     from dp in _context.Terms
                     where dp.ApprovedYn == "N" && dp.ValidFromDateTime > DateTime.Now.AddDays(-30)
                     orderby dp.LastUpdatedDateTime descending
-                    select new BasicFavoriteData { Name = dp.Name, Id = dp.TermId, }
+                    select new BasicFavoriteData { Name = dp.Name, Id = dp.TermId }
                 )
                     .Take(myLength)
                     .ToListAsync();
@@ -73,7 +73,7 @@ namespace Atlas_Web.Pages
             return new PartialViewResult
             {
                 ViewName = "Partials/_RecentTerms",
-                ViewData = ViewData
+                ViewData = ViewData,
             };
         }
     }

@@ -57,8 +57,11 @@ namespace Atlas_Web.Pages.Data
 
             // headers to attempt to open pdf vs download
 
-            System.Net.Mime.ContentDisposition cd =
-                new() { FileName = attachment.Name, Inline = true };
+            System.Net.Mime.ContentDisposition cd = new()
+            {
+                FileName = attachment.Name,
+                Inline = true,
+            };
             Response.Headers.Add("Content-Disposition", cd.ToString());
             Response.Headers.Add("X-Content-Type-Options", "nosniff");
 

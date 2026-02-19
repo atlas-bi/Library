@@ -109,7 +109,7 @@ namespace Atlas_Web.Helpers
                 helper,
                 new Dictionary<string, string>
                 {
-                    { nameof(SolrAtlasParameters.PageIndex), pageIndex.ToString() }
+                    { nameof(SolrAtlasParameters.PageIndex), pageIndex.ToString() },
                 }
             );
         }

@@ -1,11 +1,11 @@
-version: "3.9"
+version: '3.9'
 
 services:
   sqlserver:
     image: mcr.microsoft.com/mssql/server:2022-latest
     container_name: atlas_sqlserver
     environment:
-      ACCEPT_EULA: "Y"
+      ACCEPT_EULA: 'Y'
       MSSQL_SA_PASSWORD: ${SERVICE_PASSWORD_SQLSERVER:-StrongPassword!123}
       MSSQL_PID: ${MSSQL_PID:-Evaluation}
     expose:
@@ -13,7 +13,11 @@ services:
     volumes:
       - sqlserver_data:/var/opt/mssql
     healthcheck:
-      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P $$MSSQL_SA_PASSWORD -C -Q 'SELECT 1' || exit 1"]
+      test:
+        [
+          'CMD-SHELL',
+          "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P $$MSSQL_SA_PASSWORD -C -Q 'SELECT 1' || exit 1",
+        ]
       interval: 10s
       timeout: 5s
       retries: 10
@@ -40,8 +44,8 @@ services:
     healthcheck:
       test:
         [
-          "CMD-SHELL",
-          "wget -qO- http://localhost:${SOLR_PORT:-8983}/solr/admin/ping | grep -q '\"status\":\"OK\"'"
+          'CMD-SHELL',
+          'wget -qO- http://localhost:${SOLR_PORT:-8983}/solr/admin/ping | grep -q ''"status":"OK"''',
         ]
       interval: 15s
       timeout: 5s
@@ -67,13 +71,10 @@ services:
     expose:
       - ${WEB_PORT:-3000}
     ports:
-      - "${WEB_PORT:-3000}:${WEB_PORT:-3000}"
+      - '${WEB_PORT:-3000}:${WEB_PORT:-3000}'
     healthcheck:
       test:
-        [
-          "CMD-SHELL",
-          "wget -qO- http://localhost:${WEB_PORT:-3000}/ || exit 1"
-        ]
+        ['CMD-SHELL', 'wget -qO- http://localhost:${WEB_PORT:-3000}/ || exit 1']
       interval: 15s
       timeout: 5s
       retries: 10

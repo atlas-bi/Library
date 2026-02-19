@@ -23,7 +23,7 @@ namespace Atlas_Web.Controllers
             binding.SetRelayStateQuery(
                 new Dictionary<string, string>
                 {
-                    { relayStateReturnUrl, returnUrl ?? Url.Content("~/") }
+                    { relayStateReturnUrl, returnUrl ?? Url.Content("~/") },
                 }
             );
 

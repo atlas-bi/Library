@@ -33,7 +33,7 @@ namespace Atlas_Web.Pages.Terms
                 new AdList { Url = "/?handler=RecentReports", Column = 2 },
                 new AdList { Url = "/?handler=RecentTerms", Column = 2 },
                 new AdList { Url = "/?handler=RecentInitiatives", Column = 2 },
-                new AdList { Url = "/?handler=RecentCollections", Column = 2 }
+                new AdList { Url = "/?handler=RecentCollections", Column = 2 },
             };
             ViewData["AdLists"] = AdLists;
 
@@ -86,11 +86,11 @@ namespace Atlas_Web.Pages.Terms
                         .Include(x => x.ReportObjectDoc)
                         .Include(x => x.ReportObjectAttachments)
                         .Include(x => x.ReportTagLinks)
-                        .ThenInclude(x => x.Tag)
+                            .ThenInclude(x => x.Tag)
                         // for authentication
                         .Include(x => x.ReportObjectHierarchyChildReportObjects)
-                        .ThenInclude(x => x.ParentReportObject)
-                        .ThenInclude(x => x.ReportGroupsMemberships)
+                            .ThenInclude(x => x.ParentReportObject)
+                                .ThenInclude(x => x.ReportGroupsMemberships)
                         .AsNoTracking()
                         .ToList();
 
@@ -108,11 +108,11 @@ namespace Atlas_Web.Pages.Terms
                         .Include(x => x.ReportObjectDoc)
                         .Include(x => x.ReportObjectAttachments)
                         .Include(x => x.ReportTagLinks)
-                        .ThenInclude(x => x.Tag)
+                            .ThenInclude(x => x.Tag)
                         // for authentication
                         .Include(x => x.ReportObjectHierarchyChildReportObjects)
-                        .ThenInclude(x => x.ParentReportObject)
-                        .ThenInclude(x => x.ReportGroupsMemberships)
+                            .ThenInclude(x => x.ParentReportObject)
+                                .ThenInclude(x => x.ReportGroupsMemberships)
                         .AsNoTracking()
                         .ToList();
                     var level_three = _context
@@ -132,11 +132,11 @@ namespace Atlas_Web.Pages.Terms
                         .Include(x => x.ReportObjectDoc)
                         .Include(x => x.ReportObjectAttachments)
                         .Include(x => x.ReportTagLinks)
-                        .ThenInclude(x => x.Tag)
+                            .ThenInclude(x => x.Tag)
                         // for authentication
                         .Include(x => x.ReportObjectHierarchyChildReportObjects)
-                        .ThenInclude(x => x.ParentReportObject)
-                        .ThenInclude(x => x.ReportGroupsMemberships)
+                            .ThenInclude(x => x.ParentReportObject)
+                                .ThenInclude(x => x.ReportGroupsMemberships)
                         .AsNoTracking()
                         .ToList();
                     var level_four = _context
@@ -159,11 +159,11 @@ namespace Atlas_Web.Pages.Terms
                         .Include(x => x.ReportObjectDoc)
                         .Include(x => x.ReportObjectAttachments)
                         .Include(x => x.ReportTagLinks)
-                        .ThenInclude(x => x.Tag)
+                            .ThenInclude(x => x.Tag)
                         // for authentication
                         .Include(x => x.ReportObjectHierarchyChildReportObjects)
-                        .ThenInclude(x => x.ParentReportObject)
-                        .ThenInclude(x => x.ReportGroupsMemberships)
+                            .ThenInclude(x => x.ParentReportObject)
+                                .ThenInclude(x => x.ReportGroupsMemberships)
                         .AsNoTracking()
                         .ToList();
 

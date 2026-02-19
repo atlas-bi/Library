@@ -36,34 +36,34 @@ namespace Atlas_Web.Pages.Collections
                         return _context
                             .Collections.Include(x => x.LastUpdateUserNavigation)
                             .Include(x => x.CollectionTerms)
-                            .ThenInclude(x => x.Term)
+                                .ThenInclude(x => x.Term)
                             .Include(x => x.CollectionTerms)
-                            .ThenInclude(x => x.Term)
-                            .ThenInclude(x => x.StarredTerms)
+                                .ThenInclude(x => x.Term)
+                                    .ThenInclude(x => x.StarredTerms)
                             .Include(x => x.CollectionReports)
-                            .ThenInclude(x => x.Report)
-                            .ThenInclude(x => x.ReportObjectDoc)
+                                .ThenInclude(x => x.Report)
+                                    .ThenInclude(x => x.ReportObjectDoc)
                             .Include(x => x.CollectionReports)
-                            .ThenInclude(x => x.Report)
-                            .ThenInclude(x => x.ReportObjectType)
+                                .ThenInclude(x => x.Report)
+                                    .ThenInclude(x => x.ReportObjectType)
                             .Include(x => x.CollectionReports)
-                            .ThenInclude(x => x.Report)
-                            .ThenInclude(x => x.ReportObjectAttachments)
+                                .ThenInclude(x => x.Report)
+                                    .ThenInclude(x => x.ReportObjectAttachments)
                             .Include(x => x.CollectionReports)
-                            .ThenInclude(x => x.Report)
-                            .ThenInclude(x => x.StarredReports)
+                                .ThenInclude(x => x.Report)
+                                    .ThenInclude(x => x.StarredReports)
                             .Include(x => x.CollectionReports)
-                            .ThenInclude(x => x.Report)
-                            .ThenInclude(x => x.ReportTagLinks)
-                            .ThenInclude(x => x.Tag)
+                                .ThenInclude(x => x.Report)
+                                    .ThenInclude(x => x.ReportTagLinks)
+                                        .ThenInclude(x => x.Tag)
                             .Include(x => x.StarredCollections)
                             .Include(x => x.Initiative)
                             // for authentication
                             .Include(x => x.CollectionReports)
-                            .ThenInclude(x => x.Report)
-                            .ThenInclude(x => x.ReportObjectHierarchyChildReportObjects)
-                            .ThenInclude(x => x.ParentReportObject)
-                            .ThenInclude(x => x.ReportGroupsMemberships)
+                                .ThenInclude(x => x.Report)
+                                    .ThenInclude(x => x.ReportObjectHierarchyChildReportObjects)
+                                        .ThenInclude(x => x.ParentReportObject)
+                                            .ThenInclude(x => x.ReportGroupsMemberships)
                             .AsNoTracking()
                             .SingleAsync(x => x.CollectionId == id);
                     }
@@ -96,7 +96,7 @@ namespace Atlas_Web.Pages.Collections
                     new
                     {
                         id = Collection.CollectionId,
-                        error = "You do not have permission to access that page."
+                        error = "You do not have permission to access that page.",
                     }
                 );
             }

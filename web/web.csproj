@@ -28,27 +28,33 @@
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
-   <PackageReference Include="ITfoxtec.Identity.Saml2" Version="4.17.0" />
-   <PackageReference Include="ITfoxtec.Identity.Saml2.MvcCore" Version="4.17.0" />
-   <PackageReference Include="System.Net.Primitives" Version="4.3.1" />
+    <PackageReference Include="ITfoxtec.Identity.Saml2" Version="4.17.0" />
+    <PackageReference Include="ITfoxtec.Identity.Saml2.MvcCore" Version="4.17.0" />
+    <PackageReference Include="System.Net.Primitives" Version="4.3.1" />
     <PackageReference Include="System.Net.NameResolution" Version="4.3.0" />
     <PackageReference Include="System.IO.FileSystem" Version="4.3.0" />
     <PackageReference Include="System.IO.FileSystem.Primitives" Version="4.3.0" />
     <PackageReference Include="System.Threading" Version="4.3.0" />
     <PackageReference Include="System.Runtime.Handles" Version="4.3.0" />
     <PackageReference Include="System.Diagnostics.Tracing" Version="4.3.0" />
-    <PackageReference Include="Hangfire" Version="1.8.22" />
+    <PackageReference Include="Hangfire" Version="1.8.23" />
     <PackageReference Include="Hangfire.InMemory" Version="1.0.0" />
-    <PackageReference Include="HtmlSanitizer" Version="9.0.889" />
+    <PackageReference Include="HtmlSanitizer" Version="9.0.892" />
     <PackageReference Include="LigerShark.WebOptimizer.AutoPrefixer" Version="7.1.8-beta" />
     <PackageReference Include="LigerShark.WebOptimizer.Core" Version="3.0.477" />
-    <PackageReference Include="Markdig" Version="0.44.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.Negotiate" Version="9.0.12" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.12" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="9.0.12" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.12" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.12" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.12">
+    <PackageReference Include="Markdig" Version="0.45.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Negotiate" Version="9.0.13" />
+    <PackageReference
+      Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore"
+      Version="9.0.13"
+    />
+    <PackageReference
+      Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation"
+      Version="9.0.13"
+    />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.13" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.13" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.13">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
@@ -59,19 +65,19 @@
     <PackageReference Include="SolrNet.Core" Version="1.2.1" />
     <PackageReference Include="SolrNet.Microsoft.DependencyInjection" Version="1.2.1" />
     <PackageReference Include="System.Data.SqlClient" Version="4.9.0" />
-    <PackageReference Include="System.Text.Json" Version="9.0.12" />
+    <PackageReference Include="System.Text.Json" Version="9.0.13" />
     <PackageReference Include="UAParser" Version="3.1.47" />
     <PackageReference Include="WebMarkupMin.AspNetCore5" Version="2.17.0" />
-    <PackageReference Include="SonarAnalyzer.CSharp" Version="10.18.0.131500">
+    <PackageReference Include="SonarAnalyzer.CSharp" Version="10.19.0.132793">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
   </ItemGroup>
   <PropertyGroup>
-  <DefaultItemExcludes>$(DefaultItemExcludes);solr\example\**\*</DefaultItemExcludes>
-</PropertyGroup>
-<!-- this will speed up builds when developing. Disable when doing a migration ;) -->
-<!-- <ItemGroup><Compile Remove="Migrations\**" /></ItemGroup> -->
+    <DefaultItemExcludes>$(DefaultItemExcludes);solr\example\**\*</DefaultItemExcludes>
+  </PropertyGroup>
+  <!-- this will speed up builds when developing. Disable when doing a migration ;) -->
+  <!-- <ItemGroup><Compile Remove="Migrations\**" /></ItemGroup> -->
   <ItemGroup>
     <None Include="solr\bin\**\*" CopyToPublishDirectory="PreserveNewest" />
     <None Include="solr\dist\**\*" CopyToPublishDirectory="PreserveNewest" />

@@ -44,12 +44,12 @@ Atlas business intelligence library plugs in to your existing reporting platform
 > Aside from those installs you will need to install ef core tools `dotnet tool install -g dotnet-ef`. \
 > These guide can be run with [Visual Studio Code](https://code.visualstudio.com/download) and the built in terminal.
 
--   Get the code `git clone git@github.com:atlas-bi/atlas-bi-library.git`
--   Install the project dependencies `npm install` and `npm run dotnet:restore`
--   Create an `appsettings.cust.json` and `appsettings.cust.Development.json` as specified in the [docs](https://www.atlas.bi/docs/bi-library/deploy/configuration/)
--   Initialize the database and create tables `npm run db:update`
--   Run the [ETL](https://www.atlas.bi/docs/bi-library/deploy/configuration/), or just insert your account name into the `dbo.[User]` `username` column.
--   Finally, start up the website `npm start`
+- Get the code `git clone git@github.com:atlas-bi/atlas-bi-library.git`
+- Install the project dependencies `npm install` and `npm run dotnet:restore`
+- Create an `appsettings.cust.json` and `appsettings.cust.Development.json` as specified in the [docs](https://www.atlas.bi/docs/bi-library/deploy/configuration/)
+- Initialize the database and create tables `npm run db:update`
+- Run the [ETL](https://www.atlas.bi/docs/bi-library/deploy/configuration/), or just insert your account name into the `dbo.[User]` `username` column.
+- Finally, start up the website `npm start`
 
 > If this is your first time running a dotnet webapp, you will need to trust the cert with `dotnet dev-certs https --trust` \
 > Running `npm start` will build all the resources needed, start IISExpress, and then open your browser. \
@@ -64,8 +64,8 @@ dotnet tool install -g coverlet.console
 dotnet tool install -g dotnet-reportgenerator-globaltool
 ```
 
--   Install dependancies `npm install` and `npm run dotnet:restore`
--   Run tests `npm run test:dev`
+- Install dependancies `npm install` and `npm run dotnet:restore`
+- Run tests `npm run test:dev`
 
 A hit/miss html report will be in the folder `/coverage`.
 

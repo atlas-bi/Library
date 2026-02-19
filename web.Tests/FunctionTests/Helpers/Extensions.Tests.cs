@@ -29,6 +29,5 @@ public class UserHelpersTests : IClassFixture<TestDatabaseFixture>
     // need cache here
     //     Assert.Equal(new List<UserPreference>(), UserHelpers.GetPreferences(cache, Fixture.CreateContext(), null));
 
-
     // }
 }

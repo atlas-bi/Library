@@ -40,8 +40,8 @@ namespace Atlas_Web.Controllers
                     {
                         Binding = ProtocolBindings.HttpPost,
                         Location = new Uri(defaultSite, "Auth/SingleLogout"),
-                        ResponseLocation = new Uri(defaultSite, "Auth/LoggedOut")
-                    }
+                        ResponseLocation = new Uri(defaultSite, "Auth/LoggedOut"),
+                    },
                 },
                 NameIDFormats = new Uri[] { NameIdentifierFormats.X509SubjectName },
                 AssertionConsumerServices = new AssertionConsumerService[]
@@ -49,7 +49,7 @@ namespace Atlas_Web.Controllers
                     new AssertionConsumerService
                     {
                         Binding = ProtocolBindings.HttpPost,
-                        Location = new Uri(defaultSite, "Auth/AssertionConsumerService")
+                        Location = new Uri(defaultSite, "Auth/AssertionConsumerService"),
                     },
                 },
                 AttributeConsumingServices = new AttributeConsumingService[]
@@ -57,8 +57,8 @@ namespace Atlas_Web.Controllers
                     new AttributeConsumingService
                     {
                         ServiceNames = new[] { new LocalizedNameType("Some SP", "en") },
-                        RequestedAttributes = CreateRequestedAttributes()
-                    }
+                        RequestedAttributes = CreateRequestedAttributes(),
+                    },
                 },
             };
             return new Saml2Metadata(entityDescriptor).CreateMetadata().ToActionResult();
@@ -71,7 +71,7 @@ namespace Atlas_Web.Controllers
             yield return new RequestedAttribute("urn:xxx", "test-value");
             yield return new RequestedAttribute("urn:yyy", "123")
             {
-                AttributeValueType = "xs:integer"
+                AttributeValueType = "xs:integer",
             };
         }
     }

@@ -42,7 +42,9 @@ namespace web.Tests.IntegrationTests
             // Assert
             if (!response.IsSuccessStatusCode)
             {
-                throw new System.Exception($"Request to '{url}' failed with {(int)response.StatusCode} ({response.StatusCode}). Body:\n{body}");
+                throw new System.Exception(
+                    $"Request to '{url}' failed with {(int)response.StatusCode} ({response.StatusCode}). Body:\n{body}"
+                );
             }
             // Assert.Equal(
             //     "text/html; charset=utf-8",

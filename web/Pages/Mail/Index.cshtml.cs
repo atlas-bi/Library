@@ -93,15 +93,14 @@ namespace Atlas_Web.Pages.Mail
             }
 
             // insert message
-            Atlas_Web.Models.MailMessage newMessage =
-                new()
-                {
-                    Subject = Subject,
-                    Message = Message,
-                    SendDate = DateTime.Now,
-                    FromUserId = User.GetUserId(),
-                    MessagePlainText = Text
-                };
+            Atlas_Web.Models.MailMessage newMessage = new()
+            {
+                Subject = Subject,
+                Message = Message,
+                SendDate = DateTime.Now,
+                FromUserId = User.GetUserId(),
+                MessagePlainText = Text,
+            };
             await _context.AddAsync(newMessage);
             await _context.SaveChangesAsync();
 
@@ -110,7 +109,7 @@ namespace Atlas_Web.Pages.Mail
                 UserList.Select(x => new MailRecipient
                 {
                     MessageId = newMessage.MessageId,
-                    ToUserId = x.UserId
+                    ToUserId = x.UserId,
                 })
             );
             await _context.SaveChangesAsync();
@@ -121,7 +120,7 @@ namespace Atlas_Web.Pages.Mail
                 {
                     MessageId = newMessage.MessageId,
                     ToUserId = x.UserId,
-                    ToGroupId = x.GroupId
+                    ToGroupId = x.GroupId,
                 })
             );
             await _context.SaveChangesAsync();
@@ -139,15 +138,14 @@ namespace Atlas_Web.Pages.Mail
                 var sender = await _context.Users.SingleAsync(x => x.UserId == User.GetUserId());
                 foreach (var recipient in UserList)
                 {
-                    SharedItem newShare =
-                        new()
-                        {
-                            SharedFromUserId = User.GetUserId(),
-                            SharedToUserId = recipient.UserId,
-                            ShareDate = DateTime.Now,
-                            Name = ShareName,
-                            Url = ShareUrl
-                        };
+                    SharedItem newShare = new()
+                    {
+                        SharedFromUserId = User.GetUserId(),
+                        SharedToUserId = recipient.UserId,
+                        ShareDate = DateTime.Now,
+                        Name = ShareName,
+                        Url = ShareUrl,
+                    };
                     await _context.AddAsync(newShare);
                     await _context.SaveChangesAsync();
 
@@ -183,15 +181,14 @@ namespace Atlas_Web.Pages.Mail
 
                 foreach (var group in GroupUserList)
                 {
-                    SharedItem newShare =
-                        new()
-                        {
-                            SharedFromUserId = sender.UserId,
-                            SharedToUserId = group.UserId,
-                            ShareDate = DateTime.Now,
-                            Name = ShareName,
-                            Url = ShareUrl
-                        };
+                    SharedItem newShare = new()
+                    {
+                        SharedFromUserId = sender.UserId,
+                        SharedToUserId = group.UserId,
+                        ShareDate = DateTime.Now,
+                        Name = ShareName,
+                        Url = ShareUrl,
+                    };
                     await _context.AddAsync(newShare);
                     await _context.SaveChangesAsync();
 

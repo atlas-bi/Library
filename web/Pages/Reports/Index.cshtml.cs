@@ -42,49 +42,49 @@ namespace Atlas_Web.Pages.Reports
                         /* run the 1:1 as a single query */
                         .Include(x => x.ReportObjectImagesDocs)
                         .Include(x => x.ReportObjectDoc)
-                        .ThenInclude(x => x.MaintenanceSchedule)
+                            .ThenInclude(x => x.MaintenanceSchedule)
                         .Include(x => x.ReportObjectDoc)
-                        .ThenInclude(x => x.OrganizationalValue)
+                            .ThenInclude(x => x.OrganizationalValue)
                         .Include(x => x.LastModifiedByUser)
                         .Include(x => x.AuthorUser)
                         .Include(x => x.ReportObjectDoc)
-                        .ThenInclude(x => x.UpdatedByNavigation)
+                            .ThenInclude(x => x.UpdatedByNavigation)
                         .Include(x => x.ReportObjectDoc)
-                        .ThenInclude(x => x.RequesterNavigation)
+                            .ThenInclude(x => x.RequesterNavigation)
                         .Include(x => x.ReportObjectDoc)
-                        .ThenInclude(x => x.OperationalOwnerUser)
+                            .ThenInclude(x => x.OperationalOwnerUser)
                         .Include(x => x.ReportObjectType)
                         .Include(x => x.ReportObjectDoc)
-                        .ThenInclude(x => x.EstimatedRunFrequency)
+                            .ThenInclude(x => x.EstimatedRunFrequency)
                         .Include(x => x.ReportObjectDoc)
-                        .ThenInclude(x => x.Fragility)
+                            .ThenInclude(x => x.Fragility)
                         .Include(x => x.ReportObjectDoc)
-                        .ThenInclude(x => x.MaintenanceLogs)
-                        .ThenInclude(x => x.Maintainer)
+                            .ThenInclude(x => x.MaintenanceLogs)
+                                .ThenInclude(x => x.Maintainer)
                         .Include(x => x.ReportObjectDoc)
-                        .ThenInclude(x => x.MaintenanceLogs)
-                        .ThenInclude(x => x.MaintenanceLogStatus)
+                            .ThenInclude(x => x.MaintenanceLogs)
+                                .ThenInclude(x => x.MaintenanceLogStatus)
                         .Include(x => x.ReportObjectDoc)
-                        .ThenInclude(x => x.ReportObjectDocFragilityTags)
-                        .ThenInclude(x => x.FragilityTag)
+                            .ThenInclude(x => x.ReportObjectDocFragilityTags)
+                                .ThenInclude(x => x.FragilityTag)
                         .Include(x => x.ReportObjectTagMemberships)
-                        .ThenInclude(x => x.Tag)
+                            .ThenInclude(x => x.Tag)
                         .Include(x => x.ReportObjectDoc)
-                        .ThenInclude(x => x.ReportServiceRequests)
+                            .ThenInclude(x => x.ReportServiceRequests)
                         .Include(x => x.ReportObjectAttachments)
                         .Include(x => x.ReportGroupsMemberships)
-                        .ThenInclude(x => x.Group)
+                            .ThenInclude(x => x.Group)
                         .Include(x => x.ReportObjectQueries)
                         .Include(x => x.CollectionReports)
-                        .ThenInclude(x => x.DataProject)
+                            .ThenInclude(x => x.DataProject)
                         .Include(x => x.StarredReports)
                         .Include(x => x.ReportObjectParameters)
                         .Include(x => x.ReportTagLinks)
-                        .ThenInclude(x => x.Tag)
+                            .ThenInclude(x => x.Tag)
                         // needed for authorization
                         .Include(x => x.ReportObjectHierarchyChildReportObjects)
-                        .ThenInclude(x => x.ParentReportObject)
-                        .ThenInclude(x => x.ReportGroupsMemberships)
+                            .ThenInclude(x => x.ParentReportObject)
+                                .ThenInclude(x => x.ReportGroupsMemberships)
                         .AsNoTracking()
                         .SingleOrDefaultAsync(x => x.ReportObjectId == id);
                 }
@@ -275,7 +275,7 @@ namespace Atlas_Web.Pages.Reports
                 new AdList { Url = "/?handler=RecentReports", Column = 2 },
                 new AdList { Url = "/?handler=RecentTerms", Column = 2 },
                 new AdList { Url = "/?handler=RecentInitiatives", Column = 2 },
-                new AdList { Url = "/?handler=RecentCollections", Column = 2 }
+                new AdList { Url = "/?handler=RecentCollections", Column = 2 },
             };
             ViewData["AdLists"] = AdLists;
             return Page();
@@ -302,37 +302,35 @@ namespace Atlas_Web.Pages.Reports
                                 .First()
                                 .MaintenanceDate,
                             x.ReportObjectId,
-                            name = x.ReportObject.DisplayName
+                            name = x.ReportObject.DisplayName,
                         }
                     )
                     select new
                     {
                         l.ReportObjectId,
-                        NextDate = l.sch == 1
-                            ? (l.thiss ?? Today).AddMonths(3)
-                            : // quarterly
-                            l.sch == 2
-                                ? (l.thiss ?? Today).AddMonths(6)
-                                : // twice a year
-                                l.sch == 3
-                                    ? (l.thiss ?? Today).AddYears(1)
-                                    : // yearly
-                                    l.sch == 4
-                                        ? (l.thiss ?? Today).AddYears(2)
-                                        : // every two years
-                                        (l.thiss ?? Today),
-                        Name = l.name
+                        NextDate = l.sch == 1 ? (l.thiss ?? Today).AddMonths(3)
+                        : // quarterly
+                        l.sch == 2 ? (l.thiss ?? Today).AddMonths(6)
+                        : // twice a year
+                        l.sch == 3 ? (l.thiss ?? Today).AddYears(1)
+                        : // yearly
+                        l.sch == 4 ? (l.thiss ?? Today).AddYears(2)
+                        : // every two years
+                        (l.thiss ?? Today),
+                        Name = l.name,
                     }
                 )
                 where n.NextDate < Today
                 orderby n.NextDate
                 select new MaintStatus { Required = "Report requires maintenance." }
-            ).AsNoTracking().FirstOrDefaultAsync();
+            )
+                .AsNoTracking()
+                .FirstOrDefaultAsync();
 
             return new PartialViewResult
             {
                 ViewName = "Partials/_MaintStatus",
-                ViewData = ViewData
+                ViewData = ViewData,
             };
         }
     }

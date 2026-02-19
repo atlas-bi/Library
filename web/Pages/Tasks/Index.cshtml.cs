@@ -93,7 +93,7 @@ namespace Atlas_Web.Pages.Tasks
                 new AdList { Url = "/?handler=RecentReports", Column = 2 },
                 new AdList { Url = "/?handler=RecentTerms", Column = 2 },
                 new AdList { Url = "/?handler=RecentInitiatives", Column = 2 },
-                new AdList { Url = "/?handler=RecentCollections", Column = 2 }
+                new AdList { Url = "/?handler=RecentCollections", Column = 2 },
             };
             ViewData["AdLists"] = AdLists;
             return Page();
@@ -108,7 +108,7 @@ namespace Atlas_Web.Pages.Tasks
                 "100612",
                 "5087102001",
                 "5087101001",
-                "5087107002"
+                "5087107002",
             };
             ViewData["CanMakeReports"] = await (
                 from u in _context.UserGroupsMemberships
@@ -118,14 +118,14 @@ namespace Atlas_Web.Pages.Tasks
                     Name = u.User.FullnameCalc,
                     UserId = u.UserId,
                     Role = u.Group.GroupName,
-                    RoleId = u.GroupId
+                    RoleId = u.GroupId,
                 }
             ).ToListAsync();
 
             return new PartialViewResult
             {
                 ViewName = "Partials/_CanMakeReports",
-                ViewData = ViewData
+                ViewData = ViewData,
             };
         }
 
@@ -143,14 +143,14 @@ namespace Atlas_Web.Pages.Tasks
                     MaintenanceDate = m.MaintenanceDate,
                     MaintenanceDateString = m.MaintenanceDateDisplayString,
                     ReportId = m.ReportId,
-                    Comment = m.Comment
+                    Comment = m.Comment,
                 }
             ).ToListAsync();
 
             return new PartialViewResult
             {
                 ViewName = "Partials/_RecommendRetire",
-                ViewData = ViewData
+                ViewData = ViewData,
             };
         }
 
@@ -190,9 +190,11 @@ namespace Atlas_Web.Pages.Tasks
                     LastMod = r.LastUpdatedDateDisplayString,
                     Server = r.SourceServer,
                     MasterFile = r.EpicMasterFile,
-                    EpicId = r.EpicRecordId.ToString()
+                    EpicId = r.EpicRecordId.ToString(),
                 }
-            ).Take(30).ToListAsync();
+            )
+                .Take(30)
+                .ToListAsync();
 
             return new PartialViewResult { ViewName = "Partials/_Unused", ViewData = ViewData };
         }
@@ -214,7 +216,7 @@ namespace Atlas_Web.Pages.Tasks
                         select new
                         {
                             ReportObjectId = grp.Key,
-                            MaintenanceLogId = grp.Max(x => x.MaintenanceLogId)
+                            MaintenanceLogId = grp.Max(x => x.MaintenanceLogId),
                         }
                     )
                         on d.ReportObjectId equals l.ReportObjectId
@@ -229,34 +231,28 @@ namespace Atlas_Web.Pages.Tasks
                         d.ReportObjectId,
                         NextDate = d.MaintenanceScheduleId == 1
                             ? (ttwo.MaintenanceDate ?? d.LastUpdateDateTime ?? Today).AddMonths(3)
-                            : // quarterly
-                            d.MaintenanceScheduleId == 2
-                                ? (ttwo.MaintenanceDate ?? d.LastUpdateDateTime ?? Today).AddMonths(
-                                    6
-                                )
-                                : // twice a year
-                                d.MaintenanceScheduleId == 3
-                                    ? (
-                                        ttwo.MaintenanceDate ?? d.LastUpdateDateTime ?? Today
-                                    ).AddYears(1)
-                                    : // yearly
-                                    d.MaintenanceScheduleId == 4
-                                        ? (
-                                            ttwo.MaintenanceDate ?? d.LastUpdateDateTime ?? Today
-                                        ).AddYears(2)
-                                        : // every two years
-                                        (
-                                            ttwo.MaintenanceDate
-                                            ?? d.LastUpdateDateTime
-                                            ?? d.CreatedDateTime
-                                            ?? Today
-                                        ),
+                        : // quarterly
+                        d.MaintenanceScheduleId == 2
+                            ? (ttwo.MaintenanceDate ?? d.LastUpdateDateTime ?? Today).AddMonths(6)
+                        : // twice a year
+                        d.MaintenanceScheduleId == 3
+                            ? (ttwo.MaintenanceDate ?? d.LastUpdateDateTime ?? Today).AddYears(1)
+                        : // yearly
+                        d.MaintenanceScheduleId == 4
+                            ? (ttwo.MaintenanceDate ?? d.LastUpdateDateTime ?? Today).AddYears(2)
+                        : // every two years
+                        (
+                            ttwo.MaintenanceDate
+                            ?? d.LastUpdateDateTime
+                            ?? d.CreatedDateTime
+                            ?? Today
+                        ),
                         Name = d.ReportObject.DisplayName,
                         LastUser = (
                             ttwo.Maintainer.FullnameCalc != "user not found"
                                 ? ttwo.Maintainer.FullnameCalc
                                 : d.UpdatedByNavigation.FullnameCalc
-                        )
+                        ),
                     }
                 )
                 where n.NextDate < Today.AddMonths(2)
@@ -266,14 +262,14 @@ namespace Atlas_Web.Pages.Tasks
                     ReportId = n.ReportObjectId,
                     Date = n.NextDate.ToString("MM/dd/yyyy"),
                     Name = n.Name,
-                    User = n.LastUser
+                    User = n.LastUser,
                 }
             ).ToListAsync();
 
             return new PartialViewResult
             {
                 ViewName = "Partials/_MaintRequired",
-                ViewData = ViewData
+                ViewData = ViewData,
             };
         }
 
@@ -293,7 +289,7 @@ namespace Atlas_Web.Pages.Tasks
                         select new
                         {
                             ReportObjectId = grp.Key,
-                            MaintenanceLogId = grp.Max(x => x.MaintenanceLogId)
+                            MaintenanceLogId = grp.Max(x => x.MaintenanceLogId),
                         }
                     )
                         on d.ReportObjectId equals l.ReportObjectId
@@ -308,34 +304,28 @@ namespace Atlas_Web.Pages.Tasks
                         d.ReportObjectId,
                         NextDate = d.MaintenanceScheduleId == 1
                             ? (ttwo.MaintenanceDate ?? d.LastUpdateDateTime ?? Today).AddMonths(3)
-                            : // quarterly
-                            d.MaintenanceScheduleId == 2
-                                ? (ttwo.MaintenanceDate ?? d.LastUpdateDateTime ?? Today).AddMonths(
-                                    6
-                                )
-                                : // twice a year
-                                d.MaintenanceScheduleId == 3
-                                    ? (
-                                        ttwo.MaintenanceDate ?? d.LastUpdateDateTime ?? Today
-                                    ).AddYears(1)
-                                    : // yearly
-                                    d.MaintenanceScheduleId == 4
-                                        ? (
-                                            ttwo.MaintenanceDate ?? d.LastUpdateDateTime ?? Today
-                                        ).AddYears(2)
-                                        : // every two years
-                                        (
-                                            ttwo.MaintenanceDate
-                                            ?? d.LastUpdateDateTime
-                                            ?? d.CreatedDateTime
-                                            ?? Today
-                                        ),
+                        : // quarterly
+                        d.MaintenanceScheduleId == 2
+                            ? (ttwo.MaintenanceDate ?? d.LastUpdateDateTime ?? Today).AddMonths(6)
+                        : // twice a year
+                        d.MaintenanceScheduleId == 3
+                            ? (ttwo.MaintenanceDate ?? d.LastUpdateDateTime ?? Today).AddYears(1)
+                        : // yearly
+                        d.MaintenanceScheduleId == 4
+                            ? (ttwo.MaintenanceDate ?? d.LastUpdateDateTime ?? Today).AddYears(2)
+                        : // every two years
+                        (
+                            ttwo.MaintenanceDate
+                            ?? d.LastUpdateDateTime
+                            ?? d.CreatedDateTime
+                            ?? Today
+                        ),
                         Name = d.ReportObject.DisplayName,
                         LastUser = (
                             ttwo.Maintainer.FullnameCalc != "user not found"
                                 ? ttwo.Maintainer.FullnameCalc
                                 : d.UpdatedByNavigation.FullnameCalc
-                        )
+                        ),
                     }
                 )
                 where n.NextDate < Today.AddMonths(2)
@@ -345,7 +335,7 @@ namespace Atlas_Web.Pages.Tasks
                     ReportId = n.ReportObjectId,
                     Date = n.NextDate.ToString("MM/dd/yyyy"),
                     Name = n.Name,
-                    User = n.LastUser
+                    User = n.LastUser,
                 }
             ).ToListAsync();
 
@@ -368,7 +358,7 @@ namespace Atlas_Web.Pages.Tasks
                         select new
                         {
                             ReportObjectId = grp.Key,
-                            MaintenanceLogId = grp.Max(x => x.MaintenanceLogId)
+                            MaintenanceLogId = grp.Max(x => x.MaintenanceLogId),
                         }
                     )
                         on d.ReportObjectId equals l.ReportObjectId
@@ -387,7 +377,7 @@ namespace Atlas_Web.Pages.Tasks
                             ttwo.Maintainer.FullnameCalc != "user not found"
                                 ? ttwo.Maintainer.FullnameCalc
                                 : d.UpdatedByNavigation.FullnameCalc
-                        )
+                        ),
                     }
                 )
                 where n.NextDate < Today.AddMonths(2)
@@ -397,7 +387,7 @@ namespace Atlas_Web.Pages.Tasks
                     ReportId = n.ReportObjectId,
                     Date = n.NextDate.ToString("MM/dd/yyyy"),
                     Name = n.Name,
-                    User = n.LastUser
+                    User = n.LastUser,
                 }
             ).ToListAsync();
 
@@ -448,14 +438,14 @@ namespace Atlas_Web.Pages.Tasks
                     RecordViewerUrl = r.RecordViewerUrl(HttpContext),
                     Runs = ((int?)f.Cnt ?? 0),
                     EpicRecordId = r.EpicRecordId.ToString(),
-                    EpicMasterFile = r.EpicMasterFile
+                    EpicMasterFile = r.EpicMasterFile,
                 }
             ).ToListAsync();
 
             return new PartialViewResult
             {
                 ViewName = "Partials/_NotAnalytics",
-                ViewData = ViewData
+                ViewData = ViewData,
             };
         }
 
@@ -477,18 +467,15 @@ namespace Atlas_Web.Pages.Tasks
                     ),
                     Name = r.DisplayName,
                     ReportType = (
-                        t.Name == "Reporting Workbench Report"
-                            ? "Workbench"
-                            : t.Name == "Source Radar Dashboard"
-                                ? "Dashboard"
-                                : t.Name == "Epic-Crystal Report"
-                                    ? "Crystal"
-                                    : "SSRS"
+                        t.Name == "Reporting Workbench Report" ? "Workbench"
+                        : t.Name == "Source Radar Dashboard" ? "Dashboard"
+                        : t.Name == "Epic-Crystal Report" ? "Crystal"
+                        : "SSRS"
                     ),
                     Runs = r.ReportObjectRunDataBridges.Sum(y => y.Runs),
                     LastMaintained = (r.LastModifiedDate ?? DateTime.Today.AddYears(-1)),
                     LastRun = r.ReportObjectRunDataBridges.Max(x => x.RunData.RunStartTime_Day),
-                    Favs = r.StarredReports.Count
+                    Favs = r.StarredReports.Count,
                 } into tmp
                 join o in _context.ReportObjectDocs
                     on tmp.ReportObjectId equals o.ReportObjectId
@@ -505,14 +492,16 @@ namespace Atlas_Web.Pages.Tasks
                     Runs = tmp.Runs,
                     Favorite = tmp.Favs > 0 ? "Yes" : "",
                     LastMaintained = tmp.LastMaintained.ToString("MM/dd/yyyy"),
-                    LastRun = tmp.LastRun.ToString("MM/dd/yyyy")
+                    LastRun = tmp.LastRun.ToString("MM/dd/yyyy"),
                 }
-            ).Take(60).ToList();
+            )
+                .Take(60)
+                .ToList();
 
             return new PartialViewResult
             {
                 ViewName = "Partials/_TopUndocumented",
-                ViewData = ViewData
+                ViewData = ViewData,
             };
         }
 
@@ -537,18 +526,15 @@ namespace Atlas_Web.Pages.Tasks
                     ),
                     Name = r.DisplayName,
                     ReportType = (
-                        t.Name == "Reporting Workbench Report"
-                            ? "Workbench"
-                            : t.Name == "Source Radar Dashboard"
-                                ? "Dashboard"
-                                : t.Name == "Epic-Crystal Report"
-                                    ? "Crystal"
-                                    : "SSRS"
+                        t.Name == "Reporting Workbench Report" ? "Workbench"
+                        : t.Name == "Source Radar Dashboard" ? "Dashboard"
+                        : t.Name == "Epic-Crystal Report" ? "Crystal"
+                        : "SSRS"
                     ),
                     Runs = r.ReportObjectRunDataBridges.Sum(y => y.Runs),
                     LastMaintained = (r.LastModifiedDate ?? DateTime.Today.AddYears(-1)),
                     LastRun = r.ReportObjectRunDataBridges.Max(x => x.RunData.RunStartTime_Day),
-                    Favs = r.StarredReports.Count
+                    Favs = r.StarredReports.Count,
                 } into tmp
                 join o in _context.ReportObjectDocs
                     on tmp.ReportObjectId equals o.ReportObjectId
@@ -565,14 +551,16 @@ namespace Atlas_Web.Pages.Tasks
                     Runs = tmp.Runs,
                     Favorite = tmp.Favs > 0 ? "Yes" : "",
                     LastMaintained = tmp.LastMaintained.ToString("MM/dd/yyyy"),
-                    LastRun = tmp.LastRun.ToString("MM/dd/yyyy")
+                    LastRun = tmp.LastRun.ToString("MM/dd/yyyy"),
                 }
-            ).Take(60).ToList();
+            )
+                .Take(60)
+                .ToList();
 
             return new PartialViewResult
             {
                 ViewName = "Partials/_NewUndocumented",
-                ViewData = ViewData
+                ViewData = ViewData,
             };
         }
     }

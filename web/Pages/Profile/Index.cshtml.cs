@@ -124,12 +124,14 @@ namespace Atlas_Web.Pages.Profile
                         Runs = grp.Sum(x => x.d.Runs),
                         LastRun = grp.Max(x => x.b.RunStartTime).ToShortDateString(),
                     }
-                ).AsNoTracking().ToListAsync();
+                )
+                    .AsNoTracking()
+                    .ToListAsync();
 
                 return new PartialViewResult()
                 {
                     ViewName = "Partials/_RunList",
-                    ViewData = ViewData
+                    ViewData = ViewData,
                 };
             }
 
@@ -162,7 +164,7 @@ namespace Atlas_Web.Pages.Profile
                     r.ReportObjectId,
                     Name = string.IsNullOrEmpty(r.DisplayTitle) ? r.Name : r.DisplayTitle,
                     r.ReportObjectType.ShortName,
-                    ReportTypeName = r.ReportObjectType.Name
+                    ReportTypeName = r.ReportObjectType.Name,
                 } into grp
                 orderby grp.Max(x => x.d.RunStartTime) descending
                 select new RunListData
@@ -175,7 +177,9 @@ namespace Atlas_Web.Pages.Profile
                     Runs = grp.Sum(x => x.b.Runs),
                     LastRun = grp.Max(x => x.d.RunStartTime).ToShortDateString(),
                 }
-            ).AsNoTracking().ToListAsync();
+            )
+                .AsNoTracking()
+                .ToListAsync();
 
             return new PartialViewResult() { ViewName = "Partials/_RunList", ViewData = ViewData };
         }
@@ -314,7 +318,7 @@ namespace Atlas_Web.Pages.Profile
                 {
                     d = d,
                     b = b,
-                    r = r
+                    r = r,
                 };
 
             var subquery_group = (
@@ -323,7 +327,7 @@ namespace Atlas_Web.Pages.Profile
                 {
                     d = x.d,
                     b = x.b,
-                    r = x.r
+                    r = x.r,
                 } by x.d.RunStartTime_Hour
             );
 
@@ -343,7 +347,7 @@ namespace Atlas_Web.Pages.Profile
                         {
                             d = d,
                             b = b,
-                            r = r
+                            r = r,
                         };
 
                     subquery_group = (
@@ -352,7 +356,7 @@ namespace Atlas_Web.Pages.Profile
                         {
                             d = x.d,
                             b = x.b,
-                            r = x.r
+                            r = x.r,
                         } by x.d.RunStartTime_Hour
                     );
 
@@ -371,7 +375,7 @@ namespace Atlas_Web.Pages.Profile
                         {
                             d = d,
                             b = b,
-                            r = r
+                            r = r,
                         };
 
                     subquery_group = (
@@ -380,7 +384,7 @@ namespace Atlas_Web.Pages.Profile
                         {
                             d = x.d,
                             b = x.b,
-                            r = x.r
+                            r = x.r,
                         } by x.d.RunStartTime_Day
                     );
                     break;
@@ -398,7 +402,7 @@ namespace Atlas_Web.Pages.Profile
                         {
                             d = d,
                             b = b,
-                            r = r
+                            r = r,
                         };
 
                     subquery_group = (
@@ -407,7 +411,7 @@ namespace Atlas_Web.Pages.Profile
                         {
                             d = x.d,
                             b = x.b,
-                            r = x.r
+                            r = x.r,
                         } by x.d.RunStartTime_Day
                     );
                     break;
@@ -423,7 +427,7 @@ namespace Atlas_Web.Pages.Profile
                         {
                             d = d,
                             b = b,
-                            r = r
+                            r = r,
                         };
 
                     subquery_group = (
@@ -432,7 +436,7 @@ namespace Atlas_Web.Pages.Profile
                         {
                             d = x.d,
                             b = x.b,
-                            r = x.r
+                            r = x.r,
                         } by x.d.RunStartTime_Month
                     );
 
@@ -481,7 +485,7 @@ namespace Atlas_Web.Pages.Profile
                     Value = x.Key,
                     FriendlyValue = x.Key,
                     Count = x.Sum(y => y.b.Runs),
-                    Checked = server.Contains(x.Key)
+                    Checked = server.Contains(x.Key),
                 })
                 .AsNoTracking()
                 .ToListAsync();
@@ -494,7 +498,7 @@ namespace Atlas_Web.Pages.Profile
                     Value = x.Key,
                     FriendlyValue = x.Key,
                     Count = x.Sum(y => y.b.Runs),
-                    Checked = database.Contains(x.Key)
+                    Checked = database.Contains(x.Key),
                 })
                 .AsNoTracking()
                 .ToListAsync();
@@ -507,7 +511,7 @@ namespace Atlas_Web.Pages.Profile
                     Value = x.Key.ReportObjectTypeId.ToString(),
                     FriendlyValue = x.Key.Name,
                     Count = x.Sum(y => y.b.Runs),
-                    Checked = reportType.Contains((int)x.Key.ReportObjectTypeId)
+                    Checked = reportType.Contains((int)x.Key.ReportObjectTypeId),
                 })
                 .AsNoTracking()
                 .ToListAsync();
@@ -524,7 +528,7 @@ namespace Atlas_Web.Pages.Profile
                     Value = x.Key.Value,
                     FriendlyValue = x.Key.Value,
                     Count = x.Sum(y => y.b.Runs),
-                    Checked = masterFile.Contains(x.Key.Value)
+                    Checked = masterFile.Contains(x.Key.Value),
                 })
                 .AsNoTracking()
                 .ToListAsync();
@@ -534,7 +538,7 @@ namespace Atlas_Web.Pages.Profile
                 {
                     Key = "visible",
                     Value = x.r.DefaultVisibilityYn == "N" ? "N" : "Y",
-                    FriendlyValue = x.r.DefaultVisibilityYn == "N" ? "No" : "Yes"
+                    FriendlyValue = x.r.DefaultVisibilityYn == "N" ? "No" : "Yes",
                 })
                 .Select(x => new Filters
                 {
@@ -542,7 +546,7 @@ namespace Atlas_Web.Pages.Profile
                     Value = x.Key.Value,
                     FriendlyValue = x.Key.FriendlyValue,
                     Count = x.Sum(y => y.b.Runs),
-                    Checked = visible.Contains(x.Key.Value)
+                    Checked = visible.Contains(x.Key.Value),
                 })
                 .AsNoTracking()
                 .ToListAsync();
@@ -557,15 +561,17 @@ namespace Atlas_Web.Pages.Profile
                     Value = x.Key,
                     FriendlyValue = x.Key,
                     Count = x.Sum(y => y.b.Runs),
-                    Checked = certification.Contains(x.Key)
+                    Checked = certification.Contains(x.Key),
                 }
-            ).AsNoTracking().ToListAsync();
+            )
+                .AsNoTracking()
+                .ToListAsync();
 
             Filter_Availabiltiy = await subquery
                 .GroupBy(x => new
                 {
                     Key = "availability",
-                    Value = string.IsNullOrEmpty(x.r.Availability) ? "Public" : x.r.Availability
+                    Value = string.IsNullOrEmpty(x.r.Availability) ? "Public" : x.r.Availability,
                 })
                 .Select(x => new Filters
                 {
@@ -573,7 +579,7 @@ namespace Atlas_Web.Pages.Profile
                     Value = x.Key.Value,
                     FriendlyValue = x.Key.Value,
                     Count = x.Sum(y => y.b.Runs),
-                    Checked = availability.Contains(x.Key.Value)
+                    Checked = availability.Contains(x.Key.Value),
                 })
                 .AsNoTracking()
                 .ToListAsync();
@@ -616,9 +622,11 @@ namespace Atlas_Web.Pages.Profile
                     Date = grp.Key.ToString(date_format),
                     Users = grp.Select(x => x.d.RunUserId).Distinct().Count(),
                     Runs = grp.Sum(x => x.b.Runs),
-                    RunTime = Math.Round(grp.Average(x => (int)x.d.RunDurationSeconds), 1)
+                    RunTime = Math.Round(grp.Average(x => (int)x.d.RunDurationSeconds), 1),
                 }
-            ).AsNoTracking().ToListAsync();
+            )
+                .AsNoTracking()
+                .ToListAsync();
 
             Runs = RunHistory.Sum(x => x.Runs);
 
@@ -690,7 +698,11 @@ namespace Atlas_Web.Pages.Profile
                             ? "/users?id=" + grp.Key.RunUserId
                             : null,
                 }
-            ).OrderByDescending(x => x.Count).Take(20).AsNoTracking().ToListAsync();
+            )
+                .OrderByDescending(x => x.Count)
+                .Take(20)
+                .AsNoTracking()
+                .ToListAsync();
 
             return new PartialViewResult { ViewName = "Partials/_BarData", ViewData = ViewData };
         }
@@ -739,9 +751,13 @@ namespace Atlas_Web.Pages.Profile
                     Count = grp.Sum(x => x.b.Runs),
                     Percent = (double)grp.Sum(x => x.b.Runs) / total,
                     TitleOne = "Failed Runs",
-                    TitleTwo = "Fails"
+                    TitleTwo = "Fails",
                 }
-            ).OrderByDescending(x => x.Count).Take(20).AsNoTracking().ToListAsync();
+            )
+                .OrderByDescending(x => x.Count)
+                .Take(20)
+                .AsNoTracking()
+                .ToListAsync();
 
             return new PartialViewResult { ViewName = "Partials/_BarData", ViewData = ViewData };
         }
@@ -781,7 +797,7 @@ namespace Atlas_Web.Pages.Profile
                 group a by new
                 {
                     a.r.ReportObjectId,
-                    name = string.IsNullOrEmpty(a.r.DisplayTitle) ? a.r.Name : a.r.DisplayTitle
+                    name = string.IsNullOrEmpty(a.r.DisplayTitle) ? a.r.Name : a.r.DisplayTitle,
                 } into grp
                 select new BarData
                 {
@@ -792,9 +808,13 @@ namespace Atlas_Web.Pages.Profile
                     Date = grp.Max(x => x.d.RunStartTime).ToShortDateString(),
                     DateTitle = "Last Run",
                     TitleTwo = "Runs",
-                    Href = "/reports?id=" + grp.Key.ReportObjectId
+                    Href = "/reports?id=" + grp.Key.ReportObjectId,
                 }
-            ).OrderByDescending(x => x.Count).Take(20).AsNoTracking().ToListAsync();
+            )
+                .OrderByDescending(x => x.Count)
+                .Take(20)
+                .AsNoTracking()
+                .ToListAsync();
 
             return new PartialViewResult { ViewName = "Partials/_BarData", ViewData = ViewData };
         }
@@ -856,7 +876,7 @@ namespace Atlas_Web.Pages.Profile
             return new PartialViewResult
             {
                 ViewName = "Partials/_Subscriptions",
-                ViewData = ViewData
+                ViewData = ViewData,
             };
         }
     }

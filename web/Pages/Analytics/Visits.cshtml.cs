@@ -99,7 +99,7 @@ namespace Atlas_Web.Pages.Analytics
                             LoadTime = Math.Round(
                                 (grp.Average(x => (long)Convert.ToDouble(x.LoadTime)) / 1000),
                                 1
-                            )
+                            ),
                         }
                     ).ToListAsync();
 
@@ -121,7 +121,7 @@ namespace Atlas_Web.Pages.Analytics
                             LoadTime = Math.Round(
                                 (grp.Average(x => (long)Convert.ToDouble(x.LoadTime)) / 1000),
                                 1
-                            )
+                            ),
                         }
                     ).ToListAsync();
                     break;
@@ -142,7 +142,7 @@ namespace Atlas_Web.Pages.Analytics
                             LoadTime = Math.Round(
                                 (grp.Average(x => (long)Convert.ToDouble(x.LoadTime)) / 1000),
                                 1
-                            )
+                            ),
                         }
                     ).ToListAsync();
                     break;
@@ -161,7 +161,7 @@ namespace Atlas_Web.Pages.Analytics
                             LoadTime = Math.Round(
                                 (grp.Average(x => (long)Convert.ToDouble(x.LoadTime)) / 1000),
                                 1
-                            )
+                            ),
                         }
                     ).ToListAsync();
                     break;
@@ -225,9 +225,12 @@ namespace Atlas_Web.Pages.Analytics
                     Count = grp.Sum(x => x.Count),
                     Percent = (double)grp.Sum(x => x.Count) / total,
                     TitleOne = "Browser",
-                    TitleTwo = "Views"
+                    TitleTwo = "Views",
                 }
-            ).OrderByDescending(x => x.Count).Take(10).ToList();
+            )
+                .OrderByDescending(x => x.Count)
+                .Take(10)
+                .ToList();
 
             return new PartialViewResult { ViewName = "Partials/_BarData", ViewData = ViewData };
         }
@@ -271,9 +274,12 @@ namespace Atlas_Web.Pages.Analytics
                     Count = grp.Sum(x => x.Count),
                     Percent = (double)grp.Sum(x => x.Count) / total,
                     TitleOne = "Operating System",
-                    TitleTwo = "Views"
+                    TitleTwo = "Views",
                 }
-            ).OrderByDescending(x => x.Count).Take(10).ToList();
+            )
+                .OrderByDescending(x => x.Count)
+                .Take(10)
+                .ToList();
 
             return new PartialViewResult { ViewName = "Partials/_BarData", ViewData = ViewData };
         }
@@ -312,9 +318,12 @@ namespace Atlas_Web.Pages.Analytics
                     Count = grp.Count(),
                     Percent = (double)grp.Count() / total,
                     TitleOne = "Window Resolution",
-                    TitleTwo = "Views"
+                    TitleTwo = "Views",
                 }
-            ).OrderByDescending(x => x.Count).Take(10).ToListAsync();
+            )
+                .OrderByDescending(x => x.Count)
+                .Take(10)
+                .ToListAsync();
 
             return new PartialViewResult { ViewName = "Partials/_BarData", ViewData = ViewData };
         }
@@ -361,9 +370,12 @@ namespace Atlas_Web.Pages.Analytics
                             ? "/users?id=" + grp.Key.UserId
                             : null,
                     TitleOne = "Top Users",
-                    TitleTwo = "Views"
+                    TitleTwo = "Views",
                 }
-            ).OrderByDescending(x => x.Count).Take(10).ToListAsync();
+            )
+                .OrderByDescending(x => x.Count)
+                .Take(10)
+                .ToListAsync();
 
             return new PartialViewResult { ViewName = "Partials/_BarData", ViewData = ViewData };
         }
@@ -403,9 +415,12 @@ namespace Atlas_Web.Pages.Analytics
                         1
                     ),
                     TitleOne = "Load Times",
-                    TitleTwo = "Seconds"
+                    TitleTwo = "Seconds",
                 }
-            ).OrderByDescending(x => x.Count).Take(10).ToListAsync();
+            )
+                .OrderByDescending(x => x.Count)
+                .Take(10)
+                .ToListAsync();
 
             return new PartialViewResult { ViewName = "Partials/_BarData", ViewData = ViewData };
         }
