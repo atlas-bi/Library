@@ -87,13 +87,20 @@ namespace Atlas_Web.Pages.Requests
             object udfFields
         )
         {
+            var email = User.GetUserEmail();
+            var name = User.GetUserName();
+
+            var requester = string.IsNullOrWhiteSpace(email)
+                ? (object)new { name = name }
+                : new { email_id = email };
+
             return new
             {
                 request = new
                 {
                     subject,
                     description,
-                    requester = new { email_id = User.GetUserEmail() },
+                    requester,
                     template = new { name = "WebAPI" },
                     status = new { name = "Open" },
                     category = new { name = "Epic Request" },
