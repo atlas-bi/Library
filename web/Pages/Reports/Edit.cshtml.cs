@@ -60,7 +60,7 @@ namespace Atlas_Web.Pages.Reports
                     {
                         ReportObjectId = id,
                         CreatedDateTime = DateTime.Now,
-                        CreatedBy = User.GetUserId()
+                        CreatedBy = User.GetUserId(),
                     }
                 );
                 await _context.SaveChangesAsync();
@@ -68,20 +68,20 @@ namespace Atlas_Web.Pages.Reports
 
             Report = await _context
                 .ReportObjectDocs.Include(x => x.ReportObject)
-                .ThenInclude(x => x.ReportObjectType)
+                    .ThenInclude(x => x.ReportObjectType)
                 /* images */
                 .Include(x => x.ReportObject)
-                .ThenInclude(x => x.ReportObjectImagesDocs)
+                    .ThenInclude(x => x.ReportObjectImagesDocs)
                 /* maintenance logs */
                 .Include(x => x.MaintenanceLogs)
-                .ThenInclude(x => x.Maintainer)
+                    .ThenInclude(x => x.Maintainer)
                 .Include(x => x.MaintenanceLogs)
-                .ThenInclude(x => x.MaintenanceLogStatus)
+                    .ThenInclude(x => x.MaintenanceLogStatus)
                 /* meta */
                 .Include(x => x.EstimatedRunFrequency)
                 .Include(x => x.Fragility)
                 .Include(x => x.ReportObjectDocFragilityTags)
-                .ThenInclude(x => x.FragilityTag)
+                    .ThenInclude(x => x.FragilityTag)
                 .Include(x => x.MaintenanceSchedule)
                 .Include(x => x.OrganizationalValue)
                 /* users */
@@ -91,11 +91,11 @@ namespace Atlas_Web.Pages.Reports
                 .Include(x => x.ReportServiceRequests)
                 /* collections */
                 .Include(x => x.ReportObject)
-                .ThenInclude(x => x.CollectionReports)
-                .ThenInclude(x => x.DataProject)
+                    .ThenInclude(x => x.CollectionReports)
+                        .ThenInclude(x => x.DataProject)
                 /* terms */
                 .Include(x => x.ReportObjectDocTerms)
-                .ThenInclude(x => x.Term)
+                    .ThenInclude(x => x.Term)
                 .AsSplitQuery()
                 .SingleOrDefaultAsync(x => x.ReportObjectId == id);
 

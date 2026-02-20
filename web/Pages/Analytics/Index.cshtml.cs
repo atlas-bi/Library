@@ -1,3 +1,4 @@
+using System.Globalization;
 using Atlas_Web.Authorization;
 using Atlas_Web.Helpers;
 using Atlas_Web.Models;
@@ -41,7 +42,7 @@ namespace Atlas_Web.Pages.Analytics
 
         public async Task<ActionResult> OnGetLiveUsers()
         {
-            var ActiveUserData = await (
+            var rawActiveUserData = await (
                 from b in _context.Analytics
                 join sub in (
                     from a in _context.Analytics
@@ -53,36 +54,59 @@ namespace Atlas_Web.Pages.Analytics
                         grp.Key.SessionId,
                         Time = grp.Max(x => x.UpdateTime),
                         SessionTime = grp.Sum(x => x.PageTime ?? 0),
-                        Pages = grp.Count()
+                        Pages = grp.Count(),
                     }
                 )
                     on new
                     {
                         b.UserId,
                         b.SessionId,
-                        time = b.UpdateTime
+                        time = b.UpdateTime,
                     } equals new
                     {
                         sub.UserId,
                         sub.SessionId,
-                        time = sub.Time
+                        time = sub.Time,
                     }
                 join u in _context.Users on b.UserId equals u.UserId
-                select new ActiveUserData
+                select new
                 {
                     Fullname = u.FullnameCalc,
                     UserId = b.UserId,
                     SessionId = b.SessionId,
-                    SessionTime = TimeSpan.FromMilliseconds(sub.SessionTime).ToString(@"h\:mm\:ss"),
-                    PageTime = TimeSpan.FromMilliseconds(b.PageTime ?? 0).ToString(@"h\:mm\:ss"),
+                    SessionTime = sub.SessionTime,
+                    PageTime = b.PageTime,
                     Href = b.Href,
-                    AccessDateTime = (b.AccessDateTime ?? DateTime.Now).ToString(
-                        @"M/d/yy h\:mm\:ss tt"
-                    ),
-                    UpdateTime = (b.UpdateTime ?? DateTime.Now).ToString(@"M/d/yy h\:mm\:ss tt"),
-                    Pages = sub.Pages
+                    AccessDateTime = b.AccessDateTime,
+                    UpdateTime = b.UpdateTime,
+                    Pages = sub.Pages,
                 }
             ).ToListAsync();
+
+            var ActiveUserData = rawActiveUserData
+                .Select(x => new ActiveUserData
+                {
+                    Fullname = x.Fullname,
+                    UserId = x.UserId,
+                    SessionId = x.SessionId,
+                    SessionTime = TimeSpan
+                        .FromMilliseconds(x.SessionTime)
+                        .ToString(@"h\:mm\:ss", CultureInfo.InvariantCulture),
+                    PageTime = TimeSpan
+                        .FromMilliseconds(x.PageTime ?? 0)
+                        .ToString(@"h\:mm\:ss", CultureInfo.InvariantCulture),
+                    Href = x.Href,
+                    AccessDateTime = (x.AccessDateTime ?? DateTime.Now).ToString(
+                        @"M/d/yy h\:mm\:ss tt",
+                        CultureInfo.InvariantCulture
+                    ),
+                    UpdateTime = (x.UpdateTime ?? DateTime.Now).ToString(
+                        @"M/d/yy h\:mm\:ss tt",
+                        CultureInfo.InvariantCulture
+                    ),
+                    Pages = x.Pages,
+                })
+                .ToList();
 
             var ActiveUsers = (
                 from a in ActiveUserData
@@ -102,7 +126,7 @@ namespace Atlas_Web.Pages.Analytics
             return new PartialViewResult
             {
                 ViewName = "Partials/_ActiveUsers",
-                ViewData = ViewData
+                ViewData = ViewData,
             };
         }
 

@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 // the reports. example of the old url:
 // /ReportObjects/Detials?id=73715
 
-
 namespace Atlas_Web.Pages.ReportObjects
 {
     public class DetailsModel : PageModel

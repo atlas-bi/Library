@@ -94,7 +94,7 @@ namespace Atlas_Web.Models
                         p.LoadTime,
                         p.PageId,
                         p.SessionId,
-                        p.Pathname
+                        p.Pathname,
                     });
                 entity
                     .HasIndex(e => e.AccessDateTime, "accessdatetime_session_width_agent")
@@ -103,7 +103,7 @@ namespace Atlas_Web.Models
                         p.PageId,
                         p.SessionId,
                         p.ScreenWidth,
-                        p.UserAgent
+                        p.UserAgent,
                     });
 
                 entity.HasIndex(e => e.UserId, "userid");
@@ -666,7 +666,7 @@ namespace Atlas_Web.Models
                         p.ReportObjectId,
                         p.EpicMasterFile,
                         p.Name,
-                        p.DisplayTitle
+                        p.DisplayTitle,
                     });
                 entity
                     .HasIndex(e => e.EpicMasterFile, "masterfile_report_visiblity_type")
@@ -674,7 +674,7 @@ namespace Atlas_Web.Models
                     {
                         p.ReportObjectId,
                         p.DefaultVisibilityYn,
-                        p.ReportObjectTypeId
+                        p.ReportObjectTypeId,
                     });
                 entity
                     .HasIndex(
@@ -682,7 +682,7 @@ namespace Atlas_Web.Models
                         {
                             e.EpicMasterFile,
                             e.SourceServer,
-                            e.ReportObjectTypeId
+                            e.ReportObjectTypeId,
                         },
                         "masterfile_sourceserver_type_report"
                     )
@@ -693,7 +693,7 @@ namespace Atlas_Web.Models
                     {
                         e.DefaultVisibilityYn,
                         e.OrphanedReportObjectYn,
-                        e.ReportObjectTypeId
+                        e.ReportObjectTypeId,
                     },
                     "visibility + orphan + type"
                 );
@@ -807,7 +807,7 @@ namespace Atlas_Web.Models
                     {
                         p.ReportObjectId,
                         p.LastUpdateDateTime,
-                        p.UpdatedBy
+                        p.UpdatedBy,
                     });
 
                 entity
@@ -817,7 +817,7 @@ namespace Atlas_Web.Models
                         p.ReportObjectId,
                         p.LastUpdateDateTime,
                         p.UpdatedBy,
-                        p.CreatedDateTime
+                        p.CreatedDateTime,
                     });
 
                 entity.HasIndex(e => e.CreatedBy, "createdby");
@@ -1104,7 +1104,7 @@ namespace Atlas_Web.Models
                     {
                         p.RunDataId,
                         p.RunDurationSeconds,
-                        p.RunStatus
+                        p.RunStatus,
                     });
                 entity
                     .HasIndex(
@@ -1115,7 +1115,7 @@ namespace Atlas_Web.Models
                     {
                         p.RunDataId,
                         p.RunDurationSeconds,
-                        p.RunStatus
+                        p.RunStatus,
                     });
                 entity
                     .HasIndex(
@@ -1126,7 +1126,7 @@ namespace Atlas_Web.Models
                     {
                         p.RunDataId,
                         p.RunDurationSeconds,
-                        p.RunStatus
+                        p.RunStatus,
                     });
                 entity
                     .HasIndex(
@@ -1137,7 +1137,7 @@ namespace Atlas_Web.Models
                     {
                         p.RunDataId,
                         p.RunDurationSeconds,
-                        p.RunStatus
+                        p.RunStatus,
                     });
                 entity
                     .HasIndex(
@@ -1148,7 +1148,7 @@ namespace Atlas_Web.Models
                     {
                         p.RunDataId,
                         p.RunDurationSeconds,
-                        p.RunStatus
+                        p.RunStatus,
                     });
 
                 entity
@@ -1160,7 +1160,7 @@ namespace Atlas_Web.Models
                     {
                         p.RunDataId,
                         p.RunDurationSeconds,
-                        p.RunUserId
+                        p.RunUserId,
                     });
                 entity
                     .HasIndex(
@@ -1171,7 +1171,7 @@ namespace Atlas_Web.Models
                     {
                         p.RunDataId,
                         p.RunDurationSeconds,
-                        p.RunUserId
+                        p.RunUserId,
                     });
                 entity
                     .HasIndex(
@@ -1182,7 +1182,7 @@ namespace Atlas_Web.Models
                     {
                         p.RunDataId,
                         p.RunDurationSeconds,
-                        p.RunUserId
+                        p.RunUserId,
                     });
                 entity
                     .HasIndex(
@@ -1193,7 +1193,7 @@ namespace Atlas_Web.Models
                     {
                         p.RunDataId,
                         p.RunDurationSeconds,
-                        p.RunUserId
+                        p.RunUserId,
                     });
                 entity
                     .HasIndex(
@@ -1204,7 +1204,7 @@ namespace Atlas_Web.Models
                     {
                         p.RunDataId,
                         p.RunDurationSeconds,
-                        p.RunUserId
+                        p.RunUserId,
                     });
 
                 entity.Property(e => e.LastLoadDate).HasColumnType("datetime");
@@ -1347,7 +1347,7 @@ namespace Atlas_Web.Models
                     {
                         e.SharedFromUserId,
                         e.SharedToUserId,
-                        e.ShareDate
+                        e.ShareDate,
                     },
                     "from + to + date"
                 );
@@ -1710,7 +1710,7 @@ namespace Atlas_Web.Models
                     {
                         e.ItemValue,
                         e.ItemId,
-                        e.UserId
+                        e.UserId,
                     },
                     "itemvalue + itemid + userid"
                 );

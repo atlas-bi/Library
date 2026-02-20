@@ -44,7 +44,7 @@ namespace Atlas_Web.Pages.Users.Settings
                     {
                         UserId = User.GetUserId(),
                         Name = "share_notification",
-                        Value = value
+                        Value = value,
                     }
                 );
                 await _context.SaveChangesAsync();

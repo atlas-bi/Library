@@ -140,34 +140,34 @@ public class CustomClaimsTransformer : IClaimsTransformation
         {
             me = await _context
                 .Users.Include(x => x.UserRoleLinks)
-                .ThenInclude(x => x.UserRoles)
-                .ThenInclude(x => x.RolePermissionLinks)
-                .ThenInclude(x => x.RolePermissions)
+                    .ThenInclude(x => x.UserRoles)
+                        .ThenInclude(x => x.RolePermissionLinks)
+                            .ThenInclude(x => x.RolePermissions)
                 .Include(x => x.UserPreferences)
                 .Include(x => x.UserGroupsMemberships)
                 .Include(x => x.UserGroupsMemberships)
-                .ThenInclude(x => x.Group)
-                .ThenInclude(x => x.GroupRoleLinks)
-                .ThenInclude(x => x.UserRoles)
-                .ThenInclude(x => x.RolePermissionLinks)
-                .ThenInclude(x => x.RolePermissions)
+                    .ThenInclude(x => x.Group)
+                        .ThenInclude(x => x.GroupRoleLinks)
+                            .ThenInclude(x => x.UserRoles)
+                                .ThenInclude(x => x.RolePermissionLinks)
+                                    .ThenInclude(x => x.RolePermissions)
                 .SingleOrDefaultAsync(x => x.Email == username);
         }
         else
         {
             me = await _context
                 .Users.Include(x => x.UserRoleLinks)
-                .ThenInclude(x => x.UserRoles)
-                .ThenInclude(x => x.RolePermissionLinks)
-                .ThenInclude(x => x.RolePermissions)
+                    .ThenInclude(x => x.UserRoles)
+                        .ThenInclude(x => x.RolePermissionLinks)
+                            .ThenInclude(x => x.RolePermissions)
                 .Include(x => x.UserPreferences)
                 .Include(x => x.UserGroupsMemberships)
                 .Include(x => x.UserGroupsMemberships)
-                .ThenInclude(x => x.Group)
-                .ThenInclude(x => x.GroupRoleLinks)
-                .ThenInclude(x => x.UserRoles)
-                .ThenInclude(x => x.RolePermissionLinks)
-                .ThenInclude(x => x.RolePermissions)
+                    .ThenInclude(x => x.Group)
+                        .ThenInclude(x => x.GroupRoleLinks)
+                            .ThenInclude(x => x.UserRoles)
+                                .ThenInclude(x => x.RolePermissionLinks)
+                                    .ThenInclude(x => x.RolePermissions)
                 .SingleOrDefaultAsync(x => x.Username == username);
         }
 
@@ -181,7 +181,7 @@ public class CustomClaimsTransformer : IClaimsTransformation
                         Email = username,
                         Username = username,
                         FullnameCalc = "Guest",
-                        FirstnameCalc = "Guest"
+                        FirstnameCalc = "Guest",
                     }
                 );
             }
@@ -192,7 +192,7 @@ public class CustomClaimsTransformer : IClaimsTransformation
                     {
                         Username = username,
                         FullnameCalc = "Guest",
-                        FirstnameCalc = "Guest"
+                        FirstnameCalc = "Guest",
                     }
                 );
             }
@@ -215,7 +215,7 @@ public class CustomClaimsTransformer : IClaimsTransformation
                         UserRolesId = _context
                             .UserRoles.Where(x => x.Name == "Administrator")
                             .First()
-                            .UserRolesId
+                            .UserRolesId,
                     }
                 );
                 await _context.SaveChangesAsync();
@@ -223,9 +223,9 @@ public class CustomClaimsTransformer : IClaimsTransformation
 
             me = await _context
                 .Users.Include(x => x.UserRoleLinks)
-                .ThenInclude(x => x.UserRoles)
-                .ThenInclude(x => x.RolePermissionLinks)
-                .ThenInclude(x => x.RolePermissions)
+                    .ThenInclude(x => x.UserRoles)
+                        .ThenInclude(x => x.RolePermissionLinks)
+                            .ThenInclude(x => x.RolePermissions)
                 .SingleAsync(x => x.Username == username);
         }
 

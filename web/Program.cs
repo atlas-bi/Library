@@ -1,5 +1,7 @@
+using System.Data.SqlClient;
 using System.IO.Compression;
 using System.Security.Cryptography.X509Certificates;
+using System.Text.RegularExpressions;
 using Atlas_Web.Authentication;
 using Atlas_Web.Authorization;
 using Atlas_Web.Middleware;
@@ -20,6 +22,7 @@ using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationM
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Net.Http.Headers;
 using SolrNet;
 using WebMarkupMin.AspNet.Common.Compressors;
@@ -55,13 +58,17 @@ builder.Services.Configure<CookiePolicyOptions>(options =>
 });
 builder.Services.AddResponseCaching();
 
-// for linq queries
-builder.Services.AddDbContext<Atlas_WebContext>(options =>
-    options.UseSqlServer(
-        builder.Configuration.GetConnectionString("AtlasDatabase"),
-        o => o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery).CommandTimeout(60000)
-    )
-);
+// for linq queries - conditionally register based on environment
+if (!builder.Environment.IsEnvironment("Test"))
+{
+    builder.Services.AddDbContext<Atlas_WebContext>(options =>
+        options.UseSqlServer(
+            builder.Configuration.GetConnectionString("AtlasDatabase"),
+            o =>
+                o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery).CommandTimeout(60000)
+        )
+    );
+}
 
 builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
 
@@ -81,7 +88,7 @@ builder.Services.AddResponseCompression(options =>
         "text/css",
         "text/js",
         "application/css",
-        "application/javascript"
+        "application/javascript",
     };
 });
 
@@ -93,12 +100,12 @@ builder
         new AuthenticatedEncryptorConfiguration()
         {
             EncryptionAlgorithm = EncryptionAlgorithm.AES_256_CBC,
-            ValidationAlgorithm = ValidationAlgorithm.HMACSHA256
+            ValidationAlgorithm = ValidationAlgorithm.HMACSHA256,
         }
     );
 
-var cssSettings = new CssBundlingSettings { Minify = true, FingerprintUrls = true, };
-var codeSettings = new CodeBundlingSettings { Minify = true, };
+var cssSettings = new CssBundlingSettings { Minify = true, FingerprintUrls = true };
+var codeSettings = new CodeBundlingSettings { Minify = true };
 
 builder.Services.AddWebOptimizer(
     builder.Environment,
@@ -184,7 +191,7 @@ builder
             ),
             new GZipCompressorFactory(
                 new GZipCompressionSettings { Level = CompressionLevel.Fastest }
-            )
+            ),
         };
     });
 
@@ -329,9 +336,9 @@ app.UseStaticFiles(
             headers.CacheControl = new CacheControlHeaderValue
             {
                 Public = true,
-                MaxAge = TimeSpan.FromDays(365)
+                MaxAge = TimeSpan.FromDays(365),
             };
-        }
+        },
     }
 );
 
@@ -351,61 +358,164 @@ app.Use(
     }
 );
 
-using (var scope = app.Services.CreateScope())
+// Skip database initialization in Test environment to avoid provider conflicts
+if (!app.Environment.IsEnvironment("Test"))
 {
-    IMemoryCache cache = scope.ServiceProvider.GetRequiredService<IMemoryCache>();
-    Atlas_WebContext context = scope.ServiceProvider.GetRequiredService<Atlas_WebContext>();
-
-    // load override css
-    var css = context
-        .GlobalSiteSettings.Where(x => x.Name == "global_css")
-        .Select(x => x.Value)
-        .FirstOrDefault();
-    if (css != null)
+    using (var scope = app.Services.CreateScope())
     {
-        cache.Set("global_css", css);
-    }
+        IMemoryCache cache = scope.ServiceProvider.GetRequiredService<IMemoryCache>();
+        Atlas_WebContext context = scope.ServiceProvider.GetRequiredService<Atlas_WebContext>();
 
-    // set logo
-    if (System.IO.File.Exists(app.Configuration["logo"]))
-    {
-        try
+        if (context.Database.IsRelational())
         {
-            byte[] imageArray = System.IO.File.ReadAllBytes(app.Configuration["logo"]);
-            string base64ImageRepresentation = Convert.ToBase64String(imageArray);
-            cache.Set("logo", "data:image/png;base64," + base64ImageRepresentation);
-            cache.Set("logo_path", app.Configuration["logo"]);
+            try
+            {
+                context.Database.Migrate();
+            }
+            catch (SqlException ex) when (ex.Number == 4060)
+            {
+                var connStr = app.Configuration.GetConnectionString("AtlasDatabase");
+                var csb = new SqlConnectionStringBuilder(connStr) { InitialCatalog = "master" };
+
+                using (var conn = new SqlConnection(csb.ConnectionString))
+                {
+                    conn.Open();
+                    using var cmd = conn.CreateCommand();
+                    cmd.CommandText = "IF DB_ID(N'atlas') IS NULL CREATE DATABASE [atlas];";
+                    cmd.ExecuteNonQuery();
+                }
+
+                context.Database.Migrate();
+            }
         }
-        catch
+
+        var seedDemoRaw =
+            app.Configuration["SEED_DEMO"] ?? Environment.GetEnvironmentVariable("SEED_DEMO");
+        var shouldSeedDemo =
+            !string.IsNullOrWhiteSpace(seedDemoRaw)
+            && (
+                string.Equals(seedDemoRaw, "true", StringComparison.OrdinalIgnoreCase)
+                || string.Equals(seedDemoRaw, "1", StringComparison.OrdinalIgnoreCase)
+                || string.Equals(seedDemoRaw, "yes", StringComparison.OrdinalIgnoreCase)
+            );
+
+        if (shouldSeedDemo)
+        {
+            const string seedMarkerName = "demo_seed_applied";
+            var alreadySeeded = context.GlobalSiteSettings.Any(x => x.Name == seedMarkerName);
+
+            if (!alreadySeeded)
+            {
+                var seedScriptPath = Path.Combine(
+                    AppContext.BaseDirectory,
+                    "atlas-demo-seed_script.sql"
+                );
+                if (File.Exists(seedScriptPath))
+                {
+                    var seedSql = File.ReadAllText(seedScriptPath);
+                    var batches = Regex.Split(
+                        seedSql,
+                        @"^\s*GO\s*$",
+                        RegexOptions.Multiline | RegexOptions.IgnoreCase,
+                        TimeSpan.FromSeconds(5)
+                    );
+
+                    using var connection = new SqlConnection(
+                        app.Configuration.GetConnectionString("AtlasDatabase")
+                    );
+                    connection.Open();
+
+                    using var tx = connection.BeginTransaction();
+                    try
+                    {
+                        foreach (var batch in batches)
+                        {
+                            var sql = batch?.Trim();
+                            if (string.IsNullOrWhiteSpace(sql))
+                            {
+                                continue;
+                            }
+
+                            using var cmd = connection.CreateCommand();
+                            cmd.Transaction = tx;
+                            cmd.CommandTimeout = 60000;
+                            cmd.CommandText = sql;
+                            cmd.ExecuteNonQuery();
+                        }
+
+                        context.GlobalSiteSettings.Add(
+                            new GlobalSiteSetting
+                            {
+                                Name = seedMarkerName,
+                                Description = "",
+                                Value = DateTimeOffset.UtcNow.ToString("O"),
+                            }
+                        );
+                        context.SaveChanges();
+
+                        tx.Commit();
+                    }
+                    catch
+                    {
+                        tx.Rollback();
+                        throw;
+                    }
+                }
+            }
+        }
+
+        // load override css
+        var css = context
+            .GlobalSiteSettings.Where(x => x.Name == "global_css")
+            .Select(x => x.Value)
+            .FirstOrDefault();
+        if (css != null)
+        {
+            cache.Set("global_css", css);
+        }
+
+        // set logo
+        var logoPath = app.Configuration["logo"];
+        if (!string.IsNullOrWhiteSpace(logoPath) && System.IO.File.Exists(logoPath))
+        {
+            try
+            {
+                byte[] imageArray = System.IO.File.ReadAllBytes(logoPath);
+                string base64ImageRepresentation = Convert.ToBase64String(imageArray);
+                cache.Set("logo", "data:image/png;base64," + base64ImageRepresentation);
+                cache.Set("logo_path", logoPath);
+            }
+            catch
+            {
+                // cache.Set("logo", "/img/atlas-a-logo.svg");
+                // cache.Set("logo_path", "wwwroot/img/atlas-a-logo.svg");
+            }
+        }
+        else
         {
             // cache.Set("logo", "/img/atlas-a-logo.svg");
             // cache.Set("logo_path", "wwwroot/img/atlas-a-logo.svg");
         }
-    }
-    else
-    {
-        // cache.Set("logo", "/img/atlas-a-logo.svg");
-        // cache.Set("logo_path", "wwwroot/img/atlas-a-logo.svg");
-    }
 
-    // set version
-    try
-    {
-        var d = "";
-
-        if (File.Exists("version"))
+        // set version
+        try
         {
-            d = File.ReadAllText("version");
-        }
+            var d = "";
 
-        if (!string.IsNullOrEmpty(d))
-        {
-            cache.Set("version", d);
+            if (File.Exists("version"))
+            {
+                d = File.ReadAllText("version");
+            }
+
+            if (!string.IsNullOrEmpty(d))
+            {
+                cache.Set("version", d);
+            }
         }
-    }
-    catch
-    {
-        // not set
+        catch
+        {
+            // not set
+        }
     }
 }
 

@@ -36,7 +36,9 @@ namespace Atlas_Web.Authorization
                     ClaimTypes.Role
                 )
                 {
-                    BootstrapContext = ((ClaimsIdentity)incomingPrincipal.Identity).BootstrapContext
+                    BootstrapContext = (
+                        (ClaimsIdentity)incomingPrincipal.Identity
+                    ).BootstrapContext,
                 }
             );
         }

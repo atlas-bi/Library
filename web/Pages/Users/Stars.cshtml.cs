@@ -80,47 +80,47 @@ namespace Atlas_Web.Pages.Users
             Collections = await _context
                 .StarredCollections.Where(x => x.Ownerid == UserId)
                 .Include(x => x.Collection)
-                .ThenInclude(x => x.StarredCollections)
+                    .ThenInclude(x => x.StarredCollections)
                 .ToListAsync();
 
             Reports = await _context
                 .StarredReports.Where(x => x.Ownerid == UserId)
                 .Include(x => x.Report)
-                .ThenInclude(x => x.ReportObjectDoc)
+                    .ThenInclude(x => x.ReportObjectDoc)
                 .Include(x => x.Report)
-                .ThenInclude(x => x.ReportObjectType)
+                    .ThenInclude(x => x.ReportObjectType)
                 .Include(x => x.Report)
-                .ThenInclude(x => x.ReportObjectAttachments)
+                    .ThenInclude(x => x.ReportObjectAttachments)
                 .Include(x => x.Report)
-                .ThenInclude(x => x.StarredReports)
+                    .ThenInclude(x => x.StarredReports)
                 .Include(x => x.Report)
-                .ThenInclude(x => x.ReportTagLinks)
-                .ThenInclude(x => x.Tag)
+                    .ThenInclude(x => x.ReportTagLinks)
+                        .ThenInclude(x => x.Tag)
                 // for authentication
                 .Include(x => x.Report)
-                .ThenInclude(x => x.ReportObjectHierarchyChildReportObjects)
-                .ThenInclude(x => x.ParentReportObject)
-                .ThenInclude(x => x.ReportGroupsMemberships)
+                    .ThenInclude(x => x.ReportObjectHierarchyChildReportObjects)
+                        .ThenInclude(x => x.ParentReportObject)
+                            .ThenInclude(x => x.ReportGroupsMemberships)
                 .Include(x => x.Report)
-                .ThenInclude(x => x.ReportGroupsMemberships)
+                    .ThenInclude(x => x.ReportGroupsMemberships)
                 .ToListAsync();
 
             Initiatives = await _context
                 .StarredInitiatives.Where(x => x.Ownerid == UserId)
                 .Include(x => x.Initiative)
-                .ThenInclude(x => x.StarredInitiatives)
+                    .ThenInclude(x => x.StarredInitiatives)
                 .ToListAsync();
 
             Terms = await _context
                 .StarredTerms.Where(x => x.Ownerid == UserId)
                 .Include(x => x.Term)
-                .ThenInclude(x => x.StarredTerms)
+                    .ThenInclude(x => x.StarredTerms)
                 .ToListAsync();
 
             Groups = await _context
                 .StarredGroups.Where(x => x.Ownerid == UserId)
                 .Include(x => x.Group)
-                .ThenInclude(x => x.StarredGroups)
+                    .ThenInclude(x => x.StarredGroups)
                 .ToListAsync();
 
             Searches = await _context.StarredSearches.Where(x => x.Ownerid == UserId).ToListAsync();
@@ -158,8 +158,8 @@ namespace Atlas_Web.Pages.Users
                     .Include(x => x.StarredReports)
                     // for authentication
                     .Include(x => x.ReportObjectHierarchyChildReportObjects)
-                    .ThenInclude(x => x.ParentReportObject)
-                    .ThenInclude(x => x.ReportGroupsMemberships)
+                        .ThenInclude(x => x.ParentReportObject)
+                            .ThenInclude(x => x.ReportGroupsMemberships)
                     .OrderByDescending(x =>
                         x.ReportObjectRunDataBridges.Where(y => y.RunData.RunUserId == UserId)
                             .Sum(x => x.Runs)

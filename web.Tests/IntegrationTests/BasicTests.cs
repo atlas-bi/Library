@@ -37,9 +37,15 @@ namespace web.Tests.IntegrationTests
 
             // Act
             var response = await client.GetAsync(url);
+            var body = await response.Content.ReadAsStringAsync();
 
             // Assert
-            response.EnsureSuccessStatusCode(); // Status Code 200-299
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new System.Exception(
+                    $"Request to '{url}' failed with {(int)response.StatusCode} ({response.StatusCode}). Body:\n{body}"
+                );
+            }
             // Assert.Equal(
             //     "text/html; charset=utf-8",
             //     response.Content.Headers.ContentType.ToString()

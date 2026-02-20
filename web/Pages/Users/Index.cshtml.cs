@@ -263,7 +263,7 @@ namespace Atlas_Web.Pages.Users
             return new PartialViewResult
             {
                 ViewName = "Sections/_SearchHistory",
-                ViewData = ViewData
+                ViewData = ViewData,
             };
         }
 
@@ -325,7 +325,7 @@ namespace Atlas_Web.Pages.Users
                             ? null
                             : (o.ShareDate ?? DateTime.Now).ToString("M/d/yyyy"),
                     SharedFrom = o.SharedFromUser.FullnameCalc,
-                    Url = o.Url
+                    Url = o.Url,
                 }
             ).ToList();
             ViewData["SharedFromMe"] = (
@@ -340,14 +340,14 @@ namespace Atlas_Web.Pages.Users
                             ? null
                             : (o.ShareDate ?? DateTime.Now).ToString("M/d/yyyy"),
                     SharedFrom = o.SharedToUser.FullnameCalc,
-                    Url = o.Url
+                    Url = o.Url,
                 }
             ).ToList();
 
             return new PartialViewResult
             {
                 ViewName = "Partials/_SharedObjects",
-                ViewData = ViewData
+                ViewData = ViewData,
             };
         }
 
@@ -390,7 +390,7 @@ namespace Atlas_Web.Pages.Users
                             Id = a.GroupId,
                             Name = a.Group.GroupName,
                             Type = a.Group.GroupType,
-                            Source = a.Group.GroupSource
+                            Source = a.Group.GroupSource,
                         }
                     ).ToListAsync();
                 }
@@ -451,7 +451,7 @@ namespace Atlas_Web.Pages.Users
             return new PartialViewResult
             {
                 ViewName = "Sections/_Subscriptions",
-                ViewData = ViewData
+                ViewData = ViewData,
             };
         }
 
@@ -488,28 +488,19 @@ namespace Atlas_Web.Pages.Users
                         {
                             Name = a.Pathname,
                             Type = (
-                                a.Pathname.ToLower() == "/reports"
-                                    ? "Reports"
-                                    : a.Pathname.ToLower() == "/terms"
-                                        ? "Terms"
-                                        : a.Pathname.ToLower() == "/projects"
-                                            ? "Collections"
-                                            : a.Pathname.ToLower() == "/collections"
-                                                ? "Collections"
-                                                : a.Pathname.ToLower() == "/initiatives"
-                                                    ? "Initiatives"
-                                                    : a.Pathname.ToLower() == "/users"
-                                                        ? "Users"
-                                                        : a.Pathname.ToLower() == "/contacts"
-                                                            ? "Reports"
-                                                            : a.Pathname.ToLower() == "/tasks"
-                                                                ? "Tasks"
-                                                                : a.Pathname.ToLower() == "/search"
-                                                                    ? "Search"
-                                                                    : "Other"
+                                a.Pathname.ToLower() == "/reports" ? "Reports"
+                                : a.Pathname.ToLower() == "/terms" ? "Terms"
+                                : a.Pathname.ToLower() == "/projects" ? "Collections"
+                                : a.Pathname.ToLower() == "/collections" ? "Collections"
+                                : a.Pathname.ToLower() == "/initiatives" ? "Initiatives"
+                                : a.Pathname.ToLower() == "/users" ? "Users"
+                                : a.Pathname.ToLower() == "/contacts" ? "Reports"
+                                : a.Pathname.ToLower() == "/tasks" ? "Tasks"
+                                : a.Pathname.ToLower() == "/search" ? "Search"
+                                : "Other"
                             ),
                             Url = a.Href,
-                            Date = a.AccessDateTimeDisplayString
+                            Date = a.AccessDateTimeDisplayString,
                         }
                     ).ToListAsync();
                 }
@@ -530,9 +521,11 @@ namespace Atlas_Web.Pages.Users
                         {
                             Date = r.LastUpdatedDateTimeDisplayString,
                             Name = r.ReportObject.DisplayName,
-                            Url = "\\reports?id=" + r.ReportObjectId
+                            Url = "\\reports?id=" + r.ReportObjectId,
                         }
-                    ).Take(10).ToListAsync();
+                    )
+                        .Take(10)
+                        .ToListAsync();
                 }
             );
 
@@ -551,9 +544,11 @@ namespace Atlas_Web.Pages.Users
                         {
                             Date = r.LastUpdatedDateDisplayString,
                             Name = r.Name,
-                            Url = "\\initiatives?id=" + r.InitiativeId
+                            Url = "\\initiatives?id=" + r.InitiativeId,
                         }
-                    ).Take(10).ToListAsync();
+                    )
+                        .Take(10)
+                        .ToListAsync();
                 }
             );
 
@@ -572,9 +567,11 @@ namespace Atlas_Web.Pages.Users
                         {
                             Date = r.LastUpdatedDateDisplayString,
                             Name = r.Name,
-                            Url = "\\collections?id=" + r.CollectionId
+                            Url = "\\collections?id=" + r.CollectionId,
                         }
-                    ).Take(10).ToListAsync();
+                    )
+                        .Take(10)
+                        .ToListAsync();
                 }
             );
 
@@ -594,9 +591,11 @@ namespace Atlas_Web.Pages.Users
                         {
                             Date = r.LastUpdatedDateTimeDisplayString,
                             Name = r.Name,
-                            Url = "\\terms?id=" + r.TermId
+                            Url = "\\terms?id=" + r.TermId,
                         }
-                    ).Take(10).ToListAsync();
+                    )
+                        .Take(10)
+                        .ToListAsync();
                 }
             );
 

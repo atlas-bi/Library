@@ -45,7 +45,7 @@ public class BasicTests : IClassFixture<BrowserFactory<Program>>
             Orientation = orientation,
             ProjectName = BrowsersTestData.ProjectName(),
             BuildName = BrowsersTestData.BuildName(),
-            BrowserStackCredentials = BrowsersTestData.BrowserStackCredentials()
+            BrowserStackCredentials = BrowsersTestData.BrowserStackCredentials(),
         };
 
         Local local = new Local();
@@ -62,24 +62,23 @@ public class BasicTests : IClassFixture<BrowserFactory<Program>>
 
         var capabilities = new BrowserFixture(options, OutputHelper);
 
-        List<string> urls =
-            new()
-            {
-                "",
-                "Collections/New",
-                "Initiatives",
-                "Initiatives/New",
-                "Terms",
-                "Terms/New",
-                "Search",
-                "Search?Query=test",
-                "about_analytics",
-                "Settings",
-                "Analytics",
-                "Users",
-                "Users?id=2",
-                "tasks"
-            };
+        List<string> urls = new()
+        {
+            "",
+            "Collections/New",
+            "Initiatives",
+            "Initiatives/New",
+            "Terms",
+            "Terms/New",
+            "Search",
+            "Search?Query=test",
+            "about_analytics",
+            "Settings",
+            "Analytics",
+            "Users",
+            "Users?id=2",
+            "tasks",
+        };
 
         IWebDriver driver = new RemoteWebDriver(
             options.BrowserStackEndpoint,

@@ -66,7 +66,7 @@ namespace Atlas_Web.Pages.Groups
                             Email = a.GroupEmail,
                             Type = a.GroupType,
                             Name = a.GroupName,
-                            Source = a.GroupSource
+                            Source = a.GroupSource,
                         }
                     ).FirstOrDefaultAsync();
                 }
@@ -113,7 +113,7 @@ namespace Atlas_Web.Pages.Groups
                                 from f in _context.StarredReports
                                 where f.Reportid == a.ReportId
                                 select new { f.Reportid }
-                            ).Count()
+                            ).Count(),
                         }
                     ).ToListAsync();
                 }

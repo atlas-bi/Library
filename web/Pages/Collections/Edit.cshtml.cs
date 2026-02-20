@@ -39,9 +39,9 @@ namespace Atlas_Web.Pages.Collections
 
             Collection = await _context
                 .Collections.Include(x => x.CollectionReports)
-                .ThenInclude(x => x.Report)
+                    .ThenInclude(x => x.Report)
                 .Include(x => x.CollectionTerms)
-                .ThenInclude(x => x.Term)
+                    .ThenInclude(x => x.Term)
                 .SingleAsync(x => x.CollectionId == id);
 
             return Page();

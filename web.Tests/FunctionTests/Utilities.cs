@@ -32,7 +32,7 @@ namespace web.Tests.FunctionTests
             return new List<User>()
             {
                 new User() { Username = "Default", UserId = 1 },
-                new User() { Username = "user 2", UserId = 2 }
+                new User() { Username = "user 2", UserId = 2 },
             };
         }
         // public static List<Message> GetSeedingMessages()
