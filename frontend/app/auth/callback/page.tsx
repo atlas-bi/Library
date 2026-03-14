@@ -4,6 +4,9 @@ import { useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 
+import { Card, CardContent } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
+
 function CallbackHandler() {
   const router = useRouter();
   const params = useSearchParams();
@@ -19,11 +22,13 @@ function CallbackHandler() {
   }, [params, router]);
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-50">
-      <div className="text-center">
-        <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-        <p className="text-gray-500 text-sm">Signing you in...</p>
-      </div>
+    <div className="flex items-center justify-center min-h-screen bg-background px-6">
+      <Card className="w-full max-w-sm">
+        <CardContent className="py-10 flex flex-col items-center text-center gap-4">
+          <Skeleton className="h-8 w-8 rounded-full" />
+          <p className="text-muted-foreground text-sm">Signing you in...</p>
+        </CardContent>
+      </Card>
     </div>
   );
 }
