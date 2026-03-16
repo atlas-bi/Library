@@ -1,6 +1,7 @@
 using System.Data.SqlClient;
 using System.IO.Compression;
 using System.Security.Cryptography.X509Certificates;
+using System.Text;
 using System.Text.RegularExpressions;
 using Atlas_Web.Authentication;
 using Atlas_Web.Authorization;
@@ -8,6 +9,8 @@ using Atlas_Web.Middleware;
 using Atlas_Web.Models;
 using Atlas_Web.Services;
 using Hangfire;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using ITfoxtec.Identity.Saml2;
 using ITfoxtec.Identity.Saml2.MvcCore;
 using ITfoxtec.Identity.Saml2.MvcCore.Configuration;
@@ -57,6 +60,20 @@ builder.Services.Configure<CookiePolicyOptions>(options =>
     options.MinimumSameSitePolicy = Microsoft.AspNetCore.Http.SameSiteMode.None;
 });
 builder.Services.AddResponseCaching();
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("NextJs", policy =>
+    {
+        var origins = builder.Configuration
+            .GetSection("Cors:AllowedOrigins")
+            .Get<string[]>() ?? new[] { "http://localhost:3000" };
+        policy.WithOrigins(origins)
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials();
+    });
+});
 
 // for linq queries - conditionally register based on environment
 if (!builder.Environment.IsEnvironment("Test"))
@@ -197,18 +214,50 @@ builder
 
 builder.Services.AddTransient<IEmailService, EmailService>();
 builder.Services.AddTransient<IRazorPartialToStringRenderer, RazorPartialToStringRenderer>();
+builder.Services.AddScoped<JwtTokenService>();
+
+var jwtKey = builder.Configuration["Jwt:Key"] ?? "atlas-dev-secret-key-change-in-production";
+var jwtIssuer = builder.Configuration["Jwt:Issuer"] ?? "atlas-library";
+var jwtAudience = builder.Configuration["Jwt:Audience"] ?? "atlas-library-nextjs";
 
 if (builder.Configuration["Demo"] == "True")
 {
 # pragma warning disable S1116
     builder
         .Services.AddAuthentication(options => options.DefaultScheme = "Demo")
-        .AddScheme<DemoSchemeOptions, DemoAuthHandler>("Demo", options => { });
+        .AddScheme<DemoSchemeOptions, DemoAuthHandler>("Demo", options => { })
+        .AddJwtBearer("Bearer", options =>
+        {
+            options.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidateLifetime = true,
+                ValidateIssuerSigningKey = true,
+                ValidIssuer = jwtIssuer,
+                ValidAudience = jwtAudience,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey)),
+            };
+        });
     ;
 }
 else
 {
-    builder.Services.AddAuthentication(NegotiateDefaults.AuthenticationScheme).AddNegotiate();
+    builder.Services.AddAuthentication(NegotiateDefaults.AuthenticationScheme)
+        .AddNegotiate()
+        .AddJwtBearer("Bearer", options =>
+        {
+            options.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidateLifetime = true,
+                ValidateIssuerSigningKey = true,
+                ValidIssuer = jwtIssuer,
+                ValidAudience = jwtAudience,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey)),
+            };
+        });
 }
 if (builder.Configuration.GetSection("Saml2").Exists())
 {
@@ -344,6 +393,7 @@ app.UseStaticFiles(
 
 app.UseETagger();
 app.UseRouting();
+app.UseCors("NextJs");
 app.UseAuthentication();
 app.UseAuthorization();
 
