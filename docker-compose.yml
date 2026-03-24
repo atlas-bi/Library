@@ -68,9 +68,9 @@ services:
     environment:
       PORT: ${WEB_PORT:-3000}
       SEED_DEMO: ${SEED_DEMO:-true}
-      Jwt__Key: ${JWT_KEY:-atlas-dev-secret-key-change-in-production-32chars}
-      Jwt__Issuer: ${JWT_ISSUER:-atlas-library}
-      Jwt__Audience: ${JWT_AUDIENCE:-atlas-library-nextjs}
+      Jwt__Key: ${JWT_KEY}
+      Jwt__Issuer: ${JWT_ISSUER}
+      Jwt__Audience: ${JWT_AUDIENCE}
     expose:
       - ${WEB_PORT:-3000}
     ports:
