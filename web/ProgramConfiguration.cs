@@ -51,9 +51,11 @@ public static class ProgramConfiguration
         {
             if (builder.Environment.IsEnvironment("Test"))
             {
+#pragma warning disable S6781 // JWT secret keys should not be disclosed - Test defaults only, not production secrets
                 jwtKey = "test-jwt-secret-key-for-ci-testing-minimum-32-characters";
                 jwtIssuer = "atlas-test-issuer";
                 jwtAudience = "atlas-test-audience";
+#pragma warning restore S6781
             }
             else
             {
@@ -63,7 +65,9 @@ public static class ProgramConfiguration
             }
         }
 
+#pragma warning disable S6781 // JWT secret keys should not be disclosed - Key from config or test defaults, not hardcoded
         var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey));
+#pragma warning restore S6781
         builder.Services.AddScoped<JwtTokenService>(_ => new JwtTokenService(signingKey, jwtIssuer, jwtAudience));
 
         if (builder.Configuration["Demo"] == "True")

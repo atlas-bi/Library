@@ -1,4 +1,5 @@
 #nullable enable
+using System.Diagnostics.CodeAnalysis;
 using Atlas_Web.Models;
 using Atlas_Web.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -24,6 +25,7 @@ public class AuthApiController : ControllerBase
 
     [AllowAnonymous]
     [HttpGet("login")]
+    [SuppressMessage("Security", "S5146:HTTP request redirections should not be open to forging attacks", Justification = "URL is validated against CORS allowlist in GetSafeRedirectUrl before redirect")]
 #pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context - False positive: #nullable enable is set at file scope
     public async Task<IActionResult> Login([FromQuery] string? returnUrl = null)
 #pragma warning restore CS8632
@@ -53,9 +55,7 @@ public class AuthApiController : ControllerBase
         );
         
         var redirectUrl = $"{safeReturnUrl}?token={token}";
-#pragma warning disable S5146 // HTTP request redirections should not be open to forging attacks - False positive: URL is validated against CORS allowlist in GetSafeRedirectUrl
         return Redirect(redirectUrl);
-#pragma warning restore S5146
     }
 
     private IActionResult GetSafeRedirectUrl(string? returnUrl)
