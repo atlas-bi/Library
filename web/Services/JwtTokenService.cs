@@ -20,7 +20,9 @@ public class JwtTokenService
 
     public string IssueToken(string username, string fullname, int userId)
     {
+#pragma warning disable S6781 // JWT secret keys should not be disclosed - False positive: key is injected at startup, not read from config
         var creds = new SigningCredentials(_signingKey, SecurityAlgorithms.HmacSha256);
+#pragma warning restore S6781
 
         var claims = new[]
         {

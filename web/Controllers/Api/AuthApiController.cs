@@ -1,3 +1,4 @@
+#nullable enable
 using Atlas_Web.Models;
 using Atlas_Web.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -25,62 +26,87 @@ public class AuthApiController : ControllerBase
     [HttpGet("login")]
     public async Task<IActionResult> Login([FromQuery] string? returnUrl = null)
     {
-        if (_config["Demo"] == "True")
+        if (_config["Demo"] != "True")
         {
-            var user = await _context.Users.FirstOrDefaultAsync(x => x.Username == "Default");
-            if (user == null)
-            {
-                return NotFound("Demo user not found.");
-            }
-
-            var allowedOrigins = _config.GetSection("Cors:AllowedOrigins").Get<string[]>() ?? Array.Empty<string>();
-            var defaultCallbackPath = _config["Auth:DefaultCallbackPath"];
-            
-            if (string.IsNullOrWhiteSpace(defaultCallbackPath))
-            {
-                return BadRequest("Auth:DefaultCallbackPath is not configured.");
-            }
-            
-            string safeReturnUrl;
-            if (string.IsNullOrWhiteSpace(returnUrl))
-            {
-                safeReturnUrl = (allowedOrigins.FirstOrDefault() ?? string.Empty).TrimEnd('/') + defaultCallbackPath;
-            }
-            else if (Uri.TryCreate(returnUrl, UriKind.Absolute, out var parsedReturnUrl))
-            {
-                var isAllowed = false;
-                foreach (var origin in allowedOrigins)
-                {
-                    if (Uri.TryCreate(origin, UriKind.Absolute, out var parsedOrigin)
-                        && string.Equals(parsedOrigin.Scheme, parsedReturnUrl.Scheme, StringComparison.OrdinalIgnoreCase)
-                        && string.Equals(parsedOrigin.Host, parsedReturnUrl.Host, StringComparison.OrdinalIgnoreCase)
-                        && parsedOrigin.Port == parsedReturnUrl.Port)
-                    {
-                        isAllowed = true;
-                        break;
-                    }
-                }
-                safeReturnUrl = isAllowed ? returnUrl : (allowedOrigins.FirstOrDefault() ?? string.Empty).TrimEnd('/') + defaultCallbackPath;
-            }
-            else
-            {
-                safeReturnUrl = (allowedOrigins.FirstOrDefault() ?? string.Empty).TrimEnd('/') + defaultCallbackPath;
-            }
-            
-            if (string.IsNullOrWhiteSpace(safeReturnUrl))
-            {
-                return BadRequest("No allowed origins configured.");
-            }
-
-            var token = _jwt.IssueToken(
-                user.Username ?? "Default",
-                user.FullnameCalc ?? "Guest",
-                user.UserId
-            );
-            return Redirect($"{safeReturnUrl}?token={token}");
+            return Unauthorized(new { error = "SAML login not configured for API flow." });
         }
 
-        return Unauthorized(new { error = "SAML login not configured for API flow." });
+        var user = await _context.Users.FirstOrDefaultAsync(x => x.Username == "Default");
+        if (user == null)
+        {
+            return NotFound("Demo user not found.");
+        }
+
+        var safeReturnUrlResult = GetSafeRedirectUrl(returnUrl);
+        if (safeReturnUrlResult is BadRequestObjectResult)
+        {
+            return safeReturnUrlResult;
+        }
+
+        var safeReturnUrl = ((OkObjectResult)safeReturnUrlResult).Value as string ?? string.Empty;
+        var token = _jwt.IssueToken(
+            user.Username ?? "Default",
+            user.FullnameCalc ?? "Guest",
+            user.UserId
+        );
+        
+        var redirectUrl = $"{safeReturnUrl}?token={token}";
+        return Redirect(redirectUrl);
+    }
+
+    private IActionResult GetSafeRedirectUrl(string? returnUrl)
+    {
+        var allowedOrigins = _config.GetSection("Cors:AllowedOrigins").Get<string[]>() ?? Array.Empty<string>();
+        var defaultCallbackPath = _config["Auth:DefaultCallbackPath"];
+        
+        if (string.IsNullOrWhiteSpace(defaultCallbackPath))
+        {
+            return BadRequest("Auth:DefaultCallbackPath is not configured.");
+        }
+
+        if (string.IsNullOrWhiteSpace(returnUrl))
+        {
+            return BuildDefaultRedirectUrl(allowedOrigins, defaultCallbackPath);
+        }
+
+        if (!Uri.TryCreate(returnUrl, UriKind.Absolute, out var parsedReturnUrl))
+        {
+            return BuildDefaultRedirectUrl(allowedOrigins, defaultCallbackPath);
+        }
+
+        if (IsUrlAllowed(parsedReturnUrl, allowedOrigins))
+        {
+            return Ok(returnUrl);
+        }
+
+        return BuildDefaultRedirectUrl(allowedOrigins, defaultCallbackPath);
+    }
+
+    private bool IsUrlAllowed(Uri url, string[] allowedOrigins)
+    {
+        foreach (var origin in allowedOrigins)
+        {
+            if (Uri.TryCreate(origin, UriKind.Absolute, out var parsedOrigin)
+                && string.Equals(parsedOrigin.Scheme, url.Scheme, StringComparison.OrdinalIgnoreCase)
+                && string.Equals(parsedOrigin.Host, url.Host, StringComparison.OrdinalIgnoreCase)
+                && parsedOrigin.Port == url.Port)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private IActionResult BuildDefaultRedirectUrl(string[] allowedOrigins, string defaultCallbackPath)
+    {
+        var defaultOrigin = allowedOrigins.FirstOrDefault();
+        if (string.IsNullOrWhiteSpace(defaultOrigin))
+        {
+            return BadRequest("No allowed origins configured.");
+        }
+        
+        var safeUrl = defaultOrigin.TrimEnd('/') + defaultCallbackPath;
+        return Ok(safeUrl);
     }
 
     [Authorize(AuthenticationSchemes = "Bearer")]

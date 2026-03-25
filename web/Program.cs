@@ -61,27 +61,7 @@ builder.Services.Configure<CookiePolicyOptions>(options =>
 });
 builder.Services.AddResponseCaching();
 
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("NextJs", policy =>
-    {
-        var origins = builder.Configuration
-            .GetSection("Cors:AllowedOrigins")
-            .Get<string[]>();
-        
-        if (origins == null || origins.Length == 0)
-        {
-            throw new InvalidOperationException(
-                "CORS allowed origins are not configured. Please set Cors:AllowedOrigins in configuration."
-            );
-        }
-        
-        policy.WithOrigins(origins)
-              .AllowAnyHeader()
-              .AllowAnyMethod()
-              .AllowCredentials();
-    });
-});
+ProgramConfiguration.ConfigureCors(builder);
 
 // for linq queries - conditionally register based on environment
 if (!builder.Environment.IsEnvironment("Test"))
@@ -223,59 +203,7 @@ builder
 builder.Services.AddTransient<IEmailService, EmailService>();
 builder.Services.AddTransient<IRazorPartialToStringRenderer, RazorPartialToStringRenderer>();
 
-var jwtKey = builder.Configuration["Jwt:Key"];
-var jwtIssuer = builder.Configuration["Jwt:Issuer"];
-var jwtAudience = builder.Configuration["Jwt:Audience"];
-
-if (string.IsNullOrWhiteSpace(jwtKey) || string.IsNullOrWhiteSpace(jwtIssuer) || string.IsNullOrWhiteSpace(jwtAudience))
-{
-    throw new InvalidOperationException(
-        "JWT configuration is missing. Please set Jwt:Key, Jwt:Issuer, and Jwt:Audience via environment variables or configuration files."
-    );
-}
-
-var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey!));
-builder.Services.AddScoped<JwtTokenService>(_ => new JwtTokenService(signingKey, jwtIssuer!, jwtAudience!));
-
-if (builder.Configuration["Demo"] == "True")
-{
-# pragma warning disable S1116
-    builder
-        .Services.AddAuthentication(options => options.DefaultScheme = "Demo")
-        .AddScheme<DemoSchemeOptions, DemoAuthHandler>("Demo", options => { })
-        .AddJwtBearer("Bearer", options =>
-        {
-            options.TokenValidationParameters = new TokenValidationParameters
-            {
-                ValidateIssuer = true,
-                ValidateAudience = true,
-                ValidateLifetime = true,
-                ValidateIssuerSigningKey = true,
-                ValidIssuer = jwtIssuer,
-                ValidAudience = jwtAudience,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey!)),
-            };
-        });
-    ;
-}
-else
-{
-    builder.Services.AddAuthentication(NegotiateDefaults.AuthenticationScheme)
-        .AddNegotiate()
-        .AddJwtBearer("Bearer", options =>
-        {
-            options.TokenValidationParameters = new TokenValidationParameters
-            {
-                ValidateIssuer = true,
-                ValidateAudience = true,
-                ValidateLifetime = true,
-                ValidateIssuerSigningKey = true,
-                ValidIssuer = jwtIssuer,
-                ValidAudience = jwtAudience,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey!)),
-            };
-        });
-}
+ProgramConfiguration.ConfigureJwtAuthentication(builder);
 if (builder.Configuration.GetSection("Saml2").Exists())
 {
     builder.Services.AddHttpClient();
