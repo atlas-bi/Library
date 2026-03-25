@@ -216,9 +216,16 @@ builder.Services.AddTransient<IEmailService, EmailService>();
 builder.Services.AddTransient<IRazorPartialToStringRenderer, RazorPartialToStringRenderer>();
 builder.Services.AddScoped<JwtTokenService>();
 
-var jwtKey = builder.Configuration["Jwt:Key"] ?? "atlas-dev-secret-key-change-in-production";
-var jwtIssuer = builder.Configuration["Jwt:Issuer"] ?? "atlas-library";
-var jwtAudience = builder.Configuration["Jwt:Audience"] ?? "atlas-library-nextjs";
+var jwtKey = builder.Configuration["Jwt:Key"];
+var jwtIssuer = builder.Configuration["Jwt:Issuer"];
+var jwtAudience = builder.Configuration["Jwt:Audience"];
+
+if (string.IsNullOrWhiteSpace(jwtKey) || string.IsNullOrWhiteSpace(jwtIssuer) || string.IsNullOrWhiteSpace(jwtAudience))
+{
+    throw new InvalidOperationException(
+        "JWT configuration is missing. Please set Jwt:Key, Jwt:Issuer, and Jwt:Audience via environment variables or configuration files."
+    );
+}
 
 if (builder.Configuration["Demo"] == "True")
 {
@@ -236,7 +243,7 @@ if (builder.Configuration["Demo"] == "True")
                 ValidateIssuerSigningKey = true,
                 ValidIssuer = jwtIssuer,
                 ValidAudience = jwtAudience,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey)),
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey!)),
             };
         });
     ;
@@ -255,7 +262,7 @@ else
                 ValidateIssuerSigningKey = true,
                 ValidIssuer = jwtIssuer,
                 ValidAudience = jwtAudience,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey)),
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey!)),
             };
         });
 }

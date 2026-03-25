@@ -29,14 +29,28 @@ public class AuthApiController : ControllerBase
         {
             var user = await _context.Users.FirstOrDefaultAsync(x => x.Username == "Default");
             if (user == null)
+            {
                 return NotFound("Demo user not found.");
+            }
+
+            var allowedOrigins = _config.GetSection("Cors:AllowedOrigins").Get<string[]>() ?? Array.Empty<string>();
+            var safeReturnUrl = returnUrl;
+            if (!Uri.TryCreate(returnUrl, UriKind.Absolute, out var parsedReturnUrl)
+                || !allowedOrigins.Any(origin => Uri.TryCreate(origin, UriKind.Absolute, out var parsedOrigin)
+                    && string.Equals(parsedOrigin.Scheme, parsedReturnUrl.Scheme, StringComparison.OrdinalIgnoreCase)
+                    && string.Equals(parsedOrigin.Host, parsedReturnUrl.Host, StringComparison.OrdinalIgnoreCase)
+                    && parsedOrigin.Port == parsedReturnUrl.Port))
+            {
+                safeReturnUrl = allowedOrigins.FirstOrDefault() ?? "http://localhost:3000";
+                safeReturnUrl = safeReturnUrl.TrimEnd('/') + "/auth/callback";
+            }
 
             var token = _jwt.IssueToken(
                 user.Username ?? "Default",
                 user.FullnameCalc ?? "Guest",
                 user.UserId
             );
-            return Redirect($"{returnUrl}?token={token}");
+            return Redirect($"{safeReturnUrl}?token={token}");
         }
 
         return Unauthorized(new { error = "SAML login not configured for API flow." });
