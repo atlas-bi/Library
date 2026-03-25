@@ -24,7 +24,9 @@ public class AuthApiController : ControllerBase
 
     [AllowAnonymous]
     [HttpGet("login")]
+#pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context - False positive: #nullable enable is set at file scope
     public async Task<IActionResult> Login([FromQuery] string? returnUrl = null)
+#pragma warning restore CS8632
     {
         if (_config["Demo"] != "True")
         {
