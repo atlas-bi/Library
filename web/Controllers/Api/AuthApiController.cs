@@ -53,7 +53,9 @@ public class AuthApiController : ControllerBase
         );
         
         var redirectUrl = $"{safeReturnUrl}?token={token}";
+#pragma warning disable S5146 // HTTP request redirections should not be open to forging attacks - False positive: URL is validated against CORS allowlist in GetSafeRedirectUrl
         return Redirect(redirectUrl);
+#pragma warning restore S5146
     }
 
     private IActionResult GetSafeRedirectUrl(string? returnUrl)

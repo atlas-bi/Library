@@ -3,6 +3,7 @@ using System.IO.Compression;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Text.RegularExpressions;
+using Atlas_Web;
 using Atlas_Web.Authentication;
 using Atlas_Web.Authorization;
 using Atlas_Web.Middleware;
