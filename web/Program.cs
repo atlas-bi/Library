@@ -67,7 +67,15 @@ builder.Services.AddCors(options =>
     {
         var origins = builder.Configuration
             .GetSection("Cors:AllowedOrigins")
-            .Get<string[]>() ?? new[] { "http://localhost:3000" };
+            .Get<string[]>();
+        
+        if (origins == null || origins.Length == 0)
+        {
+            throw new InvalidOperationException(
+                "CORS allowed origins are not configured. Please set Cors:AllowedOrigins in configuration."
+            );
+        }
+        
         policy.WithOrigins(origins)
               .AllowAnyHeader()
               .AllowAnyMethod()
@@ -214,7 +222,6 @@ builder
 
 builder.Services.AddTransient<IEmailService, EmailService>();
 builder.Services.AddTransient<IRazorPartialToStringRenderer, RazorPartialToStringRenderer>();
-builder.Services.AddScoped<JwtTokenService>();
 
 var jwtKey = builder.Configuration["Jwt:Key"];
 var jwtIssuer = builder.Configuration["Jwt:Issuer"];
@@ -226,6 +233,9 @@ if (string.IsNullOrWhiteSpace(jwtKey) || string.IsNullOrWhiteSpace(jwtIssuer) ||
         "JWT configuration is missing. Please set Jwt:Key, Jwt:Issuer, and Jwt:Audience via environment variables or configuration files."
     );
 }
+
+var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey!));
+builder.Services.AddScoped<JwtTokenService>(_ => new JwtTokenService(signingKey, jwtIssuer!, jwtAudience!));
 
 if (builder.Configuration["Demo"] == "True")
 {

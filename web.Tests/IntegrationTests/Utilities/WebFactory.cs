@@ -17,6 +17,18 @@ namespace web.Tests.IntegrationTests
         {
             builder.UseEnvironment("Test");
 
+            builder.ConfigureAppConfiguration((context, config) =>
+            {
+                config.AddInMemoryCollection(new Dictionary<string, string>
+                {
+                    ["Jwt:Key"] = "test-jwt-secret-key-for-integration-tests-32-chars-minimum",
+                    ["Jwt:Issuer"] = "atlas-test-issuer",
+                    ["Jwt:Audience"] = "atlas-test-audience",
+                    ["Cors:AllowedOrigins:0"] = "http://localhost:3000",
+                    ["Auth:DefaultCallbackPath"] = "/auth/callback"
+                });
+            });
+
             builder.ConfigureTestServices(services =>
             {
                 // Add InMemory database for testing

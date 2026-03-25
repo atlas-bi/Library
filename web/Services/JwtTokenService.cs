@@ -7,23 +7,20 @@ namespace Atlas_Web.Services;
 
 public class JwtTokenService
 {
-    private readonly IConfiguration _config;
+    private readonly SymmetricSecurityKey _signingKey;
+    private readonly string _issuer;
+    private readonly string _audience;
 
-    public JwtTokenService(IConfiguration config)
+    public JwtTokenService(SymmetricSecurityKey signingKey, string issuer, string audience)
     {
-        _config = config;
+        _signingKey = signingKey ?? throw new ArgumentNullException(nameof(signingKey));
+        _issuer = issuer ?? throw new ArgumentNullException(nameof(issuer));
+        _audience = audience ?? throw new ArgumentNullException(nameof(audience));
     }
 
     public string IssueToken(string username, string fullname, int userId)
     {
-        var jwtKey = _config["Jwt:Key"];
-        if (string.IsNullOrWhiteSpace(jwtKey))
-        {
-            throw new InvalidOperationException("JWT signing key is missing. Please set Jwt:Key via environment variables or configuration.");
-        }
-
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey));
-        var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+        var creds = new SigningCredentials(_signingKey, SecurityAlgorithms.HmacSha256);
 
         var claims = new[]
         {
@@ -33,8 +30,8 @@ public class JwtTokenService
         };
 
         var token = new JwtSecurityToken(
-            issuer: _config["Jwt:Issuer"],
-            audience: _config["Jwt:Audience"],
+            issuer: _issuer,
+            audience: _audience,
             claims: claims,
             expires: DateTime.UtcNow.AddHours(8),
             signingCredentials: creds

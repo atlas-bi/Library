@@ -23,7 +23,7 @@ public class AuthApiController : ControllerBase
 
     [AllowAnonymous]
     [HttpGet("login")]
-    public async Task<IActionResult> Login([FromQuery] string returnUrl = "http://localhost:3000/auth/callback")
+    public async Task<IActionResult> Login([FromQuery] string? returnUrl = null)
     {
         if (_config["Demo"] == "True")
         {
@@ -34,15 +34,42 @@ public class AuthApiController : ControllerBase
             }
 
             var allowedOrigins = _config.GetSection("Cors:AllowedOrigins").Get<string[]>() ?? Array.Empty<string>();
-            var safeReturnUrl = returnUrl;
-            if (!Uri.TryCreate(returnUrl, UriKind.Absolute, out var parsedReturnUrl)
-                || !allowedOrigins.Any(origin => Uri.TryCreate(origin, UriKind.Absolute, out var parsedOrigin)
-                    && string.Equals(parsedOrigin.Scheme, parsedReturnUrl.Scheme, StringComparison.OrdinalIgnoreCase)
-                    && string.Equals(parsedOrigin.Host, parsedReturnUrl.Host, StringComparison.OrdinalIgnoreCase)
-                    && parsedOrigin.Port == parsedReturnUrl.Port))
+            var defaultCallbackPath = _config["Auth:DefaultCallbackPath"];
+            
+            if (string.IsNullOrWhiteSpace(defaultCallbackPath))
             {
-                safeReturnUrl = allowedOrigins.FirstOrDefault() ?? "http://localhost:3000";
-                safeReturnUrl = safeReturnUrl.TrimEnd('/') + "/auth/callback";
+                return BadRequest("Auth:DefaultCallbackPath is not configured.");
+            }
+            
+            string safeReturnUrl;
+            if (string.IsNullOrWhiteSpace(returnUrl))
+            {
+                safeReturnUrl = (allowedOrigins.FirstOrDefault() ?? string.Empty).TrimEnd('/') + defaultCallbackPath;
+            }
+            else if (Uri.TryCreate(returnUrl, UriKind.Absolute, out var parsedReturnUrl))
+            {
+                var isAllowed = false;
+                foreach (var origin in allowedOrigins)
+                {
+                    if (Uri.TryCreate(origin, UriKind.Absolute, out var parsedOrigin)
+                        && string.Equals(parsedOrigin.Scheme, parsedReturnUrl.Scheme, StringComparison.OrdinalIgnoreCase)
+                        && string.Equals(parsedOrigin.Host, parsedReturnUrl.Host, StringComparison.OrdinalIgnoreCase)
+                        && parsedOrigin.Port == parsedReturnUrl.Port)
+                    {
+                        isAllowed = true;
+                        break;
+                    }
+                }
+                safeReturnUrl = isAllowed ? returnUrl : (allowedOrigins.FirstOrDefault() ?? string.Empty).TrimEnd('/') + defaultCallbackPath;
+            }
+            else
+            {
+                safeReturnUrl = (allowedOrigins.FirstOrDefault() ?? string.Empty).TrimEnd('/') + defaultCallbackPath;
+            }
+            
+            if (string.IsNullOrWhiteSpace(safeReturnUrl))
+            {
+                return BadRequest("No allowed origins configured.");
             }
 
             var token = _jwt.IssueToken(
