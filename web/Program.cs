@@ -1,13 +1,17 @@
 using System.Data.SqlClient;
 using System.IO.Compression;
 using System.Security.Cryptography.X509Certificates;
+using System.Text;
 using System.Text.RegularExpressions;
+using Atlas_Web;
 using Atlas_Web.Authentication;
 using Atlas_Web.Authorization;
 using Atlas_Web.Middleware;
 using Atlas_Web.Models;
 using Atlas_Web.Services;
 using Hangfire;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using ITfoxtec.Identity.Saml2;
 using ITfoxtec.Identity.Saml2.MvcCore;
 using ITfoxtec.Identity.Saml2.MvcCore.Configuration;
@@ -57,6 +61,8 @@ builder.Services.Configure<CookiePolicyOptions>(options =>
     options.MinimumSameSitePolicy = Microsoft.AspNetCore.Http.SameSiteMode.None;
 });
 builder.Services.AddResponseCaching();
+
+ProgramConfiguration.ConfigureCors(builder);
 
 // for linq queries - conditionally register based on environment
 if (!builder.Environment.IsEnvironment("Test"))
@@ -198,18 +204,7 @@ builder
 builder.Services.AddTransient<IEmailService, EmailService>();
 builder.Services.AddTransient<IRazorPartialToStringRenderer, RazorPartialToStringRenderer>();
 
-if (builder.Configuration["Demo"] == "True")
-{
-# pragma warning disable S1116
-    builder
-        .Services.AddAuthentication(options => options.DefaultScheme = "Demo")
-        .AddScheme<DemoSchemeOptions, DemoAuthHandler>("Demo", options => { });
-    ;
-}
-else
-{
-    builder.Services.AddAuthentication(NegotiateDefaults.AuthenticationScheme).AddNegotiate();
-}
+ProgramConfiguration.ConfigureJwtAuthentication(builder);
 if (builder.Configuration.GetSection("Saml2").Exists())
 {
     builder.Services.AddHttpClient();
@@ -344,6 +339,7 @@ app.UseStaticFiles(
 
 app.UseETagger();
 app.UseRouting();
+app.UseCors("NextJs");
 app.UseAuthentication();
 app.UseAuthorization();
 
