@@ -203,6 +203,8 @@ builder
 
 builder.Services.AddTransient<IEmailService, EmailService>();
 builder.Services.AddTransient<IRazorPartialToStringRenderer, RazorPartialToStringRenderer>();
+builder.Services.AddScoped<IReportsApiService, ReportsApiService>();
+builder.Services.AddHttpContextAccessor();
 
 ProgramConfiguration.ConfigureJwtAuthentication(builder);
 if (builder.Configuration.GetSection("Saml2").Exists())

@@ -1,7 +1,9 @@
-using Atlas_Web.Models;
+using System.ComponentModel.DataAnnotations;
+using Atlas_Web.Authorization;
+using Atlas_Web.Contracts.Api.Reports;
+using Atlas_Web.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace Atlas_Web.Controllers.Api;
 
@@ -10,35 +12,137 @@ namespace Atlas_Web.Controllers.Api;
 [Authorize(AuthenticationSchemes = "Bearer")]
 public class ReportsApiController : ControllerBase
 {
-    private readonly Atlas_WebContext _context;
+    private readonly IReportsApiService _reportsApiService;
 
-    public ReportsApiController(Atlas_WebContext context)
+    public ReportsApiController(IReportsApiService reportsApiService)
     {
-        _context = context;
+        _reportsApiService = reportsApiService;
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetReports([FromQuery] int page = 1, [FromQuery] int pageSize = 20)
+    public async Task<ActionResult<ReportListResponseDto>> GetReports(
+        [FromQuery]
+        [Range(1, int.MaxValue)]
+            int page = 1,
+        [FromQuery]
+        [Range(1, 100)]
+            int pageSize = 20,
+        CancellationToken cancellationToken = default
+    )
     {
-        var reports = await _context.ReportObjects
-            .Where(x => x.DefaultVisibilityYn == "Y")
-            .Include(x => x.ReportObjectType)
-            .OrderBy(x => x.Name)
-            .Skip((page - 1) * pageSize)
-            .Take(pageSize)
-            .Select(x => new
+        var response = await _reportsApiService.GetReportsAsync(
+            User,
+            page,
+            pageSize,
+            cancellationToken
+        );
+        return Ok(response);
+    }
+
+    [HttpGet("{id:int}")]
+    public async Task<ActionResult<ReportDetailDto>> GetReport(
+        int id,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var report = await _reportsApiService.GetReportAsync(User, id, cancellationToken);
+        if (report == null)
+        {
+            return NotFound();
+        }
+
+        return Ok(report);
+    }
+
+    [HttpPut("{id:int}")]
+    public async Task<ActionResult<ReportDetailDto>> UpdateReport(
+        int id,
+        [FromBody] UpdateReportDocumentRequestDto request,
+        CancellationToken cancellationToken = default
+    )
+    {
+        if (!User.HasPermission("Edit Report Documentation"))
+        {
+            return Forbid();
+        }
+
+        var report = await _reportsApiService.UpdateReportAsync(
+            User,
+            id,
+            request,
+            cancellationToken
+        );
+        if (report == null)
+        {
+            return NotFound();
+        }
+
+        return Ok(report);
+    }
+
+    [HttpPost("{id:int}/images")]
+    [RequestSizeLimit(1024 * 1024)]
+    public async Task<ActionResult<ReportImageDto>> AddImage(
+        int id,
+        IFormFile file,
+        CancellationToken cancellationToken = default
+    )
+    {
+        if (!User.HasPermission("Edit Report Documentation"))
+        {
+            return Forbid();
+        }
+
+        try
+        {
+            var image = await _reportsApiService.AddImageAsync(User, id, file, cancellationToken);
+            if (image == null)
             {
-                id = x.ReportObjectId,
-                name = x.Name ?? x.DisplayTitle,
-                description = x.Description,
-                type = x.ReportObjectType != null ? x.ReportObjectType.ShortName : null,
-                url = x.ReportObjectUrl,
-                lastModified = x.LastModifiedDate,
-            })
-            .ToListAsync();
+                return NotFound();
+            }
 
-        var total = await _context.ReportObjects.CountAsync(x => x.DefaultVisibilityYn == "Y");
+            return Ok(image);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(new { error = ex.Message });
+        }
+    }
 
-        return Ok(new { reports, total, page, pageSize });
+    [HttpGet("lookups/{lookupArea}")]
+    public async Task<ActionResult<IReadOnlyList<LookupDto>>> GetLookupValues(
+        string lookupArea,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var values = await _reportsApiService.GetLookupValuesAsync(lookupArea, cancellationToken);
+        return Ok(values);
+    }
+
+    [HttpGet("search/terms")]
+    public async Task<ActionResult<IReadOnlyList<ReportSearchResultDto>>> SearchTerms(
+        [FromQuery] string q,
+        CancellationToken cancellationToken = default
+    )
+    {
+        return Ok(await _reportsApiService.SearchTermsAsync(q, cancellationToken));
+    }
+
+    [HttpGet("search/collections")]
+    public async Task<ActionResult<IReadOnlyList<ReportSearchResultDto>>> SearchCollections(
+        [FromQuery] string q,
+        CancellationToken cancellationToken = default
+    )
+    {
+        return Ok(await _reportsApiService.SearchCollectionsAsync(q, cancellationToken));
+    }
+
+    [HttpGet("search/users")]
+    public async Task<ActionResult<IReadOnlyList<ReportSearchResultDto>>> SearchUsers(
+        [FromQuery] string q,
+        CancellationToken cancellationToken = default
+    )
+    {
+        return Ok(await _reportsApiService.SearchUsersAsync(q, cancellationToken));
     }
 }
