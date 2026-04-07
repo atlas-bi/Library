@@ -1,10 +1,12 @@
 #nullable enable
 using System.Diagnostics.CodeAnalysis;
+using System.Security.Claims;
 using Atlas_Web.Models;
 using Atlas_Web.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.WebUtilities;
 
 namespace Atlas_Web.Controllers.Api;
 
@@ -30,17 +32,7 @@ public class AuthApiController : ControllerBase
     public async Task<IActionResult> Login([FromQuery] string? returnUrl = null)
 #pragma warning restore CS8632
     {
-        if (_config["Demo"] != "True")
-        {
-            return Unauthorized(new { error = "SAML login not configured for API flow." });
-        }
-
         var user = await _context.Users.FirstOrDefaultAsync(x => x.Username == "Default");
-        if (user == null)
-        {
-            return NotFound("Demo user not found.");
-        }
-
         var safeReturnUrlResult = GetSafeRedirectUrl(returnUrl);
         if (safeReturnUrlResult is BadRequestObjectResult)
         {
@@ -48,14 +40,41 @@ public class AuthApiController : ControllerBase
         }
 
         var safeReturnUrl = ((OkObjectResult)safeReturnUrlResult).Value as string ?? string.Empty;
+
+        if (_config["Demo"] == "True")
+        {
+            if (user == null)
+            {
+                return NotFound("Demo user not found.");
+            }
+
+            var demoToken = _jwt.IssueToken(
+                user.Username ?? "Default",
+                user.FullnameCalc ?? "Guest",
+                user.UserId
+            );
+
+            return Redirect(BuildTokenRedirectUrl(safeReturnUrl, demoToken));
+        }
+
+        if (User.Identity?.IsAuthenticated != true)
+        {
+            return Redirect(BuildSamlLoginUrl(safeReturnUrl));
+        }
+
+        var apiUser = await ResolveAuthenticatedUserAsync(User);
+        if (apiUser == null)
+        {
+            return Unauthorized(new { error = "Authenticated SAML user could not be resolved." });
+        }
+
         var token = _jwt.IssueToken(
-            user.Username ?? "Default",
-            user.FullnameCalc ?? "Guest",
-            user.UserId
+            apiUser.Username ?? User.Identity?.Name ?? "Guest",
+            apiUser.FullnameCalc ?? User.FindFirstValue("Fullname") ?? apiUser.Username ?? "Guest",
+            apiUser.UserId
         );
-        
-        var redirectUrl = $"{safeReturnUrl}?token={token}";
-        return Redirect(redirectUrl);
+
+        return Redirect(BuildTokenRedirectUrl(safeReturnUrl, token));
     }
 
     private IActionResult GetSafeRedirectUrl(string? returnUrl)
@@ -113,6 +132,63 @@ public class AuthApiController : ControllerBase
         return Ok(safeUrl);
     }
 
+    private async Task<User?> ResolveAuthenticatedUserAsync(ClaimsPrincipal principal)
+    {
+        var userIdClaim = principal.FindFirstValue("UserId");
+        if (int.TryParse(userIdClaim, out var userId))
+        {
+            return await _context.Users.FirstOrDefaultAsync(x => x.UserId == userId);
+        }
+
+        var identityName = principal.Identity?.Name;
+        if (!string.IsNullOrWhiteSpace(identityName))
+        {
+            var user = await FindUserByIdentityAsync(identityName);
+            if (user != null)
+            {
+                return user;
+            }
+        }
+
+        var email = principal.FindFirstValue(ClaimTypes.Email);
+        if (!string.IsNullOrWhiteSpace(email))
+        {
+            return await FindUserByIdentityAsync(email);
+        }
+
+        return null;
+    }
+
+    private Task<User?> FindUserByIdentityAsync(string identity)
+    {
+        if (identity.Contains("@"))
+        {
+            return _context.Users.FirstOrDefaultAsync(x => x.Email == identity || x.Username == identity);
+        }
+
+        return _context.Users.FirstOrDefaultAsync(x => x.Username == identity);
+    }
+
+    private string BuildSamlLoginUrl(string safeReturnUrl)
+    {
+        var apiLoginUrl = QueryHelpers.AddQueryString(
+            Url.Content("~/api/auth/login"),
+            "returnUrl",
+            safeReturnUrl
+        );
+
+        return QueryHelpers.AddQueryString(
+            Url.Content("~/Auth/Login"),
+            "returnUrl",
+            apiLoginUrl
+        );
+    }
+
+    private static string BuildTokenRedirectUrl(string safeReturnUrl, string token)
+    {
+        return QueryHelpers.AddQueryString(safeReturnUrl, "token", token);
+    }
+
     [Authorize(AuthenticationSchemes = "Bearer")]
     [HttpGet("me")]
     public IActionResult Me()
@@ -122,6 +198,9 @@ public class AuthApiController : ControllerBase
             username = User.Identity?.Name,
             fullname = User.FindFirst("Fullname")?.Value,
             userId = User.FindFirst("UserId")?.Value,
+            roles = User.FindAll(ClaimTypes.Role).Select(c => c.Value).ToArray(),
+            permissions = User.FindAll("Permission").Select(c => c.Value).ToArray(),
+            adminEnabled = User.FindFirst("AdminEnabled")?.Value == "Y",
         });
     }
 
