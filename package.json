@@ -8,7 +8,7 @@
     "@fontsource/rasa": "^5.0.0",
     "@fontsource/source-code-pro": "^5.0.0",
     "@fortawesome/fontawesome-free": "^7.0.0",
-    "@rollup/plugin-babel": "^6.0.3",
+    "@rollup/plugin-babel": "^7.0.0",
     "@rollup/plugin-commonjs": "^29.0.0",
     "@rollup/plugin-json": "^6.0.0",
     "@rollup/plugin-multi-entry": "^7.0.0",
@@ -164,7 +164,7 @@
       "unicorn/prefer-at": "warn"
     }
   },
-  "version": "3.15.38",
+  "version": "3.15.39",
   "dependencies": {
     "sass": "^1.63.6"
   }
