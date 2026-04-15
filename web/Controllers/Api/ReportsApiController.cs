@@ -54,6 +54,74 @@ public class ReportsApiController : ControllerBase
         return Ok(report);
     }
 
+    [HttpGet("{id:int}/terms")]
+    public async Task<ActionResult<IReadOnlyList<TermSummaryDto>>> GetReportTerms(
+        int id,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var report = await _reportsApiService.GetReportAsync(User, id, cancellationToken);
+        if (report == null)
+        {
+            return NotFound();
+        }
+
+        return Ok(await _reportsApiService.GetReportTermsAsync(User, id, cancellationToken));
+    }
+
+    [HttpGet("{id:int}/queries")]
+    public async Task<ActionResult<ReportQueriesResponseDto>> GetReportQueries(
+        int id,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var response = await _reportsApiService.GetReportQueriesAsync(User, id, cancellationToken);
+        if (response == null)
+        {
+            return NotFound();
+        }
+
+        return Ok(response);
+    }
+
+    [HttpGet("{id:int}/relationships")]
+    public async Task<ActionResult<ReportRelationshipsResponseDto>> GetReportRelationships(
+        int id,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var response = await _reportsApiService.GetReportRelationshipsAsync(
+            User,
+            id,
+            cancellationToken
+        );
+        if (response == null)
+        {
+            return NotFound();
+        }
+
+        return Ok(response);
+    }
+
+    [HttpGet("{id:int}/maintenance-status")]
+    public async Task<ActionResult<ReportMaintenanceStatusDto>> GetReportMaintenanceStatus(
+        int id,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var response = await _reportsApiService.GetReportMaintenanceStatusAsync(
+            User,
+            id,
+            cancellationToken
+        );
+        if (response == null)
+        {
+            return NotFound();
+        }
+
+        return Ok(response);
+    }
+
     [HttpPut("{id:int}")]
     public async Task<ActionResult<ReportDetailDto>> UpdateReport(
         int id,
