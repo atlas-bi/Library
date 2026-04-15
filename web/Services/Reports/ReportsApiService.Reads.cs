@@ -8,6 +8,31 @@ namespace Atlas_Web.Services;
 
 public sealed partial class ReportsApiService
 {
+    private async Task<bool> ReportExistsAsync(int id, CancellationToken cancellationToken)
+    {
+        return await _context.ReportObjects.AsNoTracking()
+            .AnyAsync(x => x.ReportObjectId == id, cancellationToken);
+    }
+
+    private bool IsFeatureEnabled(string key)
+    {
+        var value = _configuration[key];
+        return string.IsNullOrWhiteSpace(value)
+            || string.Equals(value, "true", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private ReportFeatureFlagsDto BuildFeatureFlags()
+    {
+        return new ReportFeatureFlagsDto
+        {
+            TermsEnabled = IsFeatureEnabled("features:enable_terms"),
+            UserProfilesEnabled = IsFeatureEnabled("features:enable_user_profile"),
+            FeedbackEnabled = IsFeatureEnabled("features:enable_feedback"),
+            RequestAccessEnabled = IsFeatureEnabled("features:enable_request_access"),
+            SharingEnabled = IsFeatureEnabled("features:enable_sharing"),
+        };
+    }
+
     private async Task PopulateRunAuthorizationAsync(
         ClaimsPrincipal user,
         IReadOnlyList<ReportListItemDto> reports,
@@ -85,6 +110,10 @@ public sealed partial class ReportsApiService
     )
     {
         var canEditDocumentation = user.HasPermission("Edit Report Documentation");
+        var canViewGroups = user.HasPermission("View Groups");
+        var canViewPurgeOption = user.HasPermission("Edit Report Purge Option");
+        var canViewHiddenOption = user.HasPermission("Edit Report Hidden Option");
+        var features = BuildFeatureFlags();
         var currentUserId = user.GetUserId();
         var query = _context.ReportObjects.AsNoTracking().Where(x => x.ReportObjectId == id);
 
@@ -101,7 +130,7 @@ public sealed partial class ReportsApiService
                 Id = x.ReportObjectId,
                 Name = x.Name,
                 DisplayTitle = x.DisplayTitle,
-                DisplayName = x.DisplayName,
+                DisplayName = x.DisplayTitle ?? x.Name,
                 Description = x.Description,
                 DetailedDescription = x.DetailedDescription,
                 TypeName = x.ReportObjectType != null ? x.ReportObjectType.Name : null,
@@ -112,6 +141,8 @@ public sealed partial class ReportsApiService
                 EpicReportTemplateId = x.EpicReportTemplateId,
                 ReportServerPath = x.ReportServerPath,
                 Availability = x.Availability,
+                OrphanedReportObjectYn = x.OrphanedReportObjectYn,
+                RepositoryDescription = x.RepositoryDescription,
                 VisibleInSearch =
                     (x.OrphanedReportObjectYn ?? "N") == "N"
                     && x.ReportObjectType != null
@@ -352,6 +383,7 @@ public sealed partial class ReportsApiService
             return null;
         }
 
+        report.Features = features;
         report.Terms = await GetTermsAsync(id, cancellationToken);
         report.ComponentQueries = await GetComponentQueriesAsync(id, cancellationToken);
         report.Children = await GetChildrenAsync(id, cancellationToken);
@@ -361,9 +393,9 @@ public sealed partial class ReportsApiService
         ApplyDetailVisibility(
             report,
             canEditDocumentation,
-            user.HasPermission("View Groups"),
-            user.HasPermission("Edit Report Purge Option"),
-            user.HasPermission("Edit Report Hidden Option")
+            canViewGroups,
+            canViewPurgeOption,
+            canViewHiddenOption
         );
         ApplyReportActions(report, user);
 
@@ -634,8 +666,10 @@ public sealed partial class ReportsApiService
             report.CanRun
         );
         report.RecordViewerUrl = actionReport.RecordViewerUrl(httpContext);
-        report.CanOpenInEditor = user.HasPermission("Open In Editor");
-        if (report.CanOpenInEditor)
+        report.CanViewUserProfiles =
+            report.Features?.UserProfilesEnabled == true
+            && user.HasPermission("View Other User");
+        if (user.HasPermission("Open In Editor"))
         {
             report.EditReportUrl = actionReport.EditReportUrl(httpContext, _configuration);
             report.ManageReportUrl = actionReport.ManageReportUrl(httpContext, _configuration);
@@ -689,6 +723,10 @@ public sealed partial class ReportsApiService
             {
                 report.Groups = Array.Empty<GroupSummaryDto>();
             }
+            if (report.Features?.TermsEnabled != true)
+            {
+                report.Terms = Array.Empty<TermSummaryDto>();
+            }
             report.CanViewGroups = canViewGroups;
             return;
         }
@@ -712,11 +750,13 @@ public sealed partial class ReportsApiService
             Hidden = canViewHiddenOption ? report.Document.Hidden : null,
             MaintenanceLogs = report.Document.MaintenanceLogs,
             FragilityTags = report.Document.FragilityTags,
+            ServiceRequests = report.Document.ServiceRequests,
         };
 
-        report.Parameters = Array.Empty<ReportParameterDto>();
-        report.Queries = Array.Empty<ReportQueryDto>();
-        report.ComponentQueries = Array.Empty<ReportQueryDto>();
+        if (report.Features?.TermsEnabled != true)
+        {
+            report.Terms = Array.Empty<TermSummaryDto>();
+        }
         report.CanViewGroups = canViewGroups;
         if (!canViewGroups)
         {

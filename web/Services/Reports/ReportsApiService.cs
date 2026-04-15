@@ -25,6 +25,26 @@ public interface IReportsApiService
         int id,
         CancellationToken cancellationToken
     );
+    Task<IReadOnlyList<TermSummaryDto>> GetReportTermsAsync(
+        ClaimsPrincipal user,
+        int id,
+        CancellationToken cancellationToken
+    );
+    Task<ReportQueriesResponseDto> GetReportQueriesAsync(
+        ClaimsPrincipal user,
+        int id,
+        CancellationToken cancellationToken
+    );
+    Task<ReportRelationshipsResponseDto> GetReportRelationshipsAsync(
+        ClaimsPrincipal user,
+        int id,
+        CancellationToken cancellationToken
+    );
+    Task<ReportMaintenanceStatusDto> GetReportMaintenanceStatusAsync(
+        ClaimsPrincipal user,
+        int id,
+        CancellationToken cancellationToken
+    );
     Task<ReportDetailDto> UpdateReportAsync(
         ClaimsPrincipal user,
         int id,
@@ -131,6 +151,87 @@ public sealed partial class ReportsApiService : IReportsApiService
     )
     {
         return await GetReportCoreAsync(user, id, cancellationToken, visibleOnly: true);
+    }
+
+    public async Task<IReadOnlyList<TermSummaryDto>> GetReportTermsAsync(
+        ClaimsPrincipal user,
+        int id,
+        CancellationToken cancellationToken
+    )
+    {
+        var exists = await ReportExistsAsync(id, cancellationToken);
+        if (!exists || !IsFeatureEnabled("features:enable_terms"))
+        {
+            return Array.Empty<TermSummaryDto>();
+        }
+
+        return await GetTermsAsync(id, cancellationToken);
+    }
+
+    public async Task<ReportQueriesResponseDto> GetReportQueriesAsync(
+        ClaimsPrincipal user,
+        int id,
+        CancellationToken cancellationToken
+    )
+    {
+        if (!await ReportExistsAsync(id, cancellationToken))
+        {
+            return null;
+        }
+
+        var detail = await GetReportCoreAsync(user, id, cancellationToken, visibleOnly: true);
+        if (detail == null)
+        {
+            return null;
+        }
+
+        return new ReportQueriesResponseDto
+        {
+            Queries = detail.Queries,
+            ComponentQueries = detail.ComponentQueries,
+        };
+    }
+
+    public async Task<ReportRelationshipsResponseDto> GetReportRelationshipsAsync(
+        ClaimsPrincipal user,
+        int id,
+        CancellationToken cancellationToken
+    )
+    {
+        if (!await ReportExistsAsync(id, cancellationToken))
+        {
+            return null;
+        }
+
+        var detail = await GetReportCoreAsync(user, id, cancellationToken, visibleOnly: true);
+        if (detail == null)
+        {
+            return null;
+        }
+
+        return new ReportRelationshipsResponseDto
+        {
+            CanViewGroups = detail.CanViewGroups,
+            Groups = detail.Groups,
+            Collections = detail.Collections,
+            Children = detail.Children,
+            Parents = detail.Parents,
+        };
+    }
+
+    public async Task<ReportMaintenanceStatusDto> GetReportMaintenanceStatusAsync(
+        ClaimsPrincipal user,
+        int id,
+        CancellationToken cancellationToken
+    )
+    {
+        if (!await ReportExistsAsync(id, cancellationToken))
+        {
+            return null;
+        }
+
+        var detail = await GetReportCoreAsync(user, id, cancellationToken, visibleOnly: true);
+        return detail?.MaintenanceStatus;
     }
 
     public async Task<ReportDetailDto> UpdateReportAsync(

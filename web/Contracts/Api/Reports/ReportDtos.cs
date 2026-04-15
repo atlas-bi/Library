@@ -36,18 +36,21 @@ public sealed class ReportDetailDto
     public string ReportServerPath { get; init; }
     public string Availability { get; init; }
     public bool VisibleInSearch { get; init; }
+    public string OrphanedReportObjectYn { get; init; }
+    public string RepositoryDescription { get; init; }
     public int? Runs { get; init; }
     public DateTime? LastModified { get; init; }
     public DateTime? LastLoadDate { get; init; }
     public bool CanRun { get; set; }
     public bool CanEditDocumentation { get; set; }
-    public bool CanOpenInEditor { get; set; }
     public bool CanViewGroups { get; set; }
+    public bool CanViewUserProfiles { get; set; }
     public bool IsStarred { get; init; }
     public string RunUrl { get; set; }
     public string RecordViewerUrl { get; set; }
     public string EditReportUrl { get; set; }
     public string ManageReportUrl { get; set; }
+    public ReportFeatureFlagsDto Features { get; set; }
     public UserSummaryDto Author { get; init; }
     public UserSummaryDto LastModifiedBy { get; init; }
     public ReportDocumentDto Document { get; set; }
@@ -72,6 +75,15 @@ public sealed class ReportDetailDto
         Array.Empty<ReportLinkSummaryDto>();
     public ReportMaintenanceStatusDto MaintenanceStatus { get; set; }
     public int StarCount { get; init; }
+}
+
+public sealed class ReportFeatureFlagsDto
+{
+    public bool TermsEnabled { get; init; }
+    public bool UserProfilesEnabled { get; init; }
+    public bool FeedbackEnabled { get; init; }
+    public bool RequestAccessEnabled { get; init; }
+    public bool SharingEnabled { get; init; }
 }
 
 public sealed class ReportDocumentDto
@@ -223,6 +235,25 @@ public sealed class ReportMaintenanceStatusDto
     public DateTime? LastMaintenanceDate { get; init; }
     public DateTime? NextMaintenanceDate { get; init; }
     public LookupDto Schedule { get; init; }
+}
+
+public sealed class ReportQueriesResponseDto
+{
+    public IReadOnlyList<ReportQueryDto> Queries { get; init; } = Array.Empty<ReportQueryDto>();
+    public IReadOnlyList<ReportQueryDto> ComponentQueries { get; init; } =
+        Array.Empty<ReportQueryDto>();
+}
+
+public sealed class ReportRelationshipsResponseDto
+{
+    public bool CanViewGroups { get; init; }
+    public IReadOnlyList<GroupSummaryDto> Groups { get; init; } = Array.Empty<GroupSummaryDto>();
+    public IReadOnlyList<CollectionSummaryDto> Collections { get; init; } =
+        Array.Empty<CollectionSummaryDto>();
+    public IReadOnlyList<ReportLinkSummaryDto> Children { get; init; } =
+        Array.Empty<ReportLinkSummaryDto>();
+    public IReadOnlyList<ReportLinkSummaryDto> Parents { get; init; } =
+        Array.Empty<ReportLinkSummaryDto>();
 }
 
 public sealed class UpdateReportDocumentRequestDto
