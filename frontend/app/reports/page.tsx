@@ -1,57 +1,72 @@
-import Link from "next/link";
-import { redirect } from "next/navigation";
-
-import { getToken } from "@/lib/auth";
-import { getReportDetailById } from "@/lib/reports/api";
-import type { ReportDetail } from "@/lib/reports/types";
-
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import Image from "next/image"
+import Link from "next/link"
+import { redirect } from "next/navigation"
+import { ConfirmLinkButton } from "@/components/reports/confirm-link-button"
+import { AppAlertDialog } from "@/components/ui/app-alert-dialog"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { getToken } from "@/lib/auth"
+import { getUserFriendlyErrorMessage } from "@/lib/errors"
+import { getReportDetailById } from "@/lib/reports/api"
+import type { ReportDetail } from "@/lib/reports/types"
 
 function formatReportTitle(r: ReportDetail) {
-  return r.displayTitle || r.displayName || r.name;
+  return r.displayTitle || r.displayName || r.name
 }
 
 function getFullName(p?: { fullName?: string | null } | null) {
-  return (p?.fullName ?? "").trim();
+  return (p?.fullName ?? "").trim()
 }
 
-export default async function ReportsPage({
-  searchParams,
-}: {
-  searchParams: { id?: string };
-}) {
-  const token = await getToken();
-  if (!token) redirect("/auth/login");
+export default async function ReportsPage({ searchParams }: { searchParams: { id?: string } }) {
+  const token = await getToken()
+  if (!token) redirect("/auth/login")
 
-  const idRaw = searchParams.id;
-  const id = idRaw ? Number(idRaw) : NaN;
+  const idRaw = searchParams.id
+  const id = idRaw ? Number(idRaw) : NaN
   if (!Number.isFinite(id) || id <= 0) {
     return (
       <div className="mx-auto max-w-4xl px-4 py-10">
         <h1 className="text-2xl font-bold">Report not found</h1>
-        <p className="mt-2 text-sm text-muted-foreground">
-          Missing or invalid report id.
-        </p>
+        <p className="mt-2 text-sm text-muted-foreground">Missing or invalid report id.</p>
       </div>
-    );
+    )
   }
 
-  const report = await getReportDetailById(id);
+  const result = await getReportDetailById(id)
+  const report = result.data
   if (!report) {
+    const message = getUserFriendlyErrorMessage(result.error ?? "unknown")
     return (
       <div className="mx-auto max-w-4xl px-4 py-10">
-        <h1 className="text-2xl font-bold">Report not found</h1>
-        <p className="mt-2 text-sm text-muted-foreground">
-          The API returned 401/404 or the report does not exist.
-        </p>
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-xl">Unable to load report</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <p className="text-sm text-muted-foreground">{message}</p>
+            <div className="flex items-center gap-2">
+              <Button asChild variant="outline">
+                <Link href="/">Back to home</Link>
+              </Button>
+              <AppAlertDialog
+                triggerLabel="See details"
+                title="Report load issue"
+                description={message}
+                confirmLabel="OK"
+                cancelLabel="Close"
+                intent="error"
+              />
+            </div>
+          </CardContent>
+        </Card>
       </div>
-    );
+    )
   }
 
-  const title = formatReportTitle(report);
-  const featureFlags = report.features ?? {};
+  const title = formatReportTitle(report)
+  const featureFlags = report.features ?? {}
 
   return (
     <div className="min-h-screen bg-background">
@@ -107,11 +122,13 @@ export default async function ReportsPage({
             </CardHeader>
             <CardContent className="space-y-2">
               {report.canRun && report.runUrl ? (
-                <Button asChild className="w-full">
-                  <a href={report.runUrl} target="_blank" rel="noreferrer">
-                    Run report
-                  </a>
-                </Button>
+                <ConfirmLinkButton
+                  href={report.runUrl}
+                  buttonLabel="Run report"
+                  title="Open report run link?"
+                  description="You are about to open the report runner in a new tab."
+                  className="w-full"
+                />
               ) : (
                 <Button variant="secondary" className="w-full" disabled>
                   Run unavailable
@@ -119,27 +136,33 @@ export default async function ReportsPage({
               )}
 
               {report.canEditDocumentation && report.editReportUrl ? (
-                <Button asChild variant="outline" className="w-full">
-                  <a href={report.editReportUrl} target="_blank" rel="noreferrer">
-                    Edit documentation
-                  </a>
-                </Button>
+                <ConfirmLinkButton
+                  href={report.editReportUrl}
+                  buttonLabel="Edit documentation"
+                  title="Open documentation editor?"
+                  description="You are about to open the report editor in a new tab."
+                  className="w-full"
+                />
               ) : null}
 
               {report.manageReportUrl ? (
-                <Button asChild variant="outline" className="w-full">
-                  <a href={report.manageReportUrl} target="_blank" rel="noreferrer">
-                    Manage report
-                  </a>
-                </Button>
+                <ConfirmLinkButton
+                  href={report.manageReportUrl}
+                  buttonLabel="Manage report"
+                  title="Open report management?"
+                  description="You are about to open report management in a new tab."
+                  className="w-full"
+                />
               ) : null}
 
               {report.recordViewerUrl ? (
-                <Button asChild variant="outline" className="w-full">
-                  <a href={report.recordViewerUrl} target="_blank" rel="noreferrer">
-                    Record viewer
-                  </a>
-                </Button>
+                <ConfirmLinkButton
+                  href={report.recordViewerUrl}
+                  buttonLabel="Record viewer"
+                  title="Open record viewer?"
+                  description="You are about to open the record viewer in a new tab."
+                  className="w-full"
+                />
               ) : null}
             </CardContent>
           </Card>
@@ -170,8 +193,7 @@ export default async function ReportsPage({
             <CardContent className="space-y-3 text-sm">
               {report.lastModified ? (
                 <div className="text-muted-foreground">
-                  Last modified:{" "}
-                  {new Date(report.lastModified).toLocaleString()}
+                  Last modified: {new Date(report.lastModified).toLocaleString()}
                 </div>
               ) : null}
 
@@ -199,10 +221,7 @@ export default async function ReportsPage({
                 <div className="text-muted-foreground">
                   Requester:{" "}
                   {report.features?.userProfilesEnabled && report.canViewUserProfiles ? (
-                    <Link
-                      href={`/users?id=${report.requester.id}`}
-                      className="underline"
-                    >
+                    <Link href={`/users?id=${report.requester.id}`} className="underline">
                       {getFullName(report.requester) || report.requester.username}
                     </Link>
                   ) : (
@@ -234,9 +253,7 @@ export default async function ReportsPage({
             </Card>
           ) : null}
 
-          {report.canViewGroups &&
-          Array.isArray(report.groups) &&
-          report.groups.length > 0 ? (
+          {report.canViewGroups && Array.isArray(report.groups) && report.groups.length > 0 ? (
             <Card>
               <CardHeader>
                 <CardTitle className="text-base">Groups</CardTitle>
@@ -265,10 +282,7 @@ export default async function ReportsPage({
                     <ul className="mt-2 space-y-2 text-sm text-muted-foreground">
                       {report.parents.map((p) => (
                         <li key={p.id ?? p.url}>
-                          <Link
-                            href={`/reports?id=${p.id ?? ""}`}
-                            className="underline"
-                          >
+                          <Link href={`/reports?id=${p.id ?? ""}`} className="underline">
                             {p.name ?? p.displayTitle ?? p.type ?? "Report"}
                           </Link>
                         </li>
@@ -282,10 +296,7 @@ export default async function ReportsPage({
                     <ul className="mt-2 space-y-2 text-sm text-muted-foreground">
                       {report.children.map((c) => (
                         <li key={c.id ?? c.url}>
-                          <Link
-                            href={`/reports?id=${c.id ?? ""}`}
-                            className="underline"
-                          >
+                          <Link href={`/reports?id=${c.id ?? ""}`} className="underline">
                             {c.name ?? c.displayTitle ?? c.type ?? "Report"}
                           </Link>
                         </li>
@@ -308,13 +319,9 @@ export default async function ReportsPage({
                     <li key={q.id} className="text-sm">
                       <div className="font-medium">{q.name ?? `Query ${q.id}`}</div>
                       {q.language ? (
-                        <div className="text-muted-foreground">
-                          Language: {q.language}
-                        </div>
+                        <div className="text-muted-foreground">Language: {q.language}</div>
                       ) : null}
-                      {q.source ? (
-                        <div className="text-muted-foreground">{q.source}</div>
-                      ) : null}
+                      {q.source ? <div className="text-muted-foreground">{q.source}</div> : null}
                     </li>
                   ))}
                 </ul>
@@ -333,9 +340,7 @@ export default async function ReportsPage({
                     <li key={q.id} className="text-sm">
                       <div className="font-medium">{q.name ?? `Query ${q.id}`}</div>
                       {q.language ? (
-                        <div className="text-muted-foreground">
-                          Language: {q.language}
-                        </div>
+                        <div className="text-muted-foreground">Language: {q.language}</div>
                       ) : null}
                     </li>
                   ))}
@@ -354,10 +359,11 @@ export default async function ReportsPage({
                   {report.images.map((img) => (
                     <div key={img.id} className="rounded-md border p-2">
                       {img.source ? (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img
+                        <Image
                           src={img.source}
-                          alt={`Report image ${img.id}`}
+                          alt={`Report ${img.id}`}
+                          width={900}
+                          height={600}
                           className="h-auto w-full"
                         />
                       ) : null}
@@ -370,6 +376,5 @@ export default async function ReportsPage({
         </section>
       </main>
     </div>
-  );
+  )
 }
-

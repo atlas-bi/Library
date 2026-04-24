@@ -1,8 +1,8 @@
-"use client";
+"use client"
 
-import type { ReactNode } from "react";
-import { useAuth } from "./auth-provider";
-import type { Permission } from "@/lib/auth/types";
+import type { ReactNode } from "react"
+import type { Permission } from "@/lib/auth/types"
+import { useAuth } from "./auth-provider"
 
 // ---------------------------------------------------------------------------
 // Declarative permission gate component
@@ -10,16 +10,16 @@ import type { Permission } from "@/lib/auth/types";
 
 interface RequirePermissionProps {
   /** The permission(s) the user must have. */
-  permission: Permission | Permission[];
+  permission: Permission | Permission[]
   /**
    * When multiple permissions are provided:
    * - `"all"` → user needs ALL of them (default)
    * - `"any"` → user needs at least ONE
    */
-  mode?: "all" | "any";
+  mode?: "all" | "any"
   /** Content to render when the user lacks the permission. */
-  fallback?: ReactNode;
-  children: ReactNode;
+  fallback?: ReactNode
+  children: ReactNode
 }
 
 /**
@@ -42,18 +42,17 @@ export function RequirePermission({
   fallback = null,
   children,
 }: RequirePermissionProps) {
-  const { hasPermission, hasAllPermissions, hasAnyPermission, loading } =
-    useAuth();
+  const { hasPermission, hasAllPermissions, hasAnyPermission, loading } = useAuth()
 
-  if (loading) return null;
+  if (loading) return null
 
   const allowed = Array.isArray(permission)
     ? mode === "any"
       ? hasAnyPermission(permission)
       : hasAllPermissions(permission)
-    : hasPermission(permission);
+    : hasPermission(permission)
 
-  return allowed ? <>{children}</> : <>{fallback}</>;
+  return allowed ? children : fallback
 }
 
 // ---------------------------------------------------------------------------
@@ -62,11 +61,11 @@ export function RequirePermission({
 
 interface RequireRoleProps {
   /** The role(s) the user must have. */
-  role: string | string[];
+  role: string | string[]
   /** When multiple roles: `"any"` = at least one (default), `"all"` = every role. */
-  mode?: "all" | "any";
-  fallback?: ReactNode;
-  children: ReactNode;
+  mode?: "all" | "any"
+  fallback?: ReactNode
+  children: ReactNode
 }
 
 /**
@@ -79,23 +78,18 @@ interface RequireRoleProps {
  * </RequireRole>
  * ```
  */
-export function RequireRole({
-  role,
-  mode = "any",
-  fallback = null,
-  children,
-}: RequireRoleProps) {
-  const { hasRole, hasAnyRole, loading } = useAuth();
+export function RequireRole({ role, mode = "any", fallback = null, children }: RequireRoleProps) {
+  const { hasRole, hasAnyRole, loading } = useAuth()
 
-  if (loading) return null;
+  if (loading) return null
 
   const allowed = Array.isArray(role)
     ? mode === "any"
       ? hasAnyRole(role)
       : role.every((r) => hasRole(r))
-    : hasRole(role);
+    : hasRole(role)
 
-  return allowed ? <>{children}</> : <>{fallback}</>;
+  return allowed ? children : fallback
 }
 
 // ---------------------------------------------------------------------------
@@ -103,8 +97,8 @@ export function RequireRole({
 // ---------------------------------------------------------------------------
 
 interface RequireAdminProps {
-  fallback?: ReactNode;
-  children: ReactNode;
+  fallback?: ReactNode
+  children: ReactNode
 }
 
 /**
@@ -117,13 +111,10 @@ interface RequireAdminProps {
  * </RequireAdmin>
  * ```
  */
-export function RequireAdmin({
-  fallback = null,
-  children,
-}: RequireAdminProps) {
-  const { isAdmin, loading } = useAuth();
+export function RequireAdmin({ fallback = null, children }: RequireAdminProps) {
+  const { isAdmin, loading } = useAuth()
 
-  if (loading) return null;
+  if (loading) return null
 
-  return isAdmin ? <>{children}</> : <>{fallback}</>;
+  return isAdmin ? children : fallback
 }
