@@ -1,22 +1,27 @@
-import { getServerApiBase } from "@/lib/api-base";
-import { getToken } from "@/lib/auth";
-import type { ReportDetail } from "./types";
+import { getServerApiBase } from "@/lib/api-base"
+import { getToken } from "@/lib/auth"
+import type { AppErrorCode } from "@/lib/errors"
 
-export async function getReportDetailById(
-  id: number
-): Promise<ReportDetail | null> {
-  const token = await getToken();
-  if (!token) return null;
+import { apiFetchJson } from "@/lib/http"
+import type { ReportDetail } from "./types"
 
-  const apiBase = getServerApiBase();
-  if (!apiBase) return null;
-
-  const res = await fetch(`${apiBase}/api/reports/${id}`, {
-    headers: { Authorization: `Bearer ${token}` },
-    cache: "no-store",
-  });
-
-  if (!res.ok) return null;
-  return (await res.json()) as ReportDetail;
+export type ReportDetailResult = {
+  data: ReportDetail | null
+  error: AppErrorCode | null
 }
 
+export async function getReportDetailById(id: number): Promise<ReportDetailResult> {
+  const token = await getToken()
+  if (!token) return { data: null, error: "auth_required" }
+
+  const apiBase = getServerApiBase()
+  if (!apiBase) return { data: null, error: "service_unavailable" }
+
+  const result = await apiFetchJson<ReportDetail>(`${apiBase}/api/reports/${id}`, {
+    headers: { Authorization: `Bearer ${token}` },
+    cache: "no-store",
+  })
+
+  if (!result.ok) return { data: null, error: result.error.code }
+  return { data: result.data, error: null }
+}
