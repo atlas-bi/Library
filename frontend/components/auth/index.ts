@@ -1,6 +1,6 @@
-export { AuthProvider, useAuth } from "./auth-provider";
+export { AuthProvider, useAuth } from "./auth-provider"
 export {
+  RequireAdmin,
   RequirePermission,
   RequireRole,
-  RequireAdmin,
-} from "./require-permission";
+} from "./require-permission"

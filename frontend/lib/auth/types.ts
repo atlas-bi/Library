@@ -10,25 +10,19 @@ export const PERMISSIONS = [
   "Edit Terms",
   "Show Advanced Search",
   "Show Report-Object Relationships",
-] as const;
+] as const
 
-export type Permission = (typeof PERMISSIONS)[number];
+export type Permission = (typeof PERMISSIONS)[number]
 
+export const KNOWN_ROLES = ["Term Administrator", "Report Writer", "Administrator"] as const
 
-export const KNOWN_ROLES = [
-  "Term Administrator",
-  "Report Writer",
-  "Administrator",
-] as const;
-
-export type KnownRole = (typeof KNOWN_ROLES)[number];
-
+export type KnownRole = (typeof KNOWN_ROLES)[number]
 
 export interface AuthUser {
-  username: string;
-  fullname: string;
-  userId: string;
-  roles: string[];
-  permissions: Permission[];
-  adminEnabled: boolean;
+  username: string
+  fullname: string
+  userId: string
+  roles: string[]
+  permissions: Permission[]
+  adminEnabled: boolean
 }
