@@ -27,7 +27,6 @@ public interface ISearchApiService
 public sealed class SearchApiService : ISearchApiService
 {
     private const int MaxPageSize = 100;
-    private const int ResultsPerPage = 20;
 
     private static readonly string[] FacetOrder =
     [

@@ -352,6 +352,9 @@ public sealed partial class ReportsApiService : IReportsApiService
             "maint-sched" => "maintenance_schedule",
             "ro-fragility" => "fragility_tag",
             "maint-log-stat" => "maintenance_log_status",
+            "user-roles" => "user_roles",
+            "financial-impact" => "financial_impact",
+            "strategic-importance" => "strategic_importance",
             _ => null,
         };
 
