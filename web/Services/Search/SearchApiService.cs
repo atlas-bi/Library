@@ -330,11 +330,13 @@ public sealed class SearchApiService : ISearchApiService
         searchString = Regex.Replace(
             searchString,
             @"\b(OR|AND|NOT)\b",
-            m => m.ToString().ToLower()
+            m => m.ToString().ToLower(),
+            RegexOptions.None,
+            TimeSpan.FromSeconds(1)
         );
 
         var exactMatches = new List<string>();
-        var literals = Regex.Matches(searchString, @"("")(.+?)("")");
+        var literals = Regex.Matches(searchString, @"("")(.+?)("")", RegexOptions.None, TimeSpan.FromSeconds(1));
 
         foreach (Match literal in literals)
         {
@@ -374,7 +376,7 @@ public sealed class SearchApiService : ISearchApiService
             }
         }
 
-        searchString = Regex.Replace(searchString, @"("".+?"")", "")
+        searchString = Regex.Replace(searchString, @"("".+?"")", "", RegexOptions.None, TimeSpan.FromSeconds(1))
             .Replace("\"", "\\\"")
             .Trim();
 
