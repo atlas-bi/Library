@@ -1,9 +1,7 @@
-import { NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server"
 
-export function GET() {
-  const response = NextResponse.redirect(
-    new URL("/auth/login", process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3000")
-  );
-  response.cookies.delete("atlas_token");
-  return response;
+export function GET(request: NextRequest) {
+  const response = NextResponse.redirect(new URL("/auth/login", request.nextUrl.origin))
+  response.cookies.delete("atlas_token")
+  return response
 }
