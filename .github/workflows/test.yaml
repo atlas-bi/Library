@@ -94,7 +94,6 @@ jobs:
         run: npm run build
       - name: install dotnet deps
         run: |
-          dotnet tool install -g coverlet.console
           dotnet tool install -g dotnet-reportgenerator-globaltool
           dotnet restore
       - name: build
@@ -108,6 +107,21 @@ jobs:
         env:
           BROWSERSTACK_ACCESS_KEY: ${{ secrets.BROWSERSTACK_ACCESS_KEY }}
           BROWSERSTACK_USERNAME: ${{ secrets.BROWSERSTACK_USERNAME }}
+
+      - name: collect coverage file
+        if: always()
+        shell: pwsh
+        run: |
+          $coverageFile = Get-ChildItem -Path TestResults -Recurse -Filter coverage.cobertura.xml |
+            Sort-Object LastWriteTimeUtc -Descending |
+            Select-Object -First 1
+
+          if ($coverageFile) {
+            Copy-Item $coverageFile.FullName coverage.cobertura.xml -Force
+            Write-Host "Copied coverage file from $($coverageFile.FullName)"
+          } else {
+            Write-Host "Coverage file not found under TestResults"
+          }
 
       - name: console coverage
         if: always()
@@ -216,7 +230,6 @@ jobs:
         run: npm run build
       - name: install dotnet deps
         run: |
-          dotnet tool install -g coverlet.console
           dotnet tool install -g dotnet-reportgenerator-globaltool
           dotnet restore
       - name: build
@@ -230,6 +243,21 @@ jobs:
         env:
           BROWSERSTACK_ACCESS_KEY: ${{ secrets.BROWSERSTACK_ACCESS_KEY }}
           BROWSERSTACK_USERNAME: ${{ secrets.BROWSERSTACK_USERNAME }}
+
+      - name: collect coverage file
+        if: always()
+        shell: pwsh
+        run: |
+          $coverageFile = Get-ChildItem -Path TestResults -Recurse -Filter coverage.cobertura.xml |
+            Sort-Object LastWriteTimeUtc -Descending |
+            Select-Object -First 1
+
+          if ($coverageFile) {
+            Copy-Item $coverageFile.FullName coverage.cobertura.xml -Force
+            Write-Host "Copied coverage file from $($coverageFile.FullName)"
+          } else {
+            Write-Host "Coverage file not found under TestResults"
+          }
 
       - name: console coverage
         if: always()
