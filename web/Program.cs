@@ -203,6 +203,7 @@ builder
 
 builder.Services.AddTransient<IEmailService, EmailService>();
 builder.Services.AddTransient<IRazorPartialToStringRenderer, RazorPartialToStringRenderer>();
+builder.Services.AddScoped<ICollectionsApiService, CollectionsApiService>();
 builder.Services.AddScoped<IReportsApiService, ReportsApiService>();
 builder.Services.AddScoped<ISearchApiService, SearchApiService>();
 builder.Services.AddHttpContextAccessor();
