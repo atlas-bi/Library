@@ -3,7 +3,7 @@ namespace Atlas_Web.Contracts.Api.Interactions;
 public sealed class ToggleStarRequestDto
 {
     public string Type { get; init; }
-    public int Id { get; init; }
+    public int? Id { get; init; }
 }
 
 public sealed class ToggleStarResponseDto
@@ -28,7 +28,7 @@ public sealed class ShareMailRequestDto
 
 public sealed class ShareRecipientDto
 {
-    public int UserId { get; init; }
+    public int? UserId { get; init; }
     public string Type { get; init; }
 }
 
