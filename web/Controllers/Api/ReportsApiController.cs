@@ -134,18 +134,25 @@ public class ReportsApiController : ControllerBase
             return Forbid();
         }
 
-        var report = await _reportsApiService.UpdateReportAsync(
-            User,
-            id,
-            request,
-            cancellationToken
-        );
-        if (report == null)
+        try
         {
-            return NotFound();
-        }
+            var report = await _reportsApiService.UpdateReportAsync(
+                User,
+                id,
+                request,
+                cancellationToken
+            );
+            if (report == null)
+            {
+                return NotFound();
+            }
 
-        return Ok(report);
+            return Ok(report);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(new { error = ex.Message });
+        }
     }
 
     [HttpPost("{id:int}/images")]
