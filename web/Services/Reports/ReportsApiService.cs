@@ -6,8 +6,10 @@ using Atlas_Web.Pages.Search;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using SolrNet;
 using SolrNet.Commands.Parameters;
+using System.Linq.Expressions;
 using System.Security.Claims;
 
 namespace Atlas_Web.Services;
@@ -82,6 +84,7 @@ public sealed partial class ReportsApiService : IReportsApiService
     private readonly Atlas_WebContext _context;
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly IConfiguration _configuration;
+    private readonly IMemoryCache _cache;
     private readonly ISolrReadOnlyOperations<SolrAtlas> _solr;
     private readonly ISolrReadOnlyOperations<SolrAtlasLookups> _solrLookup;
 
@@ -90,6 +93,7 @@ public sealed partial class ReportsApiService : IReportsApiService
         IAuthorizationService authorizationService,
         IHttpContextAccessor httpContextAccessor,
         IConfiguration configuration,
+        IMemoryCache cache,
         ISolrReadOnlyOperations<SolrAtlas> solr,
         ISolrReadOnlyOperations<SolrAtlasLookups> solrLookup
     )
@@ -98,6 +102,7 @@ public sealed partial class ReportsApiService : IReportsApiService
         _authorizationService = authorizationService;
         _httpContextAccessor = httpContextAccessor;
         _configuration = configuration;
+        _cache = cache;
         _solr = solr;
         _solrLookup = solrLookup;
     }
@@ -241,6 +246,8 @@ public sealed partial class ReportsApiService : IReportsApiService
         CancellationToken cancellationToken
     )
     {
+        await ValidateUpdateRequestAsync(id, request, cancellationToken);
+
         var reportExists = await _context.ReportObjects.AnyAsync(
             x => x.ReportObjectId == id,
             cancellationToken
@@ -249,6 +256,13 @@ public sealed partial class ReportsApiService : IReportsApiService
         {
             return null;
         }
+
+        var previousTermIds = await _context.ReportObjectDocTerms.Where(x => x.ReportObjectId == id)
+            .Select(x => x.TermId)
+            .ToListAsync(cancellationToken);
+        var previousCollectionIds = await _context.CollectionReports.Where(x => x.ReportId == id)
+            .Select(x => x.CollectionId)
+            .ToListAsync(cancellationToken);
 
         var existingDocument = await _context.ReportObjectDocs.SingleOrDefaultAsync(
             x => x.ReportObjectId == id,
@@ -293,6 +307,12 @@ public sealed partial class ReportsApiService : IReportsApiService
 
         await _context.SaveChangesAsync(cancellationToken);
 
+        InvalidateReportCaches(
+            id,
+            previousTermIds.Concat(request.TermIds).Distinct(),
+            previousCollectionIds.Concat(request.CollectionIds).Distinct()
+        );
+
         return await GetReportCoreAsync(user, id, cancellationToken, visibleOnly: false);
     }
 
@@ -328,6 +348,7 @@ public sealed partial class ReportsApiService : IReportsApiService
 
         await _context.ReportObjectImagesDocs.AddAsync(image, cancellationToken);
         await _context.SaveChangesAsync(cancellationToken);
+        InvalidateReportCaches(id, Array.Empty<int>(), Array.Empty<int>());
 
         return new ReportImageDto
         {
@@ -435,5 +456,193 @@ public sealed partial class ReportsApiService : IReportsApiService
             .ToList();
 
         return Task.FromResult<IReadOnlyList<ReportSearchResultDto>>(results);
+    }
+
+    private async Task ValidateUpdateRequestAsync(
+        int reportId,
+        UpdateReportDocumentRequestDto request,
+        CancellationToken cancellationToken
+    )
+    {
+        if (request == null)
+        {
+            throw new InvalidOperationException("Request body is required.");
+        }
+
+        await ValidateOptionalUserAsync(
+            request.OperationalOwnerUserId,
+            "Unknown operational owner user id.",
+            cancellationToken
+        );
+        await ValidateOptionalUserAsync(
+            request.RequesterUserId,
+            "Unknown requester user id.",
+            cancellationToken
+        );
+        await ValidateOptionalLookupAsync(
+            _context.OrganizationalValues,
+            request.OrganizationalValueId,
+            x => x.Id,
+            "Unknown organizational value id.",
+            cancellationToken
+        );
+        await ValidateOptionalLookupAsync(
+            _context.EstimatedRunFrequencies,
+            request.EstimatedRunFrequencyId,
+            x => x.Id,
+            "Unknown estimated run frequency id.",
+            cancellationToken
+        );
+        await ValidateOptionalLookupAsync(
+            _context.Fragilities,
+            request.FragilityId,
+            x => x.Id,
+            "Unknown fragility id.",
+            cancellationToken
+        );
+        await ValidateOptionalLookupAsync(
+            _context.MaintenanceSchedules,
+            request.MaintenanceScheduleId,
+            x => x.Id,
+            "Unknown maintenance schedule id.",
+            cancellationToken
+        );
+        await ValidateOptionalLookupAsync(
+            _context.MaintenanceLogStatuses,
+            request.NewMaintenanceLog?.MaintenanceLogStatusId,
+            x => x.Id,
+            "Unknown maintenance log status id.",
+            cancellationToken
+        );
+
+        await ValidateLinkedIdsAsync(
+            _context.Terms.Select(x => x.TermId),
+            request.TermIds,
+            "term",
+            cancellationToken
+        );
+        await ValidateLinkedIdsAsync(
+            _context.Collections.Select(x => x.CollectionId),
+            request.CollectionIds,
+            "collection",
+            cancellationToken
+        );
+        await ValidateLinkedIdsAsync(
+            _context.FragilityTags.Select(x => x.Id),
+            request.FragilityTagIds,
+            "fragility tag",
+            cancellationToken
+        );
+
+        await ValidateOwnedIdsAsync(
+            _context.ReportObjectImagesDocs.Where(x => x.ReportObjectId == reportId).Select(x => x.ImageId),
+            request.ImageIds,
+            "image",
+            cancellationToken
+        );
+        await ValidateOwnedIdsAsync(
+            _context.ReportServiceRequests.Where(x => x.ReportObjectId == reportId)
+                .Select(x => x.ServiceRequestId),
+            request.ServiceRequestIds,
+            "service request",
+            cancellationToken
+        );
+    }
+
+    private async Task ValidateOptionalUserAsync(
+        int? userId,
+        string errorMessage,
+        CancellationToken cancellationToken
+    )
+    {
+        if (
+            userId.HasValue
+            && !await _context.Users.AnyAsync(x => x.UserId == userId.Value, cancellationToken)
+        )
+        {
+            throw new InvalidOperationException(errorMessage);
+        }
+    }
+
+    private static async Task ValidateOptionalLookupAsync<TEntity>(
+        IQueryable<TEntity> query,
+        int? id,
+        Expression<Func<TEntity, int>> selector,
+        string errorMessage,
+        CancellationToken cancellationToken
+    )
+        where TEntity : class
+    {
+        if (!id.HasValue)
+        {
+            return;
+        }
+
+        var values = await query.Select(selector).ToListAsync(cancellationToken);
+        if (!values.Contains(id.Value))
+        {
+            throw new InvalidOperationException(errorMessage);
+        }
+    }
+
+    private static async Task ValidateLinkedIdsAsync(
+        IQueryable<int> validIdsQuery,
+        IReadOnlyList<int> requestedIds,
+        string label,
+        CancellationToken cancellationToken
+    )
+    {
+        var normalizedIds = requestedIds.Distinct().ToList();
+        if (normalizedIds.Count == 0)
+        {
+            return;
+        }
+
+        var validIds = await validIdsQuery.Where(x => normalizedIds.Contains(x))
+            .ToListAsync(cancellationToken);
+        var missingIds = normalizedIds.Except(validIds).ToList();
+        if (missingIds.Count > 0)
+        {
+            throw new InvalidOperationException(
+                $"Unknown {label} ids: {string.Join(", ", missingIds)}"
+            );
+        }
+    }
+
+    private static async Task ValidateOwnedIdsAsync(
+        IQueryable<int> validIdsQuery,
+        IReadOnlyList<int> requestedIds,
+        string label,
+        CancellationToken cancellationToken
+    )
+    {
+        await ValidateLinkedIdsAsync(validIdsQuery, requestedIds, label, cancellationToken);
+    }
+
+    private void InvalidateReportCaches(
+        int reportId,
+        IEnumerable<int> termIds,
+        IEnumerable<int> collectionIds
+    )
+    {
+        _cache.Remove($"report-{reportId}");
+        _cache.Remove($"report-terms-{reportId}");
+        _cache.Remove($"report-comp-queries-{reportId}");
+        _cache.Remove($"report-children-{reportId}");
+        _cache.Remove($"report-parents-{reportId}");
+        _cache.Remove($"search-report-{reportId}");
+        _cache.Remove("terms");
+        _cache.Remove("collections");
+
+        foreach (var termId in termIds.Distinct())
+        {
+            _cache.Remove($"term-{termId}");
+        }
+
+        foreach (var collectionId in collectionIds.Distinct())
+        {
+            _cache.Remove($"collection-{collectionId}");
+            _cache.Remove($"search-collection-{collectionId}");
+        }
     }
 }
