@@ -80,7 +80,7 @@ public sealed class ProfileApiService : IProfileApiService
         public List<string> Visible { get; init; } = new();
         public List<string> Certification { get; init; } = new();
         public List<string> Availability { get; init; } = new();
-        public List<int> ReportType { get; init; } = new();
+        public List<int> ReportTypes { get; init; } = new();
     }
 
     private sealed class ProfileSubqueryResult
@@ -310,42 +310,15 @@ public sealed class ProfileApiService : IProfileApiService
         CancellationToken cancellationToken
     )
     {
-        return type switch
+        var starsQuery = await BuildStarsQueryAsync(id, type, cancellationToken);
+        return await starsQuery.Select(x => new ProfileStarUserDto
         {
-            "report" when await _context.ReportObjects.AnyAsync(x => x.ReportObjectId == id, cancellationToken) =>
-                await _context.Users.Where(x => x.StarredReports.Any(r => r.Reportid == id))
-                    .Select(x => new ProfileStarUserDto
-                    {
-                        Id = x.UserId,
-                        FullName = x.FullnameCalc,
-                        Email = x.Email,
-                    })
-                    .AsNoTracking()
-                    .ToListAsync(cancellationToken),
-            "term" when await _context.Terms.AnyAsync(x => x.TermId == id, cancellationToken) =>
-                await _context.Users.Where(x => x.StarredTerms.Any(r => r.Termid == id))
-                    .Select(x => new ProfileStarUserDto
-                    {
-                        Id = x.UserId,
-                        FullName = x.FullnameCalc,
-                        Email = x.Email,
-                    })
-                    .AsNoTracking()
-                    .ToListAsync(cancellationToken),
-            "collection" when await _context.Collections.AnyAsync(x => x.CollectionId == id, cancellationToken) =>
-                await _context.Users.Where(x => x.StarredCollections.Any(r => r.Collectionid == id))
-                    .Select(x => new ProfileStarUserDto
-                    {
-                        Id = x.UserId,
-                        FullName = x.FullnameCalc,
-                        Email = x.Email,
-                    })
-                    .AsNoTracking()
-                    .ToListAsync(cancellationToken),
-            _ => throw new InvalidOperationException(
-                "Wrong parameter value supplied. Type: " + type + " with Id: " + id
-            ),
-        };
+            Id = x.UserId,
+            FullName = x.FullnameCalc,
+            Email = x.Email,
+        })
+            .AsNoTracking()
+            .ToListAsync(cancellationToken);
     }
 
     public async Task<IReadOnlyList<ProfileSubscriptionDto>> GetSubscriptionsAsync(
@@ -359,9 +332,7 @@ public sealed class ProfileApiService : IProfileApiService
             || !await _context.ReportObjects.AnyAsync(x => x.ReportObjectId == id, cancellationToken)
         )
         {
-            throw new InvalidOperationException(
-                "Wrong parameter value supplied. Type: " + type + " with Id: " + id
-            );
+            throw InvalidType(type, id);
         }
 
         return await _context.ReportObjectSubscriptions.Where(r => r.ReportObjectId == id)
@@ -386,8 +357,9 @@ public sealed class ProfileApiService : IProfileApiService
         CancellationToken cancellationToken
     )
     {
-        var start = DateTime.Now.AddSeconds(query.StartAt);
-        var end = DateTime.Now.AddSeconds(query.EndAt);
+        var now = DateTime.Now;
+        var start = now.AddSeconds(query.StartAt);
+        var end = now.AddSeconds(query.EndAt);
 
         var runData = _context.ReportObjectRunDatas.AsQueryable();
         var reports = _context.ReportObjects.AsQueryable();
@@ -427,6 +399,45 @@ public sealed class ProfileApiService : IProfileApiService
             Grouped = grouped,
             DateFormat = dateFormat,
         };
+    }
+
+    private async Task<IQueryable<User>> BuildStarsQueryAsync(
+        int id,
+        string type,
+        CancellationToken cancellationToken
+    )
+    {
+        if (string.Equals(type, ReportType, StringComparison.OrdinalIgnoreCase))
+        {
+            if (!await _context.ReportObjects.AnyAsync(x => x.ReportObjectId == id, cancellationToken))
+            {
+                throw InvalidType(type, id);
+            }
+
+            return _context.Users.Where(x => x.StarredReports.Any(r => r.Reportid == id));
+        }
+
+        if (string.Equals(type, "term", StringComparison.OrdinalIgnoreCase))
+        {
+            if (!await _context.Terms.AnyAsync(x => x.TermId == id, cancellationToken))
+            {
+                throw InvalidType(type, id);
+            }
+
+            return _context.Users.Where(x => x.StarredTerms.Any(r => r.Termid == id));
+        }
+
+        if (string.Equals(type, "collection", StringComparison.OrdinalIgnoreCase))
+        {
+            if (!await _context.Collections.AnyAsync(x => x.CollectionId == id, cancellationToken))
+            {
+                throw InvalidType(type, id);
+            }
+
+            return _context.Users.Where(x => x.StarredCollections.Any(r => r.Collectionid == id));
+        }
+
+        throw InvalidType(type, id);
     }
 
     private static IQueryable<ReportObject> ApplyReportFilters(
@@ -475,9 +486,9 @@ public sealed class ProfileApiService : IProfileApiService
             );
         }
 
-        if (query.ReportType.Count > 0)
+        if (query.ReportTypes.Count > 0)
         {
-            reports = reports.Where(x => query.ReportType.Contains((int)x.ReportObjectTypeId));
+            reports = reports.Where(x => query.ReportTypes.Contains((int)x.ReportObjectTypeId));
         }
 
         return reports;
@@ -514,7 +525,7 @@ public sealed class ProfileApiService : IProfileApiService
             Visible = request.Visible ?? new List<string>(),
             Certification = request.Certification ?? new List<string>(),
             Availability = request.Availability ?? new List<string>(),
-            ReportType = request.ReportType ?? new List<int>(),
+            ReportTypes = request.ReportType ?? new List<int>(),
         };
     }
 
