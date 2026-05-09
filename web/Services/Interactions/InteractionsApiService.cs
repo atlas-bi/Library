@@ -81,8 +81,12 @@ public sealed class InteractionsApiService : IInteractionsApiService
 
         return type switch
         {
-            "report" => await ToggleReportStarAsync(userId, request.Id, cancellationToken),
-            "collection" => await ToggleCollectionStarAsync(userId, request.Id, cancellationToken),
+            "report" => await ToggleReportStarAsync(userId, request.Id!.Value, cancellationToken),
+            "collection" => await ToggleCollectionStarAsync(
+                userId,
+                request.Id!.Value,
+                cancellationToken
+            ),
             _ => throw new InvalidOperationException("Unsupported star target type."),
         };
     }
@@ -106,12 +110,12 @@ public sealed class InteractionsApiService : IInteractionsApiService
 
         var userIds = recipients
             .Where(x => !string.Equals(x.Type, "g", StringComparison.OrdinalIgnoreCase))
-            .Select(x => x.UserId)
+            .Select(x => x.UserId!.Value)
             .Distinct()
             .ToList();
         var groupIds = recipients
             .Where(x => string.Equals(x.Type, "g", StringComparison.OrdinalIgnoreCase))
-            .Select(x => x.UserId)
+            .Select(x => x.UserId!.Value)
             .Distinct()
             .ToList();
 
@@ -194,10 +198,7 @@ public sealed class InteractionsApiService : IInteractionsApiService
             throw new InvalidOperationException("Feedback target is required.");
         }
 
-        using var handler = new HttpClientHandler
-        {
-            ServerCertificateCustomValidationCallback = (_, _, _, _) => true,
-        };
+        using var handler = new HttpClientHandler();
         using var client = new HttpClient(handler)
         {
             DefaultRequestVersion = new Version(1, 1),
@@ -375,14 +376,14 @@ public sealed class InteractionsApiService : IInteractionsApiService
             shareCount++;
         }
 
-        foreach (var groupRecipient in groupUsers)
+        foreach (var recipient in groupUsers.Select(groupRecipient => groupRecipient.User))
         {
-            if (groupRecipient.User == null)
+            if (recipient == null)
             {
                 continue;
             }
 
-            await CreateShareAsync(sender, groupRecipient.User, request, cancellationToken);
+            await CreateShareAsync(sender, recipient, request, cancellationToken);
             shareCount++;
         }
 
@@ -440,7 +441,7 @@ public sealed class InteractionsApiService : IInteractionsApiService
         );
     }
 
-    private object BuildRequester(ClaimsPrincipal user)
+    private static object BuildRequester(ClaimsPrincipal user)
     {
         var email = user.GetUserEmail();
         var name = user.GetUserName();

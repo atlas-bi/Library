@@ -19,138 +19,38 @@ public class ProfileApiController : ControllerBase
 
     [HttpGet("chart")]
     public async Task<ActionResult<ProfileChartResponseDto>> GetChart(
-        [FromQuery] int id,
-        [FromQuery] string type,
-        [FromQuery] double start_at = -31536000,
-        [FromQuery] double end_at = 0,
-        [FromQuery] List<string> server = null,
-        [FromQuery] List<string> database = null,
-        [FromQuery] List<string> masterFile = null,
-        [FromQuery] List<string> visible = null,
-        [FromQuery] List<string> certification = null,
-        [FromQuery] List<string> availability = null,
-        [FromQuery] List<int> reportType = null,
+        [FromQuery] ProfileQueryRequestDto request,
         CancellationToken cancellationToken = default
     )
     {
-        return Ok(
-            await _profileApiService.GetChartAsync(
-                id,
-                type,
-                start_at,
-                end_at,
-                server,
-                database,
-                masterFile,
-                visible,
-                certification,
-                availability,
-                reportType,
-                cancellationToken
-            )
-        );
+        return Ok(await _profileApiService.GetChartAsync(request, cancellationToken));
     }
 
     [HttpGet("users")]
     public async Task<ActionResult<IReadOnlyList<ProfileBarItemDto>>> GetUsers(
-        [FromQuery] int id,
-        [FromQuery] string type,
-        [FromQuery] double start_at = -31536000,
-        [FromQuery] double end_at = 0,
-        [FromQuery] List<string> server = null,
-        [FromQuery] List<string> database = null,
-        [FromQuery] List<string> masterFile = null,
-        [FromQuery] List<string> visible = null,
-        [FromQuery] List<string> certification = null,
-        [FromQuery] List<string> availability = null,
-        [FromQuery] List<int> reportType = null,
+        [FromQuery] ProfileQueryRequestDto request,
         CancellationToken cancellationToken = default
     )
     {
-        return Ok(
-            await _profileApiService.GetUsersAsync(
-                id,
-                type,
-                start_at,
-                end_at,
-                server,
-                database,
-                masterFile,
-                visible,
-                certification,
-                availability,
-                reportType,
-                cancellationToken
-            )
-        );
+        return Ok(await _profileApiService.GetUsersAsync(request, cancellationToken));
     }
 
     [HttpGet("reports")]
     public async Task<ActionResult<IReadOnlyList<ProfileBarItemDto>>> GetReports(
-        [FromQuery] int id,
-        [FromQuery] string type,
-        [FromQuery] double start_at = -31536000,
-        [FromQuery] double end_at = 0,
-        [FromQuery] List<string> server = null,
-        [FromQuery] List<string> database = null,
-        [FromQuery] List<string> masterFile = null,
-        [FromQuery] List<string> visible = null,
-        [FromQuery] List<string> certification = null,
-        [FromQuery] List<string> availability = null,
-        [FromQuery] List<int> reportType = null,
+        [FromQuery] ProfileQueryRequestDto request,
         CancellationToken cancellationToken = default
     )
     {
-        return Ok(
-            await _profileApiService.GetReportsAsync(
-                id,
-                type,
-                start_at,
-                end_at,
-                server,
-                database,
-                masterFile,
-                visible,
-                certification,
-                availability,
-                reportType,
-                cancellationToken
-            )
-        );
+        return Ok(await _profileApiService.GetReportsAsync(request, cancellationToken));
     }
 
     [HttpGet("fails")]
     public async Task<ActionResult<IReadOnlyList<ProfileBarItemDto>>> GetFails(
-        [FromQuery] int id,
-        [FromQuery] string type,
-        [FromQuery] double start_at = -31536000,
-        [FromQuery] double end_at = 0,
-        [FromQuery] List<string> server = null,
-        [FromQuery] List<string> database = null,
-        [FromQuery] List<string> masterFile = null,
-        [FromQuery] List<string> visible = null,
-        [FromQuery] List<string> certification = null,
-        [FromQuery] List<string> availability = null,
-        [FromQuery] List<int> reportType = null,
+        [FromQuery] ProfileQueryRequestDto request,
         CancellationToken cancellationToken = default
     )
     {
-        return Ok(
-            await _profileApiService.GetFailsAsync(
-                id,
-                type,
-                start_at,
-                end_at,
-                server,
-                database,
-                masterFile,
-                visible,
-                certification,
-                availability,
-                reportType,
-                cancellationToken
-            )
-        );
+        return Ok(await _profileApiService.GetFailsAsync(request, cancellationToken));
     }
 
     [HttpGet("run-list")]

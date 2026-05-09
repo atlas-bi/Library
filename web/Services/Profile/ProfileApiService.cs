@@ -8,59 +8,19 @@ namespace Atlas_Web.Services;
 public interface IProfileApiService
 {
     Task<ProfileChartResponseDto> GetChartAsync(
-        int id,
-        string type,
-        double startAt,
-        double endAt,
-        List<string> server,
-        List<string> database,
-        List<string> masterFile,
-        List<string> visible,
-        List<string> certification,
-        List<string> availability,
-        List<int> reportType,
+        ProfileQueryRequestDto request,
         CancellationToken cancellationToken
     );
     Task<IReadOnlyList<ProfileBarItemDto>> GetUsersAsync(
-        int id,
-        string type,
-        double startAt,
-        double endAt,
-        List<string> server,
-        List<string> database,
-        List<string> masterFile,
-        List<string> visible,
-        List<string> certification,
-        List<string> availability,
-        List<int> reportType,
+        ProfileQueryRequestDto request,
         CancellationToken cancellationToken
     );
     Task<IReadOnlyList<ProfileBarItemDto>> GetReportsAsync(
-        int id,
-        string type,
-        double startAt,
-        double endAt,
-        List<string> server,
-        List<string> database,
-        List<string> masterFile,
-        List<string> visible,
-        List<string> certification,
-        List<string> availability,
-        List<int> reportType,
+        ProfileQueryRequestDto request,
         CancellationToken cancellationToken
     );
     Task<IReadOnlyList<ProfileBarItemDto>> GetFailsAsync(
-        int id,
-        string type,
-        double startAt,
-        double endAt,
-        List<string> server,
-        List<string> database,
-        List<string> masterFile,
-        List<string> visible,
-        List<string> certification,
-        List<string> availability,
-        List<int> reportType,
+        ProfileQueryRequestDto request,
         CancellationToken cancellationToken
     );
     Task<IReadOnlyList<ProfileRunListItemDto>> GetRunListAsync(
@@ -83,6 +43,15 @@ public interface IProfileApiService
 
 public sealed class ProfileApiService : IProfileApiService
 {
+    private const string ReportType = "report";
+    private static readonly TimeSpan RegexTimeout = TimeSpan.FromSeconds(1);
+    private static readonly Regex RsPrefixRegex = new(@"^rs", RegexOptions.Multiline, RegexTimeout);
+    private static readonly Regex SplitCamelCaseRegex = new(
+        @"(?<=[a-z])([A-Z])",
+        RegexOptions.None,
+        RegexTimeout
+    );
+
     private sealed class ProfileRunRow
     {
         public int? RunUserId { get; init; }
@@ -99,6 +68,28 @@ public sealed class ProfileApiService : IProfileApiService
         public string DisplayTitle { get; init; }
     }
 
+    private sealed class ProfileQueryOptions
+    {
+        public int Id { get; init; }
+        public string Type { get; init; }
+        public double StartAt { get; init; }
+        public double EndAt { get; init; }
+        public List<string> Server { get; init; } = new();
+        public List<string> Database { get; init; } = new();
+        public List<string> MasterFile { get; init; } = new();
+        public List<string> Visible { get; init; } = new();
+        public List<string> Certification { get; init; } = new();
+        public List<string> Availability { get; init; } = new();
+        public List<int> ReportTypes { get; init; } = new();
+    }
+
+    private sealed class ProfileSubqueryResult
+    {
+        public IQueryable<ProfileRunRow> Flattened { get; init; }
+        public IQueryable<IGrouping<DateTime, ProfileRunRow>> Grouped { get; init; }
+        public string DateFormat { get; init; }
+    }
+
     private readonly Atlas_WebContext _context;
     private readonly IConfiguration _config;
 
@@ -109,34 +100,15 @@ public sealed class ProfileApiService : IProfileApiService
     }
 
     public async Task<ProfileChartResponseDto> GetChartAsync(
-        int id,
-        string type,
-        double startAt,
-        double endAt,
-        List<string> server,
-        List<string> database,
-        List<string> masterFile,
-        List<string> visible,
-        List<string> certification,
-        List<string> availability,
-        List<int> reportType,
+        ProfileQueryRequestDto request,
         CancellationToken cancellationToken
     )
     {
-        var (subquery, subqueryGroup, dateFormat) = await BuildSubqueriesAsync(
-            id,
-            type,
-            startAt,
-            endAt,
-            server,
-            database,
-            masterFile,
-            visible,
-            certification,
-            availability,
-            reportType,
-            cancellationToken
-        );
+        var query = ToQueryOptions(request);
+        var subqueryResult = await BuildSubqueriesAsync(query, cancellationToken);
+        var subquery = subqueryResult.Flattened;
+        var subqueryGroup = subqueryResult.Grouped;
+        var dateFormat = subqueryResult.DateFormat;
 
         var history = await (
             from grp in subqueryGroup
@@ -146,7 +118,7 @@ public sealed class ProfileApiService : IProfileApiService
                 Date = grp.Key.ToString(dateFormat),
                 Users = grp.Select(x => x.RunUserId).Distinct().Count(),
                 Runs = grp.Sum(x => x.Runs),
-                RunTime = Math.Round(grp.Average(x => (int)x.RunDurationSeconds), 1),
+                RunTime = Math.Round(grp.Average(x => x.RunDurationSeconds), 1),
             }
         )
             .AsNoTracking()
@@ -155,7 +127,7 @@ public sealed class ProfileApiService : IProfileApiService
         var totalRuns = history.Sum(x => x.Runs);
         var distinctUsers = await subquery.Select(x => x.RunUserId).Distinct().CountAsync(cancellationToken);
         var averageRunTime = totalRuns > 0
-            ? Math.Round(await subquery.AverageAsync(x => (int)x.RunDurationSeconds, cancellationToken), 2)
+            ? Math.Round(await subquery.AverageAsync(x => x.RunDurationSeconds, cancellationToken), 2)
             : 0;
 
         return new ProfileChartResponseDto
@@ -168,34 +140,11 @@ public sealed class ProfileApiService : IProfileApiService
     }
 
     public async Task<IReadOnlyList<ProfileBarItemDto>> GetUsersAsync(
-        int id,
-        string type,
-        double startAt,
-        double endAt,
-        List<string> server,
-        List<string> database,
-        List<string> masterFile,
-        List<string> visible,
-        List<string> certification,
-        List<string> availability,
-        List<int> reportType,
+        ProfileQueryRequestDto request,
         CancellationToken cancellationToken
     )
     {
-        var (subquery, _, _) = await BuildSubqueriesAsync(
-            id,
-            type,
-            startAt,
-            endAt,
-            server,
-            database,
-            masterFile,
-            visible,
-            certification,
-            availability,
-            reportType,
-            cancellationToken
-        );
+        var subquery = (await BuildSubqueriesAsync(ToQueryOptions(request), cancellationToken)).Flattened;
 
         var total = await subquery.SumAsync(x => x.Runs, cancellationToken);
         return await (
@@ -220,34 +169,11 @@ public sealed class ProfileApiService : IProfileApiService
     }
 
     public async Task<IReadOnlyList<ProfileBarItemDto>> GetReportsAsync(
-        int id,
-        string type,
-        double startAt,
-        double endAt,
-        List<string> server,
-        List<string> database,
-        List<string> masterFile,
-        List<string> visible,
-        List<string> certification,
-        List<string> availability,
-        List<int> reportType,
+        ProfileQueryRequestDto request,
         CancellationToken cancellationToken
     )
     {
-        var (subquery, _, _) = await BuildSubqueriesAsync(
-            id,
-            type,
-            startAt,
-            endAt,
-            server,
-            database,
-            masterFile,
-            visible,
-            certification,
-            availability,
-            reportType,
-            cancellationToken
-        );
+        var subquery = (await BuildSubqueriesAsync(ToQueryOptions(request), cancellationToken)).Flattened;
 
         var total = await subquery.SumAsync(x => x.Runs, cancellationToken);
         return await (
@@ -276,34 +202,11 @@ public sealed class ProfileApiService : IProfileApiService
     }
 
     public async Task<IReadOnlyList<ProfileBarItemDto>> GetFailsAsync(
-        int id,
-        string type,
-        double startAt,
-        double endAt,
-        List<string> server,
-        List<string> database,
-        List<string> masterFile,
-        List<string> visible,
-        List<string> certification,
-        List<string> availability,
-        List<int> reportType,
+        ProfileQueryRequestDto request,
         CancellationToken cancellationToken
     )
     {
-        var (subquery, _, _) = await BuildSubqueriesAsync(
-            id,
-            type,
-            startAt,
-            endAt,
-            server,
-            database,
-            masterFile,
-            visible,
-            certification,
-            availability,
-            reportType,
-            cancellationToken
-        );
+        var subquery = (await BuildSubqueriesAsync(ToQueryOptions(request), cancellationToken)).Flattened;
 
         var total = await subquery.SumAsync(x => x.Runs, cancellationToken);
         return await (
@@ -312,9 +215,8 @@ public sealed class ProfileApiService : IProfileApiService
             group a by a.RunStatus into grp
             select new ProfileBarItemDto
             {
-                Key = Regex.Replace(
-                    Regex.Replace(grp.Key, @"^rs", "", RegexOptions.Multiline),
-                    @"(?<=[a-z])([A-Z])",
+                Key = SplitCamelCaseRegex.Replace(
+                    RsPrefixRegex.Replace(grp.Key, string.Empty),
                     " $1"
                 ),
                 Count = grp.Sum(x => x.Runs),
@@ -339,7 +241,7 @@ public sealed class ProfileApiService : IProfileApiService
         reportType ??= new List<int>();
         var runData = _context.ReportObjectRunDatas.AsQueryable();
 
-        if (string.Equals(type, "report", StringComparison.OrdinalIgnoreCase))
+        if (string.Equals(type, ReportType, StringComparison.OrdinalIgnoreCase))
         {
             return await (
                 from b in runData
@@ -408,42 +310,15 @@ public sealed class ProfileApiService : IProfileApiService
         CancellationToken cancellationToken
     )
     {
-        return type switch
+        var starsQuery = await BuildStarsQueryAsync(id, type, cancellationToken);
+        return await starsQuery.Select(x => new ProfileStarUserDto
         {
-            "report" when await _context.ReportObjects.AnyAsync(x => x.ReportObjectId == id, cancellationToken) =>
-                await _context.Users.Where(x => x.StarredReports.Any(r => r.Reportid == id))
-                    .Select(x => new ProfileStarUserDto
-                    {
-                        Id = x.UserId,
-                        FullName = x.FullnameCalc,
-                        Email = x.Email,
-                    })
-                    .AsNoTracking()
-                    .ToListAsync(cancellationToken),
-            "term" when await _context.Terms.AnyAsync(x => x.TermId == id, cancellationToken) =>
-                await _context.Users.Where(x => x.StarredTerms.Any(r => r.Termid == id))
-                    .Select(x => new ProfileStarUserDto
-                    {
-                        Id = x.UserId,
-                        FullName = x.FullnameCalc,
-                        Email = x.Email,
-                    })
-                    .AsNoTracking()
-                    .ToListAsync(cancellationToken),
-            "collection" when await _context.Collections.AnyAsync(x => x.CollectionId == id, cancellationToken) =>
-                await _context.Users.Where(x => x.StarredCollections.Any(r => r.Collectionid == id))
-                    .Select(x => new ProfileStarUserDto
-                    {
-                        Id = x.UserId,
-                        FullName = x.FullnameCalc,
-                        Email = x.Email,
-                    })
-                    .AsNoTracking()
-                    .ToListAsync(cancellationToken),
-            _ => throw new InvalidOperationException(
-                "Wrong parameter value supplied. Type: " + type + " with Id: " + id
-            ),
-        };
+            Id = x.UserId,
+            FullName = x.FullnameCalc,
+            Email = x.Email,
+        })
+            .AsNoTracking()
+            .ToListAsync(cancellationToken);
     }
 
     public async Task<IReadOnlyList<ProfileSubscriptionDto>> GetSubscriptionsAsync(
@@ -453,13 +328,11 @@ public sealed class ProfileApiService : IProfileApiService
     )
     {
         if (
-            !string.Equals(type, "report", StringComparison.OrdinalIgnoreCase)
+            !string.Equals(type, ReportType, StringComparison.OrdinalIgnoreCase)
             || !await _context.ReportObjects.AnyAsync(x => x.ReportObjectId == id, cancellationToken)
         )
         {
-            throw new InvalidOperationException(
-                "Wrong parameter value supplied. Type: " + type + " with Id: " + id
-            );
+            throw InvalidType(type, id);
         }
 
         return await _context.ReportObjectSubscriptions.Where(r => r.ReportObjectId == id)
@@ -479,125 +352,24 @@ public sealed class ProfileApiService : IProfileApiService
             .ToListAsync(cancellationToken);
     }
 
-    private async Task<
-        Tuple<
-            IQueryable<ProfileRunRow>,
-            IQueryable<IGrouping<DateTime, ProfileRunRow>>,
-            string
-        >
-    > BuildSubqueriesAsync(
-        int id,
-        string type,
-        double startAt,
-        double endAt,
-        List<string> server,
-        List<string> database,
-        List<string> masterFile,
-        List<string> visible,
-        List<string> certification,
-        List<string> availability,
-        List<int> reportType,
+    private async Task<ProfileSubqueryResult> BuildSubqueriesAsync(
+        ProfileQueryOptions query,
         CancellationToken cancellationToken
     )
     {
-        server ??= new List<string>();
-        database ??= new List<string>();
-        masterFile ??= new List<string>();
-        visible ??= new List<string>();
-        certification ??= new List<string>();
-        availability ??= new List<string>();
-        reportType ??= new List<int>();
-
-        var start = DateTime.Now.AddSeconds(startAt);
-        var end = DateTime.Now.AddSeconds(endAt);
+        var now = DateTime.Now;
+        var start = now.AddSeconds(query.StartAt);
+        var end = now.AddSeconds(query.EndAt);
 
         var runData = _context.ReportObjectRunDatas.AsQueryable();
         var reports = _context.ReportObjects.AsQueryable();
 
-        if (string.Equals(type, "report", StringComparison.OrdinalIgnoreCase))
-        {
-            if (id == -1)
-            {
-                reports = ApplyReportFilters(
-                    reports,
-                    server,
-                    database,
-                    masterFile,
-                    visible,
-                    certification,
-                    availability,
-                    reportType
-                );
-            }
-            else if (await _context.ReportObjects.AnyAsync(x => x.ReportObjectId == id, cancellationToken))
-            {
-                reports = reports.Where(x => x.ReportObjectId == id);
-            }
-            else
-            {
-                throw InvalidType(type, id);
-            }
-        }
-        else if (
-            string.Equals(type, "term", StringComparison.OrdinalIgnoreCase)
-            && await _context.Terms.AnyAsync(x => x.TermId == id, cancellationToken)
-        )
-        {
-            reports = reports.Where(x =>
-                _context.ReportObjectDocTerms.Where(t => t.TermId == id)
-                    .Select(t => t.ReportObjectId)
-                    .Contains(x.ReportObjectId)
-            );
-        }
-        else if (
-            string.Equals(type, "collection", StringComparison.OrdinalIgnoreCase)
-            && await _context.Collections.AnyAsync(x => x.CollectionId == id, cancellationToken)
-        )
-        {
-            reports = reports.Where(x =>
-                _context.CollectionReports.Where(c => c.CollectionId == id)
-                    .Select(c => c.ReportId)
-                    .Contains(x.ReportObjectId)
-            );
-        }
-        else if (
-            string.Equals(type, "user", StringComparison.OrdinalIgnoreCase)
-            && await _context.Users.AnyAsync(x => x.UserId == id, cancellationToken)
-        )
-        {
-            runData = runData.Where(x => x.RunUserId == id);
-            reports = ApplyReportFilters(
-                reports,
-                server,
-                database,
-                masterFile,
-                visible,
-                certification,
-                availability,
-                reportType
-            );
-        }
-        else if (
-            string.Equals(type, "group", StringComparison.OrdinalIgnoreCase)
-            && await _context.UserGroups.AnyAsync(x => x.GroupId == id, cancellationToken)
-        )
-        {
-            runData = runData.Where(x => x.RunUser.UserGroupsMemberships.Any(g => g.GroupId == id));
-            reports = ApplyReportFilters(
-                reports,
-                server,
-                database,
-                masterFile,
-                visible,
-                certification,
-                availability,
-                reportType
-            );
-        }
-        else
-        {
-            throw InvalidType(type, id);
-        }
+        (runData, reports) = await ApplyProfileScopeAsync(
+            runData,
+            reports,
+            query,
+            cancellationToken
+        );
 
         var joined = from d in runData
             join b in _context.ReportObjectRunDataBridges on d.RunDataId equals b.RunId
@@ -618,87 +390,105 @@ public sealed class ProfileApiService : IProfileApiService
                 DisplayTitle = r.DisplayTitle,
             };
 
-        string dateFormat;
-        IQueryable<IGrouping<DateTime, ProfileRunRow>> grouped;
-
-        if (endAt - startAt < 172800)
-        {
-            dateFormat = "h tt";
-            grouped = joined.Where(x => x.RunStartTime_Hour >= start && x.RunStartTime_Hour <= end)
-                .GroupBy(x => x.RunStartTime_Hour);
-        }
-        else if (endAt - startAt < 31536000)
-        {
-            dateFormat = endAt - startAt < 691200 ? "ddd M/d" : "MMM d";
-            grouped = joined.Where(x => x.RunStartTime_Day >= start && x.RunStartTime_Day <= end)
-                .GroupBy(x => x.RunStartTime_Day);
-        }
-        else
-        {
-            dateFormat = "MMM yy";
-            grouped = joined.Where(x => x.RunStartTime_Month >= start && x.RunStartTime_Month <= end)
-                .GroupBy(x => x.RunStartTime_Month);
-        }
+        var (grouped, dateFormat) = BuildDateGrouping(joined, query, start, end);
 
         var flattened = grouped.SelectMany(x => x);
-        return Tuple.Create(flattened, grouped, dateFormat);
+        return new ProfileSubqueryResult
+        {
+            Flattened = flattened,
+            Grouped = grouped,
+            DateFormat = dateFormat,
+        };
     }
 
-    private IQueryable<ReportObject> ApplyReportFilters(
-        IQueryable<ReportObject> reports,
-        List<string> server,
-        List<string> database,
-        List<string> masterFile,
-        List<string> visible,
-        List<string> certification,
-        List<string> availability,
-        List<int> reportType
+    private async Task<IQueryable<User>> BuildStarsQueryAsync(
+        int id,
+        string type,
+        CancellationToken cancellationToken
     )
     {
-        if (server.Count > 0)
+        if (string.Equals(type, ReportType, StringComparison.OrdinalIgnoreCase))
         {
-            reports = reports.Where(x => server.Contains(x.SourceServer));
+            if (!await _context.ReportObjects.AnyAsync(x => x.ReportObjectId == id, cancellationToken))
+            {
+                throw InvalidType(type, id);
+            }
+
+            return _context.Users.Where(x => x.StarredReports.Any(r => r.Reportid == id));
         }
 
-        if (database.Count > 0)
+        if (string.Equals(type, "term", StringComparison.OrdinalIgnoreCase))
         {
-            reports = reports.Where(x => database.Contains(x.SourceDb));
+            if (!await _context.Terms.AnyAsync(x => x.TermId == id, cancellationToken))
+            {
+                throw InvalidType(type, id);
+            }
+
+            return _context.Users.Where(x => x.StarredTerms.Any(r => r.Termid == id));
         }
 
-        if (masterFile.Count > 0)
+        if (string.Equals(type, "collection", StringComparison.OrdinalIgnoreCase))
+        {
+            if (!await _context.Collections.AnyAsync(x => x.CollectionId == id, cancellationToken))
+            {
+                throw InvalidType(type, id);
+            }
+
+            return _context.Users.Where(x => x.StarredCollections.Any(r => r.Collectionid == id));
+        }
+
+        throw InvalidType(type, id);
+    }
+
+    private static IQueryable<ReportObject> ApplyReportFilters(
+        IQueryable<ReportObject> reports,
+        ProfileQueryOptions query
+    )
+    {
+        if (query.Server.Count > 0)
+        {
+            reports = reports.Where(x => query.Server.Contains(x.SourceServer));
+        }
+
+        if (query.Database.Count > 0)
+        {
+            reports = reports.Where(x => query.Database.Contains(x.SourceDb));
+        }
+
+        if (query.MasterFile.Count > 0)
         {
             reports = reports.Where(x =>
-                masterFile.Contains(x.EpicMasterFile)
-                || (masterFile.Contains("None") && string.IsNullOrEmpty(x.EpicMasterFile))
+                query.MasterFile.Contains(x.EpicMasterFile)
+                || (query.MasterFile.Contains("None") && string.IsNullOrEmpty(x.EpicMasterFile))
             );
         }
 
-        if (visible.Count > 0)
+        if (query.Visible.Count > 0)
         {
             reports = reports.Where(x =>
-                visible.Contains(x.DefaultVisibilityYn)
-                || (visible.Contains("Y") && string.IsNullOrEmpty(x.DefaultVisibilityYn))
+                query.Visible.Contains(x.DefaultVisibilityYn)
+                || (query.Visible.Contains("Y") && string.IsNullOrEmpty(x.DefaultVisibilityYn))
             );
         }
 
-        if (certification.Count > 0)
+        if (query.Certification.Count > 0)
         {
             reports = reports.Where(x =>
-                certification.Intersect(x.ReportTagLinks.Select(y => y.Tag.Name)).Any()
+                query.Certification.Intersect(x.ReportTagLinks.Select(y => y.Tag.Name)).Any()
             );
         }
 
-        if (availability.Count > 0)
+        if (query.Availability.Count > 0)
         {
             reports = reports.Where(x =>
-                availability.Contains(x.Availability)
-                || (availability.Contains("Public") && string.IsNullOrEmpty(x.Availability))
+                query.Availability.Contains(x.Availability)
+                || (query.Availability.Contains("Public") && string.IsNullOrEmpty(x.Availability))
             );
         }
 
-        if (reportType.Count > 0)
+        if (query.ReportTypes.Count > 0)
         {
-            reports = reports.Where(x => reportType.Contains((int)x.ReportObjectTypeId));
+            reports = reports.Where(x => query.ReportTypes.Contains((int)x.ReportObjectTypeId));
         }
 
         return reports;
@@ -707,13 +497,201 @@ public sealed class ProfileApiService : IProfileApiService
     private bool IsUserProfileEnabled()
     {
         return _config["features:enable_user_profile"] == null
-            || _config["features:enable_user_profile"].ToLower() == "true";
+            || string.Equals(
+                _config["features:enable_user_profile"],
+                bool.TrueString,
+                StringComparison.OrdinalIgnoreCase
+            );
     }
 
     private static InvalidOperationException InvalidType(string type, int id)
     {
         return new InvalidOperationException(
             "Wrong parameter value supplied. Type: " + type + " with Id: " + id
+        );
+    }
+
+    private static ProfileQueryOptions ToQueryOptions(ProfileQueryRequestDto request)
+    {
+        return new ProfileQueryOptions
+        {
+            Id = request.Id,
+            Type = request.Type,
+            StartAt = request.StartAt,
+            EndAt = request.EndAt,
+            Server = request.Server ?? new List<string>(),
+            Database = request.Database ?? new List<string>(),
+            MasterFile = request.MasterFile ?? new List<string>(),
+            Visible = request.Visible ?? new List<string>(),
+            Certification = request.Certification ?? new List<string>(),
+            Availability = request.Availability ?? new List<string>(),
+            ReportTypes = request.ReportType ?? new List<int>(),
+        };
+    }
+
+    private async Task<(IQueryable<ReportObjectRunData> RunData, IQueryable<ReportObject> Reports)> ApplyProfileScopeAsync(
+        IQueryable<ReportObjectRunData> runData,
+        IQueryable<ReportObject> reports,
+        ProfileQueryOptions query,
+        CancellationToken cancellationToken
+    )
+    {
+        if (string.Equals(query.Type, ReportType, StringComparison.OrdinalIgnoreCase))
+        {
+            return await ApplyReportScopeAsync(runData, reports, query, cancellationToken);
+        }
+
+        if (string.Equals(query.Type, "term", StringComparison.OrdinalIgnoreCase))
+        {
+            return await ApplyTermScopeAsync(runData, reports, query, cancellationToken);
+        }
+
+        if (string.Equals(query.Type, "collection", StringComparison.OrdinalIgnoreCase))
+        {
+            return await ApplyCollectionScopeAsync(runData, reports, query, cancellationToken);
+        }
+
+        if (string.Equals(query.Type, "user", StringComparison.OrdinalIgnoreCase))
+        {
+            return await ApplyUserScopeAsync(runData, reports, query, cancellationToken);
+        }
+
+        if (string.Equals(query.Type, "group", StringComparison.OrdinalIgnoreCase))
+        {
+            return await ApplyGroupScopeAsync(runData, reports, query, cancellationToken);
+        }
+
+        throw InvalidType(query.Type, query.Id);
+    }
+
+    private async Task<(IQueryable<ReportObjectRunData> RunData, IQueryable<ReportObject> Reports)> ApplyReportScopeAsync(
+        IQueryable<ReportObjectRunData> runData,
+        IQueryable<ReportObject> reports,
+        ProfileQueryOptions query,
+        CancellationToken cancellationToken
+    )
+    {
+        if (query.Id == -1)
+        {
+            return (runData, ApplyReportFilters(reports, query));
+        }
+
+        if (await _context.ReportObjects.AnyAsync(x => x.ReportObjectId == query.Id, cancellationToken))
+        {
+            return (runData, reports.Where(x => x.ReportObjectId == query.Id));
+        }
+
+        throw InvalidType(query.Type, query.Id);
+    }
+
+    private async Task<(IQueryable<ReportObjectRunData> RunData, IQueryable<ReportObject> Reports)> ApplyTermScopeAsync(
+        IQueryable<ReportObjectRunData> runData,
+        IQueryable<ReportObject> reports,
+        ProfileQueryOptions query,
+        CancellationToken cancellationToken
+    )
+    {
+        if (!await _context.Terms.AnyAsync(x => x.TermId == query.Id, cancellationToken))
+        {
+            throw InvalidType(query.Type, query.Id);
+        }
+
+        reports = reports.Where(x =>
+            _context.ReportObjectDocTerms.Where(t => t.TermId == query.Id)
+                .Select(t => t.ReportObjectId)
+                .Contains(x.ReportObjectId)
+        );
+
+        return (runData, reports);
+    }
+
+    private async Task<(IQueryable<ReportObjectRunData> RunData, IQueryable<ReportObject> Reports)> ApplyCollectionScopeAsync(
+        IQueryable<ReportObjectRunData> runData,
+        IQueryable<ReportObject> reports,
+        ProfileQueryOptions query,
+        CancellationToken cancellationToken
+    )
+    {
+        if (!await _context.Collections.AnyAsync(x => x.CollectionId == query.Id, cancellationToken))
+        {
+            throw InvalidType(query.Type, query.Id);
+        }
+
+        reports = reports.Where(x =>
+            _context.CollectionReports.Where(c => c.CollectionId == query.Id)
+                .Select(c => c.ReportId)
+                .Contains(x.ReportObjectId)
+        );
+
+        return (runData, reports);
+    }
+
+    private async Task<(IQueryable<ReportObjectRunData> RunData, IQueryable<ReportObject> Reports)> ApplyUserScopeAsync(
+        IQueryable<ReportObjectRunData> runData,
+        IQueryable<ReportObject> reports,
+        ProfileQueryOptions query,
+        CancellationToken cancellationToken
+    )
+    {
+        if (!await _context.Users.AnyAsync(x => x.UserId == query.Id, cancellationToken))
+        {
+            throw InvalidType(query.Type, query.Id);
+        }
+
+        runData = runData.Where(x => x.RunUserId == query.Id);
+        return (runData, ApplyReportFilters(reports, query));
+    }
+
+    private async Task<(IQueryable<ReportObjectRunData> RunData, IQueryable<ReportObject> Reports)> ApplyGroupScopeAsync(
+        IQueryable<ReportObjectRunData> runData,
+        IQueryable<ReportObject> reports,
+        ProfileQueryOptions query,
+        CancellationToken cancellationToken
+    )
+    {
+        if (!await _context.UserGroups.AnyAsync(x => x.GroupId == query.Id, cancellationToken))
+        {
+            throw InvalidType(query.Type, query.Id);
+        }
+
+        runData = runData.Where(x => x.RunUser.UserGroupsMemberships.Any(g => g.GroupId == query.Id));
+        return (runData, ApplyReportFilters(reports, query));
+    }
+
+    private static (
+        IQueryable<IGrouping<DateTime, ProfileRunRow>> Grouped,
+        string DateFormat
+    ) BuildDateGrouping(
+        IQueryable<ProfileRunRow> joined,
+        ProfileQueryOptions query,
+        DateTime start,
+        DateTime end
+    )
+    {
+        var range = query.EndAt - query.StartAt;
+
+        if (range < 172800)
+        {
+            return (
+                joined.Where(x => x.RunStartTime_Hour >= start && x.RunStartTime_Hour <= end)
+                    .GroupBy(x => x.RunStartTime_Hour),
+                "h tt"
+            );
+        }
+
+        if (range < 31536000)
+        {
+            return (
+                joined.Where(x => x.RunStartTime_Day >= start && x.RunStartTime_Day <= end)
+                    .GroupBy(x => x.RunStartTime_Day),
+                range < 691200 ? "ddd M/d" : "MMM d"
+            );
+        }
+
+        return (
+            joined.Where(x => x.RunStartTime_Month >= start && x.RunStartTime_Month <= end)
+                .GroupBy(x => x.RunStartTime_Month),
+            "MMM yy"
         );
     }
 }
