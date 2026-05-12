@@ -10,7 +10,7 @@
     <SonarQubeExclude>true</SonarQubeExclude>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="BrowserStackLocal" Version="2.4.0" />
+    <PackageReference Include="BrowserStackLocal" Version="3.0.0" />
     <PackageReference Include="MartinCostello.BrowserStack.Automate" Version="4.2.1" />
     <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="9.0.14" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
