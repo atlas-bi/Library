@@ -1,98 +1,13 @@
 services:
-  sqlserver:
-    image: mcr.microsoft.com/mssql/server:2022-latest
-    container_name: atlas_sqlserver
-    environment:
-      ACCEPT_EULA: 'Y'
-      MSSQL_SA_PASSWORD: ${SERVICE_PASSWORD_SQLSERVER:-StrongPassword!123}
-      MSSQL_PID: ${MSSQL_PID:-Evaluation}
-    expose:
-      - 1433
-    volumes:
-      - sqlserver_data:/var/opt/mssql
-    healthcheck:
-      test:
-        [
-          'CMD-SHELL',
-          "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P $$MSSQL_SA_PASSWORD -C -Q 'SELECT 1' || exit 1",
-        ]
-      interval: 10s
-      timeout: 5s
-      retries: 10
-
-  solr:
-    build:
-      context: ../Library_c#
-      dockerfile: solr.Dockerfile
-      args:
-        HOST: sqlserver
-        USER: sa
-        PASSWORD: ${SERVICE_PASSWORD_SQLSERVER:-StrongPassword!123}
-    container_name: atlas_solr
-    depends_on:
-      sqlserver:
-        condition: service_healthy
-    environment:
-      SOLR_PORT: ${SOLR_PORT:-8983}
-      HOST: sqlserver
-      USER: sa
-      PASSWORD: ${SERVICE_PASSWORD_SQLSERVER:-StrongPassword!123}
-    expose:
-      - ${SOLR_PORT:-8983}
-    healthcheck:
-      test:
-        [
-          'CMD-SHELL',
-          'wget -qO- http://localhost:${SOLR_PORT:-8983}/solr/admin/ping | grep -q "status":"OK"',
-        ]
-      interval: 15s
-      timeout: 5s
-      retries: 10
-      start_period: 30s
-
-  backend:
-    build:
-      context: ../Library_c#
-      dockerfile: Dockerfile
-      args:
-        HOST: sqlserver
-        USER: sa
-        PASSWORD: ${SERVICE_PASSWORD_SQLSERVER:-StrongPassword!123}
-        SOLR: http://solr:${SOLR_PORT:-8983}
-    container_name: atlas_backend
-    depends_on:
-      solr:
-        condition: service_healthy
-      sqlserver:
-        condition: service_healthy
-    environment:
-      PORT: ${WEB_PORT:-5000}
-      SEED_DEMO: ${SEED_DEMO:-true}
-      DEMO: ${DEMO:-True}
-      Jwt__Key: ${JWT_KEY:-local-dev-jwt-secret-key-change-me-32-chars-minimum}
-      Jwt__Issuer: ${JWT_ISSUER:-atlas-local-dev}
-      Jwt__Audience: ${JWT_AUDIENCE:-atlas-local-dev}
-    expose:
-      - ${WEB_PORT:-5000}
-    healthcheck:
-      test: ['CMD-SHELL', 'wget -qO- http://localhost:${WEB_PORT:-5000}/ || exit 1']
-      interval: 15s
-      timeout: 5s
-      retries: 10
-      start_period: 20s
-
   frontend:
     build:
       context: .
       dockerfile: Dockerfile
       args:
-        API_URL: http://backend:${WEB_PORT:-5000}
+        API_URL: ${API_URL}
     container_name: atlas_frontend
-    depends_on:
-      backend:
-        condition: service_healthy
     environment:
-      API_URL: http://backend:${WEB_PORT:-5000}
+      API_URL: ${API_URL}
     ports:
       - '${FRONTEND_PORT:-3001}:3000'
     healthcheck:
@@ -101,6 +16,3 @@ services:
       timeout: 5s
       retries: 5
       start_period: 15s
-
-volumes:
-  sqlserver_data:
