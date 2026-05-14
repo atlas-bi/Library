@@ -56,13 +56,15 @@ export default async function HomePage() {
             <span className="font-semibold tracking-[0.01em]">/ library</span>
           </Link>
 
-          <div className="relative mx-2 hidden flex-1 md:block">
+          <form action="/search" method="get" className="relative mx-2 hidden flex-1 md:block">
             <Search className="absolute left-2 top-1/2 h-3 w-3 -translate-y-1/2 text-[#a1aab3]" />
             <input
+              name="q"
               aria-label="Search the library"
+              placeholder="Search the library"
               className="h-6 w-full rounded-sm border border-[#dfe3e7] bg-white pl-6 pr-2 text-[11px] outline-none"
             />
-          </div>
+          </form>
 
           <div className="ml-auto flex items-center gap-2 text-[#707b85]">
             <button type="button" className="inline-flex items-center gap-0.5 hover:text-[#2f3b46]">
