@@ -10,6 +10,9 @@ export const PERMISSIONS = [
   "Edit Terms",
   "Show Advanced Search",
   "Show Report-Object Relationships",
+  "Create Collection",
+  "Edit Collection",
+  "Delete Collection",
 ] as const
 
 export type Permission = (typeof PERMISSIONS)[number]
