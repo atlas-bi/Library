@@ -1,6 +1,8 @@
 import Link from "next/link"
 import { redirect } from "next/navigation"
 import { DeleteCollectionButton } from "@/components/collections/delete-collection-button"
+import { ShareMailDialog } from "@/components/interactions/share-mail-dialog"
+import { StarToggleButton } from "@/components/interactions/star-toggle-button"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -97,17 +99,19 @@ export default async function CollectionsPage({
               {collection.hidden ? (
                 <Badge variant="outline">Hidden: {collection.hidden}</Badge>
               ) : null}
-              {typeof collection.isStarred === "boolean" ? (
-                <Badge variant={collection.isStarred ? "default" : "secondary"}>
-                  {collection.isStarred ? "Starred" : "Not starred"}
-                </Badge>
-              ) : null}
-              {typeof collection.starCount === "number" ? (
-                <Badge variant="outline">Stars: {collection.starCount}</Badge>
-              ) : null}
             </div>
           </div>
           <div className="flex flex-wrap items-center gap-2">
+            <StarToggleButton
+              type="collection"
+              id={collection.id}
+              initialStarred={collection.isStarred ?? false}
+              initialCount={collection.starCount ?? 0}
+            />
+            <ShareMailDialog
+              shareName={collection.name}
+              shareUrl={`/collections?id=${collection.id}`}
+            />
             {collection.canEditCollection ? (
               <Button asChild variant="outline">
                 <Link href={`/collections/edit?id=${collection.id}`}>Edit</Link>
