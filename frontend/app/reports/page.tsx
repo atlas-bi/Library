@@ -1,9 +1,12 @@
 import Image from "next/image"
 import Link from "next/link"
 import { redirect } from "next/navigation"
+import { FeedbackForm } from "@/components/interactions/feedback-form"
+import { ShareMailDialog } from "@/components/interactions/share-mail-dialog"
+import { StarToggleButton } from "@/components/interactions/star-toggle-button"
+import { ProfileAnalyticsPanel } from "@/components/profile/profile-analytics-panel"
 import { ConfirmLinkButton } from "@/components/reports/confirm-link-button"
 import { AppAlertDialog } from "@/components/ui/app-alert-dialog"
-import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { getToken } from "@/lib/auth"
@@ -96,12 +99,20 @@ export default async function ReportsPage({ searchParams }: { searchParams: { id
               ) : null}
             </div>
 
-            <div className="flex items-center gap-2">
-              {typeof report.starCount === "number" ? (
-                <Badge variant={report.isStarred ? "default" : "outline"}>
-                  <span className="mr-1">★</span>
-                  {report.starCount}
-                </Badge>
+            <div className="flex flex-wrap items-center gap-2">
+              <StarToggleButton
+                type="report"
+                id={report.id}
+                initialStarred={report.isStarred ?? false}
+                initialCount={report.starCount ?? 0}
+              />
+              {featureFlags.sharingEnabled ? (
+                <ShareMailDialog shareName={title} shareUrl={`/reports?id=${report.id}`} />
+              ) : null}
+              {report.canEditDocumentation ? (
+                <Button asChild variant="outline" size="sm">
+                  <Link href={`/reports/edit?id=${report.id}`}>Edit</Link>
+                </Button>
               ) : null}
             </div>
           </div>
@@ -348,6 +359,19 @@ export default async function ReportsPage({ searchParams }: { searchParams: { id
               </CardContent>
             </Card>
           ) : null}
+
+          {featureFlags.feedbackEnabled ? (
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-base">Feedback</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <FeedbackForm reportName={title} reportUrl={`/reports?id=${report.id}`} />
+              </CardContent>
+            </Card>
+          ) : null}
+
+          <ProfileAnalyticsPanel id={report.id} type="report" />
 
           {Array.isArray(report.images) && report.images.length > 0 ? (
             <Card>

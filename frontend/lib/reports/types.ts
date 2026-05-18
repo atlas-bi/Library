@@ -125,3 +125,57 @@ export type ReportListItem = {
   typeShortName?: string | null
   lastModified?: string | null
 }
+
+export type ReportsListResponse = {
+  reports: ReportListItem[]
+  total: number
+  page: number
+  pageSize: number
+}
+
+export type ReportLookupItem = {
+  id: number
+  name?: string | null
+  label?: string | null
+}
+
+export type ReportTypeaheadItem = {
+  id: number
+  name: string
+  description?: string | null
+}
+
+export type ReportNewServiceRequest = {
+  ticketNumber: string
+  description: string
+  ticketUrl?: string | null
+}
+
+export type ReportNewMaintenanceLog = {
+  maintenanceLogStatusId: number
+  comment: string
+}
+
+export type ReportUpdateBody = {
+  gitLabProjectUrl?: string | null
+  developerDescription?: string | null
+  keyAssumptions?: string | null
+  developerNotes?: string | null
+  operationalOwnerUserId?: number | null
+  requesterUserId?: number | null
+  organizationalValueId?: number | null
+  estimatedRunFrequencyId?: number | null
+  fragilityId?: number | null
+  maintenanceScheduleId?: number | null
+  executiveVisibilityYn?: string | null
+  enabledForHyperspace?: string | null
+  doNotPurge?: string | null
+  hidden?: string | null
+  termIds: number[]
+  collectionIds: number[]
+  fragilityTagIds: number[]
+  imageIds: number[]
+  serviceRequestIds: number[]
+  newServiceRequest?: ReportNewServiceRequest | null
+  newMaintenanceLog?: ReportNewMaintenanceLog | null
+}
