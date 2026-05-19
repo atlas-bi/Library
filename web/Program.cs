@@ -355,7 +355,7 @@ app.MapControllers();
 app.Use(
     async (context, next) =>
     {
-        context.Response.Headers.Add("Content-Security-Policy", "frame-ancestors 'self' *;");
+        context.Response.Headers["Content-Security-Policy"] = "frame-ancestors 'self' *;";
         await next();
     }
 );

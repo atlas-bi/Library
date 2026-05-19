@@ -89,7 +89,10 @@ public static class ProgramConfiguration
 #pragma warning disable S1116
         builder
             .Services.AddAuthentication(options => options.DefaultScheme = "Demo")
-            .AddScheme<DemoSchemeOptions, DemoAuthHandler>("Demo", options => { })
+            .AddScheme<DemoSchemeOptions, DemoAuthHandler>("Demo", options =>
+            {
+                options.Username = builder.Configuration["DEMO_ADMIN_USERNAME"] ?? "Default";
+            })
             .AddJwtBearer("Bearer", options =>
             {
                 options.TokenValidationParameters = new TokenValidationParameters
