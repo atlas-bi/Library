@@ -68,6 +68,7 @@ services:
     environment:
       PORT: ${WEB_PORT:-3000}
       SEED_DEMO: ${SEED_DEMO:-true}
+      DEMO_ADMIN_USERNAME: ${DEMO_ADMIN_USERNAME:-}
       Jwt__Key: ${JWT_KEY}
       Jwt__Issuer: ${JWT_ISSUER}
       Jwt__Audience: ${JWT_AUDIENCE}

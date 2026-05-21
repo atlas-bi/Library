@@ -32,7 +32,6 @@ public class AuthApiController : ControllerBase
     public async Task<IActionResult> Login([FromQuery] string? returnUrl = null)
 #pragma warning restore CS8632
     {
-        var user = await _context.Users.FirstOrDefaultAsync(x => x.Username == "Default");
         var safeReturnUrlResult = GetSafeRedirectUrl(returnUrl);
         if (safeReturnUrlResult is BadRequestObjectResult)
         {
@@ -43,9 +42,17 @@ public class AuthApiController : ControllerBase
 
         if (_config["Demo"] == "True")
         {
+            var demoUsername = _config["DEMO_ADMIN_USERNAME"];
+            var selectedDemoUsername = string.IsNullOrWhiteSpace(demoUsername)
+                ? "Default"
+                : demoUsername.Trim();
+            var user = await _context.Users.FirstOrDefaultAsync(
+                x => x.Username == selectedDemoUsername
+            );
+
             if (user == null)
             {
-                return NotFound("Demo user not found.");
+                return NotFound($"Demo user '{selectedDemoUsername}' not found.");
             }
 
             var demoToken = _jwt.IssueToken(
