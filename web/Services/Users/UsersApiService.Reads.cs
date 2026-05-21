@@ -348,7 +348,7 @@ public sealed partial class UsersApiService
 
     private static string ToHistoryType(string path)
     {
-        return path.ToLower() switch
+        return path.ToLowerInvariant() switch
         {
             "/reports" => "Reports",
             "/terms" => "Terms",
@@ -414,7 +414,7 @@ public sealed partial class UsersApiService
         foreach (var star in stars)
         {
             var report = star.Report;
-            var canRun = await CanRunFavoriteReportAsync(user, report, cancellationToken);
+            var canRun = await CanRunFavoriteReportAsync(user, report);
             var runUrl = report.RunReportUrl(httpContext, _configuration, canRun);
             var editUrl = report.EditReportUrl(httpContext, _configuration);
             var manageUrl = report.ManageReportUrl(httpContext, _configuration);
@@ -719,8 +719,7 @@ public sealed partial class UsersApiService
 
     private async Task<bool> CanRunFavoriteReportAsync(
         ClaimsPrincipal user,
-        ReportObject report,
-        CancellationToken cancellationToken
+        ReportObject report
     )
     {
         if (_authorizationService == null)

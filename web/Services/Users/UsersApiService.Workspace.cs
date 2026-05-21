@@ -192,6 +192,8 @@ public sealed partial class UsersApiService
                 case "search":
                     await SetFavoriteRankAsync(_context.StarredSearches, workspaceUserId, favoriteId, item.FavoriteRank, cancellationToken);
                     break;
+                default:
+                    continue;
             }
         }
 
