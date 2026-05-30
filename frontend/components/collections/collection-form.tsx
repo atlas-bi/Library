@@ -1,6 +1,6 @@
 "use client"
 
-import { ChevronDown, ChevronUp, Trash2 } from "lucide-react"
+import { ArrowLeft, ArrowRight, ChevronDown, ChevronUp, X } from "lucide-react"
 import Link from "next/link"
 import type { Dispatch, SetStateAction } from "react"
 import { useCallback, useEffect, useMemo, useState, useTransition } from "react"
@@ -10,10 +10,12 @@ import {
   searchCollectionTermsAction,
   updateCollectionAction,
 } from "@/app/collections/actions"
+import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { Switch } from "@/components/ui/switch"
 import type { CollectionDetailDto, CollectionTermDto } from "@/lib/collections/types"
 
 type PickerRow = { id: number; label: string; subtitle?: string | null }
@@ -65,79 +67,74 @@ function useDebouncedTypeahead(
   return { results, loading }
 }
 
-function OrderedPicker({
-  title,
+function LinkedItemTags({
   rows,
   onRemove,
   onMove,
 }: {
-  title: string
   rows: PickerRow[]
   onRemove: (id: number) => void
   onMove: (id: number, direction: "up" | "down") => void
 }) {
+  if (rows.length === 0) {
+    return <p className="text-sm text-muted-foreground">None selected.</p>
+  }
+
   return (
-    <div className="space-y-2">
-      <div className="text-sm font-medium">{title}</div>
-      {rows.length === 0 ? (
-        <p className="text-sm text-muted-foreground">None selected.</p>
-      ) : (
-        <ul className="space-y-2">
-          {rows.map((row, index) => (
-            <li
-              key={row.id}
-              className="flex items-center justify-between gap-2 rounded-md border bg-background px-3 py-2 text-sm"
+    <ul className="flex flex-col gap-2">
+      {rows.map((row, index) => (
+        <li
+          key={row.id}
+          className="flex flex-wrap items-center gap-2 rounded-lg border bg-muted/20 px-3 py-2"
+        >
+          <Badge variant="secondary" className="max-w-full truncate font-normal">
+            {row.label}
+          </Badge>
+          <div className="ml-auto flex items-center gap-0.5">
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon-xs"
+              aria-label={`Move ${row.label} up`}
+              disabled={index === 0}
+              onClick={() => {
+                onMove(row.id, "up")
+              }}
             >
-              <div className="min-w-0 flex-1">
-                <div className="truncate font-medium">{row.label}</div>
-                {row.subtitle ? (
-                  <div className="truncate text-xs text-muted-foreground">{row.subtitle}</div>
-                ) : null}
-              </div>
-              <div className="flex shrink-0 items-center gap-1">
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="icon-xs"
-                  aria-label={`Move ${row.label} up`}
-                  disabled={index === 0}
-                  onClick={() => {
-                    onMove(row.id, "up")
-                  }}
-                >
-                  <ChevronUp className="size-3.5" />
-                </Button>
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="icon-xs"
-                  aria-label={`Move ${row.label} down`}
-                  disabled={index === rows.length - 1}
-                  onClick={() => {
-                    onMove(row.id, "down")
-                  }}
-                >
-                  <ChevronDown className="size-3.5" />
-                </Button>
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="icon-xs"
-                  aria-label={`Remove ${row.label}`}
-                  onClick={() => {
-                    onRemove(row.id)
-                  }}
-                >
-                  <Trash2 className="size-3.5" />
-                </Button>
-              </div>
-            </li>
-          ))}
-        </ul>
-      )}
-    </div>
+              <ChevronUp className="size-3.5" />
+            </Button>
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon-xs"
+              aria-label={`Move ${row.label} down`}
+              disabled={index === rows.length - 1}
+              onClick={() => {
+                onMove(row.id, "down")
+              }}
+            >
+              <ChevronDown className="size-3.5" />
+            </Button>
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon-xs"
+              aria-label={`Remove ${row.label}`}
+              onClick={() => {
+                onRemove(row.id)
+              }}
+            >
+              <X className="size-3.5" />
+            </Button>
+          </div>
+        </li>
+      ))}
+    </ul>
   )
 }
+
+const textareaClassName =
+  "w-full rounded-lg border border-input bg-transparent px-3 py-2 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
 
 export function CollectionForm({
   mode,
@@ -153,7 +150,7 @@ export function CollectionForm({
   const [name, setName] = useState(initial?.name ?? "")
   const [description, setDescription] = useState(initial?.description ?? "")
   const [purpose, setPurpose] = useState(initial?.purpose ?? "")
-  const [hidden, setHidden] = useState((initial?.hidden ?? "N").toUpperCase() === "Y" ? "Y" : "N")
+  const [hidden, setHidden] = useState((initial?.hidden ?? "N").toUpperCase() === "Y")
 
   const initialTermRows = useMemo((): PickerRow[] => {
     const terms = initial?.terms ? sortByRank(initial.terms) : []
@@ -194,6 +191,9 @@ export function CollectionForm({
   const [formError, setFormError] = useState<string | null>(null)
   const [isPending, startTransition] = useTransition()
 
+  const pageTitle =
+    mode === "create" ? "Create a Collection" : `Editing ${initial?.name?.trim() || "collection"}`
+
   const moveRow = (
     setter: Dispatch<SetStateAction<PickerRow[]>>,
     id: number,
@@ -226,7 +226,7 @@ export function CollectionForm({
       name: trimmedName,
       description: description.trim() ? description.trim() : null,
       purpose: purpose.trim() ? purpose.trim() : null,
-      hidden,
+      hidden: hidden ? "Y" : "N",
       termIds: termRows.map((row) => row.id),
       reportIds: reportRows.map((row) => row.id),
     }
@@ -255,111 +255,157 @@ export function CollectionForm({
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>{mode === "create" ? "Create collection" : "Edit collection"}</CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-6">
-        <div className="grid gap-4 md:grid-cols-2">
-          <div className="space-y-2 md:col-span-2">
+    <div className="space-y-8">
+      <h1 className="font-serif text-4xl font-semibold tracking-tight">{pageTitle}</h1>
+
+      <div className="flex flex-wrap items-stretch justify-between gap-4">
+        <Button asChild variant="outline" size="lg" className="h-auto min-h-14 px-5 py-3">
+          <Link href={cancelHref}>
+            <ArrowLeft className="mr-3 size-5 shrink-0" />
+            <span className="text-left">
+              <span className="block font-semibold">Cancel</span>
+              <span className="block text-xs font-normal text-muted-foreground">Go back</span>
+            </span>
+          </Link>
+        </Button>
+        <Button
+          type="button"
+          size="lg"
+          className="h-auto min-h-14 px-5 py-3"
+          disabled={isPending}
+          onClick={submit}
+        >
+          <span className="text-left">
+            <span className="block font-semibold">{isPending ? "Saving…" : "Save"}</span>
+            <span className="block text-xs font-normal opacity-90">and continue</span>
+          </span>
+          <ArrowRight className="ml-3 size-5 shrink-0" />
+        </Button>
+      </div>
+
+      <Card>
+        <CardHeader className="border-b bg-muted/20">
+          <CardTitle className="text-lg">Basics</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4 pt-6">
+          <div className="space-y-2">
             <Label htmlFor="collection-name">Name</Label>
             <Input
               id="collection-name"
               value={name}
+              placeholder="e.g. Data Sorting"
               onChange={(event) => {
                 setName(event.target.value)
               }}
               required
             />
           </div>
-          <div className="space-y-2 md:col-span-2">
-            <Label htmlFor="collection-description">Description</Label>
-            <textarea
-              id="collection-description"
-              value={description}
-              onChange={(event) => {
-                setDescription(event.target.value)
+          <div className="flex items-center gap-3 rounded-lg border bg-muted/10 px-4 py-3">
+            <Switch
+              id="collection-hidden"
+              checked={hidden}
+              onCheckedChange={(checked) => {
+                setHidden(checked)
               }}
-              rows={3}
-              className="w-full rounded-lg border border-input bg-transparent px-2.5 py-2 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
             />
+            <Label htmlFor="collection-hidden" className="cursor-pointer font-normal">
+              Hide collection from search?
+            </Label>
           </div>
-          <div className="space-y-2 md:col-span-2">
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader className="border-b bg-muted/20">
+          <CardTitle className="text-lg">Content</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-6 pt-6">
+          <div className="space-y-2">
             <Label htmlFor="collection-purpose">Purpose</Label>
+            <p className="text-xs text-muted-foreground">
+              Supports Markdown. Shown as search summary.
+            </p>
             <textarea
               id="collection-purpose"
               value={purpose}
               onChange={(event) => {
                 setPurpose(event.target.value)
               }}
-              rows={3}
-              className="w-full rounded-lg border border-input bg-transparent px-2.5 py-2 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
+              rows={4}
+              className={textareaClassName}
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="collection-hidden">Visibility</Label>
-            <select
-              id="collection-hidden"
-              value={hidden}
+            <Label htmlFor="collection-description">Description</Label>
+            <p className="text-xs text-muted-foreground">
+              Supports Markdown. Shown on the collection page.
+            </p>
+            <textarea
+              id="collection-description"
+              value={description}
               onChange={(event) => {
-                setHidden(event.target.value)
+                setDescription(event.target.value)
               }}
-              className="h-8 w-full rounded-lg border border-input bg-transparent px-2 text-sm outline-none"
-            >
-              <option value="N">Visible</option>
-              <option value="Y">Hidden</option>
-            </select>
-          </div>
-        </div>
-
-        <div className="grid gap-6 lg:grid-cols-2">
-          <div className="space-y-3">
-            <Label htmlFor="term-search">Add terms</Label>
-            <Input
-              id="term-search"
-              value={termQuery}
-              onChange={(event) => {
-                setTermQuery(event.target.value)
-              }}
-              placeholder="Search terms…"
-              autoComplete="off"
+              rows={5}
+              className={textareaClassName}
             />
-            {termTypeahead.loading ? (
-              <p className="text-xs text-muted-foreground">Searching…</p>
-            ) : null}
-            {termQuery.trim() && termTypeahead.results.length > 0 ? (
-              <ul className="max-h-48 overflow-auto rounded-md border bg-background text-sm">
-                {termTypeahead.results.map((item) => (
-                  <li key={item.id} className="border-b last:border-b-0">
-                    <button
-                      type="button"
-                      className="flex w-full flex-col items-start gap-0.5 px-3 py-2 text-left hover:bg-muted"
-                      onClick={() => {
-                        setTermRows((rows) => {
-                          if (rows.some((row) => row.id === item.id)) return rows
-                          return [
-                            ...rows,
-                            {
-                              id: item.id,
-                              label: item.name,
-                              subtitle: item.description ?? null,
-                            },
-                          ]
-                        })
-                        setTermQuery("")
-                      }}
-                    >
-                      <span className="font-medium">{item.name}</span>
-                      {item.description ? (
-                        <span className="text-xs text-muted-foreground">{item.description}</span>
-                      ) : null}
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            ) : null}
-            <OrderedPicker
-              title="Linked terms (order = rank)"
+          </div>
+        </CardContent>
+      </Card>
+
+      <div className="grid gap-6 lg:grid-cols-2">
+        <Card>
+          <CardHeader className="border-b bg-muted/20">
+            <CardTitle className="text-lg">Linked Terms</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4 pt-6">
+            <div className="space-y-2">
+              <Label htmlFor="term-search">Search terms</Label>
+              <Input
+                id="term-search"
+                value={termQuery}
+                onChange={(event) => {
+                  setTermQuery(event.target.value)
+                }}
+                placeholder="Search for terms…"
+                autoComplete="off"
+              />
+              {termTypeahead.loading ? (
+                <p className="text-xs text-muted-foreground">Searching…</p>
+              ) : null}
+              {termQuery.trim() && termTypeahead.results.length > 0 ? (
+                <ul className="max-h-48 overflow-auto rounded-md border bg-background text-sm shadow-sm">
+                  {termTypeahead.results.map((item) => (
+                    <li key={item.id} className="border-b last:border-b-0">
+                      <button
+                        type="button"
+                        className="flex w-full flex-col items-start gap-0.5 px-3 py-2 text-left hover:bg-muted"
+                        onClick={() => {
+                          setTermRows((rows) => {
+                            if (rows.some((row) => row.id === item.id)) return rows
+                            return [
+                              ...rows,
+                              {
+                                id: item.id,
+                                label: item.name,
+                                subtitle: item.description ?? null,
+                              },
+                            ]
+                          })
+                          setTermQuery("")
+                        }}
+                      >
+                        <span className="font-medium">{item.name}</span>
+                        {item.description ? (
+                          <span className="text-xs text-muted-foreground">{item.description}</span>
+                        ) : null}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              ) : null}
+            </div>
+            <LinkedItemTags
               rows={termRows}
               onRemove={(id) => {
                 setTermRows((rows) => rows.filter((row) => row.id !== id))
@@ -368,55 +414,61 @@ export function CollectionForm({
                 moveRow(setTermRows, id, direction)
               }}
             />
-          </div>
+          </CardContent>
+        </Card>
 
-          <div className="space-y-3">
-            <Label htmlFor="report-search">Add reports</Label>
-            <Input
-              id="report-search"
-              value={reportQuery}
-              onChange={(event) => {
-                setReportQuery(event.target.value)
-              }}
-              placeholder="Search reports…"
-              autoComplete="off"
-            />
-            {reportTypeahead.loading ? (
-              <p className="text-xs text-muted-foreground">Searching…</p>
-            ) : null}
-            {reportQuery.trim() && reportTypeahead.results.length > 0 ? (
-              <ul className="max-h-48 overflow-auto rounded-md border bg-background text-sm">
-                {reportTypeahead.results.map((item) => (
-                  <li key={item.id} className="border-b last:border-b-0">
-                    <button
-                      type="button"
-                      className="flex w-full flex-col items-start gap-0.5 px-3 py-2 text-left hover:bg-muted"
-                      onClick={() => {
-                        setReportRows((rows) => {
-                          if (rows.some((row) => row.id === item.id)) return rows
-                          return [
-                            ...rows,
-                            {
-                              id: item.id,
-                              label: item.name,
-                              subtitle: item.description ?? null,
-                            },
-                          ]
-                        })
-                        setReportQuery("")
-                      }}
-                    >
-                      <span className="font-medium">{item.name}</span>
-                      {item.description ? (
-                        <span className="text-xs text-muted-foreground">{item.description}</span>
-                      ) : null}
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            ) : null}
-            <OrderedPicker
-              title="Linked reports (order = rank)"
+        <Card>
+          <CardHeader className="border-b bg-muted/20">
+            <CardTitle className="text-lg">Linked Reports</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4 pt-6">
+            <div className="space-y-2">
+              <Label htmlFor="report-search">Search reports</Label>
+              <Input
+                id="report-search"
+                value={reportQuery}
+                onChange={(event) => {
+                  setReportQuery(event.target.value)
+                }}
+                placeholder="Search for reports…"
+                autoComplete="off"
+              />
+              {reportTypeahead.loading ? (
+                <p className="text-xs text-muted-foreground">Searching…</p>
+              ) : null}
+              {reportQuery.trim() && reportTypeahead.results.length > 0 ? (
+                <ul className="max-h-48 overflow-auto rounded-md border bg-background text-sm shadow-sm">
+                  {reportTypeahead.results.map((item) => (
+                    <li key={item.id} className="border-b last:border-b-0">
+                      <button
+                        type="button"
+                        className="flex w-full flex-col items-start gap-0.5 px-3 py-2 text-left hover:bg-muted"
+                        onClick={() => {
+                          setReportRows((rows) => {
+                            if (rows.some((row) => row.id === item.id)) return rows
+                            return [
+                              ...rows,
+                              {
+                                id: item.id,
+                                label: item.name,
+                                subtitle: item.description ?? null,
+                              },
+                            ]
+                          })
+                          setReportQuery("")
+                        }}
+                      >
+                        <span className="font-medium">{item.name}</span>
+                        {item.description ? (
+                          <span className="text-xs text-muted-foreground">{item.description}</span>
+                        ) : null}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              ) : null}
+            </div>
+            <LinkedItemTags
               rows={reportRows}
               onRemove={(id) => {
                 setReportRows((rows) => rows.filter((row) => row.id !== id))
@@ -425,20 +477,14 @@ export function CollectionForm({
                 moveRow(setReportRows, id, direction)
               }}
             />
-          </div>
-        </div>
+            <p className="text-xs text-muted-foreground">
+              Order defines report rank on the collection page.
+            </p>
+          </CardContent>
+        </Card>
+      </div>
 
-        {formError ? <p className="text-sm text-destructive">{formError}</p> : null}
-
-        <div className="flex flex-wrap items-center gap-2">
-          <Button type="button" disabled={isPending} onClick={submit}>
-            {isPending ? "Saving…" : mode === "create" ? "Create" : "Save changes"}
-          </Button>
-          <Button asChild type="button" variant="outline" disabled={isPending}>
-            <Link href={cancelHref}>Cancel</Link>
-          </Button>
-        </div>
-      </CardContent>
-    </Card>
+      {formError ? <p className="text-sm text-destructive">{formError}</p> : null}
+    </div>
   )
 }

@@ -37,7 +37,12 @@ const markdownComponents = {
 
 export function MarkdownContent({ content, className }: { content: string; className?: string }) {
   return (
-    <div className={cn("markdown text-sm text-foreground", className)}>
+    <div
+      className={cn(
+        "markdown rounded-lg border border-border/60 bg-muted/20 px-4 py-3 text-sm leading-relaxed text-foreground",
+        className,
+      )}
+    >
       <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents}>
         {content}
       </ReactMarkdown>
