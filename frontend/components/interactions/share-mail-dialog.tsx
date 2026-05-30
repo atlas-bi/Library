@@ -1,5 +1,6 @@
 "use client"
 
+import { Share2 } from "lucide-react"
 import { useCallback, useEffect, useState, useTransition } from "react"
 import { searchRecipientsAction, sendShareMailAction } from "@/app/interactions/actions"
 import { Button } from "@/components/ui/button"
@@ -16,7 +17,15 @@ import type { ShareRecipientInput } from "@/lib/interactions/types"
 
 type SelectedRecipient = ShareRecipientInput & { name: string }
 
-export function ShareMailDialog({ shareName, shareUrl }: { shareName: string; shareUrl: string }) {
+export function ShareMailDialog({
+  shareName,
+  shareUrl,
+  iconOnly = false,
+}: {
+  shareName: string
+  shareUrl: string
+  iconOnly?: boolean
+}) {
   const [open, setOpen] = useState(false)
   const [query, setQuery] = useState("")
   const [suggestions, setSuggestions] = useState<
@@ -58,9 +67,16 @@ export function ShareMailDialog({ shareName, shareUrl }: { shareName: string; sh
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button type="button" variant="outline" size="sm">
-          Share
-        </Button>
+        {iconOnly ? (
+          <Button type="button" variant="ghost" size="icon" className="size-10">
+            <Share2 className="size-5" />
+            <span className="sr-only">Share</span>
+          </Button>
+        ) : (
+          <Button type="button" variant="outline" size="sm">
+            Share
+          </Button>
+        )}
       </DialogTrigger>
       <DialogContent className="max-w-lg">
         <DialogHeader>
