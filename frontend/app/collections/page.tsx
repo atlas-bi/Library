@@ -1,7 +1,11 @@
 import Link from "next/link"
 import { redirect } from "next/navigation"
-import type { ReactNode } from "react"
 import { CollectionActionRail } from "@/components/collections/collection-action-rail"
+import {
+  CollectionDetailSection,
+  CollectionSubsection,
+} from "@/components/collections/collection-detail-section"
+import { CollectionMetadataTable } from "@/components/collections/collection-metadata-table"
 import { CollectionSectionNav } from "@/components/collections/collection-section-nav"
 import { MarkdownContent } from "@/components/content/markdown-content"
 import { ProfileAnalyticsPanel } from "@/components/profile/profile-analytics-panel"
@@ -43,14 +47,6 @@ function buildListHref(page: number, pageSize: number): string {
 
 function sortByRank<T extends { rank?: number }>(items: T[]): T[] {
   return [...items].sort((a, b) => (a.rank ?? 0) - (b.rank ?? 0))
-}
-
-function SectionHeading({ id, children }: { id: string; children: ReactNode }) {
-  return (
-    <h2 id={id} className="scroll-mt-24 text-2xl font-semibold">
-      {children}
-    </h2>
-  )
 }
 
 export default async function CollectionsPage({
@@ -109,123 +105,86 @@ export default async function CollectionsPage({
     const hasTerms = termsEnabled && sortedTerms.length > 0
 
     return (
-      <div className="mx-auto min-h-screen w-full max-w-7xl px-4 py-8">
-        <div className="text-sm text-muted-foreground">
-          <Link href="/collections" className="hover:underline">
-            Collections
-          </Link>
-        </div>
-
-        <div className="mt-4 flex flex-wrap items-start gap-4">
-          <div className="min-w-0 flex-1 space-y-3">
-            <h1 className="text-3xl font-bold">{collection.name}</h1>
-            {collection.hidden === "Y" ? <Badge variant="outline">Hidden from search</Badge> : null}
-            <CollectionSectionNav
-              hasInitiative={hasInitiative}
-              hasReports={hasReports}
-              hasTerms={hasTerms}
-            />
+      <div className="min-h-screen bg-background">
+        <div className="mx-auto w-full max-w-7xl px-4 py-8">
+          <div className="mb-6 space-y-4 border-b border-border/60 pb-6">
+            <div className="text-sm text-muted-foreground">
+              <Link href="/collections" className="hover:underline">
+                Collections
+              </Link>
+            </div>
+            <div className="space-y-3">
+              <h1 className="font-serif text-4xl font-semibold tracking-tight text-foreground">
+                {collection.name}
+              </h1>
+              {collection.hidden === "Y" ? (
+                <Badge variant="outline" className="text-muted-foreground">
+                  Hidden from search
+                </Badge>
+              ) : null}
+              <CollectionSectionNav hasReports={hasReports} hasTerms={hasTerms} />
+            </div>
           </div>
-        </div>
 
-        <div className="mt-8 grid gap-8 lg:grid-cols-[auto_minmax(0,1fr)]">
-          <CollectionActionRail
-            collection={collection}
-            profilePanel={<ProfileAnalyticsPanel id={collection.id} type="collection" />}
-          />
+          <div className="grid gap-10 xl:grid-cols-[4.75rem_minmax(0,1fr)]">
+            <CollectionActionRail
+              collection={collection}
+              profilePanel={<ProfileAnalyticsPanel id={collection.id} type="collection" />}
+            />
 
-          <div className="space-y-10">
-            {hasInitiative && collection.initiative ? (
-              <section className="space-y-4">
-                <SectionHeading id="initiative">Owning Initiative</SectionHeading>
-                <div className="grid gap-4 md:grid-cols-2">
-                  <InitiativeSnippetCard initiative={collection.initiative} />
-                </div>
-              </section>
-            ) : null}
-
-            {hasReports ? (
-              <section className="space-y-4">
-                <SectionHeading id="reports">Reports</SectionHeading>
-                <div className="grid gap-4 md:grid-cols-2">
-                  {sortedReports.map((report) => (
-                    <ReportSnippetCard key={report.id} report={report} />
-                  ))}
-                </div>
-              </section>
-            ) : null}
-
-            {hasTerms ? (
-              <section className="space-y-4">
-                <SectionHeading id="terms">Terms</SectionHeading>
-                <div className="grid gap-4 md:grid-cols-2">
-                  {sortedTerms.map((term) => {
-                    const key =
-                      typeof term.id === "number"
-                        ? term.id
-                        : typeof term.termId === "number"
-                          ? term.termId
-                          : `${term.name ?? "term"}-${term.rank ?? 0}`
-                    return <TermSnippetCard key={key} term={term} />
-                  })}
-                </div>
-              </section>
-            ) : null}
-
-            <section id="details" className="scroll-mt-24 space-y-6">
-              <SectionHeading id="details-heading">Details</SectionHeading>
-
-              <div className="space-y-6">
-                {collection.description ? (
-                  <div>
-                    <h3 className="text-lg font-semibold">Description</h3>
-                    <MarkdownContent content={collection.description} className="mt-2" />
+            <div className="min-w-0 space-y-12">
+              {hasInitiative && collection.initiative ? (
+                <CollectionDetailSection id="initiative" title="Owning Initiative">
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <InitiativeSnippetCard initiative={collection.initiative} />
                   </div>
-                ) : null}
+                </CollectionDetailSection>
+              ) : null}
 
-                {collection.purpose ? (
-                  <div>
-                    <h3 className="text-lg font-semibold">Search Summary</h3>
-                    <MarkdownContent content={collection.purpose} className="mt-2" />
+              {hasReports ? (
+                <CollectionDetailSection id="reports" title="Reports">
+                  <div className="grid gap-4 md:grid-cols-2">
+                    {sortedReports.map((report) => (
+                      <ReportSnippetCard key={report.id} report={report} />
+                    ))}
                   </div>
-                ) : null}
-              </div>
+                </CollectionDetailSection>
+              ) : null}
 
-              <div className="overflow-x-auto rounded-md border">
-                <table className="w-full text-sm" aria-label="Collection metadata">
-                  <tbody>
-                    {collection.lastUpdatedBy?.fullName || collection.lastUpdatedBy?.username ? (
-                      <tr className="border-b">
-                        <th className="w-48 px-4 py-2 text-left font-medium text-muted-foreground">
-                          Last Updated By
-                        </th>
-                        <td className="px-4 py-2">
-                          {collection.lastUpdatedBy.fullName?.trim() ||
-                            collection.lastUpdatedBy.username ||
-                            "—"}
-                        </td>
-                      </tr>
-                    ) : null}
-                    {collection.lastModifiedDisplay ? (
-                      <tr className="border-b">
-                        <th className="w-48 px-4 py-2 text-left font-medium text-muted-foreground">
-                          Last Updated
-                        </th>
-                        <td className="px-4 py-2">{collection.lastModifiedDisplay}</td>
-                      </tr>
-                    ) : null}
-                    {collection.hidden === "Y" ? (
-                      <tr>
-                        <th className="w-48 px-4 py-2 text-left font-medium text-muted-foreground">
-                          Hidden from Search?
-                        </th>
-                        <td className="px-4 py-2">Yes</td>
-                      </tr>
-                    ) : null}
-                  </tbody>
-                </table>
-              </div>
-            </section>
+              {hasTerms ? (
+                <CollectionDetailSection id="terms" title="Terms">
+                  <div className="grid gap-4 md:grid-cols-2">
+                    {sortedTerms.map((term) => {
+                      const key =
+                        typeof term.id === "number"
+                          ? term.id
+                          : typeof term.termId === "number"
+                            ? term.termId
+                            : `${term.name ?? "term"}-${term.rank ?? 0}`
+                      return <TermSnippetCard key={key} term={term} />
+                    })}
+                  </div>
+                </CollectionDetailSection>
+              ) : null}
+
+              <CollectionDetailSection id="details" title="Details">
+                <div className="content space-y-8">
+                  {collection.description ? (
+                    <CollectionSubsection title="Description">
+                      <MarkdownContent content={collection.description} />
+                    </CollectionSubsection>
+                  ) : null}
+
+                  {collection.purpose ? (
+                    <CollectionSubsection title="Search Summary">
+                      <MarkdownContent content={collection.purpose} />
+                    </CollectionSubsection>
+                  ) : null}
+                </div>
+
+                <CollectionMetadataTable collection={collection} />
+              </CollectionDetailSection>
+            </div>
           </div>
         </div>
       </div>
@@ -269,40 +228,42 @@ export default async function CollectionsPage({
   const totalPages = Math.max(1, Math.ceil(list.total / list.pageSize))
 
   return (
-    <div className="mx-auto min-h-screen w-full max-w-7xl space-y-6 px-4 py-8">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <div className="text-sm text-muted-foreground">
-            <Link href="/" className="hover:underline">
-              Home
-            </Link>
-            <span className="px-1">/</span>
-            <span>Collections</span>
-          </div>
-          <h1 className="mt-2 text-3xl font-bold">Collections</h1>
+    <div className="mx-auto min-h-screen w-full max-w-7xl space-y-8 px-4 py-8">
+      <header className="space-y-4 border-b border-border/60 pb-6">
+        <div className="text-sm text-muted-foreground">
+          <Link href="/" className="hover:underline">
+            Home
+          </Link>
+          <span className="px-1">/</span>
+          <span>Collections</span>
         </div>
-        {canCreateCollection ? (
-          <Button asChild>
-            <Link href="/collections/new">
-              <span className="mr-2">+</span>
-              Create a Collection
-            </Link>
-          </Button>
-        ) : null}
-      </div>
+        <div className="flex flex-wrap items-end justify-between gap-4">
+          <h1 className="font-serif text-4xl font-semibold tracking-tight">Collections</h1>
+          {canCreateCollection ? (
+            <Button asChild size="lg">
+              <Link href="/collections/new">
+                <span className="mr-2 font-bold">+</span>
+                Create a Collection
+              </Link>
+            </Button>
+          ) : null}
+        </div>
+      </header>
 
       {list.collections.length === 0 ? (
         <p className="text-sm text-muted-foreground">No collections found.</p>
       ) : (
-        <div className="grid gap-4 md:grid-cols-2">
+        <div className="columns-1 gap-4 md:columns-2">
           {list.collections.map((item) => (
-            <CollectionSnippetCard key={item.id} collection={item} />
+            <div key={item.id} className="mb-4 break-inside-avoid">
+              <CollectionSnippetCard collection={item} />
+            </div>
           ))}
         </div>
       )}
 
       {list.total > list.pageSize ? (
-        <div className="flex items-center justify-between gap-2 text-sm text-muted-foreground">
+        <div className="flex items-center justify-between gap-2 border-t pt-4 text-sm text-muted-foreground">
           <span>
             {list.total} total • page {list.page} of {totalPages}
           </span>

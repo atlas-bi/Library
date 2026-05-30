@@ -88,8 +88,11 @@ export function CollectionActionRail({
     <TooltipProvider>
       <aside
         aria-label="Collection actions"
-        className="sticky top-8 flex w-14 shrink-0 flex-col items-center gap-1 rounded-lg border bg-card p-2"
+        className="sticky top-8 z-10 flex w-[4.5rem] shrink-0 flex-col items-center gap-1.5 rounded-xl border border-border/80 bg-card/95 p-2.5 shadow-lg backdrop-blur-sm"
       >
+        <span className="mb-1 w-full border-b border-border/60 pb-2 text-center text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+          Actions
+        </span>
         <CollectionProfileSheet collectionName={collection.name}>
           {profilePanel}
         </CollectionProfileSheet>
