@@ -208,6 +208,7 @@ builder.Services.AddScoped<IInteractionsApiService, InteractionsApiService>();
 builder.Services.AddScoped<IProfileApiService, ProfileApiService>();
 builder.Services.AddScoped<IReportsApiService, ReportsApiService>();
 builder.Services.AddScoped<ISearchApiService, SearchApiService>();
+builder.Services.AddScoped<ITermsApiService, TermsApiService>();
 builder.Services.AddScoped<IUsersApiService, UsersApiService>();
 builder.Services.AddHttpContextAccessor();
 
