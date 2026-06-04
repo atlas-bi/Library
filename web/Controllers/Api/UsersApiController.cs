@@ -1,3 +1,4 @@
+using Atlas_Web.Authorization;
 using Atlas_Web.Contracts.Api.Users;
 using Atlas_Web.Services;
 using Microsoft.AspNetCore.Authorization;
