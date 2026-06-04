@@ -29,6 +29,7 @@ public sealed partial class UsersApiService
         var canViewGroups = user.HasPermission("View Groups");
         var canViewAnalytics = user.HasPermission("View Site Analytics");
         var canEditOtherUsers = user.HasPermission("Edit Other Users");
+        var isAdministrator = user.HasPermission("Administrator");
         var isCurrentUser = targetUserId == viewerId;
         var canEditWorkspace = isCurrentUser || canEditOtherUsers;
 
@@ -51,7 +52,7 @@ public sealed partial class UsersApiService
             {
                 Id = viewerId,
                 IsCurrentUser = isCurrentUser,
-                IsAdministrator = user.IsInRole("Administrator"),
+                IsAdministrator = isAdministrator,
                 AdminEnabled = user.HasAdminEnabled(),
             },
             Permissions = new UserPagePermissionsDto
@@ -60,7 +61,7 @@ public sealed partial class UsersApiService
                 CanViewGroups = canViewGroups,
                 CanViewAnalytics = canViewAnalytics,
                 CanEditOtherUsers = canEditOtherUsers,
-                CanToggleAdminMode = user.IsInRole("Administrator"),
+                CanToggleAdminMode = isAdministrator,
                 CanEditWorkspace = canEditWorkspace,
             },
             Tabs = new UserPageTabsDto

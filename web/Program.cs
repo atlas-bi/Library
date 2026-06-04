@@ -204,6 +204,7 @@ builder
 builder.Services.AddTransient<IEmailService, EmailService>();
 builder.Services.AddTransient<IRazorPartialToStringRenderer, RazorPartialToStringRenderer>();
 builder.Services.AddScoped<ICollectionsApiService, CollectionsApiService>();
+builder.Services.AddScoped<IGroupsApiService, GroupsApiService>();
 builder.Services.AddScoped<IInteractionsApiService, InteractionsApiService>();
 builder.Services.AddScoped<IProfileApiService, ProfileApiService>();
 builder.Services.AddScoped<IReportsApiService, ReportsApiService>();
