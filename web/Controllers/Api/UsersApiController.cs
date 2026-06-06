@@ -1,3 +1,4 @@
+using Atlas_Web.Authorization;
 using Atlas_Web.Contracts.Api.Users;
 using Atlas_Web.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -21,7 +22,7 @@ public class UsersApiController : ControllerBase
 
     private bool CanManageWorkspaceFor(int userId)
     {
-        return userId == CurrentUserId || User.HasClaim("Permission", "Edit Other Users");
+        return userId == CurrentUserId || User.HasPermission("Edit Other Users");
     }
 
     [HttpGet("{id:int}")]
@@ -338,7 +339,7 @@ public class UsersApiController : ControllerBase
         CancellationToken cancellationToken = default
     )
     {
-        if (!User.IsInRole("Administrator"))
+        if (!User.HasPermission("Administrator"))
         {
             return Forbid();
         }

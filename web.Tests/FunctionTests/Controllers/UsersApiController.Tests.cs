@@ -64,8 +64,7 @@ public class UsersApiControllerTests
             BuildPrincipal(
                 userId: 1,
                 username: "viewer",
-                permissions: new[] { "View Other User", "View Groups", "View Site Analytics" },
-                roles: new[] { "Administrator" }
+                permissions: new[] { "View Other User", "View Groups", "View Site Analytics", "Administrator" }
             )
         );
 
@@ -79,6 +78,8 @@ public class UsersApiControllerTests
         Assert.Equal(1, payload.Viewer.Id);
         Assert.False(payload.Viewer.IsCurrentUser);
         Assert.True(payload.Permissions.CanViewOtherUsers);
+        Assert.True(payload.Viewer.IsAdministrator);
+        Assert.True(payload.Permissions.CanToggleAdminMode);
         Assert.True(payload.Tabs.GroupsVisible);
         Assert.True(payload.Tabs.AnalyticsVisible);
         Assert.Equal(new[] { 10, 30 }, payload.DefaultReportTypeIds);
@@ -498,7 +499,7 @@ public class UsersApiControllerTests
         );
         var controller = BuildController(
             service,
-            BuildPrincipal(userId: 1, username: "viewer", roles: new[] { "Administrator" })
+            BuildPrincipal(userId: 1, username: "viewer", permissions: new[] { "Administrator" })
         );
 
         var first = await controller.ToggleAdminMode();
