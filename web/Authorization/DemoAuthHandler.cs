@@ -6,7 +6,10 @@ using Microsoft.Extensions.Options;
 namespace Atlas_Web.Authentication
 {
 #pragma warning disable S2094
-    public class DemoSchemeOptions : AuthenticationSchemeOptions { }
+    public class DemoSchemeOptions : AuthenticationSchemeOptions
+    {
+        public string Username { get; set; } = "Default";
+    }
 
     public class DemoAuthHandler : AuthenticationHandler<DemoSchemeOptions>
     {
@@ -20,14 +23,17 @@ namespace Atlas_Web.Authentication
 
         protected override Task<AuthenticateResult> HandleAuthenticateAsync()
         {
+            var username = string.IsNullOrWhiteSpace(Options.Username)
+                ? "Default"
+                : Options.Username.Trim();
             var claims = new[]
             {
-                new Claim(ClaimTypes.Name, "Default"),
+                new Claim(ClaimTypes.Name, username),
                 new Claim(ClaimTypes.NameIdentifier, Guid.NewGuid().ToString()),
             };
-            var identity = new ClaimsIdentity(claims, "Default");
+            var identity = new ClaimsIdentity(claims, "Demo");
             var principal = new ClaimsPrincipal(identity);
-            var ticket = new AuthenticationTicket(principal, "Default");
+            var ticket = new AuthenticationTicket(principal, "Demo");
 
             var result = AuthenticateResult.Success(ticket);
 
