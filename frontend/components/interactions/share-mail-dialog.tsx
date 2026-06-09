@@ -21,10 +21,12 @@ export function ShareMailDialog({
   shareName,
   shareUrl,
   iconOnly = false,
+  variant = "default",
 }: {
   shareName: string
   shareUrl: string
   iconOnly?: boolean
+  variant?: "default" | "footer"
 }) {
   const [open, setOpen] = useState(false)
   const [query, setQuery] = useState("")
@@ -68,10 +70,20 @@ export function ShareMailDialog({
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         {iconOnly ? (
-          <Button type="button" variant="ghost" size="icon" className="size-10">
-            <Share2 className="size-5" />
-            <span className="sr-only">Share</span>
-          </Button>
+          variant === "footer" ? (
+            <button
+              type="button"
+              className="inline-flex cursor-pointer items-center text-[var(--atlas-home-muted)] hover:text-[var(--atlas-home-link)]"
+            >
+              <Share2 className="h-4 w-4" strokeWidth={1.8} />
+              <span className="sr-only">Share</span>
+            </button>
+          ) : (
+            <Button type="button" variant="ghost" size="icon" className="size-10">
+              <Share2 className="size-5" />
+              <span className="sr-only">Share</span>
+            </Button>
+          )
         ) : (
           <Button type="button" variant="outline" size="sm">
             Share
