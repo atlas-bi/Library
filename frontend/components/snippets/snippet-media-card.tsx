@@ -35,14 +35,14 @@ export function SnippetMediaCard({
   variant?: "default" | "collection"
 }) {
   const titleNode = href ? (
-    <Link href={href} className="text-base font-semibold text-foreground hover:underline">
+    <Link href={href} className="atlas-home-card-title hover:underline">
       {title}
       {showCertified ? (
         <Award className="ml-1.5 inline size-4 text-info" aria-label="Certified" />
       ) : null}
     </Link>
   ) : (
-    <span className="text-base font-semibold text-foreground">
+    <span className="atlas-home-card-title">
       {title}
       {showCertified ? (
         <Award className="ml-1.5 inline size-4 text-info" aria-label="Certified" />
