@@ -10,6 +10,8 @@ services:
       MSSQL_PID: ${MSSQL_PID:-Evaluation}
     expose:
       - 1433
+    ulimits:
+      core: 0
     volumes:
       - sqlserver_data:/var/opt/mssql
     healthcheck:
