@@ -1,18 +1,27 @@
-import type { CollectionReportDto } from "@/lib/collections/types"
+import { EntityCardFooter } from "@/components/interactions/entity-card-footer"
+import type { CollectionFeatureFlagsDto, CollectionReportDto } from "@/lib/collections/types"
 import { truncateText } from "@/lib/text"
 import { SnippetMediaCard } from "./snippet-media-card"
 
-export function ReportSnippetCard({ report }: { report: CollectionReportDto }) {
+export function ReportSnippetCard({
+  report,
+  features,
+}: {
+  report: CollectionReportDto
+  features?: CollectionFeatureFlagsDto | null
+}) {
   const title = report.name?.trim() || `Report ${report.id}`
+  const href = `/reports?id=${report.id}`
   const excerpt = report.description?.trim()
     ? truncateText(report.description)
     : "Open to view details."
   const tags = ["report", ...(report.canRun ? ["can run"] : [])]
+  const canRequestAccess = (report.attachmentCount ?? 0) > 0 || !!report.canRun
 
   return (
     <SnippetMediaCard
       title={title}
-      href={`/reports?id=${report.id}`}
+      href={href}
       tags={tags}
       excerpt={
         <>
@@ -20,10 +29,16 @@ export function ReportSnippetCard({ report }: { report: CollectionReportDto }) {
         </>
       }
       footer={
-        <div className="flex w-full items-center justify-between text-xs text-muted-foreground">
-          {typeof report.rank === "number" ? <span>Rank {report.rank}</span> : <span />}
-          {report.isStarred ? <span className="font-medium text-amber-600">Starred</span> : null}
-        </div>
+        <EntityCardFooter
+          entityType="report"
+          id={report.id}
+          title={title}
+          href={href}
+          isStarred={report.isStarred}
+          starCount={report.starCount}
+          features={features ?? undefined}
+          canRequestAccess={canRequestAccess}
+        />
       }
     />
   )

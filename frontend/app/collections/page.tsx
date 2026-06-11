@@ -162,7 +162,11 @@ export default async function CollectionsPage({
               <CollectionDetailSection id="reports" title="Reports">
                 <div className="grid gap-4 md:grid-cols-2">
                   {sortedReports.map((report) => (
-                    <ReportSnippetCard key={report.id} report={report} />
+                    <ReportSnippetCard
+                      key={report.id}
+                      report={report}
+                      features={collection.features}
+                    />
                   ))}
                 </div>
               </CollectionDetailSection>

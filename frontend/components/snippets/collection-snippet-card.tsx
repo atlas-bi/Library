@@ -1,8 +1,10 @@
+import { EntityCardFooter } from "@/components/interactions/entity-card-footer"
 import type { CollectionListItemDto } from "@/lib/collections/types"
 import { truncateText } from "@/lib/text"
 import { SnippetMediaCard } from "./snippet-media-card"
 
 export function CollectionSnippetCard({ collection }: { collection: CollectionListItemDto }) {
+  const href = `/collections?id=${collection.id}`
   const excerpt = collection.description?.trim()
     ? truncateText(collection.description)
     : "Open to view details."
@@ -11,7 +13,7 @@ export function CollectionSnippetCard({ collection }: { collection: CollectionLi
     <SnippetMediaCard
       variant="collection"
       title={collection.name}
-      href={`/collections?id=${collection.id}`}
+      href={href}
       tags={["collection"]}
       showCertified
       excerpt={
@@ -20,16 +22,14 @@ export function CollectionSnippetCard({ collection }: { collection: CollectionLi
         </>
       }
       footer={
-        <div className="flex w-full items-center justify-between text-xs text-muted-foreground">
-          {typeof collection.starCount === "number" ? (
-            <span>{collection.starCount} stars</span>
-          ) : (
-            <span />
-          )}
-          {collection.isStarred ? (
-            <span className="font-medium text-amber-600">Starred</span>
-          ) : null}
-        </div>
+        <EntityCardFooter
+          entityType="collection"
+          id={collection.id}
+          title={collection.name}
+          href={href}
+          isStarred={collection.isStarred}
+          starCount={collection.starCount}
+        />
       }
     />
   )

@@ -84,7 +84,7 @@ export function SnippetMediaCard({
           </div>
         </div>
       </CardContent>
-      {footer ? <CardFooter className="border-t bg-muted/10 py-2">{footer}</CardFooter> : null}
+      {footer ? <CardFooter className="border-t bg-muted/10 p-0">{footer}</CardFooter> : null}
     </Card>
   )
 }

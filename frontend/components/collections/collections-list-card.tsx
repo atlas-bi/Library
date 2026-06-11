@@ -1,9 +1,6 @@
 import { BadgeCheck } from "lucide-react"
 import Link from "next/link"
-import { CollectionProfileSheet } from "@/components/collections/collection-profile-sheet"
-import { ShareMailDialog } from "@/components/interactions/share-mail-dialog"
-import { StarToggleButton } from "@/components/interactions/star-toggle-button"
-import { ProfileAnalyticsPanel } from "@/components/profile/profile-analytics-panel"
+import { EntityCardFooter } from "@/components/interactions/entity-card-footer"
 import type { CollectionListItemDto } from "@/lib/collections/types"
 import { truncateText } from "@/lib/text"
 
@@ -54,21 +51,14 @@ export function CollectionsListCard({ collection }: { collection: CollectionList
         </Link>
       </div>
 
-      <footer className="grid grid-cols-2 border-t border-[var(--atlas-home-border-soft)]">
-        <StarToggleButton
-          type="collection"
-          id={collection.id}
-          initialStarred={collection.isStarred ?? false}
-          initialCount={collection.starCount ?? 0}
-          variant="card-footer"
-        />
-        <div className="atlas-home-footer-cell inline-flex items-center justify-center gap-3 text-center text-sm">
-          <CollectionProfileSheet collectionName={collection.name} variant="footer">
-            <ProfileAnalyticsPanel id={collection.id} type="collection" />
-          </CollectionProfileSheet>
-          <ShareMailDialog shareName={collection.name} shareUrl={href} iconOnly variant="footer" />
-        </div>
-      </footer>
+      <EntityCardFooter
+        entityType="collection"
+        id={collection.id}
+        title={collection.name}
+        href={href}
+        isStarred={collection.isStarred}
+        starCount={collection.starCount}
+      />
     </article>
   )
 }

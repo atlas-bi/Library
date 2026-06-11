@@ -1,24 +1,18 @@
 import {
   BadgeCheck,
-  BarChart3,
   BookOpen,
   ChartBar,
   Folder,
   FolderOpen,
-  GlobeLock,
   Lightbulb,
-  Pencil,
   PlayCircle,
   Search,
-  Settings,
-  Share2,
-  Star,
   UserRound,
   Users,
   Waypoints,
 } from "lucide-react"
 import Link from "next/link"
-import type { ReactNode } from "react"
+import { HomeStarCardFooter } from "@/components/home/home-star-card-footer"
 import type { HomeStarCard, HomeStarsPanel } from "@/lib/home/types"
 
 function filterIcon(label: string) {
@@ -58,20 +52,6 @@ function isCollectionCard(card: HomeStarCard) {
 
 function isReportCard(card: HomeStarCard) {
   return card.typeLabel.toLowerCase() === "report"
-}
-
-function renderFooterLink(href: string, icon: ReactNode, label: string) {
-  return (
-    <a
-      href={href}
-      target="_blank"
-      rel="noreferrer"
-      className="atlas-home-footer-cell inline-flex cursor-pointer items-center justify-center gap-2 border-r border-[var(--atlas-home-border-soft)] text-center text-sm hover:text-[var(--atlas-home-link)]"
-    >
-      {icon}
-      <span>{label}</span>
-    </a>
-  )
 }
 
 export function HomeStarsPanelView({ panel }: { panel: HomeStarsPanel }) {
@@ -219,104 +199,7 @@ export function HomeStarsPanelView({ panel }: { panel: HomeStarsPanel }) {
                     </div>
                   </div>
 
-                  {collectionCard ? (
-                    <div className="grid grid-cols-2 border-t border-[var(--atlas-home-border-soft)]">
-                      <div className="atlas-home-footer-cell inline-flex items-center justify-center gap-2 border-r border-[var(--atlas-home-border-soft)] text-center text-sm text-[var(--atlas-home-link)]">
-                        <Star
-                          className={`h-4 w-4 ${card.isStarred ? "atlas-home-star-icon" : "text-[var(--atlas-home-muted)]"}`}
-                          strokeWidth={1.8}
-                          fill={card.isStarred ? "currentColor" : "none"}
-                        />
-                        <span>
-                          {card.isStarred ? "Starred" : "Star"} {card.starCount ?? 0}
-                        </span>
-                      </div>
-                      <div className="atlas-home-footer-cell inline-flex items-center justify-center gap-3 text-center text-sm">
-                        {card.canOpenProfile ? (
-                          <a
-                            href={card.href}
-                            aria-label="Open collection profile"
-                            className="inline-flex cursor-pointer items-center text-[var(--atlas-home-muted)] hover:text-[var(--atlas-home-link)]"
-                          >
-                            <BarChart3 className="h-4 w-4" strokeWidth={1.8} />
-                          </a>
-                        ) : null}
-                        {card.canShare ? (
-                          <button
-                            type="button"
-                            aria-label="Share collection"
-                            className="inline-flex cursor-pointer items-center text-[var(--atlas-home-muted)] hover:text-[var(--atlas-home-link)]"
-                          >
-                            <Share2 className="h-4 w-4" strokeWidth={1.8} />
-                          </button>
-                        ) : null}
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="grid grid-cols-2 border-t border-[var(--atlas-home-border-soft)] md:grid-cols-4">
-                      <div className="atlas-home-footer-cell inline-flex items-center justify-center gap-2 border-r border-[var(--atlas-home-border-soft)] text-center text-sm">
-                        <Star
-                          className={`h-4 w-4 ${card.isStarred ? "atlas-home-star-icon" : "text-[var(--atlas-home-muted)]"}`}
-                          strokeWidth={1.8}
-                          fill={card.isStarred ? "currentColor" : "none"}
-                        />
-                        <span>
-                          {card.isStarred ? "Starred" : "Star"} {card.starCount ?? 0}
-                        </span>
-                      </div>
-                      {card.canEdit && card.editUrl ? (
-                        renderFooterLink(
-                          card.editUrl,
-                          <Pencil className="h-4 w-4" strokeWidth={1.8} />,
-                          "Edit",
-                        )
-                      ) : (
-                        <div className="atlas-home-footer-cell border-r border-[var(--atlas-home-border-soft)] text-center text-sm text-[var(--atlas-home-muted)]">
-                          Edit
-                        </div>
-                      )}
-                      {card.canManage && card.manageUrl ? (
-                        renderFooterLink(
-                          card.manageUrl,
-                          <Settings className="h-4 w-4" strokeWidth={1.8} />,
-                          "Manage",
-                        )
-                      ) : (
-                        <div className="atlas-home-footer-cell border-r border-[var(--atlas-home-border-soft)] text-center text-sm text-[var(--atlas-home-muted)]">
-                          Manage
-                        </div>
-                      )}
-                      <div className="atlas-home-footer-cell inline-flex items-center justify-center gap-3 text-center text-sm">
-                        {card.canOpenProfile ? (
-                          <a
-                            href={card.href}
-                            aria-label="Open report profile"
-                            className="inline-flex cursor-pointer items-center text-[var(--atlas-home-muted)] hover:text-[var(--atlas-home-link)]"
-                          >
-                            <BarChart3 className="h-4 w-4" strokeWidth={1.8} />
-                          </a>
-                        ) : null}
-                        {card.canShare ? (
-                          <button
-                            type="button"
-                            aria-label="Share report"
-                            className="inline-flex cursor-pointer items-center text-[var(--atlas-home-muted)] hover:text-[var(--atlas-home-link)]"
-                          >
-                            <Share2 className="h-4 w-4" strokeWidth={1.8} />
-                          </button>
-                        ) : null}
-                        {card.canRequestAccess ? (
-                          <button
-                            type="button"
-                            aria-label="Request access"
-                            className="inline-flex cursor-pointer items-center text-[var(--atlas-home-muted)] hover:text-[var(--atlas-home-link)]"
-                          >
-                            <GlobeLock className="h-4 w-4" strokeWidth={1.8} />
-                          </button>
-                        ) : null}
-                      </div>
-                    </div>
-                  )}
+                  <HomeStarCardFooter card={card} />
                 </article>
               )
             })

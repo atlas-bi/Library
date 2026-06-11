@@ -48,7 +48,9 @@ export interface CollectionReportDto {
   description?: string | null
   rank?: number
   isStarred?: boolean
+  starCount?: number
   canRun?: boolean
+  attachmentCount?: number
 }
 
 export interface CollectionDetailDto {
