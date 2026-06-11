@@ -5,7 +5,21 @@ import { submitFeedbackAction } from "@/app/interactions/actions"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 
-export function FeedbackForm({ reportName, reportUrl }: { reportName: string; reportUrl: string }) {
+export function FeedbackForm({
+  entityName,
+  entityUrl,
+  reportName,
+  reportUrl,
+}: {
+  entityName?: string
+  entityUrl?: string
+  /** @deprecated Use entityName */
+  reportName?: string
+  /** @deprecated Use entityUrl */
+  reportUrl?: string
+}) {
+  const name = entityName ?? reportName ?? ""
+  const url = entityUrl ?? reportUrl ?? ""
   const [description, setDescription] = useState("")
   const [message, setMessage] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
@@ -26,8 +40,8 @@ export function FeedbackForm({ reportName, reportUrl }: { reportName: string; re
         startTransition(() => {
           void (async () => {
             const result = await submitFeedbackAction({
-              reportName,
-              reportUrl,
+              reportName: name,
+              reportUrl: url,
               description: trimmed,
             })
             if (result.error) {
