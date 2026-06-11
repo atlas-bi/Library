@@ -1,4 +1,5 @@
 import { EntityCardFooter } from "@/components/interactions/entity-card-footer"
+import { ProfileAnalyticsPanel } from "@/components/profile/profile-analytics-panel"
 import type { CollectionFeatureFlagsDto, CollectionReportDto } from "@/lib/collections/types"
 import { truncateText } from "@/lib/text"
 import { SnippetMediaCard } from "./snippet-media-card"
@@ -38,6 +39,7 @@ export function ReportSnippetCard({
           starCount={report.starCount}
           features={features ?? undefined}
           canRequestAccess={canRequestAccess}
+          profilePanel={<ProfileAnalyticsPanel id={report.id} type="report" />}
         />
       }
     />

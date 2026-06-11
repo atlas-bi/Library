@@ -1,4 +1,5 @@
 import { EntityCardFooter } from "@/components/interactions/entity-card-footer"
+import { ProfileAnalyticsPanelClient } from "@/components/profile/profile-analytics-panel-client"
 import type { HomeStarCard } from "@/lib/home/types"
 
 function resolveStarType(card: HomeStarCard): "collection" | "report" | null {
@@ -11,6 +12,8 @@ function resolveStarType(card: HomeStarCard): "collection" | "report" | null {
 export function HomeStarCardFooter({ card }: { card: HomeStarCard }) {
   const starType = resolveStarType(card)
   if (!starType) return null
+
+  const profileType = starType
 
   return (
     <EntityCardFooter
@@ -26,6 +29,11 @@ export function HomeStarCardFooter({ card }: { card: HomeStarCard }) {
       manageUrl={card.manageUrl}
       canOpenProfile={card.canOpenProfile ?? true}
       canRequestAccess={card.canRequestAccess}
+      profilePanel={
+        card.canOpenProfile !== false ? (
+          <ProfileAnalyticsPanelClient id={card.id} type={profileType} />
+        ) : undefined
+      }
       features={{
         sharingEnabled: card.canShare === false ? false : undefined,
         requestAccessEnabled: card.canRequestAccess === false ? false : undefined,

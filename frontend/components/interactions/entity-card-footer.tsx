@@ -7,7 +7,6 @@ import { EntityProfileSheet } from "@/components/interactions/entity-profile-she
 import { RequestAccessDialog } from "@/components/interactions/request-access-dialog"
 import { ShareMailDialog } from "@/components/interactions/share-mail-dialog"
 import { StarToggleButton } from "@/components/interactions/star-toggle-button"
-import { ProfileAnalyticsPanel } from "@/components/profile/profile-analytics-panel"
 import type { CollectionFeatureFlagsDto } from "@/lib/collections/types"
 import { isInteractionFeatureEnabled } from "@/lib/interactions/features"
 import type { ReportFeatureFlags } from "@/lib/reports/types"
@@ -45,27 +44,25 @@ function renderPlaceholderCell(label: string) {
 }
 
 function ProfileShareGroup({
-  id,
   title,
   href,
-  profileType,
   profileLabel,
+  profilePanel,
   showProfile,
   showShare,
 }: {
-  id: number
   title: string
   href: string
-  profileType: "collection" | "report"
   profileLabel: string
+  profilePanel?: ReactNode
   showProfile: boolean
   showShare: boolean
 }) {
   return (
     <div className="atlas-home-footer-cell inline-flex items-center justify-center gap-3 text-center text-sm">
-      {showProfile ? (
+      {showProfile && profilePanel ? (
         <EntityProfileSheet entityName={title} entityLabel={profileLabel} variant="footer">
-          <ProfileAnalyticsPanel id={id} type={profileType} />
+          {profilePanel}
         </EntityProfileSheet>
       ) : null}
       {showShare ? (
@@ -89,6 +86,7 @@ export type EntityCardFooterProps = {
   manageUrl?: string | null
   canOpenProfile?: boolean
   canRequestAccess?: boolean
+  profilePanel?: ReactNode
 }
 
 export function EntityCardFooter({
@@ -105,6 +103,7 @@ export function EntityCardFooter({
   manageUrl,
   canOpenProfile = true,
   canRequestAccess = false,
+  profilePanel,
 }: EntityCardFooterProps) {
   const starType = entityType
   const profileLabel = entityType === "collection" ? "collection profile" : "report profile"
@@ -128,11 +127,10 @@ export function EntityCardFooter({
       <div className="grid grid-cols-2 border-t border-[var(--atlas-home-border-soft)]">
         {starCell}
         <ProfileShareGroup
-          id={id}
           title={title}
           href={href}
-          profileType="collection"
           profileLabel={profileLabel}
+          profilePanel={profilePanel}
           showProfile={canOpenProfile}
           showShare={sharingEnabled}
         />
@@ -150,11 +148,11 @@ export function EntityCardFooter({
         ? renderFooterLink(manageUrl, <Settings className="h-4 w-4" strokeWidth={1.8} />, "Manage")
         : renderPlaceholderCell("Manage")}
       <div className="atlas-home-footer-cell inline-flex items-center justify-center gap-3 text-center text-sm">
-        {canOpenProfile ? (
+        {canOpenProfile && profilePanel ? (
           <EntityProfileSheet entityName={title} entityLabel={profileLabel} variant="footer">
-            <ProfileAnalyticsPanel id={id} type="report" />
+            {profilePanel}
           </EntityProfileSheet>
-        ) : (
+        ) : !canOpenProfile ? (
           <Link
             href={href}
             aria-label="Open report details"
@@ -162,7 +160,7 @@ export function EntityCardFooter({
           >
             Details
           </Link>
-        )}
+        ) : null}
         {sharingEnabled ? (
           <ShareMailDialog shareName={title} shareUrl={href} iconOnly variant="footer" />
         ) : null}

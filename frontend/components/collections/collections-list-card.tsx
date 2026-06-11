@@ -1,6 +1,7 @@
 import { BadgeCheck } from "lucide-react"
 import Link from "next/link"
 import { EntityCardFooter } from "@/components/interactions/entity-card-footer"
+import { ProfileAnalyticsPanel } from "@/components/profile/profile-analytics-panel"
 import type { CollectionListItemDto } from "@/lib/collections/types"
 import { truncateText } from "@/lib/text"
 
@@ -58,6 +59,7 @@ export function CollectionsListCard({ collection }: { collection: CollectionList
         href={href}
         isStarred={collection.isStarred}
         starCount={collection.starCount}
+        profilePanel={<ProfileAnalyticsPanel id={collection.id} type="collection" />}
       />
     </article>
   )
