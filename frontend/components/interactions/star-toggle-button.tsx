@@ -69,6 +69,8 @@ export function StarToggleButton({
     )
   }
 
+  const entityLabel = type === "report" ? "report" : "collection"
+
   if (iconOnly) {
     return (
       <div className="flex flex-col items-center gap-1">
@@ -81,7 +83,7 @@ export function StarToggleButton({
           onClick={toggleStar}
         >
           <Star className={`size-5 ${isStarred ? "fill-amber-400 text-amber-500" : ""}`} />
-          <span className="sr-only">Star this collection</span>
+          <span className="sr-only">Star this {entityLabel}</span>
           {count > 0 ? (
             <span className="absolute -top-1 -right-1 rounded-full bg-muted px-1 text-[10px] leading-none">
               {count}

@@ -34,13 +34,23 @@ export function ShareMailDialog({
     Array<{ id: number; name: string; type: string; email?: string | null }>
   >([])
   const [selected, setSelected] = useState<SelectedRecipient[]>([])
-  const [subject, setSubject] = useState(`Shared: ${shareName}`)
+  const [subject, setSubject] = useState(`[Share] ${shareName}`)
   const [message, setMessage] = useState("")
   const [status, setStatus] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [pending, startTransition] = useTransition()
 
   const fetcher = useCallback((q: string) => searchRecipientsAction(q, true), [])
+
+  useEffect(() => {
+    if (!open) return
+    setSubject(`[Share] ${shareName}`)
+    setMessage(
+      `Hi!\n\nI would like to share this report with you.\n\n[${shareName}](${shareUrl})\n\nCheck it out sometime!\nRegards!`,
+    )
+    setError(null)
+    setStatus(null)
+  }, [open, shareName, shareUrl])
 
   useEffect(() => {
     const trimmed = query.trim()
@@ -185,7 +195,7 @@ export function ShareMailDialog({
                 void (async () => {
                   const result = await sendShareMailAction({
                     to: selected.map(({ userId, type }) => ({ userId, type })),
-                    subject: subject.trim() || `Shared: ${shareName}`,
+                    subject: subject.trim() || `[Share] ${shareName}`,
                     message: text ? `<p>${text}</p>` : `<p>Shared via Atlas Library</p>`,
                     text: text || "Shared via Atlas Library",
                     share: true,
