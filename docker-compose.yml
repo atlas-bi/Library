@@ -1,5 +1,3 @@
-version: '3.9'
-
 services:
   sqlserver:
     image: mcr.microsoft.com/mssql/server:2025-latest
@@ -45,7 +43,7 @@ services:
       test:
         [
           'CMD-SHELL',
-          'wget -qO- http://localhost:${SOLR_PORT:-8983}/solr/admin/ping | grep -q ''"status":"OK"''',
+          'wget -qO- http://127.0.0.1:${SOLR_PORT:-8983}/solr/atlas/admin/ping | grep -q ''"status":"OK"''',
         ]
       interval: 15s
       timeout: 5s
@@ -66,23 +64,51 @@ services:
       - solr
       - sqlserver
     environment:
-      PORT: ${WEB_PORT:-3000}
+      PORT: ${WEB_PORT:-5000}
       SEED_DEMO: ${SEED_DEMO:-true}
-      DEMO_ADMIN_USERNAME: ${DEMO_ADMIN_USERNAME:-}
+      DEMO_ADMIN_USERNAME: ${DEMO_ADMIN_USERNAME:-local-admin}
       Jwt__Key: ${JWT_KEY}
       Jwt__Issuer: ${JWT_ISSUER}
       Jwt__Audience: ${JWT_AUDIENCE}
     expose:
-      - ${WEB_PORT:-3000}
+      - ${WEB_PORT:-5000}
     ports:
-      - '${WEB_PORT:-3000}:${WEB_PORT:-3000}'
+      - '${WEB_PORT:-5000}:${WEB_PORT:-5000}'
     healthcheck:
       test:
-        ['CMD-SHELL', 'wget -qO- http://localhost:${WEB_PORT:-3000}/ || exit 1']
+        ['CMD-SHELL', 'wget -qO- http://localhost:${WEB_PORT:-5000}/ || exit 1']
       interval: 15s
       timeout: 5s
       retries: 10
       start_period: 20s
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        API_URL: http://web:${WEB_PORT:-5000}
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:5000}
+    container_name: atlas_frontend
+    depends_on:
+      web:
+        condition: service_healthy
+    environment:
+      API_URL: http://web:${WEB_PORT:-5000}
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:5000}
+      AUTH_RETURN_URL_ORIGIN: ${AUTH_RETURN_URL_ORIGIN:-http://localhost:3000}
+      DEMO: ${DEMO:-true}
+      DEMO_ADMIN_USERNAME: ${DEMO_ADMIN_USERNAME:-local-admin}
+    expose:
+      - 3000
+    ports:
+      - '${FRONTEND_PORT:-3000}:3000'
+    healthcheck:
+      test: ['CMD-SHELL', 'wget -qO- http://127.0.0.1:3000/ || exit 1']
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
 
 volumes:
   sqlserver_data:
