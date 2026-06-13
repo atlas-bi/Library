@@ -31,6 +31,7 @@ export interface CollectionUserSummaryDto {
 export interface InitiativeSummaryDto {
   id?: number
   name?: string | null
+  description?: string | null
 }
 
 export interface CollectionTermDto {

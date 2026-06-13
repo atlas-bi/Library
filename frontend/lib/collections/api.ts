@@ -13,11 +13,13 @@ import type {
 export type CollectionsListResult = {
   data: CollectionsListResponseDto | null
   error: AppErrorCode | null
+  status?: number
 }
 
 export type CollectionDetailResult = {
   data: CollectionDetailDto | null
   error: AppErrorCode | null
+  status?: number
 }
 
 export type CollectionMutationOk = { ok: true; data: CollectionDetailDto }
@@ -68,7 +70,7 @@ export async function getCollectionsList(page = 1, pageSize = 20): Promise<Colle
     },
   )
 
-  if (!result.ok) return { data: null, error: result.error.code }
+  if (!result.ok) return { data: null, error: result.error.code, status: result.error.status }
   return { data: result.data, error: null }
 }
 
@@ -84,7 +86,7 @@ export async function getCollectionById(id: number): Promise<CollectionDetailRes
     cache: "no-store",
   })
 
-  if (!result.ok) return { data: null, error: result.error.code }
+  if (!result.ok) return { data: null, error: result.error.code, status: result.error.status }
   return { data: result.data, error: null }
 }
 
