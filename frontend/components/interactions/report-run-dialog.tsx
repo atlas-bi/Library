@@ -2,6 +2,7 @@
 
 import { CirclePlay } from "lucide-react"
 import type { ReactNode } from "react"
+import { InteractionTooltip } from "@/components/interactions/interaction-tooltip"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -10,7 +11,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 import type { ReportAttachment } from "@/lib/reports/types"
 
 function formatAttachmentDate(value?: string | null): string {
@@ -36,19 +36,21 @@ export function ReportRunDialog({
 
   return (
     <Dialog>
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <DialogTrigger asChild>
-            {trigger ?? (
-              <Button type="button" variant="ghost" size="icon" className="size-11">
-                <CirclePlay className="size-7 text-success" strokeWidth={1.5} />
-                <span className="sr-only">Run report</span>
-              </Button>
-            )}
-          </DialogTrigger>
-        </TooltipTrigger>
-        <TooltipContent side="right">Run report</TooltipContent>
-      </Tooltip>
+      <InteractionTooltip label="Run report" placement="rail">
+        <DialogTrigger asChild>
+          {trigger ?? (
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              className="atlas-action-rail-button size-11"
+            >
+              <CirclePlay className="size-7 text-success" strokeWidth={1.5} />
+              <span className="sr-only">Run report</span>
+            </Button>
+          )}
+        </DialogTrigger>
+      </InteractionTooltip>
       <DialogContent className="max-w-lg">
         <DialogHeader>
           <DialogTitle>Run this report</DialogTitle>

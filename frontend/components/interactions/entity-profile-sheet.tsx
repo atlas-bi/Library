@@ -2,9 +2,9 @@
 
 import { BarChart3 } from "lucide-react"
 import type { ReactNode } from "react"
+import { InteractionTooltip } from "@/components/interactions/interaction-tooltip"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 
 export function EntityProfileSheet({
   entityName,
@@ -18,6 +18,7 @@ export function EntityProfileSheet({
   variant?: "default" | "footer"
 }) {
   const tooltipLabel = `Open ${entityLabel}`
+  const tooltipPlacement = variant === "footer" ? "footer" : "rail"
   const trigger =
     variant === "footer" ? (
       <button
@@ -28,7 +29,7 @@ export function EntityProfileSheet({
         <span className="sr-only">{tooltipLabel}</span>
       </button>
     ) : (
-      <Button type="button" variant="ghost" size="icon" className="size-10">
+      <Button type="button" variant="ghost" size="icon" className="atlas-action-rail-button">
         <BarChart3 className="size-5" />
         <span className="sr-only">{tooltipLabel}</span>
       </Button>
@@ -36,14 +37,9 @@ export function EntityProfileSheet({
 
   return (
     <Sheet>
-      <TooltipProvider>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <SheetTrigger asChild>{trigger}</SheetTrigger>
-          </TooltipTrigger>
-          <TooltipContent side="right">{tooltipLabel}</TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
+      <InteractionTooltip label={tooltipLabel} placement={tooltipPlacement}>
+        <SheetTrigger asChild>{trigger}</SheetTrigger>
+      </InteractionTooltip>
       <SheetContent side="right" className="w-full overflow-y-auto sm:max-w-xl">
         <SheetHeader>
           <SheetTitle>Profile — {entityName}</SheetTitle>

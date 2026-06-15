@@ -4,6 +4,7 @@ import { Star } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useState, useTransition } from "react"
 import { toggleStarAction } from "@/app/interactions/actions"
+import { InteractionTooltip } from "@/components/interactions/interaction-tooltip"
 import { Button } from "@/components/ui/button"
 import type { InteractionEntityType } from "@/lib/interactions/types"
 
@@ -70,26 +71,32 @@ export function StarToggleButton({
   }
 
   const entityLabel = type === "report" ? "report" : "collection"
+  const starTooltip = `Star this ${entityLabel}`
 
   if (iconOnly) {
     return (
       <div className="flex flex-col items-center gap-1">
-        <Button
-          type="button"
-          variant="ghost"
-          size="icon"
-          className="relative size-10"
-          disabled={pending}
-          onClick={toggleStar}
-        >
-          <Star className={`size-5 ${isStarred ? "fill-amber-400 text-amber-500" : ""}`} />
-          <span className="sr-only">Star this {entityLabel}</span>
-          {count > 0 ? (
-            <span className="absolute -top-1 -right-1 rounded-full bg-muted px-1 text-[10px] leading-none">
-              {count}
-            </span>
-          ) : null}
-        </Button>
+        <InteractionTooltip label={starTooltip} placement="rail">
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon"
+            className="atlas-action-rail-button relative"
+            disabled={pending}
+            onClick={toggleStar}
+          >
+            <Star
+              className={`size-5 ${isStarred ? "atlas-home-star-icon" : ""}`}
+              fill={isStarred ? "currentColor" : "none"}
+            />
+            <span className="sr-only">{starTooltip}</span>
+            {count > 0 ? (
+              <span className="absolute -top-1 -right-1 rounded-full bg-muted px-1 text-[10px] leading-none">
+                {count}
+              </span>
+            ) : null}
+          </Button>
+        </InteractionTooltip>
         {error ? <span className="text-xs text-destructive">{error}</span> : null}
       </div>
     )

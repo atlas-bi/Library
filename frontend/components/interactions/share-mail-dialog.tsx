@@ -3,6 +3,7 @@
 import { Share2 } from "lucide-react"
 import { useCallback, useEffect, useState, useTransition } from "react"
 import { searchRecipientsAction, sendShareMailAction } from "@/app/interactions/actions"
+import { InteractionTooltip } from "@/components/interactions/interaction-tooltip"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -76,30 +77,34 @@ export function ShareMailDialog({
     setSuggestions([])
   }
 
+  const tooltipPlacement = variant === "footer" ? "footer" : "rail"
+
+  const trigger = iconOnly ? (
+    variant === "footer" ? (
+      <button
+        type="button"
+        className="inline-flex cursor-pointer items-center text-[var(--atlas-home-muted)] hover:text-[var(--atlas-home-link)]"
+      >
+        <Share2 className="h-4 w-4" strokeWidth={1.8} />
+        <span className="sr-only">Share</span>
+      </button>
+    ) : (
+      <Button type="button" variant="ghost" size="icon" className="atlas-action-rail-button">
+        <Share2 className="size-5" />
+        <span className="sr-only">Share</span>
+      </Button>
+    )
+  ) : (
+    <Button type="button" variant="outline" size="sm">
+      Share
+    </Button>
+  )
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        {iconOnly ? (
-          variant === "footer" ? (
-            <button
-              type="button"
-              className="inline-flex cursor-pointer items-center text-[var(--atlas-home-muted)] hover:text-[var(--atlas-home-link)]"
-            >
-              <Share2 className="h-4 w-4" strokeWidth={1.8} />
-              <span className="sr-only">Share</span>
-            </button>
-          ) : (
-            <Button type="button" variant="ghost" size="icon" className="size-10">
-              <Share2 className="size-5" />
-              <span className="sr-only">Share</span>
-            </Button>
-          )
-        ) : (
-          <Button type="button" variant="outline" size="sm">
-            Share
-          </Button>
-        )}
-      </DialogTrigger>
+      <InteractionTooltip label="Share" placement={tooltipPlacement}>
+        <DialogTrigger asChild>{trigger}</DialogTrigger>
+      </InteractionTooltip>
       <DialogContent className="max-w-lg">
         <DialogHeader>
           <DialogTitle>Share {shareName}</DialogTitle>

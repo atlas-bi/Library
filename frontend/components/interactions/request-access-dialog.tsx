@@ -3,6 +3,7 @@
 import { Accessibility } from "lucide-react"
 import { useCallback, useEffect, useState, useTransition } from "react"
 import { searchRecipientsAction, submitAccessRequestAction } from "@/app/interactions/actions"
+import { InteractionTooltip } from "@/components/interactions/interaction-tooltip"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -13,7 +14,6 @@ import {
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 
 export function RequestAccessDialog({
   reportName,
@@ -52,6 +52,8 @@ export function RequestAccessDialog({
     }
   }, [query, fetcher])
 
+  const tooltipPlacement = variant === "footer" ? "footer" : "rail"
+
   const trigger =
     iconOnly && variant === "footer" ? (
       <button
@@ -62,7 +64,7 @@ export function RequestAccessDialog({
         <span className="sr-only">Request access</span>
       </button>
     ) : iconOnly ? (
-      <Button type="button" variant="ghost" size="icon" className="size-10">
+      <Button type="button" variant="ghost" size="icon" className="atlas-action-rail-button">
         <Accessibility className="size-5" />
         <span className="sr-only">Request access</span>
       </Button>
@@ -74,14 +76,9 @@ export function RequestAccessDialog({
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <TooltipProvider>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <DialogTrigger asChild>{trigger}</DialogTrigger>
-          </TooltipTrigger>
-          <TooltipContent side="right">Request access</TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
+      <InteractionTooltip label="Request access" placement={tooltipPlacement}>
+        <DialogTrigger asChild>{trigger}</DialogTrigger>
+      </InteractionTooltip>
       <DialogContent className="max-w-lg">
         <DialogHeader>
           <DialogTitle>Request report access</DialogTitle>
