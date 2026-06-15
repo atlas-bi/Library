@@ -1,4 +1,5 @@
 import { EntityCardFooter } from "@/components/interactions/entity-card-footer"
+import { ReportSnippetRunAction } from "@/components/interactions/report-snippet-run-action"
 import { ProfileAnalyticsPanel } from "@/components/profile/profile-analytics-panel"
 import type { CollectionFeatureFlagsDto, CollectionReportDto } from "@/lib/collections/types"
 import { truncateText } from "@/lib/text"
@@ -24,6 +25,16 @@ export function ReportSnippetCard({
       title={title}
       href={href}
       tags={tags}
+      headerLeading={
+        <ReportSnippetRunAction
+          reportId={report.id}
+          canRun={report.canRun}
+          attachmentCount={report.attachmentCount}
+          runUrl={report.runUrl}
+          epicMasterFile={report.epicMasterFile}
+          editReportUrl={report.editReportUrl}
+        />
+      }
       excerpt={
         <>
           {excerpt} <span className="text-link font-medium">read more</span>

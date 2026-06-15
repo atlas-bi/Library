@@ -51,6 +51,9 @@ export interface CollectionReportDto {
   starCount?: number
   canRun?: boolean
   attachmentCount?: number
+  runUrl?: string | null
+  epicMasterFile?: string | null
+  editReportUrl?: string | null
 }
 
 export interface CollectionDetailDto {

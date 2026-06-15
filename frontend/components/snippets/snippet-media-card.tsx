@@ -23,6 +23,7 @@ export function SnippetMediaCard({
   tags,
   excerpt,
   footer,
+  headerLeading,
   showCertified = false,
   variant = "default",
 }: {
@@ -31,6 +32,7 @@ export function SnippetMediaCard({
   tags: string[]
   excerpt: ReactNode
   footer?: ReactNode
+  headerLeading?: ReactNode
   showCertified?: boolean
   variant?: "default" | "collection"
 }) {
@@ -60,7 +62,10 @@ export function SnippetMediaCard({
     >
       <CardHeader className="gap-2 border-b bg-muted/20 py-3">
         <div className="flex flex-wrap items-start justify-between gap-2">
-          <div className="min-w-0 flex-1">{titleNode}</div>
+          <div className="flex min-w-0 flex-1 items-center gap-2">
+            {headerLeading}
+            <div className="min-w-0 flex-1">{titleNode}</div>
+          </div>
           <div className="flex flex-wrap justify-end gap-1">
             {tags.map((tag) => (
               <Badge key={tag} variant="secondary" className="text-xs uppercase tracking-wide">
