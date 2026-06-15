@@ -71,6 +71,8 @@
   --atlas-home-navbar-height: 3.5rem;
   --atlas-home-title-size: 2.5rem;
   --atlas-home-card-footer-padding: 0.5rem 0.75rem;
+  --atlas-action-rail-width: 4.75rem;
+  --atlas-action-rail-sticky-top: calc(var(--atlas-home-navbar-height) + 1.5rem);
   --atlas-home-spacing-1: 0.5rem;
   --atlas-home-spacing-2: 0.75rem;
   --atlas-home-spacing-3: 0.875rem;
@@ -388,6 +390,52 @@
   .atlas-home-star-icon {
     color: var(--atlas-home-star);
     fill: var(--atlas-home-star);
+  }
+
+  .atlas-action-rail {
+    top: var(--atlas-action-rail-sticky-top);
+    display: flex;
+    width: var(--atlas-action-rail-width);
+    flex-direction: column;
+    align-items: center;
+    gap: 0.375rem;
+    border-radius: var(--atlas-home-radius);
+    border: 1px solid var(--atlas-home-border-soft);
+    background: rgba(255, 255, 255, 0.96);
+    padding: 0.625rem 0.5rem;
+    box-shadow: 0 10px 24px rgba(10, 10, 10, 0.08);
+  }
+
+  .atlas-action-rail-label {
+    margin-bottom: 0.25rem;
+    width: 100%;
+    border-bottom: 1px solid var(--atlas-home-border-soft);
+    padding-bottom: 0.5rem;
+    text-align: center;
+    font-size: 0.625rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--atlas-home-muted);
+  }
+
+  .atlas-action-rail-button {
+    height: 2.5rem;
+    width: 2.5rem;
+    color: var(--atlas-home-muted);
+  }
+
+  .atlas-action-rail-button:hover {
+    color: var(--atlas-home-link);
+  }
+
+  .atlas-action-rail-group-separated {
+    margin-top: 0.125rem;
+    border-top: 1px solid var(--atlas-home-border-soft);
+  }
+
+  .atlas-footer-icon-group {
+    color: var(--atlas-home-muted);
   }
 
   .atlas-home-table {

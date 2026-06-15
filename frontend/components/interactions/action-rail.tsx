@@ -16,19 +16,31 @@ export function ActionRail({
 }) {
   return (
     <TooltipProvider>
-      <aside
-        aria-label={label}
-        className={
-          className ??
-          "sticky top-8 z-10 flex w-[4.5rem] shrink-0 flex-col items-center gap-1.5 rounded-xl border border-border/80 bg-card/95 p-2.5 shadow-lg backdrop-blur-sm"
-        }
-      >
-        <span className="mb-1 w-full border-b border-border/60 pb-2 text-center text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
-          Actions
-        </span>
-        {children}
+      <aside aria-label={label} className={className ?? "atlas-action-rail sticky z-10 shrink-0"}>
+        <span className="atlas-action-rail-label">{label}</span>
+        <div className="flex w-full flex-col items-center gap-1">{children}</div>
       </aside>
     </TooltipProvider>
+  )
+}
+
+export function ActionRailGroup({
+  children,
+  separated = false,
+}: {
+  children: ReactNode
+  separated?: boolean
+}) {
+  return (
+    <div
+      className={
+        separated
+          ? "atlas-action-rail-group atlas-action-rail-group-separated flex w-full flex-col items-center gap-1 pt-2"
+          : "atlas-action-rail-group flex w-full flex-col items-center gap-1"
+      }
+    >
+      {children}
+    </div>
   )
 }
 
@@ -46,7 +58,12 @@ export function RailIconLink({
   return (
     <Tooltip>
       <TooltipTrigger asChild>
-        <Button asChild variant="ghost" size="icon" className={className ?? "size-10"}>
+        <Button
+          asChild
+          variant="ghost"
+          size="icon"
+          className={className ?? "atlas-action-rail-button"}
+        >
           <Link href={href}>{children}</Link>
         </Button>
       </TooltipTrigger>
@@ -69,7 +86,12 @@ export function RailExternalLink({
   return (
     <Tooltip>
       <TooltipTrigger asChild>
-        <Button asChild variant="ghost" size="icon" className={className ?? "size-10"}>
+        <Button
+          asChild
+          variant="ghost"
+          size="icon"
+          className={className ?? "atlas-action-rail-button"}
+        >
           <a href={href} target="_blank" rel="noopener noreferrer">
             {children}
           </a>
@@ -100,7 +122,7 @@ export function RailTooltipButton({
           type="button"
           variant="ghost"
           size="icon"
-          className={className ?? "size-10"}
+          className={className ?? "atlas-action-rail-button"}
           disabled={disabled}
           onClick={onClick}
         >
