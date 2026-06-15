@@ -1,9 +1,9 @@
 "use client"
 
 import { Pencil, Settings } from "lucide-react"
-import Link from "next/link"
 import type { ReactNode } from "react"
 import { EntityProfileSheet } from "@/components/interactions/entity-profile-sheet"
+import { FooterIconAction, FooterIconActions } from "@/components/interactions/footer-icon-actions"
 import { RequestAccessDialog } from "@/components/interactions/request-access-dialog"
 import { ShareMailDialog } from "@/components/interactions/share-mail-dialog"
 import { StarToggleButton } from "@/components/interactions/star-toggle-button"
@@ -32,43 +32,6 @@ function renderFooterLink(href: string, icon: ReactNode, label: string) {
       {icon}
       <span>{label}</span>
     </a>
-  )
-}
-
-function renderPlaceholderCell(label: string) {
-  return (
-    <div className="atlas-home-footer-cell border-r border-[var(--atlas-home-border-soft)] text-center text-sm text-[var(--atlas-home-muted)]">
-      {label}
-    </div>
-  )
-}
-
-function ProfileShareGroup({
-  title,
-  href,
-  profileLabel,
-  profilePanel,
-  showProfile,
-  showShare,
-}: {
-  title: string
-  href: string
-  profileLabel: string
-  profilePanel?: ReactNode
-  showProfile: boolean
-  showShare: boolean
-}) {
-  return (
-    <div className="atlas-home-footer-cell inline-flex items-center justify-center gap-3 text-center text-sm">
-      {showProfile && profilePanel ? (
-        <EntityProfileSheet entityName={title} entityLabel={profileLabel} variant="footer">
-          {profilePanel}
-        </EntityProfileSheet>
-      ) : null}
-      {showShare ? (
-        <ShareMailDialog shareName={title} shareUrl={href} iconOnly variant="footer" />
-      ) : null}
-    </div>
   )
 }
 
@@ -126,48 +89,74 @@ export function EntityCardFooter({
     return (
       <div className="grid grid-cols-2 border-t border-[var(--atlas-home-border-soft)]">
         {starCell}
-        <ProfileShareGroup
-          title={title}
-          href={href}
-          profileLabel={profileLabel}
-          profilePanel={profilePanel}
-          showProfile={canOpenProfile}
-          showShare={sharingEnabled}
-        />
+        <FooterIconActions>
+          {canOpenProfile && profilePanel ? (
+            <FooterIconAction label={`Open ${profileLabel}`}>
+              <EntityProfileSheet entityName={title} entityLabel={profileLabel} variant="footer">
+                {profilePanel}
+              </EntityProfileSheet>
+            </FooterIconAction>
+          ) : null}
+          {sharingEnabled ? (
+            <FooterIconAction label="Share">
+              <ShareMailDialog shareName={title} shareUrl={href} iconOnly variant="footer" />
+            </FooterIconAction>
+          ) : null}
+        </FooterIconActions>
       </div>
     )
   }
 
-  return (
-    <div className="grid grid-cols-2 border-t border-[var(--atlas-home-border-soft)] md:grid-cols-4">
-      {starCell}
-      {canEdit && editUrl
-        ? renderFooterLink(editUrl, <Pencil className="h-4 w-4" strokeWidth={1.8} />, "Edit")
-        : renderPlaceholderCell("Edit")}
-      {canManage && manageUrl
-        ? renderFooterLink(manageUrl, <Settings className="h-4 w-4" strokeWidth={1.8} />, "Manage")
-        : renderPlaceholderCell("Manage")}
-      <div className="atlas-home-footer-cell inline-flex items-center justify-center gap-3 text-center text-sm">
+  const segments: ReactNode[] = [starCell]
+
+  if (canEdit && editUrl) {
+    segments.push(
+      renderFooterLink(editUrl, <Pencil className="h-4 w-4" strokeWidth={1.8} />, "Edit"),
+    )
+  }
+
+  if (canManage && manageUrl) {
+    segments.push(
+      renderFooterLink(manageUrl, <Settings className="h-4 w-4" strokeWidth={1.8} />, "Manage"),
+    )
+  }
+
+  const hasIconActions = (canOpenProfile && profilePanel) || sharingEnabled || requestAccessEnabled
+
+  if (hasIconActions) {
+    segments.push(
+      <FooterIconActions key="icon-actions">
         {canOpenProfile && profilePanel ? (
-          <EntityProfileSheet entityName={title} entityLabel={profileLabel} variant="footer">
-            {profilePanel}
-          </EntityProfileSheet>
-        ) : !canOpenProfile ? (
-          <Link
-            href={href}
-            aria-label="Open report details"
-            className="inline-flex cursor-pointer items-center text-[var(--atlas-home-muted)] hover:text-[var(--atlas-home-link)]"
-          >
-            Details
-          </Link>
+          <FooterIconAction label={`Open ${profileLabel}`}>
+            <EntityProfileSheet entityName={title} entityLabel={profileLabel} variant="footer">
+              {profilePanel}
+            </EntityProfileSheet>
+          </FooterIconAction>
         ) : null}
         {sharingEnabled ? (
-          <ShareMailDialog shareName={title} shareUrl={href} iconOnly variant="footer" />
+          <FooterIconAction label="Share">
+            <ShareMailDialog shareName={title} shareUrl={href} iconOnly variant="footer" />
+          </FooterIconAction>
         ) : null}
         {requestAccessEnabled ? (
-          <RequestAccessDialog reportName={title} reportUrl={href} variant="footer" />
+          <FooterIconAction label="Request access">
+            <RequestAccessDialog reportName={title} reportUrl={href} variant="footer" />
+          </FooterIconAction>
         ) : null}
-      </div>
+      </FooterIconActions>,
+    )
+  }
+
+  const columnClass =
+    segments.length === 2
+      ? "grid-cols-2"
+      : segments.length === 3
+        ? "grid-cols-3"
+        : "grid-cols-2 md:grid-cols-4"
+
+  return (
+    <div className={`grid border-t border-[var(--atlas-home-border-soft)] ${columnClass}`}>
+      {segments}
     </div>
   )
 }
