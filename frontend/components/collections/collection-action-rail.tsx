@@ -5,13 +5,14 @@ import { useRouter } from "next/navigation"
 import type { ReactNode } from "react"
 import { useTransition } from "react"
 import { deleteCollectionAction } from "@/app/collections/actions"
-import { ActionRail, RailIconLink, RailTooltipButton } from "@/components/interactions/action-rail"
-import { EntityFeedbackDialog } from "@/components/interactions/entity-feedback-dialog"
-import { EntityProfileSheet } from "@/components/interactions/entity-profile-sheet"
-import { ShareMailDialog } from "@/components/interactions/share-mail-dialog"
-import { StarToggleButton } from "@/components/interactions/star-toggle-button"
+import {
+  ActionRail,
+  ActionRailGroup,
+  RailIconLink,
+  RailTooltipButton,
+} from "@/components/interactions/action-rail"
+import { EntityEngagementRailActions } from "@/components/interactions/entity-engagement-rail-actions"
 import type { CollectionDetailDto } from "@/lib/collections/types"
-import { isInteractionFeatureEnabled } from "@/lib/interactions/features"
 
 function RailDeleteButton({
   collectionId,
@@ -27,7 +28,7 @@ function RailDeleteButton({
     <RailTooltipButton
       label="Delete this collection"
       disabled={pending}
-      className="size-10 text-destructive hover:text-destructive"
+      className="atlas-action-rail-button text-destructive hover:text-destructive"
       onClick={() => {
         const label = collectionName.trim() || `collection ${collectionId}`
         if (!window.confirm(`Delete ${label}? This cannot be undone.`)) return
@@ -54,45 +55,45 @@ export function CollectionActionRail({
 }) {
   const features = collection.features ?? {}
   const shareUrl = `/collections?id=${collection.id}`
+  const hasAdminActions =
+    collection.canCreateCollection || collection.canEditCollection || collection.canDeleteCollection
 
   return (
     <ActionRail label="Collection actions">
-      <EntityProfileSheet entityName={collection.name} entityLabel="collection profile">
-        {profilePanel}
-      </EntityProfileSheet>
+      <ActionRailGroup>
+        <EntityEngagementRailActions
+          entityType="collection"
+          entityId={collection.id}
+          entityName={collection.name}
+          entityUrl={shareUrl}
+          profileLabel="collection profile"
+          profilePanel={profilePanel}
+          isStarred={collection.isStarred}
+          starCount={collection.starCount}
+          features={features}
+        />
+      </ActionRailGroup>
 
-      <StarToggleButton
-        type="collection"
-        id={collection.id}
-        initialStarred={collection.isStarred ?? false}
-        initialCount={collection.starCount ?? 0}
-        iconOnly
-      />
+      {hasAdminActions ? (
+        <ActionRailGroup separated>
+          {collection.canCreateCollection ? (
+            <RailIconLink href="/collections/new" label="Create new collection">
+              <Plus className="size-5" />
+              <span className="sr-only">Create new collection</span>
+            </RailIconLink>
+          ) : null}
 
-      {isInteractionFeatureEnabled(features.sharingEnabled) ? (
-        <ShareMailDialog shareName={collection.name} shareUrl={shareUrl} iconOnly />
-      ) : null}
+          {collection.canEditCollection ? (
+            <RailIconLink href={`/collections/edit?id=${collection.id}`} label="Open Atlas editor">
+              <Pencil className="size-5" />
+              <span className="sr-only">Edit collection</span>
+            </RailIconLink>
+          ) : null}
 
-      {isInteractionFeatureEnabled(features.feedbackEnabled) ? (
-        <EntityFeedbackDialog entityName={collection.name} entityUrl={shareUrl} />
-      ) : null}
-
-      {collection.canCreateCollection ? (
-        <RailIconLink href="/collections/new" label="Create new collection">
-          <Plus className="size-5" />
-          <span className="sr-only">Create new collection</span>
-        </RailIconLink>
-      ) : null}
-
-      {collection.canEditCollection ? (
-        <RailIconLink href={`/collections/edit?id=${collection.id}`} label="Open Atlas editor">
-          <Pencil className="size-5" />
-          <span className="sr-only">Edit collection</span>
-        </RailIconLink>
-      ) : null}
-
-      {collection.canDeleteCollection ? (
-        <RailDeleteButton collectionId={collection.id} collectionName={collection.name} />
+          {collection.canDeleteCollection ? (
+            <RailDeleteButton collectionId={collection.id} collectionName={collection.name} />
+          ) : null}
+        </ActionRailGroup>
       ) : null}
     </ActionRail>
   )

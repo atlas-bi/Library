@@ -4,17 +4,13 @@ import { ArrowUpRightFromSquare, CirclePlay, Pencil, Settings } from "lucide-rea
 import type { ReactNode } from "react"
 import {
   ActionRail,
+  ActionRailGroup,
   RailExternalLink,
   RailIconLink,
   RailTooltipButton,
 } from "@/components/interactions/action-rail"
-import { EntityFeedbackDialog } from "@/components/interactions/entity-feedback-dialog"
-import { EntityProfileSheet } from "@/components/interactions/entity-profile-sheet"
+import { EntityEngagementRailActions } from "@/components/interactions/entity-engagement-rail-actions"
 import { ReportRunDialog } from "@/components/interactions/report-run-dialog"
-import { RequestAccessDialog } from "@/components/interactions/request-access-dialog"
-import { ShareMailDialog } from "@/components/interactions/share-mail-dialog"
-import { StarToggleButton } from "@/components/interactions/star-toggle-button"
-import { isInteractionFeatureEnabled } from "@/lib/interactions/features"
 import type { ReportDetail } from "@/lib/reports/types"
 
 function resolveDisabledRunLabel(report: ReportDetail): string {
@@ -38,7 +34,11 @@ function ReportRunRailButton({ report, title }: { report: ReportDetail; title: s
 
   if (report.canRun && report.runUrl) {
     return (
-      <RailExternalLink href={report.runUrl} label="Run report" className="size-11">
+      <RailExternalLink
+        href={report.runUrl}
+        label="Run report"
+        className="atlas-action-rail-button size-11"
+      >
         <CirclePlay className="size-7 text-success" strokeWidth={1.5} />
         <span className="sr-only">Run report</span>
       </RailExternalLink>
@@ -46,7 +46,11 @@ function ReportRunRailButton({ report, title }: { report: ReportDetail; title: s
   }
 
   return (
-    <RailTooltipButton label={resolveDisabledRunLabel(report)} disabled className="size-11">
+    <RailTooltipButton
+      label={resolveDisabledRunLabel(report)}
+      disabled
+      className="atlas-action-rail-button size-11"
+    >
       <CirclePlay className="size-7 text-muted-foreground/50" strokeWidth={1.5} />
       <span className="sr-only">Run report unavailable</span>
     </RailTooltipButton>
@@ -64,54 +68,53 @@ export function ReportActionRail({
 }) {
   const features = report.features ?? {}
   const shareUrl = `/reports?id=${report.id}`
+  const hasAdminActions = !!report.editReportUrl || !!report.manageReportUrl
 
   return (
     <ActionRail label="Report actions">
-      <ReportRunRailButton report={report} title={title} />
+      <ActionRailGroup>
+        <ReportRunRailButton report={report} title={title} />
+      </ActionRailGroup>
 
-      <EntityProfileSheet entityName={title} entityLabel="report profile">
-        {profilePanel}
-      </EntityProfileSheet>
+      <ActionRailGroup separated>
+        <EntityEngagementRailActions
+          entityType="report"
+          entityId={report.id}
+          entityName={title}
+          entityUrl={shareUrl}
+          profileLabel="report profile"
+          profilePanel={profilePanel}
+          isStarred={report.isStarred}
+          starCount={report.starCount}
+          features={features}
+          showRequestAccess
+          afterStar={
+            report.canEditDocumentation ? (
+              <RailIconLink href={`/reports/edit?id=${report.id}`} label="Open Atlas editor">
+                <Pencil className="size-5" />
+                <span className="sr-only">Open Atlas editor</span>
+              </RailIconLink>
+            ) : null
+          }
+        />
+      </ActionRailGroup>
 
-      <StarToggleButton
-        type="report"
-        id={report.id}
-        initialStarred={report.isStarred ?? false}
-        initialCount={report.starCount ?? 0}
-        iconOnly
-      />
+      {hasAdminActions && (report.editReportUrl || report.manageReportUrl) ? (
+        <ActionRailGroup separated>
+          {report.editReportUrl ? (
+            <RailExternalLink href={report.editReportUrl} label="Open report editor">
+              <ArrowUpRightFromSquare className="size-5" />
+              <span className="sr-only">Open report editor</span>
+            </RailExternalLink>
+          ) : null}
 
-      {report.canEditDocumentation ? (
-        <RailIconLink href={`/reports/edit?id=${report.id}`} label="Open Atlas editor">
-          <Pencil className="size-5" />
-          <span className="sr-only">Open Atlas editor</span>
-        </RailIconLink>
-      ) : null}
-
-      {isInteractionFeatureEnabled(features.sharingEnabled) ? (
-        <ShareMailDialog shareName={title} shareUrl={shareUrl} iconOnly />
-      ) : null}
-
-      {isInteractionFeatureEnabled(features.requestAccessEnabled) ? (
-        <RequestAccessDialog reportName={title} reportUrl={shareUrl} />
-      ) : null}
-
-      {isInteractionFeatureEnabled(features.feedbackEnabled) ? (
-        <EntityFeedbackDialog entityName={title} entityUrl={shareUrl} />
-      ) : null}
-
-      {report.editReportUrl ? (
-        <RailExternalLink href={report.editReportUrl} label="Open report editor">
-          <ArrowUpRightFromSquare className="size-5" />
-          <span className="sr-only">Open report editor</span>
-        </RailExternalLink>
-      ) : null}
-
-      {report.manageReportUrl ? (
-        <RailExternalLink href={report.manageReportUrl} label="Manage report">
-          <Settings className="size-5" />
-          <span className="sr-only">Manage report</span>
-        </RailExternalLink>
+          {report.manageReportUrl ? (
+            <RailExternalLink href={report.manageReportUrl} label="Manage report">
+              <Settings className="size-5" />
+              <span className="sr-only">Manage report</span>
+            </RailExternalLink>
+          ) : null}
+        </ActionRailGroup>
       ) : null}
     </ActionRail>
   )
