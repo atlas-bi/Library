@@ -8,6 +8,7 @@ import "./globals.css"
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
 })
 
 const sourceCodePro = Source_Code_Pro({
@@ -18,7 +19,7 @@ const sourceCodePro = Source_Code_Pro({
 const rasa = Rasa({
   variable: "--font-rasa",
   subsets: ["latin"],
-  weight: ["600"],
+  weight: ["600", "700"],
 })
 
 export const metadata: Metadata = {

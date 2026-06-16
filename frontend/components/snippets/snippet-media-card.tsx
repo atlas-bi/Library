@@ -23,6 +23,7 @@ export function SnippetMediaCard({
   tags,
   excerpt,
   footer,
+  headerLeading,
   showCertified = false,
   variant = "default",
 }: {
@@ -31,18 +32,19 @@ export function SnippetMediaCard({
   tags: string[]
   excerpt: ReactNode
   footer?: ReactNode
+  headerLeading?: ReactNode
   showCertified?: boolean
   variant?: "default" | "collection"
 }) {
   const titleNode = href ? (
-    <Link href={href} className="text-base font-semibold text-foreground hover:underline">
+    <Link href={href} className="atlas-home-card-title hover:underline">
       {title}
       {showCertified ? (
         <Award className="ml-1.5 inline size-4 text-info" aria-label="Certified" />
       ) : null}
     </Link>
   ) : (
-    <span className="text-base font-semibold text-foreground">
+    <span className="atlas-home-card-title">
       {title}
       {showCertified ? (
         <Award className="ml-1.5 inline size-4 text-info" aria-label="Certified" />
@@ -60,7 +62,10 @@ export function SnippetMediaCard({
     >
       <CardHeader className="gap-2 border-b bg-muted/20 py-3">
         <div className="flex flex-wrap items-start justify-between gap-2">
-          <div className="min-w-0 flex-1">{titleNode}</div>
+          <div className="flex min-w-0 flex-1 items-center gap-2">
+            {headerLeading}
+            <div className="min-w-0 flex-1">{titleNode}</div>
+          </div>
           <div className="flex flex-wrap justify-end gap-1">
             {tags.map((tag) => (
               <Badge key={tag} variant="secondary" className="text-xs uppercase tracking-wide">
@@ -84,7 +89,7 @@ export function SnippetMediaCard({
           </div>
         </div>
       </CardContent>
-      {footer ? <CardFooter className="border-t bg-muted/10 py-2">{footer}</CardFooter> : null}
+      {footer ? <CardFooter className="border-t bg-muted/10 p-0">{footer}</CardFooter> : null}
     </Card>
   )
 }

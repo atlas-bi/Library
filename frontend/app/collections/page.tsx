@@ -7,16 +7,17 @@ import {
 } from "@/components/collections/collection-detail-section"
 import { CollectionMetadataTable } from "@/components/collections/collection-metadata-table"
 import { CollectionSectionNav } from "@/components/collections/collection-section-nav"
+import { CollectionsListCard } from "@/components/collections/collections-list-card"
 import { MarkdownContent } from "@/components/content/markdown-content"
+import { LibraryShell } from "@/components/layout/library-shell"
 import { ProfileAnalyticsPanel } from "@/components/profile/profile-analytics-panel"
-import { CollectionSnippetCard } from "@/components/snippets/collection-snippet-card"
 import { InitiativeSnippetCard } from "@/components/snippets/initiative-snippet-card"
 import { ReportSnippetCard } from "@/components/snippets/report-snippet-card"
 import { TermSnippetCard } from "@/components/snippets/term-snippet-card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { getCurrentUser, getToken, hasPermission } from "@/lib/auth"
+import { type AuthUser, getCurrentUser, getToken, hasPermission } from "@/lib/auth"
 import { getCollectionById, getCollectionsList } from "@/lib/collections/api"
 import type { CollectionReportDto, CollectionTermDto } from "@/lib/collections/types"
 import { getUserFriendlyErrorMessage } from "@/lib/errors"
@@ -49,29 +50,48 @@ function sortByRank<T extends { rank?: number }>(items: T[]): T[] {
   return [...items].sort((a, b) => (a.rank ?? 0) - (b.rank ?? 0))
 }
 
+function resolveDisplayName(user: AuthUser | null): string {
+  if (!user) return "Guest"
+  if (user.fullname && user.fullname !== "Guest") return user.fullname
+  return user.username || "Guest"
+}
+
+function getShellProps(user: AuthUser | null) {
+  return {
+    displayName: resolveDisplayName(user),
+    isSignedIn: !!user,
+    isAdministrator: !!user && user.roles.includes("Administrator"),
+    adminEnabled: user?.adminEnabled ?? false,
+  }
+}
+
 export default async function CollectionsPage({
   searchParams,
 }: {
-  searchParams: CollectionsSearchParams
+  searchParams: Promise<CollectionsSearchParams>
 }) {
   const token = await getToken()
   if (!token) redirect("/auth/login")
 
+  const resolvedSearchParams = await searchParams
   const user = await getCurrentUser()
+  const shellProps = getShellProps(user)
   const canCreateCollection = !!user && hasPermission(user, "Create Collection")
 
-  const idRaw = getSingleValue(searchParams.id)
+  const idRaw = getSingleValue(resolvedSearchParams.id)
   if (idRaw) {
     const id = Number(idRaw)
     if (!Number.isFinite(id) || id <= 0) {
       return (
-        <div className="mx-auto max-w-4xl px-4 py-10">
-          <h1 className="text-2xl font-bold">Collection not found</h1>
-          <p className="mt-2 text-sm text-muted-foreground">Missing or invalid collection id.</p>
+        <LibraryShell {...shellProps} searchPlaceholder="search for collections..">
+          <h1 className="atlas-home-heading">Collection not found</h1>
+          <p className="text-sm text-[var(--atlas-home-muted)]">
+            Missing or invalid collection id.
+          </p>
           <Button asChild className="mt-6" variant="outline">
             <Link href="/collections">Back to collections</Link>
           </Button>
-        </div>
+        </LibraryShell>
       )
     }
 
@@ -80,7 +100,7 @@ export default async function CollectionsPage({
     if (!collection) {
       const message = getUserFriendlyErrorMessage(result.error ?? "unknown")
       return (
-        <div className="mx-auto max-w-4xl px-4 py-10">
+        <LibraryShell {...shellProps} searchPlaceholder="search for collections..">
           <Card>
             <CardHeader>
               <CardTitle className="text-xl">Unable to load collection</CardTitle>
@@ -92,7 +112,7 @@ export default async function CollectionsPage({
               </Button>
             </CardContent>
           </Card>
-        </div>
+        </LibraryShell>
       )
     }
 
@@ -105,94 +125,94 @@ export default async function CollectionsPage({
     const hasTerms = termsEnabled && sortedTerms.length > 0
 
     return (
-      <div className="min-h-screen bg-background">
-        <div className="mx-auto w-full max-w-7xl px-4 py-8">
-          <div className="mb-6 space-y-4 border-b border-border/60 pb-6">
-            <div className="text-sm text-muted-foreground">
-              <Link href="/collections" className="hover:underline">
-                Collections
-              </Link>
-            </div>
-            <div className="space-y-3">
-              <h1 className="font-serif text-4xl font-semibold tracking-tight text-foreground">
-                {collection.name}
-              </h1>
-              {collection.hidden === "Y" ? (
-                <Badge variant="outline" className="text-muted-foreground">
-                  Hidden from search
-                </Badge>
-              ) : null}
-              <CollectionSectionNav hasReports={hasReports} hasTerms={hasTerms} />
-            </div>
+      <LibraryShell {...shellProps} searchPlaceholder="search for collections..">
+        <div className="mb-6 space-y-4 border-b border-[var(--atlas-home-border-soft)] pb-6">
+          <div className="text-sm text-[var(--atlas-home-muted)]">
+            <Link href="/collections" className="text-[var(--atlas-home-link)] hover:underline">
+              Collections
+            </Link>
           </div>
-
-          <div className="grid gap-10 xl:grid-cols-[4.75rem_minmax(0,1fr)]">
-            <CollectionActionRail
-              collection={collection}
-              profilePanel={<ProfileAnalyticsPanel id={collection.id} type="collection" />}
-            />
-
-            <div className="min-w-0 space-y-12">
-              {hasInitiative && collection.initiative ? (
-                <CollectionDetailSection id="initiative" title="Owning Initiative">
-                  <div className="grid gap-4 md:grid-cols-2">
-                    <InitiativeSnippetCard initiative={collection.initiative} />
-                  </div>
-                </CollectionDetailSection>
-              ) : null}
-
-              {hasReports ? (
-                <CollectionDetailSection id="reports" title="Reports">
-                  <div className="grid gap-4 md:grid-cols-2">
-                    {sortedReports.map((report) => (
-                      <ReportSnippetCard key={report.id} report={report} />
-                    ))}
-                  </div>
-                </CollectionDetailSection>
-              ) : null}
-
-              {hasTerms ? (
-                <CollectionDetailSection id="terms" title="Terms">
-                  <div className="grid gap-4 md:grid-cols-2">
-                    {sortedTerms.map((term) => {
-                      const key =
-                        typeof term.id === "number"
-                          ? term.id
-                          : typeof term.termId === "number"
-                            ? term.termId
-                            : `${term.name ?? "term"}-${term.rank ?? 0}`
-                      return <TermSnippetCard key={key} term={term} />
-                    })}
-                  </div>
-                </CollectionDetailSection>
-              ) : null}
-
-              <CollectionDetailSection id="details" title="Details">
-                <div className="content space-y-8">
-                  {collection.description ? (
-                    <CollectionSubsection title="Description">
-                      <MarkdownContent content={collection.description} />
-                    </CollectionSubsection>
-                  ) : null}
-
-                  {collection.purpose ? (
-                    <CollectionSubsection title="Search Summary">
-                      <MarkdownContent content={collection.purpose} />
-                    </CollectionSubsection>
-                  ) : null}
-                </div>
-
-                <CollectionMetadataTable collection={collection} />
-              </CollectionDetailSection>
-            </div>
+          <div className="space-y-3">
+            <h1 className="atlas-home-heading mb-0">{collection.name}</h1>
+            {collection.hidden === "Y" ? (
+              <Badge variant="outline" className="text-muted-foreground">
+                Hidden from search
+              </Badge>
+            ) : null}
+            <CollectionSectionNav hasReports={hasReports} hasTerms={hasTerms} />
           </div>
         </div>
-      </div>
+
+        <div className="grid gap-10 xl:grid-cols-[4.75rem_minmax(0,1fr)]">
+          <CollectionActionRail
+            collection={collection}
+            profilePanel={<ProfileAnalyticsPanel id={collection.id} type="collection" />}
+          />
+
+          <div className="min-w-0 space-y-12">
+            {hasInitiative && collection.initiative ? (
+              <CollectionDetailSection id="initiative" title="Owning Initiative">
+                <div className="grid gap-4 md:grid-cols-2">
+                  <InitiativeSnippetCard initiative={collection.initiative} />
+                </div>
+              </CollectionDetailSection>
+            ) : null}
+
+            {hasReports ? (
+              <CollectionDetailSection id="reports" title="Reports">
+                <div className="grid gap-4 md:grid-cols-2">
+                  {sortedReports.map((report) => (
+                    <ReportSnippetCard
+                      key={report.id}
+                      report={report}
+                      features={collection.features}
+                    />
+                  ))}
+                </div>
+              </CollectionDetailSection>
+            ) : null}
+
+            {hasTerms ? (
+              <CollectionDetailSection id="terms" title="Terms">
+                <div className="grid gap-4 md:grid-cols-2">
+                  {sortedTerms.map((term) => {
+                    const key =
+                      typeof term.id === "number"
+                        ? term.id
+                        : typeof term.termId === "number"
+                          ? term.termId
+                          : `${term.name ?? "term"}-${term.rank ?? 0}`
+                    return <TermSnippetCard key={key} term={term} />
+                  })}
+                </div>
+              </CollectionDetailSection>
+            ) : null}
+
+            <CollectionDetailSection id="details" title="Details">
+              <div className="content space-y-8">
+                {collection.description ? (
+                  <CollectionSubsection title="Description">
+                    <MarkdownContent content={collection.description} />
+                  </CollectionSubsection>
+                ) : null}
+
+                {collection.purpose ? (
+                  <CollectionSubsection title="Search Summary">
+                    <MarkdownContent content={collection.purpose} />
+                  </CollectionSubsection>
+                ) : null}
+              </div>
+
+              <CollectionMetadataTable collection={collection} />
+            </CollectionDetailSection>
+          </div>
+        </div>
+      </LibraryShell>
     )
   }
 
-  const page = asPositiveInt(getSingleValue(searchParams.page), 1)
-  const pageSize = Math.min(100, asPositiveInt(getSingleValue(searchParams.pageSize), 20))
+  const page = asPositiveInt(getSingleValue(resolvedSearchParams.page), 1)
+  const pageSize = Math.min(100, asPositiveInt(getSingleValue(resolvedSearchParams.pageSize), 20))
   const listResult = await getCollectionsList(page, pageSize)
   const list = listResult.data
 
@@ -207,7 +227,7 @@ export default async function CollectionsPage({
           ? "API_URL is not configured. Set API_URL in .env.local to your Library backend (e.g. http://localhost:5000)."
           : null
     return (
-      <div className="mx-auto max-w-4xl px-4 py-10">
+      <LibraryShell {...shellProps} searchPlaceholder="search for collections..">
         <Card>
           <CardHeader>
             <CardTitle className="text-xl">Unable to load collections</CardTitle>
@@ -221,49 +241,41 @@ export default async function CollectionsPage({
             </Button>
           </CardContent>
         </Card>
-      </div>
+      </LibraryShell>
     )
   }
 
   const totalPages = Math.max(1, Math.ceil(list.total / list.pageSize))
 
   return (
-    <div className="mx-auto min-h-screen w-full max-w-7xl space-y-8 px-4 py-8">
-      <header className="space-y-4 border-b border-border/60 pb-6">
-        <div className="text-sm text-muted-foreground">
-          <Link href="/" className="hover:underline">
-            Home
-          </Link>
-          <span className="px-1">/</span>
-          <span>Collections</span>
-        </div>
-        <div className="flex flex-wrap items-end justify-between gap-4">
-          <h1 className="font-serif text-4xl font-semibold tracking-tight">Collections</h1>
-          {canCreateCollection ? (
-            <Button asChild size="lg">
-              <Link href="/collections/new">
-                <span className="mr-2 font-bold">+</span>
-                Create a Collection
-              </Link>
-            </Button>
-          ) : null}
-        </div>
+    <LibraryShell {...shellProps} searchPlaceholder="search for collections..">
+      <header className="space-y-3">
+        <h1 className="atlas-home-heading mb-0">Collections</h1>
+        {canCreateCollection ? (
+          <div>
+            <Link
+              href="/collections/new"
+              className="inline-flex items-center gap-1 rounded-md border border-[var(--atlas-home-border)] bg-white px-3 py-2 text-sm text-[var(--atlas-home-text)] hover:bg-[var(--atlas-home-surface-muted)]"
+            >
+              <span className="font-bold">+</span>
+              Create a Collection
+            </Link>
+          </div>
+        ) : null}
       </header>
 
       {list.collections.length === 0 ? (
-        <p className="text-sm text-muted-foreground">No collections found.</p>
+        <p className="mt-4 text-sm text-[var(--atlas-home-muted)]">No collections found.</p>
       ) : (
-        <div className="columns-1 gap-4 md:columns-2">
+        <div className="mt-4 grid gap-4 md:grid-cols-2">
           {list.collections.map((item) => (
-            <div key={item.id} className="mb-4 break-inside-avoid">
-              <CollectionSnippetCard collection={item} />
-            </div>
+            <CollectionsListCard key={item.id} collection={item} />
           ))}
         </div>
       )}
 
       {list.total > list.pageSize ? (
-        <div className="flex items-center justify-between gap-2 border-t pt-4 text-sm text-muted-foreground">
+        <div className="mt-6 flex items-center justify-between gap-2 border-t border-[var(--atlas-home-border-soft)] pt-4 text-sm text-[var(--atlas-home-muted)]">
           <span>
             {list.total} total • page {list.page} of {totalPages}
           </span>
@@ -289,6 +301,6 @@ export default async function CollectionsPage({
           </div>
         </div>
       ) : null}
-    </div>
+    </LibraryShell>
   )
 }

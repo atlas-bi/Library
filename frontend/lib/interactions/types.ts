@@ -40,6 +40,12 @@ export interface FeedbackRequest {
   description: string
 }
 
+export interface AccessRequestRequest {
+  reportName: string
+  reportUrl: string
+  directorName: string
+}
+
 export interface InteractionRecipientDto {
   id: number
   name: string

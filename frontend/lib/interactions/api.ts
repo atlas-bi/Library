@@ -4,6 +4,7 @@ import type { AppErrorCode } from "@/lib/errors"
 import { getUserFriendlyErrorMessage, mapHttpStatusToErrorCode } from "@/lib/errors"
 import { apiFetchJson } from "@/lib/http"
 import type {
+  AccessRequestRequest,
   FeedbackRequest,
   InteractionRecipientDto,
   ShareMailRequest,
@@ -132,6 +133,43 @@ export async function submitFeedback(
   }
 
   const res = await fetch(`${apiBase}/api/interactions/feedback`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(body),
+  })
+
+  if (res.ok) {
+    return { ok: true, data: (await res.json()) as unknown }
+  }
+
+  return { ok: false, message: await parseErrorMessage(res), code: toErrorCode(res.status) }
+}
+
+export async function submitAccessRequest(
+  body: AccessRequestRequest,
+): Promise<InteractionMutationResult<unknown>> {
+  const token = await getToken()
+  if (!token) {
+    return {
+      ok: false,
+      message: getUserFriendlyErrorMessage("auth_required"),
+      code: "auth_required",
+    }
+  }
+
+  const apiBase = getServerApiBase()
+  if (!apiBase) {
+    return {
+      ok: false,
+      message: getUserFriendlyErrorMessage("service_unavailable"),
+      code: "service_unavailable",
+    }
+  }
+
+  const res = await fetch(`${apiBase}/api/interactions/access-request`, {
     method: "POST",
     headers: {
       Authorization: `Bearer ${token}`,

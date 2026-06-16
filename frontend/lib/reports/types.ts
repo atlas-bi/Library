@@ -21,9 +21,20 @@ export type MaintenanceStatus = {
   schedule?: { id: number; name: string } | null
 }
 
+export type ReportAttachment = {
+  id: number
+  name?: string | null
+  path?: string | null
+  source?: string | null
+  type?: string | null
+  creationDate?: string | null
+  runUrl?: string | null
+}
+
 export type ReportDetail = {
   id: number
   name: string
+  epicMasterFile?: string | null
   displayTitle?: string | null
   displayName?: string | null
   description?: string | null
@@ -93,6 +104,7 @@ export type ReportDetail = {
   }>
 
   // document-related
+  attachments?: ReportAttachment[]
   images?: Array<{ id: number; ordinal?: number | null; source?: string | null }>
 
   // queries / terms

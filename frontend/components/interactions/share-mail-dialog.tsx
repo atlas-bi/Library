@@ -3,6 +3,7 @@
 import { Share2 } from "lucide-react"
 import { useCallback, useEffect, useState, useTransition } from "react"
 import { searchRecipientsAction, sendShareMailAction } from "@/app/interactions/actions"
+import { InteractionTooltip } from "@/components/interactions/interaction-tooltip"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -21,10 +22,12 @@ export function ShareMailDialog({
   shareName,
   shareUrl,
   iconOnly = false,
+  variant = "default",
 }: {
   shareName: string
   shareUrl: string
   iconOnly?: boolean
+  variant?: "default" | "footer"
 }) {
   const [open, setOpen] = useState(false)
   const [query, setQuery] = useState("")
@@ -32,13 +35,23 @@ export function ShareMailDialog({
     Array<{ id: number; name: string; type: string; email?: string | null }>
   >([])
   const [selected, setSelected] = useState<SelectedRecipient[]>([])
-  const [subject, setSubject] = useState(`Shared: ${shareName}`)
+  const [subject, setSubject] = useState(`[Share] ${shareName}`)
   const [message, setMessage] = useState("")
   const [status, setStatus] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [pending, startTransition] = useTransition()
 
   const fetcher = useCallback((q: string) => searchRecipientsAction(q, true), [])
+
+  useEffect(() => {
+    if (!open) return
+    setSubject(`[Share] ${shareName}`)
+    setMessage(
+      `Hi!\n\nI would like to share this report with you.\n\n[${shareName}](${shareUrl})\n\nCheck it out sometime!\nRegards!`,
+    )
+    setError(null)
+    setStatus(null)
+  }, [open, shareName, shareUrl])
 
   useEffect(() => {
     const trimmed = query.trim()
@@ -64,20 +77,34 @@ export function ShareMailDialog({
     setSuggestions([])
   }
 
+  const tooltipPlacement = variant === "footer" ? "footer" : "rail"
+
+  const trigger = iconOnly ? (
+    variant === "footer" ? (
+      <button
+        type="button"
+        className="inline-flex cursor-pointer items-center text-[var(--atlas-home-muted)] hover:text-[var(--atlas-home-link)]"
+      >
+        <Share2 className="h-4 w-4" strokeWidth={1.8} />
+        <span className="sr-only">Share</span>
+      </button>
+    ) : (
+      <Button type="button" variant="ghost" size="icon" className="atlas-action-rail-button">
+        <Share2 className="size-5" />
+        <span className="sr-only">Share</span>
+      </Button>
+    )
+  ) : (
+    <Button type="button" variant="outline" size="sm">
+      Share
+    </Button>
+  )
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        {iconOnly ? (
-          <Button type="button" variant="ghost" size="icon" className="size-10">
-            <Share2 className="size-5" />
-            <span className="sr-only">Share</span>
-          </Button>
-        ) : (
-          <Button type="button" variant="outline" size="sm">
-            Share
-          </Button>
-        )}
-      </DialogTrigger>
+      <InteractionTooltip label="Share" placement={tooltipPlacement}>
+        <DialogTrigger asChild>{trigger}</DialogTrigger>
+      </InteractionTooltip>
       <DialogContent className="max-w-lg">
         <DialogHeader>
           <DialogTitle>Share {shareName}</DialogTitle>
@@ -173,7 +200,7 @@ export function ShareMailDialog({
                 void (async () => {
                   const result = await sendShareMailAction({
                     to: selected.map(({ userId, type }) => ({ userId, type })),
-                    subject: subject.trim() || `Shared: ${shareName}`,
+                    subject: subject.trim() || `[Share] ${shareName}`,
                     message: text ? `<p>${text}</p>` : `<p>Shared via Atlas Library</p>`,
                     text: text || "Shared via Atlas Library",
                     share: true,
