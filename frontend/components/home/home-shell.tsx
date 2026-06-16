@@ -31,7 +31,6 @@ export function HomeShell({
       <HomeTabsClient
         requestContext={requestContext}
         visibleTabs={visibleTabs}
-        isSignedIn={isSignedIn}
       />
     </LibraryShell>
   )
