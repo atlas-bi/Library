@@ -38,6 +38,11 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          Jwt__Key: "sonar-ci-test-jwt-key-minimum-32-characters-required-for-build"
+          Jwt__Issuer: "atlas-sonar-ci"
+          Jwt__Audience: "atlas-sonar-ci"
+          Cors__AllowedOrigins__0: "http://localhost:3000"
+          Auth__DefaultCallbackPath: "/auth/callback"
         shell: powershell
         run: |
           .\.sonar\scanner\dotnet-sonarscanner begin /k:"atlas-bi_atlas-bi-library" /o:"atlas-bi" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"

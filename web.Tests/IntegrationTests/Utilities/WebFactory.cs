@@ -1,9 +1,11 @@
 using System;
+using System.Collections.Generic;
 using Atlas_Web.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -16,6 +18,18 @@ namespace web.Tests.IntegrationTests
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
             builder.UseEnvironment("Test");
+
+            builder.ConfigureAppConfiguration((context, config) =>
+            {
+                config.AddInMemoryCollection(new Dictionary<string, string>
+                {
+                    ["Jwt:Key"] = "test-jwt-secret-key-for-integration-tests-32-chars-minimum",
+                    ["Jwt:Issuer"] = "atlas-test-issuer",
+                    ["Jwt:Audience"] = "atlas-test-audience",
+                    ["Cors:AllowedOrigins:0"] = "http://localhost:3000",
+                    ["Auth:DefaultCallbackPath"] = "/auth/callback"
+                });
+            });
 
             builder.ConfigureTestServices(services =>
             {
