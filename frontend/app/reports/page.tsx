@@ -273,7 +273,9 @@ export default async function ReportsPage({ searchParams }: { searchParams: { id
                 <ul className="space-y-2">
                   {report.groups.map((g) => (
                     <li key={g.id} className="text-sm">
-                      {g.name ?? g.email ?? `Group ${g.id}`}
+                      <Link href={`/groups?id=${g.id}`} className="text-link hover:underline">
+                        {g.name ?? g.email ?? `Group ${g.id}`}
+                      </Link>
                     </li>
                   ))}
                 </ul>
