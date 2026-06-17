@@ -28,10 +28,19 @@ export function HomeShell({
     >
       <h1 className="atlas-home-heading">Hi, {displayName}!</h1>
 
-      <HomeTabsClient
-        requestContext={requestContext}
-        visibleTabs={visibleTabs}
-      />
+      {isSignedIn ? (
+        <HomeTabsClient requestContext={requestContext} visibleTabs={visibleTabs} />
+      ) : (
+        <section className="atlas-home-card px-6 py-7 text-sm text-[var(--atlas-home-text)]">
+          <a
+            href="/auth/login"
+            className="font-medium text-[var(--atlas-home-link)] hover:underline"
+          >
+            Sign in
+          </a>{" "}
+          to view your stars, subscriptions, report runs, and groups.
+        </section>
+      )}
     </LibraryShell>
   )
 }
