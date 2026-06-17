@@ -1,6 +1,6 @@
-@import "../node_modules/tailwindcss/index.css";
-@import "../node_modules/tw-animate-css/dist/tw-animate.css";
-@import "../node_modules/shadcn/dist/tailwind.css";
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -43,6 +43,9 @@
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
   --atlas-home-text: #4a4a4a;
+  --atlas-home-text-strong: #363636;
+  --atlas-home-body-size: 0.875rem;
+  --atlas-home-body-weight: 500;
   --atlas-home-title: #363636;
   --atlas-home-link: #485fc7;
   --atlas-home-link-hover: #363636;
@@ -66,8 +69,10 @@
   --atlas-home-thumbnail-end: #bfdbfe;
   --atlas-home-thumbnail-accent: rgba(72, 199, 142, 0.2);
   --atlas-home-navbar-height: 3.5rem;
-  --atlas-home-title-size: 2rem;
+  --atlas-home-title-size: 2.5rem;
   --atlas-home-card-footer-padding: 0.5rem 0.75rem;
+  --atlas-action-rail-width: 4.75rem;
+  --atlas-action-rail-sticky-top: calc(var(--atlas-home-navbar-height) + 1.5rem);
   --atlas-home-spacing-1: 0.5rem;
   --atlas-home-spacing-2: 0.75rem;
   --atlas-home-spacing-3: 0.875rem;
@@ -177,6 +182,9 @@
 @layer components {
   .atlas-home-surface {
     color: var(--atlas-home-text);
+    font-size: var(--atlas-home-body-size);
+    font-weight: var(--atlas-home-body-weight);
+    line-height: 1.5;
   }
 
   .atlas-home-card {
@@ -185,18 +193,40 @@
     box-shadow: var(--atlas-home-shadow);
   }
 
+  .atlas-snippet-gold-card {
+    border: 1px solid #ffd700;
+    border-radius: var(--atlas-home-radius);
+    background: white;
+    box-shadow:
+      0 0.5em 1em -0.125em rgba(255, 215, 0, 0.1),
+      0 0 0 1px rgba(255, 215, 0, 0.02);
+  }
+
   .atlas-home-heading {
     color: var(--atlas-home-title);
     font-family: var(--font-rasa), Georgia, "Times New Roman", serif;
     font-size: var(--atlas-home-title-size);
-    font-weight: 600;
-    line-height: 1.125;
+    font-weight: 700;
+    line-height: 1.2;
     margin-bottom: 1rem;
+  }
+
+  .atlas-home-card-title {
+    color: var(--atlas-home-text-strong);
+    font-size: var(--atlas-home-body-size);
+    font-weight: 700;
+    line-height: 1.5;
+  }
+
+  .atlas-home-card-title:hover {
+    color: var(--atlas-home-text-strong);
+    text-decoration: underline;
   }
 
   .atlas-home-brand {
     color: var(--atlas-home-logo-text);
     align-items: center;
+    font-weight: 500;
   }
 
   .atlas-home-brand:hover {
@@ -274,11 +304,52 @@
 
   .atlas-home-tab-nav {
     color: var(--atlas-home-link);
+    font-size: 0.9rem;
+    font-weight: var(--atlas-home-body-weight);
     margin-bottom: 1.25rem;
   }
 
-  .atlas-home-footer p {
+  .atlas-home-tab-link {
+    color: var(--atlas-home-link);
+    font-weight: var(--atlas-home-body-weight);
+  }
+
+  .atlas-home-tab-link-active {
+    color: var(--atlas-home-text-strong);
+    font-weight: 600;
+  }
+
+  .atlas-home-footer-subtitle {
+    color: var(--atlas-home-text-strong);
+    font-size: var(--atlas-home-body-size);
+    font-weight: var(--atlas-home-body-weight);
     line-height: 1.5;
+  }
+
+  .atlas-home-footer-copyright {
+    color: var(--atlas-home-muted);
+    font-size: var(--atlas-home-body-size);
+    font-weight: var(--atlas-home-body-weight);
+    line-height: 1.5;
+  }
+
+  .atlas-home-footer-heading {
+    color: var(--atlas-home-text-strong);
+    font-size: 0.95rem;
+    font-weight: 700;
+    line-height: 1.5;
+  }
+
+  .atlas-home-footer-link {
+    color: var(--atlas-home-link);
+    font-size: var(--atlas-home-body-size);
+    font-weight: var(--atlas-home-body-weight);
+    line-height: 1.5;
+  }
+
+  .atlas-home-footer-link:hover {
+    color: var(--atlas-home-link-hover);
+    text-decoration: underline;
   }
 
   .atlas-home-filter-button {
@@ -321,6 +392,52 @@
     fill: var(--atlas-home-star);
   }
 
+  .atlas-action-rail {
+    top: var(--atlas-action-rail-sticky-top);
+    display: flex;
+    width: var(--atlas-action-rail-width);
+    flex-direction: column;
+    align-items: center;
+    gap: 0.375rem;
+    border-radius: var(--atlas-home-radius);
+    border: 1px solid var(--atlas-home-border-soft);
+    background: rgba(255, 255, 255, 0.96);
+    padding: 0.625rem 0.5rem;
+    box-shadow: 0 10px 24px rgba(10, 10, 10, 0.08);
+  }
+
+  .atlas-action-rail-label {
+    margin-bottom: 0.25rem;
+    width: 100%;
+    border-bottom: 1px solid var(--atlas-home-border-soft);
+    padding-bottom: 0.5rem;
+    text-align: center;
+    font-size: 0.625rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--atlas-home-muted);
+  }
+
+  .atlas-action-rail-button {
+    height: 2.5rem;
+    width: 2.5rem;
+    color: var(--atlas-home-muted);
+  }
+
+  .atlas-action-rail-button:hover {
+    color: var(--atlas-home-link);
+  }
+
+  .atlas-action-rail-group-separated {
+    margin-top: 0.125rem;
+    border-top: 1px solid var(--atlas-home-border-soft);
+  }
+
+  .atlas-footer-icon-group {
+    color: var(--atlas-home-muted);
+  }
+
   .atlas-home-table {
     width: 100%;
     text-align: left;
@@ -329,7 +446,8 @@
   }
 
   .atlas-home-table thead {
-    color: var(--atlas-home-title);
+    color: var(--atlas-home-text-strong);
+    font-weight: 600;
   }
 
   .atlas-home-table th,

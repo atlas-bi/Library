@@ -236,9 +236,7 @@ export default async function ReportsPage({
                 <ul className="space-y-2">
                   {report.groups.map((group) => (
                     <li key={group.id} className="text-sm">
-                      <Link href={`/groups?id=${group.id}`} className="text-link hover:underline">
-                        {group.name ?? group.email ?? `Group ${group.id}`}
-                      </Link>
+                      {group.name ?? group.email ?? `Group ${group.id}`}
                     </li>
                   ))}
                 </ul>

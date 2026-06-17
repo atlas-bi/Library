@@ -32,10 +32,10 @@ export function HomeFooter() {
               library
             </h2>
           </Link>
-          <p className="text-[0.8125rem] text-[var(--atlas-home-text)]">
+          <p className="atlas-home-footer-subtitle mt-4 mb-2">
             Atlas was created by the Riverside Healthcare Analytics team.
           </p>
-          <p className="text-[0.8125rem] text-[var(--atlas-home-muted)]">
+          <p className="atlas-home-footer-copyright mt-4">
             &copy; {year} Example Healthcare | Release 3.15.2-alpha.1
           </p>
         </div>
@@ -45,16 +45,14 @@ export function HomeFooter() {
         <div className="grid content-start gap-1.5 text-center">
           {footerSections.map((section) => (
             <div key={section.title} className="space-y-1">
-              <strong className="block text-[0.95rem] font-semibold text-[var(--atlas-home-title)]">
-                {section.title}
-              </strong>
+              <strong className="atlas-home-footer-heading block">{section.title}</strong>
               {section.links.map((link) => (
                 <a
                   key={link.label}
                   href={link.href}
                   target="_blank"
                   rel="noreferrer"
-                  className="block text-[0.8125rem] text-[var(--atlas-home-link)] hover:text-[var(--atlas-home-link-hover)] hover:underline"
+                  className="atlas-home-footer-link block"
                 >
                   {link.label}
                 </a>
