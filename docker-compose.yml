@@ -67,6 +67,7 @@ services:
       - sqlserver
     environment:
       PORT: ${WEB_PORT:-5000}
+      Demo: ${DEMO:-true}
       SEED_DEMO: ${SEED_DEMO:-true}
       DEMO_ADMIN_USERNAME: ${DEMO_ADMIN_USERNAME:-local-admin}
       Jwt__Key: ${JWT_KEY}
