@@ -32,6 +32,10 @@ export interface ProfileBarItemDto {
   percent: number
   href?: string | null
   title?: string | null
+  titleOne?: string | null
+  titleTwo?: string | null
+  date?: string | null
+  dateTitle?: string | null
   dateLabel?: string | null
   [key: string]: unknown
 }
@@ -55,6 +59,8 @@ export interface ProfileSubscriptionDto {
   userId?: number
   userName?: string | null
   emailList?: string | null
+  description?: string | null
   lastStatus?: string | null
+  lastRunTime?: string | null
   subscriptionTo?: string | null
 }
