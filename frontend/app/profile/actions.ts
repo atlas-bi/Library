@@ -12,6 +12,7 @@ import {
 import type {
   ProfileBarItemDto,
   ProfileChartResponseDto,
+  ProfileFilters,
   ProfileRunListItemDto,
   ProfileStarUserDto,
   ProfileSubscriptionDto,
@@ -30,8 +31,9 @@ export type ProfileAnalyticsData = {
 export async function loadProfileAnalyticsAction(
   id: number,
   type: string,
+  options?: Partial<Omit<ProfileFilters, "id" | "type">>,
 ): Promise<{ data: ProfileAnalyticsData | null; error: string | null }> {
-  const filters = { id, type }
+  const filters: ProfileFilters = { id, type, ...options }
   const [
     chartResult,
     usersResult,

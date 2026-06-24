@@ -40,7 +40,7 @@ export function EntityProfileSheet({
       <InteractionTooltip label={tooltipLabel} placement={tooltipPlacement}>
         <SheetTrigger asChild>{trigger}</SheetTrigger>
       </InteractionTooltip>
-      <SheetContent side="right" className="w-full overflow-y-auto sm:max-w-xl">
+      <SheetContent side="right" className="w-full overflow-y-auto sm:max-w-4xl lg:max-w-5xl">
         <SheetHeader>
           <SheetTitle>Profile — {entityName}</SheetTitle>
         </SheetHeader>
