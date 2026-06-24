@@ -13,7 +13,6 @@ const nextConfig: NextConfig = {
       "/profile",
       "/initiatives",
       "/terms",
-      "/users",
       "/users/settings",
       "/about_analytics",
     ]
