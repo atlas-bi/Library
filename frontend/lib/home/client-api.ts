@@ -130,6 +130,17 @@ function normalizeStarsPanel(payload: {
   }
 }
 
+function isHomeStarsPanel(payload: unknown): payload is HomeStarsPanel {
+  if (!payload || typeof payload !== "object") return false
+  const panel = payload as Partial<HomeStarsPanel>
+  return (
+    panel.kind === "stars" &&
+    Array.isArray(panel.folders) &&
+    Array.isArray(panel.filters) &&
+    Array.isArray(panel.cards)
+  )
+}
+
 function normalizeSubscriptionsPanel(
   payload: Array<{
     reportId?: number | null
@@ -215,7 +226,12 @@ export async function fetchHomeTabPanel(tabId: HomeTabId) {
 
   switch (tabId) {
     case "stars":
-      return { ok: true as const, data: normalizeStarsPanel(panelPayload as Parameters<typeof normalizeStarsPanel>[0]) }
+      return {
+        ok: true as const,
+        data: isHomeStarsPanel(panelPayload)
+          ? panelPayload
+          : normalizeStarsPanel(panelPayload as Parameters<typeof normalizeStarsPanel>[0]),
+      }
     case "subscriptions":
       return {
         ok: true as const,

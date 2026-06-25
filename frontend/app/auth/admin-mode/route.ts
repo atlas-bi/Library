@@ -11,6 +11,7 @@ export async function GET(request: NextRequest) {
     `${parsedReturnTo.pathname}${parsedReturnTo.search}${parsedReturnTo.hash}` || "/",
     publicOrigin,
   )
+  redirectUrl.searchParams.set("_admin", String(Date.now()))
 
   if (!token) {
     return NextResponse.redirect(redirectUrl)
@@ -22,14 +23,18 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    await fetch(`${apiBase}/api/users/me/admin-mode/toggle`, {
+    const result = await fetch(`${apiBase}/api/users/me/admin-mode/toggle`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
       },
       cache: "no-store",
     })
+    if (!result.ok) {
+      redirectUrl.searchParams.set("adminToggle", "failed")
+    }
   } catch {
+    redirectUrl.searchParams.set("adminToggle", "failed")
     return NextResponse.redirect(redirectUrl)
   }
 

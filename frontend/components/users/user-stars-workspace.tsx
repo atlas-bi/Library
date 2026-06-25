@@ -220,7 +220,7 @@ export function UserStarsWorkspace({ stars }: { stars: UserStars }) {
   if (stars.items.length === 0 && stars.suggestedReports.length > 0) {
     return (
       <div className="space-y-4">
-        <h3 className="text-xl font-semibold">
+        <h3 className="text-2xl font-semibold text-[var(--atlas-home-text-strong)]">
           You don&apos;t have any favorites! Here&apos;s some reports you&apos;ve used.
         </h3>
         <div className="grid gap-4 md:grid-cols-2">
@@ -259,25 +259,25 @@ export function UserStarsWorkspace({ stars }: { stars: UserStars }) {
 
   if (stars.items.length === 0) {
     return (
-      <p className="text-sm text-muted-foreground">
+      <div className="atlas-home-card min-h-[72px] px-6 py-6 text-sm text-[var(--atlas-home-text)]">
         You don&apos;t have any favorites! Search to get started.
-      </p>
+      </div>
     )
   }
 
   return (
     <div className={cn("space-y-5", isPending && "opacity-70")}>
       {quickFilters.length > 0 ? (
-        <div className="flex flex-wrap items-center gap-4">
-          <div className="inline-flex items-center gap-2 text-sm font-semibold">
-            <Search className="h-4 w-4 text-muted-foreground" />
+        <div className="my-4 flex flex-wrap items-center gap-4">
+          <div className="inline-flex items-center gap-2 text-sm font-semibold text-[var(--atlas-home-text-strong)]">
+            <Search className="h-4 w-4 text-[var(--atlas-home-muted)]" strokeWidth={1.8} />
             Quick Filter
           </div>
           <Input
             value={textFilter}
             onChange={(event) => setTextFilter(event.target.value)}
             placeholder="type to filter..."
-            className="max-w-xs"
+            className="atlas-home-search-shell h-10 max-w-xs bg-white px-3 text-sm shadow-none outline-none"
             aria-label="Filter starred items"
           />
           {quickFilters.map((filter) => (
@@ -287,7 +287,7 @@ export function UserStarsWorkspace({ stars }: { stars: UserStars }) {
               size="sm"
               variant={typeFilter === filter.id ? "default" : "outline"}
               onClick={() => setTypeFilter((current) => (current === filter.id ? null : filter.id))}
-              className="gap-2"
+              className="atlas-home-filter-button gap-2 rounded-full px-4 py-2 text-sm"
             >
               {filterIcon(filter.id)}
               {filter.label}
@@ -302,17 +302,17 @@ export function UserStarsWorkspace({ stars }: { stars: UserStars }) {
             type="button"
             onClick={() => setFolderFilter("all")}
             className={cn(
-              "relative w-full rounded-md border px-4 py-4 text-left transition-colors",
+              "atlas-home-card relative w-full border border-transparent px-4 py-4 text-left transition-colors",
               folderFilter === "all"
-                ? "border-primary bg-primary/5 font-semibold"
-                : "hover:bg-muted/50",
+                ? "font-bold"
+                : "font-medium hover:bg-[var(--atlas-home-surface-muted)]",
             )}
           >
-            <span className="inline-flex items-center gap-3">
-              <FolderOpen className="h-5 w-5" />
+            <span className="inline-flex items-center gap-3 text-[var(--atlas-home-text)]">
+              <FolderOpen className="h-5 w-5" strokeWidth={1.8} />
               All
             </span>
-            <span className="absolute -top-2 -right-2 rounded-full bg-primary px-2 py-0.5 text-xs text-primary-foreground">
+            <span className="atlas-home-folder-badge absolute -top-3 -right-3 rounded-full px-2 py-0.5 text-xs">
               {stars.summary.totalCount}
             </span>
           </button>
@@ -322,17 +322,17 @@ export function UserStarsWorkspace({ stars }: { stars: UserStars }) {
               type="button"
               onClick={() => setFolderFilter("unsorted")}
               className={cn(
-                "relative w-full rounded-md border px-4 py-4 text-left transition-colors",
+                "atlas-home-card relative w-full border border-transparent px-4 py-4 text-left transition-colors",
                 folderFilter === "unsorted"
-                  ? "border-primary bg-primary/5 font-semibold"
-                  : "hover:bg-muted/50",
+                  ? "font-bold"
+                  : "font-medium hover:bg-[var(--atlas-home-surface-muted)]",
               )}
             >
-              <span className="inline-flex items-center gap-3">
-                <Folder className="h-5 w-5" />
+              <span className="inline-flex items-center gap-3 text-[var(--atlas-home-text)]">
+                <Folder className="h-5 w-5" strokeWidth={1.8} />
                 Unsorted
               </span>
-              <span className="absolute -top-2 -right-2 rounded-full bg-primary px-2 py-0.5 text-xs text-primary-foreground">
+              <span className="atlas-home-folder-badge absolute -top-3 -right-3 rounded-full px-2 py-0.5 text-xs">
                 {stars.summary.unsortedCount}
               </span>
             </button>
@@ -344,17 +344,17 @@ export function UserStarsWorkspace({ stars }: { stars: UserStars }) {
                 type="button"
                 onClick={() => setFolderFilter(folder.id)}
                 className={cn(
-                  "relative w-full rounded-md border px-4 py-4 text-left transition-colors",
+                  "atlas-home-card relative w-full border border-transparent px-4 py-4 text-left transition-colors",
                   folderFilter === folder.id
-                    ? "border-primary bg-primary/5 font-semibold"
-                    : "hover:bg-muted/50",
+                    ? "font-bold"
+                    : "font-medium hover:bg-[var(--atlas-home-surface-muted)]",
                 )}
               >
-                <span className="inline-flex items-center gap-3">
-                  <Folder className="h-5 w-5" />
+                <span className="inline-flex items-center gap-3 text-[var(--atlas-home-text)]">
+                  <Folder className="h-5 w-5" strokeWidth={1.8} />
                   {folder.name?.trim() || `Folder ${folder.id}`}
                 </span>
-                <span className="absolute -top-2 -right-2 rounded-full bg-primary px-2 py-0.5 text-xs text-primary-foreground">
+                <span className="atlas-home-folder-badge absolute -top-3 -right-3 rounded-full px-2 py-0.5 text-xs">
                   {folder.itemCount}
                 </span>
               </button>
@@ -403,8 +403,10 @@ export function UserStarsWorkspace({ stars }: { stars: UserStars }) {
           ))}
 
           {stars.canEditWorkspace && stars.permissions.canCreateFolders ? (
-            <div className="space-y-2 rounded-md border p-3">
-              <div className="text-sm font-medium">New folder</div>
+            <div className="atlas-home-card space-y-2 p-3">
+              <div className="text-sm font-medium text-[var(--atlas-home-text-strong)]">
+                New folder
+              </div>
               <Input
                 value={newFolderName}
                 onChange={(event) => setNewFolderName(event.target.value)}
@@ -418,8 +420,10 @@ export function UserStarsWorkspace({ stars }: { stars: UserStars }) {
           ) : null}
 
           {renameFolderId != null ? (
-            <div className="space-y-2 rounded-md border p-3">
-              <div className="text-sm font-medium">Rename folder</div>
+            <div className="atlas-home-card space-y-2 p-3">
+              <div className="text-sm font-medium text-[var(--atlas-home-text-strong)]">
+                Rename folder
+              </div>
               <Input
                 value={renameFolderName}
                 onChange={(event) => setRenameFolderName(event.target.value)}
@@ -485,7 +489,9 @@ export function UserStarsWorkspace({ stars }: { stars: UserStars }) {
               </div>
             ))
           ) : (
-            <p className="text-sm text-muted-foreground">No favorites match the current filters.</p>
+            <div className="atlas-home-card px-6 py-7 text-sm text-[var(--atlas-home-text)]">
+              No favorites match the current filters.
+            </div>
           )}
         </div>
       </div>

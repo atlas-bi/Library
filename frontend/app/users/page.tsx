@@ -81,10 +81,10 @@ export default async function UsersPage({
         isAdministrator={currentUser?.roles.includes("Administrator") ?? false}
         adminEnabled={currentUser?.adminEnabled ?? false}
       >
-        <h1 className="mb-3 font-serif text-4xl font-semibold tracking-tight">
+        <h1 className="atlas-home-heading">
           {denied ? "Access denied" : "Unable to load user profile"}
         </h1>
-        <p className="mb-4 text-sm text-muted-foreground">
+        <p className="mb-4 text-sm text-[var(--atlas-home-muted)]">
           {denied ? "You do not have access to this page." : message}
         </p>
         <Button asChild variant="outline">
@@ -122,19 +122,8 @@ export default async function UsersPage({
       isAdministrator={currentUser?.roles.includes("Administrator") ?? false}
       adminEnabled={currentUser?.adminEnabled ?? false}
     >
-      <header className="mb-6 space-y-4">
-        <h1 className="font-serif text-5xl font-semibold tracking-tight">{title}</h1>
-        {page.permissions.canToggleAdminMode ? (
-          <div>
-            <Button asChild variant="outline" size="sm" className="rounded-full">
-              <Link
-                href={`/auth/admin-mode?returnTo=${encodeURIComponent(`/users?id=${resolvedId}`)}`}
-              >
-                Toggle admin mode
-              </Link>
-            </Button>
-          </div>
-        ) : null}
+      <header>
+        <h1 className="atlas-home-heading">{title}</h1>
       </header>
 
       <UserPageTabs
@@ -144,7 +133,9 @@ export default async function UsersPage({
           stars ? (
             <UserStarsWorkspace stars={stars} />
           ) : (
-            <p className="text-sm text-muted-foreground">Unable to load stars workspace.</p>
+            <div className="atlas-home-card px-6 py-7 text-sm text-[var(--atlas-home-text)]">
+              Unable to load stars workspace.
+            </div>
           )
         }
         subscriptions={<UserSubscriptionsTable rows={subscriptions} />}
@@ -162,7 +153,7 @@ export default async function UsersPage({
         analytics={
           page.permissions.canViewAnalytics ? (
             <div className="space-y-4">
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm text-[var(--atlas-home-muted)]">
                 Site analytics for this user are available in the Analytics application.
               </p>
               <Button asChild variant="outline">
@@ -170,7 +161,9 @@ export default async function UsersPage({
               </Button>
             </div>
           ) : (
-            <p className="text-sm text-muted-foreground">Analytics are not available.</p>
+            <div className="atlas-home-card px-6 py-7 text-sm text-[var(--atlas-home-text)]">
+              Analytics are not available.
+            </div>
           )
         }
       />
