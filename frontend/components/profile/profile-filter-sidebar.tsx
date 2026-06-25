@@ -30,7 +30,7 @@ export function ProfileFilterSidebar({
       </div>
 
       <div className="space-y-2">
-        <div className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+        <div className="text-xs font-semibold tracking-wide text-muted-foreground uppercase">
           Date range
         </div>
         <ProfileDateRangeSelect

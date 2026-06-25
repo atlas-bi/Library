@@ -109,7 +109,9 @@ export function ProfileFullView({
         isPending && "opacity-70 transition-opacity",
       )}
     >
-      {showTitle ? <h2 className="text-2xl font-semibold tracking-tight">Report Activity</h2> : null}
+      {showTitle ? (
+        <h2 className="text-2xl font-semibold tracking-tight">Report Activity</h2>
+      ) : null}
 
       <div className="grid gap-6 lg:grid-cols-[minmax(220px,1fr)_minmax(0,3fr)]">
         <ProfileFilterSidebar

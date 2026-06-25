@@ -1,8 +1,9 @@
 import { type NextRequest, NextResponse } from "next/server"
+import { getAuthRedirectOrigin } from "../redirect-origin"
 
 export function GET(request: NextRequest) {
-  const publicOrigin = process.env.AUTH_RETURN_URL_ORIGIN ?? request.nextUrl.origin
-  const response = NextResponse.redirect(new URL("/", publicOrigin))
+  const redirectOrigin = getAuthRedirectOrigin(request.url)
+  const response = NextResponse.redirect(new URL("/", redirectOrigin))
   response.cookies.set({
     name: "atlas_token",
     value: "",

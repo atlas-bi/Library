@@ -34,9 +34,9 @@ export interface ProfileBarItemDto {
   title?: string | null
   titleOne?: string | null
   titleTwo?: string | null
-  dateLabel?: string | null
   date?: string | null
   dateTitle?: string | null
+  dateLabel?: string | null
   [key: string]: unknown
 }
 
