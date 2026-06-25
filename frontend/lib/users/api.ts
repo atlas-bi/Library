@@ -149,8 +149,7 @@ export function createUserFolder(
   isCurrentUser: boolean,
   body: CreateUserFavoriteFolderRequest,
 ) {
-  const base = workspaceBasePath(userId, isCurrentUser)
-  const path = isCurrentUser ? `${base}/folders` : `/api/users/${userId}/folders`
+  const path = isCurrentUser ? "/api/users/me/folders" : `/api/users/${userId}/folders`
   return authorizedMutation<UserFavoriteFolder>(path, {
     method: "POST",
     body: JSON.stringify(body),

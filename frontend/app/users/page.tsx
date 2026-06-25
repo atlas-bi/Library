@@ -1,6 +1,6 @@
 import Link from "next/link"
 import { redirect } from "next/navigation"
-import { ProfileFullView } from "@/components/profile/profile-full-view"
+import { ProfileAnalyticsPanel } from "@/components/profile/profile-analytics-panel"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { UserGroupsTable } from "@/components/users/user-groups-table"
@@ -125,12 +125,7 @@ export default async function UsersPage({ searchParams }: { searchParams: UsersS
           subscriptions={<UserSubscriptionsTable rows={subscriptions} />}
           groups={<UserGroupsTable rows={groups} canViewGroups={page.permissions.canViewGroups} />}
           activity={
-            <ProfileFullView
-              id={resolvedId}
-              type="user"
-              variant="page"
-              userProfilesEnabled={page.features.userProfilesEnabled}
-            />
+            <ProfileAnalyticsPanel id={resolvedId} type="user" />
           }
           runList={
             <UserRunListPanel userId={resolvedId} reportTypeIds={page.defaultReportTypeIds} />
