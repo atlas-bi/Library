@@ -29,12 +29,17 @@ function getSingleValue(value: string | string[] | undefined): string | undefine
   return undefined
 }
 
-export default async function UsersPage({ searchParams }: { searchParams: UsersSearchParams }) {
+export default async function UsersPage({
+  searchParams,
+}: {
+  searchParams: Promise<UsersSearchParams>
+}) {
   const token = await getToken()
   if (!token) redirect("/auth/login")
 
   const currentUser = await getCurrentUser()
-  const idRaw = getSingleValue(searchParams.id)
+  const resolvedSearchParams = await searchParams
+  const idRaw = getSingleValue(resolvedSearchParams.id)
   const resolvedId = idRaw ? Number(idRaw) : Number(currentUser?.userId)
   if (!Number.isFinite(resolvedId) || resolvedId <= 0) {
     redirect("/")

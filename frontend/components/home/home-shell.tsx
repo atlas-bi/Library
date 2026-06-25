@@ -1,13 +1,12 @@
 import { HomeTabsClient } from "@/components/home/home-tabs-client"
 import { LibraryShell } from "@/components/layout/library-shell"
-import type { HomeTabRequestContext, HomeTabsVisibility } from "@/lib/home/types"
+import type { HomeTabsVisibility } from "@/lib/home/types"
 
 type HomeShellProps = {
   displayName: string
   isSignedIn: boolean
   isAdministrator: boolean
   adminEnabled: boolean
-  requestContext: HomeTabRequestContext
   visibleTabs: HomeTabsVisibility
 }
 
@@ -16,7 +15,6 @@ export function HomeShell({
   isSignedIn,
   isAdministrator,
   adminEnabled,
-  requestContext,
   visibleTabs,
 }: HomeShellProps) {
   return (
@@ -29,7 +27,7 @@ export function HomeShell({
       <h1 className="atlas-home-heading">Hi, {displayName}!</h1>
 
       {isSignedIn ? (
-        <HomeTabsClient requestContext={requestContext} visibleTabs={visibleTabs} />
+        <HomeTabsClient visibleTabs={visibleTabs} />
       ) : (
         <section className="atlas-home-card px-6 py-7 text-sm text-[var(--atlas-home-text)]">
           <a

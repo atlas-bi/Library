@@ -49,4 +49,54 @@ describe("HomeStarsPanelView", () => {
     expect(screen.getByRole("link", { name: "Manage" })).toBeInTheDocument()
     expect(screen.getByLabelText("Open report profile")).toBeInTheDocument()
   })
+
+  it("renders the plain empty-state message when there are no favorites or suggestions", () => {
+    render(
+      <HomeStarsPanelView
+        panel={{
+          kind: "stars",
+          title: "Stars",
+          emptyMessage: "You don't have any favorites! Search to get started.",
+          folders: [{ id: "all", label: "All", count: 0 }],
+          filters: [],
+          cards: [],
+        }}
+      />,
+    )
+
+    expect(
+      screen.getByText("You don't have any favorites! Search to get started."),
+    ).toBeInTheDocument()
+  })
+
+  it("renders the Razor-style suggestion fallback when suggested reports are present", () => {
+    render(
+      <HomeStarsPanelView
+        panel={{
+          kind: "stars",
+          title: "Stars",
+          folders: [{ id: "all", label: "All", count: 0 }],
+          filters: [],
+          cards: [
+            {
+              id: 9,
+              href: "/reports?id=9",
+              title: "Operations Summary",
+              typeLabel: "Report",
+              description: "Open to view details.",
+              canOpenDetails: true,
+              isStarred: false,
+            },
+          ],
+          isSuggestionFallback: true,
+          suggestionHeading: "You don't have any favorites! Here's some reports you've used.",
+        }}
+      />,
+    )
+
+    expect(
+      screen.getByText("You don't have any favorites! Here's some reports you've used."),
+    ).toBeInTheDocument()
+    expect(screen.getByText("Operations Summary")).toBeInTheDocument()
+  })
 })
