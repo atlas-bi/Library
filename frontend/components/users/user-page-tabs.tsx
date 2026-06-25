@@ -1,9 +1,10 @@
 "use client"
 
 import type { ReactNode } from "react"
-import { useMemo, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import {
   getDefaultUserTab,
+  getHashUserTab,
   getUserTabs,
   UserSectionNav,
   type UserTabId,
@@ -37,8 +38,23 @@ export function UserPageTabs({
     getDefaultUserTab(isCurrentUser, visibleTabs),
   )
 
+  useEffect(() => {
+    const syncFromHash = () => {
+      const hashTab = getHashUserTab(window.location.hash, visibleTabs)
+      if (hashTab) {
+        setActiveTab(hashTab)
+        return
+      }
+      setActiveTab(getDefaultUserTab(isCurrentUser, visibleTabs))
+    }
+
+    syncFromHash()
+    window.addEventListener("hashchange", syncFromHash)
+    return () => window.removeEventListener("hashchange", syncFromHash)
+  }, [isCurrentUser, visibleTabs])
+
   return (
-    <div className="space-y-4">
+    <div className="space-y-5">
       <UserSectionNav activeTab={activeTab} tabs={visibleTabs} onTabChange={setActiveTab} />
       <UserTabPanel tab="stars" activeTab={activeTab}>
         {stars}

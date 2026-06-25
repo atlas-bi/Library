@@ -1,6 +1,8 @@
 "use client"
 
 import {
+  ArrowDown,
+  ArrowUp,
   BookOpen,
   ChartBar,
   Folder,
@@ -17,10 +19,20 @@ import { useMemo, useState, useTransition } from "react"
 import {
   createUserFolderAction,
   deleteUserFolderAction,
+  reorderUserFavoritesAction,
+  reorderUserFoldersAction,
+  updateUserFavoriteFolderAssignmentAction,
   updateUserFolderAction,
 } from "@/app/users/actions"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import { UserFavoriteCard } from "@/components/users/user-favorite-card"
 import type { UserStars } from "@/lib/users/types"
 import { cn } from "@/lib/utils"
@@ -47,6 +59,12 @@ function filterIcon(type: string) {
 }
 
 export function UserStarsWorkspace({ stars }: { stars: UserStars }) {
+  const [folders, setFolders] = useState(() =>
+    [...stars.folders].sort((a, b) => (a.rank ?? 0) - (b.rank ?? 0)),
+  )
+  const [items, setItems] = useState(() =>
+    [...stars.items].sort((a, b) => (a.rank ?? 0) - (b.rank ?? 0)),
+  )
   const [folderFilter, setFolderFilter] = useState<FolderFilter>("all")
   const [typeFilter, setTypeFilter] = useState<string | null>(null)
   const [textFilter, setTextFilter] = useState("")
@@ -71,7 +89,7 @@ export function UserStarsWorkspace({ stars }: { stars: UserStars }) {
 
   const filteredItems = useMemo(() => {
     const query = textFilter.trim().toLowerCase()
-    return [...stars.items]
+    return [...items]
       .filter((item) => {
         if (folderFilter === "unsorted") return item.folderId == null
         if (typeof folderFilter === "number") return item.folderId === folderFilter
@@ -96,10 +114,74 @@ export function UserStarsWorkspace({ stars }: { stars: UserStars }) {
         return haystack.includes(query)
       })
       .sort((a, b) => (a.rank ?? 0) - (b.rank ?? 0))
-  }, [folderFilter, stars.items, textFilter, typeFilter])
+  }, [folderFilter, items, textFilter, typeFilter])
 
   const refreshPage = () => {
     window.location.reload()
+  }
+
+  const persistFolderOrder = (nextFolders: typeof folders) => {
+    startTransition(async () => {
+      const payload = nextFolders.map((folder, index) => ({
+        folderId: String(folder.id),
+        folderRank: index + 1,
+      }))
+      const result = await reorderUserFoldersAction(stars.userId, stars.isCurrentUser, payload)
+      if (result.ok) refreshPage()
+    })
+  }
+
+  const persistFavoriteOrder = (nextItems: typeof items) => {
+    startTransition(async () => {
+      const payload = nextItems.map((item, index) => ({
+        favoriteId: String(item.starId),
+        favoriteType: item.type ?? "",
+        favoriteRank: index + 1,
+      }))
+      const result = await reorderUserFavoritesAction(stars.userId, stars.isCurrentUser, payload)
+      if (result.ok) refreshPage()
+    })
+  }
+
+  const moveFolder = (folderId: number, direction: -1 | 1) => {
+    const index = folders.findIndex((folder) => folder.id === folderId)
+    const targetIndex = index + direction
+    if (index < 0 || targetIndex < 0 || targetIndex >= folders.length) return
+    const nextFolders = [...folders]
+    const [folder] = nextFolders.splice(index, 1)
+    nextFolders.splice(targetIndex, 0, folder)
+    setFolders(nextFolders)
+    persistFolderOrder(nextFolders)
+  }
+
+  const moveFavorite = (favoriteId: number, direction: -1 | 1) => {
+    const scopedItems = filteredItems
+    const index = scopedItems.findIndex((item) => item.starId === favoriteId)
+    const targetIndex = index + direction
+    if (index < 0 || targetIndex < 0 || targetIndex >= scopedItems.length) return
+
+    const current = scopedItems[index]
+    const target = scopedItems[targetIndex]
+    const sourceIndex = items.findIndex((item) => item.starId === current.starId)
+    const destinationIndex = items.findIndex((item) => item.starId === target.starId)
+    if (sourceIndex < 0 || destinationIndex < 0) return
+
+    const nextItems = [...items]
+    const [moved] = nextItems.splice(sourceIndex, 1)
+    nextItems.splice(destinationIndex, 0, moved)
+    setItems(nextItems)
+    persistFavoriteOrder(nextItems)
+  }
+
+  const assignFavoriteFolder = (favoriteId: number, favoriteType: string, folderId: string) => {
+    startTransition(async () => {
+      const result = await updateUserFavoriteFolderAssignmentAction(stars.userId, stars.isCurrentUser, {
+        favoriteId,
+        favoriteType,
+        folderId: folderId === "unsorted" ? null : Number(folderId),
+      })
+      if (result.ok) refreshPage()
+    })
   }
 
   const handleCreateFolder = () => {
@@ -256,7 +338,7 @@ export function UserStarsWorkspace({ stars }: { stars: UserStars }) {
             </button>
           ) : null}
 
-          {stars.folders.map((folder) => (
+          {folders.map((folder, index) => (
             <div key={folder.id} className="space-y-2">
               <button
                 type="button"
@@ -277,7 +359,7 @@ export function UserStarsWorkspace({ stars }: { stars: UserStars }) {
                 </span>
               </button>
               {stars.canEditWorkspace && folder.canManage ? (
-                <div className="flex gap-2 px-1">
+                <div className="flex flex-wrap gap-2 px-1">
                   <Button
                     type="button"
                     size="sm"
@@ -296,6 +378,24 @@ export function UserStarsWorkspace({ stars }: { stars: UserStars }) {
                     onClick={() => handleDeleteFolder(folder.id)}
                   >
                     <Trash2 className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant="outline"
+                    disabled={index === 0}
+                    onClick={() => moveFolder(folder.id, -1)}
+                  >
+                    <ArrowUp className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant="outline"
+                    disabled={index === folders.length - 1}
+                    onClick={() => moveFolder(folder.id, 1)}
+                  >
+                    <ArrowDown className="h-4 w-4" />
                   </Button>
                 </div>
               ) : null}
@@ -333,8 +433,56 @@ export function UserStarsWorkspace({ stars }: { stars: UserStars }) {
 
         <div className="space-y-4">
           {filteredItems.length > 0 ? (
-            filteredItems.map((item) => (
-              <UserFavoriteCard key={`${item.type}-${item.starId}`} item={item} />
+            filteredItems.map((item, index) => (
+              <div key={`${item.type}-${item.starId}`} className="space-y-2">
+                {(stars.canEditWorkspace || item.canReorder) && stars.isCurrentUser ? (
+                  <div className="flex flex-wrap items-center justify-end gap-2">
+                    {stars.permissions.canMoveFavoritesToFolders ? (
+                      <Select
+                        defaultValue={item.folderId == null ? "unsorted" : String(item.folderId)}
+                        onValueChange={(value) =>
+                          assignFavoriteFolder(item.starId, item.type ?? "", value)
+                        }
+                      >
+                        <SelectTrigger className="h-9 w-[180px]">
+                          <SelectValue placeholder="Move to folder" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="unsorted">Unsorted</SelectItem>
+                          {folders.map((folder) => (
+                            <SelectItem key={folder.id} value={String(folder.id)}>
+                              {folder.name?.trim() || `Folder ${folder.id}`}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    ) : null}
+                    {stars.permissions.canReorderFavorites ? (
+                      <>
+                        <Button
+                          type="button"
+                          size="sm"
+                          variant="outline"
+                          disabled={index === 0}
+                          onClick={() => moveFavorite(item.starId, -1)}
+                        >
+                          <ArrowUp className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          type="button"
+                          size="sm"
+                          variant="outline"
+                          disabled={index === filteredItems.length - 1}
+                          onClick={() => moveFavorite(item.starId, 1)}
+                        >
+                          <ArrowDown className="h-4 w-4" />
+                        </Button>
+                      </>
+                    ) : null}
+                  </div>
+                ) : null}
+                <UserFavoriteCard item={item} />
+              </div>
             ))
           ) : (
             <p className="text-sm text-muted-foreground">No favorites match the current filters.</p>

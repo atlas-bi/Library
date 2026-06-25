@@ -1,24 +1,24 @@
 "use client"
 
+import { useEffect, useState } from "react"
 import type { ReactNode } from "react"
-import { cn } from "@/lib/utils"
 
 export type UserTabId =
   | "stars"
   | "subscriptions"
-  | "groups"
   | "activity"
   | "run-list"
   | "atlas-history"
+  | "groups"
   | "analytics"
 
 const TAB_LABELS: Record<UserTabId, string> = {
   stars: "Stars",
   subscriptions: "Subscriptions",
-  groups: "Groups",
-  activity: "Run Analytics",
+  activity: "Activity",
   "run-list": "Report Runs",
   "atlas-history": "Atlas History",
+  groups: "Groups",
   analytics: "Analytics",
 }
 
@@ -36,18 +36,24 @@ export function getUserTabs(options: {
   const visible: UserTabId[] = []
   if (options.tabs.starsVisible) visible.push("stars")
   if (options.tabs.subscriptionsVisible) visible.push("subscriptions")
-  if (options.tabs.groupsVisible) visible.push("groups")
   if (options.tabs.activityVisible) visible.push("activity")
   if (options.tabs.runListVisible) visible.push("run-list")
   if (options.tabs.atlasHistoryVisible) visible.push("atlas-history")
+  if (options.tabs.groupsVisible) visible.push("groups")
   if (options.tabs.analyticsVisible) visible.push("analytics")
   return visible
 }
 
 export function getDefaultUserTab(isCurrentUser: boolean, tabs: UserTabId[]): UserTabId {
   if (isCurrentUser && tabs.includes("stars")) return "stars"
-  if (!isCurrentUser && tabs.includes("activity")) return "activity"
+  if (!isCurrentUser && tabs.includes("run-list")) return "run-list"
   return tabs[0] ?? "stars"
+}
+
+export function getHashUserTab(hash: string | null, tabs: UserTabId[]): UserTabId | null {
+  const normalized = hash?.replace(/^#/, "")
+  if (!normalized) return null
+  return tabs.find((tab) => tab === normalized) ?? null
 }
 
 export function UserSectionNav({
@@ -59,24 +65,38 @@ export function UserSectionNav({
   tabs: UserTabId[]
   onTabChange: (tab: UserTabId) => void
 }) {
+  const [currentHash, setCurrentHash] = useState<string>("")
+
+  useEffect(() => {
+    const syncHash = () => setCurrentHash(window.location.hash.replace(/^#/, ""))
+    syncHash()
+    window.addEventListener("hashchange", syncHash)
+    return () => window.removeEventListener("hashchange", syncHash)
+  }, [])
+
   return (
-    <nav aria-label="User profile sections" className="border-b border-border/60">
-      <ul className="flex flex-wrap gap-1 text-sm">
-        {tabs.map((tab) => (
+    <nav aria-label="User profile sections">
+      <ul className="flex flex-wrap items-center text-[0.95rem]">
+        {tabs.map((tab, index) => (
           <li key={tab}>
-            <button
-              type="button"
-              onClick={() => onTabChange(tab)}
-              className={cn(
-                "rounded-t-md px-3 py-2 font-medium transition-colors",
-                activeTab === tab
-                  ? "border border-b-0 border-border/60 bg-background text-foreground"
-                  : "text-muted-foreground hover:bg-muted/50 hover:text-foreground",
-              )}
+            {index > 0 ? <span className="mx-1.5 text-muted-foreground">/</span> : null}
+            <a
+              href={`#${tab}`}
+              onClick={(event) => {
+                event.preventDefault()
+                window.history.replaceState(null, "", `#${tab}`)
+                setCurrentHash(tab)
+                onTabChange(tab)
+              }}
+              className={
+                activeTab === tab || currentHash === tab
+                  ? "font-medium text-blue-700 hover:underline"
+                  : "text-foreground hover:text-blue-700 hover:underline"
+              }
               aria-current={activeTab === tab ? "page" : undefined}
             >
               {TAB_LABELS[tab]}
-            </button>
+            </a>
           </li>
         ))}
       </ul>
@@ -94,5 +114,9 @@ export function UserTabPanel({
   children: ReactNode
 }) {
   if (tab !== activeTab) return null
-  return <section className="space-y-6 py-2">{children}</section>
+  return (
+    <section id={tab} className="space-y-6 pt-2">
+      {children}
+    </section>
+  )
 }

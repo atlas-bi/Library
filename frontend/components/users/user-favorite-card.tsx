@@ -4,10 +4,8 @@ import { EntityCardFooter } from "@/components/interactions/entity-card-footer"
 import { ReportSnippetRunAction } from "@/components/interactions/report-snippet-run-action"
 import { ProfileAnalyticsPanelClient } from "@/components/profile/profile-analytics-panel-client"
 import { Badge } from "@/components/ui/badge"
-import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { truncateText } from "@/lib/text"
 import type { UserFavoriteItem } from "@/lib/users/types"
-import { cn } from "@/lib/utils"
 
 function resolveProfileType(type?: string | null): string | null {
   const normalized = type?.toLowerCase()
@@ -33,13 +31,10 @@ export function UserFavoriteCard({ item }: { item: UserFavoriteItem }) {
   const profileId = item.profileTargetId ? Number(item.profileTargetId) : item.itemId
 
   const card = (
-    <Card
-      className={cn(
-        "overflow-hidden transition-shadow hover:shadow-md",
-        isCollection && "border-amber-200/70 ring-1 ring-amber-100/80",
-      )}
+    <article
+      className={`overflow-hidden border border-border/70 bg-card ${isCollection ? "ring-1 ring-amber-200/70" : ""}`}
     >
-      <CardHeader className="gap-2 border-b bg-muted/20 py-3">
+      <div className="gap-2 border-b border-border/60 px-4 py-3">
         <div className="flex flex-wrap items-start justify-between gap-2">
           <div className="flex min-w-0 flex-1 items-center gap-2">
             {isReport && item.itemId ? (
@@ -82,8 +77,8 @@ export function UserFavoriteCard({ item }: { item: UserFavoriteItem }) {
               ))}
           </div>
         </div>
-      </CardHeader>
-      <CardContent className="py-3">
+      </div>
+      <div className="py-3">
         <div className="flex gap-4">
           {item.thumbnailUrl || item.placeholderImageUrl ? (
             // biome-ignore lint/performance/noImgElement: backend-provided thumbnails for workspace cards.
@@ -106,9 +101,9 @@ export function UserFavoriteCard({ item }: { item: UserFavoriteItem }) {
             ) : null}
           </div>
         </div>
-      </CardContent>
+      </div>
       {isReport && item.itemId ? (
-        <CardFooter className="border-t p-0">
+        <div className="border-t p-0">
           <EntityCardFooter
             entityType="report"
             id={item.itemId}
@@ -132,9 +127,9 @@ export function UserFavoriteCard({ item }: { item: UserFavoriteItem }) {
               requestAccessEnabled: item.canRequestAccess ? undefined : false,
             }}
           />
-        </CardFooter>
+        </div>
       ) : isCollection && item.itemId ? (
-        <CardFooter className="border-t p-0">
+        <div className="border-t p-0">
           <EntityCardFooter
             entityType="collection"
             id={item.itemId}
@@ -153,9 +148,9 @@ export function UserFavoriteCard({ item }: { item: UserFavoriteItem }) {
               ) : undefined
             }
           />
-        </CardFooter>
+        </div>
       ) : null}
-    </Card>
+    </article>
   )
 
   return card
