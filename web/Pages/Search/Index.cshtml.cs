@@ -187,6 +187,19 @@ namespace Atlas_Web.Pages.Search
             );
         }
 
+        public static string BuildOptionalSearchString(
+            string search_string,
+            Microsoft.AspNetCore.Http.IQueryCollection query
+        )
+        {
+            if (string.IsNullOrWhiteSpace(search_string))
+            {
+                return "*:*";
+            }
+
+            return BuildSearchString(search_string, query);
+        }
+
         public async Task<IActionResult> OnGet(string Query)
         {
             if (string.IsNullOrEmpty(Query))
@@ -590,7 +603,7 @@ namespace Atlas_Web.Pages.Search
 
             UserSearch = _solr
                 .Query(
-                    new SolrQuery(BuildSearchString(SearchString, Request.Query)),
+                    new SolrQuery(BuildOptionalSearchString(SearchString, Request.Query)),
                     new QueryOptions
                     {
                         RequestHandler = new RequestHandlerParameters("/users"),
