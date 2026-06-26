@@ -144,15 +144,20 @@
   let loadMiniAjax = null;
   function loadMini($input, $mini, $sa, $hidden) {
     const value = $input.value;
+    const searchOnOpen = $input.dataset.searchOnOpen === 'true';
 
     // Run query if txt
-    if ($input.value.length > 0) {
+    if ($input.value.length > 0 || searchOnOpen) {
       if (loadMiniAjax !== null) {
         loadMiniAjax.abort();
       }
 
       loadMiniAjax = new XMLHttpRequest();
-      loadMiniAjax.open('post', '/Search?handler=' + $sa + '&s=' + value, true);
+      loadMiniAjax.open(
+        'post',
+        '/Search?handler=' + $sa + '&s=' + encodeURIComponent(value),
+        true,
+      );
       loadMiniAjax.setRequestHeader(
         'Content-Type',
         'application/x-www-form-urlencoded; charset=UTF-8',
@@ -236,13 +241,26 @@
         $input.addEventListener('click', () => {
           closeAllMinis();
           openMini($mini);
+          if ($input.dataset.searchOnOpen === 'true') {
+            loadMini(
+              $input,
+              $mini,
+              $input.getAttribute('search-area'),
+              $hidden,
+            );
+          }
         });
         $input.addEventListener('focus', () => {
-          if ($input.value !== '') {
+          if ($input.value !== '' || $input.dataset.searchOnOpen === 'true') {
             closeAllMinis();
             openMini($mini);
             // Reload search
-            $mini.dispatchEvent(new CustomEvent('input'));
+            loadMini(
+              $input,
+              $mini,
+              $input.getAttribute('search-area'),
+              $hidden,
+            );
           }
         });
 

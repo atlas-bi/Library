@@ -126,6 +126,11 @@ public class CustomClaimsTransformer : IClaimsTransformation
             claims.Add(new Claim("AdminEnabled", "Y"));
         }
 
+        if (isAdmin)
+        {
+            claims.Add(new Claim("Permission", "Administrator"));
+        }
+
         ClaimsIdentity identity = new ClaimsIdentity(claims);
 
         clone.AddIdentity(identity);
