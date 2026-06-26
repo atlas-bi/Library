@@ -159,6 +159,7 @@ export async function getHomeStarsPanel(userId: number): Promise<HomeResult<Home
           starCount: 0,
           canOpenDetails: Boolean(item.url),
         }))
+  const isSuggestionFallback = dto.items.length === 0 && dto.suggestedReports.length > 0
 
   const filters = [
     dto.filters.hasReports ? { id: "reports", label: "Reports" } : null,
@@ -175,6 +176,10 @@ export async function getHomeStarsPanel(userId: number): Promise<HomeResult<Home
       kind: "stars",
       title: "Stars",
       emptyMessage: "You don't have any favorites! Search to get started.",
+      isSuggestionFallback,
+      suggestionHeading: isSuggestionFallback
+        ? "You don't have any favorites! Here's some reports you've used."
+        : undefined,
       folders: [
         { id: "all", label: "All", count: dto.summary.totalCount },
         ...(dto.summary.unsortedCount > 0

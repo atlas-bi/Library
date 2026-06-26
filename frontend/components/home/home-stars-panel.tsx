@@ -55,6 +55,8 @@ function isReportCard(card: HomeStarCard) {
 }
 
 export function HomeStarsPanelView({ panel }: { panel: HomeStarsPanel }) {
+  const showFolders = panel.cards.length > 0 && !panel.isSuggestionFallback
+
   return (
     <section className="space-y-5">
       {panel.filters.length > 0 ? (
@@ -82,31 +84,38 @@ export function HomeStarsPanelView({ panel }: { panel: HomeStarsPanel }) {
         </div>
       ) : null}
 
-      <div className="grid gap-5 lg:grid-cols-[256px_1fr]">
-        <aside className="sticky top-20 self-start space-y-3">
-          {panel.folders.map((folder, index) => (
-            <div
-              key={folder.id}
-              className={`atlas-home-card relative border border-transparent px-4 py-4 text-[var(--atlas-home-text)] ${index === 0 ? "font-bold" : "font-medium"}`}
-            >
-              <span className="inline-flex items-center gap-3">
-                <span className="relative inline-flex text-[var(--atlas-home-text)]">
-                  {index === 0 ? (
-                    <FolderOpen className="h-5 w-5" strokeWidth={1.8} />
-                  ) : (
-                    <Folder className="h-5 w-5" strokeWidth={1.8} />
-                  )}
+      <div className={`grid gap-5 ${showFolders ? "lg:grid-cols-[256px_1fr]" : ""}`}>
+        {showFolders ? (
+          <aside className="sticky top-20 self-start space-y-3">
+            {panel.folders.map((folder, index) => (
+              <div
+                key={folder.id}
+                className={`atlas-home-card relative border border-transparent px-4 py-4 text-[var(--atlas-home-text)] ${index === 0 ? "font-bold" : "font-medium"}`}
+              >
+                <span className="inline-flex items-center gap-3">
+                  <span className="relative inline-flex text-[var(--atlas-home-text)]">
+                    {index === 0 ? (
+                      <FolderOpen className="h-5 w-5" strokeWidth={1.8} />
+                    ) : (
+                      <Folder className="h-5 w-5" strokeWidth={1.8} />
+                    )}
+                  </span>
+                  <span>{folder.label}</span>
                 </span>
-                <span>{folder.label}</span>
-              </span>
-              <span className="atlas-home-folder-badge absolute -top-3 -right-3 rounded-full px-2 py-0.5 text-xs">
-                {folder.count}
-              </span>
-            </div>
-          ))}
-        </aside>
+                <span className="atlas-home-folder-badge absolute -top-3 -right-3 rounded-full px-2 py-0.5 text-xs">
+                  {folder.count}
+                </span>
+              </div>
+            ))}
+          </aside>
+        ) : null}
 
         <div className="space-y-4">
+          {panel.isSuggestionFallback && panel.suggestionHeading ? (
+            <h3 className="text-2xl font-semibold text-[var(--atlas-home-text-strong)]">
+              {panel.suggestionHeading}
+            </h3>
+          ) : null}
           {panel.cards.length > 0 ? (
             panel.cards.map((card) => {
               const collectionCard = isCollectionCard(card)

@@ -4,10 +4,8 @@ import { EntityCardFooter } from "@/components/interactions/entity-card-footer"
 import { ReportSnippetRunAction } from "@/components/interactions/report-snippet-run-action"
 import { ProfileAnalyticsPanelClient } from "@/components/profile/profile-analytics-panel-client"
 import { Badge } from "@/components/ui/badge"
-import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { truncateText } from "@/lib/text"
 import type { UserFavoriteItem } from "@/lib/users/types"
-import { cn } from "@/lib/utils"
 
 function resolveProfileType(type?: string | null): string | null {
   const normalized = type?.toLowerCase()
@@ -33,15 +31,10 @@ export function UserFavoriteCard({ item }: { item: UserFavoriteItem }) {
   const profileId = item.profileTargetId ? Number(item.profileTargetId) : item.itemId
 
   const card = (
-    <Card
-      className={cn(
-        "overflow-hidden transition-shadow hover:shadow-md",
-        isCollection && "border-amber-200/70 ring-1 ring-amber-100/80",
-      )}
-    >
-      <CardHeader className="gap-2 border-b bg-muted/20 py-3">
+    <article className={`overflow-hidden ${isCollection ? "atlas-snippet-gold-card" : "atlas-home-card"}`}>
+      <div className="gap-2 border-b border-[var(--atlas-home-border-soft)] px-4 py-2.5">
         <div className="flex flex-wrap items-start justify-between gap-2">
-          <div className="flex min-w-0 flex-1 items-center gap-2">
+          <div className="flex min-w-0 flex-1 items-center gap-3 text-[var(--atlas-home-text-strong)]">
             {isReport && item.itemId ? (
               <ReportSnippetRunAction
                 reportId={item.itemId}
@@ -54,14 +47,17 @@ export function UserFavoriteCard({ item }: { item: UserFavoriteItem }) {
             ) : null}
             <div className="min-w-0 flex-1">
               {href ? (
-                <Link href={href} className="font-semibold hover:underline">
+                <Link href={href} className="atlas-home-card-title hover:underline">
                   {title}
                 </Link>
               ) : (
-                <span className="font-semibold">{title}</span>
+                <span className="atlas-home-card-title">{title}</span>
               )}
               {item.isCertified ? (
-                <BadgeCheck className="ml-1.5 inline size-4 text-info" aria-label="Certified" />
+                <BadgeCheck
+                  className="ml-1.5 inline size-4 text-[var(--atlas-home-link)]"
+                  aria-label="Certified"
+                />
               ) : null}
             </div>
           </div>
@@ -82,33 +78,33 @@ export function UserFavoriteCard({ item }: { item: UserFavoriteItem }) {
               ))}
           </div>
         </div>
-      </CardHeader>
-      <CardContent className="py-3">
-        <div className="flex gap-4">
+      </div>
+      <div className="px-4 py-4">
+        <div className="grid gap-4 md:grid-cols-[128px_1fr]">
           {item.thumbnailUrl || item.placeholderImageUrl ? (
             // biome-ignore lint/performance/noImgElement: backend-provided thumbnails for workspace cards.
             <img
               src={item.thumbnailUrl ?? item.placeholderImageUrl ?? ""}
               alt={`${title} thumbnail`}
-              className="size-32 rounded-md border object-cover"
+              className="size-32 rounded-lg border border-[var(--atlas-home-border-soft)] object-cover"
             />
           ) : (
-            <div className="flex size-32 shrink-0 items-center justify-center rounded-md border bg-muted/50 text-muted-foreground">
+            <div className="atlas-home-thumbnail flex size-32 shrink-0 items-center justify-center rounded-lg border border-[var(--atlas-home-border-soft)] text-[var(--atlas-home-muted)]">
               {isReport ? <PlayCircle className="size-10 opacity-60" /> : null}
             </div>
           )}
-          <div className="min-w-0 flex-1 text-sm text-muted-foreground">
+          <div className="flex min-h-24 min-w-0 flex-col justify-between gap-3 text-sm font-medium leading-6 text-[var(--atlas-home-text)]">
             <p>{excerpt ? truncateText(excerpt) : "Open to view details."}</p>
             {href ? (
-              <Link href={href} className="mt-2 inline-block text-link hover:underline">
+              <Link href={href} className="text-[var(--atlas-home-link)] hover:underline">
                 read more
               </Link>
             ) : null}
           </div>
         </div>
-      </CardContent>
+      </div>
       {isReport && item.itemId ? (
-        <CardFooter className="border-t p-0">
+        <div className="border-t border-[var(--atlas-home-border-soft)] p-0">
           <EntityCardFooter
             entityType="report"
             id={item.itemId}
@@ -132,9 +128,9 @@ export function UserFavoriteCard({ item }: { item: UserFavoriteItem }) {
               requestAccessEnabled: item.canRequestAccess ? undefined : false,
             }}
           />
-        </CardFooter>
+        </div>
       ) : isCollection && item.itemId ? (
-        <CardFooter className="border-t p-0">
+        <div className="border-t border-[var(--atlas-home-border-soft)] p-0">
           <EntityCardFooter
             entityType="collection"
             id={item.itemId}
@@ -153,9 +149,9 @@ export function UserFavoriteCard({ item }: { item: UserFavoriteItem }) {
               ) : undefined
             }
           />
-        </CardFooter>
+        </div>
       ) : null}
-    </Card>
+    </article>
   )
 
   return card

@@ -8,21 +8,17 @@ const fetchMock = vi.fn<(input: RequestInfo | URL) => Promise<Response>>()
 describe("HomeTabsClient", () => {
   beforeEach(() => {
     vi.stubGlobal("fetch", fetchMock)
-    process.env.NEXT_PUBLIC_API_URL = "http://localhost:5000"
-    // biome-ignore lint/suspicious/noDocumentCookie: test setup requires a readable cookie token
-    document.cookie = "atlas_token=test-token"
   })
 
   afterEach(() => {
     vi.unstubAllGlobals()
-    delete process.env.NEXT_PUBLIC_API_URL
     fetchMock.mockReset()
   })
 
   it("loads the default stars tab and caches loaded tabs", async () => {
     fetchMock.mockImplementation((input) => {
       const url = String(input)
-      if (url.endsWith("/api/users/7/stars")) {
+      if (url.endsWith("/api/home/stars")) {
         return Promise.resolve(
           new Response(
             JSON.stringify({
@@ -58,7 +54,7 @@ describe("HomeTabsClient", () => {
         )
       }
 
-      if (url.endsWith("/api/users/7/groups")) {
+      if (url.endsWith("/api/home/groups")) {
         return Promise.resolve(
           new Response(JSON.stringify([{ id: 12, name: "Finance", type: "AD", source: "LDAP" }]), {
             status: 200,
@@ -75,7 +71,7 @@ describe("HomeTabsClient", () => {
       )
     })
 
-    render(<HomeTabsClient requestContext={{ userId: 7, defaultReportTypeIds: [1, 2] }} />)
+    render(<HomeTabsClient />)
 
     expect(screen.getByRole("tab", { name: "Stars" })).toHaveAttribute("aria-selected", "true")
     expect(screen.getByText("Loading Stars...")).toBeInTheDocument()
@@ -92,5 +88,19 @@ describe("HomeTabsClient", () => {
       expect(screen.getByText("Executive Dashboard")).toBeInTheDocument()
     })
     expect(fetchMock).toHaveBeenCalledTimes(2)
+  })
+
+  it("shows the sign-in prompt for unauthorized tab responses", async () => {
+    fetchMock.mockResolvedValue(
+      new Response(JSON.stringify({ ok: false, error: "auth_required" }), {
+        status: 401,
+        headers: { "Content-Type": "application/json" },
+      }),
+    )
+
+    render(<HomeTabsClient />)
+
+    await screen.findByRole("link", { name: "Sign in" })
+    expect(screen.getByText("to view your stars.", { exact: false })).toBeInTheDocument()
   })
 })

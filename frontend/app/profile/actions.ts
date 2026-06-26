@@ -34,6 +34,7 @@ export async function loadProfileAnalyticsAction(
   options?: Partial<Omit<ProfileFilters, "id" | "type">>,
 ): Promise<{ data: ProfileAnalyticsData | null; error: string | null }> {
   const filters: ProfileFilters = { id, type, ...options }
+  const canLoadProfileRelationships = type !== "user"
   const [
     chartResult,
     usersResult,
@@ -48,8 +49,10 @@ export async function loadProfileAnalyticsAction(
     getProfileReports(filters),
     getProfileFails(filters),
     getProfileRunList(filters),
-    getProfileStars(filters),
-    getProfileSubscriptions(filters),
+    canLoadProfileRelationships ? getProfileStars(filters) : Promise.resolve({ data: [], error: null }),
+    canLoadProfileRelationships
+      ? getProfileSubscriptions(filters)
+      : Promise.resolve({ data: [], error: null }),
   ])
 
   if (

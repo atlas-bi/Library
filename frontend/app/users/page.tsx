@@ -1,8 +1,8 @@
 import Link from "next/link"
 import { redirect } from "next/navigation"
+import { LibraryShell } from "@/components/layout/library-shell"
 import { ProfileFullView } from "@/components/profile/profile-full-view"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { UserGroupsTable } from "@/components/users/user-groups-table"
 import { UserHistorySectionView } from "@/components/users/user-history-section"
 import { UserPageTabs } from "@/components/users/user-page-tabs"
@@ -29,12 +29,28 @@ function getSingleValue(value: string | string[] | undefined): string | undefine
   return undefined
 }
 
-export default async function UsersPage({ searchParams }: { searchParams: UsersSearchParams }) {
+function getShellDisplayName(
+  user:
+    | {
+        fullname?: string | null
+        username?: string | null
+      }
+    | null,
+) {
+  return user?.fullname?.trim() || user?.username?.trim() || "Guest"
+}
+
+export default async function UsersPage({
+  searchParams,
+}: {
+  searchParams: Promise<UsersSearchParams>
+}) {
   const token = await getToken()
   if (!token) redirect("/auth/login")
 
   const currentUser = await getCurrentUser()
-  const idRaw = getSingleValue(searchParams.id)
+  const resolvedSearchParams = await searchParams
+  const idRaw = getSingleValue(resolvedSearchParams.id)
   const resolvedId = idRaw ? Number(idRaw) : Number(currentUser?.userId)
   if (!Number.isFinite(resolvedId) || resolvedId <= 0) {
     redirect("/")
@@ -59,23 +75,22 @@ export default async function UsersPage({ searchParams }: { searchParams: UsersS
     const denied = pageResult.error === "forbidden" || pageResult.status === 403
 
     return (
-      <div className="mx-auto max-w-4xl px-4 py-10">
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-xl">
-              {denied ? "Access denied" : "Unable to load user profile"}
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <p className="text-sm text-muted-foreground">
-              {denied ? "You do not have access to this page." : message}
-            </p>
-            <Button asChild variant="outline">
-              <Link href="/">Back to home</Link>
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
+      <LibraryShell
+        displayName={getShellDisplayName(currentUser)}
+        isSignedIn={Boolean(currentUser)}
+        isAdministrator={currentUser?.roles.includes("Administrator") ?? false}
+        adminEnabled={currentUser?.adminEnabled ?? false}
+      >
+        <h1 className="atlas-home-heading">
+          {denied ? "Access denied" : "Unable to load user profile"}
+        </h1>
+        <p className="mb-4 text-sm text-[var(--atlas-home-muted)]">
+          {denied ? "You do not have access to this page." : message}
+        </p>
+        <Button asChild variant="outline">
+          <Link href="/">Back to home</Link>
+        </Button>
+      </LibraryShell>
     )
   }
 
@@ -93,65 +108,65 @@ export default async function UsersPage({ searchParams }: { searchParams: UsersS
   const title = page.viewer.isCurrentUser
     ? `Hi, ${page.user.firstName?.trim() || page.user.displayName?.trim() || page.user.fullName?.trim() || "there"}`
     : `You are viewing ${page.user.fullName?.trim() || page.user.displayName?.trim() || page.user.username?.trim() || "this user"}'s Profile`
+  const shellDisplayName =
+    currentUser?.fullname?.trim() ||
+    page.user.displayName?.trim() ||
+    page.user.fullName?.trim() ||
+    page.user.username?.trim() ||
+    "Guest"
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="mx-auto w-full max-w-7xl px-4 py-8">
-        <header className="mb-6 space-y-3 border-b border-border/60 pb-6">
-          <h1 className="font-serif text-4xl font-semibold tracking-tight">{title}</h1>
-          {page.permissions.canToggleAdminMode ? (
-            <div>
-              <Button asChild variant="outline" size="sm">
-                <Link
-                  href={`/auth/admin-mode?returnTo=${encodeURIComponent(`/users?id=${resolvedId}`)}`}
-                >
-                  Toggle admin mode
-                </Link>
+    <LibraryShell
+      displayName={shellDisplayName}
+      isSignedIn
+      isAdministrator={currentUser?.roles.includes("Administrator") ?? false}
+      adminEnabled={currentUser?.adminEnabled ?? false}
+    >
+      <header>
+        <h1 className="atlas-home-heading">{title}</h1>
+      </header>
+
+      <UserPageTabs
+        isCurrentUser={page.viewer.isCurrentUser}
+        tabs={page.tabs}
+        stars={
+          stars ? (
+            <UserStarsWorkspace stars={stars} />
+          ) : (
+            <div className="atlas-home-card px-6 py-7 text-sm text-[var(--atlas-home-text)]">
+              Unable to load stars workspace.
+            </div>
+          )
+        }
+        subscriptions={<UserSubscriptionsTable rows={subscriptions} />}
+        groups={<UserGroupsTable rows={groups} canViewGroups={page.permissions.canViewGroups} />}
+        activity={
+          <ProfileFullView
+            id={resolvedId}
+            type="user"
+            variant="page"
+            userProfilesEnabled={page.features.userProfilesEnabled}
+          />
+        }
+        runList={<UserRunListPanel userId={resolvedId} reportTypeIds={page.defaultReportTypeIds} />}
+        atlasHistory={<UserHistorySectionView history={history} />}
+        analytics={
+          page.permissions.canViewAnalytics ? (
+            <div className="space-y-4">
+              <p className="text-sm text-[var(--atlas-home-muted)]">
+                Site analytics for this user are available in the Analytics application.
+              </p>
+              <Button asChild variant="outline">
+                <Link href="/analytics">Open Analytics</Link>
               </Button>
             </div>
-          ) : null}
-        </header>
-
-        <UserPageTabs
-          isCurrentUser={page.viewer.isCurrentUser}
-          tabs={page.tabs}
-          stars={
-            stars ? (
-              <UserStarsWorkspace stars={stars} />
-            ) : (
-              <p className="text-sm text-muted-foreground">Unable to load stars workspace.</p>
-            )
-          }
-          subscriptions={<UserSubscriptionsTable rows={subscriptions} />}
-          groups={<UserGroupsTable rows={groups} canViewGroups={page.permissions.canViewGroups} />}
-          activity={
-            <ProfileFullView
-              id={resolvedId}
-              type="user"
-              variant="page"
-              userProfilesEnabled={page.features.userProfilesEnabled}
-            />
-          }
-          runList={
-            <UserRunListPanel userId={resolvedId} reportTypeIds={page.defaultReportTypeIds} />
-          }
-          atlasHistory={<UserHistorySectionView history={history} />}
-          analytics={
-            page.permissions.canViewAnalytics ? (
-              <div className="space-y-4">
-                <p className="text-sm text-muted-foreground">
-                  Site analytics for this user are available in the Analytics application.
-                </p>
-                <Button asChild variant="outline">
-                  <Link href="/analytics">Open Analytics</Link>
-                </Button>
-              </div>
-            ) : (
-              <p className="text-sm text-muted-foreground">Analytics are not available.</p>
-            )
-          }
-        />
-      </div>
-    </div>
+          ) : (
+            <div className="atlas-home-card px-6 py-7 text-sm text-[var(--atlas-home-text)]">
+              Analytics are not available.
+            </div>
+          )
+        }
+      />
+    </LibraryShell>
   )
 }

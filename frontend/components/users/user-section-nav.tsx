@@ -1,7 +1,7 @@
 "use client"
 
+import { useEffect, useState } from "react"
 import type { ReactNode } from "react"
-import { cn } from "@/lib/utils"
 
 export type UserTabId =
   | "stars"
@@ -50,6 +50,12 @@ export function getDefaultUserTab(isCurrentUser: boolean, tabs: UserTabId[]): Us
   return tabs[0] ?? "stars"
 }
 
+export function getHashUserTab(hash: string | null, tabs: UserTabId[]): UserTabId | null {
+  const normalized = hash?.replace(/^#/, "")
+  if (!normalized) return null
+  return tabs.find((tab) => tab === normalized) ?? null
+}
+
 export function UserSectionNav({
   activeTab,
   tabs,
@@ -59,24 +65,40 @@ export function UserSectionNav({
   tabs: UserTabId[]
   onTabChange: (tab: UserTabId) => void
 }) {
+  const [currentHash, setCurrentHash] = useState<string>("")
+
+  useEffect(() => {
+    const syncHash = () => setCurrentHash(window.location.hash.replace(/^#/, ""))
+    syncHash()
+    window.addEventListener("hashchange", syncHash)
+    return () => window.removeEventListener("hashchange", syncHash)
+  }, [])
+
   return (
-    <nav aria-label="User profile sections" className="border-b border-border/60">
-      <ul className="flex flex-wrap gap-1 text-sm">
-        {tabs.map((tab) => (
+    <nav aria-label="User profile sections" className="atlas-home-tab-nav">
+      <ul className="flex flex-wrap items-center text-[0.95rem]">
+        {tabs.map((tab, index) => (
           <li key={tab}>
-            <button
-              type="button"
-              onClick={() => onTabChange(tab)}
-              className={cn(
-                "rounded-t-md px-3 py-2 font-medium transition-colors",
-                activeTab === tab
-                  ? "border border-b-0 border-border/60 bg-background text-foreground"
-                  : "text-muted-foreground hover:bg-muted/50 hover:text-foreground",
-              )}
+            {index > 0 ? (
+              <span className="mx-1.5 text-[var(--atlas-home-muted-light)]">/</span>
+            ) : null}
+            <a
+              href={`#${tab}`}
+              onClick={(event) => {
+                event.preventDefault()
+                window.history.replaceState(null, "", `#${tab}`)
+                setCurrentHash(tab)
+                onTabChange(tab)
+              }}
+              className={
+                activeTab === tab || currentHash === tab
+                  ? "text-[0.9rem] font-medium text-[var(--atlas-home-link)] hover:text-[var(--atlas-home-link-hover)] hover:underline"
+                  : "text-[0.9rem] text-[var(--atlas-home-link)] hover:text-[var(--atlas-home-link-hover)] hover:underline"
+              }
               aria-current={activeTab === tab ? "page" : undefined}
             >
               {TAB_LABELS[tab]}
-            </button>
+            </a>
           </li>
         ))}
       </ul>
@@ -94,5 +116,9 @@ export function UserTabPanel({
   children: ReactNode
 }) {
   if (tab !== activeTab) return null
-  return <section className="space-y-6 py-2">{children}</section>
+  return (
+    <section id={tab} className="space-y-6 pt-2">
+      {children}
+    </section>
+  )
 }

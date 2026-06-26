@@ -1,4 +1,5 @@
 using System.Text;
+using Atlas_Web.Configuration;
 using Atlas_Web.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authentication.Negotiate;
@@ -70,7 +71,7 @@ public static class ProgramConfiguration
 #pragma warning restore S6781
         builder.Services.AddScoped<JwtTokenService>(_ => new JwtTokenService(signingKey, jwtIssuer, jwtAudience));
 
-        if (builder.Configuration["Demo"] == "True")
+        if (BooleanConfig.IsEnabled(builder.Configuration["Demo"]))
         {
             ConfigureDemoAuthentication(builder, jwtIssuer, jwtAudience, signingKey);
         }

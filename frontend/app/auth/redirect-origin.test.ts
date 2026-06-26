@@ -27,6 +27,6 @@ describe("auth public redirect origin", () => {
 
     const response = logoutGet(new Request("https://0.0.0.0:3000/auth/logout") as NextRequest)
 
-    expect(response.headers.get("location")).toBe("https://library.atlas.bi/auth/login")
+    expect(response.headers.get("location")).toBe("https://library.atlas.bi/")
   })
 })

@@ -4,41 +4,7 @@ import type {
   HomeStarsPanel,
   HomeSubscriptionsPanel,
   HomeTabId,
-  HomeTabRequestContext,
 } from "@/lib/home/types"
-
-function getClientApiBase(): string {
-  return (process.env.NEXT_PUBLIC_API_URL ?? "").replace(/\/+$/, "")
-}
-
-function readCookie(name: string): string | null {
-  if (typeof document === "undefined") return null
-
-  const match = document.cookie.match(new RegExp(`(?:^|; )${name}=([^;]*)`))
-  return match ? decodeURIComponent(match[1]) : null
-}
-
-function buildDirectApiUrl(tabId: HomeTabId, context: HomeTabRequestContext): string {
-  const base = getClientApiBase()
-
-  switch (tabId) {
-    case "stars":
-      return `${base}/api/users/${context.userId}/stars`
-    case "subscriptions":
-      return `${base}/api/users/${context.userId}/subscriptions`
-    case "groups":
-      return `${base}/api/users/${context.userId}/groups`
-    case "report-runs": {
-      const params = new URLSearchParams()
-      params.set("id", String(context.userId))
-      params.set("type", "user")
-      for (const reportTypeId of context.defaultReportTypeIds) {
-        params.append("reportType", String(reportTypeId))
-      }
-      return `${base}/api/profile/run-list?${params.toString()}`
-    }
-  }
-}
 
 function normalizeStarsPanel(payload: {
   summary: { totalCount: number; unsortedCount: number }
@@ -86,6 +52,7 @@ function normalizeStarsPanel(payload: {
     type?: string | null
   }>
 }): HomeStarsPanel {
+  const isSuggestionFallback = payload.items.length === 0 && payload.suggestedReports.length > 0
   const cards =
     payload.items.length > 0
       ? payload.items.map((item) => ({
@@ -135,6 +102,10 @@ function normalizeStarsPanel(payload: {
     kind: "stars",
     title: "Stars",
     emptyMessage: "You don't have any favorites! Search to get started.",
+    isSuggestionFallback,
+    suggestionHeading: isSuggestionFallback
+      ? "You don't have any favorites! Here's some reports you've used."
+      : undefined,
     folders: [
       { id: "all", label: "All", count: payload.summary.totalCount },
       ...(payload.summary.unsortedCount > 0
@@ -157,6 +128,17 @@ function normalizeStarsPanel(payload: {
     ].filter(Boolean) as HomeStarsPanel["filters"],
     cards,
   }
+}
+
+function isHomeStarsPanel(payload: unknown): payload is HomeStarsPanel {
+  if (!payload || typeof payload !== "object") return false
+  const panel = payload as Partial<HomeStarsPanel>
+  return (
+    panel.kind === "stars" &&
+    Array.isArray(panel.folders) &&
+    Array.isArray(panel.filters) &&
+    Array.isArray(panel.cards)
+  )
 }
 
 function normalizeSubscriptionsPanel(
@@ -230,14 +212,8 @@ function normalizeRunListPanel(
   }
 }
 
-export async function fetchHomeTabPanel(tabId: HomeTabId, context: HomeTabRequestContext) {
-  const token = readCookie("atlas_token")
-  const clientApiBase = getClientApiBase()
-  const url = clientApiBase ? buildDirectApiUrl(tabId, context) : `/api/home/${tabId}`
-  const headers: HeadersInit = token ? { Authorization: `Bearer ${token}` } : {}
-
-  const response = await fetch(url, {
-    headers,
+export async function fetchHomeTabPanel(tabId: HomeTabId) {
+  const response = await fetch(`/api/home/${tabId}`, {
     credentials: "include",
   })
 
@@ -245,16 +221,31 @@ export async function fetchHomeTabPanel(tabId: HomeTabId, context: HomeTabReques
     return { ok: false as const, error: `http_${response.status}` }
   }
 
-  const payload = await response.json()
+  const payload = (await response.json()) as { ok?: boolean; data?: unknown }
+  const panelPayload = payload && "data" in payload ? payload.data : payload
 
   switch (tabId) {
     case "stars":
-      return { ok: true as const, data: normalizeStarsPanel(payload) }
+      return {
+        ok: true as const,
+        data: isHomeStarsPanel(panelPayload)
+          ? panelPayload
+          : normalizeStarsPanel(panelPayload as Parameters<typeof normalizeStarsPanel>[0]),
+      }
     case "subscriptions":
-      return { ok: true as const, data: normalizeSubscriptionsPanel(payload) }
+      return {
+        ok: true as const,
+        data: normalizeSubscriptionsPanel(panelPayload as Parameters<typeof normalizeSubscriptionsPanel>[0]),
+      }
     case "groups":
-      return { ok: true as const, data: normalizeGroupsPanel(payload) }
+      return {
+        ok: true as const,
+        data: normalizeGroupsPanel(panelPayload as Parameters<typeof normalizeGroupsPanel>[0]),
+      }
     case "report-runs":
-      return { ok: true as const, data: normalizeRunListPanel(payload) }
+      return {
+        ok: true as const,
+        data: normalizeRunListPanel(panelPayload as Parameters<typeof normalizeRunListPanel>[0]),
+      }
   }
 }

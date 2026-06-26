@@ -20,7 +20,6 @@ export default async function HomePage() {
         isSignedIn={false}
         isAdministrator={false}
         adminEnabled={false}
-        requestContext={{ userId: 0, defaultReportTypeIds: [] }}
         visibleTabs={allTabsVisible}
       />
     )
@@ -36,10 +35,6 @@ export default async function HomePage() {
       isSignedIn
       isAdministrator={user.roles.includes("Administrator")}
       adminEnabled={user.adminEnabled}
-      requestContext={{
-        userId,
-        defaultReportTypeIds: page?.data?.defaultReportTypeIds ?? [],
-      }}
       visibleTabs={allTabsVisible}
     />
   )
