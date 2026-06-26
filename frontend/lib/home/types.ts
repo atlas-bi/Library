@@ -57,6 +57,8 @@ export type HomeStarsPanel = HomePanelBase & {
   folders: Array<{ id: string; label: string; count: number }>
   filters: Array<{ id: string; label: string }>
   cards: HomeStarCard[]
+  isSuggestionFallback?: boolean
+  suggestionHeading?: string
 }
 
 export type HomeSubscriptionsPanel = HomePanelBase & {

@@ -7,7 +7,6 @@ import { HOME_TABS } from "@/lib/home/constants"
 import type {
   HomePanelData,
   HomeTabId,
-  HomeTabRequestContext,
   HomeTabsVisibility,
 } from "@/lib/home/types"
 
@@ -18,7 +17,6 @@ type PanelState = {
 }
 
 type HomeTabsClientProps = {
-  requestContext: HomeTabRequestContext
   visibleTabs?: HomeTabsVisibility
 }
 
@@ -27,7 +25,6 @@ function getDefaultTab(visibleTabs: HomeTabsVisibility): HomeTabId {
 }
 
 export function HomeTabsClient({
-  requestContext,
   visibleTabs = {
     stars: true,
     subscriptions: true,
@@ -45,14 +42,14 @@ export function HomeTabsClient({
 
   useEffect(() => {
     const state = panels[activeTab]
-    if (state.status === "loading" || state.status === "ready") return
+    if (state.status !== "idle") return
 
     setPanels((current) => ({
       ...current,
       [activeTab]: { status: "loading" },
     }))
 
-    fetchHomeTabPanel(activeTab, requestContext)
+    fetchHomeTabPanel(activeTab)
       .then((payload) => {
         if (!payload.ok) {
           setPanels((current) => ({
@@ -73,7 +70,7 @@ export function HomeTabsClient({
           [activeTab]: { status: "error", error: "unknown" },
         }))
       })
-  }, [activeTab, panels, requestContext])
+  }, [activeTab, panels])
 
   const tabs = HOME_TABS.filter((tab) => visibleTabs[tab.id])
   const activePanel = panels[activeTab]
@@ -110,7 +107,19 @@ export function HomeTabsClient({
 
         {activePanel.status === "error" ? (
           <div className="atlas-home-card px-6 py-7 text-sm text-[var(--atlas-home-text)]">
-            Unable to load {HOME_TABS.find((tab) => tab.id === activeTab)?.label}.
+            {activePanel.error === "http_401" ? (
+              <>
+                <a
+                  href="/auth/login"
+                  className="font-medium text-[var(--atlas-home-link)] hover:underline"
+                >
+                  Sign in
+                </a>{" "}
+                to view your {HOME_TABS.find((tab) => tab.id === activeTab)?.label?.toLowerCase()}.
+              </>
+            ) : (
+              <>Unable to load {HOME_TABS.find((tab) => tab.id === activeTab)?.label}.</>
+            )}
           </div>
         ) : null}
 

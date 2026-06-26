@@ -6,7 +6,7 @@ function getBarTitle(item: ProfileBarItemDto) {
 }
 
 function getBarSubtitle(item: ProfileBarItemDto) {
-  return item.titleTwo ?? item.dateTitle ?? item.date ?? null
+  return item.titleTwo ?? item.dateTitle ?? item.date ?? item.dateLabel ?? null
 }
 
 export function ProfileBarDataSection({

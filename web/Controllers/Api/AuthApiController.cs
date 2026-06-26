@@ -1,6 +1,7 @@
 #nullable enable
 using System.Diagnostics.CodeAnalysis;
 using System.Security.Claims;
+using Atlas_Web.Configuration;
 using Atlas_Web.Models;
 using Atlas_Web.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -40,7 +41,7 @@ public class AuthApiController : ControllerBase
 
         var safeReturnUrl = ((OkObjectResult)safeReturnUrlResult).Value as string ?? string.Empty;
 
-        if (_config["Demo"] == "True")
+        if (BooleanConfig.IsEnabled(_config["Demo"]))
         {
             var demoUsername = _config["DEMO_ADMIN_USERNAME"];
             var selectedDemoUsername = string.IsNullOrWhiteSpace(demoUsername)

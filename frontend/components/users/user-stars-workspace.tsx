@@ -1,6 +1,8 @@
 "use client"
 
 import {
+  ArrowDown,
+  ArrowUp,
   BookOpen,
   ChartBar,
   Folder,
@@ -17,10 +19,20 @@ import { useMemo, useState, useTransition } from "react"
 import {
   createUserFolderAction,
   deleteUserFolderAction,
+  reorderUserFavoritesAction,
+  reorderUserFoldersAction,
+  updateUserFavoriteFolderAssignmentAction,
   updateUserFolderAction,
 } from "@/app/users/actions"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import { UserFavoriteCard } from "@/components/users/user-favorite-card"
 import type { UserStars } from "@/lib/users/types"
 import { cn } from "@/lib/utils"
@@ -47,6 +59,12 @@ function filterIcon(type: string) {
 }
 
 export function UserStarsWorkspace({ stars }: { stars: UserStars }) {
+  const [folders, setFolders] = useState(() =>
+    [...stars.folders].sort((a, b) => (a.rank ?? 0) - (b.rank ?? 0)),
+  )
+  const [items, setItems] = useState(() =>
+    [...stars.items].sort((a, b) => (a.rank ?? 0) - (b.rank ?? 0)),
+  )
   const [folderFilter, setFolderFilter] = useState<FolderFilter>("all")
   const [typeFilter, setTypeFilter] = useState<string | null>(null)
   const [textFilter, setTextFilter] = useState("")
@@ -71,7 +89,7 @@ export function UserStarsWorkspace({ stars }: { stars: UserStars }) {
 
   const filteredItems = useMemo(() => {
     const query = textFilter.trim().toLowerCase()
-    return [...stars.items]
+    return [...items]
       .filter((item) => {
         if (folderFilter === "unsorted") return item.folderId == null
         if (typeof folderFilter === "number") return item.folderId === folderFilter
@@ -96,10 +114,74 @@ export function UserStarsWorkspace({ stars }: { stars: UserStars }) {
         return haystack.includes(query)
       })
       .sort((a, b) => (a.rank ?? 0) - (b.rank ?? 0))
-  }, [folderFilter, stars.items, textFilter, typeFilter])
+  }, [folderFilter, items, textFilter, typeFilter])
 
   const refreshPage = () => {
     window.location.reload()
+  }
+
+  const persistFolderOrder = (nextFolders: typeof folders) => {
+    startTransition(async () => {
+      const payload = nextFolders.map((folder, index) => ({
+        folderId: String(folder.id),
+        folderRank: index + 1,
+      }))
+      const result = await reorderUserFoldersAction(stars.userId, stars.isCurrentUser, payload)
+      if (result.ok) refreshPage()
+    })
+  }
+
+  const persistFavoriteOrder = (nextItems: typeof items) => {
+    startTransition(async () => {
+      const payload = nextItems.map((item, index) => ({
+        favoriteId: String(item.starId),
+        favoriteType: item.type ?? "",
+        favoriteRank: index + 1,
+      }))
+      const result = await reorderUserFavoritesAction(stars.userId, stars.isCurrentUser, payload)
+      if (result.ok) refreshPage()
+    })
+  }
+
+  const moveFolder = (folderId: number, direction: -1 | 1) => {
+    const index = folders.findIndex((folder) => folder.id === folderId)
+    const targetIndex = index + direction
+    if (index < 0 || targetIndex < 0 || targetIndex >= folders.length) return
+    const nextFolders = [...folders]
+    const [folder] = nextFolders.splice(index, 1)
+    nextFolders.splice(targetIndex, 0, folder)
+    setFolders(nextFolders)
+    persistFolderOrder(nextFolders)
+  }
+
+  const moveFavorite = (favoriteId: number, direction: -1 | 1) => {
+    const scopedItems = filteredItems
+    const index = scopedItems.findIndex((item) => item.starId === favoriteId)
+    const targetIndex = index + direction
+    if (index < 0 || targetIndex < 0 || targetIndex >= scopedItems.length) return
+
+    const current = scopedItems[index]
+    const target = scopedItems[targetIndex]
+    const sourceIndex = items.findIndex((item) => item.starId === current.starId)
+    const destinationIndex = items.findIndex((item) => item.starId === target.starId)
+    if (sourceIndex < 0 || destinationIndex < 0) return
+
+    const nextItems = [...items]
+    const [moved] = nextItems.splice(sourceIndex, 1)
+    nextItems.splice(destinationIndex, 0, moved)
+    setItems(nextItems)
+    persistFavoriteOrder(nextItems)
+  }
+
+  const assignFavoriteFolder = (favoriteId: number, favoriteType: string, folderId: string) => {
+    startTransition(async () => {
+      const result = await updateUserFavoriteFolderAssignmentAction(stars.userId, stars.isCurrentUser, {
+        favoriteId,
+        favoriteType,
+        folderId: folderId === "unsorted" ? null : Number(folderId),
+      })
+      if (result.ok) refreshPage()
+    })
   }
 
   const handleCreateFolder = () => {
@@ -138,7 +220,7 @@ export function UserStarsWorkspace({ stars }: { stars: UserStars }) {
   if (stars.items.length === 0 && stars.suggestedReports.length > 0) {
     return (
       <div className="space-y-4">
-        <h3 className="text-xl font-semibold">
+        <h3 className="text-2xl font-semibold text-[var(--atlas-home-text-strong)]">
           You don&apos;t have any favorites! Here&apos;s some reports you&apos;ve used.
         </h3>
         <div className="grid gap-4 md:grid-cols-2">
@@ -177,25 +259,25 @@ export function UserStarsWorkspace({ stars }: { stars: UserStars }) {
 
   if (stars.items.length === 0) {
     return (
-      <p className="text-sm text-muted-foreground">
+      <div className="atlas-home-card min-h-[72px] px-6 py-6 text-sm text-[var(--atlas-home-text)]">
         You don&apos;t have any favorites! Search to get started.
-      </p>
+      </div>
     )
   }
 
   return (
     <div className={cn("space-y-5", isPending && "opacity-70")}>
       {quickFilters.length > 0 ? (
-        <div className="flex flex-wrap items-center gap-4">
-          <div className="inline-flex items-center gap-2 text-sm font-semibold">
-            <Search className="h-4 w-4 text-muted-foreground" />
+        <div className="my-4 flex flex-wrap items-center gap-4">
+          <div className="inline-flex items-center gap-2 text-sm font-semibold text-[var(--atlas-home-text-strong)]">
+            <Search className="h-4 w-4 text-[var(--atlas-home-muted)]" strokeWidth={1.8} />
             Quick Filter
           </div>
           <Input
             value={textFilter}
             onChange={(event) => setTextFilter(event.target.value)}
             placeholder="type to filter..."
-            className="max-w-xs"
+            className="atlas-home-search-shell h-10 max-w-xs bg-white px-3 text-sm shadow-none outline-none"
             aria-label="Filter starred items"
           />
           {quickFilters.map((filter) => (
@@ -205,7 +287,7 @@ export function UserStarsWorkspace({ stars }: { stars: UserStars }) {
               size="sm"
               variant={typeFilter === filter.id ? "default" : "outline"}
               onClick={() => setTypeFilter((current) => (current === filter.id ? null : filter.id))}
-              className="gap-2"
+              className="atlas-home-filter-button gap-2 rounded-full px-4 py-2 text-sm"
             >
               {filterIcon(filter.id)}
               {filter.label}
@@ -220,17 +302,17 @@ export function UserStarsWorkspace({ stars }: { stars: UserStars }) {
             type="button"
             onClick={() => setFolderFilter("all")}
             className={cn(
-              "relative w-full rounded-md border px-4 py-4 text-left transition-colors",
+              "atlas-home-card relative w-full border border-transparent px-4 py-4 text-left transition-colors",
               folderFilter === "all"
-                ? "border-primary bg-primary/5 font-semibold"
-                : "hover:bg-muted/50",
+                ? "font-bold"
+                : "font-medium hover:bg-[var(--atlas-home-surface-muted)]",
             )}
           >
-            <span className="inline-flex items-center gap-3">
-              <FolderOpen className="h-5 w-5" />
+            <span className="inline-flex items-center gap-3 text-[var(--atlas-home-text)]">
+              <FolderOpen className="h-5 w-5" strokeWidth={1.8} />
               All
             </span>
-            <span className="absolute -top-2 -right-2 rounded-full bg-primary px-2 py-0.5 text-xs text-primary-foreground">
+            <span className="atlas-home-folder-badge absolute -top-3 -right-3 rounded-full px-2 py-0.5 text-xs">
               {stars.summary.totalCount}
             </span>
           </button>
@@ -240,44 +322,44 @@ export function UserStarsWorkspace({ stars }: { stars: UserStars }) {
               type="button"
               onClick={() => setFolderFilter("unsorted")}
               className={cn(
-                "relative w-full rounded-md border px-4 py-4 text-left transition-colors",
+                "atlas-home-card relative w-full border border-transparent px-4 py-4 text-left transition-colors",
                 folderFilter === "unsorted"
-                  ? "border-primary bg-primary/5 font-semibold"
-                  : "hover:bg-muted/50",
+                  ? "font-bold"
+                  : "font-medium hover:bg-[var(--atlas-home-surface-muted)]",
               )}
             >
-              <span className="inline-flex items-center gap-3">
-                <Folder className="h-5 w-5" />
+              <span className="inline-flex items-center gap-3 text-[var(--atlas-home-text)]">
+                <Folder className="h-5 w-5" strokeWidth={1.8} />
                 Unsorted
               </span>
-              <span className="absolute -top-2 -right-2 rounded-full bg-primary px-2 py-0.5 text-xs text-primary-foreground">
+              <span className="atlas-home-folder-badge absolute -top-3 -right-3 rounded-full px-2 py-0.5 text-xs">
                 {stars.summary.unsortedCount}
               </span>
             </button>
           ) : null}
 
-          {stars.folders.map((folder) => (
+          {folders.map((folder, index) => (
             <div key={folder.id} className="space-y-2">
               <button
                 type="button"
                 onClick={() => setFolderFilter(folder.id)}
                 className={cn(
-                  "relative w-full rounded-md border px-4 py-4 text-left transition-colors",
+                  "atlas-home-card relative w-full border border-transparent px-4 py-4 text-left transition-colors",
                   folderFilter === folder.id
-                    ? "border-primary bg-primary/5 font-semibold"
-                    : "hover:bg-muted/50",
+                    ? "font-bold"
+                    : "font-medium hover:bg-[var(--atlas-home-surface-muted)]",
                 )}
               >
-                <span className="inline-flex items-center gap-3">
-                  <Folder className="h-5 w-5" />
+                <span className="inline-flex items-center gap-3 text-[var(--atlas-home-text)]">
+                  <Folder className="h-5 w-5" strokeWidth={1.8} />
                   {folder.name?.trim() || `Folder ${folder.id}`}
                 </span>
-                <span className="absolute -top-2 -right-2 rounded-full bg-primary px-2 py-0.5 text-xs text-primary-foreground">
+                <span className="atlas-home-folder-badge absolute -top-3 -right-3 rounded-full px-2 py-0.5 text-xs">
                   {folder.itemCount}
                 </span>
               </button>
               {stars.canEditWorkspace && folder.canManage ? (
-                <div className="flex gap-2 px-1">
+                <div className="flex flex-wrap gap-2 px-1">
                   <Button
                     type="button"
                     size="sm"
@@ -297,14 +379,34 @@ export function UserStarsWorkspace({ stars }: { stars: UserStars }) {
                   >
                     <Trash2 className="h-4 w-4" />
                   </Button>
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant="outline"
+                    disabled={index === 0}
+                    onClick={() => moveFolder(folder.id, -1)}
+                  >
+                    <ArrowUp className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant="outline"
+                    disabled={index === folders.length - 1}
+                    onClick={() => moveFolder(folder.id, 1)}
+                  >
+                    <ArrowDown className="h-4 w-4" />
+                  </Button>
                 </div>
               ) : null}
             </div>
           ))}
 
           {stars.canEditWorkspace && stars.permissions.canCreateFolders ? (
-            <div className="space-y-2 rounded-md border p-3">
-              <div className="text-sm font-medium">New folder</div>
+            <div className="atlas-home-card space-y-2 p-3">
+              <div className="text-sm font-medium text-[var(--atlas-home-text-strong)]">
+                New folder
+              </div>
               <Input
                 value={newFolderName}
                 onChange={(event) => setNewFolderName(event.target.value)}
@@ -318,8 +420,10 @@ export function UserStarsWorkspace({ stars }: { stars: UserStars }) {
           ) : null}
 
           {renameFolderId != null ? (
-            <div className="space-y-2 rounded-md border p-3">
-              <div className="text-sm font-medium">Rename folder</div>
+            <div className="atlas-home-card space-y-2 p-3">
+              <div className="text-sm font-medium text-[var(--atlas-home-text-strong)]">
+                Rename folder
+              </div>
               <Input
                 value={renameFolderName}
                 onChange={(event) => setRenameFolderName(event.target.value)}
@@ -333,11 +437,61 @@ export function UserStarsWorkspace({ stars }: { stars: UserStars }) {
 
         <div className="space-y-4">
           {filteredItems.length > 0 ? (
-            filteredItems.map((item) => (
-              <UserFavoriteCard key={`${item.type}-${item.starId}`} item={item} />
+            filteredItems.map((item, index) => (
+              <div key={`${item.type}-${item.starId}`} className="space-y-2">
+                {(stars.canEditWorkspace || item.canReorder) && stars.isCurrentUser ? (
+                  <div className="flex flex-wrap items-center justify-end gap-2">
+                    {stars.permissions.canMoveFavoritesToFolders ? (
+                      <Select
+                        defaultValue={item.folderId == null ? "unsorted" : String(item.folderId)}
+                        onValueChange={(value) =>
+                          assignFavoriteFolder(item.starId, item.type ?? "", value)
+                        }
+                      >
+                        <SelectTrigger className="h-9 w-[180px]">
+                          <SelectValue placeholder="Move to folder" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="unsorted">Unsorted</SelectItem>
+                          {folders.map((folder) => (
+                            <SelectItem key={folder.id} value={String(folder.id)}>
+                              {folder.name?.trim() || `Folder ${folder.id}`}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    ) : null}
+                    {stars.permissions.canReorderFavorites ? (
+                      <>
+                        <Button
+                          type="button"
+                          size="sm"
+                          variant="outline"
+                          disabled={index === 0}
+                          onClick={() => moveFavorite(item.starId, -1)}
+                        >
+                          <ArrowUp className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          type="button"
+                          size="sm"
+                          variant="outline"
+                          disabled={index === filteredItems.length - 1}
+                          onClick={() => moveFavorite(item.starId, 1)}
+                        >
+                          <ArrowDown className="h-4 w-4" />
+                        </Button>
+                      </>
+                    ) : null}
+                  </div>
+                ) : null}
+                <UserFavoriteCard item={item} />
+              </div>
             ))
           ) : (
-            <p className="text-sm text-muted-foreground">No favorites match the current filters.</p>
+            <div className="atlas-home-card px-6 py-7 text-sm text-[var(--atlas-home-text)]">
+              No favorites match the current filters.
+            </div>
           )}
         </div>
       </div>
