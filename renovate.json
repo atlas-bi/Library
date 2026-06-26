@@ -15,6 +15,7 @@
   "platformAutomerge": true,
   "commitMessagePrefix": "chore(deps): ",
   "labels": ["maintenance", "renovate"],
+  "minimumReleaseAge": "1 day",
   "packageRules": [
     {
       "matchUpdateTypes": ["pin", "digest", "minor", "patch"],
