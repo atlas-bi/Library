@@ -5,8 +5,9 @@ RUN npm install -g pnpm@10.32.1
 FROM base AS deps
 WORKDIR /app
 COPY package.json ./package.json
+COPY pnpm-lock.yaml ./pnpm-lock.yaml
 COPY frontend ./frontend
-RUN pnpm install --ignore-scripts --no-frozen-lockfile
+RUN pnpm install --ignore-scripts --frozen-lockfile
 
 FROM base AS builder
 WORKDIR /app
