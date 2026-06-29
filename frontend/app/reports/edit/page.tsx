@@ -15,7 +15,12 @@ function getSingleValue(value: string | string[] | undefined): string | undefine
   return undefined
 }
 
-export default async function EditReportPage({ searchParams }: { searchParams: EditSearchParams }) {
+export default async function EditReportPage({
+  searchParams,
+}: {
+  searchParams: Promise<EditSearchParams>
+}) {
+  const resolvedSearchParams = await searchParams
   const token = await getToken()
   if (!token) redirect("/auth/login")
 
@@ -40,7 +45,7 @@ export default async function EditReportPage({ searchParams }: { searchParams: E
     )
   }
 
-  const idRaw = getSingleValue(searchParams.id)
+  const idRaw = getSingleValue(resolvedSearchParams.id)
   const id = idRaw ? Number(idRaw) : NaN
   if (!Number.isFinite(id) || id <= 0) {
     return (

@@ -28,7 +28,6 @@ export function CollectionsListCard({ collection }: { collection: CollectionList
 
       <div className="grid gap-4 px-4 py-4 md:grid-cols-[128px_1fr]">
         <div className="flex items-start">
-          {/* biome-ignore lint/performance/noImgElement: proxied backend placeholder matches C# _Snippet.cshtml */}
           <img
             src="/img/report_placeholder_128x128.png"
             alt={`${collection.name} thumbnail`}
