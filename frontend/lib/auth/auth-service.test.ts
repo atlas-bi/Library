@@ -1,9 +1,11 @@
 import { beforeEach, describe, expect, it, vi } from "vitest"
 import type { AuthUser } from "./types"
 
-const cookiesMock = vi.fn()
-const getServerApiBaseMock = vi.fn()
-const apiFetchJsonMock = vi.fn()
+const { cookiesMock, getServerApiBaseMock, apiFetchJsonMock } = vi.hoisted(() => ({
+  cookiesMock: vi.fn(),
+  getServerApiBaseMock: vi.fn(),
+  apiFetchJsonMock: vi.fn(),
+}))
 
 vi.mock("next/headers", () => ({
   cookies: cookiesMock,
