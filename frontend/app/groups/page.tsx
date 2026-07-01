@@ -24,11 +24,16 @@ function getSingleValue(value: string | string[] | undefined): string | undefine
   return undefined
 }
 
-export default async function GroupsPage({ searchParams }: { searchParams: GroupsSearchParams }) {
+export default async function GroupsPage({
+  searchParams,
+}: {
+  searchParams: Promise<GroupsSearchParams>
+}) {
   const token = await getToken()
   if (!token) redirect("/auth/login")
 
-  const idRaw = getSingleValue(searchParams.id)
+  const resolvedSearchParams = await searchParams
+  const idRaw = getSingleValue(resolvedSearchParams.id)
 
   if (!idRaw) {
     return <GroupsListView />

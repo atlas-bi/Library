@@ -49,7 +49,9 @@ export async function loadProfileAnalyticsAction(
     getProfileReports(filters),
     getProfileFails(filters),
     getProfileRunList(filters),
-    canLoadProfileRelationships ? getProfileStars(filters) : Promise.resolve({ data: [], error: null }),
+    canLoadProfileRelationships
+      ? getProfileStars(filters)
+      : Promise.resolve({ data: [], error: null }),
     canLoadProfileRelationships
       ? getProfileSubscriptions(filters)
       : Promise.resolve({ data: [], error: null }),
