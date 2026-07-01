@@ -24,6 +24,33 @@ jobs:
 
       - name: lint
         run: npm run lint
+  frontend_tests:
+    name: 'frontend tests'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: checkout
+        uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
+
+      - name: setup node
+        uses: actions/setup-node@v6
+        with:
+          node-version: '22.x'
+
+      - name: install node deps
+        run: npm install --ignore-scripts --no-audit --no-fund
+
+      - name: test with coverage
+        run: npm run frontend:test:coverage
+
+      - name: upload cov
+        if: always()
+        uses: codecov/codecov-action@671740ac38dd9b0130fbe1cec585b89eea48d3de
+        with:
+          files: ./frontend/coverage/cobertura-coverage.xml
+          token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: false
+          verbose: true
   install_test:
     name: 'install test'
     runs-on: windows-latest
@@ -133,6 +160,24 @@ jobs:
             cat coverage/Summary.txt
           } else {
             Write-Host "Coverage file not found, skipping report generation"
+          }
+
+      - name: enforce coverage threshold
+        if: always()
+        shell: pwsh
+        env:
+          COVERAGE_THRESHOLD: '5'
+        run: |
+          if (!(Test-Path coverage.cobertura.xml)) {
+            throw "Coverage file not found."
+          }
+
+          [xml]$coverage = Get-Content coverage.cobertura.xml
+          $lineRate = [double]$coverage.coverage.'line-rate' * 100
+          Write-Host ("Line coverage: {0:N2}%" -f $lineRate)
+
+          if ($lineRate -lt [double]$env:COVERAGE_THRESHOLD) {
+            throw "Line coverage $lineRate is below threshold $env:COVERAGE_THRESHOLD."
           }
 
       - name: upload cov
@@ -271,6 +316,24 @@ jobs:
             cat coverage/Summary.txt
           } else {
             Write-Host "Coverage file not found, skipping report generation"
+          }
+
+      - name: enforce coverage threshold
+        if: always()
+        shell: pwsh
+        env:
+          COVERAGE_THRESHOLD: '5'
+        run: |
+          if (!(Test-Path coverage.cobertura.xml)) {
+            throw "Coverage file not found."
+          }
+
+          [xml]$coverage = Get-Content coverage.cobertura.xml
+          $lineRate = [double]$coverage.coverage.'line-rate' * 100
+          Write-Host ("Line coverage: {0:N2}%" -f $lineRate)
+
+          if ($lineRate -lt [double]$env:COVERAGE_THRESHOLD) {
+            throw "Line coverage $lineRate is below threshold $env:COVERAGE_THRESHOLD."
           }
 
       - name: upload cov

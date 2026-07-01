@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Atlas_Web.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -15,6 +16,8 @@ namespace web.Tests.IntegrationTests
     public class WebFactory<TStartup> : WebApplicationFactory<TStartup>
         where TStartup : class
     {
+        private readonly string _databaseName = $"AtlasIntegrationTestDb-{Guid.NewGuid()}";
+
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
             builder.UseEnvironment("Test");
@@ -23,6 +26,8 @@ namespace web.Tests.IntegrationTests
             {
                 config.AddInMemoryCollection(new Dictionary<string, string>
                 {
+                    ["Demo"] = "True",
+                    ["DEMO_ADMIN_USERNAME"] = "Default",
                     ["Jwt:Key"] = "test-jwt-secret-key-for-integration-tests-32-chars-minimum",
                     ["Jwt:Issuer"] = "atlas-test-issuer",
                     ["Jwt:Audience"] = "atlas-test-audience",
@@ -37,7 +42,7 @@ namespace web.Tests.IntegrationTests
                 // Program.cs won't register SQL Server in Test environment, so no conflict
                 services.AddDbContext<Atlas_WebContext>(options =>
                 {
-                    options.UseInMemoryDatabase("AtlasIntegrationTestDb");
+                    options.UseInMemoryDatabase(_databaseName);
                 });
             });
         }
@@ -56,7 +61,10 @@ namespace web.Tests.IntegrationTests
                 try
                 {
                     db.Database.EnsureCreated();
-                    web.Tests.FunctionTests.Utilities.InitializeDbForTests(db);
+                    if (!db.Users.Any())
+                    {
+                        web.Tests.FunctionTests.Utilities.InitializeDbForTests(db);
+                    }
                     logger.LogInformation("Test database initialized and seeded");
                 }
                 catch (Exception ex)

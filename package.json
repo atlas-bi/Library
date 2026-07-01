@@ -73,6 +73,7 @@
     "tailwindcss": "^4",
     "typescript": "^5",
     "vitest": "^3",
+    "@vitest/coverage-v8": "^3",
     "xo": "^1.0.0"
   },
   "homepage": "https://demo.atlas.bi",
@@ -97,6 +98,7 @@
     "frontend:format": "cd frontend && ../node_modules/.bin/biome check --config-path biome.json --write .",
     "frontend:typecheck": "tsc -p frontend/tsconfig.json --noEmit",
     "frontend:test": "vitest run --config frontend/vitest.config.ts",
+    "frontend:test:coverage": "vitest run --config frontend/vitest.config.ts --coverage",
     "watch": "gulp watch",
     "pre-commit": "lint-staged",
     "format:static": "prettier --config .prettierrc \"**/*.{ts,css,less,scss,js,json,md,yaml,yml,html}\" --write",
