@@ -18,12 +18,16 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: '22.x'
+          cache: 'pnpm'
+
+      - name: enable corepack
+        run: corepack enable
 
       - name: install node deps
-        run: npm install --ignore-scripts --no-audit --no-fund
+        run: pnpm install --ignore-scripts --frozen-lockfile
 
       - name: lint
-        run: npm run lint
+        run: pnpm run lint
   frontend_tests:
     name: 'frontend tests'
     runs-on: ubuntu-latest
@@ -36,12 +40,16 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: '22.x'
+          cache: 'pnpm'
+
+      - name: enable corepack
+        run: corepack enable
 
       - name: install node deps
-        run: npm install --ignore-scripts --no-audit --no-fund
+        run: pnpm install --ignore-scripts --frozen-lockfile
 
       - name: test with coverage
-        run: npm run frontend:test:coverage
+        run: pnpm run frontend:test:coverage
 
       - name: upload cov
         if: always()
@@ -69,10 +77,13 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: '22.x'
+          cache: 'pnpm'
+      - name: enable corepack
+        run: corepack enable
       - name: install node deps
-        run: npm install --ignore-scripts --no-audit --no-fund
+        run: pnpm install --ignore-scripts --frozen-lockfile
       - name: node build
-        run: npm run build
+        run: pnpm run build
       - name: create settings file
         run: |
           cd web
@@ -110,27 +121,30 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: '22.x'
+          cache: 'pnpm'
       - name: setup java
         uses: actions/setup-java@be666c2fcd27ec809703dec50e508c2fdc7f6654
         with:
           distribution: 'microsoft'
           java-version: '17'
+      - name: enable corepack
+        run: corepack enable
       - name: install node deps
-        run: npm install --ignore-scripts --no-audit --no-fund
+        run: pnpm install --ignore-scripts --frozen-lockfile
       - name: node build
-        run: npm run build
+        run: pnpm run build
       - name: install dotnet deps
         run: |
           dotnet tool install -g dotnet-reportgenerator-globaltool
           dotnet restore
       - name: build
-        run: npm run dotnet:build
+        run: pnpm run dotnet:build
       - name: start solr
         run: ./web/solr/bin/solr start
 
       - name: test
         run: |
-          npm run test:integrationTests
+          pnpm run test:integrationTests
         env:
           BROWSERSTACK_ACCESS_KEY: ${{ secrets.BROWSERSTACK_ACCESS_KEY }}
           BROWSERSTACK_USERNAME: ${{ secrets.BROWSERSTACK_USERNAME }}
