@@ -66,7 +66,7 @@ jobs:
 
       - name: upload test results
         if: ${{ !cancelled() }}
-        uses: codecov/test-results-action@cc178e79eb2110bf01f5b145e0e92a0bda0cfd69
+        uses: codecov/codecov-action@671740ac38dd9b0130fbe1cec585b89eea48d3de
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./frontend/coverage/test-report.junit.xml
@@ -222,7 +222,7 @@ jobs:
 
       - name: upload test results
         if: ${{ !cancelled() }}
-        uses: codecov/test-results-action@cc178e79eb2110bf01f5b145e0e92a0bda0cfd69
+        uses: codecov/codecov-action@671740ac38dd9b0130fbe1cec585b89eea48d3de
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./TestResults/integration-tests.junit.xml
@@ -393,7 +393,7 @@ jobs:
 
       - name: upload test results
         if: ${{ !cancelled() }}
-        uses: codecov/test-results-action@cc178e79eb2110bf01f5b145e0e92a0bda0cfd69
+        uses: codecov/codecov-action@671740ac38dd9b0130fbe1cec585b89eea48d3de
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./TestResults/function-tests.junit.xml
