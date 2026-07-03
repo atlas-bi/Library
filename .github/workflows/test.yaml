@@ -63,6 +63,14 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
           fail_ci_if_error: false
           verbose: true
+
+      - name: upload test results
+        if: ${{ !cancelled() }}
+        uses: codecov/test-results-action@cc178e79eb2110bf01f5b145e0e92a0bda0cfd69
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./frontend/coverage/test-report.junit.xml
+          report-type: test_results
   install_test:
     name: 'install test'
     runs-on: windows-latest
@@ -152,7 +160,7 @@ jobs:
 
       - name: test
         run: |
-          pnpm run test:integrationTests
+          dotnet test web.Tests/web.Tests.csproj --filter IntegrationTests --no-build -e Demo=True --collect:"XPlat Code Coverage;Format=cobertura" --results-directory TestResults --logger:"junit;LogFilePath=TestResults/integration-tests.junit.xml"
         env:
           BROWSERSTACK_ACCESS_KEY: ${{ secrets.BROWSERSTACK_ACCESS_KEY }}
           BROWSERSTACK_USERNAME: ${{ secrets.BROWSERSTACK_USERNAME }}
@@ -211,6 +219,15 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
           fail_ci_if_error: false
           verbose: true
+
+      - name: upload test results
+        if: ${{ !cancelled() }}
+        uses: codecov/test-results-action@cc178e79eb2110bf01f5b145e0e92a0bda0cfd69
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./TestResults/integration-tests.junit.xml
+          report-type: test_results
+          flags: integration
 
   # browser_tests:
   #   name: 'browser tests'
@@ -314,7 +331,7 @@ jobs:
 
       - name: test
         run: |
-          pnpm run test:functionTests
+          dotnet test web.Tests/web.Tests.csproj --filter FunctionTests --no-build -e Demo=True --collect:"XPlat Code Coverage;Format=cobertura" --results-directory TestResults --logger:"junit;LogFilePath=TestResults/function-tests.junit.xml"
         env:
           BROWSERSTACK_ACCESS_KEY: ${{ secrets.BROWSERSTACK_ACCESS_KEY }}
           BROWSERSTACK_USERNAME: ${{ secrets.BROWSERSTACK_USERNAME }}
@@ -373,3 +390,12 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
           fail_ci_if_error: false
           verbose: true
+
+      - name: upload test results
+        if: ${{ !cancelled() }}
+        uses: codecov/test-results-action@cc178e79eb2110bf01f5b145e0e92a0bda0cfd69
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./TestResults/function-tests.junit.xml
+          report-type: test_results
+          flags: function
