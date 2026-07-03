@@ -316,7 +316,7 @@ var app = builder.Build();
 
 app.UseResponseCompression();
 
-if (!app.Environment.IsDevelopment())
+if (!app.Environment.IsDevelopment() && !app.Environment.IsEnvironment("Test"))
 {
     app.UseHsts();
     app.UseStatusCodePagesWithReExecute("/Error", "?id={0}");
