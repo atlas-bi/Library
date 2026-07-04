@@ -7,10 +7,6 @@ import { LibraryShell } from "@/components/layout/library-shell"
 import { ProfileAnalyticsPanel } from "@/components/profile/profile-analytics-panel"
 import { TermRelatedReportCard } from "@/components/snippets/term-related-report-card"
 import { TermActionRail } from "@/components/terms/term-action-rail"
-import {
-  CollectionDetailSection,
-  CollectionSubsection,
-} from "@/components/collections/collection-detail-section"
 import { TermMetadataTable } from "@/components/terms/term-metadata-table"
 import { TermSectionNav } from "@/components/terms/term-section-nav"
 import { TermsListCard } from "@/components/terms/terms-list-card"
@@ -147,40 +143,51 @@ export default async function TermsPage({
               </h1>
               <TermSectionNav hasDescription={hasDescription} hasReports={hasReports} />
             </div>
-            {(hasSummary || hasTechnicalDefinition) ? (
-              <CollectionDetailSection id="details" title="Description">
-                <div className="content space-y-8">
+            <div className="content space-y-8">
+              {(hasSummary || hasTechnicalDefinition) ? (
+                <>
+                  <h2 id="details" className="atlas-home-heading text-3xl mb-4">Description</h2>
                   {hasSummary ? (
-                    <CollectionSubsection title="Summary">
-                      <MarkdownContent content={term.summary ?? ""} />
-                    </CollectionSubsection>
+                    <div className="space-y-4">
+                      <h3 className="atlas-home-heading text-2xl mb-2">Summary</h3>
+                      <div>
+                        <MarkdownContent content={term.summary ?? ""} />
+                      </div>
+                    </div>
                   ) : null}
                   {hasTechnicalDefinition ? (
-                    <CollectionSubsection title="Technical Definition">
-                      <TechnicalDefinitionContent content={term.technicalDefinition ?? ""} />
-                    </CollectionSubsection>
+                    <div className="space-y-4">
+                      <h3 className="atlas-home-heading text-2xl mb-2">Technical Definition</h3>
+                      <div>
+                        <TechnicalDefinitionContent content={term.technicalDefinition ?? ""} />
+                      </div>
+                    </div>
                   ) : null}
-                </div>
-              </CollectionDetailSection>
-            ) : null}
+                </>
+              ) : null}
 
-            {hasReports ? (
-              <CollectionDetailSection id="reports" title="Linked Reports">
-                <div className="grid gap-4 md:grid-cols-2">
-                  {reports.map((report) => (
-                    <TermRelatedReportCard
-                      key={report.id}
-                      report={report}
-                      features={features}
-                    />
-                  ))}
-                </div>
-              </CollectionDetailSection>
-            ) : null}
+              {hasReports ? (
+                <>
+                  <h2 id="reports" className="atlas-home-heading text-3xl mb-4 mt-8">Linked Reports</h2>
+                  <div className="grid gap-4 md:grid-cols-2">
+                    {reports.map((report) => (
+                      <TermRelatedReportCard
+                        key={report.id}
+                        report={report}
+                        features={features}
+                      />
+                    ))}
+                  </div>
+                </>
+              ) : null}
+            </div>
 
-            <CollectionDetailSection id="meta" title="Details">
-              <TermMetadataTable term={term} />
-            </CollectionDetailSection>
+            <div className="mt-8">
+              <h2 id="meta" className="atlas-home-heading text-3xl mb-4">Details</h2>
+              <div>
+                <TermMetadataTable term={term} />
+              </div>
+            </div>
           </div>
         </div>
       </LibraryShell>
