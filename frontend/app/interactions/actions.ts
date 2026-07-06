@@ -24,6 +24,8 @@ export async function toggleStarAction(type: InteractionEntityType, id: number) 
   revalidatePath("/")
   if (type === "report") {
     revalidatePath("/reports")
+  } else if (type === "term") {
+    revalidatePath("/terms")
   } else {
     revalidatePath("/collections")
   }

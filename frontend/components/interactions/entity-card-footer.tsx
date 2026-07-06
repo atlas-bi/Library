@@ -37,7 +37,7 @@ function renderFooterLink(href: string, icon: ReactNode, label: string, key: str
 }
 
 export type EntityCardFooterProps = {
-  entityType: "collection" | "report"
+  entityType: "collection" | "report" | "term"
   id: number
   title: string
   href: string
@@ -70,7 +70,11 @@ export function EntityCardFooter({
   profilePanel,
 }: EntityCardFooterProps) {
   const starType = entityType
-  const profileLabel = entityType === "collection" ? "collection profile" : "report profile"
+  const profileLabel = entityType === "collection"
+    ? "collection profile"
+    : entityType === "term"
+      ? "term profile"
+      : "report profile"
   const sharingEnabled = isInteractionFeatureEnabled(readFeatureFlag(features, "sharingEnabled"))
   const requestAccessEnabled =
     isInteractionFeatureEnabled(readFeatureFlag(features, "requestAccessEnabled")) &&
