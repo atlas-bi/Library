@@ -32,7 +32,7 @@ export function MarkdownField({
             ref={editorRef}
             id={id}
             value={value}
-            onChange={(val) => {
+            onChange={(val: string) => {
               onChange(val)
             }}
             extensions={[markdown({ base: markdownLanguage }), EditorView.lineWrapping]}
