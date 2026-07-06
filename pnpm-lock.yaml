@@ -103,8 +103,8 @@ importers:
         specifier: ^16.0.0
         version: 16.0.3(rollup@4.62.2)
       '@rollup/plugin-terser':
-        specifier: ^0.4.3
-        version: 0.4.4(rollup@4.62.2)
+        specifier: ^1.0.0
+        version: 1.0.0(rollup@4.62.2)
       '@semantic-release/changelog':
         specifier: ^6.0.3
         version: 6.0.3(semantic-release@25.0.5(typescript@5.9.3))
@@ -970,7 +970,7 @@ packages:
     engines: {node: '>=22.12.0'}
 
   '@creativebulma/bulma-badge@https://codeload.github.com/christopherpickering/bulma-badge/tar.gz/25ddc9d4ac351ebb0a9991af2bdf7765c428b33e':
-    resolution: {gitHosted: true, tarball: https://codeload.github.com/christopherpickering/bulma-badge/tar.gz/25ddc9d4ac351ebb0a9991af2bdf7765c428b33e}
+    resolution: {gitHosted: true, integrity: sha512-CrCFNkSEbIkCz0UxqRM2w1zJx3oGz4jPsYyN5wpQ998UhwcXSFt91z0FR4kT1X4qcYByPzdZU8iJXuVpKJZqHw==, tarball: https://codeload.github.com/christopherpickering/bulma-badge/tar.gz/25ddc9d4ac351ebb0a9991af2bdf7765c428b33e}
     version: 1.0.1
 
   '@creativebulma/bulma-tooltip@1.2.0':
@@ -2538,9 +2538,9 @@ packages:
       rollup:
         optional: true
 
-  '@rollup/plugin-terser@0.4.4':
-    resolution: {integrity: sha512-XHeJC5Bgvs8LfukDwWZp7yeqin6ns8RTl2B9avbejt6tZqsqvVoWI7ZTQrcNsfKEDWBTnTxM8nMDkO2IFFbd0A==}
-    engines: {node: '>=14.0.0'}
+  '@rollup/plugin-terser@1.0.0':
+    resolution: {integrity: sha512-FnCxhTBx6bMOYQrar6C8h3scPt8/JwIzw3+AJ2K++6guogH5fYaIFia+zZuhqv0eo1RN7W1Pz630SyvLbDjhtQ==}
+    engines: {node: '>=20.0.0'}
     peerDependencies:
       rollup: ^2.0.0||^3.0.0||^4.0.0
     peerDependenciesMeta:
@@ -3613,7 +3613,7 @@ packages:
     deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
 
   bulma-steps-component@https://codeload.github.com/atlas-bi/bulma-steps/tar.gz/a1b068b3d4a90d4af9b50e97eded6aa7f65b0a96:
-    resolution: {gitHosted: true, tarball: https://codeload.github.com/atlas-bi/bulma-steps/tar.gz/a1b068b3d4a90d4af9b50e97eded6aa7f65b0a96}
+    resolution: {gitHosted: true, integrity: sha512-FYGky3DMJjHK1ZQXEbZNu5QDcU2wqVk1iFc4+6FDcmol6wx3Qdi9KQ83QX5RbjAewy1xLPWYQ0B6nnzr6CSCUg==, tarball: https://codeload.github.com/atlas-bi/bulma-steps/tar.gz/a1b068b3d4a90d4af9b50e97eded6aa7f65b0a96}
     version: 0.9.3
 
   bulma-switch@2.0.4:
@@ -7106,9 +7106,6 @@ packages:
       '@types/react-dom':
         optional: true
 
-  randombytes@2.1.0:
-    resolution: {integrity: sha512-vYl3iOX+4CKUWuxGi9Ukhie6fsqXqS9FE2Zaic4tNFD2N2QQaXOMFbuKK4QmDHC0JO6B1Zp41J0LpT0oR68amQ==}
-
   range-parser@1.3.0:
     resolution: {integrity: sha512-hek2mFQpPuI4E1BBKrSto+BU3e3x4xuarsbiwr3+lf7p44juvFMV0XFWQAP3xUyqXA4RrXLIoaSUGbSt056ZMw==}
     engines: {node: '>= 0.6'}
@@ -7441,8 +7438,9 @@ packages:
     resolution: {integrity: sha512-1gnZf7DFcoIcajTjTwjwuDjzuz4PPcY2StKPlsGAQ1+YH20IRVrBaXSWmdjowTJ6u8Rc01PoYOGHXfP1mYcZNQ==}
     engines: {node: '>= 18'}
 
-  serialize-javascript@6.0.2:
-    resolution: {integrity: sha512-Saa1xPByTTq2gdeFZYLLo+RFE35NHZkAbqZeWNd3BpzppeVisAqpDjcp8dyf6uIvEqJRd46jemmyA4iFIeVk8g==}
+  serialize-javascript@7.0.7:
+    resolution: {integrity: sha512-YAy8Od6KV+uuwUuU50np8fGB/Aues6Y0nAhA9y/hId74PlKUcme4pXcBD46NWKr1Q4osN/iseZ17YqO1XfmI8g==}
+    engines: {node: '>=20.0.0'}
 
   serve-static@2.2.1:
     resolution: {integrity: sha512-xRXBn0pPqQTVQiC8wyQrKs2MOlX24zQ0POGaj0kultvoOCstBQM5yvOhAVSUwOMjQtTvsPWoNCHfPGwaaQJhTw==}
@@ -10954,9 +10952,9 @@ snapshots:
     optionalDependencies:
       rollup: 4.62.2
 
-  '@rollup/plugin-terser@0.4.4(rollup@4.62.2)':
+  '@rollup/plugin-terser@1.0.0(rollup@4.62.2)':
     dependencies:
-      serialize-javascript: 6.0.2
+      serialize-javascript: 7.0.7
       smob: 1.6.2
       terser: 5.48.0
     optionalDependencies:
@@ -15970,10 +15968,6 @@ snapshots:
       '@types/react': 19.2.17
       '@types/react-dom': 19.2.3(@types/react@19.2.17)
 
-  randombytes@2.1.0:
-    dependencies:
-      safe-buffer: 5.2.1
-
   range-parser@1.3.0: {}
 
   raw-body@3.0.2:
@@ -16437,9 +16431,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  serialize-javascript@6.0.2:
-    dependencies:
-      randombytes: 2.1.0
+  serialize-javascript@7.0.7: {}
 
   serve-static@2.2.1:
     dependencies:
