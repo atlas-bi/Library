@@ -74,7 +74,7 @@
     "typescript": "^5",
     "vitest": "^3",
     "@vitest/coverage-v8": "^3",
-    "xo": "^1.0.0"
+    "xo": "^2.0.0"
   },
   "homepage": "https://demo.atlas.bi",
   "license": "AGPL-3.0-or-later",
@@ -187,7 +187,7 @@
       "unicorn/prefer-at": "warn"
     }
   },
-  "version": "3.15.44",
+  "version": "3.15.45",
   "dependencies": {
     "@codemirror/lang-markdown": "^6.5.0",
     "@codemirror/view": "^6.43.5",
