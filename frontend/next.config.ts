@@ -1,7 +1,9 @@
+import path from "node:path"
 import type { NextConfig } from "next"
 
 const nextConfig: NextConfig = {
   output: "standalone",
+  outputFileTracingRoot: path.join(__dirname, ".."),
   async rewrites() {
     const apiBase = process.env.API_URL ?? process.env.NEXT_PUBLIC_API_URL
     if (!apiBase) return []
