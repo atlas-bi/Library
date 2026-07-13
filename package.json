@@ -27,7 +27,7 @@
     "@testing-library/react": "^16",
     "@testing-library/user-event": "^14",
     "@toycode/markdown-it-class": "1.2.4",
-    "@types/node": "^20",
+    "@types/node": "^22.0.0",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "bulma": "1.0.4",
@@ -187,7 +187,7 @@
       "unicorn/prefer-at": "warn"
     }
   },
-  "version": "3.15.45",
+  "version": "3.15.46",
   "dependencies": {
     "@codemirror/lang-markdown": "^6.5.0",
     "@codemirror/view": "^6.43.5",
