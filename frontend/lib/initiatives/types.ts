@@ -7,10 +7,12 @@ export interface InitiativeListItemDto {
 }
 
 export interface InitiativesListResponseDto {
-  initiatives: InitiativeListItemDto[]
+  items: InitiativeListItemDto[]
   total: number
   page: number
   pageSize: number
+  features?: InitiativeFeatureFlagsDto | null
+  permissions?: Record<string, boolean> | null
 }
 
 export interface InitiativeFeatureFlagsDto {
@@ -24,6 +26,11 @@ export interface InitiativeUserSummaryDto {
   id?: number
   username?: string | null
   fullName?: string | null
+}
+
+export interface InitiativeLookupItemDto {
+  id: number
+  name: string
 }
 
 export interface InitiativeCollectionSummaryDto {
@@ -51,8 +58,8 @@ export interface InitiativeDetailDto {
   collections?: InitiativeCollectionSummaryDto[]
   operationOwner?: InitiativeUserSummaryDto | null
   executiveOwner?: InitiativeUserSummaryDto | null
-  financialImpact?: string | null
-  strategicImportance?: string | null
+  financialImpact?: InitiativeLookupItemDto | null
+  strategicImportance?: InitiativeLookupItemDto | null
   hidden?: string | null
 }
 
@@ -63,8 +70,9 @@ export interface InitiativeWriteBody {
   collectionIds: number[]
   operationOwnerId?: number | null
   executiveOwnerId?: number | null
-  financialImpact?: string | null
-  strategicImportance?: string | null
+  financialImpactId?: number | null
+  strategicImportanceId?: number | null
+  hidden?: string | null
 }
 
 export interface InitiativeCollectionTypeaheadItemDto {

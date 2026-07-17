@@ -1,11 +1,15 @@
 "use client"
 
+import { BarChart2, Edit, Plus, Share, Star, Trash2 } from "lucide-react"
 import Link from "next/link"
-import { useState } from "react"
 import { useRouter } from "next/navigation"
-import { deleteInitiativeAction } from "@/lib/initiatives/actions"
+import { useState, useTransition } from "react"
+import {
+  deleteInitiativeAction,
+  starInitiativeAction,
+  unstarInitiativeAction,
+} from "@/lib/initiatives/actions"
 import type { InitiativeDetailDto } from "@/lib/initiatives/types"
-import { Star, Share, Plus, Edit, Trash2, BarChart2 } from "lucide-react"
 import { ShareModal } from "./share-modal"
 
 interface InitiativeDetailProps {
@@ -14,9 +18,13 @@ interface InitiativeDetailProps {
   canCreateInitiative?: boolean
 }
 
-export function InitiativeDetail({ data, canViewOtherUser = true, canCreateInitiative = false }: InitiativeDetailProps) {
+export function InitiativeDetail({
+  data,
+  canViewOtherUser = true,
+  canCreateInitiative = false,
+}: InitiativeDetailProps) {
   const router = useRouter()
-  
+
   const {
     id,
     name,
@@ -38,9 +46,20 @@ export function InitiativeDetail({ data, canViewOtherUser = true, canCreateIniti
   const [isDeleting, setIsDeleting] = useState(false)
   const [shareModalOpen, setShareModalOpen] = useState(false)
 
+  const [isPending, startTransition] = useTransition()
+
   const toggleStar = () => {
     setIsStarred(!isStarred)
-    setStarCount(prev => isStarred ? prev - 1 : prev + 1)
+    setStarCount((prev) => (isStarred ? prev - 1 : prev + 1))
+    startTransition(() => {
+      void (async () => {
+        if (isStarred) {
+          await unstarInitiativeAction(id)
+        } else {
+          await starInitiativeAction(id)
+        }
+      })()
+    })
   }
 
   const handleDelete = async () => {
@@ -68,18 +87,21 @@ export function InitiativeDetail({ data, canViewOtherUser = true, canCreateIniti
 
   return (
     <div className="mx-auto flex flex-col md:flex-row gap-8 py-8 items-start">
-      
       {/* Left Action Rail */}
       <div className="flex flex-col items-center gap-4 sticky top-24 pt-2">
         {/* Star Button */}
-        <button 
-          type="button" 
-          onClick={toggleStar} 
+        <button
+          type="button"
+          disabled={isPending}
+          onClick={toggleStar}
           className="relative group"
           title={isStarred ? "Unstar this initiative" : "Star this initiative"}
         >
           <div className="relative inline-block">
-            <Star className={`h-5 w-5 ${isStarred ? "fill-current text-[#dba71a]" : "text-gray-500"}`} strokeWidth={isStarred ? 0 : 2} />
+            <Star
+              className={`h-5 w-5 ${isStarred ? "fill-current text-[#dba71a]" : "text-gray-500"}`}
+              strokeWidth={isStarred ? 0 : 2}
+            />
             <span className="absolute -top-2 -right-3 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-[#59cbb7] px-1 text-[9px] font-bold text-white">
               {starCount}
             </span>
@@ -88,8 +110,8 @@ export function InitiativeDetail({ data, canViewOtherUser = true, canCreateIniti
 
         {/* Share Button */}
         {features?.sharingEnabled !== false && (
-          <button 
-            type="button" 
+          <button
+            type="button"
             onClick={handleShare}
             className="text-gray-500 hover:text-gray-700 transition-colors"
             title="Share"
@@ -100,7 +122,7 @@ export function InitiativeDetail({ data, canViewOtherUser = true, canCreateIniti
 
         {/* Create Button */}
         {canCreateInitiative && (
-          <Link 
+          <Link
             href="/initiatives/new"
             className="text-gray-500 hover:text-gray-700 transition-colors"
             title="Create New Initiative"
@@ -111,8 +133,8 @@ export function InitiativeDetail({ data, canViewOtherUser = true, canCreateIniti
 
         {/* Edit Button */}
         {canEditInitiative && (
-          <button 
-            type="button" 
+          <button
+            type="button"
             onClick={handleEdit}
             className="text-gray-500 hover:text-gray-700 transition-colors"
             title="Edit Initiative"
@@ -123,8 +145,8 @@ export function InitiativeDetail({ data, canViewOtherUser = true, canCreateIniti
 
         {/* Delete Button */}
         {canDeleteInitiative && (
-          <button 
-            type="button" 
+          <button
+            type="button"
             onClick={handleDelete}
             disabled={isDeleting}
             className="text-gray-500 hover:text-gray-700 transition-colors disabled:opacity-50"
@@ -144,13 +166,17 @@ export function InitiativeDetail({ data, canViewOtherUser = true, canCreateIniti
         <nav className="mb-8 text-[1rem] text-gray-500">
           <ul className="flex items-center gap-2">
             <li>
-              <a href="#details" className="text-[#3273dc] hover:underline">Details</a>
+              <a href="#details" className="text-[#3273dc] hover:underline">
+                Details
+              </a>
             </li>
             {collections && collections.length > 0 && (
               <>
                 <li className="mx-2 text-[#b5b5b5]">/</li>
                 <li>
-                  <a href="#collections" className="text-[#3273dc] hover:underline">Linked Collections</a>
+                  <a href="#collections" className="text-[#3273dc] hover:underline">
+                    Linked Collections
+                  </a>
                 </li>
               </>
             )}
@@ -159,7 +185,9 @@ export function InitiativeDetail({ data, canViewOtherUser = true, canCreateIniti
 
         {description && (
           <div className="mb-8">
-            <h2 className="mb-4 font-serif text-[2.5rem] font-semibold text-[#363636]">Description</h2>
+            <h2 className="mb-4 font-serif text-[2.5rem] font-semibold text-[#363636]">
+              Description
+            </h2>
             <div className="text-[1rem] leading-relaxed text-[#4a4a4a] whitespace-pre-wrap">
               {description}
             </div>
@@ -167,7 +195,9 @@ export function InitiativeDetail({ data, canViewOtherUser = true, canCreateIniti
         )}
 
         <div className="mb-8">
-          <h2 id="details" className="mb-4 font-serif text-[2.5rem] font-semibold text-[#363636]">Details</h2>
+          <h2 id="details" className="mb-4 font-serif text-[2.5rem] font-semibold text-[#363636]">
+            Details
+          </h2>
           <div className="overflow-x-auto">
             <table className="w-full text-left text-[1rem] text-[#363636]">
               <tbody className="divide-y divide-[#dbdbdb]">
@@ -176,7 +206,10 @@ export function InitiativeDetail({ data, canViewOtherUser = true, canCreateIniti
                     <td className="py-2 pr-8 font-medium">Operational Owner</td>
                     <td className="py-2">
                       {canViewOtherUser ? (
-                        <a href={`/users?id=${operationOwner.id}`} className="text-[#3273dc] hover:underline">
+                        <a
+                          href={`/users?id=${operationOwner.id}`}
+                          className="text-[#3273dc] hover:underline"
+                        >
                           {operationOwner.fullName || operationOwner.username}
                         </a>
                       ) : (
@@ -190,7 +223,10 @@ export function InitiativeDetail({ data, canViewOtherUser = true, canCreateIniti
                     <td className="py-2 pr-8 font-medium">Executive Owner</td>
                     <td className="py-2">
                       {canViewOtherUser ? (
-                        <a href={`/users?id=${executiveOwner.id}`} className="text-[#3273dc] hover:underline">
+                        <a
+                          href={`/users?id=${executiveOwner.id}`}
+                          className="text-[#3273dc] hover:underline"
+                        >
                           {executiveOwner.fullName || executiveOwner.username}
                         </a>
                       ) : (
@@ -202,13 +238,13 @@ export function InitiativeDetail({ data, canViewOtherUser = true, canCreateIniti
                 {financialImpact && (
                   <tr className="hover:bg-[#fafafa]">
                     <td className="py-2 pr-8 font-medium">Financial Impact</td>
-                    <td className="py-2">{financialImpact}</td>
+                    <td className="py-2">{financialImpact.name}</td>
                   </tr>
                 )}
                 {strategicImportance && (
                   <tr className="hover:bg-[#fafafa]">
                     <td className="py-2 pr-8 font-medium">Strategic Importance</td>
-                    <td className="py-2">{strategicImportance}</td>
+                    <td className="py-2">{strategicImportance.name}</td>
                   </tr>
                 )}
                 {lastUpdatedBy && (
@@ -216,7 +252,10 @@ export function InitiativeDetail({ data, canViewOtherUser = true, canCreateIniti
                     <td className="py-2 pr-8 font-medium">Last Updated By</td>
                     <td className="py-2">
                       {canViewOtherUser ? (
-                        <a href={`/users?id=${lastUpdatedBy.id}`} className="text-[#3273dc] hover:underline">
+                        <a
+                          href={`/users?id=${lastUpdatedBy.id}`}
+                          className="text-[#3273dc] hover:underline"
+                        >
                           {lastUpdatedBy.fullName || lastUpdatedBy.username}
                         </a>
                       ) : (
@@ -238,13 +277,24 @@ export function InitiativeDetail({ data, canViewOtherUser = true, canCreateIniti
 
         {collections && collections.length > 0 && (
           <div>
-            <h2 id="collections" className="mb-4 font-serif text-[2.5rem] font-semibold text-[#363636]">Linked Collections</h2>
+            <h2
+              id="collections"
+              className="mb-4 font-serif text-[2.5rem] font-semibold text-[#363636]"
+            >
+              Linked Collections
+            </h2>
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-              {collections.map(c => (
-                <div key={c.id} className="atlas-home-card flex flex-col overflow-hidden rounded-[8px] border border-[#dbdbdb] bg-white shadow-sm">
+              {collections.map((c) => (
+                <div
+                  key={c.id}
+                  className="atlas-home-card flex flex-col overflow-hidden rounded-[8px] border border-[#dbdbdb] bg-white shadow-sm"
+                >
                   {/* Card Header */}
                   <div className="flex items-center justify-between px-4 py-3 border-b border-[#dbdbdb]">
-                    <Link href={`/collections?id=${c.id}`} className="text-[1rem] font-bold text-[#363636] hover:text-[#3273dc] truncate pr-2">
+                    <Link
+                      href={`/collections?id=${c.id}`}
+                      className="text-[1rem] font-bold text-[#363636] hover:text-[#3273dc] truncate pr-2"
+                    >
                       {c.name}
                     </Link>
                     <div className="flex items-center">
@@ -277,10 +327,14 @@ export function InitiativeDetail({ data, canViewOtherUser = true, canCreateIniti
                             {c.description ? (
                               <>
                                 <span className="line-clamp-3 inline">{c.description}</span>{" "}
-                                <span className="text-[#3273dc] hover:underline whitespace-nowrap">read more</span>
+                                <span className="text-[#3273dc] hover:underline whitespace-nowrap">
+                                  read more
+                                </span>
                               </>
                             ) : (
-                              <span className="text-[#3273dc] hover:underline">Open to view details.</span>
+                              <span className="text-[#3273dc] hover:underline">
+                                Open to view details.
+                              </span>
                             )}
                           </p>
                         </Link>
@@ -292,7 +346,9 @@ export function InitiativeDetail({ data, canViewOtherUser = true, canCreateIniti
                   <footer className="flex items-center border-t border-[#dbdbdb] bg-[#fafafa]">
                     <div className="flex items-center justify-center border-r border-[#dbdbdb] px-4 py-2 hover:bg-[#f5f5f5] cursor-pointer text-[#4a4a4a] transition-colors">
                       <button className="flex items-center gap-1.5 text-sm font-medium">
-                        <Star className={`h-[1.1rem] w-[1.1rem] ${c.isStarred ? "fill-[#dba71a] text-[#dba71a]" : "text-gray-400"}`} />
+                        <Star
+                          className={`h-[1.1rem] w-[1.1rem] ${c.isStarred ? "fill-[#dba71a] text-[#dba71a]" : "text-gray-400"}`}
+                        />
                         <span>Star {c.starCount}</span>
                       </button>
                     </div>
@@ -314,10 +370,10 @@ export function InitiativeDetail({ data, canViewOtherUser = true, canCreateIniti
         )}
       </div>
 
-      <ShareModal 
-        isOpen={shareModalOpen} 
-        onClose={() => setShareModalOpen(false)} 
-        initiativeName={name} 
+      <ShareModal
+        isOpen={shareModalOpen}
+        onClose={() => setShareModalOpen(false)}
+        initiativeName={name}
         initiativeId={id}
       />
     </div>

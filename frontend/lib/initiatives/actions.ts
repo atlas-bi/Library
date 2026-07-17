@@ -1,6 +1,15 @@
 "use server"
 
-import { deleteInitiative, searchInitiativeCollections, createInitiative, updateInitiative } from "./api"
+import {
+  createInitiative,
+  deleteInitiative,
+  type ShareInitiativeBody,
+  searchInitiativeCollections,
+  shareInitiative,
+  starInitiative,
+  unstarInitiative,
+  updateInitiative,
+} from "./api"
 import type { InitiativeWriteBody } from "./types"
 
 export async function deleteInitiativeAction(id: number) {
@@ -17,4 +26,16 @@ export async function createInitiativeAction(body: InitiativeWriteBody) {
 
 export async function updateInitiativeAction(id: number, body: InitiativeWriteBody) {
   return updateInitiative(id, body)
+}
+
+export async function starInitiativeAction(id: number) {
+  return starInitiative(id)
+}
+
+export async function unstarInitiativeAction(id: number) {
+  return unstarInitiative(id)
+}
+
+export async function shareInitiativeAction(id: number, data: ShareInitiativeBody) {
+  return shareInitiative(id, data)
 }

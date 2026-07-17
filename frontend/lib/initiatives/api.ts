@@ -5,9 +5,15 @@ import { apiFetchJson } from "@/lib/http"
 import type {
   InitiativeCollectionTypeaheadItemDto,
   InitiativeDetailDto,
-  InitiativeWriteBody,
   InitiativesListResponseDto,
+  InitiativeWriteBody,
 } from "./types"
+
+export interface ShareInitiativeBody {
+  to: string
+  subject: string
+  message: string
+}
 
 export type ApiResult<T> = {
   data: T | null
@@ -57,7 +63,6 @@ async function authorizedMutation<T>(
   return { data: result.data, error: null }
 }
 
-
 export async function getInitiatives(): Promise<ApiResult<InitiativesListResponseDto>> {
   return authorizedGet<InitiativesListResponseDto>("/api/initiatives")
 }
@@ -66,7 +71,9 @@ export async function getInitiative(id: number): Promise<ApiResult<InitiativeDet
   return authorizedGet<InitiativeDetailDto>(`/api/initiatives/${id}`)
 }
 
-export async function createInitiative(data: InitiativeWriteBody): Promise<ApiResult<InitiativeDetailDto>> {
+export async function createInitiative(
+  data: InitiativeWriteBody,
+): Promise<ApiResult<InitiativeDetailDto>> {
   return authorizedMutation<InitiativeDetailDto>("/api/initiatives", "POST", data)
 }
 
@@ -91,4 +98,19 @@ export async function searchInitiativeCollections(
   return authorizedGet<InitiativeCollectionTypeaheadItemDto[]>(
     `/api/initiatives/search/collections?${params.toString()}`,
   )
+}
+
+export async function starInitiative(id: number): Promise<ApiResult<void>> {
+  return authorizedMutation<void>(`/api/initiatives/${id}/star`, "POST")
+}
+
+export async function unstarInitiative(id: number): Promise<ApiResult<void>> {
+  return authorizedMutation<void>(`/api/initiatives/${id}/star`, "DELETE")
+}
+
+export async function shareInitiative(
+  id: number,
+  data: ShareInitiativeBody,
+): Promise<ApiResult<void>> {
+  return authorizedMutation<void>(`/api/initiatives/${id}/share`, "POST", data)
 }
