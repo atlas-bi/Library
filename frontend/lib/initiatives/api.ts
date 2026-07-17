@@ -9,11 +9,6 @@ import type {
   InitiativeWriteBody,
 } from "./types"
 
-export interface ShareInitiativeBody {
-  to: string
-  subject: string
-  message: string
-}
 
 export type ApiResult<T> = {
   data: T | null
@@ -100,17 +95,33 @@ export async function searchInitiativeCollections(
   )
 }
 
-export async function starInitiative(id: number): Promise<ApiResult<void>> {
-  return authorizedMutation<void>(`/api/initiatives/${id}/star`, "POST")
+export interface ToggleStarResponseDto {
+  type: string
+  id: number
+  isStarred: boolean
+  count: number
 }
 
-export async function unstarInitiative(id: number): Promise<ApiResult<void>> {
-  return authorizedMutation<void>(`/api/initiatives/${id}/star`, "DELETE")
+export interface ShareRecipientDto {
+  userId?: number | null
+  type: string
 }
 
-export async function shareInitiative(
-  id: number,
-  data: ShareInitiativeBody,
-): Promise<ApiResult<void>> {
-  return authorizedMutation<void>(`/api/initiatives/${id}/share`, "POST", data)
+export interface ShareMailRequestDto {
+  draftId?: number | null
+  to: ShareRecipientDto[]
+  subject: string
+  message: string
+  text?: string | null
+  share: boolean
+  shareName?: string | null
+  shareUrl?: string | null
+}
+
+export async function toggleStar(id: number): Promise<ApiResult<ToggleStarResponseDto>> {
+  return authorizedMutation<ToggleStarResponseDto>("/api/interactions/stars/toggle", "POST", { type: "Initiative", id })
+}
+
+export async function shareMail(data: ShareMailRequestDto): Promise<ApiResult<void>> {
+  return authorizedMutation<void>("/api/interactions/share-mail", "POST", data)
 }

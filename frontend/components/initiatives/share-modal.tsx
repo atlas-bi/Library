@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import { shareInitiativeAction } from "@/lib/initiatives/actions"
+import { shareMailAction } from "@/lib/initiatives/actions"
 
 interface ShareModalProps {
   isOpen: boolean
@@ -26,14 +26,7 @@ export function ShareModal({ isOpen, onClose, initiativeName, initiativeId }: Sh
     if (isOpen) {
       const origin =
         typeof window !== "undefined" ? window.location.origin : "http://localhost:5001"
-      setMessage(`Hi!
-
-I would like to share this initiative with you.
-
-[${initiativeName}](${origin}/initiatives?id=${initiativeId})
-
-Check it out sometime!
-Regards!`)
+      setMessage(`Hi!\n\nI would like to share this initiative with you.\n\n[${initiativeName}](${origin}/initiatives?id=${initiativeId})\n\nCheck it out sometime!\nRegards!`)
     }
   }, [isOpen, initiativeName, initiativeId])
 
@@ -41,7 +34,14 @@ Regards!`)
     if (!to) return
     startTransition(() => {
       void (async () => {
-        const result = await shareInitiativeAction(initiativeId, { to, subject, message })
+        const result = await shareMailAction({
+          to: [{ type: "Email", userId: null }], // TODO: Update to proper recipient parsing when typeahead is implemented
+          subject,
+          message,
+          share: true,
+          shareName: initiativeName,
+          shareUrl: `/initiatives?id=${initiativeId}`,
+        })
         if (result.error) {
           alert(`Error sharing initiative: ${result.error}`)
         } else {

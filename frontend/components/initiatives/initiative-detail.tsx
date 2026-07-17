@@ -6,8 +6,7 @@ import { useRouter } from "next/navigation"
 import { useState, useTransition } from "react"
 import {
   deleteInitiativeAction,
-  starInitiativeAction,
-  unstarInitiativeAction,
+  toggleStarAction,
 } from "@/lib/initiatives/actions"
 import type { InitiativeDetailDto } from "@/lib/initiatives/types"
 import { ShareModal } from "./share-modal"
@@ -53,11 +52,7 @@ export function InitiativeDetail({
     setStarCount((prev) => (isStarred ? prev - 1 : prev + 1))
     startTransition(() => {
       void (async () => {
-        if (isStarred) {
-          await unstarInitiativeAction(id)
-        } else {
-          await starInitiativeAction(id)
-        }
+        await toggleStarAction(id)
       })()
     })
   }

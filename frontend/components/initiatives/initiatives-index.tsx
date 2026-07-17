@@ -6,7 +6,7 @@ import { useState, useTransition } from "react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { starInitiativeAction, unstarInitiativeAction } from "@/lib/initiatives/actions"
+import { toggleStarAction } from "@/lib/initiatives/actions"
 import type { InitiativesListResponseDto } from "@/lib/initiatives/types"
 import { ShareModal } from "./share-modal"
 
@@ -29,18 +29,14 @@ export function InitiativesIndex({ data, canCreateInitiative }: InitiativesIndex
   const [shareModalOpen, setShareModalOpen] = useState(false)
   const [shareInitiative, setShareInitiative] = useState<{ id: number; name: string } | null>(null)
 
-  const toggleStar = (id: number, currentlyStarred: boolean) => {
+  const toggleStar = (id: number) => {
     setStarredMap((prev) => ({
       ...prev,
       [id]: !prev[id],
     }))
     startTransition(() => {
       void (async () => {
-        if (currentlyStarred) {
-          await unstarInitiativeAction(id)
-        } else {
-          await starInitiativeAction(id)
-        }
+        await toggleStarAction(id)
       })()
     })
   }
@@ -146,7 +142,7 @@ export function InitiativesIndex({ data, canCreateInitiative }: InitiativesIndex
                   <button 
                     type="button" 
                     disabled={isPending}
-                    onClick={() => toggleStar(item.id, isStarred)}
+                    onClick={() => toggleStar(item.id)}
                     className={`flex flex-1 items-center justify-center gap-2 border-r border-[#dbdbdb] px-4 py-3 text-[1rem] hover:bg-[#f5f5f5] ${isStarred ? "text-[#363636]" : "text-[#4a4a4a]"}`}
                   >
                     <Star className={`h-4 w-4 ${isStarred ? "fill-[#ffdd57] text-[#ffdd57]" : ""}`} />

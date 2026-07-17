@@ -3,12 +3,11 @@
 import {
   createInitiative,
   deleteInitiative,
-  type ShareInitiativeBody,
   searchInitiativeCollections,
-  shareInitiative,
-  starInitiative,
-  unstarInitiative,
+  toggleStar,
+  shareMail,
   updateInitiative,
+  type ShareMailRequestDto,
 } from "./api"
 import type { InitiativeWriteBody } from "./types"
 
@@ -28,14 +27,10 @@ export async function updateInitiativeAction(id: number, body: InitiativeWriteBo
   return updateInitiative(id, body)
 }
 
-export async function starInitiativeAction(id: number) {
-  return starInitiative(id)
+export async function toggleStarAction(id: number) {
+  return toggleStar(id)
 }
 
-export async function unstarInitiativeAction(id: number) {
-  return unstarInitiative(id)
-}
-
-export async function shareInitiativeAction(id: number, data: ShareInitiativeBody) {
-  return shareInitiative(id, data)
+export async function shareMailAction(data: ShareMailRequestDto) {
+  return shareMail(data)
 }
