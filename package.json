@@ -79,7 +79,7 @@
   "homepage": "https://demo.atlas.bi",
   "license": "AGPL-3.0-or-later",
   "name": "atlas",
-  "packageManager": "pnpm@10.34.4",
+  "packageManager": "pnpm@10.34.5",
   "private": true,
   "repository": {
     "type": "git",
@@ -187,7 +187,7 @@
       "unicorn/prefer-at": "warn"
     }
   },
-  "version": "3.15.47",
+  "version": "3.15.48",
   "dependencies": {
     "@codemirror/lang-markdown": "^6.5.0",
     "@codemirror/view": "^6.43.5",
