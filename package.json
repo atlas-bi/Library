@@ -54,7 +54,7 @@
     "gulp-replace": "^1.1.4",
     "gulp-sass": "6.0.1",
     "gulp-uglify": "3.0.2",
-    "jsdom": "^27.0.0",
+    "jsdom": "^28.0.0",
     "jsnlog": "2.30.0",
     "lint-staged": "^17.0.0",
     "markdown-it": "14.3.0",
@@ -187,7 +187,7 @@
       "unicorn/prefer-at": "warn"
     }
   },
-  "version": "3.15.48",
+  "version": "3.15.49",
   "dependencies": {
     "@codemirror/lang-markdown": "^6.5.0",
     "@codemirror/view": "^6.43.5",
