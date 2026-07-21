@@ -36,6 +36,11 @@ public class BasicTests : IClassFixture<BrowserFactory<Program>>
         string orientation
     )
     {
+        if (!BrowsersTestData.UseBrowserStack)
+        {
+            return;
+        }
+
         var options = new BrowserFixtureOptions()
         {
             Browser = browser,

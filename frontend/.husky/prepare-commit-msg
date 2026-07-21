@@ -1,0 +1,6 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Commitizen interactive prompt (like the other project)
+exec < /dev/tty && pnpm -s exec cz --hook || exit 0
+
