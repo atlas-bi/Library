@@ -32,12 +32,18 @@ export function ShareModal({ isOpen, onClose, initiativeName, initiativeId }: Sh
 
   const handleSend = () => {
     if (!to) return
+    const parsed = parseInt(to, 10)
+    if (Number.isNaN(parsed) || parsed <= 0) {
+      alert("Please enter a valid numeric user ID. User lookup by name/email is not yet supported.")
+      return
+    }
     startTransition(() => {
       void (async () => {
         const result = await shareMailAction({
-          to: [{ type: "Email", userId: null }], // TODO: Update to proper recipient parsing when typeahead is implemented
+          to: [{ type: "u", userId: parsed }],
           subject,
           message,
+          text: message,
           share: true,
           shareName: initiativeName,
           shareUrl: `/initiatives?id=${initiativeId}`,

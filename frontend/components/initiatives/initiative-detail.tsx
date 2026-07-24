@@ -48,11 +48,23 @@ export function InitiativeDetail({
   const [isPending, startTransition] = useTransition()
 
   const toggleStar = () => {
-    setIsStarred(!isStarred)
-    setStarCount((prev) => (isStarred ? prev - 1 : prev + 1))
+    const previousIsStarred = isStarred
+    const previousStarCount = starCount
+
+    setIsStarred(!previousIsStarred)
+    setStarCount((prev) => (previousIsStarred ? Math.max(0, prev - 1) : prev + 1))
+
     startTransition(() => {
       void (async () => {
-        await toggleStarAction(id)
+        const result = await toggleStarAction(id)
+        if (result.error) {
+          setIsStarred(previousIsStarred)
+          setStarCount(previousStarCount)
+          alert(`Error updating star: ${result.error}`)
+        } else if (result.data) {
+          setIsStarred(result.data.isStarred)
+          setStarCount(result.data.count)
+        }
       })()
     })
   }

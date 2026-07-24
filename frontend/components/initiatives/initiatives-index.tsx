@@ -24,19 +24,37 @@ export function InitiativesIndex({ data, canCreateInitiative }: InitiativesIndex
     return initial
   })
 
+  const [countMap, setCountMap] = useState<Record<number, number>>(() => {
+    const initial: Record<number, number> = {}
+    data.items.forEach((i) => {
+      initial[i.id] = i.starCount ?? 0
+    })
+    return initial
+  })
+
   const [isPending, startTransition] = useTransition()
 
   const [shareModalOpen, setShareModalOpen] = useState(false)
   const [shareInitiative, setShareInitiative] = useState<{ id: number; name: string } | null>(null)
 
   const toggleStar = (id: number) => {
-    setStarredMap((prev) => ({
-      ...prev,
-      [id]: !prev[id],
-    }))
+    const prevStarred = starredMap[id]
+    const prevCount = countMap[id]
+
+    setStarredMap((prev) => ({ ...prev, [id]: !prevStarred }))
+    setCountMap((prev) => ({ ...prev, [id]: prevStarred ? Math.max(0, prevCount - 1) : prevCount + 1 }))
+
     startTransition(() => {
       void (async () => {
-        await toggleStarAction(id)
+        const result = await toggleStarAction(id)
+        if (result.error) {
+          setStarredMap((prev) => ({ ...prev, [id]: prevStarred }))
+          setCountMap((prev) => ({ ...prev, [id]: prevCount }))
+          alert(`Error updating star: ${result.error}`)
+        } else if (result.data) {
+          setStarredMap((prev) => ({ ...prev, [id]: result.data.isStarred }))
+          setCountMap((prev) => ({ ...prev, [id]: result.data.count }))
+        }
       })()
     })
   }
@@ -86,12 +104,7 @@ export function InitiativesIndex({ data, canCreateInitiative }: InitiativesIndex
         <div className="grid gap-6 md:grid-cols-2">
           {data.items.map((item) => {
             const isStarred = starredMap[item.id]
-            const starCountDisplay =
-              isStarred && !item.isStarred
-                ? (item.starCount || 0) + 1
-                : !isStarred && item.isStarred
-                  ? Math.max(0, (item.starCount || 0) - 1)
-                  : item.starCount || 0
+            const starCountDisplay = countMap[item.id]
 
             return (
               <div key={item.id} className="flex flex-col overflow-hidden rounded-[4px] bg-white shadow-[0_2px_3px_rgba(10,10,10,0.1),0_0_0_1px_rgba(10,10,10,0.1)]">
