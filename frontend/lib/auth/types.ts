@@ -13,6 +13,8 @@ export const PERMISSIONS = [
   "Create Collection",
   "Edit Collection",
   "Delete Collection",
+  "Create Initiative",
+  "View Other User",
 ] as const
 
 export type Permission = (typeof PERMISSIONS)[number]
