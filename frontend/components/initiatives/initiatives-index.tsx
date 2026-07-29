@@ -1,9 +1,9 @@
 "use client"
 
-import { BadgeCheck, BarChart3, MessageSquare, Share, Star, TrendingUp } from "lucide-react"
+import { BadgeCheck, Share, Star } from "lucide-react"
 import Link from "next/link"
 import { useState, useTransition } from "react"
-import { Badge } from "@/components/ui/badge"
+import { EntityFeedbackDialog } from "@/components/interactions/entity-feedback-dialog"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { toggleStarAction } from "@/lib/initiatives/actions"
@@ -52,8 +52,9 @@ export function InitiativesIndex({ data, canCreateInitiative }: InitiativesIndex
           setCountMap((prev) => ({ ...prev, [id]: prevCount }))
           alert(`Error updating star: ${result.error}`)
         } else if (result.data) {
-          setStarredMap((prev) => ({ ...prev, [id]: result.data.isStarred }))
-          setCountMap((prev) => ({ ...prev, [id]: result.data.count }))
+          const { isStarred, count } = result.data
+          setStarredMap((prev) => ({ ...prev, [id]: isStarred }))
+          setCountMap((prev) => ({ ...prev, [id]: count }))
         }
       })()
     })
@@ -81,7 +82,7 @@ export function InitiativesIndex({ data, canCreateInitiative }: InitiativesIndex
         Initiatives
       </h1>
 
-      {canCreateInitiative && (
+      {canCreateInitiative && data.permissions?.canCreateInitiative !== false && (
         <div className="mb-6">
           <Link href="/initiatives/new">
             <Button
@@ -173,14 +174,12 @@ export function InitiativesIndex({ data, canCreateInitiative }: InitiativesIndex
                       <Share className="h-4 w-4" />
                     </button>
                   )}
-                  {data.features?.feedbackEnabled && (
-                    <button 
-                      type="button" 
-                      className="flex flex-1 items-center justify-center px-4 py-3 text-[#7a7a7a] hover:bg-[#f5f5f5]"
-                      title="Provide Feedback"
-                    >
-                      <MessageSquare className="h-4 w-4" />
-                    </button>
+                  {data.features?.feedbackEnabled !== false && (
+                    <EntityFeedbackDialog
+                      entityName={item.name}
+                      entityUrl={`/initiatives?id=${item.id}`}
+                      variant="footer"
+                    />
                   )}
                 </div>
             </div>

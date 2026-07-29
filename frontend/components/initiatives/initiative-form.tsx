@@ -17,7 +17,8 @@ import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useState, useTransition } from "react"
 import { createInitiativeAction, updateInitiativeAction } from "@/lib/initiatives/actions"
-import type { InitiativeDetailDto } from "@/lib/initiatives/types"
+import type { InitiativeDetailDto, InitiativeWriteBody } from "@/lib/initiatives/types"
+import { LinkedCollectionPicker } from "./linked-collection-picker"
 
 export function InitiativeForm({
   mode,
@@ -53,10 +54,9 @@ export function InitiativeForm({
   const [strategicImportance, setStrategicImportance] = useState(
     initial?.strategicImportance ?? null,
   )
-  const [collectionIds, setCollectionIds] = useState<number[]>(
-    initial?.collections?.map((c) => c.id) || [],
+  const [selectedCollections, setSelectedCollections] = useState(
+    initial?.collections ?? [],
   )
-  const [collectionQuery, setCollectionQuery] = useState("")
 
   const [formError, setFormError] = useState<string | null>(null)
   const [isPending, startTransition] = useTransition()
@@ -69,11 +69,11 @@ export function InitiativeForm({
       return
     }
 
-    const body: any = {
+    const body: InitiativeWriteBody = {
       name: trimmedName,
       description: description.trim() ? description.trim() : null,
       purpose: null, // Legacy Razor form doesn't seem to have a purpose field in the screenshot
-      collectionIds: collectionIds,
+      collectionIds: selectedCollections.map((collection) => collection.id),
       operationOwnerId: operationOwner?.id ?? null,
       executiveOwnerId: executiveOwner?.id ?? null,
       financialImpactId: financialImpact?.id ?? null,
@@ -322,14 +322,36 @@ export function InitiativeForm({
         <label className="mb-2 block text-[1rem] font-bold text-[#363636]">
           Linked Collections
         </label>
-        <div className="control">
-          <input
-            type="text"
-            value={collectionQuery}
-            onChange={(e) => setCollectionQuery(e.target.value)}
-            disabled={isPending}
-            className="w-full rounded-[4px] border border-[#dbdbdb] px-3 py-2 text-[1rem] text-[#363636] shadow-[inset_0_0.0625em_0.125em_rgba(10,10,10,0.05)] focus:border-[#3273dc] focus:outline-none"
-            placeholder="search for collections.."
+        <div className="space-y-3">
+          {selectedCollections.length > 0 && (
+            <ul className="flex flex-wrap gap-2">
+              {selectedCollections.map((collection) => (
+                <li key={collection.id} className="rounded-md border bg-muted px-2 py-1 text-sm">
+                  {collection.name}
+                  <button
+                    type="button"
+                    className="ml-2 text-muted-foreground hover:text-foreground"
+                    onClick={() =>
+                      setSelectedCollections((current) =>
+                        current.filter((item) => item.id !== collection.id),
+                      )
+                    }
+                    aria-label={`Remove ${collection.name}`}
+                  >
+                    ×
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
+          <LinkedCollectionPicker
+            onSelectAction={(item) => {
+              setSelectedCollections((current) =>
+                current.some((collection) => collection.id === item.id)
+                  ? current
+                  : [...current, item],
+              )
+            }}
           />
         </div>
       </div>

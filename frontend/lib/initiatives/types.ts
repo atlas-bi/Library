@@ -53,6 +53,7 @@ export interface InitiativeDetailDto {
   canCreateInitiative?: boolean
   canEditInitiative?: boolean
   canDeleteInitiative?: boolean
+  canViewUserProfiles?: boolean
   features?: InitiativeFeatureFlagsDto | null
   lastUpdatedBy?: InitiativeUserSummaryDto | null
   collections?: InitiativeCollectionSummaryDto[]

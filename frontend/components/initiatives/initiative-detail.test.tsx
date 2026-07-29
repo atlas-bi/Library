@@ -1,6 +1,8 @@
 import { render, screen } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import { describe, expect, it, vi, beforeEach } from "vitest"
+import type { ReactNode } from "react"
+import { TooltipProvider } from "@/components/ui/tooltip"
 import type { InitiativeDetailDto } from "@/lib/initiatives/types"
 import { InitiativeDetail } from "./initiative-detail"
 import { toggleStarAction } from "@/lib/initiatives/actions"
@@ -19,6 +21,8 @@ vi.mock("next/navigation", () => ({
   }),
 }))
 
+const renderDetail = (ui: ReactNode) => render(<TooltipProvider>{ui}</TooltipProvider>)
+
 describe("InitiativeDetail", () => {
   const mockData: InitiativeDetailDto = {
     id: 1,
@@ -29,7 +33,7 @@ describe("InitiativeDetail", () => {
   }
 
   it("renders user links when canViewOtherUser is true (default)", () => {
-    render(<InitiativeDetail data={mockData} canViewOtherUser={true} />)
+    renderDetail(<InitiativeDetail data={mockData} canViewOtherUser={true} />)
 
     // They should be links (<a> tags)
     expect(screen.getByRole("link", { name: "Alice Operator" })).toBeDefined()
@@ -38,7 +42,7 @@ describe("InitiativeDetail", () => {
   })
 
   it("renders user plain text when canViewOtherUser is false", () => {
-    render(<InitiativeDetail data={mockData} canViewOtherUser={false} />)
+    renderDetail(<InitiativeDetail data={mockData} canViewOtherUser={false} />)
 
     // They should NOT be links
     expect(screen.queryByRole("link", { name: "Alice Operator" })).toBeNull()
@@ -49,6 +53,17 @@ describe("InitiativeDetail", () => {
     expect(screen.getByText("Alice Operator")).toBeDefined()
     expect(screen.getByText("Bob Exec")).toBeDefined()
     expect(screen.getByText("Charlie Editor")).toBeDefined()
+  })
+
+  it("hides profile links when the API disables user profiles", () => {
+    renderDetail(
+      <InitiativeDetail
+        data={{ ...mockData, canViewUserProfiles: false }}
+        canViewOtherUser={true}
+      />,
+    )
+
+    expect(screen.queryByRole("link", { name: "Alice Operator" })).toBeNull()
   })
 })
 
@@ -71,7 +86,7 @@ describe("InitiativeDetail - Star Toggle", () => {
       error: null,
     })
 
-    render(<InitiativeDetail data={mockData} />)
+    renderDetail(<InitiativeDetail data={mockData} />)
 
     const starButton = screen.getByTitle("Star this initiative")
     await user.click(starButton)
@@ -88,7 +103,7 @@ describe("InitiativeDetail - Star Toggle", () => {
       error: "service_unavailable",
     })
 
-    render(<InitiativeDetail data={mockData} />)
+    renderDetail(<InitiativeDetail data={mockData} />)
 
     // Should show initial count of 5
     expect(screen.getByText("5")).toBeDefined()
@@ -103,4 +118,3 @@ describe("InitiativeDetail - Star Toggle", () => {
     alertMock.mockRestore()
   })
 })
-

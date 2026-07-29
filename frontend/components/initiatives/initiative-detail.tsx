@@ -4,6 +4,7 @@ import { BarChart2, Edit, Plus, Share, Star, Trash2 } from "lucide-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useState, useTransition } from "react"
+import { EntityFeedbackDialog } from "@/components/interactions/entity-feedback-dialog"
 import {
   deleteInitiativeAction,
   toggleStarAction,
@@ -38,6 +39,7 @@ export function InitiativeDetail({
     canEditInitiative,
     canDeleteInitiative,
     features,
+    canViewUserProfiles,
   } = data
 
   const [isStarred, setIsStarred] = useState(data.isStarred ?? false)
@@ -46,6 +48,8 @@ export function InitiativeDetail({
   const [shareModalOpen, setShareModalOpen] = useState(false)
 
   const [isPending, startTransition] = useTransition()
+  const canViewProfiles =
+    canViewOtherUser && canViewUserProfiles !== false && features?.userProfilesEnabled !== false
 
   const toggleStar = () => {
     const previousIsStarred = isStarred
@@ -212,7 +216,7 @@ export function InitiativeDetail({
                   <tr className="hover:bg-[#fafafa]">
                     <td className="py-2 pr-8 font-medium">Operational Owner</td>
                     <td className="py-2">
-                      {canViewOtherUser ? (
+                      {canViewProfiles ? (
                         <a
                           href={`/users?id=${operationOwner.id}`}
                           className="text-[#3273dc] hover:underline"
@@ -229,7 +233,7 @@ export function InitiativeDetail({
                   <tr className="hover:bg-[#fafafa]">
                     <td className="py-2 pr-8 font-medium">Executive Owner</td>
                     <td className="py-2">
-                      {canViewOtherUser ? (
+                      {canViewProfiles ? (
                         <a
                           href={`/users?id=${executiveOwner.id}`}
                           className="text-[#3273dc] hover:underline"
@@ -258,7 +262,7 @@ export function InitiativeDetail({
                   <tr className="hover:bg-[#fafafa]">
                     <td className="py-2 pr-8 font-medium">Last Updated By</td>
                     <td className="py-2">
-                      {canViewOtherUser ? (
+                      {canViewProfiles ? (
                         <a
                           href={`/users?id=${lastUpdatedBy.id}`}
                           className="text-[#3273dc] hover:underline"
@@ -374,6 +378,13 @@ export function InitiativeDetail({
               ))}
             </div>
           </div>
+        )}
+
+        {features?.feedbackEnabled !== false && (
+          <EntityFeedbackDialog
+            entityName={name}
+            entityUrl={`/initiatives?id=${id}`}
+          />
         )}
       </div>
 

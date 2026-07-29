@@ -5,7 +5,11 @@ import { Button } from "@/components/ui/button"
 import { searchInitiativeCollectionsAction } from "@/lib/initiatives/actions"
 import type { InitiativeCollectionTypeaheadItemDto } from "@/lib/initiatives/types"
 
-export function LinkedCollectionPicker({ onSelectAction }: { onSelectAction: (id: number) => void }) {
+export function LinkedCollectionPicker({
+  onSelectAction,
+}: {
+  onSelectAction: (item: InitiativeCollectionTypeaheadItemDto) => void
+}) {
   const [query, setQuery] = useState("")
   const [results, setResults] = useState<InitiativeCollectionTypeaheadItemDto[]>([])
   const [isSearching, setIsSearching] = useState(false)
@@ -45,7 +49,7 @@ export function LinkedCollectionPicker({ onSelectAction }: { onSelectAction: (id
                 <div className="font-medium">{item.name}</div>
                 {item.description && <div className="text-xs text-muted-foreground">{item.description}</div>}
               </div>
-              <Button size="sm" variant="outline" onClick={() => onSelectAction(item.id)} type="button">
+              <Button size="sm" variant="outline" onClick={() => onSelectAction(item)} type="button">
                 Select
               </Button>
             </li>
