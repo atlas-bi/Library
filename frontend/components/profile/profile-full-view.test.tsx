@@ -130,16 +130,12 @@ describe("ProfileFullView", () => {
 
     render(<ProfileFullView id={1} type="user" initialData={mockData} />)
 
-    // Click a date range option in the sidebar
-    const dateButton = screen.getAllByRole("button").find((btn) =>
-      btn.textContent?.match(/last 30 days|last week|30 days|7 days/i),
-    )
-    if (dateButton) {
-      await user.click(dateButton)
-      await waitFor(() => {
-        expect(loadProfileAnalyticsAction).toHaveBeenCalled()
-      })
-    }
+    // Change date range using the select dropdown
+    const dateSelect = screen.getByRole("combobox", { name: /profile date range/i })
+    await user.selectOptions(dateSelect, "last-30-days")
+    await waitFor(() => {
+      expect(loadProfileAnalyticsAction).toHaveBeenCalled()
+    })
   })
 
   it("renders empty run list message when runList is empty", async () => {
