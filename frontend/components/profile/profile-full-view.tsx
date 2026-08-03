@@ -49,30 +49,35 @@ export function ProfileFullView({
   const [dateRangeId, setDateRangeId] = useState<ProfileDateRangeId>(DEFAULT_PROFILE_DATE_RANGE_ID)
   const [data, setData] = useState<ProfileAnalyticsData | null>(initialData ?? null)
   const [error, setError] = useState<string | null>(null)
+  const [isLoading, setIsLoading] = useState(!initialData)
   const [isPending, startTransition] = useTransition()
+
+  const skipInitialFetch = useRef(!!initialData)
 
   const loadData = useCallback(
     (nextRangeId: ProfileDateRangeId) => {
       const range = getProfileDateRangeById(nextRangeId)
+      setIsLoading(true)
       startTransition(() => {
         void loadProfileAnalyticsAction(id, type, {
           start_at: range.start_at,
           end_at: range.end_at,
         }).then((result) => {
           if (!result.data) {
-            setError(result.error ?? "unknown")
+            setError(result.error ?? null)
             setData(null)
+            setIsLoading(false)
             return
           }
           setError(null)
           setData(result.data)
+          setIsLoading(false)
         })
       })
     },
     [id, type],
   )
 
-  const skipInitialFetch = useRef(Boolean(initialData))
 
   useEffect(() => {
     if (skipInitialFetch.current) {
@@ -86,7 +91,7 @@ export function ProfileFullView({
     setDateRangeId(nextRangeId)
   }
 
-  if (!data && isPending) {
+  if (!data && isLoading) {
     return <p className="text-sm text-muted-foreground">Loading profile...</p>
   }
 
@@ -125,13 +130,11 @@ export function ProfileFullView({
 
           <ProfileTabPanel tab="runs" activeTab={activeTab}>
             <div className="flex flex-wrap items-start justify-between gap-4">
-              {chart ? (
-                <ProfileSummaryStats
-                  runs={chart.runs}
-                  users={chart.users}
-                  runTime={chart.runTime}
-                />
-              ) : null}
+              <ProfileSummaryStats
+                runs={chart?.runs ?? null}
+                users={chart?.users ?? null}
+                runTime={chart?.runTime ?? null}
+              />
               <ProfileDateRangeSelect
                 value={dateRangeId}
                 options={dateRangeOptions}
@@ -139,7 +142,7 @@ export function ProfileFullView({
               />
             </div>
 
-            {chart ? <ProfileHistoryChart history={chart.history} /> : null}
+            <ProfileHistoryChart history={chart?.history ?? []} />
 
             <ProfileBarDataGrid
               type={type}
