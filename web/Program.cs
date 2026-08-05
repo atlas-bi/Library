@@ -212,6 +212,7 @@ builder.Services.AddScoped<IReportsApiService, ReportsApiService>();
 builder.Services.AddScoped<ISearchApiService, SearchApiService>();
 builder.Services.AddScoped<ITermsApiService, TermsApiService>();
 builder.Services.AddScoped<IUsersApiService, UsersApiService>();
+builder.Services.AddScoped<ITasksApiService, TasksApiService>();
 builder.Services.AddHttpContextAccessor();
 
 ProgramConfiguration.ConfigureJwtAuthentication(builder);
