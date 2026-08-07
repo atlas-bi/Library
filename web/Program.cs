@@ -207,6 +207,7 @@ builder.Services.AddScoped<ICollectionsApiService, CollectionsApiService>();
 builder.Services.AddScoped<IGroupsApiService, GroupsApiService>();
 builder.Services.AddScoped<IInitiativesApiService, InitiativesApiService>();
 builder.Services.AddScoped<IInteractionsApiService, InteractionsApiService>();
+builder.Services.AddScoped<IAnalyticsApiService, AnalyticsApiService>();
 builder.Services.AddScoped<IProfileApiService, ProfileApiService>();
 builder.Services.AddScoped<IReportsApiService, ReportsApiService>();
 builder.Services.AddScoped<ISearchApiService, SearchApiService>();
