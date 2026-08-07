@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.Linq.Expressions;
 using Atlas_Web.Contracts.Api.Analytics;
 using Atlas_Web.Helpers;
 using Atlas_Web.Models;
@@ -85,77 +86,7 @@ public sealed class AnalyticsApiService : IAnalyticsApiService
 
         var minDate = new DateTime(1900, 1, 1);
         var range = request.EndAt - request.StartAt;
-        var accessHistory = range switch
-        {
-            < 172800 => await (
-                from analytic in query
-                group analytic by minDate.AddHours(
-                    EF.Functions.DateDiffHour(minDate, analytic.AccessDateTime ?? DateTime.Now)
-                ) into groupByDate
-                orderby groupByDate.Key
-                select new AnalyticsAccessHistoryDto
-                {
-                    Date = groupByDate.Key.ToString("h tt"),
-                    Sessions = groupByDate.Select(x => x.SessionId).Distinct().Count(),
-                    Pages = groupByDate.Select(x => x.PageId).Distinct().Count(),
-                    LoadTime = Math.Round(
-                        groupByDate.Average(x => (long)Convert.ToDouble(x.LoadTime)) / 1000,
-                        1
-                    ),
-                }
-            ).ToListAsync(cancellationToken),
-            < 691200 => await (
-                from analytic in query
-                group analytic by minDate.AddDays(
-                    EF.Functions.DateDiffDay(minDate, analytic.AccessDateTime ?? DateTime.Now)
-                ) into groupByDate
-                orderby groupByDate.Key
-                select new AnalyticsAccessHistoryDto
-                {
-                    Date = groupByDate.Key.ToString("ddd M/d"),
-                    Sessions = groupByDate.Select(x => x.SessionId).Distinct().Count(),
-                    Pages = groupByDate.Select(x => x.PageId).Distinct().Count(),
-                    LoadTime = Math.Round(
-                        groupByDate.Average(x => (long)Convert.ToDouble(x.LoadTime)) / 1000,
-                        1
-                    ),
-                }
-            ).ToListAsync(cancellationToken),
-            < 31536000 => await (
-                from analytic in query
-                group analytic by minDate.AddDays(
-                    EF.Functions.DateDiffDay(minDate, analytic.AccessDateTime ?? DateTime.Now)
-                ) into groupByDate
-                orderby groupByDate.Key
-                select new AnalyticsAccessHistoryDto
-                {
-                    Date = groupByDate.Key.ToString("MMM d"),
-                    Sessions = groupByDate.Select(x => x.SessionId).Distinct().Count(),
-                    Pages = groupByDate.Select(x => x.PageId).Distinct().Count(),
-                    LoadTime = Math.Round(
-                        groupByDate.Average(x => (long)Convert.ToDouble(x.LoadTime)) / 1000,
-                        1
-                    ),
-                }
-            ).ToListAsync(cancellationToken),
-            _ => await (
-                from analytic in query
-                group analytic by minDate.AddMonths(
-                    EF.Functions.DateDiffMonth(minDate, analytic.AccessDateTime ?? DateTime.Now)
-                ) into groupByDate
-                orderby groupByDate.Key
-                select new AnalyticsAccessHistoryDto
-                {
-                    Date = groupByDate.Key.ToString("MMM yy"),
-                    Sessions = groupByDate.Select(x => x.SessionId).Distinct().Count(),
-                    Pages = groupByDate.Select(x => x.PageId).Distinct().Count(),
-                    LoadTime = Math.Round(
-                        groupByDate.Average(x => (long)Convert.ToDouble(x.LoadTime)) / 1000,
-                        1
-                    ),
-                }
-            ).ToListAsync(cancellationToken),
-        };
+        var accessHistory = await GetAccessHistoryAsync(query, minDate, range, cancellationToken);
 
         return new AnalyticsVisitsResponseDto
         {
@@ -179,13 +110,10 @@ public sealed class AnalyticsApiService : IAnalyticsApiService
         if (total == 0) return Array.Empty<AnalyticsBarItemDto>();
 
         var parser = Parser.GetDefault();
-        var grouped = await query
-            .GroupBy(x => x.UserAgent)
-            .Select(x => new { x.Key, Count = x.Count() })
-            .ToListAsync(cancellationToken);
+        var grouped = await GetUserAgentCountsAsync(query, cancellationToken);
 
         return grouped
-            .Select(x => new { Parsed = parser.Parse(x.Key ?? ""), x.Count })
+            .Select(x => new { Parsed = parser.Parse(x.UserAgent ?? ""), x.Count })
             .GroupBy(x => new { x.Parsed.UA.Family, x.Parsed.UA.Major })
             .Select(groupByBrowser => new AnalyticsBarItemDto
             {
@@ -210,13 +138,10 @@ public sealed class AnalyticsApiService : IAnalyticsApiService
         if (total == 0) return Array.Empty<AnalyticsBarItemDto>();
 
         var parser = Parser.GetDefault();
-        var grouped = await query
-            .GroupBy(x => x.UserAgent)
-            .Select(x => new { x.Key, Count = x.Count() })
-            .ToListAsync(cancellationToken);
+        var grouped = await GetUserAgentCountsAsync(query, cancellationToken);
 
         return grouped
-            .Select(x => new { Parsed = parser.Parse(x.Key ?? ""), x.Count })
+            .Select(x => new { Parsed = parser.Parse(x.UserAgent ?? ""), x.Count })
             .GroupBy(x => new { x.Parsed.OS.Family, x.Parsed.OS.Major })
             .Select(groupByOs => new AnalyticsBarItemDto
             {
@@ -539,6 +464,67 @@ public sealed class AnalyticsApiService : IAnalyticsApiService
 
         error.Handled = type == 1 ? 1 : null;
         await _context.SaveChangesAsync(cancellationToken);
+    }
+
+    private async Task<List<AnalyticsAccessHistoryDto>> GetAccessHistoryAsync(
+        IQueryable<Analytic> query,
+        DateTime minDate,
+        double range,
+        CancellationToken cancellationToken
+    )
+    {
+        var (bucket, format) = range switch
+        {
+            < 172800 => ((Expression<Func<Analytic, DateTime>>)(x => minDate.AddHours(
+                EF.Functions.DateDiffHour(minDate, x.AccessDateTime ?? DateTime.Now)
+            )), "h tt"),
+            < 691200 => ((Expression<Func<Analytic, DateTime>>)(x => minDate.AddDays(
+                EF.Functions.DateDiffDay(minDate, x.AccessDateTime ?? DateTime.Now)
+            )), "ddd M/d"),
+            < 31536000 => ((Expression<Func<Analytic, DateTime>>)(x => minDate.AddDays(
+                EF.Functions.DateDiffDay(minDate, x.AccessDateTime ?? DateTime.Now)
+            )), "MMM d"),
+            _ => ((Expression<Func<Analytic, DateTime>>)(x => minDate.AddMonths(
+                EF.Functions.DateDiffMonth(minDate, x.AccessDateTime ?? DateTime.Now)
+            )), "MMM yy"),
+        };
+
+        var grouped = await query
+            .GroupBy(bucket)
+            .OrderBy(x => x.Key)
+            .Select(groupByDate => new
+            {
+                Date = groupByDate.Key,
+                Sessions = groupByDate.Select(x => x.SessionId).Distinct().Count(),
+                Pages = groupByDate.Select(x => x.PageId).Distinct().Count(),
+                LoadTime = Math.Round(
+                    groupByDate.Average(x => (long)Convert.ToDouble(x.LoadTime)) / 1000,
+                    1
+                ),
+            })
+            .ToListAsync(cancellationToken);
+
+        return grouped
+            .Select(x => new AnalyticsAccessHistoryDto
+            {
+                Date = x.Date.ToString(format),
+                Sessions = x.Sessions,
+                Pages = x.Pages,
+                LoadTime = x.LoadTime,
+            })
+            .ToList();
+    }
+
+    private static async Task<List<(string? UserAgent, int Count)>> GetUserAgentCountsAsync(
+        IQueryable<Analytic> query,
+        CancellationToken cancellationToken
+    )
+    {
+        var grouped = await query
+            .GroupBy(x => x.UserAgent)
+            .Select(x => new { x.Key, Count = x.Count() })
+            .ToListAsync(cancellationToken);
+        return grouped.Select(x => (x.Key, x.Count)).ToList();
     }
 
     private async Task<IQueryable<Analytic>> GetAnalyticsQueryAsync(
