@@ -7,6 +7,7 @@ import type { ProfileAnalyticsData } from "@/app/profile/actions"
 
 vi.mock("@/app/profile/actions", () => ({
   loadProfileAnalyticsAction: vi.fn(),
+  loadProfileFiltersAction: vi.fn().mockResolvedValue(null),
 }))
 
 const mockData: ProfileAnalyticsData = {
@@ -49,13 +50,39 @@ describe("ProfileFullView", () => {
     expect(await screen.findByText(/loading profile/i)).toBeDefined()
   })
 
-  it("renders error message when no initialData and fetch returns null", async () => {
+  it("renders error message when action returns service_unavailable", async () => {
     vi.mocked(loadProfileAnalyticsAction).mockResolvedValue({
       data: null,
       error: "service_unavailable",
     })
 
     render(<ProfileFullView id={1} type="user" />)
+
+    await waitFor(() => {
+      expect(screen.getByText(/unable to load profile analytics/i)).toBeDefined()
+    })
+  })
+
+  it("renders error message when action returns not_found", async () => {
+    vi.mocked(loadProfileAnalyticsAction).mockResolvedValue({
+      data: null,
+      error: "not_found",
+    })
+
+    render(<ProfileFullView id={999} type="report" />)
+
+    await waitFor(() => {
+      expect(screen.getByText(/unable to load profile analytics/i)).toBeDefined()
+    })
+  })
+
+  it("renders error message when action returns forbidden", async () => {
+    vi.mocked(loadProfileAnalyticsAction).mockResolvedValue({
+      data: null,
+      error: "forbidden",
+    })
+
+    render(<ProfileFullView id={1} type="report" />)
 
     await waitFor(() => {
       expect(screen.getByText(/unable to load profile analytics/i)).toBeDefined()
@@ -130,8 +157,9 @@ describe("ProfileFullView", () => {
 
     render(<ProfileFullView id={1} type="user" initialData={mockData} />)
 
-    // Change date range using the select dropdown
-    const dateSelect = screen.getByRole("combobox", { name: /profile date range/i })
+    // The date-range select now appears in both the sidebar and the main content area.
+    // Use getAllByRole and interact with the first instance (sidebar).
+    const [dateSelect] = screen.getAllByRole("combobox", { name: /profile date range/i })
     await user.selectOptions(dateSelect, "last-30-days")
     await waitFor(() => {
       expect(loadProfileAnalyticsAction).toHaveBeenCalled()

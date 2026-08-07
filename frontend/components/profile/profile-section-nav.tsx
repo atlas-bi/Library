@@ -23,7 +23,7 @@ export function getProfileTabs(type: string, id: number): ProfileTabId[] {
     tabs.push("stars")
   }
 
-  if (type === "report") {
+  if (type === "report" && id !== -1) {
     tabs.push("subscriptions")
   }
 

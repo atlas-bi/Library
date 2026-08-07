@@ -3,6 +3,7 @@
 import {
 	getProfileChart,
 	getProfileFails,
+	getProfileFilters,
 	getProfileReports,
 	getProfileRunList,
 	getProfileStars,
@@ -13,6 +14,7 @@ import type {
 	ProfileBarItemDto,
 	ProfileChartResponseDto,
 	ProfileFilters,
+	ProfileFiltersResponseDto,
 	ProfileRunListItemDto,
 	ProfileStarUserDto,
 	ProfileSubscriptionDto,
@@ -34,7 +36,7 @@ export async function loadProfileAnalyticsAction(
 	options?: Partial<Omit<ProfileFilters, "id" | "type">>,
 ): Promise<{ data: ProfileAnalyticsData | null; error: string | null }> {
 	const filters: ProfileFilters = { id, type, ...options };
-	const canLoadProfileRelationships = type !== "user";
+	const canLoadProfileRelationships = type !== "user" && id !== -1;
 	const [
 		chartResult,
 		usersResult,
@@ -84,4 +86,23 @@ export async function loadProfileAnalyticsAction(
 		},
 		error: null,
 	};
+}
+
+export type ProfileFiltersData = ProfileFiltersResponseDto;
+
+/**
+ * Loads sidebar filter options (available server names, databases, etc.) from
+ * the backend. Returns null silently when the endpoint is unavailable so the
+ * sidebar degrades gracefully to free-text TagInputs.
+ */
+export async function loadProfileFiltersAction(
+	id: number,
+	type: string,
+	options?: Partial<Omit<ProfileFilters, "id" | "type">>,
+): Promise<ProfileFiltersData | null> {
+	const filters: ProfileFilters = { id, type, ...options };
+	const result = await getProfileFilters(filters);
+	// Return null on any error (404 = endpoint not yet deployed, etc.)
+	if (result.error) return null;
+	return result.data;
 }

@@ -45,13 +45,13 @@ export default async function ProfilePage({
   const idRaw = getSingleValue(resolvedSearchParams.id)
   const typeRaw = getSingleValue(resolvedSearchParams.type)
 
-  const resolvedId = idRaw ? Number(idRaw) : Number(currentUser?.userId ?? -1)
-  const resolvedType = typeRaw ?? "user"
+  // Legacy Report Activity semantics: bare /profile (no params) → type=report, id=-1.
+  // This is the global report-activity view. /users?id=X is the personal-profile route.
+  // Do NOT redirect — inline the defaults directly to avoid an extra round-trip
+  // and the stale-fallback risk from `resolvedType ?? "user"` if params are ever absent.
 
-  // Redirect bare /profile to /profile?id=<currentUserId>&type=user
-  if (!idRaw && currentUser?.userId) {
-    redirect(`/profile?id=${currentUser.userId}&type=user`)
-  }
+  const resolvedType = typeRaw ?? "report"
+  const resolvedId = idRaw !== undefined ? Number(idRaw) : -1
 
   // Fetch initial data server-side for fast first paint
   const analyticsResult = await loadProfileAnalyticsAction(resolvedId, resolvedType)
