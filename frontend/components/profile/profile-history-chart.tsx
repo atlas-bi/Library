@@ -66,14 +66,14 @@ function ProfileStatCard({
   suffix,
 }: {
   label: string
-  value: number
+  value: number | null
   suffix?: string
 }) {
   return (
     <div className="space-y-1">
       <div className="text-3xl font-semibold tracking-tight">
-        {value.toLocaleString()}
-        {suffix ? <span className="text-xl">{suffix}</span> : null}
+        {value === null ? "-" : value.toLocaleString()}
+        {value !== null && suffix ? <span className="text-xl">{suffix}</span> : null}
       </div>
       <div className="text-sm text-muted-foreground">{label}</div>
     </div>
@@ -85,9 +85,9 @@ export function ProfileSummaryStats({
   users,
   runTime,
 }: {
-  runs: number
-  users: number
-  runTime: number
+  runs: number | null
+  users: number | null
+  runTime: number | null
 }) {
   return (
     <div className="flex flex-wrap gap-8">

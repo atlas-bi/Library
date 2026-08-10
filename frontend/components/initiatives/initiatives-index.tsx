@@ -1,9 +1,9 @@
 "use client"
 
-import { BadgeCheck, Share, Star } from "lucide-react"
+import { BadgeCheck, BarChart3, MessageSquare, Share, Star, TrendingUp } from "lucide-react"
 import Link from "next/link"
 import { useState, useTransition } from "react"
-import { EntityFeedbackDialog } from "@/components/interactions/entity-feedback-dialog"
+import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { toggleStarAction } from "@/lib/initiatives/actions"
@@ -52,9 +52,9 @@ export function InitiativesIndex({ data, canCreateInitiative }: InitiativesIndex
           setCountMap((prev) => ({ ...prev, [id]: prevCount }))
           alert(`Error updating star: ${result.error}`)
         } else if (result.data) {
-          const { isStarred, count } = result.data
-          setStarredMap((prev) => ({ ...prev, [id]: isStarred }))
-          setCountMap((prev) => ({ ...prev, [id]: count }))
+          const d = result.data
+          setStarredMap((prev) => ({ ...prev, [id]: d.isStarred }))
+          setCountMap((prev) => ({ ...prev, [id]: d.count }))
         }
       })()
     })
@@ -67,7 +67,6 @@ export function InitiativesIndex({ data, canCreateInitiative }: InitiativesIndex
 
   return (
     <div className="mx-auto px-4 py-8">
-      {/* Breadcrumb matching the screenshot */}
       <nav className="mb-6 flex gap-2 text-[0.9rem] text-gray-500">
         <Link href="/initiatives" className="hover:underline">
           Initiatives
@@ -82,7 +81,7 @@ export function InitiativesIndex({ data, canCreateInitiative }: InitiativesIndex
         Initiatives
       </h1>
 
-      {canCreateInitiative && data.permissions?.canCreateInitiative !== false && (
+      {canCreateInitiative && (
         <div className="mb-6">
           <Link href="/initiatives/new">
             <Button
@@ -129,9 +128,9 @@ export function InitiativesIndex({ data, canCreateInitiative }: InitiativesIndex
                   <div className="h-[128px] w-[128px] shrink-0">
                     <picture>
                       <source srcSet="/img/report_placeholder_128x128.webp" type="image/webp" />
-                      <img 
-                        src="/img/report_placeholder_128x128.png" 
-                        alt="placeholder image" 
+                      <img
+                        src="/img/report_placeholder_128x128.png"
+                        alt="placeholder image"
                         className="block h-auto max-w-full"
                         loading="lazy"
                       />
@@ -153,8 +152,8 @@ export function InitiativesIndex({ data, canCreateInitiative }: InitiativesIndex
 
                 {/* Card Footer */}
                 <div className="flex items-stretch border-t border-[#dbdbdb] bg-white">
-                  <button 
-                    type="button" 
+                  <button
+                    type="button"
                     disabled={isPending}
                     onClick={() => toggleStar(item.id)}
                     className={`flex flex-1 items-center justify-center gap-2 border-r border-[#dbdbdb] px-4 py-3 text-[1rem] hover:bg-[#f5f5f5] ${isStarred ? "text-[#363636]" : "text-[#4a4a4a]"}`}
@@ -166,23 +165,25 @@ export function InitiativesIndex({ data, canCreateInitiative }: InitiativesIndex
                     </span>
                   </button>
                   {data.features?.sharingEnabled !== false && (
-                    <button 
-                      type="button" 
+                    <button
+                      type="button"
                       onClick={() => openShareModal(item.id, item.name)}
                       className={`flex flex-1 items-center justify-center px-4 py-3 text-[#7a7a7a] hover:bg-[#f5f5f5] ${data.features?.feedbackEnabled ? 'border-r border-[#dbdbdb]' : ''}`}
                     >
                       <Share className="h-4 w-4" />
                     </button>
                   )}
-                  {data.features?.feedbackEnabled !== false && (
-                    <EntityFeedbackDialog
-                      entityName={item.name}
-                      entityUrl={`/initiatives?id=${item.id}`}
-                      variant="footer"
-                    />
+                  {data.features?.feedbackEnabled && (
+                    <button
+                      type="button"
+                      className="flex flex-1 items-center justify-center px-4 py-3 text-[#7a7a7a] hover:bg-[#f5f5f5]"
+                      title="Provide Feedback"
+                    >
+                      <MessageSquare className="h-4 w-4" />
+                    </button>
                   )}
                 </div>
-            </div>
+              </div>
             )
           })}
         </div>
