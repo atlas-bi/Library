@@ -14,7 +14,6 @@ const nextConfig: NextConfig = {
       "/tasks",
       "/terms",
       "/users/settings",
-      "/about_analytics",
     ]
     const legacyAssetRoutes = ["/css/:path*", "/js/:path*", "/font/:path*", "/img/:path*"]
 
