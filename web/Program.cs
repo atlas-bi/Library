@@ -305,7 +305,6 @@ builder
     .AddRazorPagesOptions(options =>
     {
         options.Conventions.AddPageRoute("/Index/Index", "");
-        options.Conventions.AddPageRoute("/Index/About", "about_analytics");
         options.Conventions.ConfigureFilter(new IgnoreAntiforgeryTokenAttribute());
     })
     .AddRazorRuntimeCompilation();
