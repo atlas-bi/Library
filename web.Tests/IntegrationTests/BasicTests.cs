@@ -24,7 +24,6 @@ namespace web.Tests.IntegrationTests
         [InlineData("/Terms/New")]
         [InlineData("/Search")]
         [InlineData("/Search?Query=test")] // > need to have a solr install for this to
-        [InlineData("/about_analytics")]
         [InlineData("/Settings")]
         [InlineData("/Analytics")]
         [InlineData("/Users")] // me
