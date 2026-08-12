@@ -11,7 +11,7 @@
   </PropertyGroup>
   <ItemGroup>
     <SonarQubeSetting Include="sonar.exclusions">
-      <Value>wwwroot/font/**/*, wwwroot/js/polyfill/**/*, wwwroot/lib/**/*, solr/**/*, atlas-creation_script.sql, atlas-demo-seed_script.sql, Migrations/**/*</Value>
+      <Value>wwwroot/font/**/*, wwwroot/js/polyfill/**/*, wwwroot/lib/**/*, solr/**/*, atlas-creation_script.sql, Migrations/**/*</Value>
     </SonarQubeSetting>
   </ItemGroup>
   <PropertyGroup>
@@ -96,9 +96,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include=".\version" CopyToPublishDirectory="PreserveNewest" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="atlas-demo-seed_script.sql" CopyToPublishDirectory="PreserveNewest" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Pages\API\Partials\" />

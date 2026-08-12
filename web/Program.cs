@@ -2,13 +2,13 @@ using System.Data.SqlClient;
 using System.IO.Compression;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
-using System.Text.RegularExpressions;
 using Atlas_Web;
 using Atlas_Web.Authentication;
 using Atlas_Web.Authorization;
 using Atlas_Web.Middleware;
 using Atlas_Web.Models;
 using Atlas_Web.Services;
+using Atlas_Web.Services.Seeding;
 using Hangfire;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -212,6 +212,7 @@ builder.Services.AddScoped<IReportsApiService, ReportsApiService>();
 builder.Services.AddScoped<ISearchApiService, SearchApiService>();
 builder.Services.AddScoped<ITermsApiService, TermsApiService>();
 builder.Services.AddScoped<IUsersApiService, UsersApiService>();
+builder.Services.AddScoped<DemoDataSeeder>();
 builder.Services.AddHttpContextAccessor();
 
 ProgramConfiguration.ConfigureJwtAuthentication(builder);
@@ -407,67 +408,20 @@ if (!app.Environment.IsEnvironment("Test"))
 
         if (shouldSeedDemo)
         {
-            const string seedMarkerName = "demo_seed_applied";
-            var alreadySeeded = context.GlobalSiteSettings.Any(x => x.Name == seedMarkerName);
-
-            if (!alreadySeeded)
-            {
-                var seedScriptPath = Path.Combine(
-                    AppContext.BaseDirectory,
-                    "atlas-demo-seed_script.sql"
-                );
-                if (File.Exists(seedScriptPath))
-                {
-                    var seedSql = File.ReadAllText(seedScriptPath);
-                    var batches = Regex.Split(
-                        seedSql,
-                        @"^\s*GO\s*$",
-                        RegexOptions.Multiline | RegexOptions.IgnoreCase,
-                        TimeSpan.FromSeconds(5)
-                    );
-
-                    using var connection = new SqlConnection(
-                        app.Configuration.GetConnectionString("AtlasDatabase")
-                    );
-                    connection.Open();
-
-                    using var tx = connection.BeginTransaction();
-                    try
-                    {
-                        foreach (var batch in batches)
-                        {
-                            var sql = batch?.Trim();
-                            if (string.IsNullOrWhiteSpace(sql))
-                            {
-                                continue;
-                            }
-
-                            using var cmd = connection.CreateCommand();
-                            cmd.Transaction = tx;
-                            cmd.CommandTimeout = 60000;
-                            cmd.CommandText = sql;
-                            cmd.ExecuteNonQuery();
-                        }
-
-                        context.GlobalSiteSettings.Add(
-                            new GlobalSiteSetting
-                            {
-                                Name = seedMarkerName,
-                                Description = "",
-                                Value = DateTimeOffset.UtcNow.ToString("O"),
-                            }
-                        );
-                        context.SaveChanges();
-
-                        tx.Commit();
-                    }
-                    catch
-                    {
-                        tx.Rollback();
-                        throw;
-                    }
-                }
-            }
+            var seedVersion = app.Configuration["DEMO_SEED_VERSION"] ?? "2026-08-12-v1";
+            var adminUsername =
+                app.Configuration["DEMO_ADMIN_USERNAME"]
+                ?? Environment.GetEnvironmentVariable("DEMO_ADMIN_USERNAME")
+                ?? "local-admin";
+            var resetDemoRaw =
+                app.Configuration["DEMO_SEED_RESET"]
+                ?? Environment.GetEnvironmentVariable("DEMO_SEED_RESET");
+            var shouldResetDemo =
+                string.Equals(resetDemoRaw, "true", StringComparison.OrdinalIgnoreCase)
+                || string.Equals(resetDemoRaw, "1", StringComparison.OrdinalIgnoreCase)
+                || string.Equals(resetDemoRaw, "yes", StringComparison.OrdinalIgnoreCase);
+            var seeder = scope.ServiceProvider.GetRequiredService<DemoDataSeeder>();
+            await seeder.SeedAsync(seedVersion, adminUsername, shouldResetDemo);
         }
 
         // load override css
