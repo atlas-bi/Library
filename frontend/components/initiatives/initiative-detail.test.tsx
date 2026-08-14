@@ -88,7 +88,7 @@ describe("InitiativeDetail", () => {
     expect(screen.getByRole("heading", { name: "Test Initiative", level: 1 })).toBeDefined()
     expect(screen.getByText("Improve discharge coordination.")).toBeDefined()
     expect(screen.getByText("2 days ago")).toBeDefined()
-    expect(screen.getAllByRole("link", { name: "Patient Flow Command Center" })).toHaveLength(2)
+    expect(screen.getByRole("link", { name: "Patient Flow Command Center" })).toBeDefined()
   })
 })
 
