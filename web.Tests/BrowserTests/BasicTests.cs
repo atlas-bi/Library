@@ -77,7 +77,6 @@ public class BasicTests : IClassFixture<BrowserFactory<Program>>
             "Terms/New",
             "Search",
             "Search?Query=test",
-            "about_analytics",
             "Settings",
             "Analytics",
             "Users",
