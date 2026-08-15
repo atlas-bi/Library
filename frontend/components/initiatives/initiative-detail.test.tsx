@@ -1,11 +1,11 @@
 import { render, screen } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
-import { describe, expect, it, vi, beforeEach } from "vitest"
 import type { ReactNode } from "react"
+import { beforeEach, describe, expect, it, vi } from "vitest"
 import { TooltipProvider } from "@/components/ui/tooltip"
+import { toggleStarAction } from "@/lib/initiatives/actions"
 import type { InitiativeDetailDto } from "@/lib/initiatives/types"
 import { InitiativeDetail } from "./initiative-detail"
-import { toggleStarAction } from "@/lib/initiatives/actions"
 
 // Mock the actions module
 vi.mock("@/lib/initiatives/actions", () => ({
@@ -64,6 +64,31 @@ describe("InitiativeDetail", () => {
     )
 
     expect(screen.queryByRole("link", { name: "Alice Operator" })).toBeNull()
+  })
+
+  it("renders the complete API detail payload", () => {
+    renderDetail(
+      <InitiativeDetail
+        data={{
+          ...mockData,
+          description: "Improve discharge coordination.",
+          lastModifiedDisplay: "2 days ago",
+          collections: [
+            {
+              id: 40,
+              name: "Patient Flow Command Center",
+              description: "Operational patient-flow reports.",
+              starCount: 2,
+            },
+          ],
+        }}
+      />,
+    )
+
+    expect(screen.getByRole("heading", { name: "Test Initiative", level: 1 })).toBeDefined()
+    expect(screen.getByText("Improve discharge coordination.")).toBeDefined()
+    expect(screen.getByText("2 days ago")).toBeDefined()
+    expect(screen.getByRole("link", { name: "Patient Flow Command Center" })).toBeDefined()
   })
 })
 

@@ -88,75 +88,87 @@ public sealed class InitiativesApiService : IInitiativesApiService
     {
         var currentUserId = user.GetUserId();
         var canViewUserProfiles = user.HasPermission("View Other User") && IsUserProfileEnabled();
+        var initiative = await _context.Initiatives.AsNoTracking()
+            .AsSplitQuery()
+            .Include(x => x.StarredInitiatives)
+            .Include(x => x.OperationOwner)
+            .Include(x => x.ExecutiveOwner)
+            .Include(x => x.LastUpdateUserNavigation)
+            .Include(x => x.FinancialImpactNavigation)
+            .Include(x => x.StrategicImportanceNavigation)
+            .Include(x => x.Collections)
+            .SingleOrDefaultAsync(x => x.InitiativeId == id, cancellationToken);
 
-        return await _context.Initiatives.AsNoTracking()
-            .Where(x => x.InitiativeId == id)
-            .Select(x => new InitiativeDetailDto
-            {
-                Id = x.InitiativeId,
-                Name = x.Name,
-                Description = x.Description,
-                Hidden = x.Hidden,
-                LastModified = x.LastUpdateDate,
-                LastModifiedDisplay = x.LastUpdatedDateDisplayString,
-                IsStarred = x.StarredInitiatives.Any(y => y.Ownerid == currentUserId),
-                StarCount = x.StarredInitiatives.Count,
-                CanCreateInitiative = user.HasPermission("Create Initiative"),
-                CanEditInitiative = user.HasPermission("Edit Initiative"),
-                CanDeleteInitiative = user.HasPermission("Delete Initiative"),
-                CanViewUserProfiles = canViewUserProfiles,
-                Features = BuildFeatures(),
-                OperationOwner = x.OperationOwner == null
-                    ? null
-                    : new InitiativeUserSummaryDto
-                    {
-                        Id = x.OperationOwner.UserId,
-                        Username = x.OperationOwner.Username,
-                        FullName = x.OperationOwner.FullnameCalc,
-                        Email = x.OperationOwner.Email,
-                    },
-                ExecutiveOwner = x.ExecutiveOwner == null
-                    ? null
-                    : new InitiativeUserSummaryDto
-                    {
-                        Id = x.ExecutiveOwner.UserId,
-                        Username = x.ExecutiveOwner.Username,
-                        FullName = x.ExecutiveOwner.FullnameCalc,
-                        Email = x.ExecutiveOwner.Email,
-                    },
-                LastUpdatedBy = x.LastUpdateUserNavigation == null
-                    ? null
-                    : new InitiativeUserSummaryDto
-                    {
-                        Id = x.LastUpdateUserNavigation.UserId,
-                        Username = x.LastUpdateUserNavigation.Username,
-                        FullName = x.LastUpdateUserNavigation.FullnameCalc,
-                        Email = x.LastUpdateUserNavigation.Email,
-                    },
-                FinancialImpact = x.FinancialImpactNavigation == null
-                    ? null
-                    : new InitiativeLookupValueDto
-                    {
-                        Id = x.FinancialImpactNavigation.Id,
-                        Name = x.FinancialImpactNavigation.Name,
-                    },
-                StrategicImportance = x.StrategicImportanceNavigation == null
-                    ? null
-                    : new InitiativeLookupValueDto
-                    {
-                        Id = x.StrategicImportanceNavigation.Id,
-                        Name = x.StrategicImportanceNavigation.Name,
-                    },
-                Collections = x.Collections.OrderBy(y => y.Name)
-                    .Select(y => new InitiativeLinkedCollectionDto
-                    {
-                        Id = y.CollectionId,
-                        Name = y.Name,
-                        Description = y.Description,
-                    })
-                    .ToList(),
-            })
-            .SingleOrDefaultAsync(cancellationToken);
+        if (initiative == null)
+        {
+            return null;
+        }
+
+        return new InitiativeDetailDto
+        {
+            Id = initiative.InitiativeId,
+            Name = initiative.Name,
+            Description = initiative.Description,
+            Hidden = initiative.Hidden,
+            LastModified = initiative.LastUpdateDate,
+            LastModifiedDisplay = initiative.LastUpdatedDateDisplayString,
+            IsStarred = initiative.StarredInitiatives.Any(y => y.Ownerid == currentUserId),
+            StarCount = initiative.StarredInitiatives.Count,
+            CanCreateInitiative = user.HasPermission("Create Initiative"),
+            CanEditInitiative = user.HasPermission("Edit Initiative"),
+            CanDeleteInitiative = user.HasPermission("Delete Initiative"),
+            CanViewUserProfiles = canViewUserProfiles,
+            Features = BuildFeatures(),
+            OperationOwner = initiative.OperationOwner == null
+                ? null
+                : new InitiativeUserSummaryDto
+                {
+                    Id = initiative.OperationOwner.UserId,
+                    Username = initiative.OperationOwner.Username,
+                    FullName = initiative.OperationOwner.FullnameCalc,
+                    Email = initiative.OperationOwner.Email,
+                },
+            ExecutiveOwner = initiative.ExecutiveOwner == null
+                ? null
+                : new InitiativeUserSummaryDto
+                {
+                    Id = initiative.ExecutiveOwner.UserId,
+                    Username = initiative.ExecutiveOwner.Username,
+                    FullName = initiative.ExecutiveOwner.FullnameCalc,
+                    Email = initiative.ExecutiveOwner.Email,
+                },
+            LastUpdatedBy = initiative.LastUpdateUserNavigation == null
+                ? null
+                : new InitiativeUserSummaryDto
+                {
+                    Id = initiative.LastUpdateUserNavigation.UserId,
+                    Username = initiative.LastUpdateUserNavigation.Username,
+                    FullName = initiative.LastUpdateUserNavigation.FullnameCalc,
+                    Email = initiative.LastUpdateUserNavigation.Email,
+                },
+            FinancialImpact = initiative.FinancialImpactNavigation == null
+                ? null
+                : new InitiativeLookupValueDto
+                {
+                    Id = initiative.FinancialImpactNavigation.Id,
+                    Name = initiative.FinancialImpactNavigation.Name,
+                },
+            StrategicImportance = initiative.StrategicImportanceNavigation == null
+                ? null
+                : new InitiativeLookupValueDto
+                {
+                    Id = initiative.StrategicImportanceNavigation.Id,
+                    Name = initiative.StrategicImportanceNavigation.Name,
+                },
+            Collections = initiative.Collections.OrderBy(y => y.Name)
+                .Select(y => new InitiativeLinkedCollectionDto
+                {
+                    Id = y.CollectionId,
+                    Name = y.Name,
+                    Description = y.Description,
+                })
+                .ToList(),
+        };
     }
 
     public async Task<InitiativeDetailDto> CreateInitiativeAsync(

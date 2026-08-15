@@ -8,6 +8,7 @@ using Atlas_Web.Models;
 using Atlas_Web.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
@@ -137,6 +138,54 @@ public class InitiativesApiControllerTests
         Assert.Equal("High", payload.FinancialImpact.Name);
         Assert.Equal("Critical", payload.StrategicImportance.Name);
         Assert.Equal(2, payload.Collections.Count);
+    }
+
+    [Fact]
+    public async Task GetInitiative_SqlServer_ReturnsFormattedLastModifiedDate()
+    {
+        var connectionString = System.Environment.GetEnvironmentVariable("ATLAS_TEST_SQLSERVER");
+        if (string.IsNullOrWhiteSpace(connectionString))
+        {
+            return;
+        }
+
+        var connection = new SqlConnectionStringBuilder(connectionString)
+        {
+            InitialCatalog = "AtlasInitiativeApiRegression",
+        };
+        var options = new DbContextOptionsBuilder<Atlas_WebContext>()
+            .UseSqlServer(connection.ConnectionString)
+            .Options;
+
+        await using var context = new Atlas_WebContext(options);
+        await context.Database.EnsureDeletedAsync();
+        await context.Database.EnsureCreatedAsync();
+        var viewer = new User
+        {
+            Username = "viewer",
+            FullnameCalc = "Viewer Name",
+        };
+        var initiative = new Initiative
+        {
+            Name = "Patient Flow",
+            LastUpdateDate = new System.DateTime(2026, 8, 12),
+        };
+        context.Users.Add(viewer);
+        context.Initiatives.Add(initiative);
+        await context.SaveChangesAsync();
+
+        var service = new InitiativesApiService(
+            context,
+            BuildConfig(),
+            new MemoryCache(new MemoryCacheOptions())
+        );
+        var controller = BuildController(service, BuildPrincipal(viewer.UserId, "viewer"));
+
+        var result = await controller.GetInitiative(initiative.InitiativeId);
+
+        var ok = Assert.IsType<OkObjectResult>(result.Result);
+        var payload = Assert.IsType<InitiativeDetailDto>(ok.Value);
+        Assert.False(string.IsNullOrWhiteSpace(payload.LastModifiedDisplay));
     }
 
     [Fact]
