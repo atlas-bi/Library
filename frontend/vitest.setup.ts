@@ -1,6 +1,12 @@
 import "@testing-library/jest-dom/vitest"
 import { vi } from "vitest"
 
+global.ResizeObserver = class ResizeObserver {
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+}
+
 vi.mock("next/navigation", async () => {
   const actual = await vi.importActual<typeof import("next/navigation")>("next/navigation")
 
