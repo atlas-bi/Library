@@ -185,6 +185,7 @@ export async function submitAccessRequest(
 
     return { ok: false, message: await parseErrorMessage(res), code: toErrorCode(res.status) }
   } catch (error) {
+    console.error("Failed to submit access request:", error)
     return {
       ok: false,
       message: getUserFriendlyErrorMessage("service_unavailable"),
