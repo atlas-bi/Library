@@ -107,4 +107,16 @@ describe("submitAccessRequest", () => {
       expect(result.code).toBe("service_unavailable")
     }
   })
+
+  test("returns ok:false with service_unavailable when fetch rejects due to network failure", async () => {
+    global.fetch = vi.fn(async () => Promise.reject(new Error("Failed to fetch"))) as typeof fetch
+
+    const result = await submitAccessRequest(VALID_BODY)
+
+    expect(result.ok).toBe(false)
+    if (!result.ok) {
+      expect(result.message).toMatch(/temporarily unavailable/i)
+      expect(result.code).toBe("service_unavailable")
+    }
+  })
 })

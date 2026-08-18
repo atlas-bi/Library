@@ -96,6 +96,12 @@ describe("RequestAccessDialog", () => {
     await waitFor(() => {
       expect(screen.getByText(/your request has been submitted/i)).toBeInTheDocument()
     })
+
+    expect(submitAccessRequestAction).toHaveBeenCalledWith({
+      reportName: "Sales Dashboard",
+      reportUrl: "https://example.com/reports/1",
+      directorName: "Jane Smith",
+    })
   })
 
   it("displays the API error message on a 400 validation failure", async () => {
