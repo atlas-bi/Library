@@ -2,7 +2,7 @@ import Link from "next/link"
 import type { ProfileBarItemDto } from "@/lib/profile/types"
 
 function getBarTitle(item: ProfileBarItemDto) {
-  return item.title ?? item.titleOne ?? item.key
+  return item.title ?? item.key
 }
 
 function getBarSubtitle(item: ProfileBarItemDto) {
@@ -46,7 +46,14 @@ export function ProfileBarDataSection({
                 </div>
                 <div className="shrink-0 text-right text-xs text-muted-foreground">
                   <div>{item.count.toLocaleString()} runs</div>
-                  {typeof item.percent === "number" ? <div>{item.percent}%</div> : null}
+                  {typeof item.percent === "number" ? (
+                    <div>
+                      {Intl.NumberFormat("en-US", {
+                        style: "percent",
+                        maximumFractionDigits: 0,
+                      }).format(item.percent)}
+                    </div>
+                  ) : null}
                 </div>
               </div>
               <div className="h-2 overflow-hidden rounded-full bg-muted">
