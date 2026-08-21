@@ -71,14 +71,14 @@ export async function loadProfileAnalyticsAction(
 		subsResult,
 	];
 
-	const firstError = allResults.find((r) => r.error !== null)?.error;
-	if (firstError) {
-		return { data: null, error: firstError };
-	}
+	// Ignore API errors and return partial data instead of crashing the modal
+	// (Next.js intercepts console.error during SSR and displays an error overlay)
 
+	// We'll return partial data even if some endpoints failed
+	// This prevents the "Profile analytics unavailable" message when e.g. stars is 404
 	return {
 		data: {
-			chart: chartResult.data,
+			chart: chartResult.data ?? null,
 			users: usersResult.data ?? [],
 			reports: reportsResult.data ?? [],
 			fails: failsResult.data ?? [],
