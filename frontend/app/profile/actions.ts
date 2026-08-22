@@ -50,11 +50,13 @@ export async function loadProfileAnalyticsAction(
 		getProfileUsers(filters),
 		getProfileReports(filters),
 		getProfileFails(filters),
-		getProfileRunList(filters),
+		type === "report"
+			? getProfileRunList(filters)
+			: Promise.resolve({ data: [], error: null }),
 		canLoadProfileRelationships
 			? getProfileStars(filters)
 			: Promise.resolve({ data: [], error: null }),
-		canLoadProfileRelationships
+		type === "report" && id !== -1
 			? getProfileSubscriptions(filters)
 			: Promise.resolve({ data: [], error: null }),
 	]);

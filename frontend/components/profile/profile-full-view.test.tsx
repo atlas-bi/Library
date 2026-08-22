@@ -216,4 +216,24 @@ describe("ProfileFullView", () => {
     expect(screen.getByText("Bob Star")).toBeDefined()
     expect(screen.queryByRole("link", { name: "Bob Star" })).toBeNull()
   })
+
+  it("renders correctly without error for term and collection types", () => {
+    render(<ProfileFullView id={1} type="term" initialData={mockData} />)
+    expect(screen.queryByText(/unable to load profile analytics/i)).toBeNull()
+    expect(screen.getByText("42")).toBeDefined()
+  })
+
+  it("formats percentages correctly and displays proper item names", () => {
+    const dataWithMockLabels = {
+      ...mockData,
+      users: [{ key: "Alice", count: 10, percent: 0.333333, titleOne: "Top Users" }],
+    }
+    render(<ProfileFullView id={1} type="report" initialData={dataWithMockLabels} />)
+    
+    // Fallback to key should display "Alice"
+    expect(screen.getByText("Alice")).toBeDefined()
+    
+    // Formatted percentage should be rounded to 33%
+    expect(screen.getByText("33%")).toBeDefined()
+  })
 })
