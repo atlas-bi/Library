@@ -351,9 +351,14 @@ app.UseStaticFiles(
 app.UseETagger();
 app.UseRouting();
 app.UseCors("NextJs");
+if (app.Configuration.GetSection("Saml2").Exists())
+{
+    app.UseSaml2();
+}
 app.UseAuthentication();
 app.UseAuthorization();
 
+app.MapGet("/healthz", () => Results.Ok(new { status = "ok" })).AllowAnonymous();
 app.MapRazorPages();
 app.MapControllers();
 

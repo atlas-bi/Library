@@ -25,16 +25,6 @@ namespace Atlas_Web.Controllers
         {
             var binding = new Saml2PostBinding();
             var saml2AuthnResponse = new Saml2AuthnResponse(config);
-            var relayStateQuery = binding.GetRelayStateQuery();
-            var returnUrl = relayStateQuery.ContainsKey(relayStateReturnUrl)
-                ? relayStateQuery[relayStateReturnUrl]
-                : Url.Content("~/");
-
-            // if a login existed.. use it
-            if (User.Identity.IsAuthenticated)
-            {
-                return Redirect(returnUrl);
-            }
 
             binding.ReadSamlResponse(Request.ToGenericHttpRequest(), saml2AuthnResponse);
             if (saml2AuthnResponse.Status != Saml2StatusCodes.Success)
@@ -45,6 +35,16 @@ namespace Atlas_Web.Controllers
             }
 
             binding.Unbind(Request.ToGenericHttpRequest(), saml2AuthnResponse);
+            var relayStateQuery = binding.GetRelayStateQuery();
+            var returnUrl = relayStateQuery.ContainsKey(relayStateReturnUrl)
+                ? relayStateQuery[relayStateReturnUrl]
+                : Url.Content("~/");
+
+            // if a login existed.. use it
+            if (User.Identity.IsAuthenticated)
+            {
+                return Redirect(returnUrl);
+            }
 
             await saml2AuthnResponse.CreateSession(
                 HttpContext,
