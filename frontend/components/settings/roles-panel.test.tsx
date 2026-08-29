@@ -1,4 +1,4 @@
-﻿import { render, screen, waitFor } from "@testing-library/react"
+import { render, screen, waitFor } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import { beforeEach, describe, expect, it, vi } from "vitest"
 import { createRoleAction, deleteRoleAction, updateRolePermissionAction } from "@/app/settings/actions"
@@ -78,8 +78,8 @@ describe("RolesPanel", () => {
 
     render(<RolesPanel initialRoles={INITIAL_ROLES} permissions={PERMISSIONS} />)
 
-    const deleteLink = screen.getByRole("link", { name: /delete role manager/i })
-    await user.click(deleteLink)
+    const deleteBtn = screen.getByRole("button", { name: /delete role manager/i })
+    await user.click(deleteBtn)
 
     await waitFor(() => {
       expect(deleteRoleAction).toHaveBeenCalledWith(10)

@@ -28,8 +28,9 @@ describe("SiteMessagesPanel", () => {
     const user = userEvent.setup()
     render(<SiteMessagesPanel initialMessages={INITIAL_MESSAGES} />)
 
-    await user.click(screen.getByRole("button", { name: /add message/i }))
-    expect(screen.getByText("Message value is required.")).toBeInTheDocument()
+    await user.type(screen.getByPlaceholderText(/message content/i), "   ")
+    await user.click(screen.getByRole("button", { name: /^add$/i }))
+    expect(screen.getByText("Message content is required.")).toBeInTheDocument()
     expect(addSiteMessageAction).not.toHaveBeenCalled()
   })
 
@@ -41,13 +42,13 @@ describe("SiteMessagesPanel", () => {
 
     render(<SiteMessagesPanel initialMessages={INITIAL_MESSAGES} />)
 
-    await user.type(screen.getByRole("textbox", { name: /^message$/i }), "New Message")
-    await user.click(screen.getByRole("button", { name: /add message/i }))
+    await user.type(screen.getByPlaceholderText(/message content/i), "New Message")
+    await user.click(screen.getByRole("button", { name: /^add$/i }))
 
     await waitFor(() => {
       expect(addSiteMessageAction).toHaveBeenCalledWith({
         value: "New Message",
-        description: null,
+        description: undefined,
       })
       expect(screen.getByText("New Message")).toBeInTheDocument()
     })
@@ -61,8 +62,8 @@ describe("SiteMessagesPanel", () => {
 
     render(<SiteMessagesPanel initialMessages={INITIAL_MESSAGES} />)
 
-    await user.type(screen.getByRole("textbox", { name: /^message$/i }), "Another Message")
-    await user.click(screen.getByRole("button", { name: /add message/i }))
+    await user.type(screen.getByPlaceholderText(/message content/i), "Another Message")
+    await user.click(screen.getByRole("button", { name: /^add$/i }))
 
     await waitFor(() => {
       expect(screen.getByText("You do not have permission to view this content.")).toBeInTheDocument()
@@ -72,15 +73,20 @@ describe("SiteMessagesPanel", () => {
   it("deletes a message successfully", async () => {
     const user = userEvent.setup()
     vi.mocked(deleteSiteMessageAction).mockResolvedValueOnce({ data: {} })
+    
+    // Mock window.confirm
+    const confirmSpy = vi.spyOn(window, 'confirm').mockImplementation(() => true)
 
     render(<SiteMessagesPanel initialMessages={INITIAL_MESSAGES} />)
 
-    const deleteBtn = screen.getByRole("button", { name: /delete message: welcome to atlas/i })
+    const deleteBtn = screen.getByRole("button", { name: /delete message 1/i })
     await user.click(deleteBtn)
 
     await waitFor(() => {
       expect(deleteSiteMessageAction).toHaveBeenCalledWith(1)
       expect(screen.queryByText("Welcome to Atlas")).not.toBeInTheDocument()
     })
+    
+    confirmSpy.mockRestore()
   })
 })
