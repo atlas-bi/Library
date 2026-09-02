@@ -16,6 +16,6 @@ describe("ShareModal", () => {
       </TooltipProvider>,
     )
 
-    expect(screen.getByLabelText("Recipients")).toBeDefined()
+    expect(screen.getByLabelText("To:")).toBeDefined()
   })
 })
