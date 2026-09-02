@@ -1,7 +1,7 @@
 ﻿"use client"
 
-import { useState, useTransition } from "react"
 import { Trash2 } from "lucide-react"
+import { useState, useTransition } from "react"
 import { addSiteMessageAction, deleteSiteMessageAction } from "@/app/settings/actions"
 import type { SiteMessageDto } from "@/lib/settings/types"
 
@@ -54,11 +54,9 @@ export function SiteMessagesPanel({ initialMessages }: Props) {
   return (
     <div className="space-y-6">
       <h2 className="text-2xl font-bold font-serif text-slate-800">Site Messages</h2>
-      
+
       {error && (
-        <div className="bg-red-50 text-red-600 border border-red-200 p-4 rounded-md">
-          {error}
-        </div>
+        <div className="bg-red-50 text-red-600 border border-red-200 p-4 rounded-md">{error}</div>
       )}
 
       <form onSubmit={handleAdd} className="flex gap-2 w-full max-w-2xl">
@@ -81,9 +79,9 @@ export function SiteMessagesPanel({ initialMessages }: Props) {
             onChange={(e) => setNewDesc(e.target.value)}
           />
         </div>
-        <button 
+        <button
           className="h-10 px-4 py-2 bg-blue-500 text-white rounded-md text-sm font-medium hover:bg-blue-600 transition-colors disabled:opacity-50"
-          type="submit" 
+          type="submit"
           disabled={isPending}
         >
           Add

@@ -1,10 +1,15 @@
 ﻿"use client"
 
-import { useState, useTransition } from "react"
 import { Trash2 } from "lucide-react"
-import { addGroupRoleAction, removeGroupRoleAction } from "@/app/settings/actions"
-import type { GroupRoleAssignmentDto, RoleDto } from "@/lib/settings/types"
 import Link from "next/link"
+import { useCallback, useState, useTransition } from "react"
+import {
+  addGroupRoleAction,
+  removeGroupRoleAction,
+  searchSettingsGroupsAction,
+} from "@/app/settings/actions"
+import { SettingsTypeahead } from "@/components/settings/settings-typeahead"
+import type { GroupRoleAssignmentDto, RoleDto } from "@/lib/settings/types"
 
 interface Props {
   initialAssignments: GroupRoleAssignmentDto[]
@@ -18,6 +23,8 @@ export function GroupRolesPanel({ initialAssignments, availableRoles }: Props) {
   const [selectedRoleId, setSelectedRoleId] = useState<number | "">("")
   const [error, setError] = useState<string | null>(null)
   const [isPending, startTransition] = useTransition()
+
+  const fetchGroups = useCallback((query: string) => searchSettingsGroupsAction(query), [])
 
   async function handleAdd(e: React.FormEvent) {
     e.preventDefault()
@@ -42,7 +49,14 @@ export function GroupRolesPanel({ initialAssignments, availableRoles }: Props) {
                 : a,
             )
           }
-          return [...prev, { groupId: selectedGroupId, name: groupSearch, roles: [{ id: role.id, name: role.name }] }]
+          return [
+            ...prev,
+            {
+              groupId: selectedGroupId,
+              name: groupSearch,
+              roles: [{ id: role.id, name: role.name }],
+            },
+          ]
         })
         setGroupSearch("")
         setSelectedGroupId(null)
@@ -72,41 +86,34 @@ export function GroupRolesPanel({ initialAssignments, availableRoles }: Props) {
   return (
     <div className="space-y-6">
       <h2 className="text-2xl font-bold font-serif text-slate-800">Group Roles</h2>
-      
+
       <div className="space-y-4">
         <h3 className="text-xl font-semibold text-slate-800">Add Privileged Group</h3>
 
         {error && (
-          <div className="bg-red-50 text-red-600 border border-red-200 p-4 rounded-md">
-            {error}
-          </div>
+          <div className="bg-red-50 text-red-600 border border-red-200 p-4 rounded-md">{error}</div>
         )}
 
         <form onSubmit={handleAdd} className="space-y-4 max-w-xl">
+          <SettingsTypeahead
+            label="Group"
+            value={groupSearch}
+            selectedId={selectedGroupId}
+            onQueryChange={setGroupSearch}
+            onSelect={(item) => setSelectedGroupId(item.id)}
+            onClear={() => setSelectedGroupId(null)}
+            fetchResults={fetchGroups}
+          />
+
           <div className="space-y-2">
-            <label className="block text-sm font-semibold text-slate-700">Group</label>
-            <input
-              className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="type to search..."
-              value={groupSearch}
-              onChange={(e) => setGroupSearch(e.target.value)}
-            />
-          </div>
-          
-          <div className="space-y-2">
-            <label className="block text-sm font-semibold text-slate-700">Group ID</label>
-            <input
-              className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              type="number"
-              placeholder="Group ID"
-              value={selectedGroupId ?? ""}
-              onChange={(e) => setSelectedGroupId(e.target.value ? Number(e.target.value) : null)}
-            />
-          </div>
-          
-          <div className="space-y-2">
-            <label className="block text-sm font-semibold text-slate-700">Role</label>
+            <label
+              htmlFor="group-role-select"
+              className="block text-sm font-semibold text-slate-700"
+            >
+              Role
+            </label>
             <select
+              id="group-role-select"
               className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               value={selectedRoleId}
               onChange={(e) => setSelectedRoleId(e.target.value ? Number(e.target.value) : "")}
@@ -121,10 +128,10 @@ export function GroupRolesPanel({ initialAssignments, availableRoles }: Props) {
                 ))}
             </select>
           </div>
-          
-          <button 
+
+          <button
             className="px-4 py-2 bg-blue-500 text-white rounded-md text-sm font-medium hover:bg-blue-600 transition-colors disabled:opacity-50"
-            type="submit" 
+            type="submit"
             disabled={isPending}
           >
             Save
@@ -155,7 +162,10 @@ export function GroupRolesPanel({ initialAssignments, availableRoles }: Props) {
                 a.roles.map((r) => (
                   <tr key={`${a.groupId}-${r.id}`} className="hover:bg-slate-50">
                     <td className="px-4 py-3">
-                      <Link href={`/groups?id=${a.groupId}`} className="text-blue-600 hover:underline">
+                      <Link
+                        href={`/groups?id=${a.groupId}`}
+                        className="text-blue-600 hover:underline"
+                      >
                         {a.name}
                       </Link>
                     </td>

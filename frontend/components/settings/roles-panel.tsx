@@ -1,6 +1,5 @@
 ﻿"use client"
 
-import { Trash2 } from "lucide-react"
 import { useOptimistic, useState, useTransition } from "react"
 import {
   createRoleAction,
@@ -93,15 +92,16 @@ export function RolesPanel({ initialRoles, permissions }: Props) {
       <h2 className="text-[28px] font-bold font-serif text-[#2c3e50]">Role Configuration</h2>
 
       {error && (
-        <div className="bg-red-50 text-red-600 border border-red-200 p-4 rounded-md">
-          {error}
-        </div>
+        <div className="bg-red-50 text-red-600 border border-red-200 p-4 rounded-md">{error}</div>
       )}
 
       <form onSubmit={handleCreateRole} className="space-y-1">
-        <label className="block text-[13px] font-bold text-gray-800">Add a New Role</label>
+        <label htmlFor="new-role-name" className="block text-[13px] font-bold text-gray-800">
+          Add a New Role
+        </label>
         <div className="flex w-full max-w-[300px] items-center space-x-0">
           <input
+            id="new-role-name"
             className="flex-1 rounded-l border border-gray-300 bg-white px-3 py-1.5 text-[13px] focus:outline-none focus:border-blue-500"
             type="text"
             placeholder="executive"
@@ -109,9 +109,9 @@ export function RolesPanel({ initialRoles, permissions }: Props) {
             onChange={(e) => setNewRoleName(e.target.value)}
             required
           />
-          <button 
+          <button
             className="px-4 py-1.5 bg-[#4a85e6] text-white rounded-r border border-[#4a85e6] text-[13px] font-medium hover:bg-blue-600 transition-colors disabled:opacity-50"
-            type="submit" 
+            type="submit"
             disabled={isPending}
           >
             Save
@@ -123,9 +123,15 @@ export function RolesPanel({ initialRoles, permissions }: Props) {
         <table className="w-full text-[13px] text-left" aria-label="role permissions matrix">
           <thead>
             <tr className="border-b border-gray-300">
-              <th scope="col" className="py-2 font-bold text-gray-800 w-64">Permission</th>
+              <th scope="col" className="py-2 font-bold text-gray-800 w-64">
+                Permission
+              </th>
               {roles.map((role) => (
-                <th scope="col" key={role.id} className="py-2 font-bold text-gray-800 text-center whitespace-nowrap">
+                <th
+                  scope="col"
+                  key={role.id}
+                  className="py-2 font-bold text-gray-800 text-center whitespace-nowrap"
+                >
                   {role.name}
                   {!isProtected(role) && (
                     <button
@@ -143,8 +149,13 @@ export function RolesPanel({ initialRoles, permissions }: Props) {
           </thead>
           <tbody>
             {permissions.map((perm) => (
-              <tr key={perm.id} className="border-b border-gray-200 last:border-b-0 hover:bg-gray-50 transition-colors">
-                <th scope="row" className="py-2.5 font-bold text-gray-800">{perm.name}</th>
+              <tr
+                key={perm.id}
+                className="border-b border-gray-200 last:border-b-0 hover:bg-gray-50 transition-colors"
+              >
+                <th scope="row" className="py-2.5 font-bold text-gray-800">
+                  {perm.name}
+                </th>
                 {roles.map((role) => {
                   const checked = hasPermission(role, perm.id)
                   const isAdmin = role.name === "Administrator"

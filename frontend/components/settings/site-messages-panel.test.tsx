@@ -1,4 +1,4 @@
-import { render, screen, waitFor, within } from "@testing-library/react"
+import { render, screen, waitFor } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import { beforeEach, describe, expect, it, vi } from "vitest"
 import { addSiteMessageAction, deleteSiteMessageAction } from "@/app/settings/actions"
@@ -9,9 +9,7 @@ vi.mock("@/app/settings/actions", () => ({
   deleteSiteMessageAction: vi.fn(),
 }))
 
-const INITIAL_MESSAGES = [
-  { id: 1, value: "Welcome to Atlas", description: "Default banner" },
-]
+const INITIAL_MESSAGES = [{ id: 1, value: "Welcome to Atlas", description: "Default banner" }]
 
 describe("SiteMessagesPanel", () => {
   beforeEach(() => {
@@ -66,16 +64,18 @@ describe("SiteMessagesPanel", () => {
     await user.click(screen.getByRole("button", { name: /^add$/i }))
 
     await waitFor(() => {
-      expect(screen.getByText("You do not have permission to view this content.")).toBeInTheDocument()
+      expect(
+        screen.getByText("You do not have permission to view this content."),
+      ).toBeInTheDocument()
     })
   })
 
   it("deletes a message successfully", async () => {
     const user = userEvent.setup()
     vi.mocked(deleteSiteMessageAction).mockResolvedValueOnce({ data: {} })
-    
+
     // Mock window.confirm
-    const confirmSpy = vi.spyOn(window, 'confirm').mockImplementation(() => true)
+    const confirmSpy = vi.spyOn(window, "confirm").mockImplementation(() => true)
 
     render(<SiteMessagesPanel initialMessages={INITIAL_MESSAGES} />)
 
@@ -86,7 +86,7 @@ describe("SiteMessagesPanel", () => {
       expect(deleteSiteMessageAction).toHaveBeenCalledWith(1)
       expect(screen.queryByText("Welcome to Atlas")).not.toBeInTheDocument()
     })
-    
+
     confirmSpy.mockRestore()
   })
 })

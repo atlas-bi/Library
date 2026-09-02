@@ -1,9 +1,9 @@
 import { render, screen, waitFor } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import { beforeEach, describe, expect, it, vi } from "vitest"
-import { createRoleAction, deleteRoleAction, updateRolePermissionAction } from "@/app/settings/actions"
-import { RolesPanel } from "./roles-panel"
+import { deleteRoleAction, updateRolePermissionAction } from "@/app/settings/actions"
 import type { PermissionDto, RoleDto } from "@/lib/settings/types"
+import { RolesPanel } from "./roles-panel"
 
 vi.mock("@/app/settings/actions", () => ({
   createRoleAction: vi.fn(),

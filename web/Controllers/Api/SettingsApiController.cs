@@ -129,6 +129,14 @@ public sealed class SettingsApiController : ControllerBase
         return NoContent();
     }
 
+    [HttpGet("permissions")]
+    public async Task<ActionResult<IReadOnlyList<PermissionDto>>> GetPermissions(CancellationToken cancellationToken = default)
+    {
+        return Ok(await _context.RolePermissions.OrderBy(x => x.Name)
+            .Select(x => new PermissionDto { Id = x.RolePermissionsId, Name = x.Name })
+            .ToListAsync(cancellationToken));
+    }
+
     [HttpGet("roles")]
     public async Task<ActionResult<IReadOnlyList<RoleDto>>> GetRoles(CancellationToken cancellationToken = default)
     {

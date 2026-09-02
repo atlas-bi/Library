@@ -70,14 +70,21 @@ export default async function SettingsPage() {
           <RolesPanel initialRoles={rolesResult.data} permissions={permissionsResult.data} />
         ) : (
           <p className="text-red-500">
-            {!rolesResult.ok ? rolesResult.message : !permissionsResult.ok ? permissionsResult.message : ""}
+            {!rolesResult.ok
+              ? rolesResult.message
+              : !permissionsResult.ok
+                ? permissionsResult.message
+                : ""}
           </p>
         )}
       </div>
 
       <div id="user-roles" className="panel-tab-data hidden">
         {rolesResult.ok && userRolesResult.ok ? (
-          <UserRolesPanel initialAssignments={userRolesResult.data} availableRoles={rolesResult.data} />
+          <UserRolesPanel
+            initialAssignments={userRolesResult.data}
+            availableRoles={rolesResult.data}
+          />
         ) : (
           <p className="text-red-500">{!userRolesResult.ok ? userRolesResult.message : ""}</p>
         )}
@@ -85,7 +92,10 @@ export default async function SettingsPage() {
 
       <div id="user-groups" className="panel-tab-data hidden">
         {rolesResult.ok && groupRolesResult.ok ? (
-          <GroupRolesPanel initialAssignments={groupRolesResult.data} availableRoles={rolesResult.data} />
+          <GroupRolesPanel
+            initialAssignments={groupRolesResult.data}
+            availableRoles={rolesResult.data}
+          />
         ) : (
           <p className="text-red-500">{!groupRolesResult.ok ? groupRolesResult.message : ""}</p>
         )}

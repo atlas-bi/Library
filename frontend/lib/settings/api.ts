@@ -5,8 +5,8 @@
 
 import { getServerApiBase } from "@/lib/api-base"
 import { getToken } from "@/lib/auth"
-import { getUserFriendlyErrorMessage, mapHttpStatusToErrorCode } from "@/lib/errors"
 import type { AppErrorCode } from "@/lib/errors"
+import { getUserFriendlyErrorMessage, mapHttpStatusToErrorCode } from "@/lib/errors"
 import { apiFetchJson } from "@/lib/http"
 import type {
   GroupRoleAssignmentDto,
@@ -205,9 +205,7 @@ export async function updateSearchVisibility(
   reportTypeId?: number,
 ): Promise<SettingsResult<void>> {
   const params =
-    type === "reports" && reportTypeId !== undefined
-      ? `?reportTypeId=${reportTypeId}`
-      : ""
+    type === "reports" && reportTypeId !== undefined ? `?reportTypeId=${reportTypeId}` : ""
   return mutate<void>(`/api/settings/search/${type}/visibility${params}`, "PUT", { visible })
 }
 
@@ -304,10 +302,7 @@ export async function getGroupRoles(): Promise<SettingsResult<GroupRoleAssignmen
   return get<GroupRoleAssignmentDto[]>("/api/settings/group-roles")
 }
 
-export async function addGroupRole(
-  groupId: number,
-  roleId: number,
-): Promise<SettingsResult<void>> {
+export async function addGroupRole(groupId: number, roleId: number): Promise<SettingsResult<void>> {
   return mutate<void>(`/api/settings/group-roles/${groupId}`, "POST", { roleId })
 }
 
@@ -317,29 +312,3 @@ export async function removeGroupRole(
 ): Promise<SettingsResult<void>> {
   return mutate<void>(`/api/settings/group-roles/${groupId}/${roleId}`, "DELETE")
 }
-
-// ---------------------------------------------------------------------------
-// Available permissions list (re-used by the Roles UI)
-// ---------------------------------------------------------------------------
-
-export const ALL_PERMISSIONS: PermissionDto[] = [
-  { id: 1, name: "Manage Global Site Settings" },
-  { id: 2, name: "Create Parameters" },
-  { id: 3, name: "Delete Parameters" },
-  { id: 4, name: "Edit Role Permissions" },
-  { id: 5, name: "Edit User Permissions" },
-  { id: 6, name: "Edit Group Permissions" },
-  { id: 7, name: "Approve Terms" },
-  { id: 8, name: "Edit Report Documentation" },
-  { id: 9, name: "Create New Terms" },
-  { id: 10, name: "Edit Terms" },
-  { id: 11, name: "Create Collection" },
-  { id: 12, name: "Edit Collection" },
-  { id: 13, name: "Delete Collection" },
-  { id: 14, name: "Create Initiative" },
-  { id: 15, name: "View Other User" },
-  { id: 16, name: "Show Advanced Search" },
-  { id: 17, name: "Show Report-Object Relationships" },
-  { id: 18, name: "Manage Report-Object Relationships" },
-  { id: 19, name: "Edit Report-Object Relationships" },
-]

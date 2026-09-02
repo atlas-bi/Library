@@ -1,6 +1,6 @@
 ﻿"use client"
 
-import { useEffect, useRef, type ReactNode } from "react"
+import { type ReactNode, useEffect, useRef } from "react"
 
 interface Props {
   defaultTab: string
@@ -13,14 +13,14 @@ export function SettingsTabController({ defaultTab, children }: Props) {
   function activateTab(tabId: string) {
     const container = containerRef.current
     if (!container) return
-    
+
     // Hide all panels by adding 'hidden'
     const panels = container.querySelectorAll<HTMLElement>(".panel-tab-data")
     panels.forEach((p) => {
       p.classList.add("hidden")
       p.classList.remove("block")
     })
-    
+
     // Show target
     const target = container.querySelector<HTMLElement>(`#${tabId}`)
     if (target) {
@@ -33,7 +33,7 @@ export function SettingsTabController({ defaultTab, children }: Props) {
       const link = a as HTMLAnchorElement
       const isActive = link.hash === `#${tabId}`
       const iconSpan = link.querySelector("span")
-      
+
       if (isActive) {
         link.classList.add("text-[#485fc7]", "bg-[#f5f5f5]")
         link.classList.remove("text-[#363636]", "hover:bg-[#f5f5f5]")
@@ -67,7 +67,7 @@ export function SettingsTabController({ defaultTab, children }: Props) {
 
     // Intercept panel-tab link clicks
     const navLinks = document.querySelectorAll<HTMLAnchorElement>("a.panel-tab")
-    const clickHandlers = Array.from(navLinks).map(link => {
+    const clickHandlers = Array.from(navLinks).map((link) => {
       const handler = (e: Event) => {
         e.preventDefault()
         const id = link.hash.replace("#", "")
@@ -86,9 +86,5 @@ export function SettingsTabController({ defaultTab, children }: Props) {
     }
   }, [defaultTab])
 
-  return (
-    <div ref={containerRef}>
-      {children}
-    </div>
-  )
+  return <div ref={containerRef}>{children}</div>
 }

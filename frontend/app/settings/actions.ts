@@ -1,6 +1,9 @@
 ﻿"use server"
 
 import { revalidatePath } from "next/cache"
+import { searchReportUsers } from "@/lib/reports/api"
+import { searchLibrary } from "@/lib/search/api"
+import type { TagType } from "@/lib/settings/api"
 import {
   addGroupRole,
   addSiteMessage,
@@ -19,7 +22,6 @@ import {
   updateTheme,
 } from "@/lib/settings/api"
 import type { ParameterRequest, RoleRequest, SiteMessageRequest } from "@/lib/settings/types"
-import type { TagType } from "@/lib/settings/api"
 
 function revalidateSettings() {
   revalidatePath("/settings")
@@ -168,4 +170,28 @@ export async function removeGroupRoleAction(groupId: number, roleId: number) {
   if (!result.ok) return { error: result.message }
   revalidatePath("/settings")
   return { data: {} }
+}
+
+// ---------------------------------------------------------------------------
+// Lookup helpers for user/group assignment
+// ---------------------------------------------------------------------------
+
+export async function searchSettingsUsersAction(query: string) {
+  return searchReportUsers(query)
+}
+
+export async function searchSettingsGroupsAction(query: string) {
+  const trimmed = query.trim()
+  if (!trimmed) return []
+
+  const result = await searchLibrary({ q: trimmed, type: "groups" })
+  if (!result.data?.results) return []
+
+  return result.data.results
+    .filter((item) => item.type === "groups")
+    .map((item) => ({
+      id: item.atlasId,
+      name: item.name,
+      description: item.description,
+    }))
 }

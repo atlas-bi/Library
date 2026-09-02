@@ -2,8 +2,8 @@
 
 import { useState, useTransition } from "react"
 import { createTagAction, deleteTagAction } from "@/app/settings/actions"
-import type { ParameterDto } from "@/lib/settings/types"
 import type { TagType } from "@/lib/settings/api"
+import type { ParameterDto } from "@/lib/settings/types"
 
 interface TagSectionProps {
   title: string
@@ -24,7 +24,10 @@ function TagSection({ title, tagType, initialItems, hasDescription = false }: Ta
     if (!newName.trim()) return
     startTransition(async () => {
       setError(null)
-      const res = await createTagAction(tagType, { name: newName.trim(), description: newDesc.trim() || undefined })
+      const res = await createTagAction(tagType, {
+        name: newName.trim(),
+        description: newDesc.trim() || undefined,
+      })
       if (res && "error" in res) {
         setError(res.error as string)
       } else if (res && "data" in res) {
@@ -51,13 +54,13 @@ function TagSection({ title, tagType, initialItems, hasDescription = false }: Ta
   return (
     <div className="mb-8 last:mb-0 space-y-2">
       <h4 className="text-[15px] font-bold text-gray-800">{title}</h4>
-      
+
       {error && (
         <div className="bg-red-50 text-red-600 border border-red-200 p-3 rounded-md text-sm">
           {error}
         </div>
       )}
-      
+
       <div className="w-full">
         <table className="w-full text-[13px] text-left" aria-label={title}>
           <thead>
@@ -71,15 +74,23 @@ function TagSection({ title, tagType, initialItems, hasDescription = false }: Ta
           <tbody>
             {items.length === 0 && (
               <tr>
-                <td colSpan={hasDescription ? 4 : 3} className="py-4 text-center text-gray-500 border-b border-gray-200">
+                <td
+                  colSpan={hasDescription ? 4 : 3}
+                  className="py-4 text-center text-gray-500 border-b border-gray-200"
+                >
                   No items.
                 </td>
               </tr>
             )}
             {items.map((item) => (
-              <tr key={item.id} className="border-b border-gray-200 last:border-b-0 hover:bg-gray-50 transition-colors">
+              <tr
+                key={item.id}
+                className="border-b border-gray-200 last:border-b-0 hover:bg-gray-50 transition-colors"
+              >
                 <td className="py-2.5 font-bold text-gray-800">{item.name}</td>
-                {hasDescription && <td className="py-2.5 text-gray-700">{item.description ?? ""}</td>}
+                {hasDescription && (
+                  <td className="py-2.5 text-gray-700">{item.description ?? ""}</td>
+                )}
                 <td className="py-2.5 text-gray-700">{item.used}</td>
                 <td className="py-2.5">
                   <button
@@ -96,7 +107,7 @@ function TagSection({ title, tagType, initialItems, hasDescription = false }: Ta
           </tbody>
         </table>
       </div>
-      
+
       <form onSubmit={handleAdd} className="flex max-w-[300px]">
         <input
           className="flex-1 rounded-l border border-gray-300 bg-white px-3 py-1.5 text-[13px] focus:outline-none focus:border-blue-500 placeholder-gray-400"
@@ -115,9 +126,9 @@ function TagSection({ title, tagType, initialItems, hasDescription = false }: Ta
             onChange={(e) => setNewDesc(e.target.value)}
           />
         )}
-        <button 
+        <button
           className="px-4 py-1.5 bg-[#4a85e6] text-white rounded-r border border-[#4a85e6] text-[13px] font-medium hover:bg-blue-600 transition-colors disabled:opacity-50"
-          type="submit" 
+          type="submit"
           disabled={isPending}
         >
           Add
@@ -153,14 +164,38 @@ export function TagsSettingsPanel({
   return (
     <div className="space-y-6">
       <h3 className="text-[28px] font-bold font-serif text-[#2c3e50] mb-8">Meta Fields</h3>
-      <TagSection title="Organizational Value" tagType="organizational-values" initialItems={organizationalValues} />
-      <TagSection title="Estimated Run Frequency" tagType="estimated-run-frequencies" initialItems={estimatedRunFrequencies} />
+      <TagSection
+        title="Organizational Value"
+        tagType="organizational-values"
+        initialItems={organizationalValues}
+      />
+      <TagSection
+        title="Estimated Run Frequency"
+        tagType="estimated-run-frequencies"
+        initialItems={estimatedRunFrequencies}
+      />
       <TagSection title="Fragility Types" tagType="fragilities" initialItems={fragilities} />
       <TagSection title="Fragility Tags" tagType="fragility-tags" initialItems={fragilityTags} />
-      <TagSection title="Maintenance Schedules" tagType="maintenance-schedules" initialItems={maintenanceSchedules} />
-      <TagSection title="Maintenance Log Status" tagType="maintenance-log-statuses" initialItems={maintenanceLogStatuses} />
-      <TagSection title="Financial Impact" tagType="financial-impacts" initialItems={financialImpacts} />
-      <TagSection title="Strategic Importance" tagType="strategic-importances" initialItems={strategicImportances} />
+      <TagSection
+        title="Maintenance Schedules"
+        tagType="maintenance-schedules"
+        initialItems={maintenanceSchedules}
+      />
+      <TagSection
+        title="Maintenance Log Status"
+        tagType="maintenance-log-statuses"
+        initialItems={maintenanceLogStatuses}
+      />
+      <TagSection
+        title="Financial Impact"
+        tagType="financial-impacts"
+        initialItems={financialImpacts}
+      />
+      <TagSection
+        title="Strategic Importance"
+        tagType="strategic-importances"
+        initialItems={strategicImportances}
+      />
       <TagSection title="Tags" tagType="tags" initialItems={tags} hasDescription />
     </div>
   )

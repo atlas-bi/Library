@@ -2,6 +2,8 @@
 
 export const PERMISSIONS = [
   "Edit Role Permissions",
+  "Edit User Permissions",
+  "Edit Group Permissions",
   "Manage Report-Object Relationships",
   "Approve Terms",
   "Edit Report Documentation",

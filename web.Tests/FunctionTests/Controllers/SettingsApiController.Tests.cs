@@ -24,6 +24,7 @@ public class SettingsApiControllerTests
 
         Assert.Contains(methods, method => method.GetCustomAttribute<HttpGetAttribute>()?.Template == "site-messages");
         Assert.Contains(methods, method => method.GetCustomAttribute<HttpGetAttribute>()?.Template == "search");
+        Assert.Contains(methods, method => method.GetCustomAttribute<HttpGetAttribute>()?.Template == "permissions");
         Assert.Contains(methods, method => method.GetCustomAttribute<HttpGetAttribute>()?.Template == "roles");
         Assert.Contains(methods, method => method.GetCustomAttribute<HttpGetAttribute>()?.Template == "tags/{type}");
     }
@@ -46,6 +47,25 @@ public class SettingsApiControllerTests
             new SiteMessageRequestDto { Value = "2", Description = "Updated" })).Result);
         Assert.Equal("2", Assert.IsType<SiteMessageDto>(created.Value).Value);
         Assert.Equal(2, await context.GlobalSiteSettings.CountAsync(x => x.Name == "msg"));
+    }
+
+    [Fact]
+    public async Task Permissions_ReturnsOrderedListFromDatabase()
+    {
+        await using var context = new Atlas_WebContext(new DbContextOptionsBuilder<Atlas_WebContext>()
+            .UseInMemoryDatabase(Guid.NewGuid().ToString()).Options);
+        context.RolePermissions.AddRange(
+            new RolePermission { RolePermissionsId = 2, Name = "Create Parameters" },
+            new RolePermission { RolePermissionsId = 1, Name = "Approve Terms" });
+        await context.SaveChangesAsync();
+        var controller = BuildController(context);
+
+        var result = Assert.IsType<OkObjectResult>((await controller.GetPermissions()).Result);
+        var permissions = Assert.IsAssignableFrom<IReadOnlyList<PermissionDto>>(result.Value);
+
+        Assert.Equal(2, permissions.Count);
+        Assert.Equal("Approve Terms", permissions[0].Name);
+        Assert.Equal("Create Parameters", permissions[1].Name);
     }
 
     [Fact]

@@ -1,7 +1,7 @@
 ﻿"use client"
 
-import { useTransition, useState } from "react"
 import { RefreshCw } from "lucide-react"
+import { useState, useTransition } from "react"
 import { updateEtlAction, updateThemeAction } from "@/app/settings/actions"
 
 interface EtlThemePanelProps {
@@ -12,7 +12,13 @@ interface EtlThemePanelProps {
   etlOnly?: boolean
 }
 
-export function EtlThemePanel({ initialEtl, initialTheme, defaultEtl, themeOnly, etlOnly }: EtlThemePanelProps) {
+export function EtlThemePanel({
+  initialEtl,
+  initialTheme,
+  defaultEtl,
+  themeOnly,
+  etlOnly,
+}: EtlThemePanelProps) {
   const [etl, setEtl] = useState(initialEtl ?? "")
   const [theme, setTheme] = useState(initialTheme ?? "")
   const [etlError, setEtlError] = useState<string | null>(null)
@@ -66,7 +72,7 @@ export function EtlThemePanel({ initialEtl, initialTheme, defaultEtl, themeOnly,
               SQL script executed to tag reports. Changes take effect on the next ETL run.
             </p>
           </div>
-          
+
           {etlError && (
             <div className="bg-red-50 text-red-600 border border-red-200 p-3 rounded-md text-sm">
               {etlError}
@@ -77,22 +83,28 @@ export function EtlThemePanel({ initialEtl, initialTheme, defaultEtl, themeOnly,
               ETL script saved.
             </div>
           )}
-          
+
           <div className="space-y-2">
-            <label htmlFor="etl-value" className="block text-sm font-semibold text-slate-700">SQL Script</label>
+            <label htmlFor="etl-value" className="block text-sm font-semibold text-slate-700">
+              SQL Script
+            </label>
             <textarea
               id="etl-value"
               className="w-full min-h-[300px] font-mono text-sm rounded-md border border-slate-300 bg-white p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
               value={etl}
-              onChange={(e) => { setEtl(e.target.value); setEtlSuccess(false) }}
+              onChange={(e) => {
+                setEtl(e.target.value)
+                setEtlSuccess(false)
+              }}
               disabled={isPending}
               placeholder="-- your ETL SQL here"
             />
           </div>
-          
+
           <div className="flex gap-3">
-            <button 
-              onClick={handleSaveEtl} 
+            <button
+              type="button"
+              onClick={handleSaveEtl}
               disabled={isPending}
               className="px-4 py-2 bg-blue-500 text-white rounded-md text-sm font-medium hover:bg-blue-600 transition-colors disabled:opacity-50"
             >
@@ -100,6 +112,7 @@ export function EtlThemePanel({ initialEtl, initialTheme, defaultEtl, themeOnly,
             </button>
             {defaultEtl !== null && (
               <button
+                type="button"
                 onClick={handleRestoreDefault}
                 disabled={isPending}
                 className="flex items-center gap-2 px-4 py-2 bg-white text-slate-700 border border-slate-300 rounded-md text-sm font-medium hover:bg-slate-50 transition-colors disabled:opacity-50"
@@ -121,7 +134,7 @@ export function EtlThemePanel({ initialEtl, initialTheme, defaultEtl, themeOnly,
               Custom CSS injected into every page. Use with care — malformed CSS can break the UI.
             </p>
           </div>
-          
+
           {themeError && (
             <div className="bg-red-50 text-red-600 border border-red-200 p-3 rounded-md text-sm">
               {themeError}
@@ -132,21 +145,27 @@ export function EtlThemePanel({ initialEtl, initialTheme, defaultEtl, themeOnly,
               Theme saved.
             </div>
           )}
-          
+
           <div className="space-y-2">
-            <label htmlFor="theme-value" className="block text-sm font-semibold text-slate-700">CSS</label>
+            <label htmlFor="theme-value" className="block text-sm font-semibold text-slate-700">
+              CSS
+            </label>
             <textarea
               id="theme-value"
               className="w-full min-h-[300px] font-mono text-sm rounded-md border border-slate-300 bg-white p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
               value={theme}
-              onChange={(e) => { setTheme(e.target.value); setThemeSuccess(false) }}
+              onChange={(e) => {
+                setTheme(e.target.value)
+                setThemeSuccess(false)
+              }}
               disabled={isPending}
               placeholder="/* custom CSS */"
             />
           </div>
-          
-          <button 
-            onClick={handleSaveTheme} 
+
+          <button
+            type="button"
+            onClick={handleSaveTheme}
             disabled={isPending}
             className="px-4 py-2 bg-blue-500 text-white rounded-md text-sm font-medium hover:bg-blue-600 transition-colors disabled:opacity-50"
           >

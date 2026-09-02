@@ -1,8 +1,13 @@
 ﻿"use client"
 
-import { useState, useTransition } from "react"
 import { Trash2 } from "lucide-react"
-import { addUserRoleAction, removeUserRoleAction } from "@/app/settings/actions"
+import { useCallback, useState, useTransition } from "react"
+import {
+  addUserRoleAction,
+  removeUserRoleAction,
+  searchSettingsUsersAction,
+} from "@/app/settings/actions"
+import { SettingsTypeahead } from "@/components/settings/settings-typeahead"
 import type { RoleDto, UserRoleAssignmentDto } from "@/lib/settings/types"
 
 interface Props {
@@ -17,6 +22,8 @@ export function UserRolesPanel({ initialAssignments, availableRoles }: Props) {
   const [selectedRoleId, setSelectedRoleId] = useState<number | "">("")
   const [error, setError] = useState<string | null>(null)
   const [isPending, startTransition] = useTransition()
+
+  const fetchUsers = useCallback((query: string) => searchSettingsUsersAction(query), [])
 
   async function handleAdd(e: React.FormEvent) {
     e.preventDefault()
@@ -41,7 +48,10 @@ export function UserRolesPanel({ initialAssignments, availableRoles }: Props) {
                 : a,
             )
           }
-          return [...prev, { userId: selectedUserId, name: userSearch, roles: [{ id: role.id, name: role.name }] }]
+          return [
+            ...prev,
+            { userId: selectedUserId, name: userSearch, roles: [{ id: role.id, name: role.name }] },
+          ]
         })
         setUserSearch("")
         setSelectedUserId(null)
@@ -71,46 +81,34 @@ export function UserRolesPanel({ initialAssignments, availableRoles }: Props) {
   return (
     <div className="space-y-6">
       <h2 className="text-2xl font-bold font-serif text-slate-800">User Roles</h2>
-      
+
       <div className="space-y-4">
         <h3 className="text-xl font-semibold text-slate-800">Add Privileged User</h3>
 
         {error && (
-          <div className="bg-red-50 text-red-600 border border-red-200 p-4 rounded-md">
-            {error}
-          </div>
+          <div className="bg-red-50 text-red-600 border border-red-200 p-4 rounded-md">{error}</div>
         )}
 
         <form onSubmit={handleAdd} className="space-y-4 max-w-xl">
+          <SettingsTypeahead
+            label="User"
+            value={userSearch}
+            selectedId={selectedUserId}
+            onQueryChange={setUserSearch}
+            onSelect={(item) => setSelectedUserId(item.id)}
+            onClear={() => setSelectedUserId(null)}
+            fetchResults={fetchUsers}
+          />
+
           <div className="space-y-2">
-            <label className="block text-sm font-semibold text-slate-700">User</label>
-            <input
-              className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="type to search..."
-              value={userSearch}
-              onChange={(e) => setUserSearch(e.target.value)}
-            />
-            {userSearch.length > 1 && (
-              <p className="text-xs text-blue-600">
-                Note: User search requires backend integration. Enter the user ID directly for now.
-              </p>
-            )}
-          </div>
-          
-          <div className="space-y-2">
-            <label className="block text-sm font-semibold text-slate-700">User ID</label>
-            <input
-              className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              type="number"
-              placeholder="User ID"
-              value={selectedUserId ?? ""}
-              onChange={(e) => setSelectedUserId(e.target.value ? Number(e.target.value) : null)}
-            />
-          </div>
-          
-          <div className="space-y-2">
-            <label className="block text-sm font-semibold text-slate-700">Role</label>
+            <label
+              htmlFor="user-role-select"
+              className="block text-sm font-semibold text-slate-700"
+            >
+              Role
+            </label>
             <select
+              id="user-role-select"
               className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               value={selectedRoleId}
               onChange={(e) => setSelectedRoleId(e.target.value ? Number(e.target.value) : "")}
@@ -125,10 +123,10 @@ export function UserRolesPanel({ initialAssignments, availableRoles }: Props) {
                 ))}
             </select>
           </div>
-          
-          <button 
+
+          <button
             className="px-4 py-2 bg-blue-500 text-white rounded-md text-sm font-medium hover:bg-blue-600 transition-colors disabled:opacity-50"
-            type="submit" 
+            type="submit"
             disabled={isPending}
           >
             Save
