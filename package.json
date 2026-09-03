@@ -1,7 +1,7 @@
 {
   "description": "Atlas BI Library",
   "devDependencies": {
-    "@babel/preset-env": "^7.22.5",
+    "@babel/preset-env": "^8.0.0",
     "@biomejs/biome": "^2",
     "@creativebulma/bulma-badge": "github:christopherpickering/bulma-badge",
     "@creativebulma/bulma-tooltip": "1.2.0",
@@ -187,7 +187,7 @@
       "unicorn/prefer-at": "warn"
     }
   },
-  "version": "3.15.58",
+  "version": "3.15.59",
   "dependencies": {
     "@codemirror/lang-markdown": "^6.5.0",
     "@codemirror/view": "^6.43.5",
