@@ -2,6 +2,7 @@ using System.Text;
 using Atlas_Web.Configuration;
 using Atlas_Web.Authentication;
 using Atlas_Web.Services;
+using ITfoxtec.Identity.Saml2.Schemas;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authentication.Negotiate;
 using Microsoft.IdentityModel.Tokens;
@@ -86,6 +87,10 @@ public static class ProgramConfiguration
         {
             ConfigureDemoAuthentication(builder, jwtIssuer, jwtAudience, signingKey);
         }
+        else if (builder.Configuration.GetSection("Saml2").Exists())
+        {
+            ConfigureSamlAuthentication(builder, jwtIssuer, jwtAudience, signingKey);
+        }
         else
         {
             ConfigureNegotiateAuthentication(builder, jwtIssuer, jwtAudience, signingKey);
@@ -143,6 +148,34 @@ public static class ProgramConfiguration
                     IssuerSigningKey = signingKey,
                 };
             });
+    }
+
+    private static void ConfigureSamlAuthentication(
+        WebApplicationBuilder builder,
+        string jwtIssuer,
+        string jwtAudience,
+        SymmetricSecurityKey signingKey)
+    {
+        builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = Saml2Constants.AuthenticationScheme;
+                options.DefaultChallengeScheme = Saml2Constants.AuthenticationScheme;
+                options.DefaultSignInScheme = Saml2Constants.AuthenticationScheme;
+            }
+        )
+        .AddJwtBearer("Bearer", options =>
+        {
+            options.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidateLifetime = true,
+                ValidateIssuerSigningKey = true,
+                ValidIssuer = jwtIssuer,
+                ValidAudience = jwtAudience,
+                IssuerSigningKey = signingKey,
+            };
+        });
     }
 
     private static void ConfigureTestSsoAuthentication(
