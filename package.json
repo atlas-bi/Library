@@ -66,9 +66,9 @@
     "regenerator-runtime": "^0.14.0",
     "rollup": "^4.0.0",
     "semantic-release": "^25.0.0",
-    "stylelint": "^16.0.2",
+    "stylelint": "^17.0.0",
     "stylelint-config-prettier-scss": "1.0.0",
-    "stylelint-config-standard-scss": "^14.0.0",
+    "stylelint-config-standard-scss": "^17.0.0",
     "stylelint-scss": "^7.0.0",
     "tailwindcss": "^4",
     "typescript": "^5",
@@ -187,7 +187,7 @@
       "unicorn/prefer-at": "warn"
     }
   },
-  "version": "3.15.58",
+  "version": "3.15.59",
   "dependencies": {
     "@codemirror/lang-markdown": "^6.5.0",
     "@codemirror/view": "^6.43.5",
