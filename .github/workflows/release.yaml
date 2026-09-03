@@ -16,12 +16,17 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
+      - name: setup pnpm
+        uses: pnpm/action-setup@0e279bb959325dab635dd2c09392533439d90093
+        with:
+          version: 10.34.5
       - name: setup node
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e
         with:
           node-version: '22.x'
+          cache: 'pnpm'
       - name: install node deps
-        run: npm install --ignore-scripts --no-audit --no-fund
+        run: pnpm install --ignore-scripts --frozen-lockfile
       - name: Semantic Release
         uses: cycjimmy/semantic-release-action@1c8dbaa298552ad40802cf44320879943de90278
         with:

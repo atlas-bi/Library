@@ -21,9 +21,10 @@ function readFeatureFlag(
   return typeof value === "boolean" ? value : undefined
 }
 
-function renderFooterLink(href: string, icon: ReactNode, label: string) {
+function renderFooterLink(href: string, icon: ReactNode, label: string, key: string) {
   return (
     <a
+      key={key}
       href={href}
       target="_blank"
       rel="noreferrer"
@@ -36,7 +37,7 @@ function renderFooterLink(href: string, icon: ReactNode, label: string) {
 }
 
 export type EntityCardFooterProps = {
-  entityType: "collection" | "report"
+  entityType: "collection" | "report" | "term"
   id: number
   title: string
   href: string
@@ -69,7 +70,11 @@ export function EntityCardFooter({
   profilePanel,
 }: EntityCardFooterProps) {
   const starType = entityType
-  const profileLabel = entityType === "collection" ? "collection profile" : "report profile"
+  const profileLabel = entityType === "collection"
+    ? "collection profile"
+    : entityType === "term"
+      ? "term profile"
+      : "report profile"
   const sharingEnabled = isInteractionFeatureEnabled(readFeatureFlag(features, "sharingEnabled"))
   const requestAccessEnabled =
     isInteractionFeatureEnabled(readFeatureFlag(features, "requestAccessEnabled")) &&
@@ -77,6 +82,7 @@ export function EntityCardFooter({
 
   const starCell = (
     <StarToggleButton
+      key="star"
       type={starType}
       id={id}
       initialStarred={isStarred}
@@ -111,13 +117,18 @@ export function EntityCardFooter({
 
   if (canEdit && editUrl) {
     segments.push(
-      renderFooterLink(editUrl, <Pencil className="h-4 w-4" strokeWidth={1.8} />, "Edit"),
+      renderFooterLink(editUrl, <Pencil className="h-4 w-4" strokeWidth={1.8} />, "Edit", "edit"),
     )
   }
 
   if (canManage && manageUrl) {
     segments.push(
-      renderFooterLink(manageUrl, <Settings className="h-4 w-4" strokeWidth={1.8} />, "Manage"),
+      renderFooterLink(
+        manageUrl,
+        <Settings className="h-4 w-4" strokeWidth={1.8} />,
+        "Manage",
+        "manage",
+      ),
     )
   }
 

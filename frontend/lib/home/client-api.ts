@@ -235,7 +235,9 @@ export async function fetchHomeTabPanel(tabId: HomeTabId) {
     case "subscriptions":
       return {
         ok: true as const,
-        data: normalizeSubscriptionsPanel(panelPayload as Parameters<typeof normalizeSubscriptionsPanel>[0]),
+        data: normalizeSubscriptionsPanel(
+          panelPayload as Parameters<typeof normalizeSubscriptionsPanel>[0],
+        ),
       }
     case "groups":
       return {

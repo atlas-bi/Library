@@ -1,10 +1,16 @@
 import { render, screen } from "@testing-library/react"
+import type { ReactNode } from "react"
 import { describe, expect, it } from "vitest"
 import { HomeStarsPanelView } from "@/components/home/home-stars-panel"
+import { TooltipProvider } from "@/components/ui/tooltip"
+
+function renderWithTooltipProvider(ui: ReactNode) {
+  return render(<TooltipProvider>{ui}</TooltipProvider>)
+}
 
 describe("HomeStarsPanelView", () => {
   it("renders richer card content with tags, image, and footer actions", () => {
-    render(
+    renderWithTooltipProvider(
       <HomeStarsPanelView
         panel={{
           kind: "stars",
@@ -16,7 +22,7 @@ describe("HomeStarsPanelView", () => {
               id: 7,
               href: "/reports?id=7",
               title: "Executive Dashboard",
-              typeLabel: "Rpt",
+              typeLabel: "Report",
               description: "Leadership reporting summary...",
               thumbnailUrl: "http://localhost:5000/data/img?handler=Thumb&id=7&size=128x128",
               tags: [
@@ -47,11 +53,11 @@ describe("HomeStarsPanelView", () => {
     expect(screen.getByRole("link", { name: "Run report" })).toBeInTheDocument()
     expect(screen.getByRole("link", { name: "Edit" })).toBeInTheDocument()
     expect(screen.getByRole("link", { name: "Manage" })).toBeInTheDocument()
-    expect(screen.getByLabelText("Open report profile")).toBeInTheDocument()
+    expect(screen.getByRole("button", { name: "Open report profile" })).toBeInTheDocument()
   })
 
   it("renders the plain empty-state message when there are no favorites or suggestions", () => {
-    render(
+    renderWithTooltipProvider(
       <HomeStarsPanelView
         panel={{
           kind: "stars",
@@ -70,7 +76,7 @@ describe("HomeStarsPanelView", () => {
   })
 
   it("renders the Razor-style suggestion fallback when suggested reports are present", () => {
-    render(
+    renderWithTooltipProvider(
       <HomeStarsPanelView
         panel={{
           kind: "stars",

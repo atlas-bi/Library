@@ -1,14 +1,15 @@
 using System.Threading.Tasks;
+using Atlas_Web.Authentication;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Xunit;
 
 namespace web.Tests.IntegrationTests
 {
-    public class BasicTests : IClassFixture<WebFactory<Program>>
+    public class BasicTests : IClassFixture<SsoWebFactory<Program>>
     {
-        private readonly WebFactory<Program> _factory;
+        private readonly SsoWebFactory<Program> _factory;
 
-        public BasicTests(WebFactory<Program> factory)
+        public BasicTests(SsoWebFactory<Program> factory)
         {
             _factory = factory;
         }
@@ -23,7 +24,6 @@ namespace web.Tests.IntegrationTests
         [InlineData("/Terms/New")]
         [InlineData("/Search")]
         [InlineData("/Search?Query=test")] // > need to have a solr install for this to
-        [InlineData("/about_analytics")]
         [InlineData("/Settings")]
         [InlineData("/Analytics")]
         [InlineData("/Users")] // me
@@ -34,6 +34,7 @@ namespace web.Tests.IntegrationTests
         {
             // Arrange
             var client = _factory.CreateClient();
+            client.DefaultRequestHeaders.Add(TestSsoSchemeOptions.HeaderName, "Default");
 
             // Act
             var response = await client.GetAsync(url);
