@@ -23,7 +23,7 @@ jobs:
       - name: setup node
         uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e
         with:
-          node-version: '22.x'
+          node-version: '24.x'
           cache: 'pnpm'
       - name: install node deps
         run: pnpm install --ignore-scripts --frozen-lockfile
