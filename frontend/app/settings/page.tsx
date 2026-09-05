@@ -62,6 +62,18 @@ export default async function SettingsPage() {
     getTags("tags"),
   ])
 
+  const tagLoadErrors = [
+    !orgValues.ok && orgValues.message,
+    !runFreqs.ok && runFreqs.message,
+    !frags.ok && frags.message,
+    !fragTags.ok && fragTags.message,
+    !maintSchedules.ok && maintSchedules.message,
+    !maintStatuses.ok && maintStatuses.message,
+    !finImpacts.ok && finImpacts.message,
+    !stratImps.ok && stratImps.message,
+    !tags.ok && tags.message,
+  ].filter((message): message is string => Boolean(message))
+
   return (
     <>
       {/* Tab panels — the SettingsTabController client component handles visibility via 'hidden' */}
@@ -102,6 +114,7 @@ export default async function SettingsPage() {
       </div>
 
       <div id="meta-fields" className="panel-tab-data hidden">
+        {tagLoadErrors.length > 0 && <p className="text-red-500 mb-4">{tagLoadErrors.join(" ")}</p>}
         <TagsSettingsPanel
           organizationalValues={orgValues.ok ? orgValues.data : []}
           estimatedRunFrequencies={runFreqs.ok ? runFreqs.data : []}
