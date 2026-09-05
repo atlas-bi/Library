@@ -18,19 +18,64 @@ export default async function SettingsLayout({ children }: { children: ReactNode
   const canEditRoles = !!user && hasPermission(user, "Edit Role Permissions")
   const canEditUsers = !!user && hasPermission(user, "Edit User Permissions")
   const canEditGroups = !!user && hasPermission(user, "Edit Group Permissions")
+  const canManageMetaFields =
+    !!user && (hasPermission(user, "Create Parameters") || hasPermission(user, "Delete Parameters"))
+  const canManageSiteSettings = !!user && hasPermission(user, "Manage Global Site Settings")
 
   const navItems = [
-    { href: "#roles", label: "Role Configuration", icon: "fa-lock", show: canEditRoles },
-    { href: "#user-roles", label: "User Roles", icon: "fa-user-lock", show: canEditUsers },
-    { href: "#user-groups", label: "Group Roles", icon: "fa-users", show: canEditGroups },
-    { href: "#meta-fields", label: "Meta Fields", icon: "fa-list-ul", show: true },
-    { href: "#site-message", label: "Site Message", icon: "fa-comment", show: true },
-    { href: "#search", label: "Search", icon: "fa-search", show: true },
-    { href: "#theme", label: "Theme", icon: "fa-palette", show: true },
-    { href: "#etl", label: "ETL", icon: "fa-database", show: true },
+    {
+      id: "roles",
+      href: "#roles",
+      label: "Role Configuration",
+      icon: "fa-lock",
+      show: canEditRoles,
+    },
+    {
+      id: "user-roles",
+      href: "#user-roles",
+      label: "User Roles",
+      icon: "fa-user-lock",
+      show: canEditUsers,
+    },
+    {
+      id: "user-groups",
+      href: "#user-groups",
+      label: "Group Roles",
+      icon: "fa-users",
+      show: canEditGroups,
+    },
+    {
+      id: "meta-fields",
+      href: "#meta-fields",
+      label: "Meta Fields",
+      icon: "fa-list-ul",
+      show: canManageMetaFields,
+    },
+    {
+      id: "site-message",
+      href: "#site-message",
+      label: "Site Message",
+      icon: "fa-comment",
+      show: canManageSiteSettings,
+    },
+    {
+      id: "search",
+      href: "#search",
+      label: "Search",
+      icon: "fa-search",
+      show: canManageSiteSettings,
+    },
+    {
+      id: "theme",
+      href: "#theme",
+      label: "Theme",
+      icon: "fa-palette",
+      show: canManageSiteSettings,
+    },
+    { id: "etl", href: "#etl", label: "ETL", icon: "fa-database", show: canManageSiteSettings },
   ].filter((item) => item.show)
 
-  const defaultTab = canEditRoles ? "roles" : canEditUsers ? "user-roles" : "meta-fields"
+  const defaultTab = navItems[0]?.id ?? "roles"
 
   return (
     <LibraryShell

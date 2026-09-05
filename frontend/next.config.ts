@@ -8,13 +8,7 @@ const nextConfig: NextConfig = {
     const apiBase = process.env.API_URL ?? process.env.NEXT_PUBLIC_API_URL
     if (!apiBase) return []
     const normalized = apiBase.replace(/\/+$/, "")
-    const legacyPageRoutes = [
-      "/settings",
-      "/analytics",
-      "/tasks",
-      "/terms",
-      "/users/settings",
-    ]
+    const legacyPageRoutes = ["/analytics", "/tasks", "/terms", "/users/settings"]
     const legacyAssetRoutes = ["/css/:path*", "/js/:path*", "/font/:path*", "/img/:path*"]
 
     return [
