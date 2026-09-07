@@ -257,3 +257,11 @@ export type ToggleUserFavoriteResponse = {
 export type ToggleAdminModeResponse = {
   adminEnabled?: string | null
 }
+
+export type UserSettings = {
+  shareNotificationEnabled: boolean
+}
+
+export type UpdateUserSettingsRequest = {
+  shareNotificationEnabled: boolean
+}

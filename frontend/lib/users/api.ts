@@ -12,11 +12,13 @@ import type {
   ToggleUserFavoriteResponse,
   UpdateUserFavoriteFolderAssignmentRequest,
   UpdateUserFavoriteFolderRequest,
+  UpdateUserSettingsRequest,
   UserFavoriteFolder,
   UserGroup,
   UserHistorySection,
   UserPage,
   UserSearchHistoryItem,
+  UserSettings,
   UserSharedObjects,
   UserStars,
   UserSubscription,
@@ -241,5 +243,16 @@ export function removeUserSharedObject(id: number) {
 export function toggleAdminMode() {
   return authorizedMutation<ToggleAdminModeResponse>("/api/users/me/admin-mode/toggle", {
     method: "POST",
+  })
+}
+
+export function getUserSettings() {
+  return authorizedGet<UserSettings>("/api/users/me/settings")
+}
+
+export function updateUserSettings(body: UpdateUserSettingsRequest) {
+  return authorizedMutation<void>("/api/users/me/settings", {
+    method: "PUT",
+    body: JSON.stringify(body),
   })
 }
