@@ -23,13 +23,21 @@ export function ShareMailDialog({
   shareUrl,
   iconOnly = false,
   variant = "default",
+  open: controlledOpen,
+  onOpenChange,
+  showTrigger = true,
 }: {
   shareName: string
   shareUrl: string
   iconOnly?: boolean
   variant?: "default" | "footer"
+  open?: boolean
+  onOpenChange?: (open: boolean) => void
+  showTrigger?: boolean
 }) {
-  const [open, setOpen] = useState(false)
+  const [internalOpen, setInternalOpen] = useState(false)
+  const open = controlledOpen ?? internalOpen
+  const setOpen = onOpenChange ?? setInternalOpen
   const [query, setQuery] = useState("")
   const [suggestions, setSuggestions] = useState<
     Array<{ id: number; name: string; type: string; email?: string | null }>
@@ -102,9 +110,11 @@ export function ShareMailDialog({
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <InteractionTooltip label="Share" placement={tooltipPlacement}>
-        <DialogTrigger asChild>{trigger}</DialogTrigger>
-      </InteractionTooltip>
+      {showTrigger ? (
+        <InteractionTooltip label="Share" placement={tooltipPlacement}>
+          <DialogTrigger asChild>{trigger}</DialogTrigger>
+        </InteractionTooltip>
+      ) : null}
       <DialogContent className="max-w-lg">
         <DialogHeader>
           <DialogTitle>Share {shareName}</DialogTitle>

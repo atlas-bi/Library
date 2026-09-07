@@ -71,7 +71,14 @@ public class ProfileApiController : ControllerBase
         CancellationToken cancellationToken = default
     )
     {
-        return Ok(await _profileApiService.GetStarsAsync(id, type, cancellationToken));
+        try
+        {
+            return Ok(await _profileApiService.GetStarsAsync(id, type, cancellationToken));
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(new { error = ex.Message });
+        }
     }
 
     [HttpGet("subscriptions")]
@@ -81,6 +88,13 @@ public class ProfileApiController : ControllerBase
         CancellationToken cancellationToken = default
     )
     {
-        return Ok(await _profileApiService.GetSubscriptionsAsync(id, type, cancellationToken));
+        try
+        {
+            return Ok(await _profileApiService.GetSubscriptionsAsync(id, type, cancellationToken));
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(new { error = ex.Message });
+        }
     }
 }

@@ -184,7 +184,6 @@ export function HomeStarsPanelView({ panel }: { panel: HomeStarsPanel }) {
                   <div className="grid gap-4 px-4 py-4 md:grid-cols-[128px_1fr]">
                     <div className="flex items-start">
                       {card.thumbnailUrl || card.placeholderImageUrl ? (
-                        // biome-ignore lint/performance/noImgElement: homepage parity uses backend-provided report thumbnails directly.
                         <img
                           src={card.thumbnailUrl ?? card.placeholderImageUrl}
                           alt={`${card.title} thumbnail`}

@@ -1,4 +1,4 @@
-import type { NextRequest } from "next/server"
+import { NextRequest } from "next/server"
 import { afterEach, describe, expect, test } from "vitest"
 import { GET as callbackGet } from "./callback/route"
 import { GET as logoutGet } from "./logout/route"
@@ -25,7 +25,7 @@ describe("auth public redirect origin", () => {
   test("logout redirects to configured public origin", () => {
     process.env.AUTH_RETURN_URL_ORIGIN = "https://library.atlas.bi"
 
-    const response = logoutGet(new Request("https://0.0.0.0:3000/auth/logout") as NextRequest)
+    const response = logoutGet(new NextRequest("https://0.0.0.0:3000/auth/logout"))
 
     expect(response.headers.get("location")).toBe("https://library.atlas.bi/")
   })

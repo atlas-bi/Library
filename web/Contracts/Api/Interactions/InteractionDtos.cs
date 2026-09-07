@@ -46,6 +46,13 @@ public sealed class ShareFeedbackRequestDto
     public string Description { get; init; }
 }
 
+public sealed class AccessRequestRequestDto
+{
+    public string ReportName { get; init; }
+    public string ReportUrl { get; init; }
+    public string DirectorName { get; init; }
+}
+
 public sealed class RecipientSearchResultDto
 {
     public int Id { get; init; }

@@ -7,8 +7,6 @@ import { getServerApiBase } from "@/lib/api-base"
 import { apiFetchJson } from "@/lib/http"
 import type { AuthUser, Permission } from "./types"
 
-const API_URL = getServerApiBase()
-
 // ---- Token helpers -------------------------------------------------------
 
 /** Read the JWT stored in cookies (server context only). */
@@ -27,8 +25,9 @@ export async function getCurrentUser(): Promise<AuthUser | null> {
   const token = await getToken()
   if (!token) return null
 
-  if (!API_URL) return null
-  const result = await apiFetchJson<AuthUser>(`${API_URL}/api/auth/me`, {
+  const apiUrl = getServerApiBase()
+  if (!apiUrl) return null
+  const result = await apiFetchJson<AuthUser>(`${apiUrl}/api/auth/me`, {
     headers: { Authorization: `Bearer ${token}` },
     cache: "no-store",
   })

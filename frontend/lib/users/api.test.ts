@@ -13,11 +13,12 @@ import { createUserFolder } from "./api"
 describe("createUserFolder", () => {
   beforeEach(() => {
     vi.restoreAllMocks()
-    global.fetch = vi.fn(async () =>
-      new Response(JSON.stringify({ id: 1, name: "Favorites" }), {
-        status: 200,
-        headers: { "Content-Type": "application/json" },
-      }),
+    global.fetch = vi.fn(
+      async () =>
+        new Response(JSON.stringify({ id: 1, name: "Favorites" }), {
+          status: 200,
+          headers: { "Content-Type": "application/json" },
+        }),
     ) as typeof fetch
   })
 

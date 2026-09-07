@@ -2,6 +2,16 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Atlas_Web.Contracts.Api.Users;
 
+public sealed class UserSettingsDto
+{
+    public bool ShareNotificationEnabled { get; init; }
+}
+
+public sealed class UpdateUserSettingsRequestDto
+{
+    public bool? ShareNotificationEnabled { get; init; }
+}
+
 public sealed class UserPageDto
 {
     public UserPageUserDto User { get; init; }

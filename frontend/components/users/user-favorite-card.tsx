@@ -31,7 +31,9 @@ export function UserFavoriteCard({ item }: { item: UserFavoriteItem }) {
   const profileId = item.profileTargetId ? Number(item.profileTargetId) : item.itemId
 
   const card = (
-    <article className={`overflow-hidden ${isCollection ? "atlas-snippet-gold-card" : "atlas-home-card"}`}>
+    <article
+      className={`overflow-hidden ${isCollection ? "atlas-snippet-gold-card" : "atlas-home-card"}`}
+    >
       <div className="gap-2 border-b border-[var(--atlas-home-border-soft)] px-4 py-2.5">
         <div className="flex flex-wrap items-start justify-between gap-2">
           <div className="flex min-w-0 flex-1 items-center gap-3 text-[var(--atlas-home-text-strong)]">
@@ -82,7 +84,6 @@ export function UserFavoriteCard({ item }: { item: UserFavoriteItem }) {
       <div className="px-4 py-4">
         <div className="grid gap-4 md:grid-cols-[128px_1fr]">
           {item.thumbnailUrl || item.placeholderImageUrl ? (
-            // biome-ignore lint/performance/noImgElement: backend-provided thumbnails for workspace cards.
             <img
               src={item.thumbnailUrl ?? item.placeholderImageUrl ?? ""}
               alt={`${title} thumbnail`}
