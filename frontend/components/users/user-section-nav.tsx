@@ -46,7 +46,7 @@ export function getUserTabs(options: {
 
 export function getDefaultUserTab(isCurrentUser: boolean, tabs: UserTabId[]): UserTabId {
   if (isCurrentUser && tabs.includes("stars")) return "stars"
-  if (!isCurrentUser && tabs.includes("activity")) return "activity"
+  if (!isCurrentUser && tabs.includes("run-list")) return "run-list"
   return tabs[0] ?? "stars"
 }
 
@@ -59,11 +59,11 @@ export function getHashUserTab(hash: string | null, tabs: UserTabId[]): UserTabI
 export function UserSectionNav({
   activeTab,
   tabs,
-  onTabChange,
+  onTabChangeAction,
 }: {
   activeTab: UserTabId
   tabs: UserTabId[]
-  onTabChange: (tab: UserTabId) => void
+  onTabChangeAction: (tab: UserTabId) => void
 }) {
   const [currentHash, setCurrentHash] = useState<string>("")
 
@@ -88,7 +88,7 @@ export function UserSectionNav({
                 event.preventDefault()
                 window.history.replaceState(null, "", `#${tab}`)
                 setCurrentHash(tab)
-                onTabChange(tab)
+                onTabChangeAction(tab)
               }}
               className={
                 activeTab === tab || currentHash === tab
