@@ -12,6 +12,9 @@ public interface ITasksApiService
 
 public sealed class TasksApiService : ITasksApiService
 {
+    private const string TaskDateFormat = "MM/dd/yyyy";
+    private const string MissingUserName = "user not found";
+
     private static readonly string[] CanMakeReportGroupEpicIds =
     {
         "100623",
@@ -24,6 +27,25 @@ public sealed class TasksApiService : ITasksApiService
     private static readonly int[] UnusedReportTypeIds = { 3, 17, 20, 28 };
     private static readonly int[] UndocumentedReportTypeIds = { 17, 28, 3, 20 };
     private static readonly int[] AnalyticsReportTypeIds = { 3, 17 };
+
+    private enum MaintenanceBucket
+    {
+        Required,
+        Audit,
+        Missing,
+    }
+
+    private sealed class MaintenanceDocRow
+    {
+        public int ReportObjectId { get; init; }
+        public int? MaintenanceScheduleId { get; init; }
+        public DateTime? MaintenanceDate { get; init; }
+        public DateTime? LastUpdateDateTime { get; init; }
+        public DateTime? CreatedDateTime { get; init; }
+        public string Name { get; init; }
+        public string MaintainerName { get; init; }
+        public string UpdatedByName { get; init; }
+    }
 
     private readonly Atlas_WebContext _context;
 
@@ -39,8 +61,11 @@ public sealed class TasksApiService : ITasksApiService
             CanMakeReports = await GetCanMakeReportsAsync(cancellationToken),
             RecommendRetire = await GetRecommendRetireAsync(cancellationToken),
             Unused = await GetUnusedAsync(cancellationToken),
-            MaintenanceRequired = await GetMaintenanceAsync(false, cancellationToken),
-            Audit = await GetMaintenanceAsync(true, cancellationToken),
+            MaintenanceRequired = await GetMaintenanceAsync(
+                MaintenanceBucket.Required,
+                cancellationToken
+            ),
+            Audit = await GetMaintenanceAsync(MaintenanceBucket.Audit, cancellationToken),
             MissingSchedule = await GetMissingScheduleAsync(cancellationToken),
             NotInAnalytics = await GetNotInAnalyticsAsync(cancellationToken),
             TopUndocumented = await GetUndocumentedAsync(false, cancellationToken),
@@ -145,19 +170,57 @@ public sealed class TasksApiService : ITasksApiService
     }
 
     private async Task<List<TaskMaintenanceReportDto>> GetMaintenanceAsync(
-        bool includeAuditSchedule,
+        MaintenanceBucket bucket,
         CancellationToken cancellationToken
     )
     {
         var today = DateTime.Now;
-        var rows = await (
+        var rows = await QueryVisibleDocsWithLatestMaintenanceAsync(bucket, cancellationToken);
+        return ToUpcomingMaintenanceDtos(
+            rows,
+            today,
+            x =>
+                NextMaintenanceDate(
+                    x.MaintenanceScheduleId,
+                    x.MaintenanceDate,
+                    x.LastUpdateDateTime,
+                    x.CreatedDateTime,
+                    today
+                )
+        );
+    }
+
+    private async Task<List<TaskMaintenanceReportDto>> GetMissingScheduleAsync(
+        CancellationToken cancellationToken
+    )
+    {
+        var today = DateTime.Now;
+        var rows = await QueryVisibleDocsWithLatestMaintenanceAsync(
+            MaintenanceBucket.Missing,
+            cancellationToken
+        );
+        return ToUpcomingMaintenanceDtos(
+            rows,
+            today,
+            x => x.MaintenanceDate ?? x.LastUpdateDateTime ?? today
+        );
+    }
+
+    private async Task<List<MaintenanceDocRow>> QueryVisibleDocsWithLatestMaintenanceAsync(
+        MaintenanceBucket bucket,
+        CancellationToken cancellationToken
+    )
+    {
+        return await (
             from document in _context.ReportObjectDocs.AsNoTracking()
             where
                 (
-                    includeAuditSchedule
-                        ? document.MaintenanceScheduleId == 5
-                        : document.MaintenanceScheduleId != 5
-                            && document.MaintenanceScheduleId != null
+                    bucket == MaintenanceBucket.Missing
+                        ? document.MaintenanceScheduleId == null
+                        : bucket == MaintenanceBucket.Audit
+                            ? document.MaintenanceScheduleId == 5
+                            : document.MaintenanceScheduleId != 5
+                                && document.MaintenanceScheduleId != null
                 )
                 && document.ReportObject.DefaultVisibilityYn == "Y"
                 && document.ReportObject.OrphanedReportObjectYn == "N"
@@ -175,97 +238,39 @@ public sealed class TasksApiService : ITasksApiService
                 on latest.MaintenanceLogId equals maintenance.MaintenanceLogId
                 into maintenanceLogs
             from maintenance in maintenanceLogs.DefaultIfEmpty()
-            select new
+            select new MaintenanceDocRow
             {
-                document.ReportObjectId,
-                document.MaintenanceScheduleId,
+                ReportObjectId = document.ReportObjectId,
+                MaintenanceScheduleId = document.MaintenanceScheduleId,
                 MaintenanceDate = maintenance == null ? null : maintenance.MaintenanceDate,
-                document.LastUpdateDateTime,
-                document.CreatedDateTime,
+                LastUpdateDateTime = document.LastUpdateDateTime,
+                CreatedDateTime = document.CreatedDateTime,
                 Name = document.ReportObject.DisplayTitle ?? document.ReportObject.Name,
                 MaintainerName = maintenance == null ? null : maintenance.Maintainer.FullnameCalc,
                 UpdatedByName = document.UpdatedByNavigation.FullnameCalc,
             }
         ).ToListAsync(cancellationToken);
-
-        return rows.Select(x => new
-            {
-                x.ReportObjectId,
-                NextDate = NextMaintenanceDate(
-                    x.MaintenanceScheduleId,
-                    x.MaintenanceDate,
-                    x.LastUpdateDateTime,
-                    x.CreatedDateTime,
-                    today
-                ),
-                x.Name,
-                User = string.IsNullOrEmpty(x.MaintainerName) || x.MaintainerName == "user not found"
-                    ? x.UpdatedByName
-                    : x.MaintainerName,
-            })
-            .Where(x => x.NextDate < today.AddMonths(2))
-            .OrderBy(x => x.NextDate)
-            .Select(x => new TaskMaintenanceReportDto
-            {
-                ReportId = x.ReportObjectId,
-                Date = x.NextDate.ToString("MM/dd/yyyy"),
-                Name = x.Name,
-                User = x.User,
-            })
-            .ToList();
     }
 
-    private async Task<List<TaskMaintenanceReportDto>> GetMissingScheduleAsync(
-        CancellationToken cancellationToken
+    private static List<TaskMaintenanceReportDto> ToUpcomingMaintenanceDtos(
+        IEnumerable<MaintenanceDocRow> rows,
+        DateTime today,
+        Func<MaintenanceDocRow, DateTime> nextDate
     )
     {
-        var today = DateTime.Now;
-        var rows = await (
-            from document in _context.ReportObjectDocs.AsNoTracking()
-            where
-                document.MaintenanceScheduleId == null
-                && document.ReportObject.DefaultVisibilityYn == "Y"
-                && document.ReportObject.OrphanedReportObjectYn == "N"
-            join latest in from log in _context.MaintenanceLogs
-            group log by log.ReportId into grouped
-            select new
-            {
-                ReportId = grouped.Key,
-                MaintenanceLogId = grouped.Max(x => x.MaintenanceLogId),
-            }
-                on document.ReportObjectId equals latest.ReportId
-                into latestLogs
-            from latest in latestLogs.DefaultIfEmpty()
-            join maintenance in _context.MaintenanceLogs
-                on latest.MaintenanceLogId equals maintenance.MaintenanceLogId
-                into maintenanceLogs
-            from maintenance in maintenanceLogs.DefaultIfEmpty()
-            select new
-            {
-                document.ReportObjectId,
-                MaintenanceDate = maintenance == null ? null : maintenance.MaintenanceDate,
-                document.LastUpdateDateTime,
-                Name = document.ReportObject.DisplayTitle ?? document.ReportObject.Name,
-                MaintainerName = maintenance == null ? null : maintenance.Maintainer.FullnameCalc,
-                UpdatedByName = document.UpdatedByNavigation.FullnameCalc,
-            }
-        ).ToListAsync(cancellationToken);
-
         return rows.Select(x => new
             {
                 x.ReportObjectId,
-                NextDate = x.MaintenanceDate ?? x.LastUpdateDateTime ?? today,
+                NextDate = nextDate(x),
                 x.Name,
-                User = string.IsNullOrEmpty(x.MaintainerName) || x.MaintainerName == "user not found"
-                    ? x.UpdatedByName
-                    : x.MaintainerName,
+                User = ResolveMaintainer(x.MaintainerName, x.UpdatedByName),
             })
             .Where(x => x.NextDate < today.AddMonths(2))
             .OrderBy(x => x.NextDate)
             .Select(x => new TaskMaintenanceReportDto
             {
                 ReportId = x.ReportObjectId,
-                Date = x.NextDate.ToString("MM/dd/yyyy"),
+                Date = FormatTaskDate(x.NextDate),
                 Name = x.Name,
                 User = x.User,
             })
@@ -346,7 +351,7 @@ public sealed class TasksApiService : ITasksApiService
             select new
             {
                 report.ReportObjectId,
-                ModifiedBy = report.LastModifiedByUser.FullnameCalc != "user not found"
+                ModifiedBy = report.LastModifiedByUser.FullnameCalc != MissingUserName
                     ? report.LastModifiedByUser.FullnameCalc
                     : report.AuthorUser.FullnameCalc,
                 Name = report.DisplayTitle ?? report.Name,
@@ -370,12 +375,19 @@ public sealed class TasksApiService : ITasksApiService
                 ReportType = FormatUndocumentedType(x.ReportType),
                 Runs = x.Runs,
                 Favorite = x.Favorite ? "Yes" : "",
-                LastMaintained = (x.LastModifiedDate ?? DateTime.Today.AddYears(-1)).ToString(
-                    "MM/dd/yyyy"
-                ),
-                LastRun = x.LastRun?.ToString("MM/dd/yyyy") ?? "",
+                LastMaintained = FormatTaskDate(x.LastModifiedDate ?? DateTime.Today.AddYears(-1)),
+                LastRun = x.LastRun == null ? "" : FormatTaskDate(x.LastRun.Value),
             })
             .ToList();
+    }
+
+    private static string FormatTaskDate(DateTime date) => date.ToString(TaskDateFormat);
+
+    private static string ResolveMaintainer(string maintainerName, string updatedByName)
+    {
+        return string.IsNullOrEmpty(maintainerName) || maintainerName == MissingUserName
+            ? updatedByName
+            : maintainerName;
     }
 
     private static DateTime NextMaintenanceDate(
