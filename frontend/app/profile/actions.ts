@@ -61,7 +61,7 @@ export async function loadProfileAnalyticsAction(
 			: Promise.resolve({ data: [], error: null }),
 	]);
 
-	const allResults = [
+	const authError = [
 		chartResult,
 		usersResult,
 		reportsResult,
@@ -69,25 +69,49 @@ export async function loadProfileAnalyticsAction(
 		runListResult,
 		starsResult,
 		subsResult,
-	];
+	].find((result) => result.error === "auth_required")?.error;
 
-	const firstError = allResults.find((r) => r.error !== null)?.error;
-	if (firstError) {
-		return { data: null, error: firstError };
+	if (authError) {
+		return { data: null, error: authError };
 	}
 
-	return {
-		data: {
-			chart: chartResult.data,
-			users: usersResult.data ?? [],
-			reports: reportsResult.data ?? [],
-			fails: failsResult.data ?? [],
-			runList: runListResult.data ?? [],
-			stars: starsResult.data ?? [],
-			subscriptions: subsResult.data ?? [],
-		},
-		error: null,
+	const data: ProfileAnalyticsData = {
+		chart: chartResult.data ?? { runs: 0, users: 0, runTime: 0, history: [] },
+		users: usersResult.error ? [] : (usersResult.data ?? []),
+		reports: reportsResult.error ? [] : (reportsResult.data ?? []),
+		fails: failsResult.error ? [] : (failsResult.data ?? []),
+		runList: runListResult.error ? [] : (runListResult.data ?? []),
+		stars: starsResult.error ? [] : (starsResult.data ?? []),
+		subscriptions: subsResult.error ? [] : (subsResult.data ?? []),
 	};
+
+	const hasRenderableData =
+		chartResult.data !== null ||
+		data.users.length > 0 ||
+		data.reports.length > 0 ||
+		data.fails.length > 0 ||
+		data.runList.length > 0 ||
+		data.stars.length > 0 ||
+		data.subscriptions.length > 0 ||
+		type === "term" ||
+		type === "collection";
+
+	if (!hasRenderableData) {
+		const firstError =
+			chartResult.error ??
+			usersResult.error ??
+			reportsResult.error ??
+			failsResult.error ??
+			runListResult.error ??
+			starsResult.error ??
+			subsResult.error;
+
+		if (firstError) {
+			return { data: null, error: firstError };
+		}
+	}
+
+	return { data, error: null };
 }
 
 export type ProfileFiltersData = ProfileFiltersResponseDto;

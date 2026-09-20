@@ -2,10 +2,64 @@
 @model Atlas_Web.Pages.Reports.IndexModel
 
 @section js {
-    <script src="/js/flowchart.min.js" defer></script>
+    @if (!Model.IsListView)
+    {
+        <script src="/js/flowchart.min.js" defer></script>
+    }
 }
 
-@{
+@section AdBar {
+    @if (!Model.IsListView)
+    {
+        @: 
+    }
+}
+
+@section Side_Links {
+    @if (!Model.IsListView)
+    {
+        <partial name="_Nav" />
+    }
+}
+
+@if (Model.IsListView)
+{
+    ViewData["Title"] = "Reports";
+
+    <h1 class="title is-1">Reports</h1>
+    <p class="subtitle">Browse documented reports in the library.</p>
+
+    @if (Model.Reports.Count > 0)
+    {
+        <div class="table-container mt-5">
+            <table class="table is-narrow sort" aria-label="reports">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Last Modified</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var report in Model.Reports)
+                    {
+                        <tr>
+                            <td><a href="/reports?id=@report.Id">@report.Name</a></td>
+                            <td>@report.Type</td>
+                            <td>@(report.LastModified?.ToString("d") ?? "-")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <p class="block">No reports found.</p>
+    }
+}
+else
+{
     if (!string.IsNullOrEmpty(@Model.Report.DisplayTitle))
     {
         ViewData["Title"] = Model.Report.DisplayTitle;
@@ -19,71 +73,65 @@
          Model.Report.ReportObjectDoc != null && !string.IsNullOrEmpty(Model.Report.ReportObjectDoc.KeyAssumptions) ||
         !string.IsNullOrEmpty(Model.Report.Description) ||
         !string.IsNullOrEmpty(Model.Report.DetailedDescription);
-}
 
-@section AdBar {}
-
-@section Side_Links {
-    <partial name="_Nav" />
-}
-
-<h1 class="title is-1 is-flex is-justify-content-space-between">
-    @if (!string.IsNullOrEmpty(@Model.Report.DisplayTitle)) {
-        @Model.Report.DisplayTitle}
-    else {
-        @Model.Report.Name
-    }
-
-    @foreach (var item in Model.Report.ReportTagLinks.ToList())
-    {
-        if(item.ShowInHeader == "Y" || item.Tag.ShowInHeader == "Y")
-        {
-            <span class="has-tooltip-arrow has-tooltip-multiline has-tooltip-bottom" data-tooltip="@item.Tag.Description">
-                <span class="pageNav @HtmlHelpers.Slug(item.Tag.Name) is-nobreak">@item.Tag.Name</span>
-            </span>
+    <h1 class="title is-1 is-flex is-justify-content-space-between">
+        @if (!string.IsNullOrEmpty(@Model.Report.DisplayTitle)) {
+            @Model.Report.DisplayTitle}
+        else {
+            @Model.Report.Name
         }
+
+        @foreach (var item in Model.Report.ReportTagLinks.ToList())
+        {
+            if(item.ShowInHeader == "Y" || item.Tag.ShowInHeader == "Y")
+            {
+                <span class="has-tooltip-arrow has-tooltip-multiline has-tooltip-bottom" data-tooltip="@item.Tag.Description">
+                    <span class="pageNav @HtmlHelpers.Slug(item.Tag.Name) is-nobreak">@item.Tag.Name</span>
+                </span>
+            }
+        }
+
+    </h1>
+
+    @if (User.HasPermission("Edit Report Documentation"))
+    {
+        <div data-ajax="yes" class="no-loader" data-url="/reports?Handler=MaintStatus&id=@Model.Report.ReportObjectId"></div>
     }
 
-</h1>
+    <partial name="_Links" />
 
-@if (User.HasPermission("Edit Report Documentation"))
-{
-    <div data-ajax="yes" class="no-loader" data-url="/reports?Handler=MaintStatus&id=@Model.Report.ReportObjectId"></div>
+    @if (Model.Report.ReportObjectImagesDocs.Any())
+    {
+        <partial name="_Images" />
+    }
+
+    @if (ViewBag.HasDescription || !string.IsNullOrEmpty(Model.Report.RepositoryDescription))
+    {
+        <partial name="_Description" />
+    }
+
+    @if (Model.Terms.Any() && (@Configuration["features:enable_terms"] == null || @Configuration["features:enable_terms"].ToString().ToLower() == "true"))
+    {
+        <partial name="_Terms" />
+    }
+
+    <partial name="_Details" />
+
+    @if (Model.Report.ReportObjectQueries.Any() || Model.ComponentQueries.Any())
+    {
+        <partial name="_Query" />
+    }
+
+    @if (Model.Parents.Any() || Model.Children.Any() || (Model.Report.ReportGroupsMemberships.Any() && User.HasPermission("View Groups")) || Model.Report.CollectionReports.Any())
+    {
+        <partial name="_Relationships" />
+    }
+
+
+    @if (Model.Report.ReportObjectDoc != null && Model.Report.ReportObjectDoc.MaintenanceLogs.Any())
+    {
+        <partial name="_Maintenance" />
+    }
+
+    <partial name="_Modals" model="Model.Report" />
 }
-
-<partial name="_Links" />
-
-@if (Model.Report.ReportObjectImagesDocs.Any())
-{
-    <partial name="_Images" />
-}
-
-@if (ViewBag.HasDescription || !string.IsNullOrEmpty(Model.Report.RepositoryDescription))
-{
-    <partial name="_Description" />
-}
-
-@if (Model.Terms.Any() && (@Configuration["features:enable_terms"] == null || @Configuration["features:enable_terms"].ToString().ToLower() == "true"))
-{
-    <partial name="_Terms" />
-}
-
-<partial name="_Details" />
-
-@if (Model.Report.ReportObjectQueries.Any() || Model.ComponentQueries.Any())
-{
-    <partial name="_Query" />
-}
-
-@if (Model.Parents.Any() || Model.Children.Any() || (Model.Report.ReportGroupsMemberships.Any() && User.HasPermission("View Groups")) || Model.Report.CollectionReports.Any())
-{
-    <partial name="_Relationships" />
-}
-
-
-@if (Model.Report.ReportObjectDoc != null && Model.Report.ReportObjectDoc.MaintenanceLogs.Any())
-{
-    <partial name="_Maintenance" />
-}
-
-<partial name="_Modals" model="Model.Report" />

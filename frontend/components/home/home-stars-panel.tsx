@@ -47,15 +47,34 @@ function renderDetailsLink(card: HomeStarCard, className: string, labelClassName
 }
 
 function isCollectionCard(card: HomeStarCard) {
-  return card.typeLabel.toLowerCase() === "collection"
+  return card.itemType === "collection" || card.typeLabel.toLowerCase() === "collection"
 }
 
 function isReportCard(card: HomeStarCard) {
-  return card.typeLabel.toLowerCase() === "report"
+  return card.itemType === "report" || card.typeLabel.toLowerCase() === "report"
 }
 
-export function HomeStarsPanelView({ panel }: { panel: HomeStarsPanel }) {
-  const showFolders = panel.cards.length > 0 && !panel.isSuggestionFallback
+type HomeStarsPanelViewProps = {
+  panel: HomeStarsPanel
+  selectedFolderId?: string
+  selectedTypeFilter?: string | null
+  textFilter?: string
+  onFolderChange?: (folderId: string) => void
+  onTypeFilterChange?: (filterId: string) => void
+  onTextFilterChange?: (value: string) => void
+}
+
+export function HomeStarsPanelView({
+  panel,
+  selectedFolderId = "all",
+  selectedTypeFilter = null,
+  textFilter = "",
+  onFolderChange,
+  onTypeFilterChange,
+  onTextFilterChange,
+}: HomeStarsPanelViewProps) {
+  const showFolders = panel.folders.length > 0 && !panel.isSuggestionFallback
+  const sharedWithMe = panel.sharedWithMe ?? []
 
   return (
     <section className="space-y-5">
@@ -67,46 +86,67 @@ export function HomeStarsPanelView({ panel }: { panel: HomeStarsPanel }) {
           </div>
           <input
             type="text"
-            readOnly
+            value={textFilter}
+            readOnly={!onTextFilterChange}
+            onChange={(event) => {
+              onTextFilterChange?.(event.target.value)
+            }}
             placeholder="type to filter..."
             className="atlas-home-search-shell h-10 min-w-52 bg-white px-3 text-sm shadow-none outline-none"
             aria-label="Filter starred items"
           />
           {panel.filters.map((filter) => (
-            <div
+            <button
               key={filter.id}
-              className="atlas-home-filter-button inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm"
+              type="button"
+              onClick={() => {
+                onTypeFilterChange?.(filter.id)
+              }}
+              className={`atlas-home-filter-button inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm ${
+                selectedTypeFilter === filter.id ? "ring-2 ring-[var(--atlas-home-link)]" : ""
+              }`}
             >
               {filterIcon(filter.label)}
               {filter.label}
-            </div>
+            </button>
           ))}
         </div>
       ) : null}
 
-      <div className={`grid gap-5 ${showFolders ? "lg:grid-cols-[256px_1fr]" : ""}`}>
+      <div
+        className={`grid gap-5 ${showFolders || sharedWithMe.length > 0 ? "xl:grid-cols-[256px_minmax(0,1fr)_220px]" : ""}`}
+      >
         {showFolders ? (
           <aside className="sticky top-20 self-start space-y-3">
-            {panel.folders.map((folder, index) => (
-              <div
-                key={folder.id}
-                className={`atlas-home-card relative border border-transparent px-4 py-4 text-[var(--atlas-home-text)] ${index === 0 ? "font-bold" : "font-medium"}`}
-              >
-                <span className="inline-flex items-center gap-3">
-                  <span className="relative inline-flex text-[var(--atlas-home-text)]">
-                    {index === 0 ? (
-                      <FolderOpen className="h-5 w-5" strokeWidth={1.8} />
-                    ) : (
-                      <Folder className="h-5 w-5" strokeWidth={1.8} />
-                    )}
+            {panel.folders.map((folder, index) => {
+              const isActive = selectedFolderId === folder.id
+              return (
+                <button
+                  key={folder.id}
+                  type="button"
+                  onClick={() => {
+                    onFolderChange?.(folder.id)
+                  }}
+                  className={`atlas-home-card relative w-full border px-4 py-4 text-left text-[var(--atlas-home-text)] ${
+                    isActive ? "border-[var(--atlas-home-link)] font-bold" : "border-transparent font-medium"
+                  }`}
+                >
+                  <span className="inline-flex items-center gap-3">
+                    <span className="relative inline-flex text-[var(--atlas-home-text)]">
+                      {index === 0 ? (
+                        <FolderOpen className="h-5 w-5" strokeWidth={1.8} />
+                      ) : (
+                        <Folder className="h-5 w-5" strokeWidth={1.8} />
+                      )}
+                    </span>
+                    <span>{folder.label}</span>
                   </span>
-                  <span>{folder.label}</span>
-                </span>
-                <span className="atlas-home-folder-badge absolute -top-3 -right-3 rounded-full px-2 py-0.5 text-xs">
-                  {folder.count}
-                </span>
-              </div>
-            ))}
+                  <span className="atlas-home-folder-badge absolute -top-3 -right-3 rounded-full px-2 py-0.5 text-xs">
+                    {folder.count}
+                  </span>
+                </button>
+              )
+            })}
           </aside>
         ) : null}
 
@@ -123,7 +163,7 @@ export function HomeStarsPanelView({ panel }: { panel: HomeStarsPanel }) {
 
               return (
                 <article
-                  key={card.id}
+                  key={`${card.itemType}-${card.id}`}
                   className={`overflow-hidden ${collectionCard ? "atlas-snippet-gold-card" : "atlas-home-card"}`}
                 >
                   <div className="flex items-center justify-between gap-3 border-b border-[var(--atlas-home-border-soft)] px-4 py-2.5">
@@ -217,6 +257,33 @@ export function HomeStarsPanelView({ panel }: { panel: HomeStarsPanel }) {
             </div>
           )}
         </div>
+
+        {sharedWithMe.length > 0 ? (
+          <aside className="sticky top-20 self-start space-y-3 rounded-md border border-[var(--atlas-home-border-soft)] bg-white p-4">
+            <strong className="block text-sm text-[var(--atlas-home-text-strong)]">
+              Shared With Me
+            </strong>
+            <ul className="space-y-2 text-sm">
+              {sharedWithMe.map((item) => (
+                <li key={item.id}>
+                  {item.href ? (
+                    <Link href={item.href} className="text-[var(--atlas-home-link)] hover:underline">
+                      {item.name}
+                    </Link>
+                  ) : (
+                    item.name
+                  )}
+                  {item.sharedFrom ? (
+                    <div className="text-xs text-[var(--atlas-home-muted)]">
+                      Shared by {item.sharedFrom}
+                      {item.shareDate ? ` on ${item.shareDate}` : ""}
+                    </div>
+                  ) : null}
+                </li>
+              ))}
+            </ul>
+          </aside>
+        ) : null}
       </div>
     </section>
   )

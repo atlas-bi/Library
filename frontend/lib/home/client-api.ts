@@ -1,3 +1,4 @@
+import { mapUserStarsPayloadToPanel, type UserStarsPayload } from "@/lib/home/stars-mapper"
 import type {
   HomeGroupsPanel,
   HomeRunListPanel,
@@ -5,130 +6,6 @@ import type {
   HomeSubscriptionsPanel,
   HomeTabId,
 } from "@/lib/home/types"
-
-function normalizeStarsPanel(payload: {
-  summary: { totalCount: number; unsortedCount: number }
-  filters: {
-    hasReports: boolean
-    hasCollections: boolean
-    hasInitiatives: boolean
-    hasTerms: boolean
-    hasUsers: boolean
-    hasGroups: boolean
-    hasSearches: boolean
-  }
-  folders: Array<{ id: number; name: string; itemCount: number }>
-  items: Array<{
-    starId: number
-    itemId?: number | null
-    url?: string | null
-    name: string
-    typeLabel?: string | null
-    description?: string | null
-    bodyText?: string | null
-    placeholderImageUrl?: string | null
-    thumbnailUrl?: string | null
-    fullImageUrl?: string | null
-    isCertified?: boolean
-    isStarred?: boolean
-    starCount?: number
-    canRun?: boolean
-    runUrl?: string | null
-    runDisabledReason?: string | null
-    canEditInEditor?: boolean
-    editUrl?: string | null
-    canManageInEditor?: boolean
-    manageUrl?: string | null
-    canOpenProfile?: boolean
-    canShare?: boolean
-    canRequestAccess?: boolean
-    tags?: Array<{ name: string; slug?: string | null; showInHeader?: boolean }>
-  }>
-  suggestedReports: Array<{
-    id: number
-    name: string
-    description?: string | null
-    url?: string | null
-    type?: string | null
-  }>
-}): HomeStarsPanel {
-  const isSuggestionFallback = payload.items.length === 0 && payload.suggestedReports.length > 0
-  const cards =
-    payload.items.length > 0
-      ? payload.items.map((item) => ({
-          id: item.itemId ?? item.starId,
-          href: item.url || "#",
-          title: item.name,
-          typeLabel: item.typeLabel || "Item",
-          description: item.bodyText || item.description || "Open to view details.",
-          thumbnailUrl: item.thumbnailUrl || undefined,
-          fullImageUrl: item.fullImageUrl || undefined,
-          placeholderImageUrl: item.placeholderImageUrl || undefined,
-          tags:
-            item.tags
-              ?.filter((tag) => tag.showInHeader)
-              .map((tag) => ({
-                name: tag.name,
-                slug: tag.slug || undefined,
-                showInHeader: tag.showInHeader,
-              })) ?? [],
-          isCertified: item.isCertified ?? false,
-          starCount: item.starCount ?? 0,
-          canOpenDetails: Boolean(item.url),
-          isStarred: item.isStarred ?? true,
-          canRun: item.canRun ?? false,
-          runUrl: item.runUrl || undefined,
-          runDisabledReason: item.runDisabledReason || undefined,
-          canEdit: item.canEditInEditor ?? false,
-          editUrl: item.editUrl || undefined,
-          canManage: item.canManageInEditor ?? false,
-          manageUrl: item.manageUrl || undefined,
-          canOpenProfile: item.canOpenProfile ?? false,
-          canShare: item.canShare ?? false,
-          canRequestAccess: item.canRequestAccess ?? false,
-        }))
-      : payload.suggestedReports.map((item) => ({
-          id: item.id,
-          href: item.url || "#",
-          title: item.name,
-          typeLabel: item.type || "Report",
-          description: item.description || "Open to view details.",
-          starCount: 0,
-          canOpenDetails: Boolean(item.url),
-          isStarred: false,
-        }))
-
-  return {
-    kind: "stars",
-    title: "Stars",
-    emptyMessage: "You don't have any favorites! Search to get started.",
-    isSuggestionFallback,
-    suggestionHeading: isSuggestionFallback
-      ? "You don't have any favorites! Here's some reports you've used."
-      : undefined,
-    folders: [
-      { id: "all", label: "All", count: payload.summary.totalCount },
-      ...(payload.summary.unsortedCount > 0
-        ? [{ id: "unsorted", label: "Unsorted", count: payload.summary.unsortedCount }]
-        : []),
-      ...payload.folders.map((folder) => ({
-        id: String(folder.id),
-        label: folder.name,
-        count: folder.itemCount,
-      })),
-    ],
-    filters: [
-      payload.filters.hasReports ? { id: "reports", label: "Reports" } : null,
-      payload.filters.hasCollections ? { id: "collections", label: "Collections" } : null,
-      payload.filters.hasInitiatives ? { id: "initiatives", label: "Initiatives" } : null,
-      payload.filters.hasTerms ? { id: "terms", label: "Terms" } : null,
-      payload.filters.hasUsers ? { id: "users", label: "Users" } : null,
-      payload.filters.hasGroups ? { id: "groups", label: "Groups" } : null,
-      payload.filters.hasSearches ? { id: "searches", label: "Searches" } : null,
-    ].filter(Boolean) as HomeStarsPanel["filters"],
-    cards,
-  }
-}
 
 function isHomeStarsPanel(payload: unknown): payload is HomeStarsPanel {
   if (!payload || typeof payload !== "object") return false
@@ -230,7 +107,7 @@ export async function fetchHomeTabPanel(tabId: HomeTabId) {
         ok: true as const,
         data: isHomeStarsPanel(panelPayload)
           ? panelPayload
-          : normalizeStarsPanel(panelPayload as Parameters<typeof normalizeStarsPanel>[0]),
+          : mapUserStarsPayloadToPanel(panelPayload as UserStarsPayload),
       }
     case "subscriptions":
       return {
