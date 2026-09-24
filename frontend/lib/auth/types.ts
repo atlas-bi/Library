@@ -17,6 +17,9 @@ export const PERMISSIONS = [
   "Delete Collection",
   "Create Initiative",
   "View Other User",
+  "Manage Global Site Settings",
+  "Create Parameters",
+  "Delete Parameters",
 ] as const
 
 export type Permission = (typeof PERMISSIONS)[number]
