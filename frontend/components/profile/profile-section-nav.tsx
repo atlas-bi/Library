@@ -42,23 +42,26 @@ export function ProfileSectionNav({
   if (tabs.length <= 1) return null
 
   return (
-    <nav aria-label="Profile sections" className="border-b border-border/60">
-      <ul className="flex flex-wrap gap-1 text-sm">
-        {tabs.map((tab) => (
-          <li key={tab}>
+    <nav aria-label="Profile sections" className="mb-4">
+      <ul className="flex flex-wrap items-center gap-2 text-sm font-medium">
+        {tabs.map((tab, index) => (
+          <li key={tab} className="flex items-center gap-2">
             <button
               type="button"
               onClick={() => onTabChange(tab)}
               className={cn(
-                "rounded-t-md px-3 py-2 font-medium transition-colors",
+                "transition-colors",
                 activeTab === tab
-                  ? "border border-b-0 border-border/60 bg-background text-foreground"
-                  : "text-muted-foreground hover:bg-muted/50 hover:text-foreground",
+                  ? "text-[var(--atlas-home-link,theme(colors.blue.600))] cursor-default"
+                  : "text-[var(--atlas-home-link,theme(colors.blue.600))] hover:underline",
               )}
               aria-current={activeTab === tab ? "page" : undefined}
             >
               {TAB_LABELS[tab]}
             </button>
+            {index < tabs.length - 1 && (
+              <span className="text-muted-foreground select-none">/</span>
+            )}
           </li>
         ))}
       </ul>

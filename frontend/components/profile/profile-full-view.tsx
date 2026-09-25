@@ -158,15 +158,17 @@ export function ProfileFullView({
         <h2 className="text-2xl font-semibold tracking-tight">Report Activity</h2>
       ) : null}
 
-      <div className="grid gap-6 lg:grid-cols-[minmax(220px,1fr)_minmax(0,3fr)]">
-        <ProfileFilterSidebar
-          dateRangeId={dateRangeId}
-          dateRangeOptions={dateRangeOptions}
-          onDateRangeChange={handleDateRangeChange}
-          filters={sidebarFilters}
-          onFiltersChange={handleFiltersChange}
-          filterOptions={filterOptions}
-        />
+      <div className={cn("gap-6", variant === "page" && "grid lg:grid-cols-[minmax(220px,1fr)_minmax(0,3fr)]")}>
+        {variant === "page" ? (
+          <ProfileFilterSidebar
+            dateRangeId={dateRangeId}
+            dateRangeOptions={dateRangeOptions}
+            onDateRangeChange={handleDateRangeChange}
+            filters={sidebarFilters}
+            onFiltersChange={handleFiltersChange}
+            filterOptions={filterOptions}
+          />
+        ) : null}
 
         <div className="min-w-0 space-y-4">
           <ProfileSectionNav activeTab={activeTab} tabs={tabs} onTabChange={setActiveTab} />

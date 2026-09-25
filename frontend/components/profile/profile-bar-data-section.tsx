@@ -1,4 +1,5 @@
 import Link from "next/link"
+import { ChevronsUpDown } from "lucide-react"
 import type { ProfileBarItemDto } from "@/lib/profile/types"
 
 function getBarTitle(item: ProfileBarItemDto) {
@@ -10,62 +11,96 @@ function getBarSubtitle(item: ProfileBarItemDto) {
 }
 
 export function ProfileBarDataSection({
-  title,
+  title, // Fallback title
   items,
+  defaultTitleTwo = "Runs",
 }: {
   title: string
   items: ProfileBarItemDto[]
+  defaultTitleTwo?: string
 }) {
   if (items.length === 0) return null
 
-  const maxCount = Math.max(...items.map((item) => item.count), 1)
+  const first = items[0]
+  const titleOne = first?.titleOne || title
+  const dateTitle = first?.dateTitle || null
+  const titleTwo = first?.titleTwo || defaultTitleTwo
 
   return (
-    <div className="space-y-3 rounded-md border bg-card/40 p-4">
-      <h3 className="text-sm font-semibold">{title}</h3>
-      <ul className="space-y-3">
-        {items.map((item) => {
-          const width = Math.max(4, Math.round((item.count / maxCount) * 100))
-          const label = getBarTitle(item)
-          const subtitle = getBarSubtitle(item)
+    <div className="w-full">
+      <table className="w-full border-collapse text-xs md:text-sm">
+        <thead>
+          <tr className="border-b-0 text-left">
+            <th className="pb-3 pr-2 font-bold whitespace-nowrap">
+              <div className="flex items-center gap-1 cursor-default">
+                {titleOne}
+                <ChevronsUpDown className="size-3 text-muted-foreground" />
+              </div>
+            </th>
+            {dateTitle ? (
+              <th className="pb-3 px-2 font-bold whitespace-nowrap">
+                <div className="flex items-center gap-1 cursor-default">
+                  {dateTitle}
+                  <ChevronsUpDown className="size-3 text-muted-foreground" />
+                </div>
+              </th>
+            ) : null}
+            <th className="pb-3 pl-2 font-bold whitespace-nowrap text-right w-1">
+              <div className="flex items-center justify-end gap-1 cursor-default">
+                {titleTwo}
+                <ChevronsUpDown className="size-3 text-muted-foreground" />
+              </div>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {items.map((item, idx) => {
+            const label = getBarTitle(item)
+            const hasDateColumn = !!dateTitle
+            const dateValue = item.date || ""
+            
+            // Format number e.g. 1,000
+            const countFormatted = typeof item.count === "number" ? item.count.toLocaleString() : "0"
 
-          return (
-            <li key={item.key} className="space-y-1">
-              <div className="flex items-start justify-between gap-3 text-sm">
-                <div className="min-w-0">
+            return (
+              <tr key={item.key || idx} className="group">
+                <td className="py-2 pr-2 align-middle max-w-[150px] md:max-w-[200px] truncate">
                   {item.href ? (
-                    <Link href={item.href} className="font-medium text-link hover:underline">
+                    <Link href={item.href} className="font-medium text-[var(--atlas-home-link,theme(colors.blue.600))] hover:underline">
                       {label}
                     </Link>
                   ) : (
-                    <span className="font-medium">{label}</span>
+                    <span className="font-medium text-[var(--atlas-home-link,theme(colors.blue.600))]">{label}</span>
                   )}
-                  {subtitle ? (
-                    <div className="truncate text-xs text-muted-foreground">{subtitle}</div>
-                  ) : null}
-                </div>
-                <div className="shrink-0 text-right text-xs text-muted-foreground">
-                  <div>{item.count.toLocaleString()} runs</div>
-                  {typeof item.percent === "number" ? (
-                    <div>
-                      {Intl.NumberFormat("en-US", {
-                        style: "percent",
-                        maximumFractionDigits: 0,
-                      }).format(item.percent)}
-                    </div>
-                  ) : null}
-                </div>
-              </div>
-              <div className="h-2 overflow-hidden rounded-full bg-muted">
-                <div
-                  className="h-full rounded-full bg-[rgba(38,128,235,0.55)]"
-                  style={{ width: `${width}%` }}
-                />
-              </div>
-            </li>
-          )
-        })}
-      </ul>
+                </td>
+                
+                {hasDateColumn ? (
+                  <td className="py-2 px-2 align-middle whitespace-nowrap text-muted-foreground">
+                    {dateValue}
+                  </td>
+                ) : null}
+
+                <td className="py-2 pl-2 align-middle text-right whitespace-nowrap">
+                  <div className="flex items-center justify-end gap-2">
+                    <strong className="text-foreground">{countFormatted}</strong>
+                    {typeof item.percent === "number" ? (
+                      <div className="relative inline-flex items-center justify-center overflow-hidden bg-[rgba(38,128,235,0.1)] rounded-sm min-w-[36px] h-5">
+                        <div 
+                          className="absolute left-0 top-0 bottom-0 bg-[rgba(38,128,235,0.2)]" 
+                          style={{ width: `${Math.round(item.percent * 100)}%` }} 
+                        />
+                        <span className="relative z-10 text-[10px] font-bold text-muted-foreground px-1">
+                          {Math.round(item.percent * 100)}%
+                        </span>
+                      </div>
+                    ) : null}
+                  </div>
+                </td>
+              </tr>
+            )
+          })}
+        </tbody>
+      </table>
     </div>
   )
 }
@@ -83,20 +118,20 @@ export function ProfileBarDataGrid({
   reports: ProfileBarItemDto[]
   fails: ProfileBarItemDto[]
 }) {
-  const showUsers = type !== "user"
-  const showReports =
-    type === "user" || type === "term" || type === "collection" || (type === "report" && id === -1)
+  const showUsers = type !== "user" && users.length > 0
+  const showReports = (type === "user" || type === "term" || type === "collection" || (type === "report" && id === -1)) && reports.length > 0
+  const showFails = fails.length > 0
 
-  const columnClass =
-    type === "term" || type === "collection" || (type === "report" && id === -1)
-      ? "md:grid-cols-3"
-      : "md:grid-cols-2"
+  // If no data to show, render nothing (which matches Razor empty state)
+  if (!showUsers && !showReports && !showFails) {
+    return null
+  }
 
   return (
-    <div className={`grid gap-4 ${columnClass}`}>
-      {showUsers ? <ProfileBarDataSection title="Top users" items={users} /> : null}
-      {showReports ? <ProfileBarDataSection title="Top reports" items={reports} /> : null}
-      <ProfileBarDataSection title="Failures" items={fails} />
+    <div className="grid gap-x-8 gap-y-6 md:grid-cols-3 pt-4">
+      {showUsers ? <ProfileBarDataSection title="Top Users" items={users} /> : null}
+      {showReports ? <ProfileBarDataSection title="Top Reports" items={reports} /> : null}
+      {showFails ? <ProfileBarDataSection title="Failed Runs" items={fails} defaultTitleTwo="Fails" /> : null}
     </div>
   )
 }
