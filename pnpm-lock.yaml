@@ -268,8 +268,8 @@ importers:
         specifier: 1.0.0
         version: 1.0.0(stylelint@16.26.1(typescript@6.0.3))
       stylelint-config-standard-scss:
-        specifier: ^14.0.0
-        version: 14.0.0(postcss@8.5.28)(stylelint@16.26.1(typescript@6.0.3))
+        specifier: ^16.0.0
+        version: 16.0.0(postcss@8.5.28)(stylelint@16.26.1(typescript@6.0.3))
       stylelint-scss:
         specifier: ^7.0.0
         version: 7.3.0(stylelint@16.26.1(typescript@6.0.3))
@@ -7771,37 +7771,37 @@ packages:
     peerDependencies:
       stylelint: '>=15.0.0'
 
-  stylelint-config-recommended-scss@14.1.0:
-    resolution: {integrity: sha512-bhaMhh1u5dQqSsf6ri2GVWWQW5iUjBYgcHkh7SgDDn92ijoItC/cfO/W+fpXshgTQWhwFkP1rVcewcv4jaftRg==}
-    engines: {node: '>=18.12.0'}
+  stylelint-config-recommended-scss@16.0.2:
+    resolution: {integrity: sha512-aUTHhPPWCvFyWaxtckJlCPaXTDFsp4pKO8evXNCsW9OwsaUWyMd6jvcUhSmfGWPrTddvzNqK4rS/UuSLcbVGdQ==}
+    engines: {node: '>=20'}
     peerDependencies:
       postcss: ^8.3.3
-      stylelint: ^16.6.1
+      stylelint: ^16.24.0
     peerDependenciesMeta:
       postcss:
         optional: true
 
-  stylelint-config-recommended@14.0.1:
-    resolution: {integrity: sha512-bLvc1WOz/14aPImu/cufKAZYfXs/A/owZfSMZ4N+16WGXLoX5lOir53M6odBxvhgmgdxCVnNySJmZKx73T93cg==}
+  stylelint-config-recommended@17.0.0:
+    resolution: {integrity: sha512-WaMSdEiPfZTSFVoYmJbxorJfA610O0tlYuU2aEwY33UQhSPgFbClrVJYWvy3jGJx+XW37O+LyNLiZOEXhKhJmA==}
     engines: {node: '>=18.12.0'}
     peerDependencies:
-      stylelint: ^16.1.0
+      stylelint: ^16.23.0
 
-  stylelint-config-standard-scss@14.0.0:
-    resolution: {integrity: sha512-6Pa26D9mHyi4LauJ83ls3ELqCglU6VfCXchovbEqQUiEkezvKdv6VgsIoMy58i00c854wVmOw0k8W5FTpuaVqg==}
-    engines: {node: '>=18.12.0'}
+  stylelint-config-standard-scss@16.0.0:
+    resolution: {integrity: sha512-/FHECLUu+med/e6OaPFpprG86ShC4SYT7Tzb2PTVdDjJsehhFBOioSlWqYFqJxmGPIwO3AMBxNo+kY3dxrbczA==}
+    engines: {node: '>=20'}
     peerDependencies:
       postcss: ^8.3.3
-      stylelint: ^16.11.0
+      stylelint: ^16.23.1
     peerDependenciesMeta:
       postcss:
         optional: true
 
-  stylelint-config-standard@36.0.1:
-    resolution: {integrity: sha512-8aX8mTzJ6cuO8mmD5yon61CWuIM4UD8Q5aBcWKGSf6kg+EC3uhB+iOywpTK4ca6ZL7B49en8yanOFtUW0qNzyw==}
+  stylelint-config-standard@39.0.1:
+    resolution: {integrity: sha512-b7Fja59EYHRNOTa3aXiuWnhUWXFU2Nfg6h61bLfAb5GS5fX3LMUD0U5t4S8N/4tpHQg3Acs2UVPR9jy2l1g/3A==}
     engines: {node: '>=18.12.0'}
     peerDependencies:
-      stylelint: ^16.1.0
+      stylelint: ^16.23.0
 
   stylelint-scss@6.14.0:
     resolution: {integrity: sha512-ZKmHMZolxeuYsnB+PCYrTpFce0/QWX9i9gh0hPXzp73WjuIMqUpzdQaBCrKoLWh6XtCFSaNDErkMPqdjy1/8aA==}
@@ -11477,7 +11477,7 @@ snapshots:
       '@types/expect': 1.20.4
       '@types/node': 24.13.6
 
-  '@typescript-eslint/eslint-plugin@8.61.0(@typescript-eslint/parser@8.61.0(eslint@10.10.0(jiti@2.7.0))(typescript@5.9.3))(eslint@10.10.0(jiti@2.7.0))(typescript@5.9.3)':
+  '@typescript-eslint/eslint-plugin@8.61.0(@typescript-eslint/parser@8.61.0(eslint@10.10.0(jiti@2.7.0))(typescript@6.0.3))(eslint@10.10.0(jiti@2.7.0))(typescript@5.9.3)':
     dependencies:
       '@eslint-community/regexpp': 4.12.2
       '@typescript-eslint/parser': 8.61.0(eslint@10.10.0(jiti@2.7.0))(typescript@6.0.3)
@@ -11493,11 +11493,23 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@typescript-eslint/parser@8.61.0(eslint@10.10.0(jiti@2.7.0))(typescript@6.0.3)':
+  '@typescript-eslint/parser@8.61.0(eslint@10.10.0(jiti@2.7.0))(typescript@5.9.3)':
     dependencies:
       '@typescript-eslint/scope-manager': 8.61.0
       '@typescript-eslint/types': 8.61.0
       '@typescript-eslint/typescript-estree': 8.61.0(typescript@5.9.3)
+      '@typescript-eslint/visitor-keys': 8.61.0
+      debug: 4.4.3
+      eslint: 10.10.0(jiti@2.7.0)
+      typescript: 5.9.3
+    transitivePeerDependencies:
+      - supports-color
+
+  '@typescript-eslint/parser@8.61.0(eslint@10.10.0(jiti@2.7.0))(typescript@6.0.3)':
+    dependencies:
+      '@typescript-eslint/scope-manager': 8.61.0
+      '@typescript-eslint/types': 8.61.0
+      '@typescript-eslint/typescript-estree': 8.61.0(typescript@6.0.3)
       '@typescript-eslint/visitor-keys': 8.61.0
       debug: 4.4.3
       eslint: 10.10.0(jiti@2.7.0)
@@ -11522,7 +11534,6 @@ snapshots:
       typescript: 6.0.3
     transitivePeerDependencies:
       - supports-color
-    optional: true
 
   '@typescript-eslint/scope-manager@8.61.0':
     dependencies:
@@ -11536,7 +11547,6 @@ snapshots:
   '@typescript-eslint/tsconfig-utils@8.61.0(typescript@6.0.3)':
     dependencies:
       typescript: 6.0.3
-    optional: true
 
   '@typescript-eslint/type-utils@8.61.0(eslint@10.10.0(jiti@2.7.0))(typescript@5.9.3)':
     dependencies:
@@ -11581,7 +11591,6 @@ snapshots:
       typescript: 6.0.3
     transitivePeerDependencies:
       - supports-color
-    optional: true
 
   '@typescript-eslint/utils@8.61.0(eslint@10.10.0(jiti@2.7.0))(typescript@5.9.3)':
     dependencies:
@@ -16942,31 +16951,31 @@ snapshots:
     dependencies:
       stylelint: 16.26.1(typescript@6.0.3)
 
-  stylelint-config-recommended-scss@14.1.0(postcss@8.5.28)(stylelint@16.26.1(typescript@6.0.3)):
+  stylelint-config-recommended-scss@16.0.2(postcss@8.5.28)(stylelint@16.26.1(typescript@6.0.3)):
     dependencies:
       postcss-scss: 4.0.9(postcss@8.5.28)
       stylelint: 16.26.1(typescript@6.0.3)
-      stylelint-config-recommended: 14.0.1(stylelint@16.26.1(typescript@6.0.3))
+      stylelint-config-recommended: 17.0.0(stylelint@16.26.1(typescript@6.0.3))
       stylelint-scss: 6.14.0(stylelint@16.26.1(typescript@6.0.3))
     optionalDependencies:
       postcss: 8.5.28
 
-  stylelint-config-recommended@14.0.1(stylelint@16.26.1(typescript@6.0.3)):
+  stylelint-config-recommended@17.0.0(stylelint@16.26.1(typescript@6.0.3)):
     dependencies:
       stylelint: 16.26.1(typescript@6.0.3)
 
-  stylelint-config-standard-scss@14.0.0(postcss@8.5.28)(stylelint@16.26.1(typescript@6.0.3)):
+  stylelint-config-standard-scss@16.0.0(postcss@8.5.28)(stylelint@16.26.1(typescript@6.0.3)):
     dependencies:
       stylelint: 16.26.1(typescript@6.0.3)
-      stylelint-config-recommended-scss: 14.1.0(postcss@8.5.28)(stylelint@16.26.1(typescript@6.0.3))
-      stylelint-config-standard: 36.0.1(stylelint@16.26.1(typescript@6.0.3))
+      stylelint-config-recommended-scss: 16.0.2(postcss@8.5.28)(stylelint@16.26.1(typescript@6.0.3))
+      stylelint-config-standard: 39.0.1(stylelint@16.26.1(typescript@6.0.3))
     optionalDependencies:
       postcss: 8.5.28
 
-  stylelint-config-standard@36.0.1(stylelint@16.26.1(typescript@6.0.3)):
+  stylelint-config-standard@39.0.1(stylelint@16.26.1(typescript@6.0.3)):
     dependencies:
       stylelint: 16.26.1(typescript@6.0.3)
-      stylelint-config-recommended: 14.0.1(stylelint@16.26.1(typescript@6.0.3))
+      stylelint-config-recommended: 17.0.0(stylelint@16.26.1(typescript@6.0.3))
 
   stylelint-scss@6.14.0(stylelint@16.26.1(typescript@6.0.3)):
     dependencies:
@@ -17240,7 +17249,6 @@ snapshots:
   ts-api-utils@2.5.0(typescript@6.0.3):
     dependencies:
       typescript: 6.0.3
-    optional: true
 
   ts-declaration-location@1.0.7(typescript@5.9.3):
     dependencies:
@@ -17327,8 +17335,8 @@ snapshots:
 
   typescript-eslint@8.61.0(eslint@10.10.0(jiti@2.7.0))(typescript@5.9.3):
     dependencies:
-      '@typescript-eslint/eslint-plugin': 8.61.0(@typescript-eslint/parser@8.61.0(eslint@10.10.0(jiti@2.7.0))(typescript@5.9.3))(eslint@10.10.0(jiti@2.7.0))(typescript@5.9.3)
-      '@typescript-eslint/parser': 8.61.0(eslint@10.10.0(jiti@2.7.0))(typescript@6.0.3)
+      '@typescript-eslint/eslint-plugin': 8.61.0(@typescript-eslint/parser@8.61.0(eslint@10.10.0(jiti@2.7.0))(typescript@6.0.3))(eslint@10.10.0(jiti@2.7.0))(typescript@5.9.3)
+      '@typescript-eslint/parser': 8.61.0(eslint@10.10.0(jiti@2.7.0))(typescript@5.9.3)
       '@typescript-eslint/typescript-estree': 8.61.0(typescript@5.9.3)
       '@typescript-eslint/utils': 8.61.0(eslint@10.10.0(jiti@2.7.0))(typescript@5.9.3)
       eslint: 10.10.0(jiti@2.7.0)
