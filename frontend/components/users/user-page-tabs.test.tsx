@@ -1,34 +1,53 @@
-import { render, screen } from "@testing-library/react"
-import { describe, expect, it } from "vitest"
-import { UserPageTabs } from "./user-page-tabs"
+import { render, screen } from '@testing-library/react';
+import { describe, expect, it } from 'vitest';
+import { UserPageTabs } from '@/components/users/user-page-tabs';
 
-const tabs = {
-  starsVisible: true,
-  subscriptionsVisible: true,
-  groupsVisible: true,
-  activityVisible: true,
-  runListVisible: true,
-  atlasHistoryVisible: true,
-  analyticsVisible: true,
-}
+const allTabsVisible = {
+    starsVisible: true,
+    subscriptionsVisible: true,
+    groupsVisible: true,
+    activityVisible: true,
+    runListVisible: true,
+    atlasHistoryVisible: true,
+    analyticsVisible: true,
+};
 
-describe("UserPageTabs", () => {
-  it("shows Report Runs content by default for another user's profile", () => {
-    render(
-      <UserPageTabs
-        isCurrentUser={false}
-        tabs={tabs}
-        stars={<div>Stars content</div>}
-        subscriptions={<div>Subscriptions content</div>}
-        groups={<div>Groups content</div>}
-        activity={<div>Activity content</div>}
-        runList={<div>Report Runs content</div>}
-        atlasHistory={<div>Atlas History content</div>}
-        analytics={<div>Analytics content</div>}
-      />,
-    )
+describe('UserPageTabs', () => {
+    it("opens report runs by default for another user's profile", () => {
+        render(
+            <UserPageTabs
+                isCurrentUser={false}
+                tabs={allTabsVisible}
+                stars={<div>Stars panel</div>}
+                subscriptions={<div>Subscriptions panel</div>}
+                groups={<div>Groups panel</div>}
+                activity={<div>Activity panel</div>}
+                runList={<div>Report runs panel</div>}
+                atlasHistory={<div>Atlas history panel</div>}
+                analytics={<div>Analytics panel</div>}
+            />,
+        );
 
-    expect(screen.getByText("Report Runs content")).toBeInTheDocument()
-    expect(screen.queryByText("Stars content")).not.toBeInTheDocument()
-  })
-})
+        expect(screen.getByText('Report runs panel')).toBeInTheDocument();
+        expect(screen.queryByText('Stars panel')).not.toBeInTheDocument();
+    });
+
+    it('opens stars by default for the current user', () => {
+        render(
+            <UserPageTabs
+                isCurrentUser
+                tabs={allTabsVisible}
+                stars={<div>Stars panel</div>}
+                subscriptions={<div>Subscriptions panel</div>}
+                groups={<div>Groups panel</div>}
+                activity={<div>Activity panel</div>}
+                runList={<div>Report runs panel</div>}
+                atlasHistory={<div>Atlas history panel</div>}
+                analytics={<div>Analytics panel</div>}
+            />,
+        );
+
+        expect(screen.getByText('Stars panel')).toBeInTheDocument();
+        expect(screen.queryByText('Report runs panel')).not.toBeInTheDocument();
+    });
+});

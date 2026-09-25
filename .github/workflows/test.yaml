@@ -333,6 +333,7 @@ jobs:
         run: |
           dotnet test web.Tests/web.Tests.csproj --filter FunctionTests --no-build -e Demo=True --collect:"XPlat Code Coverage;Format=cobertura" --results-directory TestResults --logger:"junit;LogFilePath=TestResults/function-tests.junit.xml"
         env:
+          VSTEST_CONNECTION_TIMEOUT: 300
           BROWSERSTACK_ACCESS_KEY: ${{ secrets.BROWSERSTACK_ACCESS_KEY }}
           BROWSERSTACK_USERNAME: ${{ secrets.BROWSERSTACK_USERNAME }}
 

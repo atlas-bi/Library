@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
@@ -17,6 +18,91 @@ namespace web.Tests.FunctionTests.Controllers;
 
 public class UsersApiControllerTests
 {
+    [Fact]
+    public async Task GetSettings_DefaultsShareNotificationsToEnabled()
+    {
+        var options = new DbContextOptionsBuilder<Atlas_WebContext>()
+            .UseInMemoryDatabase(databaseName: "users-api-settings-default")
+            .Options;
+
+        await using var context = new Atlas_WebContext(options);
+        context.Users.Add(new User { UserId = 1, Username = "viewer", FullnameCalc = "Viewer Name" });
+        await context.SaveChangesAsync();
+
+        var service = new UsersApiService(
+            context,
+            new ConfigurationBuilder().AddInMemoryCollection().Build(),
+            new MemoryCache(new MemoryCacheOptions())
+        );
+        var controller = BuildController(service, BuildPrincipal(userId: 1, username: "viewer"));
+
+        var result = await controller.GetSettings();
+
+        var ok = Assert.IsType<OkObjectResult>(result.Result);
+        var payload = Assert.IsType<UserSettingsDto>(ok.Value);
+        Assert.True(payload.ShareNotificationEnabled);
+    }
+
+    [Fact]
+    public async Task UpdateSettings_PersistsShareNotificationForCurrentUser()
+    {
+        var options = new DbContextOptionsBuilder<Atlas_WebContext>()
+            .UseInMemoryDatabase(databaseName: "users-api-settings-update")
+            .Options;
+
+        await using var context = new Atlas_WebContext(options);
+        context.Users.AddRange(
+            new User { UserId = 1, Username = "viewer", FullnameCalc = "Viewer Name" },
+            new User { UserId = 2, Username = "other", FullnameCalc = "Other Name" }
+        );
+        context.UserSettings.Add(
+            new UserSetting { UserId = 2, Name = "share_notification", Value = "Y" }
+        );
+        await context.SaveChangesAsync();
+
+        var service = new UsersApiService(
+            context,
+            new ConfigurationBuilder().AddInMemoryCollection().Build(),
+            new MemoryCache(new MemoryCacheOptions())
+        );
+        var controller = BuildController(service, BuildPrincipal(userId: 1, username: "viewer"));
+
+        var result = await controller.UpdateSettings(
+            new UpdateUserSettingsRequestDto { ShareNotificationEnabled = false }
+        );
+
+        Assert.IsType<NoContentResult>(result);
+        var setting = Assert.Single(context.UserSettings, x => x.UserId == 1);
+        Assert.Equal("share_notification", setting.Name);
+        Assert.Equal("N", setting.Value);
+        Assert.Equal("Y", Assert.Single(context.UserSettings, x => x.UserId == 2).Value);
+    }
+
+    [Fact]
+    public async Task UpdateSettings_RejectsMissingShareNotificationValue()
+    {
+        var options = new DbContextOptionsBuilder<Atlas_WebContext>()
+            .UseInMemoryDatabase(databaseName: "users-api-settings-invalid")
+            .Options;
+
+        await using var context = new Atlas_WebContext(options);
+        context.Users.Add(new User { UserId = 1, Username = "viewer", FullnameCalc = "Viewer Name" });
+        await context.SaveChangesAsync();
+
+        var service = new UsersApiService(
+            context,
+            new ConfigurationBuilder().AddInMemoryCollection().Build(),
+            new MemoryCache(new MemoryCacheOptions())
+        );
+        var controller = BuildController(service, BuildPrincipal(userId: 1, username: "viewer"));
+
+        var result = await controller.UpdateSettings(new UpdateUserSettingsRequestDto());
+
+        var badRequest = Assert.IsType<BadRequestObjectResult>(result);
+        Assert.Contains("required", badRequest.Value.ToString(), StringComparison.OrdinalIgnoreCase);
+        Assert.Empty(context.UserSettings);
+    }
+
     [Fact]
     public async Task GetUserPage_ReturnsTargetUserAndViewerDrivenFlags()
     {

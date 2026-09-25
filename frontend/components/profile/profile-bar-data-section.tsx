@@ -3,7 +3,7 @@ import { ChevronsUpDown } from "lucide-react"
 import type { ProfileBarItemDto } from "@/lib/profile/types"
 
 function getBarTitle(item: ProfileBarItemDto) {
-  return item.title ?? item.key
+  return item.key?.trim() || item.title?.trim() || "Unknown"
 }
 
 function getBarSubtitle(item: ProfileBarItemDto) {

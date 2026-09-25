@@ -213,6 +213,7 @@ builder.Services.AddScoped<IReportsApiService, ReportsApiService>();
 builder.Services.AddScoped<ISearchApiService, SearchApiService>();
 builder.Services.AddScoped<ITermsApiService, TermsApiService>();
 builder.Services.AddScoped<IUsersApiService, UsersApiService>();
+builder.Services.AddScoped<IMailApiService, MailApiService>();
 builder.Services.AddScoped<DemoDataSeeder>();
 builder.Services.AddHttpContextAccessor();
 
@@ -351,9 +352,14 @@ app.UseStaticFiles(
 app.UseETagger();
 app.UseRouting();
 app.UseCors("NextJs");
+if (app.Configuration.GetSection("Saml2").Exists())
+{
+    app.UseSaml2();
+}
 app.UseAuthentication();
 app.UseAuthorization();
 
+app.MapGet("/healthz", () => Results.Ok(new { status = "ok" })).AllowAnonymous();
 app.MapRazorPages();
 app.MapControllers();
 
