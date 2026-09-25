@@ -1,7 +1,11 @@
 import { render, screen, waitFor } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import { beforeEach, describe, expect, it, vi } from "vitest"
-import { deleteRoleAction, updateRolePermissionAction } from "@/app/settings/actions"
+import {
+  deleteRoleAction,
+  updateRolePermissionAction,
+  createRoleAction,
+} from "@/app/settings/actions"
 import type { PermissionDto, RoleDto } from "@/lib/settings/types"
 import { RolesPanel } from "./roles-panel"
 
@@ -83,6 +87,42 @@ describe("RolesPanel", () => {
 
     await waitFor(() => {
       expect(deleteRoleAction).toHaveBeenCalledWith(10)
+    })
+  })
+
+  it("creates a role successfully", async () => {
+    const user = userEvent.setup()
+    vi.mocked(createRoleAction).mockResolvedValueOnce({
+      data: { id: 99, name: "Executive", permissions: [] },
+    })
+
+    render(<RolesPanel initialRoles={INITIAL_ROLES} permissions={PERMISSIONS} />)
+
+    const input = screen.getByPlaceholderText("executive")
+    await user.type(input, "Executive")
+    await user.click(screen.getByRole("button", { name: /^save$/i }))
+
+    await waitFor(() => {
+      expect(createRoleAction).toHaveBeenCalledWith({ name: "Executive" })
+      expect(input).toHaveValue("")
+    })
+  })
+
+  it("shows forbidden error when create role fails", async () => {
+    const user = userEvent.setup()
+    vi.mocked(createRoleAction).mockResolvedValueOnce({
+      error: "You do not have permission to view this content.",
+    })
+
+    render(<RolesPanel initialRoles={INITIAL_ROLES} permissions={PERMISSIONS} />)
+
+    await user.type(screen.getByPlaceholderText("executive"), "Executive")
+    await user.click(screen.getByRole("button", { name: /^save$/i }))
+
+    await waitFor(() => {
+      expect(
+        screen.getByText("You do not have permission to view this content."),
+      ).toBeInTheDocument()
     })
   })
 })

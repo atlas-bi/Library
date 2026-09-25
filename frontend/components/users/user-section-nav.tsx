@@ -46,7 +46,7 @@ export function getUserTabs(options: {
 
 export function getDefaultUserTab(isCurrentUser: boolean, tabs: UserTabId[]): UserTabId {
   if (isCurrentUser && tabs.includes("stars")) return "stars"
-  if (!isCurrentUser && tabs.includes("activity")) return "activity"
+  if (!isCurrentUser && tabs.includes("run-list")) return "run-list"
   return tabs[0] ?? "stars"
 }
 
