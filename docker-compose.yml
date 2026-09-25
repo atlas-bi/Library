@@ -1,6 +1,6 @@
 services:
   sqlserver:
-    image: mcr.microsoft.com/mssql/server:2025-latest
+    image: mcr.microsoft.com/mssql/server:2022-latest
     container_name: atlas_sqlserver
     environment:
       ACCEPT_EULA: 'Y'
@@ -34,6 +34,8 @@ services:
     depends_on:
       sqlserver:
         condition: service_healthy
+      web:
+        condition: service_healthy
     environment:
       SOLR_PORT: ${SOLR_PORT:-8983}
       HOST: sqlserver
@@ -63,12 +65,14 @@ services:
         SOLR: http://solr:${SOLR_PORT:-8983}
     container_name: atlas_web
     depends_on:
-      - solr
-      - sqlserver
+      sqlserver:
+        condition: service_healthy
     environment:
       PORT: ${WEB_PORT:-5000}
       Demo: ${DEMO:-true}
       SEED_DEMO: ${SEED_DEMO:-true}
+      DEMO_SEED_VERSION: ${DEMO_SEED_VERSION:-2026-08-12-v1}
+      DEMO_SEED_RESET: ${DEMO_SEED_RESET:-false}
       DEMO_ADMIN_USERNAME: ${DEMO_ADMIN_USERNAME:-local-admin}
       Jwt__Key: ${JWT_KEY}
       Jwt__Issuer: ${JWT_ISSUER}
@@ -77,17 +81,24 @@ services:
       - ${WEB_PORT:-5000}
     ports:
       - '${WEB_PORT:-5000}:${WEB_PORT:-5000}'
+    healthcheck:
+      test: ['CMD-SHELL', 'wget -qO- http://127.0.0.1:${WEB_PORT:-5000}/healthz >/dev/null || exit 1']
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
 
   frontend:
     build:
-      context: ./frontend
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: frontend/Dockerfile
       args:
         API_URL: http://web:${WEB_PORT:-5000}
         NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:5000}
     container_name: atlas_frontend
     depends_on:
-      - web
+      web:
+        condition: service_healthy
     environment:
       API_URL: http://web:${WEB_PORT:-5000}
       NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:5000}

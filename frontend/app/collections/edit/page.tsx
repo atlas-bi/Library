@@ -17,7 +17,7 @@ function getSingleValue(value: string | string[] | undefined): string | undefine
 export default async function EditCollectionPage({
   searchParams,
 }: {
-  searchParams: EditSearchParams
+  searchParams: Promise<EditSearchParams>
 }) {
   const token = await getToken()
   if (!token) redirect("/auth/login")
@@ -43,7 +43,8 @@ export default async function EditCollectionPage({
     )
   }
 
-  const idRaw = getSingleValue(searchParams.id)
+  const resolvedSearchParams = await searchParams
+  const idRaw = getSingleValue(resolvedSearchParams.id)
   const id = idRaw ? Number(idRaw) : NaN
   if (!Number.isFinite(id) || id <= 0) {
     return (

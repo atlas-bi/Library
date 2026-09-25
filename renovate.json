@@ -6,14 +6,16 @@
     ":ignoreUnstable",
     ":enableVulnerabilityAlertsWithLabel(security)",
     ":rebaseStalePrs",
-    ":npm",
     "security:minimumReleaseAgeNpm"
   ],
   "ignoreDeps": ["chart.js", "open", "dompurify", "gulp-autoprefixer"],
   "baseBranchPatterns": ["dev"],
   "bumpVersion": "patch",
-  "commitMessagePrefix": "chore(deps)",
+  "automergeType": "pr",
+  "platformAutomerge": true,
+  "commitMessagePrefix": "chore(deps): ",
   "labels": ["maintenance", "renovate"],
+  "minimumReleaseAge": "1 day",
   "packageRules": [
     {
       "matchUpdateTypes": ["pin", "digest", "minor", "patch"],

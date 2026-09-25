@@ -1,11 +1,11 @@
 import Link from "next/link"
 import { redirect } from "next/navigation"
-import { ReportEditForm } from "@/components/reports/report-edit-form"
-import { ReportImageUpload } from "@/components/reports/report-image-upload"
+import { ReportEditWizard } from "@/components/reports/report-edit-wizard"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { getCurrentUser, getToken, hasPermission } from "@/lib/auth"
-import { getReportDetailById } from "@/lib/reports/api"
+import { getReportDetailById, getReportLookups } from "@/lib/reports/api"
+import type { ReportEditLookupOptions } from "@/lib/reports/types"
 
 type EditSearchParams = { id?: string }
 
@@ -15,7 +15,12 @@ function getSingleValue(value: string | string[] | undefined): string | undefine
   return undefined
 }
 
-export default async function EditReportPage({ searchParams }: { searchParams: EditSearchParams }) {
+export default async function EditReportPage({
+  searchParams,
+}: {
+  searchParams: Promise<EditSearchParams>
+}) {
+  const resolvedSearchParams = await searchParams
   const token = await getToken()
   if (!token) redirect("/auth/login")
 
@@ -40,7 +45,7 @@ export default async function EditReportPage({ searchParams }: { searchParams: E
     )
   }
 
-  const idRaw = getSingleValue(searchParams.id)
+  const idRaw = getSingleValue(resolvedSearchParams.id)
   const id = idRaw ? Number(idRaw) : NaN
   if (!Number.isFinite(id) || id <= 0) {
     return (
@@ -48,7 +53,7 @@ export default async function EditReportPage({ searchParams }: { searchParams: E
         <h1 className="text-2xl font-bold">Missing report</h1>
         <p className="mt-2 text-sm text-muted-foreground">Provide a valid report id in the URL.</p>
         <Button asChild className="mt-6" variant="outline">
-          <Link href="/">Back to home</Link>
+          <Link href="/reports">Back to reports</Link>
         </Button>
       </div>
     )
@@ -65,7 +70,7 @@ export default async function EditReportPage({ searchParams }: { searchParams: E
           </CardHeader>
           <CardContent>
             <Button asChild variant="outline">
-              <Link href="/">Back to home</Link>
+              <Link href="/reports">Back to reports</Link>
             </Button>
           </CardContent>
         </Card>
@@ -93,30 +98,45 @@ export default async function EditReportPage({ searchParams }: { searchParams: E
     )
   }
 
-  const title = report.displayTitle || report.displayName || report.name
+  const [
+    organizationalValues,
+    runFrequencies,
+    fragilities,
+    maintenanceSchedules,
+    fragilityTags,
+    maintenanceLogStatuses,
+  ] = await Promise.all([
+    getReportLookups("org-value"),
+    getReportLookups("run-freq"),
+    getReportLookups("fragility"),
+    getReportLookups("maint-sched"),
+    getReportLookups("ro-fragility"),
+    getReportLookups("maint-log-stat"),
+  ])
+
+  const lookupOptions: ReportEditLookupOptions = {
+    organizationalValues: organizationalValues.data ?? [],
+    runFrequencies: runFrequencies.data ?? [],
+    fragilities: fragilities.data ?? [],
+    maintenanceSchedules: maintenanceSchedules.data ?? [],
+    fragilityTags: fragilityTags.data ?? [],
+    maintenanceLogStatuses: maintenanceLogStatuses.data ?? [],
+  }
 
   return (
-    <div className="mx-auto max-w-5xl space-y-6 px-4 py-8">
-      <div className="text-sm text-muted-foreground">
+    <div className="mx-auto max-w-5xl px-4 py-8">
+      <div className="mb-4 text-sm text-muted-foreground">
         <Link href={`/reports?id=${report.id}`} className="hover:underline">
-          {title}
+          {report.displayTitle || report.displayName || report.name}
         </Link>
         <span className="px-1">/</span>
         <span>Edit documentation</span>
       </div>
-      <ReportEditForm
-        reportId={report.id}
-        initial={report}
+      <ReportEditWizard
+        report={report}
         cancelHref={`/reports?id=${report.id}`}
+        lookupOptions={lookupOptions}
       />
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-base">Images</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <ReportImageUpload reportId={report.id} />
-        </CardContent>
-      </Card>
     </div>
   )
 }

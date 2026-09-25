@@ -49,17 +49,44 @@ namespace Atlas_Web.Pages.Groups
         public IEnumerable<UserList> GroupUsers { get; set; }
         public IEnumerable<ReportList> GroupReports { get; set; }
         public GroupItem Group { get; set; }
+        public IReadOnlyList<GroupItem> Groups { get; set; } = Array.Empty<GroupItem>();
+        public bool IsListView { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(int id)
+        public async Task<IActionResult> OnGetAsync(int? id)
         {
+            if (!id.HasValue || id.Value <= 0)
+            {
+                IsListView = true;
+                Groups = await _cache.GetOrCreateAsync<List<GroupItem>>(
+                    "groups-list",
+                    cacheEntry =>
+                    {
+                        cacheEntry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20);
+                        return _context.UserGroups.AsNoTracking()
+                            .OrderBy(x => x.GroupName)
+                            .Select(x => new GroupItem
+                            {
+                                Id = x.GroupId,
+                                Email = x.GroupEmail,
+                                Type = x.GroupType,
+                                Name = x.GroupName,
+                                Source = x.GroupSource,
+                            })
+                            .ToListAsync();
+                    }
+                );
+
+                return Page();
+            }
+
             Group = await _cache.GetOrCreateAsync<GroupItem>(
-                "Group-" + id,
+                "Group-" + id.Value,
                 cacheEntry =>
                 {
                     cacheEntry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20);
                     return (
                         from a in _context.UserGroups
-                        where a.GroupId == id
+                        where a.GroupId == id.Value
                         select new GroupItem
                         {
                             Id = a.GroupId,
@@ -72,15 +99,20 @@ namespace Atlas_Web.Pages.Groups
                 }
             );
 
+            if (Group == null)
+            {
+                return NotFound();
+            }
+
             // users w/ group
             GroupUsers = await _cache.GetOrCreateAsync<List<UserList>>(
-                "GroupUsers-" + id,
+                "GroupUsers-" + id.Value,
                 cacheEntry =>
                 {
                     cacheEntry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20);
                     return (
                         from a in _context.UserGroupsMemberships
-                        where a.GroupId == id
+                        where a.GroupId == id.Value
                         select new UserList
                         {
                             Id = a.UserId,
@@ -95,13 +127,13 @@ namespace Atlas_Web.Pages.Groups
             );
             // reports w/ group
             GroupReports = await _cache.GetOrCreateAsync<List<ReportList>>(
-                "GroupReports-" + id,
+                "GroupReports-" + id.Value,
                 cacheEntry =>
                 {
                     cacheEntry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20);
                     return (
                         from a in _context.ReportGroupsMemberships
-                        where a.GroupId == id
+                        where a.GroupId == id.Value
                         select new ReportList
                         {
                             Id = a.ReportId,
