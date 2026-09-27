@@ -76,6 +76,32 @@ describe("ProfileFullView", () => {
     })
   })
 
+  it("renders error message when action returns not_found for term type", async () => {
+    vi.mocked(loadProfileAnalyticsAction).mockResolvedValue({
+      data: null,
+      error: "not_found",
+    })
+
+    render(<ProfileFullView id={999} type="term" />)
+
+    await waitFor(() => {
+      expect(screen.getByText(/unable to load profile analytics/i)).toBeDefined()
+    })
+  })
+
+  it("renders error message when action returns not_found for collection type", async () => {
+    vi.mocked(loadProfileAnalyticsAction).mockResolvedValue({
+      data: null,
+      error: "not_found",
+    })
+
+    render(<ProfileFullView id={999} type="collection" />)
+
+    await waitFor(() => {
+      expect(screen.getByText(/unable to load profile analytics/i)).toBeDefined()
+    })
+  })
+
   it("renders error message when action returns forbidden", async () => {
     vi.mocked(loadProfileAnalyticsAction).mockResolvedValue({
       data: null,
@@ -217,8 +243,14 @@ describe("ProfileFullView", () => {
     expect(screen.queryByRole("link", { name: "Bob Star" })).toBeNull()
   })
 
-  it("renders correctly without error for term and collection types", () => {
+  it("renders correctly without error for term type", () => {
     render(<ProfileFullView id={1} type="term" initialData={mockData} />)
+    expect(screen.queryByText(/unable to load profile analytics/i)).toBeNull()
+    expect(screen.getByText("42")).toBeDefined()
+  })
+
+  it("renders correctly without error for collection type", () => {
+    render(<ProfileFullView id={1} type="collection" initialData={mockData} />)
     expect(screen.queryByText(/unable to load profile analytics/i)).toBeNull()
     expect(screen.getByText("42")).toBeDefined()
   })
