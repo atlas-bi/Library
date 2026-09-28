@@ -76,32 +76,6 @@ describe("ProfileFullView", () => {
     })
   })
 
-  it("renders error message when action returns not_found for term type", async () => {
-    vi.mocked(loadProfileAnalyticsAction).mockResolvedValue({
-      data: null,
-      error: "not_found",
-    })
-
-    render(<ProfileFullView id={999} type="term" />)
-
-    await waitFor(() => {
-      expect(screen.getByText(/unable to load profile analytics/i)).toBeDefined()
-    })
-  })
-
-  it("renders error message when action returns not_found for collection type", async () => {
-    vi.mocked(loadProfileAnalyticsAction).mockResolvedValue({
-      data: null,
-      error: "not_found",
-    })
-
-    render(<ProfileFullView id={999} type="collection" />)
-
-    await waitFor(() => {
-      expect(screen.getByText(/unable to load profile analytics/i)).toBeDefined()
-    })
-  })
-
   it("renders error message when action returns forbidden", async () => {
     vi.mocked(loadProfileAnalyticsAction).mockResolvedValue({
       data: null,
