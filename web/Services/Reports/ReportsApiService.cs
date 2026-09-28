@@ -120,7 +120,9 @@ public sealed partial class ReportsApiService : IReportsApiService
         var query = _context
             .ReportObjects.AsNoTracking()
             .Where(x => x.DefaultVisibilityYn == "Y")
-            .Where(x => (x.ReportObjectDoc.Hidden ?? "N") == "N");
+            .Where(x =>
+                x.ReportObjectDoc == null || (x.ReportObjectDoc.Hidden ?? "N") == "N"
+            );
 
         var total = await query.CountAsync(cancellationToken);
         var reports = await query
