@@ -85,4 +85,27 @@ describe("loadProfileAnalyticsAction", () => {
       subscriptions: [],
     })
   })
+
+  test("returns an empty shell for collection profiles even when chart data is missing", async () => {
+    vi.mocked(getProfileChart).mockResolvedValueOnce({ data: null, error: "not_found" })
+    vi.mocked(getProfileUsers).mockResolvedValueOnce({ data: [], error: "not_found" })
+    vi.mocked(getProfileReports).mockResolvedValueOnce({ data: [], error: "not_found" })
+    vi.mocked(getProfileFails).mockResolvedValueOnce({ data: [], error: "not_found" })
+    vi.mocked(getProfileRunList).mockResolvedValueOnce({ data: [], error: null })
+    vi.mocked(getProfileStars).mockResolvedValueOnce({ data: [], error: "not_found" })
+    vi.mocked(getProfileSubscriptions).mockResolvedValueOnce({ data: [], error: null })
+
+    const result = await loadProfileAnalyticsAction(1, "collection")
+
+    expect(result.error).toBeNull()
+    expect(result.data).toEqual({
+      chart: { runs: 0, users: 0, runTime: 0, history: [] },
+      users: [],
+      reports: [],
+      fails: [],
+      runList: [],
+      stars: [],
+      subscriptions: [],
+    })
+  })
 })
