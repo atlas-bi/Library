@@ -146,19 +146,24 @@ function renderHighlightSnippet(snippet: string) {
   return nodes
 }
 
-export default async function SearchPage({ searchParams }: { searchParams: SearchPageParams }) {
+export default async function SearchPage({
+  searchParams,
+}: {
+  searchParams: Promise<SearchPageParams>
+}) {
   const token = await getToken()
   if (!token) redirect("/auth/login")
 
   const user = await getCurrentUser()
   const canUseAdvancedSearch = !!user && hasPermission(user, "Show Advanced Search")
+  const resolvedSearchParams = await searchParams
 
-  const q = getSingleValue(searchParams.q) ?? ""
-  const type = normalizeSearchType(getSingleValue(searchParams.type))
-  const page = asPositiveInt(getSingleValue(searchParams.page), 1)
-  const pageSize = asPositiveInt(getSingleValue(searchParams.pageSize), 20)
-  const field = getSingleValue(searchParams.field)
-  const advancedRequested = getSingleValue(searchParams.advanced) === "Y"
+  const q = getSingleValue(resolvedSearchParams.q) ?? ""
+  const type = normalizeSearchType(getSingleValue(resolvedSearchParams.type))
+  const page = asPositiveInt(getSingleValue(resolvedSearchParams.page), 1)
+  const pageSize = asPositiveInt(getSingleValue(resolvedSearchParams.pageSize), 20)
+  const field = getSingleValue(resolvedSearchParams.field)
+  const advancedRequested = getSingleValue(resolvedSearchParams.advanced) === "Y"
 
   const requestParams: SearchPageParams = {
     q,
@@ -171,7 +176,7 @@ export default async function SearchPage({ searchParams }: { searchParams: Searc
   if (canUseAdvancedSearch && advancedRequested) requestParams.advanced = "Y"
 
   // Preserve all dynamic facet filters by passing every non-reserved param through.
-  Object.entries(searchParams).forEach(([key, value]) => {
+  Object.entries(resolvedSearchParams).forEach(([key, value]) => {
     if (!RESERVED_KEYS.has(key)) {
       requestParams[key] = value
     }
@@ -283,7 +288,7 @@ export default async function SearchPage({ searchParams }: { searchParams: Searc
         </Card>
 
         {data.facets.map((facet) => {
-          const selected = new Set(getFacetValues(searchParams, facet.key))
+          const selected = new Set(getFacetValues(resolvedSearchParams, facet.key))
           return (
             <Card key={facet.key}>
               <CardHeader>

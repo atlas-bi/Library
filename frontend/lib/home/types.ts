@@ -26,10 +26,20 @@ export type HomePanelBase = {
   emptyMessage?: string
 }
 
+export type HomeSharedWithMeItem = {
+  id: number
+  name: string
+  href?: string
+  sharedFrom?: string
+  shareDate?: string
+}
+
 export type HomeStarCard = {
   id: number
   href: string
   title: string
+  itemType: string
+  folderId?: number | null
   typeLabel: string
   description: string
   thumbnailUrl?: string
@@ -57,6 +67,7 @@ export type HomeStarsPanel = HomePanelBase & {
   folders: Array<{ id: string; label: string; count: number }>
   filters: Array<{ id: string; label: string }>
   cards: HomeStarCard[]
+  sharedWithMe?: HomeSharedWithMeItem[]
   isSuggestionFallback?: boolean
   suggestionHeading?: string
 }

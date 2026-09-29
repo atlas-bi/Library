@@ -85,7 +85,7 @@ public sealed class ProfileApiService : IProfileApiService
 
     private sealed class ProfileSubqueryResult
     {
-        public IQueryable<ProfileRunRow> Flattened { get; init; }
+        public IQueryable<ProfileRunRow> Filtered { get; init; }
         public IQueryable<IGrouping<DateTime, ProfileRunRow>> Grouped { get; init; }
         public string DateFormat { get; init; }
     }
@@ -106,7 +106,7 @@ public sealed class ProfileApiService : IProfileApiService
     {
         var query = ToQueryOptions(request);
         var subqueryResult = await BuildSubqueriesAsync(query, cancellationToken);
-        var subquery = subqueryResult.Flattened;
+        var subquery = subqueryResult.Filtered;
         var subqueryGroup = subqueryResult.Grouped;
         var dateFormat = subqueryResult.DateFormat;
 
@@ -144,7 +144,7 @@ public sealed class ProfileApiService : IProfileApiService
         CancellationToken cancellationToken
     )
     {
-        var subquery = (await BuildSubqueriesAsync(ToQueryOptions(request), cancellationToken)).Flattened;
+        var subquery = (await BuildSubqueriesAsync(ToQueryOptions(request), cancellationToken)).Filtered;
 
         var total = await subquery.SumAsync(x => x.Runs, cancellationToken);
         return await (
@@ -173,7 +173,7 @@ public sealed class ProfileApiService : IProfileApiService
         CancellationToken cancellationToken
     )
     {
-        var subquery = (await BuildSubqueriesAsync(ToQueryOptions(request), cancellationToken)).Flattened;
+        var subquery = (await BuildSubqueriesAsync(ToQueryOptions(request), cancellationToken)).Filtered;
 
         var total = await subquery.SumAsync(x => x.Runs, cancellationToken);
         return await (
@@ -206,29 +206,36 @@ public sealed class ProfileApiService : IProfileApiService
         CancellationToken cancellationToken
     )
     {
-        var subquery = (await BuildSubqueriesAsync(ToQueryOptions(request), cancellationToken)).Flattened;
+        var subquery = (await BuildSubqueriesAsync(ToQueryOptions(request), cancellationToken)).Filtered;
 
         var total = await subquery.SumAsync(x => x.Runs, cancellationToken);
-        return await (
+        var failures = await (
             from a in subquery
             where a.RunStatus != "Success"
             group a by a.RunStatus into grp
-            select new ProfileBarItemDto
+            select new
             {
-                Key = SplitCamelCaseRegex.Replace(
-                    RsPrefixRegex.Replace(grp.Key, string.Empty),
-                    " $1"
-                ),
+                Status = grp.Key,
                 Count = grp.Sum(x => x.Runs),
-                Percent = total == 0 ? 0 : (double)grp.Sum(x => x.Runs) / total,
-                TitleOne = "Failed Runs",
-                TitleTwo = "Fails",
             }
         )
             .OrderByDescending(x => x.Count)
             .Take(20)
             .AsNoTracking()
             .ToListAsync(cancellationToken);
+
+        return failures.Select(x => new ProfileBarItemDto
+            {
+                Key = SplitCamelCaseRegex.Replace(
+                    RsPrefixRegex.Replace(x.Status, string.Empty),
+                    " $1"
+                ),
+                Count = x.Count,
+                Percent = total == 0 ? 0 : (double)x.Count / total,
+                TitleOne = "Failed Runs",
+                TitleTwo = "Fails",
+            })
+            .ToList();
     }
 
     public async Task<IReadOnlyList<ProfileRunListItemDto>> GetRunListAsync(
@@ -390,12 +397,10 @@ public sealed class ProfileApiService : IProfileApiService
                 DisplayTitle = r.DisplayTitle,
             };
 
-        var (grouped, dateFormat) = BuildDateGrouping(joined, query, start, end);
-
-        var flattened = grouped.SelectMany(x => x);
+        var (filtered, grouped, dateFormat) = BuildDateGrouping(joined, query, start, end);
         return new ProfileSubqueryResult
         {
-            Flattened = flattened,
+            Filtered = filtered,
             Grouped = grouped,
             DateFormat = dateFormat,
         };
@@ -659,6 +664,7 @@ public sealed class ProfileApiService : IProfileApiService
     }
 
     private static (
+        IQueryable<ProfileRunRow> Filtered,
         IQueryable<IGrouping<DateTime, ProfileRunRow>> Grouped,
         string DateFormat
     ) BuildDateGrouping(
@@ -672,25 +678,34 @@ public sealed class ProfileApiService : IProfileApiService
 
         if (range < 172800)
         {
+            var filtered = joined.Where(x =>
+                x.RunStartTime_Hour >= start && x.RunStartTime_Hour <= end
+            );
             return (
-                joined.Where(x => x.RunStartTime_Hour >= start && x.RunStartTime_Hour <= end)
-                    .GroupBy(x => x.RunStartTime_Hour),
+                filtered,
+                filtered.GroupBy(x => x.RunStartTime_Hour),
                 "h tt"
             );
         }
 
         if (range < 31536000)
         {
+            var filtered = joined.Where(x =>
+                x.RunStartTime_Day >= start && x.RunStartTime_Day <= end
+            );
             return (
-                joined.Where(x => x.RunStartTime_Day >= start && x.RunStartTime_Day <= end)
-                    .GroupBy(x => x.RunStartTime_Day),
+                filtered,
+                filtered.GroupBy(x => x.RunStartTime_Day),
                 range < 691200 ? "ddd M/d" : "MMM d"
             );
         }
 
+        var monthly = joined.Where(x =>
+            x.RunStartTime_Month >= start && x.RunStartTime_Month <= end
+        );
         return (
-            joined.Where(x => x.RunStartTime_Month >= start && x.RunStartTime_Month <= end)
-                .GroupBy(x => x.RunStartTime_Month),
+            monthly,
+            monthly.GroupBy(x => x.RunStartTime_Month),
             "MMM yy"
         );
     }

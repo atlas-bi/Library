@@ -23,7 +23,9 @@ function HistoryLinks({ items }: { items: UserHistoryItem[] }) {
           ) : (
             item.name?.trim() || "Untitled"
           )}
-          {item.date ? <span className="text-[var(--atlas-home-muted)]"> · {item.date}</span> : null}
+          {item.date ? (
+            <span className="text-[var(--atlas-home-muted)]"> · {item.date}</span>
+          ) : null}
         </li>
       ))}
     </ul>

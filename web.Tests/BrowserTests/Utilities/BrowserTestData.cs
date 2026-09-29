@@ -23,8 +23,10 @@ public sealed class BrowsersTestData : IEnumerable<object[]>
         string userName = Environment.GetEnvironmentVariable("BROWSERSTACK_USERNAME");
         string accessToken = Environment.GetEnvironmentVariable("BROWSERSTACK_ACCESS_KEY");
 
-        Assert.NotNull(userName);
-        Assert.NotNull(accessToken);
+        if (string.IsNullOrWhiteSpace(userName) || string.IsNullOrWhiteSpace(accessToken))
+        {
+            return default;
+        }
 
         return (userName, accessToken);
     }

@@ -1,22 +1,29 @@
 import { render, screen } from "@testing-library/react"
+import type { ReactNode } from "react"
 import { describe, expect, it } from "vitest"
 import { HomeStarsPanelView } from "@/components/home/home-stars-panel"
+import { TooltipProvider } from "@/components/ui/tooltip"
+
+function renderWithTooltipProvider(ui: ReactNode) {
+  return render(<TooltipProvider>{ui}</TooltipProvider>)
+}
 
 describe("HomeStarsPanelView", () => {
   it("renders richer card content with tags, image, and footer actions", () => {
-    render(
+    renderWithTooltipProvider(
       <HomeStarsPanelView
         panel={{
           kind: "stars",
           title: "Stars",
           folders: [{ id: "all", label: "All", count: 1 }],
-          filters: [{ id: "reports", label: "Reports" }],
+          filters: [{ id: "report", label: "Reports" }],
           cards: [
             {
               id: 7,
               href: "/reports?id=7",
               title: "Executive Dashboard",
-              typeLabel: "Rpt",
+              itemType: "report",
+              typeLabel: "Report",
               description: "Leadership reporting summary...",
               thumbnailUrl: "http://localhost:5000/data/img?handler=Thumb&id=7&size=128x128",
               tags: [
@@ -47,11 +54,11 @@ describe("HomeStarsPanelView", () => {
     expect(screen.getByRole("link", { name: "Run report" })).toBeInTheDocument()
     expect(screen.getByRole("link", { name: "Edit" })).toBeInTheDocument()
     expect(screen.getByRole("link", { name: "Manage" })).toBeInTheDocument()
-    expect(screen.getByLabelText("Open report profile")).toBeInTheDocument()
+    expect(screen.getByRole("button", { name: "Open report profile" })).toBeInTheDocument()
   })
 
   it("renders the plain empty-state message when there are no favorites or suggestions", () => {
-    render(
+    renderWithTooltipProvider(
       <HomeStarsPanelView
         panel={{
           kind: "stars",
@@ -70,7 +77,7 @@ describe("HomeStarsPanelView", () => {
   })
 
   it("renders the Razor-style suggestion fallback when suggested reports are present", () => {
-    render(
+    renderWithTooltipProvider(
       <HomeStarsPanelView
         panel={{
           kind: "stars",
@@ -82,6 +89,7 @@ describe("HomeStarsPanelView", () => {
               id: 9,
               href: "/reports?id=9",
               title: "Operations Summary",
+              itemType: "report",
               typeLabel: "Report",
               description: "Open to view details.",
               canOpenDetails: true,
@@ -98,5 +106,73 @@ describe("HomeStarsPanelView", () => {
       screen.getByText("You don't have any favorites! Here's some reports you've used."),
     ).toBeInTheDocument()
     expect(screen.getByText("Operations Summary")).toBeInTheDocument()
+  })
+
+  it("renders the Shared With Me rail", () => {
+    renderWithTooltipProvider(
+      <HomeStarsPanelView
+        panel={{
+          kind: "stars",
+          title: "Stars",
+          folders: [{ id: "all", label: "All", count: 1 }],
+          filters: [],
+          cards: [
+            {
+              id: 16,
+              href: "/reports?id=16",
+              title: "Daily Emergency Department Census",
+              itemType: "report",
+              typeLabel: "Report",
+              description: "Census report",
+            },
+          ],
+          sharedWithMe: [
+            {
+              id: 1,
+              name: "Shared Census Link",
+              href: "/reports?id=16",
+              sharedFrom: "Maya Patel",
+            },
+          ],
+        }}
+      />,
+    )
+
+    expect(screen.getByText("Shared With Me")).toBeInTheDocument()
+    expect(screen.getByRole("link", { name: "Shared Census Link" })).toBeInTheDocument()
+  })
+
+  it("applies collection card styling distinct from report cards", () => {
+    const { container } = renderWithTooltipProvider(
+      <HomeStarsPanelView
+        panel={{
+          kind: "stars",
+          title: "Stars",
+          folders: [{ id: "all", label: "All", count: 2 }],
+          filters: [],
+          cards: [
+            {
+              id: 16,
+              href: "/reports?id=16",
+              title: "Daily Emergency Department Census",
+              itemType: "report",
+              typeLabel: "Report",
+              description: "Census report",
+            },
+            {
+              id: 1,
+              href: "/collections?id=1",
+              title: "Patient Flow Command Center",
+              itemType: "collection",
+              typeLabel: "Collection",
+              description: "Collection overview",
+            },
+          ],
+        }}
+      />,
+    )
+
+    expect(container.querySelector(".atlas-snippet-gold-card")).toBeTruthy()
+    expect(container.querySelector(".atlas-home-card")).toBeTruthy()
   })
 })
