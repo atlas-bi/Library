@@ -25,20 +25,41 @@ function TasksTable({
   )
 }
 
-function isPastDue(dateText: string): boolean {
+const SIX_MONTH_REVIEW_HINT =
+  "Reports with red outline have not been reviewed in the last 6 months."
+
+export function parseTaskPanelDate(dateText: string): Date | null {
   const match = /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/.exec(dateText.trim())
-  if (!match) return false
+  if (!match) return null
   const month = Number(match[1])
   const day = Number(match[2])
   const year = Number(match[3])
-  const due = new Date(year, month - 1, day)
-  if (Number.isNaN(due.getTime())) return false
-  const today = new Date()
-  today.setHours(0, 0, 0, 0)
-  return due < today
+  const parsed = new Date(year, month - 1, day)
+  if (Number.isNaN(parsed.getTime())) return null
+  parsed.setHours(0, 0, 0, 0)
+  return parsed
 }
 
-function MaintenanceList({ items, hint }: { items: TaskMaintenanceReportDto[]; hint: string }) {
+function isBeforeToday(date: Date): boolean {
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
+  return date < today
+}
+
+export function isOlderThanSixMonths(date: Date, now = new Date()): boolean {
+  const cutoff = new Date(now)
+  cutoff.setMonth(cutoff.getMonth() - 6)
+  cutoff.setHours(0, 0, 0, 0)
+  return date < cutoff
+}
+
+function MaintenanceDueList({
+  items,
+  hint,
+}: {
+  items: TaskMaintenanceReportDto[]
+  hint: string
+}) {
   return (
     <div className="space-y-3">
       <p className="text-sm text-[var(--atlas-home-muted)]">{hint}</p>
@@ -46,26 +67,74 @@ function MaintenanceList({ items, hint }: { items: TaskMaintenanceReportDto[]; h
         <p className="text-sm text-[var(--atlas-home-muted)]">No reports to show.</p>
       ) : (
         <ul className="space-y-2">
-          {items.map((item) => (
-            <li key={item.reportId} className="text-sm">
-              <Link
-                href={`/reports?id=${item.reportId}`}
-                className="font-medium text-[var(--atlas-home-link)] hover:underline"
-              >
-                {item.name}
-              </Link>
-              <span className="text-[var(--atlas-home-muted)]">
-                {" "}
-                ·{" "}
-                {isPastDue(item.date) ? (
-                  <span className="text-red-600">Due on {item.date}.</span>
-                ) : (
-                  <>Due on {item.date}.</>
-                )}{" "}
-                Last updated/maintained by {item.user}
-              </span>
-            </li>
-          ))}
+          {items.map((item) => {
+            const parsed = parseTaskPanelDate(item.date)
+            const pastDue = parsed ? isBeforeToday(parsed) : false
+            return (
+              <li key={item.reportId} className="text-sm">
+                <Link
+                  href={`/reports?id=${item.reportId}`}
+                  className="font-medium text-[var(--atlas-home-link)] hover:underline"
+                >
+                  {item.name}
+                </Link>
+                <span className="text-[var(--atlas-home-muted)]">
+                  {" "}
+                  ·{" "}
+                  {pastDue ? (
+                    <span className="text-red-600">Due on {item.date}.</span>
+                  ) : (
+                    <>Due on {item.date}.</>
+                  )}{" "}
+                  Last updated/maintained by {item.user}
+                </span>
+              </li>
+            )
+          })}
+        </ul>
+      )}
+    </div>
+  )
+}
+
+function LastMaintainedOnList({
+  items,
+  showPastDueWhenOlderThanSixMonths,
+}: {
+  items: TaskMaintenanceReportDto[]
+  showPastDueWhenOlderThanSixMonths: boolean
+}) {
+  return (
+    <div className="space-y-3">
+      <p className="text-sm text-[var(--atlas-home-muted)]">{SIX_MONTH_REVIEW_HINT}</p>
+      {items.length === 0 ? (
+        <p className="text-sm text-[var(--atlas-home-muted)]">No reports to show.</p>
+      ) : (
+        <ul className="space-y-2">
+          {items.map((item) => {
+            const parsed = parseTaskPanelDate(item.date)
+            const pastDue =
+              showPastDueWhenOlderThanSixMonths && parsed
+                ? isOlderThanSixMonths(parsed)
+                : false
+            return (
+              <li key={item.reportId} className="text-sm">
+                {pastDue ? (
+                  <span className="text-red-600">Past Due </span>
+                ) : null}
+                <Link
+                  href={`/reports?id=${item.reportId}`}
+                  className="font-medium text-[var(--atlas-home-link)] hover:underline"
+                >
+                  {item.name}
+                </Link>
+                <span className="text-[var(--atlas-home-muted)]">
+                  {" "}
+                  · Last updated/maintained by {item.user} on {item.date}
+                </span>
+              </li>
+            )
+          })}
         </ul>
       )}
     </div>
@@ -153,7 +222,7 @@ export function UnusedPanel({ items }: { items: TaskUnusedReportDto[] }) {
 
 export function MaintenanceRequiredPanel({ items }: { items: TaskMaintenanceReportDto[] }) {
   return (
-    <MaintenanceList
+    <MaintenanceDueList
       items={items}
       hint="Reports with red outline have maintenance that is past due."
     />
@@ -161,21 +230,11 @@ export function MaintenanceRequiredPanel({ items }: { items: TaskMaintenanceRepo
 }
 
 export function AuditPanel({ items }: { items: TaskMaintenanceReportDto[] }) {
-  return (
-    <MaintenanceList
-      items={items}
-      hint="Reports on an audit-only maintenance schedule that are due within two months."
-    />
-  )
+  return <LastMaintainedOnList items={items} showPastDueWhenOlderThanSixMonths={true} />
 }
 
 export function MissingSchedulePanel({ items }: { items: TaskMaintenanceReportDto[] }) {
-  return (
-    <MaintenanceList
-      items={items}
-      hint="Visible reports with no maintenance schedule and a due date within two months."
-    />
-  )
+  return <LastMaintainedOnList items={items} showPastDueWhenOlderThanSixMonths={false} />
 }
 
 export function NotInAnalyticsPanel({ items }: { items: TaskAnalyticsReportDto[] }) {
@@ -239,14 +298,16 @@ export function NotInAnalyticsPanel({ items }: { items: TaskAnalyticsReportDto[]
 function UndocumentedTable({
   items,
   hint,
+  ariaLabel,
 }: {
   items: TaskUndocumentedReportDto[]
   hint: string
+  ariaLabel: string
 }) {
   return (
     <div className="space-y-3">
       <p className="text-sm text-[var(--atlas-home-muted)]">{hint}</p>
-      <TasksTable ariaLabel="undocumented reports">
+      <TasksTable ariaLabel={ariaLabel}>
         <thead className="bg-transparent text-[var(--atlas-home-title)]">
           <tr>
             <th className="px-4 py-3 font-semibold">Report Name</th>
@@ -285,6 +346,7 @@ export function TopUndocumentedPanel({ items }: { items: TaskUndocumentedReportD
     <UndocumentedTable
       items={items}
       hint="Top 60 Undocumented Reports (Workbench, SSRS, Dashboard, and Crystal)"
+      ariaLabel="undocumented reports"
     />
   )
 }
@@ -293,7 +355,8 @@ export function NewUndocumentedPanel({ items }: { items: TaskUndocumentedReportD
   return (
     <UndocumentedTable
       items={items}
-      hint="Undocumented reports modified in the last month."
+      hint="New (edited) Undocumented Reports (Workbench, SSRS, Dashboard, and Crystal)"
+      ariaLabel="new undocumented reports"
     />
   )
 }
