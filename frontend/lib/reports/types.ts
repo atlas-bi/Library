@@ -93,6 +93,7 @@ export type ReportDetail = {
     type?: string | null
     url?: string | null
     lastModified?: string | null
+    attachmentCount?: number | null
   }>
   parents?: Array<{
     id: number
@@ -101,6 +102,7 @@ export type ReportDetail = {
     type?: string | null
     url?: string | null
     lastModified?: string | null
+    attachmentCount?: number | null
   }>
 
   // document-related
@@ -113,6 +115,8 @@ export type ReportDetail = {
     name?: string | null
     language?: string | null
     sourceServer?: string | null
+    /** API field name for query text */
+    query?: string | null
     source?: string | null
   }>
   componentQueries?: Array<{
@@ -120,6 +124,7 @@ export type ReportDetail = {
     name?: string | null
     language?: string | null
     sourceServer?: string | null
+    query?: string | null
     source?: string | null
   }>
   terms?: Array<{ id: number; name?: string | null; summary?: string | null }>
@@ -142,6 +147,13 @@ export type ReportMaintenanceLog = {
   maintainer?: PeopleRef | null
 }
 
+export type ReportServiceRequest = {
+  id: number
+  ticketNumber?: string | null
+  description?: string | null
+  ticketUrl?: string | null
+}
+
 export type ReportDocument = {
   gitLabProjectUrl?: string | null
   developerDescription?: string | null
@@ -161,6 +173,7 @@ export type ReportDocument = {
   updatedBy?: PeopleRef | null
   fragilityTags?: Array<{ id: number; name?: string | null }>
   maintenanceLogs?: ReportMaintenanceLog[]
+  serviceRequests?: ReportServiceRequest[]
 }
 
 export type ReportListItem = {
