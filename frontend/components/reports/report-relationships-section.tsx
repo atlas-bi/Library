@@ -1,34 +1,16 @@
 import Link from "next/link"
+import { CollectionSnippetCard } from "@/components/snippets/collection-snippet-card"
+import { ReportSnippetCard } from "@/components/snippets/report-snippet-card"
 import type { ReportDetail } from "@/lib/reports/types"
 
-function RelationshipList({
-  title,
-  items,
-}: {
-  title: string
-  items: Array<{ id?: number; name?: string | null; displayTitle?: string | null; type?: string | null }>
-}) {
-  if (items.length === 0) return null
-
-  return (
-    <div className="space-y-2">
-      <h3 className="text-base font-semibold">{title}</h3>
-      <ul className="space-y-1 text-sm">
-        {items.map((item) => (
-          <li key={`${title}-${item.id}`}>
-            {item.id ? (
-              <Link href={`/reports?id=${item.id}`} className="text-link hover:underline">
-                {item.displayTitle ?? item.name ?? `Report ${item.id}`}
-              </Link>
-            ) : (
-              item.name
-            )}
-            {item.type ? <span className="text-muted-foreground"> · {item.type}</span> : null}
-          </li>
-        ))}
-      </ul>
-    </div>
-  )
+function toReportSnippet(
+  item: NonNullable<ReportDetail["parents"]>[number],
+): Parameters<typeof ReportSnippetCard>[0]["report"] {
+  return {
+    id: item.id,
+    name: item.displayTitle ?? item.name,
+    attachmentCount: item.attachmentCount ?? 0,
+  }
 }
 
 export function ReportRelationshipsSection({ report }: { report: ReportDetail }) {
@@ -42,40 +24,88 @@ export function ReportRelationshipsSection({ report }: { report: ReportDetail })
   }
 
   return (
-    <section id="relationships" className="space-y-4 scroll-mt-24">
+    <section id="relationships" className="space-y-6 scroll-mt-24">
       <h2 className="text-2xl font-semibold text-[var(--atlas-home-text-strong)]">Relationships</h2>
-      <div className="space-y-5 rounded-md border border-[var(--atlas-home-border-soft)] bg-white p-4">
-        <RelationshipList title="Parents" items={parents} />
-        <RelationshipList title="Children" items={children} />
-        {groups.length > 0 ? (
-          <div className="space-y-2">
-            <h3 className="text-base font-semibold">Groups</h3>
-            <ul className="space-y-1 text-sm">
-              {groups.map((group) => (
-                <li key={group.id}>
-                  <Link href={`/groups?id=${group.id}`} className="text-link hover:underline">
-                    {group.name ?? group.email ?? `Group ${group.id}`}
-                  </Link>
-                </li>
-              ))}
-            </ul>
+
+      {groups.length > 0 ? (
+        <div className="space-y-3">
+          <h3 className="text-lg font-semibold">Report Groups</h3>
+          <div className="overflow-x-auto rounded-md border border-[var(--atlas-home-border-soft)]">
+            <table className="min-w-full text-sm">
+              <thead>
+                <tr className="border-b border-[var(--atlas-home-border-soft)] bg-muted/30">
+                  <th className="px-3 py-2 text-left font-medium">Group Name</th>
+                  <th className="px-3 py-2 text-left font-medium">Type</th>
+                </tr>
+              </thead>
+              <tbody>
+                {groups.map((group) => (
+                  <tr
+                    key={group.id}
+                    className="border-b border-[var(--atlas-home-border-soft)] last:border-b-0"
+                  >
+                    <td className="px-3 py-2">
+                      <Link href={`/groups?id=${group.id}`} className="text-link hover:underline">
+                        {group.name ?? group.email ?? `Group ${group.id}`}
+                      </Link>
+                    </td>
+                    <td className="px-3 py-2 text-muted-foreground">{group.type ?? "—"}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
-        ) : null}
-        {collections.length > 0 ? (
-          <div className="space-y-2">
-            <h3 className="text-base font-semibold">Collections</h3>
-            <ul className="space-y-1 text-sm">
-              {collections.map((collection) => (
-                <li key={collection.id}>
-                  <Link href={`/collections?id=${collection.id}`} className="text-link hover:underline">
-                    {collection.name ?? `Collection ${collection.id}`}
-                  </Link>
-                </li>
-              ))}
-            </ul>
+        </div>
+      ) : null}
+
+      {children.length > 0 ? (
+        <div className="space-y-3">
+          <h3 className="text-lg font-semibold">Reports included in this report</h3>
+          <div className="grid gap-4 md:grid-cols-2">
+            {children.map((child) => (
+              <ReportSnippetCard
+                key={child.id}
+                report={toReportSnippet(child)}
+                features={report.features}
+              />
+            ))}
           </div>
-        ) : null}
-      </div>
+        </div>
+      ) : null}
+
+      {parents.length > 0 ? (
+        <div className="space-y-3">
+          <h3 className="text-lg font-semibold">Reports that include this report</h3>
+          <div className="grid gap-4 md:grid-cols-2">
+            {parents.map((parent) => (
+              <ReportSnippetCard
+                key={parent.id}
+                report={toReportSnippet(parent)}
+                features={report.features}
+              />
+            ))}
+          </div>
+        </div>
+      ) : null}
+
+      {collections.length > 0 ? (
+        <div className="space-y-3">
+          <h3 id="collections" className="text-lg font-semibold scroll-mt-24">
+            Linked Collections
+          </h3>
+          <div className="grid gap-4 md:grid-cols-2">
+            {collections.map((collection) => (
+              <CollectionSnippetCard
+                key={collection.id}
+                collection={{
+                  id: collection.id,
+                  name: collection.name ?? `Collection ${collection.id}`,
+                }}
+              />
+            ))}
+          </div>
+        </div>
+      ) : null}
     </section>
   )
 }

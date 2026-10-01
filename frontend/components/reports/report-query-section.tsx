@@ -1,5 +1,10 @@
 import type { ReportDetail } from "@/lib/reports/types"
 
+function queryText(query: { query?: string | null; source?: string | null }) {
+  const text = query.query?.trim() || query.source?.trim()
+  return text || null
+}
+
 function QueryBlock({
   query,
 }: {
@@ -7,10 +12,12 @@ function QueryBlock({
     id: number
     name?: string | null
     language?: string | null
+    query?: string | null
     source?: string | null
     sourceServer?: string | null
   }
 }) {
+  const sql = queryText(query)
   return (
     <details className="rounded-md border border-[var(--atlas-home-border-soft)] bg-white">
       <summary className="cursor-pointer px-4 py-3 font-medium">
@@ -19,9 +26,9 @@ function QueryBlock({
       <div className="space-y-2 border-t border-[var(--atlas-home-border-soft)] px-4 py-3 text-sm text-muted-foreground">
         {query.language ? <div>Language: {query.language}</div> : null}
         {query.sourceServer ? <div>Server: {query.sourceServer}</div> : null}
-        {query.source ? (
+        {sql ? (
           <pre className="overflow-x-auto rounded-md bg-muted/40 p-3 text-xs text-foreground">
-            {query.source}
+            {sql}
           </pre>
         ) : null}
       </div>
