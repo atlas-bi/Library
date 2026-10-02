@@ -25,7 +25,9 @@ function DetailRow({ label, value }: { label: string; value: ReactNode }) {
   if (value == null || value === "") return null
   return (
     <tr className="border-b border-[var(--atlas-home-border-soft)]">
-      <th className="w-56 px-3 py-2 text-left font-medium text-[var(--atlas-home-muted)]">{label}</th>
+      <th className="w-56 px-3 py-2 text-left font-medium text-[var(--atlas-home-muted)]">
+        {label}
+      </th>
       <td className="px-3 py-2 text-sm">{value}</td>
     </tr>
   )
@@ -57,7 +59,10 @@ export function ReportDetailsTable({
   const visibleInSearch =
     report.visibleInSearch === undefined ? undefined : report.visibleInSearch ? "Yes" : "No"
   const fragilityTagNames =
-    doc?.fragilityTags?.map((tag) => tag.name).filter(Boolean).join(", ") ?? null
+    doc?.fragilityTags
+      ?.map((tag) => tag.name)
+      .filter(Boolean)
+      .join(", ") ?? null
 
   return (
     <section id="details" className="space-y-4 scroll-mt-24">
@@ -75,9 +80,7 @@ export function ReportDetailsTable({
             <DetailRow
               label="ETL Load Date"
               value={
-                report.lastLoadDate
-                  ? new Date(report.lastLoadDate).toLocaleDateString()
-                  : null
+                report.lastLoadDate ? new Date(report.lastLoadDate).toLocaleDateString() : null
               }
             />
             <DetailRow
@@ -118,7 +121,12 @@ export function ReportDetailsTable({
             />
             <DetailRow
               label="Report Requester"
-              value={<PersonLink person={doc?.requester ?? report.requester} canLink={canViewUserProfiles} />}
+              value={
+                <PersonLink
+                  person={doc?.requester ?? report.requester}
+                  canLink={canViewUserProfiles}
+                />
+              }
             />
             <DetailRow
               label="Operational Owner"
@@ -156,7 +164,10 @@ export function ReportDetailsTable({
               }
             />
             <DetailRow label="Atlas Id" value={String(report.id)} />
-            <DetailRow label="Runs" value={typeof report.runs === "number" ? String(report.runs) : null} />
+            <DetailRow
+              label="Runs"
+              value={typeof report.runs === "number" ? String(report.runs) : null}
+            />
             <DetailRow label="Orphaned?" value={ynYes(report.orphanedReportObjectYn)} />
             <DetailRow label="Executive Visibility" value={ynYes(doc?.executiveVisibilityYn)} />
             <DetailRow
@@ -178,13 +189,46 @@ export function ReportDetailsTable({
               label="Report Tags"
               value={
                 report.objectTags && report.objectTags.length > 0
-                  ? report.objectTags.map((tag) => tag.name).filter(Boolean).join(", ")
+                  ? report.objectTags
+                      .map((tag) => tag.name)
+                      .filter(Boolean)
+                      .join(", ")
                   : null
               }
             />
           </tbody>
         </table>
       </div>
+
+      {doc?.serviceRequests && doc.serviceRequests.length > 0 ? (
+        <div className="overflow-hidden rounded-md border border-[var(--atlas-home-border-soft)]">
+          <div className="border-b border-[var(--atlas-home-border-soft)] bg-muted/30 px-4 py-2 text-sm font-semibold">
+            Service Requests
+          </div>
+          {doc.serviceRequests.map((ticket) => (
+            <div
+              key={ticket.id}
+              className="border-b border-[var(--atlas-home-border-soft)] px-4 py-3 text-sm last:border-b-0"
+            >
+              {ticket.ticketUrl ? (
+                <a
+                  href={ticket.ticketUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-link hover:underline"
+                >
+                  {ticket.ticketNumber ?? `Ticket ${ticket.id}`}
+                </a>
+              ) : (
+                <span>{ticket.ticketNumber ?? `Ticket ${ticket.id}`}</span>
+              )}
+              {ticket.description?.trim() ? (
+                <span className="text-muted-foreground"> · {ticket.description}</span>
+              ) : null}
+            </div>
+          ))}
+        </div>
+      ) : null}
     </section>
   )
 }

@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
 import type { ReportDetail, ReportEditLookupOptions } from "@/lib/reports/types"
+import { cn } from "@/lib/utils"
 
 const STEPS = [
   { id: "description", label: "Description" },
@@ -18,6 +19,12 @@ const STEPS = [
 ] as const
 
 type WizardStep = (typeof STEPS)[number]["id"]
+
+type FormStep = "description" | "meta" | "maintenance"
+
+function isFormStep(step: WizardStep): step is FormStep {
+  return step === "description" || step === "meta" || step === "maintenance"
+}
 
 export function ReportEditWizard({
   report,
@@ -41,9 +48,7 @@ export function ReportEditWizard({
     }
   }, [doc.maintenanceLogs, doc.maintenanceSchedule])
 
-  const goToStep = (nextStep: WizardStep) => {
-    setStep(nextStep)
-  }
+  const formMode: FormStep = isFormStep(step) ? step : "description"
 
   return (
     <div className="space-y-6">
@@ -62,8 +67,9 @@ export function ReportEditWizard({
                 type="button"
                 size="sm"
                 variant={step === wizardStep.id ? "default" : "outline"}
+                aria-current={step === wizardStep.id ? "step" : undefined}
                 onClick={() => {
-                  goToStep(wizardStep.id)
+                  setStep(wizardStep.id)
                 }}
               >
                 {wizardStep.label}
@@ -73,34 +79,40 @@ export function ReportEditWizard({
         </ol>
       </nav>
 
-      {step === "description" ? (
+      <div className={cn(!isFormStep(step) && "hidden")} aria-hidden={!isFormStep(step)}>
+        {step === "maintenance" ? (
+          <div className="mb-4 grid gap-4 sm:grid-cols-2">
+            <div className="space-y-1">
+              <Label>Maintenance schedule</Label>
+              <p className="text-sm text-muted-foreground">{maintenanceSummary.schedule}</p>
+            </div>
+            <div className="space-y-1">
+              <Label>Existing maintenance logs</Label>
+              <p className="text-sm text-muted-foreground">{maintenanceSummary.logCount}</p>
+            </div>
+          </div>
+        ) : null}
         <ReportEditForm
           reportId={report.id}
           initial={report}
           cancelHref={cancelHref}
           lookupOptions={lookupOptions}
-          mode="description"
+          mode={formMode}
+          onBack={
+            step === "description"
+              ? undefined
+              : () => {
+                  if (step === "meta") setStep("description")
+                  if (step === "maintenance") setStep("images")
+                }
+          }
           onContinue={() => {
-            goToStep("meta")
+            if (step === "description") setStep("meta")
+            if (step === "meta") setStep("images")
+            if (step === "maintenance") setStep("complete")
           }}
         />
-      ) : null}
-
-      {step === "meta" ? (
-        <ReportEditForm
-          reportId={report.id}
-          initial={report}
-          cancelHref={cancelHref}
-          lookupOptions={lookupOptions}
-          mode="meta"
-          onBack={() => {
-            goToStep("description")
-          }}
-          onContinue={() => {
-            goToStep("images")
-          }}
-        />
-      ) : null}
+      </div>
 
       {step === "images" ? (
         <Card>
@@ -110,46 +122,13 @@ export function ReportEditWizard({
           <CardContent className="space-y-4">
             <ReportImageUpload reportId={report.id} />
             <div className="flex flex-wrap gap-2">
-              <Button type="button" variant="outline" onClick={() => goToStep("meta")}>
+              <Button type="button" variant="outline" onClick={() => setStep("meta")}>
                 Back
               </Button>
-              <Button type="button" onClick={() => goToStep("maintenance")}>
+              <Button type="button" onClick={() => setStep("maintenance")}>
                 Next
               </Button>
             </div>
-          </CardContent>
-        </Card>
-      ) : null}
-
-      {step === "maintenance" ? (
-        <Card>
-          <CardHeader>
-            <CardTitle>Maintenance</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid gap-4 sm:grid-cols-2">
-              <div className="space-y-1">
-                <Label>Maintenance schedule</Label>
-                <p className="text-sm text-muted-foreground">{maintenanceSummary.schedule}</p>
-              </div>
-              <div className="space-y-1">
-                <Label>Existing maintenance logs</Label>
-                <p className="text-sm text-muted-foreground">{maintenanceSummary.logCount}</p>
-              </div>
-            </div>
-            <ReportEditForm
-              reportId={report.id}
-              initial={report}
-              cancelHref={cancelHref}
-              lookupOptions={lookupOptions}
-              mode="maintenance"
-              onBack={() => {
-                goToStep("images")
-              }}
-              onContinue={() => {
-                goToStep("complete")
-              }}
-            />
           </CardContent>
         </Card>
       ) : null}
@@ -161,13 +140,14 @@ export function ReportEditWizard({
           </CardHeader>
           <CardContent className="space-y-4">
             <p className="text-sm text-muted-foreground">
-              Review your changes on the report detail page when you are ready.
+              Save your documentation on the previous steps, then return to the report when you are
+              ready.
             </p>
             <div className="flex flex-wrap gap-2">
               <Button asChild>
                 <Link href={`/reports?id=${report.id}`}>Return to report</Link>
               </Button>
-              <Button type="button" variant="outline" onClick={() => goToStep("maintenance")}>
+              <Button type="button" variant="outline" onClick={() => setStep("maintenance")}>
                 Back
               </Button>
             </div>
