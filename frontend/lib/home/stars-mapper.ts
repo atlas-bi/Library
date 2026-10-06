@@ -4,6 +4,8 @@ export type UserStarsPayload = {
   summary: {
     totalCount: number
     unsortedCount: number
+    hasFolders?: boolean
+    showUnsortedBucket?: boolean
   }
   filters: {
     hasReports: boolean
@@ -13,17 +15,19 @@ export type UserStarsPayload = {
     hasUsers: boolean
     hasGroups: boolean
     hasSearches: boolean
+    showQuickFilters?: boolean
   }
   folders: Array<{
     id: number
     name: string
     itemCount: number
   }>
-  items: Array<{
+  items?: Array<{
     starId: number
     type?: string | null
     typeLabel?: string | null
     folderId?: number | null
+    rank?: number | null
     itemId?: number | null
     url?: string | null
     name: string
@@ -46,23 +50,42 @@ export type UserStarsPayload = {
     canShare?: boolean
     canRequestAccess?: boolean
     tags?: Array<{ name: string; slug?: string | null; showInHeader?: boolean }>
-  }>
-  suggestedReports: Array<{
+  }> | null
+  suggestedReports?: Array<{
     id: number
     name: string
     description?: string | null
     url?: string | null
     type?: string | null
-  }>
+  }> | null
 }
 
-function mapStarItem(item: UserStarsPayload["items"][number]): HomeStarCard {
+export function normalizeHomeStarItemType(type?: string | null, typeLabel?: string | null): string {
+  const normalizedType = type?.trim().toLowerCase()
+  if (normalizedType) return normalizedType
+
+  const normalizedLabel = typeLabel?.trim().toLowerCase()
+  if (normalizedLabel === "collection" || normalizedLabel === "initiative") {
+    return normalizedLabel
+  }
+  if (normalizedLabel === "report" || normalizedLabel === "term" || normalizedLabel === "user") {
+    return normalizedLabel
+  }
+  if (normalizedLabel === "group" || normalizedLabel === "search") {
+    return normalizedLabel
+  }
+
+  return normalizedLabel ?? "item"
+}
+
+function mapStarItem(item: NonNullable<UserStarsPayload["items"]>[number]): HomeStarCard {
   return {
     id: item.itemId ?? item.starId,
     href: item.url || "#",
     title: item.name,
-    itemType: item.type ?? item.typeLabel?.toLowerCase() ?? "item",
+    itemType: normalizeHomeStarItemType(item.type, item.typeLabel),
     folderId: item.folderId ?? null,
+    rank: item.rank ?? null,
     typeLabel: item.typeLabel || "Item",
     description: item.bodyText || item.description || "Open to view details.",
     thumbnailUrl: item.thumbnailUrl || undefined,
@@ -93,37 +116,69 @@ function mapStarItem(item: UserStarsPayload["items"][number]): HomeStarCard {
   }
 }
 
+function sortStarCards(cards: HomeStarCard[]): HomeStarCard[] {
+  return [...cards].sort((left, right) => {
+    const leftRank = left.rank ?? Number.MAX_SAFE_INTEGER
+    const rightRank = right.rank ?? Number.MAX_SAFE_INTEGER
+    if (leftRank !== rightRank) return leftRank - rightRank
+    return left.title.localeCompare(right.title)
+  })
+}
+
 export function mapUserStarsPayloadToPanel(
   dto: UserStarsPayload,
   sharedWithMe: HomeSharedWithMeItem[] = [],
 ): HomeStarsPanel {
-  const cards =
-    dto.items.length > 0
-      ? dto.items.map(mapStarItem)
-      : dto.suggestedReports.map((item) => ({
+  const items = dto.items ?? []
+  const suggestedReports = dto.suggestedReports ?? []
+
+  const cards = sortStarCards(
+    items.length > 0
+      ? items.map(mapStarItem)
+      : suggestedReports.map((item) => ({
           id: item.id,
           href: item.url || "#",
           title: item.name,
-          itemType: item.type?.toLowerCase() ?? "report",
+          itemType: normalizeHomeStarItemType(item.type, item.type),
           folderId: null,
+          rank: null,
           typeLabel: item.type || "Report",
           description: item.description || "Open to view details.",
           starCount: 0,
           canOpenDetails: Boolean(item.url),
           isStarred: false,
-        }))
+        })),
+  )
 
-  const isSuggestionFallback = dto.items.length === 0 && dto.suggestedReports.length > 0
+  const isSuggestionFallback = items.length === 0 && suggestedReports.length > 0
+  const favoriteTypeCount = [
+    dto.filters.hasReports,
+    dto.filters.hasCollections,
+    dto.filters.hasInitiatives,
+    dto.filters.hasTerms,
+    dto.filters.hasUsers,
+    dto.filters.hasGroups,
+    dto.filters.hasSearches,
+  ].filter(Boolean).length
+  const showTypeQuickFilters = dto.filters.showQuickFilters ?? favoriteTypeCount > 1
 
-  const filters = [
-    dto.filters.hasReports ? { id: "report", label: "Reports" } : null,
-    dto.filters.hasCollections ? { id: "collection", label: "Collections" } : null,
-    dto.filters.hasInitiatives ? { id: "initiative", label: "Initiatives" } : null,
-    dto.filters.hasTerms ? { id: "term", label: "Terms" } : null,
-    dto.filters.hasUsers ? { id: "user", label: "Users" } : null,
-    dto.filters.hasGroups ? { id: "group", label: "Groups" } : null,
-    dto.filters.hasSearches ? { id: "search", label: "Searches" } : null,
-  ].filter(Boolean) as HomeStarsPanel["filters"]
+  const filters = showTypeQuickFilters
+    ? ([
+        dto.filters.hasReports ? { id: "report", label: "Reports" } : null,
+        dto.filters.hasCollections ? { id: "collection", label: "Collections" } : null,
+        dto.filters.hasInitiatives ? { id: "initiative", label: "Initiatives" } : null,
+        dto.filters.hasTerms ? { id: "term", label: "Terms" } : null,
+        dto.filters.hasUsers ? { id: "user", label: "Users" } : null,
+        dto.filters.hasGroups ? { id: "group", label: "Groups" } : null,
+        dto.filters.hasSearches ? { id: "search", label: "Searches" } : null,
+      ].filter(Boolean) as HomeStarsPanel["filters"])
+    : []
+
+  const showUnsortedBucket =
+    dto.summary.showUnsortedBucket ??
+    (Boolean(dto.summary.hasFolders) &&
+      dto.folders.length > 0 &&
+      dto.summary.unsortedCount > 0)
 
   return {
     kind: "stars",
@@ -134,8 +189,8 @@ export function mapUserStarsPayloadToPanel(
       ? "You don't have any favorites! Here's some reports you've used."
       : undefined,
     folders: [
-      { id: "all", label: "All", count: cards.length },
-      ...(dto.summary.unsortedCount > 0
+      { id: "all", label: "All", count: dto.summary.totalCount },
+      ...(showUnsortedBucket
         ? [{ id: "unsorted", label: "Unsorted", count: dto.summary.unsortedCount }]
         : []),
       ...dto.folders.map((folder) => ({

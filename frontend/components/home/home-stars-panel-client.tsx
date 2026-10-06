@@ -22,10 +22,16 @@ export function HomeStarsPanelClient({ panel }: { panel: HomeStarsPanel }) {
 
   const foldersWithCounts = useMemo(
     () =>
-      panel.folders.map((folder) => ({
-        ...folder,
-        count: countCardsForFolder(panel.cards, folder.id),
-      })),
+      panel.folders.map((folder) => {
+        if (folder.id === "all" || folder.id === "unsorted") {
+          return folder
+        }
+
+        return {
+          ...folder,
+          count: countCardsForFolder(panel.cards, folder.id),
+        }
+      }),
     [panel.cards, panel.folders],
   )
 

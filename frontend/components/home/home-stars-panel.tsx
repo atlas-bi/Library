@@ -47,11 +47,15 @@ function renderDetailsLink(card: HomeStarCard, className: string, labelClassName
 }
 
 function isCollectionCard(card: HomeStarCard) {
-  return card.itemType === "collection" || card.typeLabel.toLowerCase() === "collection"
+  return card.itemType === "collection"
+}
+
+function isInitiativeCard(card: HomeStarCard) {
+  return card.itemType === "initiative"
 }
 
 function isReportCard(card: HomeStarCard) {
-  return card.itemType === "report" || card.typeLabel.toLowerCase() === "report"
+  return card.itemType === "report"
 }
 
 type HomeStarsPanelViewProps = {
@@ -75,10 +79,14 @@ export function HomeStarsPanelView({
 }: HomeStarsPanelViewProps) {
   const showFolders = panel.folders.length > 0 && !panel.isSuggestionFallback
   const sharedWithMe = panel.sharedWithMe ?? []
+  const hasFavoriteWorkspace =
+    panel.folders.some((folder) => folder.id === "all" && folder.count > 0) ||
+    panel.cards.length > 0
+  const showQuickFilterBar = !panel.isSuggestionFallback && hasFavoriteWorkspace
 
   return (
     <section className="space-y-5">
-      {panel.filters.length > 0 ? (
+      {showQuickFilterBar ? (
         <div className="my-4 flex flex-wrap items-center gap-4">
           <div className="inline-flex items-center gap-2 text-sm font-semibold text-[var(--atlas-home-text-strong)]">
             <Search className="h-4 w-4 text-[var(--atlas-home-muted)]" strokeWidth={1.8} />
@@ -159,12 +167,14 @@ export function HomeStarsPanelView({
           {panel.cards.length > 0 ? (
             panel.cards.map((card) => {
               const collectionCard = isCollectionCard(card)
+              const initiativeCard = isInitiativeCard(card)
               const reportCard = isReportCard(card)
+              const goldCard = collectionCard && !initiativeCard
 
               return (
                 <article
                   key={`${card.itemType}-${card.id}`}
-                  className={`overflow-hidden ${collectionCard ? "atlas-snippet-gold-card" : "atlas-home-card"}`}
+                  className={`overflow-hidden ${goldCard ? "atlas-snippet-gold-card" : "atlas-home-card"}`}
                 >
                   <div className="flex items-center justify-between gap-3 border-b border-[var(--atlas-home-border-soft)] px-4 py-2.5">
                     <div className="flex items-center gap-3 text-[var(--atlas-home-text-strong)]">

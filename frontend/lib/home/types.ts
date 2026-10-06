@@ -40,6 +40,7 @@ export type HomeStarCard = {
   title: string
   itemType: string
   folderId?: number | null
+  rank?: number | null
   typeLabel: string
   description: string
   thumbnailUrl?: string

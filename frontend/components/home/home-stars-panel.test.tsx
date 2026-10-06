@@ -142,13 +142,13 @@ describe("HomeStarsPanelView", () => {
     expect(screen.getByRole("link", { name: "Shared Census Link" })).toBeInTheDocument()
   })
 
-  it("applies collection card styling distinct from report cards", () => {
+  it("applies gold card styling to collections but not initiatives or reports", () => {
     const { container } = renderWithTooltipProvider(
       <HomeStarsPanelView
         panel={{
           kind: "stars",
           title: "Stars",
-          folders: [{ id: "all", label: "All", count: 2 }],
+          folders: [{ id: "all", label: "All", count: 3 }],
           filters: [],
           cards: [
             {
@@ -158,6 +158,14 @@ describe("HomeStarsPanelView", () => {
               itemType: "report",
               typeLabel: "Report",
               description: "Census report",
+            },
+            {
+              id: 3,
+              href: "/initiatives?id=3",
+              title: "Improve Patient Flow",
+              itemType: "initiative",
+              typeLabel: "Initiative",
+              description: "Initiative overview",
             },
             {
               id: 1,
@@ -172,7 +180,35 @@ describe("HomeStarsPanelView", () => {
       />,
     )
 
-    expect(container.querySelector(".atlas-snippet-gold-card")).toBeTruthy()
-    expect(container.querySelector(".atlas-home-card")).toBeTruthy()
+    expect(container.querySelectorAll(".atlas-snippet-gold-card")).toHaveLength(1)
+    expect(container.querySelectorAll(".atlas-home-card").length).toBeGreaterThanOrEqual(2)
+  })
+
+  it("renders the All folder badge count from the panel model", () => {
+    renderWithTooltipProvider(
+      <HomeStarsPanelView
+        panel={{
+          kind: "stars",
+          title: "Stars",
+          folders: [
+            { id: "all", label: "All", count: 14 },
+            { id: "10", label: "Daily Operations", count: 7 },
+          ],
+          filters: [],
+          cards: [
+            {
+              id: 16,
+              href: "/reports?id=16",
+              title: "Daily Emergency Department Census",
+              itemType: "report",
+              typeLabel: "Report",
+              description: "Census report",
+            },
+          ],
+        }}
+      />,
+    )
+
+    expect(screen.getByText("14")).toBeInTheDocument()
   })
 })
