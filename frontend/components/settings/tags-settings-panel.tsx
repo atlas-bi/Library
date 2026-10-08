@@ -129,6 +129,7 @@ function TagSection({ title, tagType, initialItems, hasDescription = false }: Ta
         <button
           className="px-4 py-1.5 bg-[#4a85e6] text-white rounded-r border border-[#4a85e6] text-[13px] font-medium hover:bg-blue-600 transition-colors disabled:opacity-50"
           type="submit"
+          aria-label={`Add ${title}`}
           disabled={isPending}
         >
           Add

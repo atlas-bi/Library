@@ -29,21 +29,19 @@ describe("SearchSettingsPanel", () => {
   })
 
   it("shows forbidden error when visibility update fails", async () => {
-    const user = userEvent.setup()
+    const user = userEvent.setup({ delay: null })
     vi.mocked(updateSearchVisibilityAction).mockResolvedValueOnce({
       error: "You do not have permission to view this content.",
     })
 
     render(<SearchSettingsPanel initialData={INITIAL_DATA} />)
 
-    const checkboxes = screen.getAllByRole("checkbox")
-    await user.click(checkboxes[1])
+    await user.click(screen.getByRole("checkbox", { name: /show groups in search/i }))
 
-    await waitFor(() => {
-      expect(
-        screen.getByText("You do not have permission to view this content."),
-      ).toBeInTheDocument()
-    })
+    expect(
+      await screen.findByText("You do not have permission to view this content."),
+    ).toBeInTheDocument()
+    expect(updateSearchVisibilityAction).toHaveBeenCalledWith("groups", true, undefined)
   })
 
   it("saves report type text override", async () => {
