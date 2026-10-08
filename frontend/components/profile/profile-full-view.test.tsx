@@ -217,8 +217,14 @@ describe("ProfileFullView", () => {
     expect(screen.queryByRole("link", { name: "Bob Star" })).toBeNull()
   })
 
-  it("renders correctly without error for term and collection types", () => {
+  it("renders correctly without error for term type", () => {
     render(<ProfileFullView id={1} type="term" initialData={mockData} />)
+    expect(screen.queryByText(/unable to load profile analytics/i)).toBeNull()
+    expect(screen.getByText("42")).toBeDefined()
+  })
+
+  it("renders correctly without error for collection type", () => {
+    render(<ProfileFullView id={1} type="collection" initialData={mockData} />)
     expect(screen.queryByText(/unable to load profile analytics/i)).toBeNull()
     expect(screen.getByText("42")).toBeDefined()
   })
