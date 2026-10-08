@@ -28,7 +28,7 @@ describe("TagsSettingsPanel", () => {
   })
 
   it("adds a tag successfully", async () => {
-    const user = userEvent.setup()
+    const user = userEvent.setup({ delay: null })
     vi.mocked(createTagAction).mockResolvedValueOnce({
       data: { id: 9, name: "Critical", description: null, used: 0 },
     })
@@ -37,16 +37,16 @@ describe("TagsSettingsPanel", () => {
 
     const input = screen.getByPlaceholderText(/add organizational value/i)
     await user.type(input, "Critical")
-    await user.click(screen.getAllByRole("button", { name: /^add$/i })[0])
+    await user.click(screen.getByRole("button", { name: /add organizational value/i }))
 
     await waitFor(() => {
       expect(createTagAction).toHaveBeenCalledWith("organizational-values", { name: "Critical" })
-      expect(screen.getByText("Critical")).toBeInTheDocument()
     })
+    expect(await screen.findByText("Critical")).toBeInTheDocument()
   })
 
   it("shows forbidden error when create fails", async () => {
-    const user = userEvent.setup()
+    const user = userEvent.setup({ delay: null })
     vi.mocked(createTagAction).mockResolvedValueOnce({
       error: "You do not have permission to view this content.",
     })
@@ -55,13 +55,11 @@ describe("TagsSettingsPanel", () => {
 
     const input = screen.getByPlaceholderText(/add organizational value/i)
     await user.type(input, "Blocked")
-    await user.click(screen.getAllByRole("button", { name: /^add$/i })[0])
+    await user.click(screen.getByRole("button", { name: /add organizational value/i }))
 
-    await waitFor(() => {
-      expect(
-        screen.getByText("You do not have permission to view this content."),
-      ).toBeInTheDocument()
-    })
+    expect(
+      await screen.findByText("You do not have permission to view this content."),
+    ).toBeInTheDocument()
   })
 
   it("deletes a tag successfully", async () => {

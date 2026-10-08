@@ -108,6 +108,7 @@ export function SearchSettingsPanel({ initialData }: Props) {
                       <input
                         type="checkbox"
                         className="sr-only peer"
+                        aria-label={`Show ${obj.label} in search`}
                         checked={data.visibility[obj.key] === "Y"}
                         disabled={isPending}
                         onChange={(e) => handleVisibilityToggle(obj.key, e.target.checked)}
@@ -145,6 +146,7 @@ export function SearchSettingsPanel({ initialData }: Props) {
                       <input
                         type="checkbox"
                         className="sr-only peer"
+                        aria-label={`Show ${t.name} report type in search`}
                         checked={t.visible}
                         disabled={isPending}
                         onChange={(e) => handleVisibilityToggle("reports", e.target.checked, t.id)}
