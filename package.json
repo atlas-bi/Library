@@ -80,6 +80,12 @@
   "license": "AGPL-3.0-or-later",
   "name": "atlas",
   "packageManager": "pnpm@10.34.6",
+  "pnpm": {
+    "overrides": {
+      "react": "19.3.0",
+      "react-dom": "19.3.0"
+    }
+  },
   "private": true,
   "repository": {
     "type": "git",
@@ -89,7 +95,7 @@
     "install": "dotnet tool update --global dotnet-ef",
     "start": "gulp start",
     "dev": "run-p dev:* start",
-    "frontend:dev": "next dev frontend -p 3001",
+    "frontend:dev": "next dev frontend -p 3001 --webpack",
     "build": "gulp build",
     "frontend:build": "next build frontend --webpack",
     "frontend:start": "next start frontend",
@@ -192,6 +198,7 @@
     "@codemirror/lang-markdown": "^6.5.0",
     "@codemirror/view": "^6.43.5",
     "@uiw/react-codemirror": "^4.25.10",
+    "chart.js": "2.9.4",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-react": "^1.0.0",
