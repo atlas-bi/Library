@@ -10,7 +10,7 @@ vi.mock("@/lib/auth", () => ({ getToken: getTokenMock }))
 vi.mock("@/lib/api-base", () => ({ getServerApiBase: getServerApiBaseMock }))
 vi.mock("@/lib/http", () => ({ apiFetchJson: apiFetchJsonMock }))
 
-import { getAnalyticsDashboard, getAnalyticsVisits } from "./api"
+import { getAnalyticsDashboard, getAnalyticsVisits, recordAnalyticsBeacon } from "./api"
 
 describe("analytics api", () => {
   beforeEach(() => {
@@ -37,6 +37,41 @@ describe("analytics api", () => {
       "https://api.test/api/analytics/visits?start_at=-86400&end_at=0&userId=2",
       expect.objectContaining({
         headers: { Authorization: "Bearer token" },
+      }),
+    )
+  })
+
+  it("posts beacon payloads", async () => {
+    apiFetchJsonMock.mockResolvedValueOnce({ ok: true, data: { status: "ok" } })
+
+    await recordAnalyticsBeacon({
+      language: "en",
+      userAgent: "ua",
+      host: "h",
+      hostname: "h",
+      href: "http://h/",
+      protocol: "http:",
+      search: "",
+      pathname: "/",
+      screenHeight: 1,
+      screenWidth: 1,
+      origin: "http://h",
+      referrer: "",
+      loadTime: "0",
+      zoom: 1,
+      sessionId: "s",
+      pageId: "p",
+      pageTime: 0,
+    })
+
+    expect(apiFetchJsonMock).toHaveBeenCalledWith(
+      "https://api.test/api/analytics/beacon",
+      expect.objectContaining({
+        method: "POST",
+        headers: expect.objectContaining({
+          Authorization: "Bearer token",
+          "Content-Type": "application/json",
+        }),
       }),
     )
   })
