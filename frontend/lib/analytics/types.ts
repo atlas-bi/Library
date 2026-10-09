@@ -112,3 +112,34 @@ export type AnalyticsDashboardData = {
   traces: AnalyticsTraceListResponseDto | null
   errors: AnalyticsErrorListResponseDto | null
 }
+
+/** Client beacon payload (camelCase), matches legacy tracker.js and AnalyticsBeaconRequest. */
+export type AnalyticsBeaconPayload = {
+  language: string
+  userAgent: string
+  host: string
+  hostname: string
+  href: string
+  protocol: string
+  search: string
+  pathname: string
+  screenHeight: string
+  screenWidth: string
+  origin: string
+  referrer: string
+  loadTime: string
+  zoom: number
+  sessionId: string
+  pageId: string
+  pageTime: number
+}
+
+export type AnalyticsTraceEntryRequest = {
+  l: number
+  m: string
+  n: string
+}
+
+export type AnalyticsTraceIngestRequest = {
+  lg: AnalyticsTraceEntryRequest[]
+}

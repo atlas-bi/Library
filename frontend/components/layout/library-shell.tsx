@@ -1,6 +1,7 @@
 import Image from "next/image"
 import Link from "next/link"
 import type { ReactNode } from "react"
+import { AnalyticsTelemetry } from "@/components/analytics/analytics-telemetry"
 import { HomeFooter } from "@/components/home/home-footer"
 import { HomeNavbarClient } from "@/components/home/home-navbar-client"
 import { HomeSearchClient } from "@/components/home/home-search-client"
@@ -24,6 +25,7 @@ export function LibraryShell({
 }: LibraryShellProps) {
   return (
     <div className="atlas-home-surface flex min-h-screen flex-col bg-white font-sans">
+      <AnalyticsTelemetry enabled={isSignedIn} />
       <header className="sticky top-0 z-20 border-b border-[var(--atlas-home-border-soft)] bg-white shadow-[0_2px_12px_rgba(10,10,10,0.04)]">
         <div className="mx-auto flex min-h-[var(--atlas-home-navbar-height)] w-full max-w-[1280px] items-center gap-2 px-4">
           <Link href="/" className="atlas-home-brand flex min-w-[156px] items-center gap-2">

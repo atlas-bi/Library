@@ -5,11 +5,13 @@ import { apiFetchJson } from "@/lib/http"
 import { buildAnalyticsLogQueryString, buildAnalyticsQueryString } from "./query"
 import type {
   AnalyticsBarItemDto,
+  AnalyticsBeaconPayload,
   AnalyticsDashboardData,
   AnalyticsErrorListResponseDto,
   AnalyticsLiveUsersResponseDto,
   AnalyticsLogFilters,
   AnalyticsQueryFilters,
+  AnalyticsTraceIngestRequest,
   AnalyticsTraceListResponseDto,
   AnalyticsVisitsResponseDto,
 } from "./types"
@@ -36,20 +38,55 @@ async function analyticsGet<T>(path: string): Promise<AnalyticsResult<T>> {
 }
 
 async function analyticsPost(path: string): Promise<AnalyticsResult<{ status: string }>> {
+  return analyticsPostJson(path)
+}
+
+async function analyticsPostJson<TBody>(
+  path: string,
+  body?: TBody,
+  extraHeaders?: HeadersInit,
+): Promise<AnalyticsResult<{ status: string }>> {
   const token = await getToken()
   if (!token) return { data: null, error: "auth_required" }
 
   const apiBase = getServerApiBase()
   if (!apiBase) return { data: null, error: "service_unavailable" }
 
+  const headers: HeadersInit = {
+    Authorization: `Bearer ${token}`,
+    ...(body !== undefined ? { "Content-Type": "application/json" } : {}),
+    ...extraHeaders,
+  }
+
   const result = await apiFetchJson<{ status: string }>(`${apiBase}${path}`, {
     method: "POST",
-    headers: { Authorization: `Bearer ${token}` },
+    headers,
+    body: body !== undefined ? JSON.stringify(body) : undefined,
     cache: "no-store",
   })
 
   if (!result.ok) return { data: null, error: result.error.code }
   return { data: result.data, error: null }
+}
+
+export async function recordAnalyticsBeacon(
+  payload: AnalyticsBeaconPayload,
+): Promise<AnalyticsResult<{ status: string }>> {
+  return analyticsPostJson("/api/analytics/beacon", payload)
+}
+
+export async function recordAnalyticsTraces(
+  request: AnalyticsTraceIngestRequest,
+  options?: { userAgent?: string; referer?: string },
+): Promise<AnalyticsResult<{ status: string }>> {
+  const extraHeaders: HeadersInit = {}
+  if (options?.userAgent) {
+    extraHeaders["User-Agent"] = options.userAgent
+  }
+  if (options?.referer) {
+    extraHeaders.Referer = options.referer
+  }
+  return analyticsPostJson("/api/analytics/traces", request, extraHeaders)
 }
 
 export async function getAnalyticsVisits(
