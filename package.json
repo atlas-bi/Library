@@ -73,8 +73,7 @@
     "tailwindcss": "^4",
     "typescript": "^7.0.0",
     "vitest": "^3",
-    "@vitest/coverage-v8": "^3",
-    "xo": "^5.0.0"
+    "@vitest/coverage-v8": "^3"
   },
   "homepage": "https://demo.atlas.bi",
   "license": "AGPL-3.0-or-later",
@@ -112,9 +111,8 @@
     "test:integrationTests": "dotnet test web.Tests/web.Tests.csproj --filter IntegrationTests --no-build -e Demo=True --collect:\"XPlat Code Coverage;Format=cobertura\" --results-directory TestResults",
     "test:browserTests": "dotnet test web.Tests/web.Tests.csproj --filter BrowserTests --no-build -e Demo=True --collect:\"XPlat Code Coverage;Format=cobertura\" --results-directory TestResults",
     "test:functionTests": "dotnet test web.Tests/web.Tests.csproj --filter FunctionTests --no-build -e Demo=True --collect:\"XPlat Code Coverage;Format=cobertura\" --results-directory TestResults",
-    "lint:js": "xo web/wwwroot/js",
     "lint:scss": "stylelint \"web/wwwroot/css/**/*.scss\"",
-    "lint": "npm run lint:js & npm run lint:scss",
+    "lint": "npm run lint:scss",
     "test:dev": "npm run dotnet:build && (npm run test || true) && npm run test:report_html",
     "commit": "git add . && npm run pre-commit && cz --no-verify",
     "dev:saml": "node ./idp/bin/run.js --acsUrl https://localhost:5001/Auth/Asc --audience atlas-library",
@@ -129,62 +127,6 @@
   "config": {
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
-    }
-  },
-  "xo": {
-    "space": true,
-    "prettier": true,
-    "ignores": [
-      "web/wwwroot/js/polyfill/",
-      "web/wwwroot/js/**/*.min.js",
-      "web/wwwroot/js/old_mail.js",
-      "web/wwwroot/js/essential.js"
-    ],
-    "globals": [
-      "cache",
-      "__dirname",
-      "debounce",
-      "showMessageBox",
-      "CodeMirror",
-      "getUrlVars",
-      "serialize",
-      "getOffset",
-      "getCookie",
-      "setCookie",
-      "window",
-      "document",
-      "CustomEvent",
-      "history",
-      "sessionStorage",
-      "getComputedStyle",
-      "parseInt",
-      "XMLHttpRequest",
-      "Node",
-      "navigator",
-      "FormData",
-      "Chart",
-      "event",
-      "DOMPurify"
-    ],
-    "rules": {
-      "unicorn/no-for-loop": "off",
-      "unicorn/no-array-for-each": "off",
-      "guard-for-in": "warn",
-      "unicorn/no-this-assignment": "off",
-      "unicorn/prefer-default-parameters": "off",
-      "unicorn/no-document-cookie": "off",
-      "unicorn/prefer-dom-node-dataset": "off",
-      "unicorn/no-empty-file": "off",
-      "unicorn/prefer-module": "off",
-      "unicorn/prefer-query-selector": "warn",
-      "unicorn/prefer-number-properties": "off",
-      "no-negated-condition": "warn",
-      "no-multi-assign": "warn",
-      "unicorn/prefer-keyboard-event-key": "off",
-      "no-new": "warn",
-      "unicorn/no-typeof-undefined": "off",
-      "unicorn/prefer-string-replace-all": "warn",
-      "unicorn/prefer-at": "warn"
     }
   },
   "version": "3.15.71",

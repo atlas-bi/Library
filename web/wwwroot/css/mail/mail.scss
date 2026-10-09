@@ -38,7 +38,7 @@
   height: 50px;
   margin-top: -35px;
   background: #fff;
-  background: linear-gradient(rgba(255 255 255 / 0%), #fff);
+  background: linear-gradient(rgb(255 255 255 / 0%), #fff);
   position: absolute;
   bottom: 0;
   left: -30px;
@@ -65,8 +65,8 @@
   background: rgb(208 208 208);
   background: linear-gradient(
     180deg,
-    rgba(208 208 208 / 100%) 35%,
-    rgba(201 201 201 / 100%) 100%
+    rgb(208 208 208 / 100%) 35%,
+    rgb(201 201 201 / 100%) 100%
   );
   filter: progid:dximagetransform.microsoft.gradient(startColorstr="#d0d0d0", endColorstr="#c9c9c9", GradientType=1);
 }
