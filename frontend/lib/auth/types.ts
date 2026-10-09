@@ -16,6 +16,7 @@ export const PERMISSIONS = [
   "Edit Collection",
   "Delete Collection",
   "Create Initiative",
+  "View Groups",
   "View Other User",
   "Manage Global Site Settings",
   "Create Parameters",
