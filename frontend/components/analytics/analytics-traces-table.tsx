@@ -1,9 +1,10 @@
 "use client"
 
 import Link from "next/link"
-import { useTransition } from "react"
+import { useState, useTransition } from "react"
 import { setAnalyticsTraceResolvedAction } from "@/app/analytics/actions"
 import type { AnalyticsTraceListResponseDto } from "@/lib/analytics/types"
+import { getUserFriendlyErrorMessage } from "@/lib/errors"
 import { summarizeUserAgent } from "@/lib/analytics/user-agent"
 import { AnalyticsLogPagination } from "./analytics-log-pagination"
 import { AnalyticsTraceMessage, analyticsTraceLevelLabel } from "./analytics-trace-message"
@@ -18,18 +19,29 @@ export function AnalyticsTracesTable({
   onResolvedChange: () => void
 }) {
   const [pending, startTransition] = useTransition()
+  const [actionError, setActionError] = useState<string | null>(null)
 
   if (!traces) return null
 
   const toggleResolved = (id: number, nextResolved: boolean) => {
     startTransition(async () => {
-      await setAnalyticsTraceResolvedAction(id, nextResolved)
+      const result = await setAnalyticsTraceResolvedAction(id, nextResolved)
+      if (!result.ok) {
+        setActionError(getUserFriendlyErrorMessage(result.error ?? "unknown"))
+        return
+      }
+      setActionError(null)
       onResolvedChange()
     })
   }
 
   return (
     <section className="mt-8 space-y-3">
+      {actionError ? (
+        <p className="text-sm text-red-500" role="alert">
+          {actionError}
+        </p>
+      ) : null}
       <div className="flex flex-wrap items-center justify-between gap-3">
         <strong className="text-base text-[#363636]">
           Browser Errors -{" "}

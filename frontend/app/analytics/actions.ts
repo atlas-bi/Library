@@ -7,6 +7,7 @@ import {
   resolveAnalyticsTrace,
 } from "@/lib/analytics/api"
 import { getAnalyticsRangeParams } from "@/lib/analytics/date-ranges"
+import type { AppErrorCode } from "@/lib/app-error"
 import type { AnalyticsDashboardData, AnalyticsPageFilters } from "@/lib/analytics/types"
 
 export type { AnalyticsPageFilters }
@@ -23,7 +24,7 @@ function buildQueryFilters(filters: AnalyticsPageFilters) {
 
 export async function loadAnalyticsDashboardAction(
   filters: AnalyticsPageFilters,
-): Promise<{ data: AnalyticsDashboardData | null; error: string | null }> {
+): Promise<{ data: AnalyticsDashboardData | null; error: AppErrorCode | null }> {
   const queryFilters = buildQueryFilters(filters)
 
   const result = await getAnalyticsDashboard(queryFilters, {
@@ -41,7 +42,7 @@ export async function loadAnalyticsDashboardAction(
 
 export async function refreshAnalyticsLiveUsersAction(): Promise<{
   data: AnalyticsDashboardData["liveUsers"]
-  error: string | null
+  error: AppErrorCode | null
 }> {
   const result = await getAnalyticsLiveUsers()
   if (result.error) return { data: null, error: result.error }
@@ -51,7 +52,7 @@ export async function refreshAnalyticsLiveUsersAction(): Promise<{
 export async function setAnalyticsTraceResolvedAction(
   id: number,
   resolved: boolean,
-): Promise<{ ok: boolean; error: string | null }> {
+): Promise<{ ok: boolean; error: AppErrorCode | null }> {
   const result = await resolveAnalyticsTrace(id, resolved ? 1 : 2)
   if (result.error) return { ok: false, error: result.error }
   return { ok: true, error: null }
@@ -60,7 +61,7 @@ export async function setAnalyticsTraceResolvedAction(
 export async function setAnalyticsErrorResolvedAction(
   id: number,
   resolved: boolean,
-): Promise<{ ok: boolean; error: string | null }> {
+): Promise<{ ok: boolean; error: AppErrorCode | null }> {
   const result = await resolveAnalyticsError(id, resolved ? 1 : 2)
   if (result.error) return { ok: false, error: result.error }
   return { ok: true, error: null }
