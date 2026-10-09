@@ -27,6 +27,7 @@ vi.mock("@/app/analytics/actions", () => ({
 
 vi.mock("next/navigation", () => ({
   redirect: redirectMock,
+  useRouter: () => ({ replace: vi.fn() }),
 }))
 
 vi.mock("@/components/layout/library-shell", () => ({

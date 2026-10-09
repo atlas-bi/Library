@@ -19,7 +19,13 @@ function getShellDisplayName(user: AuthUser | null): string {
 }
 
 type AnalyticsPageProps = {
-  searchParams: Promise<{ userId?: string; groupId?: string }>
+  searchParams: Promise<{
+    userId?: string
+    groupId?: string
+    range?: string
+    tracePage?: string
+    errorPage?: string
+  }>
 }
 
 export default async function AnalyticsPage({ searchParams }: AnalyticsPageProps) {

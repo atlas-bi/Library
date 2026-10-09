@@ -1,16 +1,20 @@
 "use client"
 
+import { useRouter } from "next/navigation"
 import { useCallback, useEffect, useState, useTransition } from "react"
 import {
   loadAnalyticsDashboardAction,
   refreshAnalyticsLiveUsersAction,
 } from "@/app/analytics/actions"
 import type { AnalyticsPageFilters } from "@/lib/analytics/types"
-import { ANALYTICS_RANGE_OPTIONS, type AnalyticsRangeId } from "@/lib/analytics/date-ranges"
+import type { AnalyticsRangeId } from "@/lib/analytics/date-ranges"
 import { formatAnalyticsCount, formatAnalyticsLoadTime } from "@/lib/analytics/format"
+import { buildAnalyticsUrlQuery } from "@/lib/analytics/page-filters"
 import type { AnalyticsDashboardData } from "@/lib/analytics/types"
+import type { AppErrorCode } from "@/lib/app-error"
 import { getUserFriendlyErrorMessage } from "@/lib/errors"
 import { AnalyticsActiveUsersTable } from "./analytics-active-users-table"
+import { AnalyticsScopeNotice } from "./analytics-scope-notice"
 import { AnalyticsBarDataTable } from "./analytics-bar-data-table"
 import { AnalyticsErrorsTable } from "./analytics-errors-table"
 import { AnalyticsRangeSelect } from "./analytics-range-select"
@@ -40,25 +44,30 @@ export function AnalyticsDashboard({
 }: {
   initialData: AnalyticsDashboardData | null
   initialFilters: AnalyticsPageFilters
-  loadError: string | null
+  loadError: AppErrorCode | null
 }) {
+  const router = useRouter()
   const [data, setData] = useState(initialData)
   const [error, setError] = useState(loadError)
   const [filters, setFilters] = useState(initialFilters)
   const [pending, startTransition] = useTransition()
 
-  const reload = useCallback((nextFilters: AnalyticsPageFilters) => {
-    startTransition(async () => {
-      const result = await loadAnalyticsDashboardAction(nextFilters)
-      if (result.error) {
-        setError(result.error)
-        return
-      }
-      setError(null)
-      setData(result.data)
-      setFilters(nextFilters)
-    })
-  }, [])
+  const reload = useCallback(
+    (nextFilters: AnalyticsPageFilters) => {
+      startTransition(async () => {
+        const result = await loadAnalyticsDashboardAction(nextFilters)
+        if (result.error) {
+          setError(result.error)
+          return
+        }
+        setError(null)
+        setData(result.data)
+        setFilters(nextFilters)
+        router.replace(`/analytics${buildAnalyticsUrlQuery(nextFilters)}`, { scroll: false })
+      })
+    },
+    [router],
+  )
 
   useEffect(() => {
     const timer = window.setInterval(() => {
@@ -74,11 +83,17 @@ export function AnalyticsDashboard({
   const visits = data?.visits
 
   if (error && !data) {
-    return <p className="text-red-500">{getUserFriendlyErrorMessage(error as "auth_required")}</p>
+    return <p className="text-red-500">{getUserFriendlyErrorMessage(error)}</p>
   }
 
   return (
     <div className={pending ? "opacity-70 transition-opacity" : ""}>
+      <AnalyticsScopeNotice filters={filters} />
+      {error ? (
+        <p className="mb-4 text-red-500" role="alert">
+          {getUserFriendlyErrorMessage(error)}
+        </p>
+      ) : null}
       <AnalyticsActiveUsersTable liveUsers={data?.liveUsers ?? null} />
 
       <div className="mb-4 flex flex-wrap items-end justify-between gap-4">
