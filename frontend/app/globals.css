@@ -5,6 +5,9 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
+  --font-inter: "Inter", sans-serif;
+  --font-source-code-pro: "Source Code Pro", monospace;
+  --font-rasa: "Rasa", serif;
   --primary: oklch(0.205 0 0);
   --success: #48c78e;
   --warning: #ffe08a;

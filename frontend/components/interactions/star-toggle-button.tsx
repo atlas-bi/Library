@@ -70,7 +70,7 @@ export function StarToggleButton({
     )
   }
 
-  const entityLabel = type === "report" ? "report" : "collection"
+  const entityLabel = type === "report" ? "report" : type === "term" ? "term" : "collection"
   const starTooltip = `Star this ${entityLabel}`
 
   if (iconOnly) {

@@ -31,7 +31,7 @@ const markdownComponents = {
     <code className="rounded bg-muted px-1 py-0.5 font-mono text-sm">{children}</code>
   ),
   pre: ({ children }: { children?: ReactNode }) => (
-    <pre className="mb-3 overflow-x-auto rounded-md border bg-muted p-3 text-sm">{children}</pre>
+    <pre className="mb-3 overflow-x-auto rounded-md bg-[#363636] p-3 text-sm text-[#f5f5f5] [&_code]:bg-transparent [&_code]:p-0">{children}</pre>
   ),
 }
 
@@ -39,7 +39,7 @@ export function MarkdownContent({ content, className }: { content: string; class
   return (
     <div
       className={cn(
-        "markdown rounded-lg border border-border/60 bg-muted/20 px-4 py-3 text-sm leading-relaxed text-foreground",
+        "markdown text-sm leading-relaxed text-foreground",
         className,
       )}
     >

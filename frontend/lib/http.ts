@@ -20,6 +20,9 @@ export async function apiFetchJson<T>(url: string, init?: ApiFetchOptions): Prom
       const code: AppErrorCode = mapHttpStatusToErrorCode(res.status)
       return { ok: false, error: new AppError({ code, status: res.status }) }
     }
+    if (res.status === 204) {
+      return { ok: true, data: {} as T }
+    }
     return { ok: true, data: (await res.json()) as T }
   } catch (err) {
     return { ok: false, error: toAppError(err) }

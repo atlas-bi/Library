@@ -1,4 +1,4 @@
-export type InteractionEntityType = "report" | "collection"
+export type InteractionEntityType = "report" | "collection" | "term"
 
 export interface StarToggleRequest {
   type: InteractionEntityType

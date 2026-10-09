@@ -43,7 +43,7 @@ ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
 
 WORKDIR /app
 
-RUN apk add --no-cache icu-libs
+RUN apk add --no-cache ca-certificates icu-libs
 
 COPY --from=build ["/app/web/out", "./"]
 
