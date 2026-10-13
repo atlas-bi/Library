@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react"
 import { beforeEach, describe, expect, it, vi } from "vitest"
-import type { AuthUser } from "@/lib/auth"
+import type { AuthUser, Permission } from "@/lib/auth"
 import type { TasksResponseDto } from "@/lib/tasks/types"
 
 const { getTokenMock, getCurrentUserMock, getTasksMock, redirectMock } = vi.hoisted(() => ({
@@ -15,7 +15,7 @@ const { getTokenMock, getCurrentUserMock, getTasksMock, redirectMock } = vi.hois
 vi.mock("@/lib/auth", () => ({
   getToken: getTokenMock,
   getCurrentUser: getCurrentUserMock,
-  hasPermission: (user: AuthUser | null, permission: string) =>
+  hasPermission: (user: AuthUser | null, permission: Permission) =>
     Boolean(user?.permissions.includes(permission)),
 }))
 
