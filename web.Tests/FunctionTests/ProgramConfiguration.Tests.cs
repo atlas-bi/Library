@@ -33,4 +33,25 @@ public class ProgramConfigurationTests
         Assert.Equal(Saml2Constants.AuthenticationScheme, options.DefaultAuthenticateScheme);
         Assert.Equal(Saml2Constants.AuthenticationScheme, options.DefaultChallengeScheme);
     }
+
+    [Fact]
+    public void ConfigureJwtAuthentication_PrefersSamlOverDemo()
+    {
+        var builder = WebApplication.CreateBuilder();
+        builder.Configuration.AddInMemoryCollection(new Dictionary<string, string?>
+        {
+            ["Demo"] = "true",
+            ["Jwt:Key"] = "test-jwt-secret-key-for-saml-config-test-32-chars",
+            ["Jwt:Issuer"] = "test-issuer",
+            ["Jwt:Audience"] = "test-audience",
+            ["Saml2:Issuer"] = "atlas-library",
+        });
+
+        ProgramConfiguration.ConfigureJwtAuthentication(builder);
+
+        using var provider = builder.Services.BuildServiceProvider();
+        var options = provider.GetRequiredService<IOptions<AuthenticationOptions>>().Value;
+
+        Assert.Equal(Saml2Constants.AuthenticationScheme, options.DefaultAuthenticateScheme);
+    }
 }

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Atlas_Web.Controllers.Api;
 using Atlas_Web.Models;
 using Atlas_Web.Services;
+using ITfoxtec.Identity.Saml2.Schemas;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
@@ -150,6 +151,76 @@ public class AuthApiControllerTests
             "/Auth/Login?returnUrl=%2Fapi%2Fauth%2Flogin%3FreturnUrl%3Dhttp%253A%252F%252Flocalhost%253A3000%252Fauth%252Fcallback",
             redirect.Url
         );
+    }
+
+    [Fact]
+    public async Task Login_RedirectsToSaml_WhenDemoModeIsEnabledAndSamlIsConfigured()
+    {
+        await using var context = CreateContext();
+        context.Users.Add(new User { UserId = 7, Username = "Default", FullnameCalc = "Default User" });
+        await context.SaveChangesAsync();
+
+        var controller = BuildController(
+            context,
+            BuildConfig(("Demo", "True"), ("Saml2:Issuer", "atlas-library"))
+        );
+
+        var result = await controller.Login("http://localhost:3000/auth/callback");
+
+        var redirect = Assert.IsType<RedirectResult>(result);
+        Assert.Equal(
+            "/Auth/Login?returnUrl=%2Fapi%2Fauth%2Flogin%3FreturnUrl%3Dhttp%253A%252F%252Flocalhost%253A3000%252Fauth%252Fcallback",
+            redirect.Url
+        );
+    }
+
+    [Fact]
+    public async Task Login_RedirectsToSaml_WhenNonSamlIdentityIsAlreadyAuthenticated()
+    {
+        await using var context = CreateContext();
+        var controller = BuildController(
+            context,
+            BuildConfig(("Demo", "False"), ("Saml2:Issuer", "atlas-library")),
+            BuildPrincipal(username: "RIVERSIDE\\chris", isAuthenticated: true, authenticationType: "Negotiate")
+        );
+
+        var result = await controller.Login("http://localhost:3000/auth/callback");
+
+        var redirect = Assert.IsType<RedirectResult>(result);
+        Assert.StartsWith("/Auth/Login?returnUrl=", redirect.Url);
+    }
+
+    [Fact]
+    public async Task Login_IssuesToken_WhenSamlSessionIsAuthenticated()
+    {
+        await using var context = CreateContext();
+        context.Users.Add(
+            new User
+            {
+                UserId = 42,
+                Username = "saml.jackson@example.com",
+                FullnameCalc = "Saml Jackson",
+                Email = "saml.jackson@example.com",
+            }
+        );
+        await context.SaveChangesAsync();
+
+        var controller = BuildController(
+            context,
+            BuildConfig(("Demo", "True"), ("Saml2:Issuer", "atlas-library")),
+            BuildPrincipal(
+                userId: 42,
+                username: "saml.jackson@example.com",
+                fullname: "Saml Jackson",
+                isAuthenticated: true,
+                authenticationType: Saml2Constants.AuthenticationScheme
+            )
+        );
+
+        var result = await controller.Login("http://localhost:3000/auth/callback");
+
+        var redirect = Assert.IsType<RedirectResult>(result);
+        Assert.StartsWith("http://localhost:3000/auth/callback?token=", redirect.Url);
     }
 
     [Fact]
@@ -320,6 +391,7 @@ public class AuthApiControllerTests
         string username = null,
         string fullname = null,
         bool isAuthenticated = false,
+        string authenticationType = "TestAuth",
         IEnumerable<string> permissions = null,
         IEnumerable<string> roles = null,
         string adminEnabled = "N"
@@ -355,7 +427,7 @@ public class AuthApiControllerTests
         }
 
         var identity = isAuthenticated
-            ? new ClaimsIdentity(claims, "TestAuth")
+            ? new ClaimsIdentity(claims, authenticationType)
             : new ClaimsIdentity();
 
         return new ClaimsPrincipal(identity);

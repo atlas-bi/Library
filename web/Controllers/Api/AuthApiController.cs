@@ -4,6 +4,7 @@ using System.Security.Claims;
 using Atlas_Web.Configuration;
 using Atlas_Web.Models;
 using Atlas_Web.Services;
+using ITfoxtec.Identity.Saml2.Schemas;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -40,8 +41,16 @@ public class AuthApiController : ControllerBase
         }
 
         var safeReturnUrl = ((OkObjectResult)safeReturnUrlResult).Value as string ?? string.Empty;
+        var samlEnabled = _config.GetSection("Saml2").Exists();
 
-        if (BooleanConfig.IsEnabled(_config["Demo"]))
+        if (samlEnabled)
+        {
+            if (!IsSamlAuthenticated(User))
+            {
+                return Redirect(BuildSamlLoginUrl(safeReturnUrl));
+            }
+        }
+        else if (BooleanConfig.IsEnabled(_config["Demo"]))
         {
             var demoUsername = _config["DEMO_ADMIN_USERNAME"];
             var selectedDemoUsername = string.IsNullOrWhiteSpace(demoUsername)
@@ -64,8 +73,7 @@ public class AuthApiController : ControllerBase
 
             return Redirect(BuildTokenRedirectUrl(safeReturnUrl, demoToken));
         }
-
-        if (User.Identity?.IsAuthenticated != true)
+        else if (User.Identity?.IsAuthenticated != true)
         {
             return Redirect(BuildSamlLoginUrl(safeReturnUrl));
         }
@@ -83,6 +91,16 @@ public class AuthApiController : ControllerBase
         );
 
         return Redirect(BuildTokenRedirectUrl(safeReturnUrl, token));
+    }
+
+    private static bool IsSamlAuthenticated(ClaimsPrincipal user)
+    {
+        return user.Identity?.IsAuthenticated == true
+            && string.Equals(
+                user.Identity.AuthenticationType,
+                Saml2Constants.AuthenticationScheme,
+                StringComparison.Ordinal
+            );
     }
 
     private IActionResult GetSafeRedirectUrl(string? returnUrl)

@@ -49,7 +49,7 @@ namespace Atlas_Web.Controllers
                     new AssertionConsumerService
                     {
                         Binding = ProtocolBindings.HttpPost,
-                        Location = new Uri(defaultSite, "Auth/AssertionConsumerService"),
+                        Location = new Uri(defaultSite, "Auth/Asc"),
                     },
                 },
                 AttributeConsumingServices = new AttributeConsumingService[]
