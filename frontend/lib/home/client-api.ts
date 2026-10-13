@@ -7,6 +7,15 @@ import type {
   HomeTabId,
 } from "@/lib/home/types"
 
+function isPanel<T extends { kind: string; rows: unknown[] }>(
+  payload: unknown,
+  kind: T["kind"],
+): payload is T {
+  if (!payload || typeof payload !== "object") return false
+  const panel = payload as { kind?: string; rows?: unknown }
+  return panel.kind === kind && Array.isArray(panel.rows)
+}
+
 function isHomeStarsPanel(payload: unknown): payload is HomeStarsPanel {
   if (!payload || typeof payload !== "object") return false
   const panel = payload as Partial<HomeStarsPanel>
@@ -112,19 +121,25 @@ export async function fetchHomeTabPanel(tabId: HomeTabId) {
     case "subscriptions":
       return {
         ok: true as const,
-        data: normalizeSubscriptionsPanel(
-          panelPayload as Parameters<typeof normalizeSubscriptionsPanel>[0],
-        ),
+        data: isPanel<HomeSubscriptionsPanel>(panelPayload, "subscriptions")
+          ? panelPayload
+          : normalizeSubscriptionsPanel(
+              panelPayload as Parameters<typeof normalizeSubscriptionsPanel>[0],
+            ),
       }
     case "groups":
       return {
         ok: true as const,
-        data: normalizeGroupsPanel(panelPayload as Parameters<typeof normalizeGroupsPanel>[0]),
+        data: isPanel<HomeGroupsPanel>(panelPayload, "groups")
+          ? panelPayload
+          : normalizeGroupsPanel(panelPayload as Parameters<typeof normalizeGroupsPanel>[0]),
       }
     case "report-runs":
       return {
         ok: true as const,
-        data: normalizeRunListPanel(panelPayload as Parameters<typeof normalizeRunListPanel>[0]),
+        data: isPanel<HomeRunListPanel>(panelPayload, "report-runs")
+          ? panelPayload
+          : normalizeRunListPanel(panelPayload as Parameters<typeof normalizeRunListPanel>[0]),
       }
   }
 }
