@@ -16,7 +16,6 @@ const nextConfig: NextConfig = {
             '/img/:path*',
         ];
 
-<<<<<<< Updated upstream
         return [
             {
                 source: '/api/:path((?!home(?:/|$)).*)',

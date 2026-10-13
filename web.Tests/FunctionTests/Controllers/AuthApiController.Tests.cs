@@ -8,8 +8,10 @@ using Atlas_Web.Controllers.Api;
 using Atlas_Web.Models;
 using Atlas_Web.Services;
 using ITfoxtec.Identity.Saml2.Schemas;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -213,7 +215,7 @@ public class AuthApiControllerTests
                 username: "saml.jackson@example.com",
                 fullname: "Saml Jackson",
                 isAuthenticated: true,
-                authenticationType: Saml2Constants.AuthenticationScheme
+                authenticationType: TokenValidationParameters.DefaultAuthenticationType
             )
         );
 
@@ -311,6 +313,43 @@ public class AuthApiControllerTests
             ReadProperty<string[]>(ok.Value, "permissions")
         );
         Assert.True(ReadProperty<bool>(ok.Value, "adminEnabled"));
+    }
+
+    [Fact]
+    public async Task LogoutGet_SignsOutSamlSessionAndRedirects()
+    {
+        await using var context = CreateContext();
+        var auth = new Mock<IAuthenticationService>();
+        auth.Setup(service =>
+                service.SignOutAsync(
+                    It.IsAny<HttpContext>(),
+                    Saml2Constants.AuthenticationScheme,
+                    It.IsAny<AuthenticationProperties>()
+                )
+            )
+            .Returns(Task.CompletedTask);
+
+        var controller = BuildController(
+            context,
+            BuildConfig(("Demo", "False"), ("Saml2:Issuer", "atlas-library"))
+        );
+        controller.HttpContext.RequestServices = new ServiceCollection()
+            .AddSingleton(auth.Object)
+            .BuildServiceProvider();
+
+        var result = await controller.EndSession("http://localhost:3000/");
+
+        var redirect = Assert.IsType<RedirectResult>(result);
+        Assert.Equal("http://localhost:3000/", redirect.Url);
+        auth.Verify(
+            service =>
+                service.SignOutAsync(
+                    It.IsAny<HttpContext>(),
+                    Saml2Constants.AuthenticationScheme,
+                    It.IsAny<AuthenticationProperties>()
+                ),
+            Times.Once
+        );
     }
 
     [Fact]
