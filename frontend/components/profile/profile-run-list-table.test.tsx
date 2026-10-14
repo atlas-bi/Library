@@ -43,10 +43,11 @@ describe('ProfileRunListTable', () => {
         const bodyRows = () =>
             screen.getAllByRole('row').slice(1).map((row) => row.textContent ?? '');
 
-        expect(bodyRows()[0]).toContain('Alpha Report');
+        expect(bodyRows()[0]).toContain('Beta Report');
+        expect(bodyRows()[1]).toContain('Alpha Report');
 
         await user.click(screen.getByRole('button', { name: /^Name/ }));
 
-        expect(bodyRows()[0]).toContain('Beta Report');
+        expect(bodyRows()[0]).toContain('Alpha Report');
     });
 });

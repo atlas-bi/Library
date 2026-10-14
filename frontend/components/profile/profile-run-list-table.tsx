@@ -56,12 +56,13 @@ export function compareProfileRunListRows(
 }
 
 export function ProfileRunListTable({ rows }: { rows: ProfileRunListItemDto[] }) {
-  const [sortKey, setSortKey] = useState<SortKey>("name")
+  const [sortKey, setSortKey] = useState<SortKey | null>(null)
   const [sortDirection, setSortDirection] = useState<SortDirection>("asc")
 
   const showType = rows.some((row) => row.type?.trim())
 
-  const sortedRows = useMemo(() => {
+  const displayRows = useMemo(() => {
+    if (sortKey === null) return rows
     const copy = [...rows]
     copy.sort((left, right) => {
       const comparison = compareProfileRunListRows(left, right, sortKey)
@@ -117,7 +118,7 @@ export function ProfileRunListTable({ rows }: { rows: ProfileRunListItemDto[] })
         </TableRow>
       </TableHeader>
       <TableBody>
-        {sortedRows.map((row) => (
+        {displayRows.map((row) => (
           <TableRow key={`${row.name}-${row.url ?? ""}-${row.lastRun ?? ""}`}>
             <TableCell className="font-medium">
               {row.url ? (
