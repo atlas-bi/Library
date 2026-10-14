@@ -83,13 +83,13 @@ public static class ProgramConfiguration
                 ConfigureTestSsoAuthentication(builder, jwtIssuer, jwtAudience, signingKey);
             }
         }
-        else if (BooleanConfig.IsEnabled(builder.Configuration["Demo"]))
-        {
-            ConfigureDemoAuthentication(builder, jwtIssuer, jwtAudience, signingKey);
-        }
         else if (builder.Configuration.GetSection("Saml2").Exists())
         {
             ConfigureSamlAuthentication(builder, jwtIssuer, jwtAudience, signingKey);
+        }
+        else if (BooleanConfig.IsEnabled(builder.Configuration["Demo"]))
+        {
+            ConfigureDemoAuthentication(builder, jwtIssuer, jwtAudience, signingKey);
         }
         else
         {
