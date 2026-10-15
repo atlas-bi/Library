@@ -238,16 +238,9 @@ export default async function ReportsPage({
 
         <div className="min-w-0 space-y-10">
           {report.maintenanceStatus?.isRequired ? (
-            <div className="rounded-md border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-950">
-              <div className="font-semibold">Maintenance past due</div>
-              <div>{report.maintenanceStatus.message ?? "Maintenance is required."}</div>
-              {report.maintenanceStatus.nextMaintenanceDate ? (
-                <div className="mt-1 text-amber-900/80">
-                  Next maintenance:{" "}
-                  {new Date(report.maintenanceStatus.nextMaintenanceDate).toLocaleDateString()}
-                </div>
-              ) : null}
-            </div>
+            <p className="text-sm font-medium text-destructive">
+              This report is past due for maintenance!
+            </p>
           ) : null}
 
           {Array.isArray(report.images) && report.images.length > 0 ? (

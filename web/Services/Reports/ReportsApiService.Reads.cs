@@ -340,6 +340,7 @@ public sealed partial class ReportsApiService
                         Name = y.Group.GroupName,
                         Email = y.Group.GroupEmail,
                         Type = y.Group.GroupType,
+                        Source = y.Group.GroupSource,
                     })
                     .ToList(),
                 Collections = x.CollectionReports
@@ -350,6 +351,8 @@ public sealed partial class ReportsApiService
                         Id = y.CollectionId,
                         Name = y.DataProject.Name,
                         Rank = y.Rank,
+                        Description = y.DataProject.Description,
+                        StarCount = y.DataProject.StarredCollections.Count,
                     })
                     .ToList(),
                 Parameters = x.ReportObjectParameters
@@ -398,8 +401,37 @@ public sealed partial class ReportsApiService
             canViewHiddenOption
         );
         ApplyReportActions(report, user);
+        await EnrichRelationshipSummariesAsync(report, currentUserId, user, cancellationToken);
 
         return report;
+    }
+
+    private async Task EnrichRelationshipSummariesAsync(
+        ReportDetailDto report,
+        int currentUserId,
+        ClaimsPrincipal user,
+        CancellationToken cancellationToken
+    )
+    {
+        if (report.Collections.Count > 0)
+        {
+            var starredCollectionIds = await _context
+                .StarredCollections.AsNoTracking()
+                .Where(x => x.Ownerid == currentUserId)
+                .Where(x => report.Collections.Select(c => c.Id).Contains(x.Collectionid))
+                .Select(x => x.Collectionid)
+                .ToListAsync(cancellationToken);
+
+            foreach (var collection in report.Collections)
+            {
+                collection.IsStarred = starredCollectionIds.Contains(collection.Id);
+            }
+        }
+
+        foreach (var link in report.Children.Concat(report.Parents))
+        {
+            link.CanRun = await CanRunReportAsync(user, link.Id, cancellationToken);
+        }
     }
 
     private async Task<IReadOnlyList<TermSummaryDto>> GetTermsAsync(
@@ -492,6 +524,9 @@ public sealed partial class ReportsApiService
                 Language = x.Language,
                 SourceServer = x.SourceServer,
                 Query = x.Query,
+                Description = x.ReportObject.Description,
+                EpicMasterFile = x.ReportObject.EpicMasterFile,
+                EpicRecordId = x.ReportObject.EpicRecordId,
                 LastLoadDate = x.LastLoadDate,
             })
             .ToListAsync(cancellationToken);
@@ -528,10 +563,14 @@ public sealed partial class ReportsApiService
             {
                 Id = x.ReportObjectId,
                 Name = x.DisplayTitle ?? x.Name,
+                DisplayTitle = x.DisplayTitle,
+                Description = x.Description,
                 Type = x.ReportObjectType != null ? x.ReportObjectType.ShortName : null,
                 Url = x.ReportObjectUrl,
                 LastModified = x.LastModifiedDate,
                 AttachmentCount = x.ReportObjectAttachments.Count,
+                EpicMasterFile = x.EpicMasterFile,
+                EpicRecordId = x.EpicRecordId,
             })
             .ToListAsync(cancellationToken);
     }
@@ -568,10 +607,14 @@ public sealed partial class ReportsApiService
             {
                 Id = x.ReportObjectId,
                 Name = x.DisplayTitle ?? x.Name,
+                DisplayTitle = x.DisplayTitle,
+                Description = x.Description,
                 Type = x.ReportObjectType != null ? x.ReportObjectType.ShortName : null,
                 Url = x.ReportObjectUrl,
                 LastModified = x.LastModifiedDate,
                 AttachmentCount = x.ReportObjectAttachments.Count,
+                EpicMasterFile = x.EpicMasterFile,
+                EpicRecordId = x.EpicRecordId,
             })
             .ToListAsync(cancellationToken);
     }
