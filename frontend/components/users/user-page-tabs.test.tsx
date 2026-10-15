@@ -14,6 +14,8 @@ const allTabsVisible = {
 
 describe('UserPageTabs', () => {
     it("opens report runs by default for another user's profile", () => {
+        window.history.replaceState(null, '', '/users?id=2');
+
         render(
             <UserPageTabs
                 isCurrentUser={false}
@@ -29,10 +31,14 @@ describe('UserPageTabs', () => {
         );
 
         expect(screen.getByText('Report runs panel')).toBeInTheDocument();
+        expect(screen.queryByText('Activity panel')).not.toBeInTheDocument();
         expect(screen.queryByText('Stars panel')).not.toBeInTheDocument();
+        expect(window.location.hash).toBe('#run-list');
     });
 
     it('opens stars by default for the current user', () => {
+        window.history.replaceState(null, '', '/users?id=1');
+
         render(
             <UserPageTabs
                 isCurrentUser
@@ -49,5 +55,6 @@ describe('UserPageTabs', () => {
 
         expect(screen.getByText('Stars panel')).toBeInTheDocument();
         expect(screen.queryByText('Report runs panel')).not.toBeInTheDocument();
+        expect(window.location.hash).toBe('#stars');
     });
 });

@@ -45,7 +45,11 @@ export function UserPageTabs({
         setActiveTab(hashTab)
         return
       }
-      setActiveTab(getDefaultUserTab(isCurrentUser, visibleTabs))
+      const defaultTab = getDefaultUserTab(isCurrentUser, visibleTabs)
+      setActiveTab(defaultTab)
+      if (!window.location.hash) {
+        window.history.replaceState(null, "", `#${defaultTab}`)
+      }
     }
 
     syncFromHash()
