@@ -25,6 +25,29 @@ public class UsersApiController : ControllerBase
         return userId == CurrentUserId || User.HasPermission("Edit Other Users");
     }
 
+    [HttpGet("me/settings")]
+    public async Task<ActionResult<UserSettingsDto>> GetSettings(
+        CancellationToken cancellationToken = default
+    )
+    {
+        return Ok(await _usersApiService.GetSettingsAsync(CurrentUserId, cancellationToken));
+    }
+
+    [HttpPut("me/settings")]
+    public async Task<IActionResult> UpdateSettings(
+        [FromBody] UpdateUserSettingsRequestDto request,
+        CancellationToken cancellationToken = default
+    )
+    {
+        if (request?.ShareNotificationEnabled == null)
+        {
+            return BadRequest(new { error = "shareNotificationEnabled is required." });
+        }
+
+        await _usersApiService.UpdateSettingsAsync(CurrentUserId, request, cancellationToken);
+        return NoContent();
+    }
+
     [HttpGet("{id:int}")]
     public async Task<ActionResult<UserPageDto>> GetUserPage(
         int id,

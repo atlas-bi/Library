@@ -1,10 +1,16 @@
 "use client"
 
-import { BarChart3 } from "lucide-react"
+import { BarChart3, X } from "lucide-react"
 import type { ReactNode } from "react"
 import { InteractionTooltip } from "@/components/interactions/interaction-tooltip"
 import { Button } from "@/components/ui/button"
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
 
 export function EntityProfileSheet({
   entityName,
@@ -36,16 +42,20 @@ export function EntityProfileSheet({
     )
 
   return (
-    <Sheet>
+    <Dialog>
       <InteractionTooltip label={tooltipLabel} placement={tooltipPlacement}>
-        <SheetTrigger asChild>{trigger}</SheetTrigger>
+        <DialogTrigger asChild>{trigger}</DialogTrigger>
       </InteractionTooltip>
-      <SheetContent side="right" className="w-full overflow-y-auto sm:max-w-4xl lg:max-w-5xl">
-        <SheetHeader>
-          <SheetTitle>Profile — {entityName}</SheetTitle>
-        </SheetHeader>
-        <div className="mt-4">{children}</div>
-      </SheetContent>
-    </Sheet>
+      {/* Match Razor's modal-large: 90vw × 90vh, centred, scrollable */}
+      <DialogContent
+        className="flex max-h-[95vh] w-[95vw] max-w-[95vw] flex-col overflow-hidden p-0"
+        aria-describedby={undefined}
+      >
+        <DialogHeader className="shrink-0 border-b px-6 py-4">
+          <DialogTitle className="font-serif text-2xl font-bold">Profile</DialogTitle>
+        </DialogHeader>
+        <div className="min-h-0 flex-1 overflow-y-auto px-6 py-4">{children}</div>
+      </DialogContent>
+    </Dialog>
   )
 }

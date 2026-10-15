@@ -29,10 +29,48 @@ namespace Atlas_Web.Pages.Reports
         public List<Term> Terms { get; set; }
         public List<ReportObjectQuery> ComponentQueries { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(int id)
+        public class ReportListItem
         {
+            public int Id { get; set; }
+            public string Name { get; set; }
+            public string Type { get; set; }
+            public DateTime? LastModified { get; set; }
+        }
+
+        public IReadOnlyList<ReportListItem> Reports { get; set; } = Array.Empty<ReportListItem>();
+        public bool IsListView { get; set; }
+
+        public async Task<IActionResult> OnGetAsync(int? id)
+        {
+            if (!id.HasValue || id.Value <= 0)
+            {
+                IsListView = true;
+                Reports = await _cache.GetOrCreateAsync<List<ReportListItem>>(
+                    "reports-list",
+                    cacheEntry =>
+                    {
+                        cacheEntry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20);
+                        return _context
+                            .ReportObjects.AsNoTracking()
+                            .Where(x => x.DefaultVisibilityYn == "Y")
+                            .Where(x => (x.ReportObjectDoc.Hidden ?? "N") == "N")
+                            .OrderBy(x => x.DisplayTitle ?? x.Name)
+                            .Select(x => new ReportListItem
+                            {
+                                Id = x.ReportObjectId,
+                                Name = x.DisplayTitle ?? x.Name,
+                                Type = x.ReportObjectType != null ? x.ReportObjectType.ShortName : null,
+                                LastModified = x.LastModifiedDate,
+                            })
+                            .ToListAsync();
+                    }
+                );
+
+                return Page();
+            }
+
             Report = await _cache.GetOrCreateAsync<ReportObject>(
-                "report-" + id,
+                "report-" + id.Value,
                 cacheEntry =>
                 {
                     cacheEntry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20);
@@ -86,23 +124,28 @@ namespace Atlas_Web.Pages.Reports
                             .ThenInclude(x => x.ParentReportObject)
                                 .ThenInclude(x => x.ReportGroupsMemberships)
                         .AsNoTracking()
-                        .SingleOrDefaultAsync(x => x.ReportObjectId == id);
+                        .SingleOrDefaultAsync(x => x.ReportObjectId == id.Value);
                 }
             );
 
+            if (Report == null)
+            {
+                return NotFound();
+            }
+
             Terms = await _cache.GetOrCreateAsync<List<Term>>(
-                "report-terms-" + id,
+                "report-terms-" + id.Value,
                 cacheEntry =>
                 {
                     cacheEntry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20);
                     return _context
-                        .Terms.Where(x => x.ReportObjectDocTerms.Any(x => x.ReportObjectId == id))
+                        .Terms.Where(x => x.ReportObjectDocTerms.Any(x => x.ReportObjectId == id.Value))
                         // from first children
                         .Union(
                             _context.Terms.Where(x =>
                                 x.ReportObjectDocTerms.Any(x =>
                                     x.ReportObject.ReportObject.ReportObjectHierarchyChildReportObjects.Any(
-                                        x => x.ParentReportObjectId == id
+                                        x => x.ParentReportObjectId == id.Value
                                     )
                                 )
                             )
@@ -114,7 +157,7 @@ namespace Atlas_Web.Pages.Reports
                                     x.ReportObject.ReportObject.ReportObjectHierarchyChildReportObjects.Any(
                                         x =>
                                             x.ParentReportObject.ReportObjectHierarchyChildReportObjects.Any(
-                                                x => x.ParentReportObjectId == id
+                                                x => x.ParentReportObjectId == id.Value
                                             )
                                     )
                                 )
@@ -129,7 +172,7 @@ namespace Atlas_Web.Pages.Reports
                                             x.ParentReportObject.ReportObjectHierarchyChildReportObjects.Any(
                                                 x =>
                                                     x.ParentReportObject.ReportObjectHierarchyChildReportObjects.Any(
-                                                        x => x.ParentReportObjectId == id
+                                                        x => x.ParentReportObjectId == id.Value
                                                     )
                                             )
                                     )
@@ -147,7 +190,7 @@ namespace Atlas_Web.Pages.Reports
                                                     x.ParentReportObject.ReportObjectHierarchyChildReportObjects.Any(
                                                         x =>
                                                             x.ParentReportObject.ReportObjectHierarchyChildReportObjects.Any(
-                                                                x => x.ParentReportObjectId == id
+                                                                x => x.ParentReportObjectId == id.Value
                                                             )
                                                     )
                                             )
@@ -162,7 +205,7 @@ namespace Atlas_Web.Pages.Reports
             );
 
             ComponentQueries = await _cache.GetOrCreateAsync<List<ReportObjectQuery>>(
-                "report-comp-queries-" + id,
+                "report-comp-queries-" + id.Value,
                 cacheEntry =>
                 {
                     cacheEntry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20);
@@ -171,7 +214,7 @@ namespace Atlas_Web.Pages.Reports
                             x.ReportObject.ReportObjectHierarchyChildReportObjects.Any(x =>
                                 x.ParentReportObject.ReportObjectHierarchyChildReportObjects.Any(
                                     x =>
-                                        x.ParentReportObjectId == id
+                                        x.ParentReportObjectId == id.Value
                                         && x.ParentReportObject.EpicMasterFile == "IDB"
                                 )
                             )
@@ -186,14 +229,14 @@ namespace Atlas_Web.Pages.Reports
             // if there is an IDK, its children should be bumped up on level.
             // IDN > IDK (ignored) > IDB
             Children = await _cache.GetOrCreateAsync<List<ReportObject>>(
-                "report-children-" + id,
+                "report-children-" + id.Value,
                 cacheEntry =>
                 {
                     cacheEntry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20);
                     return _context
                         .ReportObjects.Where(x =>
                             x.ReportObjectHierarchyChildReportObjects.Any(y =>
-                                y.ParentReportObjectId == id
+                                y.ParentReportObjectId == id.Value
                             )
                         )
                         .Where(x => x.EpicMasterFile != "IDK")
@@ -208,7 +251,7 @@ namespace Atlas_Web.Pages.Reports
                                     x.ReportObjectHierarchyChildReportObjects.Any(y =>
                                         y.ParentReportObject.ReportObjectHierarchyChildReportObjects.Any(
                                             g =>
-                                                g.ParentReportObjectId == id
+                                                g.ParentReportObjectId == id.Value
                                                 && g.ParentReportObject.DefaultVisibilityYn == "Y"
                                         )
                                         && y.ParentReportObject.EpicMasterFile == "IDK"
@@ -230,14 +273,14 @@ namespace Atlas_Web.Pages.Reports
             // also exclude personal dashboards
             // IDN > IDK (ignored) > IDB
             Parents = await _cache.GetOrCreateAsync<List<ReportObject>>(
-                "report-parents-" + id,
+                "report-parents-" + id.Value,
                 cacheEntry =>
                 {
                     cacheEntry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20);
                     return _context
                         .ReportObjects.Where(x =>
                             x.ReportObjectHierarchyParentReportObjects.Any(y =>
-                                y.ChildReportObjectId == id
+                                y.ChildReportObjectId == id.Value
                             )
                         )
                         .Where(x => x.ReportObjectTypeId != 12) //Personal dashboard
@@ -252,7 +295,7 @@ namespace Atlas_Web.Pages.Reports
                                 .ReportObjects.Where(x =>
                                     x.ReportObjectHierarchyParentReportObjects.Any(y =>
                                         y.ChildReportObject.ReportObjectHierarchyParentReportObjects.Any(
-                                            g => g.ChildReportObjectId == id
+                                            g => g.ChildReportObjectId == id.Value
                                         )
                                         && y.ChildReportObject.EpicMasterFile == "IDK"
                                     )

@@ -167,6 +167,7 @@ public sealed class GroupSummaryDto
     public string Name { get; init; }
     public string Email { get; init; }
     public string Type { get; init; }
+    public string Source { get; init; }
 }
 
 public sealed class CollectionSummaryDto
@@ -174,6 +175,9 @@ public sealed class CollectionSummaryDto
     public int Id { get; init; }
     public string Name { get; init; }
     public int? Rank { get; init; }
+    public string Description { get; init; }
+    public bool IsStarred { get; set; }
+    public int StarCount { get; init; }
 }
 
 public sealed class ReportParameterDto
@@ -191,6 +195,9 @@ public sealed class ReportQueryDto
     public string Language { get; init; }
     public string SourceServer { get; init; }
     public string Query { get; init; }
+    public string Description { get; init; }
+    public string EpicMasterFile { get; init; }
+    public decimal? EpicRecordId { get; init; }
     public DateTime? LastLoadDate { get; init; }
 }
 
@@ -205,10 +212,15 @@ public sealed class ReportLinkSummaryDto
 {
     public int Id { get; init; }
     public string Name { get; init; }
+    public string DisplayTitle { get; init; }
+    public string Description { get; init; }
     public string Type { get; init; }
     public string Url { get; init; }
     public DateTime? LastModified { get; init; }
     public int AttachmentCount { get; init; }
+    public bool CanRun { get; set; }
+    public string EpicMasterFile { get; init; }
+    public decimal? EpicRecordId { get; init; }
 }
 
 public sealed class ReportMaintenanceLogDto

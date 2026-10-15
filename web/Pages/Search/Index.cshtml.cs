@@ -200,8 +200,18 @@ namespace Atlas_Web.Pages.Search
             return BuildSearchString(search_string, query);
         }
 
+        public static string ResolveSearchQuery(
+            string query,
+            Microsoft.AspNetCore.Http.IQueryCollection requestQuery
+        )
+        {
+            return query ?? requestQuery["q"].FirstOrDefault();
+        }
+
         public async Task<IActionResult> OnGet(string Query)
         {
+            Query = ResolveSearchQuery(Query, Request.Query);
+
             if (string.IsNullOrEmpty(Query))
             {
                 return RedirectToPage("/Index/Index");

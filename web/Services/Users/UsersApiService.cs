@@ -13,6 +13,15 @@ namespace Atlas_Web.Services;
 
 public interface IUsersApiService
 {
+    Task<UserSettingsDto> GetSettingsAsync(
+        int userId,
+        CancellationToken cancellationToken
+    );
+    Task UpdateSettingsAsync(
+        int userId,
+        UpdateUserSettingsRequestDto request,
+        CancellationToken cancellationToken
+    );
     Task<UserPageDto> GetUserPageAsync(
         ClaimsPrincipal user,
         int requestedId,
@@ -169,6 +178,52 @@ public sealed partial class UsersApiService : IUsersApiService
     {
         _cache.Remove("FavoriteFolders-" + userId);
         _cache.Remove("FavoriteReports-" + userId);
+    }
+
+    public async Task<UserSettingsDto> GetSettingsAsync(
+        int userId,
+        CancellationToken cancellationToken
+    )
+    {
+        var setting = await _context.UserSettings.SingleOrDefaultAsync(
+            x => x.UserId == userId && x.Name == "share_notification",
+            cancellationToken
+        );
+
+        return new UserSettingsDto
+        {
+            ShareNotificationEnabled = setting?.Value != "N",
+        };
+    }
+
+    public async Task UpdateSettingsAsync(
+        int userId,
+        UpdateUserSettingsRequestDto request,
+        CancellationToken cancellationToken
+    )
+    {
+        var setting = await _context.UserSettings.SingleOrDefaultAsync(
+            x => x.UserId == userId && x.Name == "share_notification",
+            cancellationToken
+        );
+
+        if (setting == null)
+        {
+            _context.UserSettings.Add(
+                new UserSetting
+                {
+                    UserId = userId,
+                    Name = "share_notification",
+                    Value = request.ShareNotificationEnabled == true ? "Y" : "N",
+                }
+            );
+        }
+        else
+        {
+            setting.Value = request.ShareNotificationEnabled == true ? "Y" : "N";
+        }
+
+        await _context.SaveChangesAsync(cancellationToken);
     }
 
     private static UserFavoriteFolderDto ToFolderDto(UserFavoriteFolder folder, int itemCount)

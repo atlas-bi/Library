@@ -3,18 +3,54 @@
 
 @model Atlas_Web.Pages.Groups.IndexModel
 @{
-    ViewData["Title"] = @Model.Group.Name;
-    ViewBag.GroupId = @Model.Group.Id;
-    if(ViewBag.DefaultReportTypes.Count > 0)
+    ViewData["Title"] = Model.IsListView ? "Groups" : Model.Group?.Name;
+    if (!Model.IsListView && Model.Group != null)
     {
-        foreach (var item in ViewBag.DefaultReportTypes){
-            ViewBag.DefaultFilters += "&reportType=" + @item;
+        ViewBag.GroupId = Model.Group.Id;
+        if(ViewBag.DefaultReportTypes.Count > 0)
+        {
+            foreach (var item in ViewBag.DefaultReportTypes){
+                ViewBag.DefaultFilters += "&reportType=" + @item;
+            }
         }
     }
 }
 
 @if(!User.HasPermission("View Groups")){
     <p class="block">You do not have access to this page.</p>
+}
+else if (Model.IsListView)
+{
+    <h1 class="title is-1">Groups</h1>
+
+    @if (Model.Groups.Count > 0)
+    {
+        <div class="table-container mt-5">
+            <table class="table is-narrow sort" aria-label="groups">
+                <thead>
+                    <tr>
+                        <th>Group Name</th>
+                        <th>Type</th>
+                        <th>Source</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var group in Model.Groups)
+                    {
+                        <tr>
+                            <td><a href="/groups?id=@group.Id">@group.Name</a></td>
+                            <td>@group.Type</td>
+                            <td>@group.Source</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <p>No groups to show.</p>
+    }
 }
 else {
 <h1 class="title is-1">@Model.Group.Name</h1>
