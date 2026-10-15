@@ -5,19 +5,19 @@ using System.Text;
 using Atlas_Web;
 using Atlas_Web.Authentication;
 using Atlas_Web.Authorization;
+using Atlas_Web.Configuration;
 using Atlas_Web.Middleware;
 using Atlas_Web.Models;
 using Atlas_Web.Services;
 using Atlas_Web.Services.Seeding;
 using Hangfire;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
 using ITfoxtec.Identity.Saml2;
 using ITfoxtec.Identity.Saml2.MvcCore;
 using ITfoxtec.Identity.Saml2.MvcCore.Configuration;
 using ITfoxtec.Identity.Saml2.Schemas.Metadata;
 using ITfoxtec.Identity.Saml2.Util;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authentication.Negotiate;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.DataProtection;
@@ -27,6 +27,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.FileProviders;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.Net.Http.Headers;
 using SolrNet;
 using WebMarkupMin.AspNet.Common.Compressors;
@@ -222,32 +223,52 @@ ProgramConfiguration.ConfigureJwtAuthentication(builder);
 if (builder.Configuration.GetSection("Saml2").Exists())
 {
     builder.Services.AddHttpClient();
+    var disableSslCertificateValidation = BooleanConfig.IsEnabled(
+        builder.Configuration["Saml2:disable_ssl_certificate_validation"]
+    );
+    if (disableSslCertificateValidation)
+    {
+        builder
+            .Services.AddHttpClient("Saml2Metadata")
+            .ConfigurePrimaryHttpMessageHandler(() =>
+                new HttpClientHandler
+                {
+                    ServerCertificateCustomValidationCallback =
+                        HttpClientHandler.DangerousAcceptAnyServerCertificateValidator,
+                }
+            );
+    }
+
     builder.Services.BindConfig<Saml2Configuration>(
         builder.Configuration,
         "Saml2",
         (serviceProvider, saml2Configuration) =>
         {
-            //saml2Configuration.SignAuthnRequest = true;
-            saml2Configuration.SigningCertificate = CertificateUtil.Load(
-                builder.Environment.MapToPhysicalFilePath(
-                    builder.Configuration["Saml2:SigningCertificateFile"]
-                ),
-                builder.Configuration["Saml2:SigningCertificatePassword"],
-                X509KeyStorageFlags.MachineKeySet | X509KeyStorageFlags.PersistKeySet
-            );
+            var certificateFile = builder.Configuration["Saml2:SigningCertificateFile"];
+            if (!string.IsNullOrWhiteSpace(certificateFile))
+            {
+                saml2Configuration.SigningCertificate = CertificateUtil.Load(
+                    builder.Environment.MapToPhysicalFilePath(certificateFile),
+                    builder.Configuration["Saml2:SigningCertificatePassword"],
+                    X509KeyStorageFlags.MachineKeySet | X509KeyStorageFlags.PersistKeySet
+                );
+            }
+            else
+            {
+                saml2Configuration.SignAuthnRequest = false;
+            }
 
-            //saml2Configuration.SignatureValidationCertificates.Add(CertificateUtil.Load(AppEnvironment.MapToPhysicalFilePath(Configuration["Saml2:SignatureValidationCertificateFile"])));
-            saml2Configuration.AllowedAudienceUris.Add(saml2Configuration.Issuer);
+            if (!string.IsNullOrWhiteSpace(saml2Configuration.Issuer))
+            {
+                saml2Configuration.AllowedAudienceUris.Add(saml2Configuration.Issuer);
+            }
 
             var httpClientFactory = serviceProvider.GetService<IHttpClientFactory>();
-            var entityDescriptor = new EntityDescriptor();
-            entityDescriptor
-                .ReadIdPSsoDescriptorFromUrlAsync(
-                    httpClientFactory,
-                    new Uri(builder.Configuration["Saml2:IdPMetadata"])
-                )
-                .GetAwaiter()
-                .GetResult();
+            var entityDescriptor = ReadIdpMetadata(
+                builder,
+                httpClientFactory,
+                disableSslCertificateValidation
+            );
             if (entityDescriptor.IdPSsoDescriptor != null)
             {
                 saml2Configuration.AllowedIssuer = entityDescriptor.EntityId;
@@ -268,7 +289,10 @@ if (builder.Configuration.GetSection("Saml2").Exists())
                 {
                     throw new Exception("The IdP signing certificates has expired.");
                 }
-                if (entityDescriptor.IdPSsoDescriptor.WantAuthnRequestsSigned.HasValue)
+                if (
+                    saml2Configuration.SigningCertificate != null
+                    && entityDescriptor.IdPSsoDescriptor.WantAuthnRequestsSigned.HasValue
+                )
                 {
                     saml2Configuration.SignAuthnRequest = entityDescriptor
                         .IdPSsoDescriptor
@@ -489,4 +513,42 @@ if (!app.Environment.IsEnvironment("Test"))
 app.Run();
 
 # pragma warning disable S1118
-public partial class Program { }
+public partial class Program
+{
+    private static EntityDescriptor ReadIdpMetadata(
+        WebApplicationBuilder builder,
+        IHttpClientFactory httpClientFactory,
+        bool disableSslCertificateValidation
+    )
+    {
+        var idpMetadata = builder.Configuration["Saml2:IdPMetadata"];
+        if (string.IsNullOrWhiteSpace(idpMetadata))
+        {
+            throw new InvalidOperationException("Saml2:IdPMetadata is required.");
+        }
+
+        if (idpMetadata.TrimStart().StartsWith('<'))
+        {
+            return new EntityDescriptor().ReadIdPSsoDescriptor(idpMetadata);
+        }
+
+        if (
+            idpMetadata.StartsWith("https://", StringComparison.OrdinalIgnoreCase)
+            || idpMetadata.StartsWith("http://", StringComparison.OrdinalIgnoreCase)
+        )
+        {
+            return new EntityDescriptor()
+                .ReadIdPSsoDescriptorFromUrlAsync(
+                    httpClientFactory,
+                    new Uri(idpMetadata),
+                    httpClientName: disableSslCertificateValidation ? "Saml2Metadata" : null
+                )
+                .GetAwaiter()
+                .GetResult();
+        }
+
+        return new EntityDescriptor().ReadIdPSsoDescriptorFromFile(
+            builder.Environment.MapToPhysicalFilePath(idpMetadata)
+        );
+    }
+}

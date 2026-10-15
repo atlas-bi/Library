@@ -22,14 +22,29 @@ namespace Atlas_Web.Controllers
         public IActionResult Index()
         {
             var defaultSite = new Uri($"{Request.Scheme}://{Request.Host.ToUriComponent()}/");
+            if (string.IsNullOrWhiteSpace(config.Issuer))
+            {
+                config.Issuer = defaultSite.GetLeftPart(UriPartial.Authority);
+            }
 
-            var entityDescriptor = new EntityDescriptor(config);
+            if (!config.AllowedAudienceUris.Contains(config.Issuer))
+            {
+                config.AllowedAudienceUris.Add(config.Issuer);
+            }
+
+            var entityDescriptor = new EntityDescriptor(
+                config,
+                signMetadata: config.SigningCertificate != null
+            );
             entityDescriptor.ValidUntil = 365;
             entityDescriptor.SPSsoDescriptor = new SPSsoDescriptor
             {
                 AuthnRequestsSigned = config.SignAuthnRequest,
                 WantAssertionsSigned = true,
-                SigningCertificates = new X509Certificate2[] { config.SigningCertificate },
+                SigningCertificates =
+                    config.SigningCertificate == null
+                        ? Array.Empty<X509Certificate2>()
+                        : new X509Certificate2[] { config.SigningCertificate },
                 //EncryptionCertificates = new X509Certificate2[]
                 //{
                 //    config.DecryptionCertificate

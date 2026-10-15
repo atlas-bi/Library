@@ -25,6 +25,14 @@ const nextConfig: NextConfig = {
                 source: '/Auth/:path*',
                 destination: `${normalized}/Auth/:path*`,
             },
+            {
+                source: '/metadata',
+                destination: `${normalized}/Metadata`,
+            },
+            {
+                source: '/Metadata',
+                destination: `${normalized}/Metadata`,
+            },
             ...legacyAssetRoutes.map((route) => ({
                 source: route,
                 destination: `${normalized}${route}`,
