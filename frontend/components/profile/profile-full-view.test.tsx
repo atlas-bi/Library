@@ -1,4 +1,4 @@
-import { render, screen, waitFor, act } from "@testing-library/react"
+import { render, screen, waitFor } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import { describe, expect, it, vi, beforeEach } from "vitest"
 import { ProfileFullView } from "./profile-full-view"
@@ -228,6 +228,32 @@ describe("ProfileFullView", () => {
     expect(screen.queryByText(/unable to load profile analytics/i)).toBeNull()
     expect(screen.getByText("42")).toBeDefined()
   })
+
+  it.each(["term", "collection"] as const)(
+    "renders empty analytics shell for %s when load succeeds with no chart",
+    async (profileType) => {
+      const emptyShell: ProfileAnalyticsData = {
+        chart: { runs: 0, users: 0, runTime: 0, history: [] },
+        users: [],
+        reports: [],
+        fails: [],
+        runList: [],
+        stars: [],
+        subscriptions: [],
+      }
+
+      vi.mocked(loadProfileAnalyticsAction).mockResolvedValue({
+        data: emptyShell,
+        error: null,
+      })
+
+      render(<ProfileFullView id={1} type={profileType} />)
+      await waitFor(() => {
+        expect(screen.queryByText(/unable to load profile analytics/i)).toBeNull()
+        expect(screen.getByText(/no history data available/i)).toBeDefined()
+      })
+    },
+  )
 
   it("formats percentages correctly and displays proper item names", () => {
     const dataWithMockLabels = {
