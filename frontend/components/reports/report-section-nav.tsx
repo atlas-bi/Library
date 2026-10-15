@@ -1,5 +1,3 @@
-import { ChevronRight } from "lucide-react"
-
 export type ReportSectionLink = {
   href: string
   label: string
@@ -9,22 +7,22 @@ export function ReportSectionNav({ links }: { links: ReportSectionLink[] }) {
   if (links.length === 0) return null
 
   return (
-    <nav aria-label="Report sections" className="text-sm">
-      <ol className="flex flex-wrap items-center gap-1">
+    <nav aria-label="Report sections" className="atlas-home-tab-nav">
+      <ul className="flex flex-wrap items-center text-[0.95rem]">
         {links.map((link, index) => (
-          <li key={link.href} className="flex items-center gap-1">
+          <li key={link.href}>
             {index > 0 ? (
-              <ChevronRight className="size-3.5 text-muted-foreground" aria-hidden />
+              <span className="mx-1.5 text-[var(--atlas-home-muted-light)]">/</span>
             ) : null}
             <a
               href={link.href}
-              className="rounded-md px-1.5 py-0.5 font-medium text-link hover:bg-muted hover:underline"
+              className="text-[0.9rem] text-[var(--atlas-home-link)] hover:text-[var(--atlas-home-link-hover)] hover:underline"
             >
               {link.label}
             </a>
           </li>
         ))}
-      </ol>
+      </ul>
     </nav>
   )
 }
