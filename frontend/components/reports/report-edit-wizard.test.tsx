@@ -11,10 +11,6 @@ vi.mock("@/app/reports/actions", () => ({
   updateReportAction: vi.fn(async () => ({ data: {} })),
 }))
 
-vi.mock("next/image", () => ({
-  default: (props: { alt?: string }) => <img alt={props.alt ?? ""} />,
-}))
-
 const lookupOptions = {
   organizationalValues: [{ id: 1, name: "High" }],
   runFrequencies: [{ id: 2, name: "Daily" }],
@@ -70,11 +66,11 @@ describe("ReportEditWizard", () => {
     expect(screen.queryByLabelText("Developer description")).not.toBeInTheDocument()
   })
 
-  it("lists existing images on the images step", async () => {
+  it("lists existing images on the images step using the thumb handler when source is null", async () => {
     const user = userEvent.setup()
     const reportWithImages: ReportDetail = {
       ...report,
-      images: [{ id: 1, source: "https://example.com/report.png" }],
+      images: [{ id: 99, source: null }],
     }
 
     render(
@@ -88,6 +84,10 @@ describe("ReportEditWizard", () => {
     await user.click(screen.getByRole("link", { name: "Images" }))
 
     expect(window.location.hash).toBe("#images")
-    expect(screen.getByAltText("Report image 1")).toBeInTheDocument()
+    const image = screen.getByAltText("Report image 99")
+    expect(image).toHaveAttribute(
+      "src",
+      "/data/img?handler=Thumb&id=-1&imgId=99&size=256x256",
+    )
   })
 })

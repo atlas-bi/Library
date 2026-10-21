@@ -1,6 +1,5 @@
 "use client"
 
-import Image from "next/image"
 import Link from "next/link"
 import { useCallback, useEffect, useMemo, useState } from "react"
 import { ReportEditForm } from "@/components/reports/report-edit-form"
@@ -8,6 +7,7 @@ import { ReportImageUpload } from "@/components/reports/report-image-upload"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
+import { getReportObjectImageThumbUrl } from "@/lib/reports/report-image-url"
 import type { ReportDetail, ReportEditLookupOptions } from "@/lib/reports/types"
 
 export const REPORT_EDIT_WIZARD_STEPS = [
@@ -164,17 +164,11 @@ export function ReportEditWizard({
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                   {existingImages.map((image) => (
                     <div key={image.id} className="rounded-md border border-[var(--atlas-home-border-soft)] p-2">
-                      {image.source ? (
-                        <Image
-                          src={image.source}
-                          alt={`Report image ${image.id}`}
-                          width={640}
-                          height={480}
-                          className="h-auto w-full"
-                        />
-                      ) : (
-                        <p className="text-sm text-muted-foreground">Image {image.id}</p>
-                      )}
+                      <img
+                        src={getReportObjectImageThumbUrl(image.id)}
+                        alt={`Report image ${image.id}`}
+                        className="h-auto w-full max-h-64 rounded-md border border-[var(--atlas-home-border-soft)] object-cover"
+                      />
                     </div>
                   ))}
                 </div>
