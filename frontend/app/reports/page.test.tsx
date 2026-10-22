@@ -17,9 +17,13 @@ vi.mock("@/lib/auth", () => ({
   getCurrentUser: getCurrentUserMock,
 }))
 
+const { getReportsListMock } = vi.hoisted(() => ({
+  getReportsListMock: vi.fn(),
+}))
+
 vi.mock("@/lib/reports/api", () => ({
   getReportDetailById: getReportDetailByIdMock,
-  getReportsList: vi.fn(),
+  getReportsList: getReportsListMock,
 }))
 
 vi.mock("next/navigation", () => ({
@@ -76,6 +80,48 @@ const report16: ReportDetail = {
   maintenanceStatus: { isRequired: true, message: "Report requires maintenance." },
   canViewGroups: true,
 }
+
+describe("ReportsPage list view", () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+    getTokenMock.mockResolvedValue("token")
+    getCurrentUserMock.mockResolvedValue(stubUser)
+  })
+
+  it("renders the reports index when id is omitted", async () => {
+    getReportsListMock.mockResolvedValue({
+      data: {
+        reports: [
+          {
+            id: 16,
+            name: "daily_emergency_department_census",
+            displayTitle: "Daily Emergency Department Census",
+            type: "SSRS",
+            lastModified: "2026-01-15T00:00:00Z",
+          },
+        ],
+        total: 1,
+        page: 1,
+        pageSize: 20,
+      },
+      error: null,
+    })
+
+    render(
+      await ReportsPage({
+        searchParams: Promise.resolve({}),
+      }),
+    )
+
+    expect(screen.getByRole("heading", { level: 1, name: "Reports" })).toBeInTheDocument()
+    expect(screen.getByText("Browse documented reports in the library.")).toBeInTheDocument()
+    expect(
+      screen.getByRole("link", { name: "Daily Emergency Department Census" }),
+    ).toHaveAttribute("href", "/reports?id=16")
+    expect(getReportDetailByIdMock).not.toHaveBeenCalled()
+    expect(getReportsListMock).toHaveBeenCalledWith(1, 20)
+  })
+})
 
 describe("ReportsPage detail view", () => {
   beforeEach(() => {
