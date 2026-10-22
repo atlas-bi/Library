@@ -36,10 +36,13 @@ export function ReportEditWizard({
   report,
   cancelHref,
   lookupOptions,
+  publicApiBase = "",
 }: {
   report: ReportDetail
   cancelHref: string
   lookupOptions: ReportEditLookupOptions
+  /** Browser-reachable API origin for /data/img thumbs (NEXT_PUBLIC_API_URL). */
+  publicApiBase?: string
 }) {
   const [step, setStep] = useState<ReportEditWizardStep>(() => getDefaultReportEditWizardStep())
   const title = report.displayTitle || report.displayName || report.name
@@ -165,7 +168,7 @@ export function ReportEditWizard({
                   {existingImages.map((image) => (
                     <div key={image.id} className="rounded-md border border-[var(--atlas-home-border-soft)] p-2">
                       <img
-                        src={getReportObjectImageThumbUrl(image.id)}
+                        src={getReportObjectImageThumbUrl(image.id, { apiBase: publicApiBase })}
                         alt={`Report image ${image.id}`}
                         className="h-auto w-full max-h-64 rounded-md border border-[var(--atlas-home-border-soft)] object-cover"
                       />

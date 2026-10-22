@@ -78,6 +78,7 @@ describe("ReportEditWizard", () => {
         report={reportWithImages}
         cancelHref="/reports?id=16"
         lookupOptions={lookupOptions}
+        publicApiBase="http://localhost:5000"
       />,
     )
 
@@ -87,7 +88,7 @@ describe("ReportEditWizard", () => {
     const image = screen.getByAltText("Report image 99")
     expect(image).toHaveAttribute(
       "src",
-      "/data/img?handler=Thumb&id=-1&imgId=99&size=256x256",
+      "http://localhost:5000/data/img?handler=Thumb&id=-1&imgId=99&size=256x256",
     )
   })
 })
