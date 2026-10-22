@@ -78,7 +78,7 @@ export default async function ReportsPage({
   const user = await getCurrentUser()
   const shellProps = getShellProps(user)
 
-  const idRaw = getSingleValue(resolvedSearchParams.id)?.trim()
+  const idRaw = getSingleValue(resolvedSearchParams.id)
   if (!idRaw) {
     const page = asPositiveInt(getSingleValue(resolvedSearchParams.page), 1)
     const pageSize = Math.min(100, asPositiveInt(getSingleValue(resolvedSearchParams.pageSize), 20))

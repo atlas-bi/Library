@@ -121,7 +121,7 @@ public sealed partial class ReportsApiService
         {
             query = query
                 .Where(x => x.DefaultVisibilityYn == "Y")
-                .Where(x => x.ReportObjectDoc == null || (x.ReportObjectDoc.Hidden ?? "N") == "N");
+                .Where(x => (x.ReportObjectDoc.Hidden ?? "N") == "N");
         }
 
         var report = await query
