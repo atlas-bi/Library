@@ -39,6 +39,10 @@ public interface IProfileApiService
         string type,
         CancellationToken cancellationToken
     );
+    Task<ProfileFiltersResponseDto> GetFiltersAsync(
+        ProfileQueryRequestDto request,
+        CancellationToken cancellationToken
+    );
 }
 
 public sealed class ProfileApiService : IProfileApiService
@@ -66,6 +70,13 @@ public sealed class ProfileApiService : IProfileApiService
         public int ReportObjectId { get; init; }
         public string Name { get; init; }
         public string DisplayTitle { get; init; }
+        public string SourceServer { get; init; }
+        public string SourceDb { get; init; }
+        public string EpicMasterFile { get; init; }
+        public string DefaultVisibilityYn { get; init; }
+        public string Availability { get; init; }
+        public int? ReportObjectTypeId { get; init; }
+        public string ReportObjectTypeName { get; init; }
     }
 
     private sealed class ProfileQueryOptions
@@ -224,7 +235,8 @@ public sealed class ProfileApiService : IProfileApiService
             .AsNoTracking()
             .ToListAsync(cancellationToken);
 
-        return failures.Select(x => new ProfileBarItemDto
+        return failures
+            .Select(x => new ProfileBarItemDto
             {
                 Key = SplitCamelCaseRegex.Replace(
                     RsPrefixRegex.Replace(x.Status, string.Empty),
@@ -234,6 +246,107 @@ public sealed class ProfileApiService : IProfileApiService
                 Percent = total == 0 ? 0 : (double)x.Count / total,
                 TitleOne = "Failed Runs",
                 TitleTwo = "Fails",
+            })
+            .ToList();
+    }
+
+    public async Task<ProfileFiltersResponseDto> GetFiltersAsync(
+        ProfileQueryRequestDto request,
+        CancellationToken cancellationToken
+    )
+    {
+        var subquery = (await BuildSubqueriesAsync(ToQueryOptions(request), cancellationToken)).Filtered;
+
+        return new ProfileFiltersResponseDto
+        {
+            Server = await FilterCountsAsync(subquery.GroupBy(x => x.SourceServer), cancellationToken),
+            Database = await FilterCountsAsync(subquery.GroupBy(x => x.SourceDb), cancellationToken),
+            MasterFile = await FilterCountsAsync(
+                subquery.GroupBy(x => string.IsNullOrEmpty(x.EpicMasterFile) ? "None" : x.EpicMasterFile),
+                cancellationToken
+            ),
+            Visible = await VisibleFilterCountsAsync(subquery, cancellationToken),
+            Certification = await CertificationFilterCountsAsync(subquery, cancellationToken),
+            Availability = await FilterCountsAsync(
+                subquery.GroupBy(x => string.IsNullOrEmpty(x.Availability) ? "Public" : x.Availability),
+                cancellationToken
+            ),
+            ReportType = await ReportTypeFilterCountsAsync(subquery, cancellationToken),
+        };
+    }
+
+    private async Task<IReadOnlyList<ProfileFilterItemDto>> CertificationFilterCountsAsync(
+        IQueryable<ProfileRunRow> subquery,
+        CancellationToken cancellationToken
+    )
+    {
+        var rows = await (
+            from link in _context.ReportTagLinks
+            join run in subquery on link.ReportId equals run.ReportObjectId
+            group run by link.Tag.Name into grp
+            select new { Value = grp.Key, Count = grp.Sum(x => x.Runs) }
+        )
+            .AsNoTracking()
+            .ToListAsync(cancellationToken);
+
+        return ToFilterItems(rows.Select(x => (x.Value, x.Value, x.Count)));
+    }
+
+    private static async Task<IReadOnlyList<ProfileFilterItemDto>> VisibleFilterCountsAsync(
+        IQueryable<ProfileRunRow> subquery,
+        CancellationToken cancellationToken
+    )
+    {
+        var rows = await subquery
+            .GroupBy(x => x.DefaultVisibilityYn == "N" ? "N" : "Y")
+            .Select(x => new { Value = x.Key, Count = x.Sum(y => y.Runs) })
+            .ToListAsync(cancellationToken);
+
+        return ToFilterItems(rows.Select(x => (x.Value, x.Value == "N" ? "No" : "Yes", x.Count)));
+    }
+
+    private static async Task<IReadOnlyList<ProfileFilterItemDto>> ReportTypeFilterCountsAsync(
+        IQueryable<ProfileRunRow> subquery,
+        CancellationToken cancellationToken
+    )
+    {
+        var rows = await subquery
+            .GroupBy(x => new { x.ReportObjectTypeId, x.ReportObjectTypeName })
+            .Select(x => new
+            {
+                x.Key.ReportObjectTypeId,
+                x.Key.ReportObjectTypeName,
+                Count = x.Sum(y => y.Runs),
+            })
+            .ToListAsync(cancellationToken);
+
+        return ToFilterItems(
+            rows.Select(x => (x.ReportObjectTypeId.ToString(), x.ReportObjectTypeName, x.Count))
+        );
+    }
+
+    private static async Task<IReadOnlyList<ProfileFilterItemDto>> FilterCountsAsync(
+        IQueryable<IGrouping<string, ProfileRunRow>> groups,
+        CancellationToken cancellationToken
+    )
+    {
+        var rows = await groups
+            .Select(x => new { Value = x.Key, Count = x.Sum(y => y.Runs) })
+            .ToListAsync(cancellationToken);
+
+        return ToFilterItems(rows.Select(x => (x.Value, x.Value, x.Count)));
+    }
+
+    private static IReadOnlyList<ProfileFilterItemDto> ToFilterItems(
+        IEnumerable<(string Value, string Label, int Count)> rows
+    )
+    {
+        return rows
+            .Select(x => new ProfileFilterItemDto
+            {
+                Value = x.Value,
+                Label = x.Label,
+                Count = x.Count,
             })
             .ToList();
     }
@@ -395,6 +508,13 @@ public sealed class ProfileApiService : IProfileApiService
                 ReportObjectId = b.ReportObjectId,
                 Name = r.Name,
                 DisplayTitle = r.DisplayTitle,
+                SourceServer = r.SourceServer,
+                SourceDb = r.SourceDb,
+                EpicMasterFile = r.EpicMasterFile,
+                DefaultVisibilityYn = r.DefaultVisibilityYn,
+                Availability = r.Availability,
+                ReportObjectTypeId = r.ReportObjectTypeId,
+                ReportObjectTypeName = r.ReportObjectType.Name,
             };
 
         var (filtered, grouped, dateFormat) = BuildDateGrouping(joined, query, start, end);

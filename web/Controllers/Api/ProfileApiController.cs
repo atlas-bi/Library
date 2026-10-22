@@ -81,6 +81,15 @@ public class ProfileApiController : ControllerBase
         }
     }
 
+    [HttpGet("filters")]
+    public async Task<ActionResult<ProfileFiltersResponseDto>> GetFilters(
+        [FromQuery] ProfileQueryRequestDto request,
+        CancellationToken cancellationToken = default
+    )
+    {
+        return Ok(await _profileApiService.GetFiltersAsync(request, cancellationToken));
+    }
+
     [HttpGet("subscriptions")]
     public async Task<ActionResult<IReadOnlyList<ProfileSubscriptionDto>>> GetSubscriptions(
         [FromQuery] int id,
