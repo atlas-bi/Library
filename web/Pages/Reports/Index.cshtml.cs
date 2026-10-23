@@ -53,7 +53,9 @@ namespace Atlas_Web.Pages.Reports
                         return _context
                             .ReportObjects.AsNoTracking()
                             .Where(x => x.DefaultVisibilityYn == "Y")
-                            .Where(x => (x.ReportObjectDoc.Hidden ?? "N") == "N")
+                            .Where(x =>
+                                x.ReportObjectDoc == null || (x.ReportObjectDoc.Hidden ?? "N") == "N"
+                            )
                             .OrderBy(x => x.DisplayTitle ?? x.Name)
                             .Select(x => new ReportListItem
                             {
