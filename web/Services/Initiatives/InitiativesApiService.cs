@@ -34,6 +34,9 @@ public interface IInitiativesApiService
         string search,
         CancellationToken cancellationToken
     );
+    Task<IReadOnlyList<RecentInitiativeDto>> GetRecentInitiativesAsync(
+        CancellationToken cancellationToken
+    );
 }
 
 public sealed class InitiativesApiService : IInitiativesApiService
@@ -387,6 +390,17 @@ public sealed class InitiativesApiService : IInitiativesApiService
         {
             collection.InitiativeId = initiativeId;
         }
+    }
+
+    public async Task<IReadOnlyList<RecentInitiativeDto>> GetRecentInitiativesAsync(
+        CancellationToken cancellationToken
+    )
+    {
+        return await _context.Initiatives.AsNoTracking()
+            .OrderByDescending(x => x.LastUpdateDate)
+            .Take(10)
+            .Select(x => new RecentInitiativeDto { Id = x.InitiativeId, Name = x.Name })
+            .ToListAsync(cancellationToken);
     }
 
     private void InvalidateInitiativeCaches(int initiativeId, IEnumerable<int> collectionIds)

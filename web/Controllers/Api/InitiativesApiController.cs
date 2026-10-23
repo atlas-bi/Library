@@ -18,6 +18,15 @@ public class InitiativesApiController : ControllerBase
         _initiativesApiService = initiativesApiService;
     }
 
+    [HttpGet("recent")]
+    public async Task<ActionResult<IReadOnlyList<RecentInitiativeDto>>> GetRecentInitiatives(
+        CancellationToken cancellationToken = default
+    )
+    {
+        Response.Headers.CacheControl = "max-age=7200";
+        return Ok(await _initiativesApiService.GetRecentInitiativesAsync(cancellationToken));
+    }
+
     [HttpGet]
     public async Task<ActionResult<InitiativeListResponseDto>> GetInitiatives(
         CancellationToken cancellationToken = default

@@ -19,6 +19,15 @@ public class CollectionsApiController : ControllerBase
         _collectionsApiService = collectionsApiService;
     }
 
+    [HttpGet("recent")]
+    public async Task<ActionResult<IReadOnlyList<RecentCollectionDto>>> GetRecentCollections(
+        CancellationToken cancellationToken = default
+    )
+    {
+        Response.Headers.CacheControl = "max-age=7200";
+        return Ok(await _collectionsApiService.GetRecentCollectionsAsync(cancellationToken));
+    }
+
     [HttpGet]
     public async Task<ActionResult<CollectionListResponseDto>> GetCollections(
         [FromQuery]

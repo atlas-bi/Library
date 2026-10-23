@@ -98,6 +98,12 @@ public sealed class CreateInitiativeRequestDto
     public IReadOnlyList<int> CollectionIds { get; init; } = Array.Empty<int>();
 }
 
+public sealed class RecentInitiativeDto
+{
+    public int Id { get; init; }
+    public string Name { get; init; }
+}
+
 public sealed class UpdateInitiativeRequestDto
 {
     [Required]
