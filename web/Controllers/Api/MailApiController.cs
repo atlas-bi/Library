@@ -1,3 +1,4 @@
+using Atlas_Web.Contracts.Api.Interactions;
 using Atlas_Web.Contracts.Api.Mail;
 using Atlas_Web.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -11,10 +12,15 @@ namespace Atlas_Web.Controllers.Api;
 public sealed class MailApiController : ControllerBase
 {
     private readonly IMailApiService _mailApiService;
+    private readonly IInteractionsApiService _interactionsApiService;
 
-    public MailApiController(IMailApiService mailApiService)
+    public MailApiController(
+        IMailApiService mailApiService,
+        IInteractionsApiService interactionsApiService
+    )
     {
         _mailApiService = mailApiService;
+        _interactionsApiService = interactionsApiService;
     }
 
     [HttpGet]
@@ -63,6 +69,46 @@ public sealed class MailApiController : ControllerBase
         return await _mailApiService.MarkMessageReadAsync(User, id, cancellationToken)
             ? Ok()
             : NotFound();
+    }
+
+    [HttpPost("messages")]
+    public async Task<ActionResult<MailSendResponseDto>> SendMessage(
+        [FromBody] MailSendRequestDto request,
+        CancellationToken cancellationToken = default
+    )
+    {
+        try
+        {
+            var sent = await _interactionsApiService.SendShareMailAsync(
+                User,
+                new ShareMailRequestDto
+                {
+                    DraftId = request?.DraftId,
+                    To = (request?.To ?? Array.Empty<MailSendRecipientDto>())
+                        .Select(x => new ShareRecipientDto { UserId = x.UserId, Type = x.Type })
+                        .ToList(),
+                    Subject = request?.Subject,
+                    Message = request?.Message,
+                    Text = request?.Text,
+                    Share = request?.Share ?? false,
+                    ShareName = request?.ShareName,
+                    ShareUrl = request?.ShareUrl,
+                },
+                cancellationToken
+            );
+            return Ok(
+                new MailSendResponseDto
+                {
+                    Message = sent.Message,
+                    RecipientCount = sent.RecipientCount,
+                    ShareCount = sent.ShareCount,
+                }
+            );
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(new { error = ex.Message });
+        }
     }
 
     [HttpPost("drafts")]

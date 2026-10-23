@@ -169,9 +169,9 @@ public sealed class InteractionsApiService : IInteractionsApiService
             cancellationToken
         );
 
-        if (request.DraftId.GetValueOrDefault() >= 0)
+        if (request.DraftId is int draftId && draftId >= 0)
         {
-            _context.RemoveRange(_context.MailDrafts.Where(x => x.DraftId == request.DraftId.Value));
+            _context.RemoveRange(_context.MailDrafts.Where(x => x.DraftId == draftId));
         }
 
         await _context.SaveChangesAsync(cancellationToken);

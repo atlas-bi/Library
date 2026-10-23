@@ -105,3 +105,29 @@ public sealed class MailDraftSaveResponseDto
 {
     public int DraftId { get; init; }
 }
+
+public sealed class MailSendRequestDto
+{
+    public int? DraftId { get; init; }
+    public IReadOnlyList<MailSendRecipientDto> To { get; init; } =
+        Array.Empty<MailSendRecipientDto>();
+    public string Subject { get; init; }
+    public string Message { get; init; }
+    public string Text { get; init; }
+    public bool Share { get; init; }
+    public string ShareName { get; init; }
+    public string ShareUrl { get; init; }
+}
+
+public sealed class MailSendRecipientDto
+{
+    public int? UserId { get; init; }
+    public string Type { get; init; }
+}
+
+public sealed class MailSendResponseDto
+{
+    public string Message { get; init; }
+    public int RecipientCount { get; init; }
+    public int ShareCount { get; init; }
+}
