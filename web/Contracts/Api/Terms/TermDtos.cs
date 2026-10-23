@@ -79,6 +79,18 @@ public sealed class TermRelatedReportDto
     public bool IsCertified { get; init; }
 }
 
+public sealed class RecentTermDto
+{
+    public int Id { get; init; }
+    public string Name { get; init; }
+}
+
+public sealed class RecentTermsDto
+{
+    public IReadOnlyList<RecentTermDto> Approved { get; init; } = Array.Empty<RecentTermDto>();
+    public IReadOnlyList<RecentTermDto> Pending { get; init; } = Array.Empty<RecentTermDto>();
+}
+
 public sealed class CreateTermRequestDto
 {
     [Required]

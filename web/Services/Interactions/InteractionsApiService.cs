@@ -32,9 +32,18 @@ public interface IInteractionsApiService
         ShareFeedbackRequestDto request,
         CancellationToken cancellationToken
     );
+    Task<JsonElement> SubmitAccessRequestAsync(
+        ClaimsPrincipal user,
+        AccessRequestRequestDto request,
+        CancellationToken cancellationToken
+    );
     Task<IReadOnlyList<RecipientSearchResultDto>> SearchRecipientsAsync(
         string search,
         bool includeGroups,
+        CancellationToken cancellationToken
+    );
+    Task<IReadOnlyList<RecipientSearchResultDto>> SearchDirectorsAsync(
+        string search,
         CancellationToken cancellationToken
     );
 }
@@ -160,9 +169,9 @@ public sealed class InteractionsApiService : IInteractionsApiService
             cancellationToken
         );
 
-        if (request.DraftId.GetValueOrDefault() >= 0)
+        if (request.DraftId is int draftId && draftId >= 0)
         {
-            _context.RemoveRange(_context.MailDrafts.Where(x => x.DraftId == request.DraftId.Value));
+            _context.RemoveRange(_context.MailDrafts.Where(x => x.DraftId == draftId));
         }
 
         await _context.SaveChangesAsync(cancellationToken);
@@ -198,19 +207,6 @@ public sealed class InteractionsApiService : IInteractionsApiService
             throw new InvalidOperationException("Feedback target is required.");
         }
 
-        using var handler = new HttpClientHandler();
-        using var client = new HttpClient(handler)
-        {
-            DefaultRequestVersion = new Version(1, 1),
-            DefaultVersionPolicy = HttpVersionPolicy.RequestVersionExact,
-        };
-
-        client.DefaultRequestHeaders.Add("Accept", "application/vnd.manageengine.sdp.v3+json");
-        client.DefaultRequestHeaders.Add(
-            "authtoken",
-            _config["AppSettings:manage_engine_tech_key"]
-        );
-
         var payload = new
         {
             request = new
@@ -232,6 +228,69 @@ public sealed class InteractionsApiService : IInteractionsApiService
             },
         };
 
+        return await SubmitManageEngineRequestAsync(payload, requireSuccess: false, cancellationToken);
+    }
+
+    public async Task<JsonElement> SubmitAccessRequestAsync(
+        ClaimsPrincipal user,
+        AccessRequestRequestDto request,
+        CancellationToken cancellationToken
+    )
+    {
+        if (
+            request == null
+            || string.IsNullOrWhiteSpace(request.ReportName)
+            || string.IsNullOrWhiteSpace(request.ReportUrl)
+            || string.IsNullOrWhiteSpace(request.DirectorName)
+        )
+        {
+            throw new InvalidOperationException("Report name, report URL, and director are required.");
+        }
+
+        var payload = new
+        {
+            request = new
+            {
+                subject = "Atlas Access Request",
+                description =
+                    $"I would like access to '{request.ReportName}' from {request.ReportUrl}",
+                requester = BuildRequester(user),
+                template = new { name = "WebAPI" },
+                status = new { name = "Open" },
+                category = new { name = "Epic Request" },
+                subcategory = new { name = "Atlas" },
+                item = new { name = "Request Access" },
+                udf_fields = new
+                {
+                    udf_sline_4517 = request.DirectorName,
+                    udf_sline_5791 = request.ReportName,
+                    udf_sline_5790 = request.ReportUrl,
+                },
+            },
+        };
+
+        return await SubmitManageEngineRequestAsync(payload, requireSuccess: true, cancellationToken);
+    }
+
+    private async Task<JsonElement> SubmitManageEngineRequestAsync(
+        object payload,
+        bool requireSuccess,
+        CancellationToken cancellationToken
+    )
+    {
+        using var handler = new HttpClientHandler();
+        using var client = new HttpClient(handler)
+        {
+            DefaultRequestVersion = new Version(1, 1),
+            DefaultVersionPolicy = HttpVersionPolicy.RequestVersionExact,
+        };
+
+        client.DefaultRequestHeaders.Add("Accept", "application/vnd.manageengine.sdp.v3+json");
+        client.DefaultRequestHeaders.Add(
+            "authtoken",
+            _config["AppSettings:manage_engine_tech_key"]
+        );
+
         var json = JsonSerializer.Serialize(payload);
         using var content = new FormUrlEncodedContent(
             new Dictionary<string, string> { { "input_data", json } }
@@ -239,7 +298,17 @@ public sealed class InteractionsApiService : IInteractionsApiService
 
         var url = _config["AppSettings:manage_engine_server"] + "/api/v3/requests";
         using var response = await client.PostAsync(url, content, cancellationToken);
+        if (requireSuccess && !response.IsSuccessStatusCode)
+        {
+            throw new HttpRequestException("ManageEngine rejected the request.");
+        }
+
         var responseBody = await response.Content.ReadAsStringAsync(cancellationToken);
+        if (string.IsNullOrWhiteSpace(responseBody))
+        {
+            return JsonSerializer.SerializeToElement(new { });
+        }
+
         return JsonDocument.Parse(responseBody).RootElement.Clone();
     }
 
@@ -264,6 +333,53 @@ public sealed class InteractionsApiService : IInteractionsApiService
         return Task.FromResult<IReadOnlyList<RecipientSearchResultDto>>(
             results.GroupBy(x => new { x.Type, x.Id }).Select(x => x.First()).ToList()
         );
+    }
+
+    public async Task<IReadOnlyList<RecipientSearchResultDto>> SearchDirectorsAsync(
+        string search,
+        CancellationToken cancellationToken
+    )
+    {
+        var directorRoleIds = await _context.UserRoles.AsNoTracking()
+            .Where(x => x.Name == "Director")
+            .Select(x => x.UserRolesId)
+            .ToListAsync(cancellationToken);
+        var directUserIds = await _context.UserRoleLinks.AsNoTracking()
+            .Where(x => directorRoleIds.Contains(x.UserRolesId))
+            .Select(x => x.UserId)
+            .ToListAsync(cancellationToken);
+        var groupIds = await _context.GroupRoleLinks.AsNoTracking()
+            .Where(x => directorRoleIds.Contains(x.UserRolesId))
+            .Select(x => x.GroupId)
+            .ToListAsync(cancellationToken);
+        var groupUserIds = await _context.UserGroupsMemberships.AsNoTracking()
+            .Where(x => groupIds.Contains(x.GroupId))
+            .Select(x => x.UserId)
+            .ToListAsync(cancellationToken);
+        var userIds = directUserIds.Concat(groupUserIds).Distinct().ToList();
+
+        var query = _context.Users.AsNoTracking().Where(x => userIds.Contains(x.UserId));
+        var term = (search ?? string.Empty).Trim();
+        if (term.Length > 0)
+        {
+            query = query.Where(x =>
+                (x.FullnameCalc != null && x.FullnameCalc.Contains(term))
+                || (x.Email != null && x.Email.Contains(term))
+                || (x.Username != null && x.Username.Contains(term))
+            );
+        }
+
+        return await query
+            .OrderBy(x => x.FullnameCalc)
+            .Take(20)
+            .Select(x => new RecipientSearchResultDto
+            {
+                Id = x.UserId,
+                Name = x.FullnameCalc ?? x.Username,
+                Type = "u",
+                Email = x.Email,
+            })
+            .ToListAsync(cancellationToken);
     }
 
     private async Task<ToggleStarResponseDto> ToggleReportStarAsync(

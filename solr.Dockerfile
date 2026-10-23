@@ -12,7 +12,7 @@
 # http://localhost:8983
 
 
-FROM python:3.14-alpine AS builder
+FROM python:3.15-alpine AS builder
 
 WORKDIR /build
 
@@ -28,7 +28,7 @@ RUN git clone --depth=1 https://github.com/atlas-bi/Solr-Search-ETL.git etl && \
     rm -rf etl/.git
 
 
-FROM python:3.14-alpine
+FROM python:3.15-alpine
 
 WORKDIR /app
 

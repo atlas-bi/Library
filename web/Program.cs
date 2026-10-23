@@ -2,22 +2,22 @@ using System.Data.SqlClient;
 using System.IO.Compression;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
-using System.Text.RegularExpressions;
 using Atlas_Web;
 using Atlas_Web.Authentication;
 using Atlas_Web.Authorization;
+using Atlas_Web.Configuration;
 using Atlas_Web.Middleware;
 using Atlas_Web.Models;
 using Atlas_Web.Services;
+using Atlas_Web.Services.Seeding;
 using Hangfire;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
 using ITfoxtec.Identity.Saml2;
 using ITfoxtec.Identity.Saml2.MvcCore;
 using ITfoxtec.Identity.Saml2.MvcCore.Configuration;
 using ITfoxtec.Identity.Saml2.Schemas.Metadata;
 using ITfoxtec.Identity.Saml2.Util;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authentication.Negotiate;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.DataProtection;
@@ -27,6 +27,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.FileProviders;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.Net.Http.Headers;
 using SolrNet;
 using WebMarkupMin.AspNet.Common.Compressors;
@@ -205,44 +206,74 @@ builder.Services.AddTransient<IEmailService, EmailService>();
 builder.Services.AddTransient<IRazorPartialToStringRenderer, RazorPartialToStringRenderer>();
 builder.Services.AddScoped<ICollectionsApiService, CollectionsApiService>();
 builder.Services.AddScoped<IGroupsApiService, GroupsApiService>();
+builder.Services.AddScoped<IInitiativesApiService, InitiativesApiService>();
 builder.Services.AddScoped<IInteractionsApiService, InteractionsApiService>();
+builder.Services.AddScoped<IAnalyticsApiService, AnalyticsApiService>();
 builder.Services.AddScoped<IProfileApiService, ProfileApiService>();
 builder.Services.AddScoped<IReportsApiService, ReportsApiService>();
+builder.Services.AddScoped<IReportImageApiService>(sp => new ReportImageApiService(
+    sp.GetRequiredService<Atlas_WebContext>(),
+    sp.GetRequiredService<IMemoryCache>(),
+    sp.GetRequiredService<IWebHostEnvironment>().ContentRootPath
+));
 builder.Services.AddScoped<ISearchApiService, SearchApiService>();
 builder.Services.AddScoped<ITermsApiService, TermsApiService>();
 builder.Services.AddScoped<IUsersApiService, UsersApiService>();
+builder.Services.AddScoped<IMailApiService, MailApiService>();
+builder.Services.AddScoped<ITasksApiService, TasksApiService>();
+builder.Services.AddScoped<DemoDataSeeder>();
 builder.Services.AddHttpContextAccessor();
 
 ProgramConfiguration.ConfigureJwtAuthentication(builder);
 if (builder.Configuration.GetSection("Saml2").Exists())
 {
     builder.Services.AddHttpClient();
+    var disableSslCertificateValidation = BooleanConfig.IsEnabled(
+        builder.Configuration["Saml2:disable_ssl_certificate_validation"]
+    );
+    if (disableSslCertificateValidation)
+    {
+        builder
+            .Services.AddHttpClient("Saml2Metadata")
+            .ConfigurePrimaryHttpMessageHandler(() =>
+                new HttpClientHandler
+                {
+                    ServerCertificateCustomValidationCallback =
+                        HttpClientHandler.DangerousAcceptAnyServerCertificateValidator,
+                }
+            );
+    }
+
     builder.Services.BindConfig<Saml2Configuration>(
         builder.Configuration,
         "Saml2",
         (serviceProvider, saml2Configuration) =>
         {
-            //saml2Configuration.SignAuthnRequest = true;
-            saml2Configuration.SigningCertificate = CertificateUtil.Load(
-                builder.Environment.MapToPhysicalFilePath(
-                    builder.Configuration["Saml2:SigningCertificateFile"]
-                ),
-                builder.Configuration["Saml2:SigningCertificatePassword"],
-                X509KeyStorageFlags.MachineKeySet | X509KeyStorageFlags.PersistKeySet
-            );
+            var certificateFile = builder.Configuration["Saml2:SigningCertificateFile"];
+            if (!string.IsNullOrWhiteSpace(certificateFile))
+            {
+                saml2Configuration.SigningCertificate = CertificateUtil.Load(
+                    builder.Environment.MapToPhysicalFilePath(certificateFile),
+                    builder.Configuration["Saml2:SigningCertificatePassword"],
+                    X509KeyStorageFlags.MachineKeySet | X509KeyStorageFlags.PersistKeySet
+                );
+            }
+            else
+            {
+                saml2Configuration.SignAuthnRequest = false;
+            }
 
-            //saml2Configuration.SignatureValidationCertificates.Add(CertificateUtil.Load(AppEnvironment.MapToPhysicalFilePath(Configuration["Saml2:SignatureValidationCertificateFile"])));
-            saml2Configuration.AllowedAudienceUris.Add(saml2Configuration.Issuer);
+            if (!string.IsNullOrWhiteSpace(saml2Configuration.Issuer))
+            {
+                saml2Configuration.AllowedAudienceUris.Add(saml2Configuration.Issuer);
+            }
 
             var httpClientFactory = serviceProvider.GetService<IHttpClientFactory>();
-            var entityDescriptor = new EntityDescriptor();
-            entityDescriptor
-                .ReadIdPSsoDescriptorFromUrlAsync(
-                    httpClientFactory,
-                    new Uri(builder.Configuration["Saml2:IdPMetadata"])
-                )
-                .GetAwaiter()
-                .GetResult();
+            var entityDescriptor = ReadIdpMetadata(
+                builder,
+                httpClientFactory,
+                disableSslCertificateValidation
+            );
             if (entityDescriptor.IdPSsoDescriptor != null)
             {
                 saml2Configuration.AllowedIssuer = entityDescriptor.EntityId;
@@ -263,7 +294,10 @@ if (builder.Configuration.GetSection("Saml2").Exists())
                 {
                     throw new Exception("The IdP signing certificates has expired.");
                 }
-                if (entityDescriptor.IdPSsoDescriptor.WantAuthnRequestsSigned.HasValue)
+                if (
+                    saml2Configuration.SigningCertificate != null
+                    && entityDescriptor.IdPSsoDescriptor.WantAuthnRequestsSigned.HasValue
+                )
                 {
                     saml2Configuration.SignAuthnRequest = entityDescriptor
                         .IdPSsoDescriptor
@@ -304,7 +338,6 @@ builder
     .AddRazorPagesOptions(options =>
     {
         options.Conventions.AddPageRoute("/Index/Index", "");
-        options.Conventions.AddPageRoute("/Index/About", "about_analytics");
         options.Conventions.ConfigureFilter(new IgnoreAntiforgeryTokenAttribute());
     })
     .AddRazorRuntimeCompilation();
@@ -316,7 +349,7 @@ var app = builder.Build();
 
 app.UseResponseCompression();
 
-if (!app.Environment.IsDevelopment())
+if (!app.Environment.IsDevelopment() && !app.Environment.IsEnvironment("Test"))
 {
     app.UseHsts();
     app.UseStatusCodePagesWithReExecute("/Error", "?id={0}");
@@ -349,9 +382,14 @@ app.UseStaticFiles(
 app.UseETagger();
 app.UseRouting();
 app.UseCors("NextJs");
+if (app.Configuration.GetSection("Saml2").Exists())
+{
+    app.UseSaml2();
+}
 app.UseAuthentication();
 app.UseAuthorization();
 
+app.MapGet("/healthz", () => Results.Ok(new { status = "ok" })).AllowAnonymous();
 app.MapRazorPages();
 app.MapControllers();
 
@@ -406,67 +444,20 @@ if (!app.Environment.IsEnvironment("Test"))
 
         if (shouldSeedDemo)
         {
-            const string seedMarkerName = "demo_seed_applied";
-            var alreadySeeded = context.GlobalSiteSettings.Any(x => x.Name == seedMarkerName);
-
-            if (!alreadySeeded)
-            {
-                var seedScriptPath = Path.Combine(
-                    AppContext.BaseDirectory,
-                    "atlas-demo-seed_script.sql"
-                );
-                if (File.Exists(seedScriptPath))
-                {
-                    var seedSql = File.ReadAllText(seedScriptPath);
-                    var batches = Regex.Split(
-                        seedSql,
-                        @"^\s*GO\s*$",
-                        RegexOptions.Multiline | RegexOptions.IgnoreCase,
-                        TimeSpan.FromSeconds(5)
-                    );
-
-                    using var connection = new SqlConnection(
-                        app.Configuration.GetConnectionString("AtlasDatabase")
-                    );
-                    connection.Open();
-
-                    using var tx = connection.BeginTransaction();
-                    try
-                    {
-                        foreach (var batch in batches)
-                        {
-                            var sql = batch?.Trim();
-                            if (string.IsNullOrWhiteSpace(sql))
-                            {
-                                continue;
-                            }
-
-                            using var cmd = connection.CreateCommand();
-                            cmd.Transaction = tx;
-                            cmd.CommandTimeout = 60000;
-                            cmd.CommandText = sql;
-                            cmd.ExecuteNonQuery();
-                        }
-
-                        context.GlobalSiteSettings.Add(
-                            new GlobalSiteSetting
-                            {
-                                Name = seedMarkerName,
-                                Description = "",
-                                Value = DateTimeOffset.UtcNow.ToString("O"),
-                            }
-                        );
-                        context.SaveChanges();
-
-                        tx.Commit();
-                    }
-                    catch
-                    {
-                        tx.Rollback();
-                        throw;
-                    }
-                }
-            }
+            var seedVersion = app.Configuration["DEMO_SEED_VERSION"] ?? "2026-08-12-v1";
+            var adminUsername =
+                app.Configuration["DEMO_ADMIN_USERNAME"]
+                ?? Environment.GetEnvironmentVariable("DEMO_ADMIN_USERNAME")
+                ?? "local-admin";
+            var resetDemoRaw =
+                app.Configuration["DEMO_SEED_RESET"]
+                ?? Environment.GetEnvironmentVariable("DEMO_SEED_RESET");
+            var shouldResetDemo =
+                string.Equals(resetDemoRaw, "true", StringComparison.OrdinalIgnoreCase)
+                || string.Equals(resetDemoRaw, "1", StringComparison.OrdinalIgnoreCase)
+                || string.Equals(resetDemoRaw, "yes", StringComparison.OrdinalIgnoreCase);
+            var seeder = scope.ServiceProvider.GetRequiredService<DemoDataSeeder>();
+            await seeder.SeedAsync(seedVersion, adminUsername, shouldResetDemo);
         }
 
         // load override css
@@ -527,4 +518,42 @@ if (!app.Environment.IsEnvironment("Test"))
 app.Run();
 
 # pragma warning disable S1118
-public partial class Program { }
+public partial class Program
+{
+    private static EntityDescriptor ReadIdpMetadata(
+        WebApplicationBuilder builder,
+        IHttpClientFactory httpClientFactory,
+        bool disableSslCertificateValidation
+    )
+    {
+        var idpMetadata = builder.Configuration["Saml2:IdPMetadata"];
+        if (string.IsNullOrWhiteSpace(idpMetadata))
+        {
+            throw new InvalidOperationException("Saml2:IdPMetadata is required.");
+        }
+
+        if (idpMetadata.TrimStart().StartsWith('<'))
+        {
+            return new EntityDescriptor().ReadIdPSsoDescriptor(idpMetadata);
+        }
+
+        if (
+            idpMetadata.StartsWith("https://", StringComparison.OrdinalIgnoreCase)
+            || idpMetadata.StartsWith("http://", StringComparison.OrdinalIgnoreCase)
+        )
+        {
+            return new EntityDescriptor()
+                .ReadIdPSsoDescriptorFromUrlAsync(
+                    httpClientFactory,
+                    new Uri(idpMetadata),
+                    httpClientName: disableSslCertificateValidation ? "Saml2Metadata" : null
+                )
+                .GetAwaiter()
+                .GetResult();
+        }
+
+        return new EntityDescriptor().ReadIdPSsoDescriptorFromFile(
+            builder.Environment.MapToPhysicalFilePath(idpMetadata)
+        );
+    }
+}
