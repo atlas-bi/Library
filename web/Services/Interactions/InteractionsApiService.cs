@@ -76,22 +76,36 @@ public sealed class InteractionsApiService : IInteractionsApiService
         CancellationToken cancellationToken
     )
     {
-        if (request == null || request.Id <= 0 || string.IsNullOrWhiteSpace(request.Type))
+        if (request == null || string.IsNullOrWhiteSpace(request.Type))
         {
             throw new InvalidOperationException("A valid star target is required.");
         }
 
         var userId = user.GetUserId();
         var type = request.Type.Trim().ToLowerInvariant();
+        if (type == "search")
+        {
+            if (string.IsNullOrWhiteSpace(request.Search))
+            {
+                throw new InvalidOperationException("A valid star target is required.");
+            }
+
+            return await ToggleSearchStarAsync(userId, request.Search.Trim(), cancellationToken);
+        }
+
+        if (request.Id is not int id || id <= 0)
+        {
+            throw new InvalidOperationException("A valid star target is required.");
+        }
 
         return type switch
         {
-            "report" => await ToggleReportStarAsync(userId, request.Id!.Value, cancellationToken),
-            "collection" => await ToggleCollectionStarAsync(
-                userId,
-                request.Id!.Value,
-                cancellationToken
-            ),
+            "report" => await ToggleReportStarAsync(userId, id, cancellationToken),
+            "collection" => await ToggleCollectionStarAsync(userId, id, cancellationToken),
+            "initiative" => await ToggleInitiativeStarAsync(userId, id, cancellationToken),
+            "term" => await ToggleTermStarAsync(userId, id, cancellationToken),
+            "user" => await ToggleUserStarAsync(userId, id, cancellationToken),
+            "group" => await ToggleGroupStarAsync(userId, id, cancellationToken),
             _ => throw new InvalidOperationException("Unsupported star target type."),
         };
     }
@@ -419,6 +433,227 @@ public sealed class InteractionsApiService : IInteractionsApiService
             IsStarred = isStarred,
             Count = await _context.StarredCollections.CountAsync(
                 x => x.Collectionid == collectionId,
+                cancellationToken
+            ),
+        };
+    }
+
+    private async Task<ToggleStarResponseDto> ToggleInitiativeStarAsync(
+        int userId,
+        int initiativeId,
+        CancellationToken cancellationToken
+    )
+    {
+        if (
+            !await _context.Initiatives.AnyAsync(
+                x => x.InitiativeId == initiativeId,
+                cancellationToken
+            )
+        )
+        {
+            return null;
+        }
+
+        var existing = await _context.StarredInitiatives.Where(x =>
+                x.Ownerid == userId && x.Initiativeid == initiativeId
+            )
+            .ToListAsync(cancellationToken);
+        var isStarred = existing.Count == 0;
+
+        if (isStarred)
+        {
+            await _context.StarredInitiatives.AddAsync(
+                new StarredInitiative { Ownerid = userId, Initiativeid = initiativeId },
+                cancellationToken
+            );
+        }
+        else
+        {
+            _context.StarredInitiatives.RemoveRange(existing);
+        }
+
+        await _context.SaveChangesAsync(cancellationToken);
+        _cache.Remove("initiative-" + initiativeId);
+        _cache.Remove("initiatives");
+        _cache.Remove("initatives");
+
+        return new ToggleStarResponseDto
+        {
+            Type = "initiative",
+            Id = initiativeId,
+            IsStarred = isStarred,
+            Count = await _context.StarredInitiatives.CountAsync(
+                x => x.Initiativeid == initiativeId,
+                cancellationToken
+            ),
+        };
+    }
+
+    private async Task<ToggleStarResponseDto> ToggleTermStarAsync(
+        int userId,
+        int termId,
+        CancellationToken cancellationToken
+    )
+    {
+        if (!await _context.Terms.AnyAsync(x => x.TermId == termId, cancellationToken))
+        {
+            return null;
+        }
+
+        var existing = await _context.StarredTerms.Where(x =>
+                x.Ownerid == userId && x.Termid == termId
+            )
+            .ToListAsync(cancellationToken);
+        var isStarred = existing.Count == 0;
+
+        if (isStarred)
+        {
+            await _context.StarredTerms.AddAsync(
+                new StarredTerm { Ownerid = userId, Termid = termId },
+                cancellationToken
+            );
+        }
+        else
+        {
+            _context.StarredTerms.RemoveRange(existing);
+        }
+
+        await _context.SaveChangesAsync(cancellationToken);
+        _cache.Remove("term-" + termId);
+        _cache.Remove("terms");
+
+        return new ToggleStarResponseDto
+        {
+            Type = "term",
+            Id = termId,
+            IsStarred = isStarred,
+            Count = await _context.StarredTerms.CountAsync(
+                x => x.Termid == termId,
+                cancellationToken
+            ),
+        };
+    }
+
+    private async Task<ToggleStarResponseDto> ToggleUserStarAsync(
+        int userId,
+        int targetUserId,
+        CancellationToken cancellationToken
+    )
+    {
+        if (!await _context.Users.AnyAsync(x => x.UserId == targetUserId, cancellationToken))
+        {
+            return null;
+        }
+
+        var existing = await _context.StarredUsers.Where(x =>
+                x.Ownerid == userId && x.Userid == targetUserId
+            )
+            .ToListAsync(cancellationToken);
+        var isStarred = existing.Count == 0;
+
+        if (isStarred)
+        {
+            await _context.StarredUsers.AddAsync(
+                new StarredUser { Ownerid = userId, Userid = targetUserId },
+                cancellationToken
+            );
+        }
+        else
+        {
+            _context.StarredUsers.RemoveRange(existing);
+        }
+
+        await _context.SaveChangesAsync(cancellationToken);
+        _cache.Remove("user-" + targetUserId);
+
+        return new ToggleStarResponseDto
+        {
+            Type = "user",
+            Id = targetUserId,
+            IsStarred = isStarred,
+            Count = await _context.StarredUsers.CountAsync(
+                x => x.Userid == targetUserId,
+                cancellationToken
+            ),
+        };
+    }
+
+    private async Task<ToggleStarResponseDto> ToggleGroupStarAsync(
+        int userId,
+        int groupId,
+        CancellationToken cancellationToken
+    )
+    {
+        if (!await _context.UserGroups.AnyAsync(x => x.GroupId == groupId, cancellationToken))
+        {
+            return null;
+        }
+
+        var existing = await _context.StarredGroups.Where(x =>
+                x.Ownerid == userId && x.Groupid == groupId
+            )
+            .ToListAsync(cancellationToken);
+        var isStarred = existing.Count == 0;
+
+        if (isStarred)
+        {
+            await _context.StarredGroups.AddAsync(
+                new StarredGroup { Ownerid = userId, Groupid = groupId },
+                cancellationToken
+            );
+        }
+        else
+        {
+            _context.StarredGroups.RemoveRange(existing);
+        }
+
+        await _context.SaveChangesAsync(cancellationToken);
+        _cache.Remove("group-" + groupId);
+
+        return new ToggleStarResponseDto
+        {
+            Type = "group",
+            Id = groupId,
+            IsStarred = isStarred,
+            Count = await _context.StarredGroups.CountAsync(
+                x => x.Groupid == groupId,
+                cancellationToken
+            ),
+        };
+    }
+
+    private async Task<ToggleStarResponseDto> ToggleSearchStarAsync(
+        int userId,
+        string search,
+        CancellationToken cancellationToken
+    )
+    {
+        var existing = await _context.StarredSearches.Where(x =>
+                x.Ownerid == userId && x.Search == search
+            )
+            .ToListAsync(cancellationToken);
+        var isStarred = existing.Count == 0;
+
+        if (isStarred)
+        {
+            await _context.StarredSearches.AddAsync(
+                new StarredSearch { Ownerid = userId, Search = search },
+                cancellationToken
+            );
+        }
+        else
+        {
+            _context.StarredSearches.RemoveRange(existing);
+        }
+
+        await _context.SaveChangesAsync(cancellationToken);
+
+        return new ToggleStarResponseDto
+        {
+            Type = "search",
+            IsStarred = isStarred,
+            Count = await _context.StarredSearches.CountAsync(
+                x => x.Search == search,
                 cancellationToken
             ),
         };
