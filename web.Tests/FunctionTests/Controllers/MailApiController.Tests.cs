@@ -9,8 +9,11 @@ using Atlas_Web.Controllers.Api;
 using Atlas_Web.Models;
 using Atlas_Web.Services;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Configuration;
 using Xunit;
 
 namespace web.Tests.FunctionTests.Controllers;
@@ -197,6 +200,88 @@ public class MailApiControllerTests
         Assert.False(context.MailDrafts.Any(x => x.DraftId == 30));
     }
 
+    [Fact]
+    public async Task SendMessage_DeliversToUsersAndGroupsAndRemovesTheDraft()
+    {
+        await using var context = CreateContext("mail-send");
+        SeedUsers(context);
+        context.MailDrafts.Add(
+            new MailDraft
+            {
+                DraftId = 30,
+                FromUserId = 1,
+                Subject = "Draft",
+                MessagePlainText = "draft",
+                Recipients = "[]",
+            }
+        );
+        context.MailDrafts.Add(
+            new MailDraft
+            {
+                DraftId = 31,
+                FromUserId = 1,
+                Subject = "Keep",
+                MessagePlainText = "keep",
+                Recipients = "[]",
+            }
+        );
+        context.UserGroupsMemberships.Add(
+            new UserGroupsMembership
+            {
+                MembershipId = 4,
+                GroupId = 7,
+                UserId = 2,
+                User = context.Users.Local.Single(x => x.UserId == 2),
+            }
+        );
+        await context.SaveChangesAsync();
+
+        var controller = BuildController(context);
+        var result = await controller.SendMessage(
+            new MailSendRequestDto
+            {
+                DraftId = 30,
+                Subject = "Hello",
+                Message = "<p>Hi</p>",
+                Text = "Hi",
+                Share = true,
+                ShareName = "Census",
+                ShareUrl = "/reports?id=6",
+                To = new[]
+                {
+                    new MailSendRecipientDto { UserId = 2, Type = "u" },
+                    new MailSendRecipientDto { UserId = 7, Type = "g" },
+                },
+            }
+        );
+
+        var ok = Assert.IsType<OkObjectResult>(result.Result);
+        var payload = Assert.IsType<MailSendResponseDto>(ok.Value);
+        Assert.Equal(2, payload.RecipientCount);
+        Assert.Equal(2, payload.ShareCount);
+        Assert.Equal(2, context.MailRecipients.Count());
+        Assert.Contains(context.MailRecipients, x => x.ToUserId == 2 && x.ToGroupId == null);
+        Assert.Contains(context.MailRecipients, x => x.ToUserId == 2 && x.ToGroupId == 7);
+        Assert.Equal(2, context.SharedItems.Count(x => x.SharedToUserId == 2));
+        Assert.False(context.MailDrafts.Any(x => x.DraftId == 30));
+        Assert.True(context.MailDrafts.Any(x => x.DraftId == 31));
+    }
+
+    [Fact]
+    public async Task SendMessage_RejectsAnEmptyRecipientList()
+    {
+        await using var context = CreateContext("mail-send-empty");
+        SeedUsers(context);
+        await context.SaveChangesAsync();
+
+        var result = await BuildController(context).SendMessage(
+            new MailSendRequestDto { Subject = "Hello", To = Array.Empty<MailSendRecipientDto>() }
+        );
+
+        Assert.IsType<BadRequestObjectResult>(result.Result);
+        Assert.Empty(context.MailMessages);
+    }
+
     private static Atlas_WebContext CreateContext(string name)
     {
         var options = new DbContextOptionsBuilder<Atlas_WebContext>()
@@ -223,6 +308,25 @@ public class MailApiControllerTests
                 FirstnameCalc = "Writer",
             }
         );
+    }
+
+    private static MailApiController BuildController(Atlas_WebContext context)
+    {
+        var interactions = new InteractionsApiService(
+            context,
+            new ConfigurationBuilder().Build(),
+            null,
+            null,
+            new MemoryCache(new MemoryCacheOptions()),
+            null
+        );
+        return new MailApiController(new MailApiService(context), interactions)
+        {
+            ControllerContext = new ControllerContext
+            {
+                HttpContext = new DefaultHttpContext { User = Owner() },
+            },
+        };
     }
 
     private static ClaimsPrincipal Owner()
