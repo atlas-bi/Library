@@ -439,6 +439,8 @@ public class UsersApiControllerTests
         );
         Assert.Contains(report.Tags, x => x.Name == "Analytics Certified" && x.ShowInHeader);
         Assert.Equal("Developer summary for the report... ", report.BodyText);
+        Assert.Equal("/api/reports/6/thumbnail?size=128x128", report.ThumbnailUrl);
+        Assert.Equal("/api/reports/6/thumbnail?size=1200x2000", report.FullImageUrl);
 
         Assert.Equal("initiative", initiative.TypeLabel);
         Assert.Contains("Operations", initiative.RelatedCollectionNames);
