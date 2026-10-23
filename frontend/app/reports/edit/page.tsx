@@ -3,6 +3,7 @@ import { redirect } from "next/navigation"
 import { ReportEditWizard } from "@/components/reports/report-edit-wizard"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { getPublicApiBase } from "@/lib/api-base"
 import { getCurrentUser, getToken, hasPermission } from "@/lib/auth"
 import { getReportDetailById, getReportLookups } from "@/lib/reports/api"
 import type { ReportEditLookupOptions } from "@/lib/reports/types"
@@ -123,6 +124,8 @@ export default async function EditReportPage({
     maintenanceLogStatuses: maintenanceLogStatuses.data ?? [],
   }
 
+  const publicApiBase = getPublicApiBase()
+
   return (
     <div className="mx-auto max-w-5xl px-4 py-8">
       <div className="mb-4 text-sm text-muted-foreground">
@@ -136,6 +139,7 @@ export default async function EditReportPage({
         report={report}
         cancelHref={`/reports?id=${report.id}`}
         lookupOptions={lookupOptions}
+        publicApiBase={publicApiBase}
       />
     </div>
   )
