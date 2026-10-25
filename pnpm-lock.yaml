@@ -189,7 +189,7 @@ importers:
         version: 3.1.4
       eslint:
         specifier: ^10.0.0
-        version: 10.12.0(jiti@2.7.0)
+        version: 10.13.0(jiti@2.7.0)
       fancy-log:
         specifier: 2.0.0
         version: 2.0.0
@@ -1004,7 +1004,7 @@ packages:
     engines: {node: '>=22.12.0'}
 
   '@creativebulma/bulma-badge@https://codeload.github.com/christopherpickering/bulma-badge/tar.gz/25ddc9d4ac351ebb0a9991af2bdf7765c428b33e':
-    resolution: {gitHosted: true, tarball: https://codeload.github.com/christopherpickering/bulma-badge/tar.gz/25ddc9d4ac351ebb0a9991af2bdf7765c428b33e}
+    resolution: {gitHosted: true, integrity: sha512-CrCFNkSEbIkCz0UxqRM2w1zJx3oGz4jPsYyN5wpQ998UhwcXSFt91z0FR4kT1X4qcYByPzdZU8iJXuVpKJZqHw==, tarball: https://codeload.github.com/christopherpickering/bulma-badge/tar.gz/25ddc9d4ac351ebb0a9991af2bdf7765c428b33e}
     version: 1.0.1
 
   '@creativebulma/bulma-tooltip@1.2.0':
@@ -3658,7 +3658,7 @@ packages:
     deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
 
   bulma-steps-component@https://codeload.github.com/atlas-bi/bulma-steps/tar.gz/a1b068b3d4a90d4af9b50e97eded6aa7f65b0a96:
-    resolution: {gitHosted: true, tarball: https://codeload.github.com/atlas-bi/bulma-steps/tar.gz/a1b068b3d4a90d4af9b50e97eded6aa7f65b0a96}
+    resolution: {gitHosted: true, integrity: sha512-FYGky3DMJjHK1ZQXEbZNu5QDcU2wqVk1iFc4+6FDcmol6wx3Qdi9KQ83QX5RbjAewy1xLPWYQ0B6nnzr6CSCUg==, tarball: https://codeload.github.com/atlas-bi/bulma-steps/tar.gz/a1b068b3d4a90d4af9b50e97eded6aa7f65b0a96}
     version: 0.9.3
 
   bulma-switch@2.0.4:
@@ -4320,8 +4320,8 @@ packages:
     resolution: {integrity: sha512-tD40eHxA35h0PEIZNeIjkHoDR4YjjJp34biM0mDvplBe//mB+IHCqHDGV7pxF+7MklTvighcCPPZC7ynWyjdTA==}
     engines: {node: ^20.19.0 || ^22.13.0 || >=24}
 
-  eslint@10.12.0:
-    resolution: {integrity: sha512-npHjrHb2o4ehH3mE+YuxABR+0gyb0aVWCIolgJDArwCiHEIsonBm3ZKjel5b0U5+a+MbEvIyRCGCzD3eKKK2NA==}
+  eslint@10.13.0:
+    resolution: {integrity: sha512-UohDjD4zSzEwhf58M3O7vc/ycc8O1I7dNlhtD0WxE8Px8EHNJKtUwzBqrzeGhisRuv2ag4sAYswszCJRgKXYUg==}
     engines: {node: ^20.19.0 || ^22.13.0 || >=24}
     hasBin: true
     peerDependencies:
@@ -8907,9 +8907,9 @@ snapshots:
   '@esbuild/win32-x64@0.28.2':
     optional: true
 
-  '@eslint-community/eslint-utils@4.10.1(eslint@10.12.0(jiti@2.7.0))':
+  '@eslint-community/eslint-utils@4.10.1(eslint@10.13.0(jiti@2.7.0))':
     dependencies:
-      eslint: 10.12.0(jiti@2.7.0)
+      eslint: 10.13.0(jiti@2.7.0)
       eslint-visitor-keys: 3.4.3
 
   '@eslint-community/regexpp@4.12.2': {}
@@ -11784,9 +11784,9 @@ snapshots:
 
   eslint-visitor-keys@5.0.1: {}
 
-  eslint@10.12.0(jiti@2.7.0):
+  eslint@10.13.0(jiti@2.7.0):
     dependencies:
-      '@eslint-community/eslint-utils': 4.10.1(eslint@10.12.0(jiti@2.7.0))
+      '@eslint-community/eslint-utils': 4.10.1(eslint@10.13.0(jiti@2.7.0))
       '@eslint-community/regexpp': 4.12.2
       '@eslint/config-array': 0.23.5
       '@eslint/config-helpers': 0.7.0
