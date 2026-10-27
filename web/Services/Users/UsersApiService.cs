@@ -100,6 +100,10 @@ public interface IUsersApiService
         ClaimsPrincipal user,
         CancellationToken cancellationToken
     );
+    Task<IReadOnlyList<UserSearchResultDto>> SearchUsersAsync(
+        string search,
+        CancellationToken cancellationToken
+    );
 }
 
 public sealed partial class UsersApiService : IUsersApiService
@@ -194,6 +198,34 @@ public sealed partial class UsersApiService : IUsersApiService
         {
             ShareNotificationEnabled = setting?.Value != "N",
         };
+    }
+
+    public async Task<IReadOnlyList<UserSearchResultDto>> SearchUsersAsync(
+        string search,
+        CancellationToken cancellationToken
+    )
+    {
+        var query = _context.Users.AsNoTracking();
+        var term = (search ?? string.Empty).Trim();
+        if (term.Length > 0)
+        {
+            query = query.Where(x =>
+                (x.FullnameCalc != null && x.FullnameCalc.Contains(term))
+                || (x.Email != null && x.Email.Contains(term))
+                || (x.Username != null && x.Username.Contains(term))
+            );
+        }
+
+        return await query
+            .OrderBy(x => x.FullnameCalc)
+            .Take(20)
+            .Select(x => new UserSearchResultDto
+            {
+                Id = x.UserId,
+                Name = x.FullnameCalc ?? x.Username,
+                Email = x.Email,
+            })
+            .ToListAsync(cancellationToken);
     }
 
     public async Task UpdateSettingsAsync(

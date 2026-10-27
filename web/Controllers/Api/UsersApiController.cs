@@ -48,6 +48,15 @@ public class UsersApiController : ControllerBase
         return NoContent();
     }
 
+    [HttpGet("search")]
+    public async Task<ActionResult<IReadOnlyList<UserSearchResultDto>>> SearchUsers(
+        [FromQuery] string q,
+        CancellationToken cancellationToken = default
+    )
+    {
+        return Ok(await _usersApiService.SearchUsersAsync(q, cancellationToken));
+    }
+
     [HttpGet("{id:int}")]
     public async Task<ActionResult<UserPageDto>> GetUserPage(
         int id,
