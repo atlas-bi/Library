@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using System.Threading;
 using System.Threading.Tasks;
 using Atlas_Web.Contracts.Api.Users;
 using Atlas_Web.Controllers.Api;
@@ -676,6 +677,57 @@ public class UsersApiControllerTests
         );
 
         Assert.IsType<ForbidResult>(result);
+    }
+
+    [Fact]
+    public async Task SearchUsers_ReturnsTwentyMatchesByNameEmailOrUsername()
+    {
+        var options = new DbContextOptionsBuilder<Atlas_WebContext>()
+            .UseInMemoryDatabase(databaseName: "users-api-search")
+            .Options;
+
+        await using var context = new Atlas_WebContext(options);
+        for (var i = 1; i <= 21; i++)
+        {
+            context.Users.Add(
+                new User
+                {
+                    UserId = i,
+                    Username = "user" + i.ToString("00"),
+                    FullnameCalc = "Person " + i.ToString("00"),
+                    Email = "person" + i + "@example.com",
+                }
+            );
+        }
+
+        context.Users.Add(
+            new User
+            {
+                UserId = 40,
+                Username = "finance.lead",
+                FullnameCalc = "Ada Finance",
+                Email = "ada@example.com",
+            }
+        );
+        await context.SaveChangesAsync();
+
+        var service = new UsersApiService(
+            context,
+            new ConfigurationBuilder().AddInMemoryCollection().Build(),
+            new MemoryCache(new MemoryCacheOptions())
+        );
+
+        var byName = await service.SearchUsersAsync("ada", CancellationToken.None);
+        var byUsername = await service.SearchUsersAsync("user21", CancellationToken.None);
+        var limited = await service.SearchUsersAsync("", CancellationToken.None);
+
+        Assert.Equal(40, Assert.Single(byName).Id);
+        Assert.Equal("Ada Finance", byName[0].Name);
+        Assert.Equal("ada@example.com", byName[0].Email);
+        Assert.Equal(21, Assert.Single(byUsername).Id);
+        Assert.Equal(20, limited.Count);
+        Assert.Equal(40, limited[0].Id);
+        Assert.DoesNotContain(limited, x => x.Id == 20 || x.Id == 21);
     }
 
     private static UsersApiController BuildController(
