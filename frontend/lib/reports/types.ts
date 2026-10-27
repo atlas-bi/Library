@@ -1,3 +1,31 @@
+export type ReportLinkSummary = {
+  id: number
+  name?: string | null
+  displayTitle?: string | null
+  description?: string | null
+  type?: string | null
+  url?: string | null
+  lastModified?: string | null
+  attachmentCount?: number
+  canRun?: boolean
+  epicMasterFile?: string | null
+  epicRecordId?: number | null
+}
+
+export type ReportQueryItem = {
+  id: number
+  reportObjectId?: number
+  name?: string | null
+  language?: string | null
+  sourceServer?: string | null
+  query?: string | null
+  /** @deprecated use query — kept for older payloads */
+  source?: string | null
+  description?: string | null
+  epicMasterFile?: string | null
+  epicRecordId?: number | null
+}
+
 export type ReportFeatureFlags = {
   termsEnabled?: boolean
   userProfilesEnabled?: boolean
@@ -84,48 +112,70 @@ export type ReportDetail = {
   requester?: PeopleRef | null
 
   // collections / groups / hierarchy
-  groups?: Array<{ id: number; name?: string | null; email?: string | null; type?: string | null }>
-  collections?: Array<{ id: number; name?: string | null; rank?: number | null }>
-  children?: Array<{
+  groups?: Array<{
     id: number
     name?: string | null
-    displayTitle?: string | null
+    email?: string | null
     type?: string | null
-    url?: string | null
-    lastModified?: string | null
+    source?: string | null
   }>
-  parents?: Array<{
+  collections?: Array<{
     id: number
     name?: string | null
-    displayTitle?: string | null
-    type?: string | null
-    url?: string | null
-    lastModified?: string | null
+    rank?: number | null
+    description?: string | null
+    isStarred?: boolean
+    starCount?: number
   }>
+  children?: ReportLinkSummary[]
+  parents?: ReportLinkSummary[]
 
   // document-related
   attachments?: ReportAttachment[]
   images?: Array<{ id: number; ordinal?: number | null; source?: string | null }>
 
   // queries / terms
-  queries?: Array<{
-    id: number
-    name?: string | null
-    language?: string | null
-    sourceServer?: string | null
-    source?: string | null
-  }>
-  componentQueries?: Array<{
-    id: number
-    name?: string | null
-    language?: string | null
-    sourceServer?: string | null
-    source?: string | null
-  }>
+  queries?: ReportQueryItem[]
+  componentQueries?: ReportQueryItem[]
   terms?: Array<{ id: number; name?: string | null; summary?: string | null }>
 
-  // full document payload (not rendered yet)
-  document?: unknown
+  objectTags?: Array<{ id: number; name?: string | null }>
+  visibleInSearch?: boolean
+  orphanedReportObjectYn?: string | null
+  epicRecordId?: number | null
+  epicReportTemplateId?: number | null
+  reportServerPath?: string | null
+
+  document?: ReportDocument | null
+}
+
+export type ReportMaintenanceLog = {
+  id: number
+  comment?: string | null
+  maintenanceDate?: string | null
+  status?: { id: number; name?: string | null } | null
+  maintainer?: PeopleRef | null
+}
+
+export type ReportDocument = {
+  gitLabProjectUrl?: string | null
+  developerDescription?: string | null
+  keyAssumptions?: string | null
+  developerNotes?: string | null
+  executiveVisibilityYn?: string | null
+  hidden?: string | null
+  enabledForHyperspace?: string | null
+  doNotPurge?: string | null
+  lastUpdateDateTime?: string | null
+  maintenanceSchedule?: { id: number; name?: string | null } | null
+  organizationalValue?: { id: number; name?: string | null } | null
+  estimatedRunFrequency?: { id: number; name?: string | null } | null
+  fragility?: { id: number; name?: string | null } | null
+  operationalOwner?: PeopleRef | null
+  requester?: PeopleRef | null
+  updatedBy?: PeopleRef | null
+  fragilityTags?: Array<{ id: number; name?: string | null }>
+  maintenanceLogs?: ReportMaintenanceLog[]
 }
 
 export type ReportListItem = {
@@ -134,8 +184,18 @@ export type ReportListItem = {
   displayTitle?: string | null
   displayName?: string | null
   description?: string | null
+  type?: string | null
   typeShortName?: string | null
   lastModified?: string | null
+}
+
+export type ReportEditLookupOptions = {
+  organizationalValues: ReportLookupItem[]
+  runFrequencies: ReportLookupItem[]
+  fragilities: ReportLookupItem[]
+  maintenanceSchedules: ReportLookupItem[]
+  fragilityTags: ReportLookupItem[]
+  maintenanceLogStatuses: ReportLookupItem[]
 }
 
 export type ReportsListResponse = {

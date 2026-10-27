@@ -169,20 +169,29 @@ export async function submitAccessRequest(
     }
   }
 
-  const res = await fetch(`${apiBase}/api/interactions/access-request`, {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(body),
-  })
+  try {
+    const res = await fetch(`${apiBase}/api/interactions/access-request`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body),
+    })
 
-  if (res.ok) {
-    return { ok: true, data: (await res.json()) as unknown }
+    if (res.ok) {
+      return { ok: true, data: (await res.json()) as unknown }
+    }
+
+    return { ok: false, message: await parseErrorMessage(res), code: toErrorCode(res.status) }
+  } catch (error) {
+    console.error("Failed to submit access request:", error)
+    return {
+      ok: false,
+      message: getUserFriendlyErrorMessage("service_unavailable"),
+      code: "service_unavailable",
+    }
   }
-
-  return { ok: false, message: await parseErrorMessage(res), code: toErrorCode(res.status) }
 }
 
 export async function searchInteractionRecipients(

@@ -71,7 +71,23 @@ public class ProfileApiController : ControllerBase
         CancellationToken cancellationToken = default
     )
     {
-        return Ok(await _profileApiService.GetStarsAsync(id, type, cancellationToken));
+        try
+        {
+            return Ok(await _profileApiService.GetStarsAsync(id, type, cancellationToken));
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(new { error = ex.Message });
+        }
+    }
+
+    [HttpGet("filters")]
+    public async Task<ActionResult<ProfileFiltersResponseDto>> GetFilters(
+        [FromQuery] ProfileQueryRequestDto request,
+        CancellationToken cancellationToken = default
+    )
+    {
+        return Ok(await _profileApiService.GetFiltersAsync(request, cancellationToken));
     }
 
     [HttpGet("subscriptions")]
@@ -81,6 +97,13 @@ public class ProfileApiController : ControllerBase
         CancellationToken cancellationToken = default
     )
     {
-        return Ok(await _profileApiService.GetSubscriptionsAsync(id, type, cancellationToken));
+        try
+        {
+            return Ok(await _profileApiService.GetSubscriptionsAsync(id, type, cancellationToken));
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(new { error = ex.Message });
+        }
     }
 }

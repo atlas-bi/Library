@@ -75,6 +75,7 @@ public interface IReportsApiService
         string search,
         CancellationToken cancellationToken
     );
+    Task<IReadOnlyList<RecentReportDto>> GetRecentReportsAsync(CancellationToken cancellationToken);
 }
 
 public sealed partial class ReportsApiService : IReportsApiService
@@ -120,7 +121,7 @@ public sealed partial class ReportsApiService : IReportsApiService
         var query = _context
             .ReportObjects.AsNoTracking()
             .Where(x => x.DefaultVisibilityYn == "Y")
-            .Where(x => (x.ReportObjectDoc.Hidden ?? "N") == "N");
+            .Where(x => x.ReportObjectDoc == null || (x.ReportObjectDoc.Hidden ?? "N") == "N");
 
         var total = await query.CountAsync(cancellationToken);
         var reports = await query
@@ -617,6 +618,17 @@ public sealed partial class ReportsApiService : IReportsApiService
     )
     {
         await ValidateLinkedIdsAsync(validIdsQuery, requestedIds, label, cancellationToken);
+    }
+
+    public async Task<IReadOnlyList<RecentReportDto>> GetRecentReportsAsync(
+        CancellationToken cancellationToken
+    )
+    {
+        return await _context.ReportObjectDocs.AsNoTracking()
+            .OrderByDescending(x => x.LastUpdateDateTime)
+            .Take(10)
+            .Select(x => new RecentReportDto { Id = x.ReportObjectId, Name = x.ReportObject.Name })
+            .ToListAsync(cancellationToken);
     }
 
     private void InvalidateReportCaches(

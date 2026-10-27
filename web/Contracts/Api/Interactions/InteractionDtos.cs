@@ -4,6 +4,7 @@ public sealed class ToggleStarRequestDto
 {
     public string Type { get; init; }
     public int? Id { get; init; }
+    public string Search { get; init; }
 }
 
 public sealed class ToggleStarResponseDto
@@ -44,6 +45,13 @@ public sealed class ShareFeedbackRequestDto
     public string ReportName { get; init; }
     public string ReportUrl { get; init; }
     public string Description { get; init; }
+}
+
+public sealed class AccessRequestRequestDto
+{
+    public string ReportName { get; init; }
+    public string ReportUrl { get; init; }
+    public string DirectorName { get; init; }
 }
 
 public sealed class RecipientSearchResultDto
