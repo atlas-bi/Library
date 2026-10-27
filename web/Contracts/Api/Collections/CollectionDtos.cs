@@ -109,6 +109,12 @@ public sealed class CreateCollectionRequestDto
     public IReadOnlyList<int> ReportIds { get; init; } = Array.Empty<int>();
 }
 
+public sealed class RecentCollectionDto
+{
+    public int Id { get; init; }
+    public string Name { get; init; }
+}
+
 public sealed class UpdateCollectionRequestDto
 {
     [Required]

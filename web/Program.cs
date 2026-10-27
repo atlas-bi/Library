@@ -211,6 +211,11 @@ builder.Services.AddScoped<IInteractionsApiService, InteractionsApiService>();
 builder.Services.AddScoped<IAnalyticsApiService, AnalyticsApiService>();
 builder.Services.AddScoped<IProfileApiService, ProfileApiService>();
 builder.Services.AddScoped<IReportsApiService, ReportsApiService>();
+builder.Services.AddScoped<IReportImageApiService>(sp => new ReportImageApiService(
+    sp.GetRequiredService<Atlas_WebContext>(),
+    sp.GetRequiredService<IMemoryCache>(),
+    sp.GetRequiredService<IWebHostEnvironment>().ContentRootPath
+));
 builder.Services.AddScoped<ISearchApiService, SearchApiService>();
 builder.Services.AddScoped<ITermsApiService, TermsApiService>();
 builder.Services.AddScoped<IUsersApiService, UsersApiService>();

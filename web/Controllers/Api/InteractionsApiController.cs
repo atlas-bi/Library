@@ -105,6 +105,15 @@ public class InteractionsApiController : ControllerBase
         }
     }
 
+    [HttpGet("search/directors")]
+    public async Task<ActionResult<IReadOnlyList<RecipientSearchResultDto>>> SearchDirectors(
+        [FromQuery] string q,
+        CancellationToken cancellationToken = default
+    )
+    {
+        return Ok(await _interactionsApiService.SearchDirectorsAsync(q, cancellationToken));
+    }
+
     [HttpGet("search/recipients")]
     public async Task<ActionResult<IReadOnlyList<RecipientSearchResultDto>>> SearchRecipients(
         [FromQuery] string q,
