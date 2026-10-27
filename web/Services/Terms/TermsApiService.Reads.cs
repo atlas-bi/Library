@@ -8,6 +8,32 @@ namespace Atlas_Web.Services;
 
 public sealed partial class TermsApiService
 {
+    private const int RecentTermWindowDays = 30;
+    private const int RecentTermLimit = 10;
+
+    public async Task<RecentTermsDto> GetRecentTermsAsync(CancellationToken cancellationToken)
+    {
+        var cutoff = DateTime.Now.AddDays(-RecentTermWindowDays);
+        var approved = await _context.Terms.AsNoTracking()
+            .Where(x => x.ApprovedYn == "Y" && x.ValidFromDateTime > cutoff)
+            .OrderByDescending(x => x.ValidFromDateTime)
+            .Take(RecentTermLimit)
+            .Select(x => new RecentTermDto { Id = x.TermId, Name = x.Name })
+            .ToListAsync(cancellationToken);
+
+        var remaining = RecentTermLimit - approved.Count;
+        var pending = remaining > 0
+            ? await _context.Terms.AsNoTracking()
+                .Where(x => x.ApprovedYn == "N" && x.ValidFromDateTime > cutoff)
+                .OrderByDescending(x => x.LastUpdatedDateTime)
+                .Take(remaining)
+                .Select(x => new RecentTermDto { Id = x.TermId, Name = x.Name })
+                .ToListAsync(cancellationToken)
+            : new List<RecentTermDto>();
+
+        return new RecentTermsDto { Approved = approved, Pending = pending };
+    }
+
     public async Task<TermsListDto> GetTermsAsync(
         ClaimsPrincipal user,
         CancellationToken cancellationToken

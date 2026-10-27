@@ -312,3 +312,9 @@ public sealed class ReportSearchResultDto
     public string Name { get; init; }
     public string Description { get; init; }
 }
+
+public sealed class RecentReportDto
+{
+    public int Id { get; init; }
+    public string Name { get; init; }
+}

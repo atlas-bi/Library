@@ -1,5 +1,6 @@
 import Link from "next/link"
 import { ChevronsUpDown } from "lucide-react"
+import { formatAnalyticsPercent } from "@/lib/analytics/format"
 import type { ProfileBarItemDto } from "@/lib/profile/types"
 
 function getBarTitle(item: ProfileBarItemDto) {
@@ -87,10 +88,10 @@ export function ProfileBarDataSection({
                       <div className="relative inline-flex items-center justify-center overflow-hidden bg-[rgba(38,128,235,0.1)] rounded-sm min-w-[36px] h-5">
                         <div 
                           className="absolute left-0 top-0 bottom-0 bg-[rgba(38,128,235,0.2)]" 
-                          style={{ width: `${Math.round(item.percent * 100)}%` }} 
+                          style={{ width: `${Math.min(100, Math.round(item.percent * 100))}%` }} 
                         />
                         <span className="relative z-10 text-[10px] font-bold text-muted-foreground px-1">
-                          {Math.round(item.percent * 100)}%
+                          {formatAnalyticsPercent(item.percent)}
                         </span>
                       </div>
                     ) : null}
