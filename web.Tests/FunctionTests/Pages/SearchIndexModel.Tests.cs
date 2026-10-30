@@ -58,4 +58,36 @@ public class SearchIndexModelTests
 
         Assert.Equal("Patient Flow", result);
     }
+
+    [Fact]
+    public void ShouldRedirectToHome_IsFalseWhenQAliasIsPresent()
+    {
+        var requestQuery = new QueryCollection(
+            new Dictionary<string, Microsoft.Extensions.Primitives.StringValues> { ["q"] = "census" }
+        );
+
+        var resolved = Atlas_Web.Pages.Search.IndexModel.ResolveSearchQuery(null, requestQuery);
+
+        Assert.Equal("census", resolved);
+        Assert.False(Atlas_Web.Pages.Search.IndexModel.ShouldRedirectToHome(resolved));
+    }
+
+    [Fact]
+    public void ShouldRedirectToHome_IsTrueWhenQueryMissing()
+    {
+        var requestQuery = new QueryCollection();
+
+        var resolved = Atlas_Web.Pages.Search.IndexModel.ResolveSearchQuery(null, requestQuery);
+
+        Assert.True(Atlas_Web.Pages.Search.IndexModel.ShouldRedirectToHome(resolved));
+    }
+
+    [Fact]
+    public void SearchRequestExcludedFilterKeys_IncludesQAlias()
+    {
+        Assert.Contains(
+            "q",
+            Atlas_Web.Pages.Search.IndexModel.SearchRequestExcludedFilterKeys
+        );
+    }
 }
