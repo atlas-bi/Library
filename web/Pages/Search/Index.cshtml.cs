@@ -205,14 +205,47 @@ namespace Atlas_Web.Pages.Search
             Microsoft.AspNetCore.Http.IQueryCollection requestQuery
         )
         {
-            return query ?? requestQuery["q"].FirstOrDefault();
+            if (!string.IsNullOrWhiteSpace(query))
+            {
+                return query;
+            }
+
+            var fromQ = requestQuery["q"].FirstOrDefault();
+            if (!string.IsNullOrWhiteSpace(fromQ))
+            {
+                return fromQ;
+            }
+
+            return requestQuery["Query"].FirstOrDefault();
         }
+
+        public static bool ShouldRedirectToHome(string resolvedQuery)
+        {
+            return string.IsNullOrWhiteSpace(resolvedQuery);
+        }
+
+        /// <summary>Query keys that are not Solr facet filters (includes <c>q</c> URL alias).</summary>
+        public static IReadOnlyCollection<string> SearchRequestExcludedFilterKeys { get; } =
+            new[]
+            {
+                "PageIndex",
+                "Query",
+                "q",
+                "type",
+                "EPIC",
+                "msg",
+                "field",
+                "advanced",
+                "error",
+                "success",
+                "warning",
+            };
 
         public async Task<IActionResult> OnGet(string Query)
         {
             Query = ResolveSearchQuery(Query, Request.Query);
 
-            if (string.IsNullOrEmpty(Query))
+            if (ShouldRedirectToHome(Query))
             {
                 return RedirectToPage("/Index/Index");
             }
@@ -296,23 +329,9 @@ namespace Atlas_Web.Pages.Search
                     FilterQuery.Add(new SolrQuery("visible_text:(Y)"));
                 }
                 // also exclude the two global keywords, EPIC and msg.
-                var ExcludedKeys = new List<string>
-                {
-                    "PageIndex",
-                    "Query",
-                    "type",
-                    "EPIC",
-                    "msg",
-                    "field",
-                    "advanced",
-                    "error",
-                    "success",
-                    "warning",
-                };
-
                 foreach (string key in query.Keys)
                 {
-                    if (ExcludedKeys.IndexOf(key) == -1)
+                    if (!SearchRequestExcludedFilterKeys.Contains(key))
                     {
                         FilterQuery.Add(
                             new SolrQuery($"{{!tag={key}}}{key}:({query[key].ToString().Trim()})")
