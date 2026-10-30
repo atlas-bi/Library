@@ -4,6 +4,7 @@ public sealed class ToggleStarRequestDto
 {
     public string Type { get; init; }
     public int? Id { get; init; }
+    public string Search { get; init; }
 }
 
 public sealed class ToggleStarResponseDto
