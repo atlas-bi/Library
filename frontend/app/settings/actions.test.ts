@@ -4,6 +4,10 @@ vi.mock("next/cache", () => ({
   revalidatePath: vi.fn(),
 }))
 
+vi.mock("@/lib/groups/api", () => ({
+  searchGroups: vi.fn(),
+}))
+
 vi.mock("@/lib/settings/api", () => ({
   addSiteMessage: vi.fn(),
   deleteSiteMessage: vi.fn(),
@@ -15,6 +19,7 @@ vi.mock("@/lib/settings/api", () => ({
 }))
 
 import { revalidatePath } from "next/cache"
+import { searchGroups } from "@/lib/groups/api"
 import {
   addSiteMessage,
   createRole,
@@ -24,6 +29,7 @@ import {
 import {
   addSiteMessageAction,
   createRoleAction,
+  searchSettingsGroupsAction,
   updateRolePermissionAction,
   updateSearchVisibilityAction,
 } from "./actions"
@@ -91,5 +97,29 @@ describe("settings actions", () => {
 
     expect(result).toEqual({ error: "You do not have permission to view this content." })
     expect(revalidatePath).not.toHaveBeenCalled()
+  })
+
+  test("searchSettingsGroupsAction returns empty array for blank query", async () => {
+    const result = await searchSettingsGroupsAction("  ")
+
+    expect(result).toEqual([])
+    expect(searchGroups).not.toHaveBeenCalled()
+  })
+
+  test("searchSettingsGroupsAction maps group search results for the typeahead", async () => {
+    vi.mocked(searchGroups).mockResolvedValueOnce([
+      { id: 2, name: "Clinical Operations", email: "clinical-ops@example.com" },
+    ])
+
+    const result = await searchSettingsGroupsAction("clinical")
+
+    expect(searchGroups).toHaveBeenCalledWith("clinical")
+    expect(result).toEqual([
+      {
+        id: 2,
+        name: "Clinical Operations",
+        description: "clinical-ops@example.com",
+      },
+    ])
   })
 })

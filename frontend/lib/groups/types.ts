@@ -8,6 +8,12 @@ export type GroupPermissions = {
   canViewSiteAnalytics?: boolean
 }
 
+export type GroupSearchResult = {
+  id: number
+  name?: string | null
+  email?: string | null
+}
+
 export type GroupListItem = {
   id: number
   name?: string | null

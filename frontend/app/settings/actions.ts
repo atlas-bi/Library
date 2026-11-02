@@ -1,8 +1,8 @@
 ﻿"use server"
 
 import { revalidatePath } from "next/cache"
+import { searchGroups } from "@/lib/groups/api"
 import { searchReportUsers } from "@/lib/reports/api"
-import { searchLibrary } from "@/lib/search/api"
 import type { TagType } from "@/lib/settings/api"
 import {
   addGroupRole,
@@ -184,14 +184,10 @@ export async function searchSettingsGroupsAction(query: string) {
   const trimmed = query.trim()
   if (!trimmed) return []
 
-  const result = await searchLibrary({ q: trimmed, type: "groups" })
-  if (!result.data?.results) return []
-
-  return result.data.results
-    .filter((item) => item.type === "groups")
-    .map((item) => ({
-      id: item.atlasId,
-      name: item.name,
-      description: item.description,
-    }))
+  const groups = await searchGroups(trimmed)
+  return groups.map((group) => ({
+    id: group.id,
+    name: group.name ?? "",
+    description: group.email ?? null,
+  }))
 }
