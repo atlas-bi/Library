@@ -12,6 +12,13 @@ public sealed class UpdateUserSettingsRequestDto
     public bool? ShareNotificationEnabled { get; init; }
 }
 
+public sealed class UserSearchResultDto
+{
+    public int Id { get; init; }
+    public string Name { get; init; }
+    public string Email { get; init; }
+}
+
 public sealed class UserPageDto
 {
     public UserPageUserDto User { get; init; }
