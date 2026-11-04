@@ -44,3 +44,8 @@ export function initiativeDetailHref(id: number): string {
 export function collectionDetailHref(id: number): string {
   return `/collections?id=${id}`
 }
+
+/** Match Razor recent-update partials and the Recent terms sidebar (#895). */
+export function formatRecentUpdateName(name: string): string {
+  return name.replace(/_/g, " ")
+}

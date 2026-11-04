@@ -4,6 +4,7 @@ import type { AppErrorCode } from "@/lib/errors"
 import { getUserFriendlyErrorMessage, mapHttpStatusToErrorCode } from "@/lib/errors"
 import { apiFetchJson } from "@/lib/http"
 import type {
+  RecentTermsDto,
   TermDetailDto,
   TermRelatedReportDto,
   TermWriteBody,
@@ -34,6 +35,12 @@ export type TermReportsResult = {
   status?: number
 }
 
+export type RecentTermsResult = {
+  data: RecentTermsDto | null
+  error: AppErrorCode | null
+  status?: number
+}
+
 async function parseErrorMessage(res: Response): Promise<string> {
   const code = mapHttpStatusToErrorCode(res.status)
   const fallback = getUserFriendlyErrorMessage(code)
@@ -53,6 +60,23 @@ async function parseErrorMessage(res: Response): Promise<string> {
 
 function toErrorCode(status: number): AppErrorCode {
   return mapHttpStatusToErrorCode(status)
+}
+
+/** Homepage sidebar — `GET /api/terms/recent` on the C# API. */
+export async function getRecentTerms(): Promise<RecentTermsResult> {
+  const token = await getToken()
+  if (!token) return { data: null, error: "auth_required" }
+
+  const apiBase = getServerApiBase()
+  if (!apiBase) return { data: null, error: "service_unavailable" }
+
+  const result = await apiFetchJson<RecentTermsDto>(`${apiBase}/api/terms/recent`, {
+    headers: { Authorization: `Bearer ${token}` },
+    cache: "no-store",
+  })
+
+  if (!result.ok) return { data: null, error: result.error.code, status: result.error.status }
+  return { data: result.data, error: null }
 }
 
 export async function getTermsList(): Promise<TermsListResult> {

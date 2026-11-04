@@ -2,6 +2,7 @@ import { afterEach, beforeEach, describe, expect, test, vi } from "vitest"
 import {
   collectionDetailHref,
   fetchRecentUpdatesList,
+  formatRecentUpdateName,
   initiativeDetailHref,
   reportDetailHref,
 } from "./recent-updates-client-api"
@@ -44,6 +45,12 @@ describe("fetchRecentUpdatesList", () => {
     const result = await fetchRecentUpdatesList("collections")
 
     expect(result).toEqual({ ok: false, error: "http_error", status: 503 })
+  })
+})
+
+describe("formatRecentUpdateName", () => {
+  test("replaces underscores with spaces", () => {
+    expect(formatRecentUpdateName("Report_10")).toBe("Report 10")
   })
 })
 

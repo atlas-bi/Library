@@ -1,6 +1,7 @@
 import Link from "next/link"
 import {
   collectionDetailHref,
+  formatRecentUpdateName,
   initiativeDetailHref,
   reportDetailHref,
 } from "@/lib/home/recent-updates-client-api"
@@ -37,7 +38,7 @@ function RecentUpdatesList({
           {section.items.map((item) => (
             <li key={item.id}>
               <Link href={hrefForId(item.id)} className="text-[var(--atlas-home-link)] hover:underline">
-                {item.name}
+                {formatRecentUpdateName(item.name)}
               </Link>
             </li>
           ))}

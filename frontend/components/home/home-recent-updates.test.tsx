@@ -18,7 +18,7 @@ describe("HomeRecentUpdatesView", () => {
     expect(screen.getByText("No recent updates to show.")).toBeInTheDocument()
   })
 
-  it("renders names as returned and links to detail pages", () => {
+  it("renders names with underscores as spaces and links to detail pages", () => {
     render(
       <HomeRecentUpdatesView
         status="ready"
@@ -30,12 +30,12 @@ describe("HomeRecentUpdatesView", () => {
       />,
     )
 
-    expect(screen.getByRole("link", { name: "Report_10" })).toHaveAttribute("href", "/reports?id=10")
-    expect(screen.getByRole("link", { name: "Initiative_20" })).toHaveAttribute(
+    expect(screen.getByRole("link", { name: "Report 10" })).toHaveAttribute("href", "/reports?id=10")
+    expect(screen.getByRole("link", { name: "Initiative 20" })).toHaveAttribute(
       "href",
       "/initiatives?id=20",
     )
-    expect(screen.getByRole("link", { name: "Collection_30" })).toHaveAttribute(
+    expect(screen.getByRole("link", { name: "Collection 30" })).toHaveAttribute(
       "href",
       "/collections?id=30",
     )
