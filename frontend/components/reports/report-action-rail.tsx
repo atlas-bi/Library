@@ -11,6 +11,8 @@ import {
 } from "@/components/interactions/action-rail"
 import { EntityEngagementRailActions } from "@/components/interactions/entity-engagement-rail-actions"
 import { ReportRunDialog } from "@/components/interactions/report-run-dialog"
+import { ReportCubeDownloadButton } from "@/components/reports/report-cube-download-button"
+import { isCubeReportType } from "@/lib/reports/report-cube"
 import type { ReportDetail } from "@/lib/reports/types"
 
 function resolveDisabledRunLabel(report: ReportDetail): string {
@@ -74,6 +76,7 @@ export function ReportActionRail({
     <ActionRail label="Report actions">
       <ActionRailGroup>
         <ReportRunRailButton report={report} title={title} />
+        {isCubeReportType(report) ? <ReportCubeDownloadButton report={report} /> : null}
       </ActionRailGroup>
 
       <ActionRailGroup separated>
