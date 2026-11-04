@@ -2,6 +2,8 @@
 
 import { CirclePlay } from "lucide-react"
 import type { ReactNode } from "react"
+import { useState } from "react"
+import { downloadReportAttachmentAction } from "@/app/reports/file-actions"
 import { InteractionTooltip } from "@/components/interactions/interaction-tooltip"
 import { Button } from "@/components/ui/button"
 import {
@@ -11,12 +13,60 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
+import { crystalAttachmentErrorMessage } from "@/lib/reports/report-file-messages"
+import { saveDownloadedFile } from "@/lib/reports/save-downloaded-file"
 import type { ReportAttachment } from "@/lib/reports/types"
 
 function formatAttachmentDate(value?: string | null): string {
   if (!value) return ""
   const date = new Date(value)
   return Number.isNaN(date.getTime()) ? "" : date.toLocaleString()
+}
+
+function CrystalAttachmentDownloadLink({
+  attachment,
+}: {
+  attachment: ReportAttachment
+}) {
+  const label = attachment.name?.trim() || `Output ${attachment.id}`
+  const [pending, setPending] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+
+  async function handleDownload() {
+    setPending(true)
+    setError(null)
+
+    try {
+      const result = await downloadReportAttachmentAction(attachment.id, label)
+      if (!result.ok) {
+        setError(crystalAttachmentErrorMessage(result.code))
+        return
+      }
+      saveDownloadedFile(result.data)
+    } catch {
+      setError(crystalAttachmentErrorMessage("unknown"))
+    } finally {
+      setPending(false)
+    }
+  }
+
+  return (
+    <div className="space-y-1">
+      <button
+        type="button"
+        disabled={pending}
+        onClick={() => void handleDownload()}
+        className="font-medium text-[var(--atlas-home-link)] hover:underline disabled:opacity-60"
+      >
+        {pending ? `Opening ${label}…` : label}
+      </button>
+      {error ? (
+        <p className="text-xs text-destructive" role="alert">
+          {error}
+        </p>
+      ) : null}
+    </div>
+  )
 }
 
 export function ReportRunDialog({
@@ -63,24 +113,11 @@ export function ReportRunDialog({
           {sorted.length > 0 ? (
             <ul className="list-disc space-y-2 pl-5">
               {sorted.map((attachment) => {
-                const label = attachment.name?.trim() || `Output ${attachment.id}`
                 const dateLabel = formatAttachmentDate(attachment.creationDate)
-                const href = attachment.runUrl?.trim()
 
                 return (
                   <li key={attachment.id}>
-                    {href ? (
-                      <a
-                        href={href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="font-medium text-[var(--atlas-home-link)] hover:underline"
-                      >
-                        {label}
-                      </a>
-                    ) : (
-                      <span>{label}</span>
-                    )}
+                    <CrystalAttachmentDownloadLink attachment={attachment} />
                     {dateLabel ? (
                       <span className="text-[var(--atlas-home-muted)]"> · {dateLabel}</span>
                     ) : null}
