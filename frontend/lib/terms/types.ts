@@ -37,6 +37,16 @@ export interface TermsListDto {
   items: TermListItemDto[]
 }
 
+export interface RecentTermDto {
+  id: number
+  name: string
+}
+
+export interface RecentTermsDto {
+  approved?: RecentTermDto[]
+  pending?: RecentTermDto[]
+}
+
 export interface TermDetailDto {
   id: number
   name: string
