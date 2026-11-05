@@ -1,3 +1,4 @@
+import { HomeRecentUpdatesClient } from "@/components/home/home-recent-updates-client"
 import { HomeTabsClient } from "@/components/home/home-tabs-client"
 import { HomeRecentTermsClient } from "@/components/home/home-recent-terms-client"
 import { LibraryShell } from "@/components/layout/library-shell"
@@ -30,7 +31,10 @@ export function HomeShell({
       {isSignedIn ? (
         <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_220px]">
           <HomeTabsClient visibleTabs={visibleTabs} />
-          <HomeRecentTermsClient />
+          <div className="space-y-6">
+            <HomeRecentTermsClient />
+            <HomeRecentUpdatesClient />
+          </div>
         </div>
       ) : (
         <section className="atlas-home-card px-6 py-7 text-sm text-[var(--atlas-home-text)]">
