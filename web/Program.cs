@@ -348,8 +348,6 @@ builder
     .AddRazorRuntimeCompilation();
 builder.Services.AddControllers();
 builder.Services.AddSolrNet<SolrAtlas>(builder.Configuration["solr:atlas_address"]);
-builder.Services.AddSolrNet<SolrAtlasLookups>(builder.Configuration["solr:atlas_lookups_address"]);
-
 var app = builder.Build();
 
 app.UseResponseCompression();
