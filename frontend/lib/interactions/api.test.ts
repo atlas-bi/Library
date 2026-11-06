@@ -10,9 +10,10 @@ vi.mock("@/lib/api-base", () => ({
 
 import { getServerApiBase } from "@/lib/api-base"
 import { getToken } from "@/lib/auth"
-import { submitAccessRequest } from "./api"
+import { sendShareMail, submitAccessRequest } from "./api"
 
-const ENDPOINT = "https://api.example.test/api/interactions/access-request"
+const ACCESS_ENDPOINT = "https://api.example.test/api/interactions/access-request"
+const SHARE_MAIL_ENDPOINT = "https://api.example.test/api/mail/messages"
 
 const VALID_BODY = {
   reportName: "Sales Dashboard",
@@ -50,7 +51,7 @@ describe("submitAccessRequest", () => {
     await submitAccessRequest(VALID_BODY)
 
     expect(global.fetch).toHaveBeenCalledWith(
-      ENDPOINT,
+      ACCESS_ENDPOINT,
       expect.objectContaining({
         method: "POST",
         body: JSON.stringify(VALID_BODY),
@@ -117,6 +118,65 @@ describe("submitAccessRequest", () => {
     if (!result.ok) {
       expect(result.message).toMatch(/temporarily unavailable/i)
       expect(result.code).toBe("service_unavailable")
+    }
+  })
+})
+
+const SHARE_BODY = {
+  draftId: 0,
+  to: [{ userId: 1, type: "u" as const }],
+  subject: "Hello",
+  message: "<p>Hi</p>",
+  text: "Hi",
+  share: true,
+  shareName: "Q4 Report",
+  shareUrl: "https://example.com/reports/1",
+}
+
+describe("sendShareMail", () => {
+  beforeEach(() => {
+    vi.mocked(getToken).mockResolvedValue("test-token")
+    vi.mocked(getServerApiBase).mockReturnValue("https://api.example.test")
+  })
+
+  test("posts to POST /api/mail/messages with bearer auth", async () => {
+    mockFetch(200, {
+      message: "Successfully shared.",
+      recipientCount: 1,
+      shareCount: 1,
+    })
+
+    const result = await sendShareMail(SHARE_BODY)
+
+    expect(result.ok).toBe(true)
+    if (result.ok) {
+      expect(result.data.message).toBe("Successfully shared.")
+      expect(result.data.recipientCount).toBe(1)
+      expect(result.data.shareCount).toBe(1)
+    }
+
+    expect(global.fetch).toHaveBeenCalledWith(
+      SHARE_MAIL_ENDPOINT,
+      expect.objectContaining({
+        method: "POST",
+        body: JSON.stringify(SHARE_BODY),
+        headers: expect.objectContaining({
+          "Content-Type": "application/json",
+          Authorization: "Bearer test-token",
+        }),
+      }),
+    )
+  })
+
+  test("returns ok:false with API error on failed send", async () => {
+    mockFetch(400, { error: "No recipients specified." })
+
+    const result = await sendShareMail(SHARE_BODY)
+
+    expect(result.ok).toBe(false)
+    if (!result.ok) {
+      expect(result.message).toBe("No recipients specified.")
+      expect(result.code).toBe("bad_request")
     }
   })
 })
