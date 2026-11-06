@@ -39,7 +39,7 @@ public class RecentUpdatesApiTests
         }
 
         await context.SaveChangesAsync();
-        var service = new ReportsApiService(context, null, null, new ConfigurationBuilder().Build(), new MemoryCache(new MemoryCacheOptions()), null, null);
+        var service = new ReportsApiService(context, null, null, new ConfigurationBuilder().Build(), new MemoryCache(new MemoryCacheOptions()), null);
 
         var recent = await service.GetRecentReportsAsync(CancellationToken.None);
 
