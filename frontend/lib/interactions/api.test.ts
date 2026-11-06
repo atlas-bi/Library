@@ -10,9 +10,10 @@ vi.mock("@/lib/api-base", () => ({
 
 import { getServerApiBase } from "@/lib/api-base"
 import { getToken } from "@/lib/auth"
-import { submitAccessRequest } from "./api"
+import { searchDirectors, submitAccessRequest } from "./api"
 
-const ENDPOINT = "https://api.example.test/api/interactions/access-request"
+const ACCESS_ENDPOINT = "https://api.example.test/api/interactions/access-request"
+const DIRECTORS_ENDPOINT = "https://api.example.test/api/interactions/search/directors?q=Smith"
 
 const VALID_BODY = {
   reportName: "Sales Dashboard",
@@ -50,7 +51,7 @@ describe("submitAccessRequest", () => {
     await submitAccessRequest(VALID_BODY)
 
     expect(global.fetch).toHaveBeenCalledWith(
-      ENDPOINT,
+      ACCESS_ENDPOINT,
       expect.objectContaining({
         method: "POST",
         body: JSON.stringify(VALID_BODY),
@@ -118,5 +119,49 @@ describe("submitAccessRequest", () => {
       expect(result.message).toMatch(/temporarily unavailable/i)
       expect(result.code).toBe("service_unavailable")
     }
+  })
+})
+
+describe("searchDirectors", () => {
+  beforeEach(() => {
+    vi.mocked(getToken).mockResolvedValue("test-token")
+    vi.mocked(getServerApiBase).mockReturnValue("https://api.example.test")
+  })
+
+  test("returns an empty list without calling fetch when the query is empty or whitespace", async () => {
+    global.fetch = vi.fn() as typeof fetch
+
+    expect(await searchDirectors("")).toEqual([])
+    expect(await searchDirectors("   \t")).toEqual([])
+
+    expect(global.fetch).not.toHaveBeenCalled()
+  })
+
+  test("GETs /api/interactions/search/directors with bearer auth", async () => {
+    mockFetch(200, [{ id: 1, name: "Pat Smith", type: "u", email: null }])
+
+    const result = await searchDirectors("Smith")
+
+    expect(result).toEqual([{ id: 1, name: "Pat Smith", type: "u", email: null }])
+    expect(global.fetch).toHaveBeenCalledWith(
+      DIRECTORS_ENDPOINT,
+      expect.objectContaining({
+        headers: expect.objectContaining({
+          Authorization: "Bearer test-token",
+        }),
+        cache: "no-store",
+      }),
+    )
+  })
+
+  test("trims the query before requesting", async () => {
+    mockFetch(200, [])
+
+    await searchDirectors("  Smith  ")
+
+    expect(global.fetch).toHaveBeenCalledWith(
+      "https://api.example.test/api/interactions/search/directors?q=Smith",
+      expect.anything(),
+    )
   })
 })
