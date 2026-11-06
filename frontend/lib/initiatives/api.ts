@@ -123,5 +123,5 @@ export async function toggleStar(id: number): Promise<ApiResult<ToggleStarRespon
 }
 
 export async function shareMail(data: ShareMailRequestDto): Promise<ApiResult<void>> {
-  return authorizedMutation<void>("/api/interactions/share-mail", "POST", data)
+  return authorizedMutation<void>("/api/mail/messages", "POST", data)
 }

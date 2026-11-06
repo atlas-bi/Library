@@ -95,7 +95,7 @@ export async function sendShareMail(
     }
   }
 
-  const res = await fetch(`${apiBase}/api/interactions/share-mail`, {
+  const res = await fetch(`${apiBase}/api/mail/messages`, {
     method: "POST",
     headers: {
       Authorization: `Bearer ${token}`,
