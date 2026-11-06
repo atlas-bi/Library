@@ -7,7 +7,10 @@ import { ReportImageUpload } from "@/components/reports/report-image-upload"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
-import { getReportObjectImageThumbUrl } from "@/lib/reports/report-image-url"
+import {
+  getReportImagePlaceholderUrl,
+  getReportThumbnailUrl,
+} from "@/lib/reports/report-image-url"
 import type { ReportDetail, ReportEditLookupOptions } from "@/lib/reports/types"
 
 export const REPORT_EDIT_WIZARD_STEPS = [
@@ -41,7 +44,7 @@ export function ReportEditWizard({
   report: ReportDetail
   cancelHref: string
   lookupOptions: ReportEditLookupOptions
-  /** Browser-reachable API origin for /data/img thumbs (NEXT_PUBLIC_API_URL). */
+  /** Browser-reachable API origin for report image GETs (NEXT_PUBLIC_API_URL). */
   publicApiBase?: string
 }) {
   const [step, setStep] = useState<ReportEditWizardStep>(() => getDefaultReportEditWizardStep())
@@ -165,15 +168,34 @@ export function ReportEditWizard({
             <CardContent className="space-y-4">
               {existingImages.length > 0 ? (
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                  {existingImages.map((image) => (
-                    <div key={image.id} className="rounded-md border border-[var(--atlas-home-border-soft)] p-2">
-                      <img
-                        src={getReportObjectImageThumbUrl(image.id, { apiBase: publicApiBase })}
-                        alt={`Report image ${image.id}`}
-                        className="h-auto w-full max-h-64 rounded-md border border-[var(--atlas-home-border-soft)] object-cover"
-                      />
-                    </div>
-                  ))}
+                  {existingImages.map((image) => {
+                    const thumbSrc = getReportThumbnailUrl(report.id, {
+                      apiBase: publicApiBase,
+                      imageId: image.id,
+                      size: "256x256",
+                    })
+                    const placeholderSrc = getReportImagePlaceholderUrl({
+                      apiBase: publicApiBase,
+                      size: "256x256",
+                    })
+                    return (
+                      <div key={image.id} className="rounded-md border border-[var(--atlas-home-border-soft)] p-2">
+                        <img
+                          src={thumbSrc}
+                          alt={`Report image ${image.id}`}
+                          className="h-auto w-full max-h-64 rounded-md border border-[var(--atlas-home-border-soft)] object-cover"
+                          onError={(event) => {
+                            const el = event.currentTarget
+                            if (el.dataset.atlasThumbFallback === "1") {
+                              return
+                            }
+                            el.dataset.atlasThumbFallback = "1"
+                            el.src = placeholderSrc
+                          }}
+                        />
+                      </div>
+                    )
+                  })}
                 </div>
               ) : (
                 <p className="text-sm text-muted-foreground">No images uploaded yet.</p>
