@@ -19,7 +19,7 @@ jobs:
       - name: setup node
         uses: actions/setup-node@v7
         with:
-          node-version: '24.x'
+          node-version: '26.x'
       - name: install node deps
         run: npm install
       - name: node build
