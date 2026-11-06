@@ -90,6 +90,47 @@ describe("HomeTabsClient", () => {
     expect(fetchMock).toHaveBeenCalledTimes(2)
   })
 
+  it("renders rows when the home route already returns a panel", async () => {
+    fetchMock.mockImplementation((input) => {
+      const url = String(input)
+      const panels = {
+        "/api/home/subscriptions": {
+          kind: "subscriptions",
+          title: "Subscriptions",
+          emptyMessage: "No subscriptions to show.",
+          rows: [{ id: "1", name: "Daily Census" }],
+        },
+        "/api/home/report-runs": {
+          kind: "report-runs",
+          title: "Report Runs",
+          emptyMessage: "No run data to show.",
+          rows: [{ id: "1", name: "Census Run" }],
+        },
+        "/api/home/groups": {
+          kind: "groups",
+          title: "Groups",
+          emptyMessage: "No groups to show.",
+          rows: [{ id: "1", name: "Nursing", href: "/groups?id=1" }],
+        },
+      } as const
+      const data = Object.entries(panels).find(([path]) => url.endsWith(path))?.[1]
+      return Promise.resolve(
+        new Response(JSON.stringify({ ok: true, data }), {
+          status: 200,
+          headers: { "Content-Type": "application/json" },
+        }),
+      )
+    })
+
+    render(<HomeTabsClient />)
+    await userEvent.click(screen.getByRole("tab", { name: "Subscriptions" }))
+    await screen.findByText("Daily Census")
+    await userEvent.click(screen.getByRole("tab", { name: "Report Runs" }))
+    await screen.findByText("Census Run")
+    await userEvent.click(screen.getByRole("tab", { name: "Groups" }))
+    await screen.findByText("Nursing")
+  })
+
   it("shows the sign-in prompt for unauthorized tab responses", async () => {
     fetchMock.mockResolvedValue(
       new Response(JSON.stringify({ ok: false, error: "auth_required" }), {

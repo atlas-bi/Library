@@ -18,7 +18,6 @@ export function ProfileDateRangeSelect({
 
   return (
     <label className={cn("inline-flex items-center gap-2 text-sm", className)}>
-      <span className="text-muted-foreground">Range</span>
       <select
         value={value}
         onChange={(event) => onChange(event.target.value as ProfileDateRangeId)}

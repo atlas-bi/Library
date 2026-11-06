@@ -1,10 +1,11 @@
 using System.Text;
 using Atlas_Web.Configuration;
+using Atlas_Web.Authentication;
 using Atlas_Web.Services;
+using ITfoxtec.Identity.Saml2.Schemas;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authentication.Negotiate;
 using Microsoft.IdentityModel.Tokens;
-using Atlas_Web.Authentication;
 
 namespace Atlas_Web;
 
@@ -71,7 +72,22 @@ public static class ProgramConfiguration
 #pragma warning restore S6781
         builder.Services.AddScoped<JwtTokenService>(_ => new JwtTokenService(signingKey, jwtIssuer, jwtAudience));
 
-        if (BooleanConfig.IsEnabled(builder.Configuration["Demo"]))
+        if (builder.Environment.IsEnvironment("Test"))
+        {
+            if (BooleanConfig.IsEnabled(builder.Configuration["Demo"]))
+            {
+                ConfigureDemoAuthentication(builder, jwtIssuer, jwtAudience, signingKey);
+            }
+            else
+            {
+                ConfigureTestSsoAuthentication(builder, jwtIssuer, jwtAudience, signingKey);
+            }
+        }
+        else if (builder.Configuration.GetSection("Saml2").Exists())
+        {
+            ConfigureSamlAuthentication(builder, jwtIssuer, jwtAudience, signingKey);
+        }
+        else if (BooleanConfig.IsEnabled(builder.Configuration["Demo"]))
         {
             ConfigureDemoAuthentication(builder, jwtIssuer, jwtAudience, signingKey);
         }
@@ -94,19 +110,7 @@ public static class ProgramConfiguration
             {
                 options.Username = builder.Configuration["DEMO_ADMIN_USERNAME"] ?? "Default";
             })
-            .AddJwtBearer("Bearer", options =>
-            {
-                options.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
-                    ValidateLifetime = true,
-                    ValidateIssuerSigningKey = true,
-                    ValidIssuer = jwtIssuer,
-                    ValidAudience = jwtAudience,
-                    IssuerSigningKey = signingKey,
-                };
-            });
+            .AddJwtBearer("Bearer", options => ApplyBearer(options, jwtIssuer, jwtAudience, signingKey));
         ;
 #pragma warning restore S1116
     }
@@ -119,18 +123,71 @@ public static class ProgramConfiguration
     {
         builder.Services.AddAuthentication(NegotiateDefaults.AuthenticationScheme)
             .AddNegotiate()
-            .AddJwtBearer("Bearer", options =>
+            .AddJwtBearer("Bearer", options => ApplyBearer(options, jwtIssuer, jwtAudience, signingKey));
+    }
+
+    private static void ConfigureSamlAuthentication(
+        WebApplicationBuilder builder,
+        string jwtIssuer,
+        string jwtAudience,
+        SymmetricSecurityKey signingKey)
+    {
+        builder.Services.AddAuthentication(options =>
             {
-                options.TokenValidationParameters = new TokenValidationParameters
+                options.DefaultAuthenticateScheme = Saml2Constants.AuthenticationScheme;
+                options.DefaultChallengeScheme = Saml2Constants.AuthenticationScheme;
+                options.DefaultSignInScheme = Saml2Constants.AuthenticationScheme;
+            }
+        )
+            .AddJwtBearer("Bearer", options => ApplyBearer(options, jwtIssuer, jwtAudience, signingKey));
+    }
+
+    private static void ConfigureTestSsoAuthentication(
+        WebApplicationBuilder builder,
+        string jwtIssuer,
+        string jwtAudience,
+        SymmetricSecurityKey signingKey)
+    {
+        builder.Services.AddAuthentication(options => options.DefaultScheme = "TestSso")
+            .AddScheme<TestSsoSchemeOptions, TestSsoAuthHandler>("TestSso", options => { })
+            .AddJwtBearer("Bearer", options => ApplyBearer(options, jwtIssuer, jwtAudience, signingKey));
+    }
+
+    private static void ApplyBearer(
+        JwtBearerOptions options,
+        string jwtIssuer,
+        string jwtAudience,
+        SymmetricSecurityKey signingKey)
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = jwtIssuer,
+            ValidAudience = jwtAudience,
+            IssuerSigningKey = signingKey,
+        };
+        options.Events = new JwtBearerEvents
+        {
+            OnMessageReceived = context =>
+            {
+                if (
+                    string.IsNullOrEmpty(context.Token)
+                    && ReportImageRequests.AcceptsSessionCookie(context.Request)
+                    && context.Request.Cookies.TryGetValue(
+                        ReportImageRequests.SessionCookieName,
+                        out var token
+                    )
+                    && !string.IsNullOrWhiteSpace(token)
+                )
                 {
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
-                    ValidateLifetime = true,
-                    ValidateIssuerSigningKey = true,
-                    ValidIssuer = jwtIssuer,
-                    ValidAudience = jwtAudience,
-                    IssuerSigningKey = signingKey,
-                };
-            });
+                    context.Token = token;
+                }
+
+                return Task.CompletedTask;
+            },
+        };
     }
 }

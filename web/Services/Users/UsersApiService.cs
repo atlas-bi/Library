@@ -13,6 +13,15 @@ namespace Atlas_Web.Services;
 
 public interface IUsersApiService
 {
+    Task<UserSettingsDto> GetSettingsAsync(
+        int userId,
+        CancellationToken cancellationToken
+    );
+    Task UpdateSettingsAsync(
+        int userId,
+        UpdateUserSettingsRequestDto request,
+        CancellationToken cancellationToken
+    );
     Task<UserPageDto> GetUserPageAsync(
         ClaimsPrincipal user,
         int requestedId,
@@ -89,6 +98,10 @@ public interface IUsersApiService
     );
     Task<ToggleAdminModeResponseDto> ToggleAdminModeAsync(
         ClaimsPrincipal user,
+        CancellationToken cancellationToken
+    );
+    Task<IReadOnlyList<UserSearchResultDto>> SearchUsersAsync(
+        string search,
         CancellationToken cancellationToken
     );
 }
@@ -169,6 +182,80 @@ public sealed partial class UsersApiService : IUsersApiService
     {
         _cache.Remove("FavoriteFolders-" + userId);
         _cache.Remove("FavoriteReports-" + userId);
+    }
+
+    public async Task<UserSettingsDto> GetSettingsAsync(
+        int userId,
+        CancellationToken cancellationToken
+    )
+    {
+        var setting = await _context.UserSettings.SingleOrDefaultAsync(
+            x => x.UserId == userId && x.Name == "share_notification",
+            cancellationToken
+        );
+
+        return new UserSettingsDto
+        {
+            ShareNotificationEnabled = setting?.Value != "N",
+        };
+    }
+
+    public async Task<IReadOnlyList<UserSearchResultDto>> SearchUsersAsync(
+        string search,
+        CancellationToken cancellationToken
+    )
+    {
+        var query = _context.Users.AsNoTracking();
+        var term = (search ?? string.Empty).Trim();
+        if (term.Length > 0)
+        {
+            query = query.Where(x =>
+                (x.FullnameCalc != null && x.FullnameCalc.Contains(term))
+                || (x.Email != null && x.Email.Contains(term))
+                || (x.Username != null && x.Username.Contains(term))
+            );
+        }
+
+        return await query
+            .OrderBy(x => x.FullnameCalc)
+            .Take(20)
+            .Select(x => new UserSearchResultDto
+            {
+                Id = x.UserId,
+                Name = x.FullnameCalc ?? x.Username,
+                Email = x.Email,
+            })
+            .ToListAsync(cancellationToken);
+    }
+
+    public async Task UpdateSettingsAsync(
+        int userId,
+        UpdateUserSettingsRequestDto request,
+        CancellationToken cancellationToken
+    )
+    {
+        var setting = await _context.UserSettings.SingleOrDefaultAsync(
+            x => x.UserId == userId && x.Name == "share_notification",
+            cancellationToken
+        );
+
+        if (setting == null)
+        {
+            _context.UserSettings.Add(
+                new UserSetting
+                {
+                    UserId = userId,
+                    Name = "share_notification",
+                    Value = request.ShareNotificationEnabled == true ? "Y" : "N",
+                }
+            );
+        }
+        else
+        {
+            setting.Value = request.ShareNotificationEnabled == true ? "Y" : "N";
+        }
+
+        await _context.SaveChangesAsync(cancellationToken);
     }
 
     private static UserFavoriteFolderDto ToFolderDto(UserFavoriteFolder folder, int itemCount)

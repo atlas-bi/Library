@@ -1,5 +1,6 @@
+import { redirect } from "next/navigation"
 import { HomeShell } from "@/components/home/home-shell"
-import { getCurrentUser } from "@/lib/auth"
+import { getCurrentUser, getToken } from "@/lib/auth"
 import { getHomeUserPageSummary } from "@/lib/home/api"
 import type { HomeTabsVisibility } from "@/lib/home/types"
 
@@ -10,7 +11,16 @@ const allTabsVisible: HomeTabsVisibility = {
   groups: true,
 }
 
+function samlLoginRequired(): boolean {
+  const demo = process.env.DEMO?.trim().toLowerCase()
+  return demo === "false" || demo === "0" || demo === "no"
+}
+
 export default async function HomePage() {
+  if (!(await getToken()) && samlLoginRequired()) {
+    redirect("/auth/login")
+  }
+
   const user = await getCurrentUser()
 
   if (!user) {
