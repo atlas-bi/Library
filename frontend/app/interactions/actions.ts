@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache"
 import {
+  searchDirectors,
   searchInteractionRecipients,
   sendShareMail,
   submitAccessRequest,
@@ -35,6 +36,10 @@ export async function toggleStarAction(type: InteractionEntityType, id: number) 
 
 export async function searchRecipientsAction(query: string, includeGroups = true) {
   return searchInteractionRecipients(query, includeGroups)
+}
+
+export async function searchDirectorsAction(query: string) {
+  return searchDirectors(query)
 }
 
 export async function sendShareMailAction(body: ShareMailRequest) {

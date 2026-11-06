@@ -219,3 +219,27 @@ export async function searchInteractionRecipients(
   if (!result.ok) return []
   return Array.isArray(result.data) ? result.data : []
 }
+
+/** SQL-backed director search (Director role only); max 20 results. */
+export async function searchDirectors(q: string): Promise<InteractionRecipientDto[]> {
+  const trimmed = q.trim()
+  if (!trimmed) return []
+
+  const token = await getToken()
+  if (!token) return []
+
+  const apiBase = getServerApiBase()
+  if (!apiBase) return []
+
+  const params = new URLSearchParams({ q: trimmed })
+  const result = await apiFetchJson<InteractionRecipientDto[]>(
+    `${apiBase}/api/interactions/search/directors?${params}`,
+    {
+      headers: { Authorization: `Bearer ${token}` },
+      cache: "no-store",
+    },
+  )
+
+  if (!result.ok) return []
+  return Array.isArray(result.data) ? result.data : []
+}
