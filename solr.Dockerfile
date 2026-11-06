@@ -24,6 +24,25 @@ RUN apk add --no-cache \
 RUN pip install --no-cache-dir \
     pyodbc pysolr pytz python-dotenv
 
+# Stage installed packages off the versioned site-packages path. The final
+# stage copies them into that image's own purelib and platlib, read from
+# /usr/local/bin/python, so a later Python base bump needs no python3.x path.
+RUN set -eu; \
+    mkdir -p /opt/site-packages; \
+    seen=""; \
+    for key in purelib platlib; do \
+        src="$(/usr/local/bin/python -c "import sysconfig; print(sysconfig.get_path('${key}'))")"; \
+        if [ -z "$src" ] || [ ! -d "$src" ]; then \
+            echo "missing ${key} site-packages: '${src}'" >&2; \
+            exit 1; \
+        fi; \
+        case " ${seen} " in \
+            *" ${src} "*) continue ;; \
+        esac; \
+        seen="${seen} ${src}"; \
+        cp -a "${src}/." /opt/site-packages/; \
+    done
+
 RUN git clone --depth=1 https://github.com/atlas-bi/Solr-Search-ETL.git etl && \
     rm -rf etl/.git
 
@@ -47,7 +66,23 @@ RUN ARCH=$(case $(uname -m) in \
     apk add --allow-untrusted msodbcsql18_18.6.1.1-1_${ARCH}.apk && \
     rm msodbcsql18_18.6.1.1-1_${ARCH}.apk
 
-COPY --from=builder /usr/local/lib/python3.14/site-packages /usr/local/lib/python3.14/site-packages
+COPY --from=builder /opt/site-packages /opt/site-packages
+RUN set -eu; \
+    seen=""; \
+    for key in purelib platlib; do \
+        dest="$(/usr/local/bin/python -c "import sysconfig; print(sysconfig.get_path('${key}'))")"; \
+        if [ -z "$dest" ]; then \
+            echo "missing ${key} site-packages" >&2; \
+            exit 1; \
+        fi; \
+        case " ${seen} " in \
+            *" ${dest} "*) continue ;; \
+        esac; \
+        seen="${seen} ${dest}"; \
+        mkdir -p "$dest"; \
+        cp -a /opt/site-packages/. "$dest/"; \
+    done; \
+    rm -rf /opt/site-packages
 COPY --from=builder /build/etl /app/etl
 
 COPY ./web/solr /app
