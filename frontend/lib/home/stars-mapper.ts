@@ -29,6 +29,7 @@ export type UserStarsPayload = {
     folderId?: number | null
     rank?: number | null
     itemId?: number | null
+    searchString?: string | null
     url?: string | null
     name: string
     description?: string | null
@@ -79,11 +80,18 @@ export function normalizeHomeStarItemType(type?: string | null, typeLabel?: stri
 }
 
 function mapStarItem(item: NonNullable<UserStarsPayload["items"]>[number]): HomeStarCard {
+  const itemType = normalizeHomeStarItemType(item.type, item.typeLabel)
+  const searchQuery =
+    itemType === "search"
+      ? item.searchString?.trim() || item.name?.trim() || undefined
+      : undefined
+
   return {
     id: item.itemId ?? item.starId,
     href: item.url || "#",
     title: item.name,
-    itemType: normalizeHomeStarItemType(item.type, item.typeLabel),
+    searchQuery,
+    itemType,
     folderId: item.folderId ?? null,
     rank: item.rank ?? null,
     typeLabel: item.typeLabel || "Item",

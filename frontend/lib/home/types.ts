@@ -38,6 +38,8 @@ export type HomeStarCard = {
   id: number
   href: string
   title: string
+  /** Saved search query when `itemType` is `search`. */
+  searchQuery?: string
   itemType: string
   folderId?: number | null
   rank?: number | null

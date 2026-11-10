@@ -10,11 +10,12 @@ vi.mock("@/lib/api-base", () => ({
 
 import { getServerApiBase } from "@/lib/api-base"
 import { getToken } from "@/lib/auth"
-import { searchDirectors, sendShareMail, submitAccessRequest } from "./api"
+import { searchDirectors, sendShareMail, submitAccessRequest, toggleStar } from "./api"
 
 const ACCESS_ENDPOINT = "https://api.example.test/api/interactions/access-request"
 const SHARE_MAIL_ENDPOINT = "https://api.example.test/api/mail/messages"
 const DIRECTORS_ENDPOINT = "https://api.example.test/api/interactions/search/directors?q=Smith"
+const STAR_ENDPOINT = "https://api.example.test/api/interactions/stars/toggle"
 
 const VALID_BODY = {
   reportName: "Sales Dashboard",
@@ -222,6 +223,44 @@ describe("searchDirectors", () => {
     expect(global.fetch).toHaveBeenCalledWith(
       "https://api.example.test/api/interactions/search/directors?q=Smith",
       expect.anything(),
+    )
+  })
+})
+
+describe("toggleStar", () => {
+  beforeEach(() => {
+    vi.mocked(getToken).mockResolvedValue("test-token")
+    vi.mocked(getServerApiBase).mockReturnValue("https://api.example.test")
+  })
+
+  test("posts user, group, and search JSON bodies to the toggle endpoint", async () => {
+    mockFetch(200, { type: "user", id: 1, isStarred: true, count: 3 })
+
+    await toggleStar({ type: "user", id: 1 })
+    expect(global.fetch).toHaveBeenLastCalledWith(
+      STAR_ENDPOINT,
+      expect.objectContaining({
+        method: "POST",
+        body: JSON.stringify({ type: "user", id: 1 }),
+      }),
+    )
+
+    mockFetch(200, { type: "group", id: 2, isStarred: false, count: 1 })
+    await toggleStar({ type: "group", id: 2 })
+    expect(global.fetch).toHaveBeenLastCalledWith(
+      STAR_ENDPOINT,
+      expect.objectContaining({
+        body: JSON.stringify({ type: "group", id: 2 }),
+      }),
+    )
+
+    mockFetch(200, { type: "search", id: 0, isStarred: true, count: 4 })
+    await toggleStar({ type: "search", id: 0, search: "census" })
+    expect(global.fetch).toHaveBeenLastCalledWith(
+      STAR_ENDPOINT,
+      expect.objectContaining({
+        body: JSON.stringify({ type: "search", id: 0, search: "census" }),
+      }),
     )
   })
 })
