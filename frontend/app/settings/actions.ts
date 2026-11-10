@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache"
 import { searchGroups } from "@/lib/groups/api"
-import { searchReportUsers } from "@/lib/reports/api"
+import { searchUsersForTypeahead } from "@/lib/users/search"
 import type { TagType } from "@/lib/settings/api"
 import {
   addGroupRole,
@@ -177,7 +177,7 @@ export async function removeGroupRoleAction(groupId: number, roleId: number) {
 // ---------------------------------------------------------------------------
 
 export async function searchSettingsUsersAction(query: string) {
-  return searchReportUsers(query)
+  return searchUsersForTypeahead(query)
 }
 
 export async function searchSettingsGroupsAction(query: string) {

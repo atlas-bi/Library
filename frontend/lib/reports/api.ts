@@ -3,6 +3,7 @@ import { getToken } from "@/lib/auth"
 import type { AppErrorCode } from "@/lib/errors"
 import { getUserFriendlyErrorMessage, mapHttpStatusToErrorCode } from "@/lib/errors"
 import { apiFetchJson } from "@/lib/http"
+import { searchUsersForTypeahead } from "@/lib/users/search"
 import type {
   MaintenanceStatus,
   ReportDetail,
@@ -122,11 +123,7 @@ export async function searchReportCollections(q: string): Promise<ReportTypeahea
 }
 
 export async function searchReportUsers(q: string): Promise<ReportTypeaheadItem[]> {
-  const trimmed = q.trim()
-  if (!trimmed) return []
-  const params = new URLSearchParams({ q: trimmed })
-  const result = await authorizedGet<ReportTypeaheadItem[]>(`/api/reports/search/users?${params}`)
-  return Array.isArray(result.data) ? result.data : []
+  return searchUsersForTypeahead(q)
 }
 
 export async function updateReport(
