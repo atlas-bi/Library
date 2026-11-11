@@ -1,3 +1,9 @@
+export type UserSearchResult = {
+  id: number
+  name: string
+  email?: string | null
+}
+
 export type UserPageUser = {
   id: number
   username?: string | null
