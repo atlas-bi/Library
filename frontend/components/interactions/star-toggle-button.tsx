@@ -11,6 +11,7 @@ import type { InteractionEntityType } from "@/lib/interactions/types"
 export function StarToggleButton({
   type,
   id,
+  searchQuery,
   initialStarred,
   initialCount,
   iconOnly = false,
@@ -18,6 +19,8 @@ export function StarToggleButton({
 }: {
   type: InteractionEntityType
   id: number
+  /** Required when `type` is `"search"`. */
+  searchQuery?: string
   initialStarred: boolean
   initialCount: number
   iconOnly?: boolean
@@ -33,7 +36,11 @@ export function StarToggleButton({
     setError(null)
     startTransition(() => {
       void (async () => {
-        const result = await toggleStarAction(type, id)
+        const result = await toggleStarAction(
+          type,
+          type === "search" ? 0 : id,
+          type === "search" ? { search: searchQuery } : undefined,
+        )
         if (result.error) {
           setError(result.error)
           return
@@ -70,7 +77,22 @@ export function StarToggleButton({
     )
   }
 
-  const entityLabel = type === "report" ? "report" : type === "term" ? "term" : "collection"
+  const entityLabel =
+    type === "report"
+      ? "report"
+      : type === "term"
+        ? "term"
+        : type === "collection"
+          ? "collection"
+          : type === "initiative"
+            ? "initiative"
+            : type === "user"
+              ? "user"
+              : type === "group"
+                ? "group"
+                : type === "search"
+                  ? "search"
+                  : "item"
   const starTooltip = `Star this ${entityLabel}`
 
   if (iconOnly) {

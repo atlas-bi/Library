@@ -1,6 +1,8 @@
 import Link from "next/link"
 import { redirect } from "next/navigation"
 import type { ReactNode } from "react"
+import { SearchQueryStarButton } from "@/components/search/search-query-star-button"
+import { SearchResultStarButton } from "@/components/search/search-result-star-button"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -351,7 +353,10 @@ export default async function SearchPage({
             qTime {data.qTime}
             ms
           </div>
-          {data.isAdvancedSearch ? <Badge>Advanced mode active</Badge> : null}
+          <div className="flex flex-wrap items-center gap-2">
+            {type === "query" && q.trim() ? <SearchQueryStarButton query={q} /> : null}
+            {data.isAdvancedSearch ? <Badge>Advanced mode active</Badge> : null}
+          </div>
         </div>
 
         {data.results.length === 0 ? (
@@ -386,7 +391,15 @@ export default async function SearchPage({
                     </CardTitle>
                     <div className="flex items-center gap-2">
                       <Badge variant="outline">{item.type}</Badge>
-                      {typeof item.isStarred === "boolean" ? (
+                      {item.type === "users" || item.type === "groups" ? (
+                        typeof item.isStarred === "boolean" ? (
+                          <SearchResultStarButton
+                            resultType={item.type}
+                            atlasId={item.atlasId}
+                            initialStarred={item.isStarred}
+                          />
+                        ) : null
+                      ) : typeof item.isStarred === "boolean" ? (
                         <Badge variant={item.isStarred ? "default" : "secondary"}>
                           {item.isStarred ? "Starred" : "Not starred"}
                         </Badge>
