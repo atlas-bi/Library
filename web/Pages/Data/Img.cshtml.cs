@@ -1,13 +1,8 @@
-using System.Text.RegularExpressions;
 using Atlas_Web.Models;
+using Atlas_Web.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Caching.Memory;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Formats.Jpeg;
-using SixLabors.ImageSharp.Formats.Webp;
-using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp.Processing;
 
 namespace Atlas_Web.Pages.Data
 {
@@ -22,65 +17,6 @@ namespace Atlas_Web.Pages.Data
         {
             _context = context;
             _cache = cache;
-        }
-
-        private static byte[] BuildImage(byte[] image_data, string size, string extension)
-        {
-            int wsize;
-            int hsize;
-            int width;
-            int height;
-            float max_ratio;
-
-            using Image image = Image.Load<Rgba32>(image_data);
-            // if height and width are specified
-            if (Regex.Match(size, @"^\d+x\d+$", RegexOptions.Multiline).Success)
-            {
-                String[] parts = size.Split("x");
-                width = Int32.Parse(parts[0]);
-                height = Int32.Parse(parts[1]);
-
-                max_ratio = (Math.Max(width / (float)image.Width, height / (float)image.Height));
-
-                // resize only if we can shrink it
-                if (max_ratio < 1)
-                {
-                    wsize = (int)(image.Width * max_ratio);
-                    hsize = (int)(image.Height * max_ratio);
-
-                    image.Mutate(x => x.Resize(wsize, hsize));
-                }
-            }
-            // if only a width
-            else if (Regex.Match(size, @"^\d+x_$", RegexOptions.Multiline).Success)
-            {
-                String[] parts = size.Split("x");
-                width = Int32.Parse(parts[0]);
-                max_ratio = (width / (float)image.Width);
-
-                // resize only if we can shrink it
-                if (max_ratio < 1)
-                {
-                    wsize = (int)(image.Width * max_ratio);
-                    hsize = (int)(image.Height * max_ratio);
-
-                    image.Mutate(x => x.Resize(wsize, hsize));
-                }
-            }
-
-            using var ms = new MemoryStream();
-            if (extension == "webp")
-            {
-                var webpEncoder = new WebpEncoder { Quality = 75 };
-                image.Save(ms, webpEncoder);
-            }
-            else
-            {
-                var jpegEncoder = new JpegEncoder { Quality = 75 };
-                image.Save(ms, jpegEncoder);
-            }
-
-            return ms.ToArray();
         }
 
         public ActionResult OnGetThumb(int id, string size, int? imgId, string type)
@@ -112,7 +48,7 @@ namespace Atlas_Web.Pages.Data
             }
 
             return File(
-                BuildImage(image_data, size, Extension),
+                ReportThumbnail.Build(image_data, size, Extension),
                 "application/octet-stream",
                 $"{id}.{Extension}"
             );
@@ -132,7 +68,7 @@ namespace Atlas_Web.Pages.Data
                     name = "placeholder";
 
                     return File(
-                        BuildImage(image_data, size, "jpeg"),
+                        ReportThumbnail.Build(image_data, size, "jpeg"),
                         "application/octet-stream",
                         $"{name}.jpeg"
                     );
