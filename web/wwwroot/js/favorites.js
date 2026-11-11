@@ -359,11 +359,10 @@
           $target.querySelector('.star-count').textContent = $ajax.responseText;
         }
 
-        // If we are on the fav's page, should we refresh the page, or delete the element?
-        // pop it
-        if ($target.closest('.favorite') !== null) {
-          const $fav = $target.closest('.favorite');
-          const $folderid = $target.closest('.favorite').dataset.folderid;
+        // Only your own list loses the card; the star never changes another user's list.
+        if ($target.closest('.favorite.drg') !== null) {
+          const $fav = $target.closest('.favorite.drg');
+          const $folderid = $fav.dataset.folderid;
           $fav.remove();
 
           const $folder = document.querySelector(
