@@ -3,11 +3,11 @@ import userEvent from "@testing-library/user-event"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 
 vi.mock("@/app/interactions/actions", () => ({
-  searchRecipientsAction: vi.fn(async () => []),
+  searchDirectorsAction: vi.fn(async () => []),
   submitAccessRequestAction: vi.fn(async () => ({ data: {} })),
 }))
 
-import { searchRecipientsAction, submitAccessRequestAction } from "@/app/interactions/actions"
+import { searchDirectorsAction, submitAccessRequestAction } from "@/app/interactions/actions"
 import { TooltipProvider } from "@/components/ui/tooltip"
 import { RequestAccessDialog } from "./request-access-dialog"
 
@@ -30,8 +30,8 @@ async function openDialog() {
 }
 
 async function pickDirector(name: string) {
-  vi.mocked(searchRecipientsAction).mockResolvedValueOnce([
-    { id: 1, name, type: "user", email: "director@example.com" },
+  vi.mocked(searchDirectorsAction).mockResolvedValueOnce([
+    { id: 1, name, type: "u", email: "director@example.com" },
   ])
   const input = screen.getByLabelText(/find your director/i)
   await userEvent.type(input, name.slice(0, 3))
@@ -44,7 +44,7 @@ describe("RequestAccessDialog", () => {
   beforeEach(() => {
     vi.useFakeTimers({ shouldAdvanceTime: true })
     vi.mocked(submitAccessRequestAction).mockResolvedValue({ data: {} })
-    vi.mocked(searchRecipientsAction).mockResolvedValue([])
+    vi.mocked(searchDirectorsAction).mockResolvedValue([])
   })
 
   afterEach(() => {
@@ -57,6 +57,33 @@ describe("RequestAccessDialog", () => {
     await openDialog()
 
     expect(screen.getByRole("heading", { name: /request report access/i })).toBeInTheDocument()
+    expect(searchDirectorsAction).not.toHaveBeenCalled()
+  })
+
+  it("does not search directors when the query is empty or only whitespace", async () => {
+    renderDialog()
+
+    await openDialog()
+    const input = screen.getByLabelText(/find your director/i)
+    await userEvent.type(input, "   ")
+    vi.runAllTimers()
+
+    expect(searchDirectorsAction).not.toHaveBeenCalled()
+  })
+
+  it("calls searchDirectorsAction after typing a non-empty query", async () => {
+    vi.mocked(searchDirectorsAction).mockResolvedValueOnce([])
+
+    renderDialog()
+
+    await openDialog()
+    const input = screen.getByLabelText(/find your director/i)
+    await userEvent.type(input, "smi")
+    vi.runAllTimers()
+
+    await waitFor(() => {
+      expect(searchDirectorsAction).toHaveBeenCalledWith("smi")
+    })
   })
 
   it("displays the report name inside the dialog", async () => {
