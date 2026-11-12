@@ -316,6 +316,11 @@ public sealed class SearchApiService : ISearchApiService
     // Mirrors the query-building logic from the Search Razor Page.
     private static string BuildSearchQuery(string searchString, string field)
     {
+        // A pasted id like ",123" or "123,456" should search the numbers.
+        // Commas are not query syntax, and the indexed tokens do not include them.
+        searchString = Regex.Replace(searchString, ",", " ");
+        searchString = Regex.Replace(searchString, @"\s+", " ").Trim();
+
         string[] illegalChars =
         [
             "\\", "+", "-", "&&", "||", "!", "(", ")", "{", "}", "[", "]", "^", "~", "*", "?",
