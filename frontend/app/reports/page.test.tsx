@@ -71,8 +71,12 @@ const report16: ReportDetail = {
   description: "System description",
   document: {
     developerDescription: "Developer description",
+    keyAssumptions: "Counts are refreshed nightly.",
     maintenanceLogs: [{ id: 1, comment: "Checked metrics" }],
+    serviceRequests: [{ id: 9, ticketNumber: "INC001", description: "Refresh the census extract" }],
   },
+  detailedDescription: "System detailed description",
+  parameters: [{ id: 1, name: "Department", value: "Emergency" }],
   terms: [{ id: 1, name: "Average Length of Stay", summary: "ALOS" }],
   queries: [{ id: 1, name: "Main query", query: "SELECT 1" }],
   collections: [{ id: 1, name: "Patient Flow Command Center" }],
@@ -142,9 +146,19 @@ describe("ReportsPage detail view", () => {
     expect(screen.getByText("This report is past due for maintenance!")).toBeInTheDocument()
     expect(screen.getByRole("navigation", { name: "Report sections" })).toHaveTextContent("Description")
     expect(screen.getByRole("heading", { name: "Description" })).toBeInTheDocument()
+    expect(screen.getByText("Developer description")).toBeInTheDocument()
+    expect(screen.getByText("Counts are refreshed nightly.")).toBeInTheDocument()
+    expect(screen.getByText("System description")).toBeInTheDocument()
+    expect(screen.getByText("System detailed description")).toBeInTheDocument()
+    expect(screen.getByRole("columnheader", { name: "Name" })).toBeInTheDocument()
+    expect(screen.getByText("Department")).toBeInTheDocument()
+    expect(screen.getByText("Emergency")).toBeInTheDocument()
     expect(screen.getByRole("heading", { name: "Terms" })).toBeInTheDocument()
+    expect(screen.getByRole("link", { name: "Average Length of Stay" })).toBeInTheDocument()
     expect(screen.getByRole("heading", { name: "Details" })).toBeInTheDocument()
+    expect(screen.getByText("INC001")).toBeInTheDocument()
     expect(screen.getByRole("heading", { name: "Query" })).toBeInTheDocument()
+    expect(screen.getByText("SELECT 1")).toBeInTheDocument()
     expect(screen.getByRole("heading", { name: "Relationships" })).toBeInTheDocument()
     expect(screen.getByRole("heading", { name: "Maintenance" })).toBeInTheDocument()
   })

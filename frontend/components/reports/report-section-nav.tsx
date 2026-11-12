@@ -46,13 +46,15 @@ export function buildReportSectionLinks(report: {
   groups?: Array<unknown> | null
   collections?: Array<unknown> | null
   canViewGroups?: boolean
+  parameters?: Array<unknown> | null
 }): ReportSectionLink[] {
   const hasDescription =
     Boolean(report.document?.developerDescription?.trim()) ||
     Boolean(report.document?.keyAssumptions?.trim()) ||
     Boolean(report.description?.trim()) ||
     Boolean(report.detailedDescription?.trim()) ||
-    Boolean(report.repositoryDescription?.trim())
+    Boolean(report.repositoryDescription?.trim()) ||
+    Boolean(report.parameters && report.parameters.length > 0)
 
   const links: ReportSectionLink[] = []
 
