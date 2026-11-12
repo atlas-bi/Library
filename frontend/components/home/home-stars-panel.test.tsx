@@ -25,7 +25,7 @@ describe("HomeStarsPanelView", () => {
               itemType: "report",
               typeLabel: "Report",
               description: "Leadership reporting summary...",
-              thumbnailUrl: "http://localhost:5000/data/img?handler=Thumb&id=7&size=128x128",
+              thumbnailUrl: "http://localhost:5000/api/reports/7/thumbnail?size=128x128",
               tags: [
                 { name: "Analytics Certified", slug: "analytics-certified", showInHeader: true },
               ],
