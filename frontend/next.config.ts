@@ -8,7 +8,6 @@ const nextConfig: NextConfig = {
         const apiBase = process.env.API_URL ?? process.env.NEXT_PUBLIC_API_URL;
         if (!apiBase) return [];
         const normalized = apiBase.replace(/\/+$/, '');
-        const legacyPageRoutes = ['/terms'];
         const legacyAssetRoutes = [
             '/css/:path*',
             '/js/:path*',
@@ -34,10 +33,6 @@ const nextConfig: NextConfig = {
                 destination: `${normalized}/Metadata`,
             },
             ...legacyAssetRoutes.map((route) => ({
-                source: route,
-                destination: `${normalized}${route}`,
-            })),
-            ...legacyPageRoutes.map((route) => ({
                 source: route,
                 destination: `${normalized}${route}`,
             })),
