@@ -67,6 +67,17 @@ namespace Atlas_Web.Pages.Search
             Microsoft.AspNetCore.Http.IQueryCollection query
         )
         {
+            // A pasted id like ",123" or "123,456" should search the numbers.
+            // Commas are not query syntax, and the indexed tokens do not include them.
+            search_string = search_string.Replace(",", " ");
+            search_string = Regex.Replace(
+                search_string,
+                @"\s+",
+                " ",
+                RegexOptions.None,
+                TimeSpan.FromSeconds(1)
+            ).Trim();
+
             string[] illegal_chars =
             {
                 "\\",
