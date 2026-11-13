@@ -7,6 +7,13 @@ public sealed class GroupListResponseDto
     public IReadOnlyList<GroupListItemDto> Items { get; init; } = Array.Empty<GroupListItemDto>();
 }
 
+public sealed class GroupSearchResultDto
+{
+    public int Id { get; init; }
+    public string Name { get; init; }
+    public string Email { get; init; }
+}
+
 public sealed class GroupListItemDto
 {
     public int Id { get; init; }

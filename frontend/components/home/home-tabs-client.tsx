@@ -4,11 +4,7 @@ import { useEffect, useState } from "react"
 import { HomeTabPanel } from "@/components/home/home-tab-panel"
 import { fetchHomeTabPanel } from "@/lib/home/client-api"
 import { HOME_TABS } from "@/lib/home/constants"
-import type {
-  HomePanelData,
-  HomeTabId,
-  HomeTabsVisibility,
-} from "@/lib/home/types"
+import type { HomePanelData, HomeTabId, HomeTabsVisibility } from "@/lib/home/types"
 
 type PanelState = {
   status: "idle" | "loading" | "ready" | "error"

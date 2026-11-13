@@ -175,11 +175,15 @@ export function UserStarsWorkspace({ stars }: { stars: UserStars }) {
 
   const assignFavoriteFolder = (favoriteId: number, favoriteType: string, folderId: string) => {
     startTransition(async () => {
-      const result = await updateUserFavoriteFolderAssignmentAction(stars.userId, stars.isCurrentUser, {
-        favoriteId,
-        favoriteType,
-        folderId: folderId === "unsorted" ? null : Number(folderId),
-      })
+      const result = await updateUserFavoriteFolderAssignmentAction(
+        stars.userId,
+        stars.isCurrentUser,
+        {
+          favoriteId,
+          favoriteType,
+          folderId: folderId === "unsorted" ? null : Number(folderId),
+        },
+      )
       if (result.ok) refreshPage()
     })
   }

@@ -1,6 +1,8 @@
 import { BadgeCheck, PlayCircle } from "lucide-react"
 import Link from "next/link"
 import { EntityCardFooter } from "@/components/interactions/entity-card-footer"
+import { InteractionStarFooter } from "@/components/interactions/interaction-star-footer"
+import { resolveInteractionStarTarget } from "@/lib/interactions/resolve-star-target"
 import { ReportSnippetRunAction } from "@/components/interactions/report-snippet-run-action"
 import { ProfileAnalyticsPanelClient } from "@/components/profile/profile-analytics-panel-client"
 import { Badge } from "@/components/ui/badge"
@@ -29,9 +31,22 @@ export function UserFavoriteCard({ item }: { item: UserFavoriteItem }) {
   const excerpt = item.description?.trim() || item.bodyText?.trim() || item.secondaryText?.trim()
   const profileType = resolveProfileType(item.type)
   const profileId = item.profileTargetId ? Number(item.profileTargetId) : item.itemId
+  const genericStarTarget = !isReport && !isCollection
+    ? resolveInteractionStarTarget({
+        itemType: item.type,
+        typeLabel: item.typeLabel,
+        id: item.itemId ?? item.starId,
+        searchString: item.searchString,
+        name: item.name,
+        isStarred: item.isStarred,
+        starCount: item.starCount,
+      })
+    : null
 
   const card = (
-    <article className={`overflow-hidden ${isCollection ? "atlas-snippet-gold-card" : "atlas-home-card"}`}>
+    <article
+      className={`overflow-hidden ${isCollection ? "atlas-snippet-gold-card" : "atlas-home-card"}`}
+    >
       <div className="gap-2 border-b border-[var(--atlas-home-border-soft)] px-4 py-2.5">
         <div className="flex flex-wrap items-start justify-between gap-2">
           <div className="flex min-w-0 flex-1 items-center gap-3 text-[var(--atlas-home-text-strong)]">
@@ -82,7 +97,6 @@ export function UserFavoriteCard({ item }: { item: UserFavoriteItem }) {
       <div className="px-4 py-4">
         <div className="grid gap-4 md:grid-cols-[128px_1fr]">
           {item.thumbnailUrl || item.placeholderImageUrl ? (
-            // biome-ignore lint/performance/noImgElement: backend-provided thumbnails for workspace cards.
             <img
               src={item.thumbnailUrl ?? item.placeholderImageUrl ?? ""}
               alt={`${title} thumbnail`}
@@ -150,6 +164,8 @@ export function UserFavoriteCard({ item }: { item: UserFavoriteItem }) {
             }
           />
         </div>
+      ) : genericStarTarget ? (
+        <InteractionStarFooter target={genericStarTarget} />
       ) : null}
     </article>
   )

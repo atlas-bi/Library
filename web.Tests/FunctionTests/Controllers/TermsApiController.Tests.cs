@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
@@ -391,6 +392,70 @@ public class TermsApiControllerTests
         Assert.Empty(context.Terms);
         Assert.Empty(context.ReportObjectDocTerms);
         Assert.Empty(context.CollectionTerms);
+    }
+
+    [Fact]
+    public async Task GetRecentTerms_ReturnsNewestApprovedThenFillsWithUnapproved()
+    {
+        var options = new DbContextOptionsBuilder<Atlas_WebContext>()
+            .UseInMemoryDatabase("terms-api-recent")
+            .Options;
+        await using var context = new Atlas_WebContext(options);
+        var now = DateTime.Now;
+        context.Terms.AddRange(
+            new Term
+            {
+                TermId = 1,
+                Name = "Older_Approved",
+                ApprovedYn = "Y",
+                ValidFromDateTime = now.AddDays(-2),
+            },
+            new Term
+            {
+                TermId = 2,
+                Name = "Newest_Approved",
+                ApprovedYn = "Y",
+                ValidFromDateTime = now.AddDays(-1),
+            },
+            new Term
+            {
+                TermId = 3,
+                Name = "Stale_Approved",
+                ApprovedYn = "Y",
+                ValidFromDateTime = now.AddDays(-40),
+            },
+            new Term
+            {
+                TermId = 4,
+                Name = "Recent_Draft",
+                ApprovedYn = "N",
+                ValidFromDateTime = now.AddDays(-3),
+                LastUpdatedDateTime = now.AddHours(-1),
+            },
+            new Term
+            {
+                TermId = 5,
+                Name = "Stale_Draft",
+                ApprovedYn = "N",
+                ValidFromDateTime = now.AddDays(-40),
+                LastUpdatedDateTime = now,
+            }
+        );
+        await context.SaveChangesAsync();
+
+        var service = new TermsApiService(
+            context,
+            new ConfigurationBuilder().AddInMemoryCollection().Build(),
+            new MemoryCache(new MemoryCacheOptions())
+        );
+        var controller = BuildController(service, BuildPrincipal(1, "viewer"));
+
+        var result = await controller.GetRecentTerms();
+
+        var ok = Assert.IsType<OkObjectResult>(result.Result);
+        var payload = Assert.IsType<RecentTermsDto>(ok.Value);
+        Assert.Equal(new[] { 2, 1 }, payload.Approved.Select(x => x.Id).ToArray());
+        Assert.Equal("Recent_Draft", Assert.Single(payload.Pending).Name);
     }
 
     private static TermsApiController BuildController(ITermsApiService service, ClaimsPrincipal principal)

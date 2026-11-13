@@ -2,12 +2,14 @@
 
 import { revalidatePath } from "next/cache"
 import {
+  searchDirectors,
   searchInteractionRecipients,
   sendShareMail,
   submitAccessRequest,
   submitFeedback,
   toggleStar,
 } from "@/lib/interactions/api"
+import { buildStarToggleRequest } from "@/lib/interactions/star-toggle-request"
 import type {
   AccessRequestRequest,
   FeedbackRequest,
@@ -15,16 +17,29 @@ import type {
   ShareMailRequest,
 } from "@/lib/interactions/types"
 
-export async function toggleStarAction(type: InteractionEntityType, id: number) {
-  const result = await toggleStar({ type, id })
+export async function toggleStarAction(
+  type: InteractionEntityType,
+  id: number,
+  options?: { search?: string },
+) {
+  const result = await toggleStar(buildStarToggleRequest(type, id, options))
   if (!result.ok) {
     return { error: result.message }
   }
 
   revalidatePath("/")
+  revalidatePath("/search")
   if (type === "report") {
     revalidatePath("/reports")
-  } else {
+  } else if (type === "term") {
+    revalidatePath("/terms")
+  } else if (type === "initiative") {
+    revalidatePath("/initiatives")
+  } else if (type === "user") {
+    revalidatePath("/users")
+  } else if (type === "group") {
+    revalidatePath("/groups")
+  } else if (type === "collection") {
     revalidatePath("/collections")
   }
 
@@ -33,6 +48,10 @@ export async function toggleStarAction(type: InteractionEntityType, id: number) 
 
 export async function searchRecipientsAction(query: string, includeGroups = true) {
   return searchInteractionRecipients(query, includeGroups)
+}
+
+export async function searchDirectorsAction(query: string) {
+  return searchDirectors(query)
 }
 
 export async function sendShareMailAction(body: ShareMailRequest) {

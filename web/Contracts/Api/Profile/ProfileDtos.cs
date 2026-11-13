@@ -56,3 +56,28 @@ public sealed class ProfileSubscriptionDto
     public DateTime? LastRunTime { get; init; }
     public string SubscriptionTo { get; init; }
 }
+
+public sealed class ProfileFilterItemDto
+{
+    public string Value { get; init; }
+    public string Label { get; init; }
+    public int Count { get; init; }
+}
+
+public sealed class ProfileFiltersResponseDto
+{
+    public IReadOnlyList<ProfileFilterItemDto> Server { get; init; } =
+        Array.Empty<ProfileFilterItemDto>();
+    public IReadOnlyList<ProfileFilterItemDto> Database { get; init; } =
+        Array.Empty<ProfileFilterItemDto>();
+    public IReadOnlyList<ProfileFilterItemDto> MasterFile { get; init; } =
+        Array.Empty<ProfileFilterItemDto>();
+    public IReadOnlyList<ProfileFilterItemDto> Visible { get; init; } =
+        Array.Empty<ProfileFilterItemDto>();
+    public IReadOnlyList<ProfileFilterItemDto> Certification { get; init; } =
+        Array.Empty<ProfileFilterItemDto>();
+    public IReadOnlyList<ProfileFilterItemDto> Availability { get; init; } =
+        Array.Empty<ProfileFilterItemDto>();
+    public IReadOnlyList<ProfileFilterItemDto> ReportType { get; init; } =
+        Array.Empty<ProfileFilterItemDto>();
+}

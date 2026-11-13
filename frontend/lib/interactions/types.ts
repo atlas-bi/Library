@@ -1,12 +1,20 @@
-export type InteractionEntityType = "report" | "collection"
+export type InteractionEntityType =
+  | "report"
+  | "collection"
+  | "term"
+  | "initiative"
+  | "user"
+  | "group"
+  | "search"
 
 export interface StarToggleRequest {
   type: InteractionEntityType
   id: number
+  search?: string
 }
 
 export interface StarToggleResponse {
-  type: InteractionEntityType
+  type: string
   id: number
   isStarred: boolean
   count: number

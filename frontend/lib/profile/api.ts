@@ -6,6 +6,7 @@ import type {
   ProfileBarItemDto,
   ProfileChartResponseDto,
   ProfileFilters,
+  ProfileFiltersResponseDto,
   ProfileRunListItemDto,
   ProfileStarUserDto,
   ProfileSubscriptionDto,
@@ -84,4 +85,13 @@ export function getProfileStars(filters: ProfileFilters) {
 
 export function getProfileSubscriptions(filters: ProfileFilters) {
   return fetchProfile<ProfileSubscriptionDto[]>("subscriptions", filters)
+}
+
+/**
+ * Fetches the available filter options (server, database, masterFile, etc.) for
+ * the sidebar. Returns null when the backend endpoint is unavailable (404) so
+ * the sidebar can fall back to free-text TagInputs gracefully.
+ */
+export function getProfileFilters(filters: ProfileFilters) {
+  return fetchProfile<ProfileFiltersResponseDto>("filters", filters)
 }

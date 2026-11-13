@@ -49,8 +49,7 @@ namespace web.Tests.FunctionTests
 
     public class TestDatabaseFixture
     {
-        private const string ConnectionString =
-            @"Server=(localdb)\mssqllocaldb;Database=atlas_test;Trusted_Connection=True";
+        private const string DatabaseName = "atlas_test";
 
         private static readonly object _lock = new();
         private static bool _databaseInitialized;
@@ -80,7 +79,7 @@ namespace web.Tests.FunctionTests
         public Atlas_WebContext CreateContext() =>
             new Atlas_WebContext(
                 new DbContextOptionsBuilder<Atlas_WebContext>()
-                    .UseSqlServer(ConnectionString)
+                    .UseInMemoryDatabase(DatabaseName)
                     .Options
             );
 

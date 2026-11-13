@@ -11,7 +11,9 @@ import type {
   HomeUserPageSummary,
 } from "@/lib/home/types"
 import { apiFetchJson } from "@/lib/http"
+import { mapUserStarsPayloadToPanel, type UserStarsPayload } from "@/lib/home/stars-mapper"
 import { getProfileRunList } from "@/lib/profile/api"
+import type { UserSharedObjects } from "@/lib/users/types"
 
 type HomeResult<T> = {
   data: T | null
@@ -33,45 +35,6 @@ type UserPageDto = {
     groupsVisible: boolean
   }
   defaultReportTypeIds: number[]
-}
-
-type UserStarsDto = {
-  summary: {
-    totalCount: number
-    unsortedCount: number
-  }
-  filters: {
-    hasReports: boolean
-    hasCollections: boolean
-    hasInitiatives: boolean
-    hasTerms: boolean
-    hasUsers: boolean
-    hasGroups: boolean
-    hasSearches: boolean
-    showQuickFilters: boolean
-  }
-  folders: Array<{
-    id: number
-    name: string
-    itemCount: number
-  }>
-  items: Array<{
-    starId: number
-    itemId?: number | null
-    url?: string | null
-    name: string
-    typeLabel?: string | null
-    description?: string | null
-    bodyText?: string | null
-    starCount?: number
-  }>
-  suggestedReports: Array<{
-    id: number
-    name: string
-    description?: string | null
-    url?: string | null
-    type?: string | null
-  }>
 }
 
 type UserSubscriptionDto = {
@@ -133,67 +96,24 @@ export async function getHomeUserPageSummary(
 }
 
 export async function getHomeStarsPanel(userId: number): Promise<HomeResult<HomeStarsPanel>> {
-  const result = await authorizedGet<UserStarsDto>(`/api/users/${userId}/stars`)
-  if (!result.data) return { data: null, error: result.error }
+  const [starsResult, sharedResult] = await Promise.all([
+    authorizedGet<UserStarsPayload>(`/api/users/${userId}/stars`),
+    authorizedGet<UserSharedObjects>("/api/users/me/shared-objects"),
+  ])
 
-  const dto = result.data
-  const cards = dto.items.map((item) => ({
-    id: item.itemId ?? item.starId,
-    href: item.url || "#",
-    title: item.name,
-    typeLabel: item.typeLabel || "Item",
-    description: item.bodyText || item.description || "Open to view details.",
-    starCount: item.starCount ?? 0,
-    canOpenDetails: Boolean(item.url),
-  }))
+  if (!starsResult.data) return { data: null, error: starsResult.error }
 
-  const fallbackCards =
-    cards.length > 0
-      ? cards
-      : dto.suggestedReports.map((item) => ({
-          id: item.id,
-          href: item.url || "#",
-          title: item.name,
-          typeLabel: item.type || "Report",
-          description: item.description || "Open to view details.",
-          starCount: 0,
-          canOpenDetails: Boolean(item.url),
-        }))
-  const isSuggestionFallback = dto.items.length === 0 && dto.suggestedReports.length > 0
-
-  const filters = [
-    dto.filters.hasReports ? { id: "reports", label: "Reports" } : null,
-    dto.filters.hasCollections ? { id: "collections", label: "Collections" } : null,
-    dto.filters.hasInitiatives ? { id: "initiatives", label: "Initiatives" } : null,
-    dto.filters.hasTerms ? { id: "terms", label: "Terms" } : null,
-    dto.filters.hasUsers ? { id: "users", label: "Users" } : null,
-    dto.filters.hasGroups ? { id: "groups", label: "Groups" } : null,
-    dto.filters.hasSearches ? { id: "searches", label: "Searches" } : null,
-  ].filter(Boolean) as HomeStarsPanel["filters"]
+  const sharedWithMe =
+    sharedResult.data?.sharedToMe.map((item) => ({
+      id: item.id,
+      name: item.name?.trim() || `Shared item ${item.id}`,
+      href: item.url ?? undefined,
+      sharedFrom: item.sharedFrom ?? undefined,
+      shareDate: item.shareDate ?? undefined,
+    })) ?? []
 
   return {
-    data: {
-      kind: "stars",
-      title: "Stars",
-      emptyMessage: "You don't have any favorites! Search to get started.",
-      isSuggestionFallback,
-      suggestionHeading: isSuggestionFallback
-        ? "You don't have any favorites! Here's some reports you've used."
-        : undefined,
-      folders: [
-        { id: "all", label: "All", count: dto.summary.totalCount },
-        ...(dto.summary.unsortedCount > 0
-          ? [{ id: "unsorted", label: "Unsorted", count: dto.summary.unsortedCount }]
-          : []),
-        ...dto.folders.map((folder) => ({
-          id: String(folder.id),
-          label: folder.name,
-          count: folder.itemCount,
-        })),
-      ],
-      filters,
-      cards: fallbackCards,
-    },
+    data: mapUserStarsPayloadToPanel(starsResult.data, sharedWithMe),
     error: null,
   }
 }

@@ -12,7 +12,7 @@
 # http://localhost:8983
 
 
-FROM python:3.14-alpine AS builder
+FROM python:3.15-alpine AS builder
 
 WORKDIR /build
 
@@ -28,7 +28,7 @@ RUN git clone --depth=1 https://github.com/atlas-bi/Solr-Search-ETL.git etl && \
     rm -rf etl/.git
 
 
-FROM python:3.14-alpine
+FROM python:3.15-alpine
 
 WORKDIR /app
 
@@ -47,7 +47,7 @@ RUN ARCH=$(case $(uname -m) in \
     apk add --allow-untrusted msodbcsql18_18.6.1.1-1_${ARCH}.apk && \
     rm msodbcsql18_18.6.1.1-1_${ARCH}.apk
 
-COPY --from=builder /usr/local/lib/python3.14/site-packages /usr/local/lib/python3.14/site-packages
+COPY --from=builder /usr/local/lib/python3.15/site-packages /usr/local/lib/python3.15/site-packages
 COPY --from=builder /build/etl /app/etl
 
 COPY ./web/solr /app

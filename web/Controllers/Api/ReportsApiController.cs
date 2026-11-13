@@ -19,6 +19,15 @@ public class ReportsApiController : ControllerBase
         _reportsApiService = reportsApiService;
     }
 
+    [HttpGet("recent")]
+    public async Task<ActionResult<IReadOnlyList<RecentReportDto>>> GetRecentReports(
+        CancellationToken cancellationToken = default
+    )
+    {
+        Response.Headers.CacheControl = "max-age=7200";
+        return Ok(await _reportsApiService.GetRecentReportsAsync(cancellationToken));
+    }
+
     [HttpGet]
     public async Task<ActionResult<ReportListResponseDto>> GetReports(
         [FromQuery]

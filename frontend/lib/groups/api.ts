@@ -2,7 +2,13 @@ import { getServerApiBase } from "@/lib/api-base"
 import { getToken } from "@/lib/auth"
 import type { AppErrorCode } from "@/lib/errors"
 import { apiFetchJson } from "@/lib/http"
-import type { GroupDetail, GroupListResponse, GroupReport, GroupUser } from "./types"
+import type {
+  GroupDetail,
+  GroupListResponse,
+  GroupReport,
+  GroupSearchResult,
+  GroupUser,
+} from "./types"
 
 export type GroupListResult = {
   data: GroupListResponse | null
@@ -52,6 +58,16 @@ async function authorizedGet<T>(path: string): Promise<{
 
 export function getGroupsList(): Promise<GroupListResult> {
   return authorizedGet<GroupListResponse>("/api/groups")
+}
+
+/** Settings group-role typeahead (`GET /api/groups/search`). */
+export async function searchGroups(q: string): Promise<GroupSearchResult[]> {
+  const trimmed = q.trim()
+  if (!trimmed) return []
+
+  const params = new URLSearchParams({ q: trimmed })
+  const result = await authorizedGet<GroupSearchResult[]>(`/api/groups/search?${params}`)
+  return result.data ?? []
 }
 
 export function getGroupById(id: number): Promise<GroupDetailResult> {

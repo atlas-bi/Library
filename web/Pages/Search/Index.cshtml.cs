@@ -2,6 +2,7 @@ using System.Text.RegularExpressions;
 using System.Web;
 using Atlas_Web.Authorization;
 using Atlas_Web.Models;
+using Atlas_Web.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
@@ -30,21 +31,21 @@ namespace Atlas_Web.Pages.Search
         private readonly Atlas_WebContext _context;
 
         private readonly ISolrReadOnlyOperations<SolrAtlas> _solr;
-        private readonly ISolrReadOnlyOperations<SolrAtlasLookups> _solrLookup;
+        private readonly IReportsApiService _reportsApiService;
         private readonly IMemoryCache _cache;
 
         public IndexModel(
             Atlas_WebContext context,
             IMemoryCache cache,
             ISolrReadOnlyOperations<SolrAtlas> solr,
-            ISolrReadOnlyOperations<SolrAtlasLookups> solrLookup
+            IReportsApiService reportsApiService
         )
         {
             _context = context;
 
             _cache = cache;
             _solr = solr;
-            _solrLookup = solrLookup;
+            _reportsApiService = reportsApiService;
         }
 
         public SolrAtlasResults SearchResults { get; set; }
@@ -200,9 +201,52 @@ namespace Atlas_Web.Pages.Search
             return BuildSearchString(search_string, query);
         }
 
+        public static string ResolveSearchQuery(
+            string query,
+            Microsoft.AspNetCore.Http.IQueryCollection requestQuery
+        )
+        {
+            if (!string.IsNullOrWhiteSpace(query))
+            {
+                return query;
+            }
+
+            var fromQ = requestQuery["q"].FirstOrDefault();
+            if (!string.IsNullOrWhiteSpace(fromQ))
+            {
+                return fromQ;
+            }
+
+            return requestQuery["Query"].FirstOrDefault();
+        }
+
+        public static bool ShouldRedirectToHome(string resolvedQuery)
+        {
+            return string.IsNullOrWhiteSpace(resolvedQuery);
+        }
+
+        /// <summary>Query keys that are not Solr facet filters (includes <c>q</c> URL alias).</summary>
+        public static IReadOnlyCollection<string> SearchRequestExcludedFilterKeys { get; } =
+            new[]
+            {
+                "PageIndex",
+                "Query",
+                "q",
+                "type",
+                "EPIC",
+                "msg",
+                "field",
+                "advanced",
+                "error",
+                "success",
+                "warning",
+            };
+
         public async Task<IActionResult> OnGet(string Query)
         {
-            if (string.IsNullOrEmpty(Query))
+            Query = ResolveSearchQuery(Query, Request.Query);
+
+            if (ShouldRedirectToHome(Query))
             {
                 return RedirectToPage("/Index/Index");
             }
@@ -286,23 +330,9 @@ namespace Atlas_Web.Pages.Search
                     FilterQuery.Add(new SolrQuery("visible_text:(Y)"));
                 }
                 // also exclude the two global keywords, EPIC and msg.
-                var ExcludedKeys = new List<string>
-                {
-                    "PageIndex",
-                    "Query",
-                    "type",
-                    "EPIC",
-                    "msg",
-                    "field",
-                    "advanced",
-                    "error",
-                    "success",
-                    "warning",
-                };
-
                 foreach (string key in query.Keys)
                 {
-                    if (ExcludedKeys.IndexOf(key) == -1)
+                    if (!SearchRequestExcludedFilterKeys.Contains(key))
                     {
                         FilterQuery.Add(
                             new SolrQuery($"{{!tag={key}}}{key}:({query[key].ToString().Trim()})")
@@ -713,72 +743,40 @@ namespace Atlas_Web.Pages.Search
             return Content(json);
         }
 
-        public ActionResult OnPostValueList(string s)
+        public async Task<ActionResult> OnPostValueList(
+            string s,
+            CancellationToken cancellationToken
+        )
         {
-            List<SmallData> myObject = new() { new SmallData("0", "error") };
-            string index_type = "";
-            switch (s)
+            List<SmallData> myObject;
+            if (!IsLookupArea(s))
             {
-                default:
-                    index_type = null;
-                    break;
-
-                case "org-value":
-                    index_type = "organizational_value";
-                    break;
-
-                case "run-freq":
-                    index_type = "run_frequency";
-                    break;
-
-                case "fragility":
-                    index_type = "fragility";
-                    break;
-
-                case "maint-sched":
-                    index_type = "maintenance_schedule";
-                    break;
-
-                case "ro-fragility":
-                    index_type = "fragility_tag";
-                    break;
-
-                case "maint-log-stat":
-                    index_type = "maintenance_log_status";
-                    break;
-
-                case "user-roles":
-                    index_type = "user_roles";
-                    break;
-
-                case "financial-impact":
-                    index_type = "financial_impact";
-                    break;
-
-                case "strategic-importance":
-                    index_type = "strategic_importance";
-                    break;
+                myObject = new() { new SmallData("0", "error") };
             }
-
-            if (index_type != "")
+            else
             {
-                myObject = _solrLookup
-                    .Query(
-                        new SolrQuery($"item_type:({index_type})"),
-                        new QueryOptions
-                        {
-                            RequestHandler = new RequestHandlerParameters("/query"),
-                            StartOrCursor = new StartOrCursor.Start(0),
-                            Rows = 9999,
-                        }
-                    )
-                    .Select(x => new SmallData(x.AtlasId.ToString(), x.Name))
+                var values = await _reportsApiService.GetLookupValuesAsync(s, cancellationToken);
+                myObject = values
+                    .Select(x => new SmallData(x.Id.ToString(), x.Name))
                     .ToList();
             }
 
             var json = JsonConvert.SerializeObject(myObject);
 
             return Content(json);
+        }
+
+        private static bool IsLookupArea(string lookupArea)
+        {
+            return lookupArea is "org-value"
+                or "run-freq"
+                or "fragility"
+                or "maint-sched"
+                or "ro-fragility"
+                or "maint-log-stat"
+                or "user-roles"
+                or "financial-impact"
+                or "strategic-importance";
         }
     }
 }
