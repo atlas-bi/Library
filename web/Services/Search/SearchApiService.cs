@@ -318,8 +318,14 @@ public sealed class SearchApiService : ISearchApiService
     {
         // A pasted id like ",123" or "123,456" should search the numbers.
         // Commas are not query syntax, and the indexed tokens do not include them.
-        searchString = Regex.Replace(searchString, ",", " ");
-        searchString = Regex.Replace(searchString, @"\s+", " ").Trim();
+        searchString = searchString.Replace(",", " ");
+        searchString = Regex.Replace(
+            searchString,
+            @"\s+",
+            " ",
+            RegexOptions.None,
+            TimeSpan.FromSeconds(1)
+        ).Trim();
 
         string[] illegalChars =
         [
