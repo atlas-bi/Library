@@ -21,6 +21,22 @@ describe("ReportQuerySection", () => {
     expect(screen.getByRole("heading", { name: /Query #1 \| Daily census/i })).toBeInTheDocument()
     await user.click(screen.getByRole("button", { name: "Copy Query" }))
     expect(writeText).toHaveBeenCalledWith("SELECT 1")
+    expect(screen.getByRole("list", { name: "Query lines" })).toBeInTheDocument()
+    expect(screen.getByText("1")).toBeInTheDocument()
+  })
+
+  it("numbers each line of a multiline query", () => {
+    const report = {
+      id: 16,
+      name: "report",
+      queries: [{ id: 1, name: "Daily census", query: "SELECT 1\nFROM census" }],
+    } satisfies ReportDetail
+
+    render(<ReportQuerySection report={report} />)
+
+    expect(screen.getByText("1")).toBeInTheDocument()
+    expect(screen.getByText("2")).toBeInTheDocument()
+    expect(screen.getByText("FROM census")).toBeInTheDocument()
   })
 
   it("renders component queries with report links and descriptions", () => {

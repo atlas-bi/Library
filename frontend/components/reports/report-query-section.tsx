@@ -12,6 +12,28 @@ async function copyQueryText(text: string) {
   await navigator.clipboard.writeText(text)
 }
 
+function QueryCode({ text }: { text: string }) {
+  const lines = text.split("\n")
+
+  return (
+    <div className="overflow-x-auto rounded-md bg-muted/40 text-xs text-foreground">
+      <ol aria-label="Query lines" className="py-2">
+        {lines.map((line, index) => (
+          <li key={`${index}-${line}`} className="grid grid-cols-[2.5rem_minmax(0,1fr)]">
+            <span
+              aria-hidden
+              className="select-none border-r border-[var(--atlas-home-border-soft)] px-2 text-right font-mono text-muted-foreground"
+            >
+              {index + 1}
+            </span>
+            <code className="px-3 font-mono whitespace-pre">{line.length > 0 ? line : " "}</code>
+          </li>
+        ))}
+      </ol>
+    </div>
+  )
+}
+
 function PrimaryQueryBlock({
   query,
   index,
@@ -39,9 +61,7 @@ function PrimaryQueryBlock({
       </div>
       {query.language ? <div className="text-sm text-muted-foreground">Language: {query.language}</div> : null}
       {query.sourceServer ? <div className="text-sm text-muted-foreground">Server: {query.sourceServer}</div> : null}
-      {text ? (
-        <pre className="overflow-x-auto rounded-md bg-muted/40 p-3 text-xs text-foreground">{text}</pre>
-      ) : null}
+      {text ? <QueryCode text={text} /> : null}
     </div>
   )
 }
@@ -74,9 +94,7 @@ function ComponentQueryBlock({ query }: { query: ReportQueryItem }) {
         ) : null}
       </div>
       {query.description?.trim() ? <p className="text-sm text-muted-foreground">{query.description}</p> : null}
-      {text ? (
-        <pre className="overflow-x-auto rounded-md bg-muted/40 p-3 text-xs text-foreground">{text}</pre>
-      ) : null}
+      {text ? <QueryCode text={text} /> : null}
     </div>
   )
 }
