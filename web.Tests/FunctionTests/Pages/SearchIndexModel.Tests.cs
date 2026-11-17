@@ -30,6 +30,27 @@ public class SearchIndexModelTests
     }
 
     [Fact]
+    public void BuildOptionalSearchString_SearchesNumbersWhenTheQueryHasALeadingComma()
+    {
+        var query = new QueryCollection();
+
+        var result = Atlas_Web.Pages.Search.IndexModel.BuildOptionalSearchString(",123", query);
+
+        Assert.Contains("name:(123)^12", result);
+        Assert.DoesNotContain(",123", result);
+    }
+
+    [Fact]
+    public void BuildOptionalSearchString_SplitsCommaSeparatedNumbers()
+    {
+        var query = new QueryCollection();
+
+        var result = Atlas_Web.Pages.Search.IndexModel.BuildOptionalSearchString("123, 456", query);
+
+        Assert.Contains("name:(123 456)^12", result);
+    }
+
+    [Fact]
     public void ResolveSearchQuery_UsesQAliasWhenQueryMissing()
     {
         var requestQuery = new QueryCollection(
