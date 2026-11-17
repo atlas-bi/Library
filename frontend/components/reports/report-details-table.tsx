@@ -185,6 +185,37 @@ export function ReportDetailsTable({
           </tbody>
         </table>
       </div>
+      {doc?.serviceRequests && doc.serviceRequests.length > 0 ? (
+        <div className="overflow-hidden rounded-md border border-[var(--atlas-home-border-soft)]">
+          <h3 className="border-b border-[var(--atlas-home-border-soft)] px-4 py-3 text-sm font-semibold">
+            Service Requests
+          </h3>
+          <ul>
+            {doc.serviceRequests.map((ticket) => (
+              <li
+                key={ticket.id}
+                className="border-b border-[var(--atlas-home-border-soft)] px-4 py-3 text-sm last:border-b-0"
+              >
+                {ticket.ticketUrl ? (
+                  <a
+                    href={ticket.ticketUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-link hover:underline"
+                  >
+                    {ticket.ticketNumber || ticket.ticketUrl}
+                  </a>
+                ) : (
+                  <span>{ticket.ticketNumber}</span>
+                )}
+                {ticket.description?.trim() ? (
+                  <span className="text-muted-foreground"> · {ticket.description}</span>
+                ) : null}
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
     </section>
   )
 }

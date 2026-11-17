@@ -22,6 +22,14 @@ const baseReport: ReportDetail = {
     estimatedRunFrequency: { id: 4, name: "Daily" },
     fragilityTags: [{ id: 1, name: "Complex SQL" }],
     operationalOwner: { id: 2, fullName: "Maya Patel", username: "mpatel", email: "mpatel@example.com" },
+    serviceRequests: [
+      {
+        id: 9,
+        ticketNumber: "INC001",
+        description: "Refresh the census extract",
+        ticketUrl: "https://example.com/inc001",
+      },
+    ],
   },
   objectTags: [{ id: 1, name: "Analytics Certified" }],
 }
@@ -42,6 +50,12 @@ describe("ReportDetailsTable", () => {
     expect(screen.getByText("Report Tags")).toBeInTheDocument()
     expect(screen.getByText("Analytics Certified")).toBeInTheDocument()
     expect(screen.getByRole("link", { name: "Maya Patel" })).toHaveAttribute("href", "/users?id=2")
+    expect(screen.getByRole("heading", { name: "Service Requests" })).toBeInTheDocument()
+    expect(screen.getByRole("link", { name: "INC001" })).toHaveAttribute(
+      "href",
+      "https://example.com/inc001",
+    )
+    expect(screen.getByText(/Refresh the census extract/)).toBeInTheDocument()
   })
 
   it("omits optional rows when values are absent", () => {

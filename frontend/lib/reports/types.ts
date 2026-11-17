@@ -137,6 +137,7 @@ export type ReportDetail = {
   // queries / terms
   queries?: ReportQueryItem[]
   componentQueries?: ReportQueryItem[]
+  parameters?: ReportParameter[]
   terms?: Array<{ id: number; name?: string | null; summary?: string | null }>
 
   objectTags?: Array<{ id: number; name?: string | null }>
@@ -147,6 +148,19 @@ export type ReportDetail = {
   reportServerPath?: string | null
 
   document?: ReportDocument | null
+}
+
+export type ReportParameter = {
+  id: number
+  name?: string | null
+  value?: string | null
+}
+
+export type ReportServiceRequest = {
+  id: number
+  ticketNumber?: string | null
+  description?: string | null
+  ticketUrl?: string | null
 }
 
 export type ReportMaintenanceLog = {
@@ -176,6 +190,7 @@ export type ReportDocument = {
   updatedBy?: PeopleRef | null
   fragilityTags?: Array<{ id: number; name?: string | null }>
   maintenanceLogs?: ReportMaintenanceLog[]
+  serviceRequests?: ReportServiceRequest[]
 }
 
 export type ReportListItem = {
