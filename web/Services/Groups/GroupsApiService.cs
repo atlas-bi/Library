@@ -25,6 +25,10 @@ public interface IGroupsApiService
         int id,
         CancellationToken cancellationToken
     );
+    Task<IReadOnlyList<GroupSearchResultDto>> SearchGroupsAsync(
+        string search,
+        CancellationToken cancellationToken
+    );
 }
 
 public sealed class GroupsApiService : IGroupsApiService
@@ -66,6 +70,34 @@ public sealed class GroupsApiService : IGroupsApiService
             Permissions = BuildPermissions(user),
             Items = items,
         };
+    }
+
+    public async Task<IReadOnlyList<GroupSearchResultDto>> SearchGroupsAsync(
+        string search,
+        CancellationToken cancellationToken
+    )
+    {
+        var query = _context.UserGroups.AsNoTracking();
+        var term = (search ?? string.Empty).Trim();
+        if (term.Length > 0)
+        {
+            query = query.Where(x =>
+                (x.GroupName != null && x.GroupName.Contains(term))
+                || (x.GroupEmail != null && x.GroupEmail.Contains(term))
+                || (x.AccountName != null && x.AccountName.Contains(term))
+            );
+        }
+
+        return await query
+            .OrderBy(x => x.GroupName)
+            .Take(10)
+            .Select(x => new GroupSearchResultDto
+            {
+                Id = x.GroupId,
+                Name = x.GroupName,
+                Email = x.GroupEmail,
+            })
+            .ToListAsync(cancellationToken);
     }
 
     public async Task<GroupDetailDto> GetGroupAsync(

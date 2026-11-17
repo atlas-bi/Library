@@ -455,9 +455,9 @@ public sealed partial class UsersApiService
                     StarCount = starCounts.GetValueOrDefault(report.ReportObjectId),
                     PlaceholderImageUrl = "/img/report_placeholder_128x128.png",
                     ThumbnailUrl =
-                        "/data/img?handler=Thumb&id=" + report.ReportObjectId + "&size=128x128",
+                        "/api/reports/" + report.ReportObjectId + "/thumbnail?size=128x128",
                     FullImageUrl =
-                        "/data/img?handler=Thumb&id=" + report.ReportObjectId + "&size=1200x2000",
+                        "/api/reports/" + report.ReportObjectId + "/thumbnail?size=1200x2000",
                     IsCertified = report.ReportTagLinks.Any(x =>
                         x.Tag.Name == "Analytics Certified" || x.Tag.Name == "Analytics Reviewed"
                     ),

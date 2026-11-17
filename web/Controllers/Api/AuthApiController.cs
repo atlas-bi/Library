@@ -4,10 +4,13 @@ using System.Security.Claims;
 using Atlas_Web.Configuration;
 using Atlas_Web.Models;
 using Atlas_Web.Services;
+using ITfoxtec.Identity.Saml2.Schemas;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Atlas_Web.Controllers.Api;
 
@@ -40,8 +43,16 @@ public class AuthApiController : ControllerBase
         }
 
         var safeReturnUrl = ((OkObjectResult)safeReturnUrlResult).Value as string ?? string.Empty;
+        var samlEnabled = _config.GetSection("Saml2").Exists();
 
-        if (BooleanConfig.IsEnabled(_config["Demo"]))
+        if (samlEnabled)
+        {
+            if (!IsSamlAuthenticated(User))
+            {
+                return Redirect(BuildSamlLoginUrl(safeReturnUrl));
+            }
+        }
+        else if (BooleanConfig.IsEnabled(_config["Demo"]))
         {
             var demoUsername = _config["DEMO_ADMIN_USERNAME"];
             var selectedDemoUsername = string.IsNullOrWhiteSpace(demoUsername)
@@ -64,8 +75,7 @@ public class AuthApiController : ControllerBase
 
             return Redirect(BuildTokenRedirectUrl(safeReturnUrl, demoToken));
         }
-
-        if (User.Identity?.IsAuthenticated != true)
+        else if (User.Identity?.IsAuthenticated != true)
         {
             return Redirect(BuildSamlLoginUrl(safeReturnUrl));
         }
@@ -83,6 +93,24 @@ public class AuthApiController : ControllerBase
         );
 
         return Redirect(BuildTokenRedirectUrl(safeReturnUrl, token));
+    }
+
+    private static bool IsSamlAuthenticated(ClaimsPrincipal user)
+    {
+        var authenticationType = user.Identity?.AuthenticationType;
+        return user.Identity?.IsAuthenticated == true
+            && (
+                string.Equals(
+                    authenticationType,
+                    Saml2Constants.AuthenticationScheme,
+                    StringComparison.Ordinal
+                )
+                || string.Equals(
+                    authenticationType,
+                    TokenValidationParameters.DefaultAuthenticationType,
+                    StringComparison.Ordinal
+                )
+            );
     }
 
     private IActionResult GetSafeRedirectUrl(string? returnUrl)
@@ -210,6 +238,24 @@ public class AuthApiController : ControllerBase
             permissions = User.FindAll("Permission").Select(c => c.Value).ToArray(),
             adminEnabled = User.FindFirst("AdminEnabled")?.Value == "Y",
         });
+    }
+
+    [AllowAnonymous]
+    [HttpGet("logout")]
+    public async Task<IActionResult> EndSession([FromQuery] string? returnUrl = null)
+    {
+        if (_config.GetSection("Saml2").Exists())
+        {
+            await HttpContext.SignOutAsync(Saml2Constants.AuthenticationScheme);
+        }
+
+        var safeReturnUrlResult = GetSafeRedirectUrl(returnUrl);
+        if (safeReturnUrlResult is not OkObjectResult ok || ok.Value is not string safeReturnUrl)
+        {
+            return safeReturnUrlResult;
+        }
+
+        return Redirect(safeReturnUrl);
     }
 
     [AllowAnonymous]

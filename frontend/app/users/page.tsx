@@ -30,12 +30,10 @@ function getSingleValue(value: string | string[] | undefined): string | undefine
 }
 
 function getShellDisplayName(
-  user:
-    | {
-        fullname?: string | null
-        username?: string | null
-      }
-    | null,
+  user: {
+    fullname?: string | null
+    username?: string | null
+  } | null,
 ) {
   return user?.fullname?.trim() || user?.username?.trim() || "Guest"
 }

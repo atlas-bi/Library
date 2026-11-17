@@ -10,6 +10,7 @@ namespace Atlas_Web.Services;
 public interface ITermsApiService
 {
     Task<TermsListDto> GetTermsAsync(ClaimsPrincipal user, CancellationToken cancellationToken);
+    Task<RecentTermsDto> GetRecentTermsAsync(CancellationToken cancellationToken);
     Task<TermDetailDto> GetTermAsync(
         ClaimsPrincipal user,
         int id,

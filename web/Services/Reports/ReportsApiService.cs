@@ -75,6 +75,7 @@ public interface IReportsApiService
         string search,
         CancellationToken cancellationToken
     );
+    Task<IReadOnlyList<RecentReportDto>> GetRecentReportsAsync(CancellationToken cancellationToken);
 }
 
 public sealed partial class ReportsApiService : IReportsApiService
@@ -86,7 +87,6 @@ public sealed partial class ReportsApiService : IReportsApiService
     private readonly IConfiguration _configuration;
     private readonly IMemoryCache _cache;
     private readonly ISolrReadOnlyOperations<SolrAtlas> _solr;
-    private readonly ISolrReadOnlyOperations<SolrAtlasLookups> _solrLookup;
 
     public ReportsApiService(
         Atlas_WebContext context,
@@ -94,8 +94,7 @@ public sealed partial class ReportsApiService : IReportsApiService
         IHttpContextAccessor httpContextAccessor,
         IConfiguration configuration,
         IMemoryCache cache,
-        ISolrReadOnlyOperations<SolrAtlas> solr,
-        ISolrReadOnlyOperations<SolrAtlasLookups> solrLookup
+        ISolrReadOnlyOperations<SolrAtlas> solr
     )
     {
         _context = context;
@@ -104,7 +103,6 @@ public sealed partial class ReportsApiService : IReportsApiService
         _configuration = configuration;
         _cache = cache;
         _solr = solr;
-        _solrLookup = solrLookup;
     }
 
     public async Task<ReportListResponseDto> GetReportsAsync(
@@ -120,7 +118,7 @@ public sealed partial class ReportsApiService : IReportsApiService
         var query = _context
             .ReportObjects.AsNoTracking()
             .Where(x => x.DefaultVisibilityYn == "Y")
-            .Where(x => (x.ReportObjectDoc.Hidden ?? "N") == "N");
+            .Where(x => x.ReportObjectDoc == null || (x.ReportObjectDoc.Hidden ?? "N") == "N");
 
         var total = await query.CountAsync(cancellationToken);
         var reports = await query
@@ -358,50 +356,95 @@ public sealed partial class ReportsApiService : IReportsApiService
         };
     }
 
-    public Task<IReadOnlyList<LookupDto>> GetLookupValuesAsync(
+    public async Task<IReadOnlyList<LookupDto>> GetLookupValuesAsync(
         string lookupArea,
         CancellationToken cancellationToken
     )
     {
-        cancellationToken.ThrowIfCancellationRequested();
-
-        var indexType = lookupArea switch
+        switch (lookupArea)
         {
-            "org-value" => "organizational_value",
-            "run-freq" => "run_frequency",
-            "fragility" => "fragility",
-            "maint-sched" => "maintenance_schedule",
-            "ro-fragility" => "fragility_tag",
-            "maint-log-stat" => "maintenance_log_status",
-            "user-roles" => "user_roles",
-            "financial-impact" => "financial_impact",
-            "strategic-importance" => "strategic_importance",
-            _ => null,
-        };
-
-        if (string.IsNullOrEmpty(indexType))
-        {
-            return Task.FromResult<IReadOnlyList<LookupDto>>(Array.Empty<LookupDto>());
+            case "org-value":
+                return await LookupAsync(
+                    _context.OrganizationalValues.AsNoTracking(),
+                    x => x.Id,
+                    x => x.Name,
+                    cancellationToken
+                );
+            case "run-freq":
+                return await LookupAsync(
+                    _context.EstimatedRunFrequencies.AsNoTracking(),
+                    x => x.Id,
+                    x => x.Name,
+                    cancellationToken
+                );
+            case "fragility":
+                return await LookupAsync(
+                    _context.Fragilities.AsNoTracking(),
+                    x => x.Id,
+                    x => x.Name,
+                    cancellationToken
+                );
+            case "maint-sched":
+                return await LookupAsync(
+                    _context.MaintenanceSchedules.AsNoTracking(),
+                    x => x.Id,
+                    x => x.Name,
+                    cancellationToken
+                );
+            case "ro-fragility":
+                return await LookupAsync(
+                    _context.FragilityTags.AsNoTracking(),
+                    x => x.Id,
+                    x => x.Name,
+                    cancellationToken
+                );
+            case "maint-log-stat":
+                return await LookupAsync(
+                    _context.MaintenanceLogStatuses.AsNoTracking(),
+                    x => x.Id,
+                    x => x.Name,
+                    cancellationToken
+                );
+            case "user-roles":
+                return await LookupAsync(
+                    _context.UserRoles.AsNoTracking(),
+                    x => x.UserRolesId,
+                    x => x.Name,
+                    cancellationToken
+                );
+            case "financial-impact":
+                return await LookupAsync(
+                    _context.FinancialImpacts.AsNoTracking(),
+                    x => x.Id,
+                    x => x.Name,
+                    cancellationToken
+                );
+            case "strategic-importance":
+                return await LookupAsync(
+                    _context.StrategicImportances.AsNoTracking(),
+                    x => x.Id,
+                    x => x.Name,
+                    cancellationToken
+                );
+            default:
+                return Array.Empty<LookupDto>();
         }
+    }
 
-        var values = _solrLookup
-            .Query(
-                new SolrQuery($"item_type:({indexType})"),
-                new QueryOptions
-                {
-                    RequestHandler = new RequestHandlerParameters("/query"),
-                    StartOrCursor = new StartOrCursor.Start(0),
-                    Rows = 9999,
-                }
-            )
-            .Select(x => new LookupDto
-            {
-                Id = x.AtlasId,
-                Name = x.Name,
-            })
+    private static async Task<IReadOnlyList<LookupDto>> LookupAsync<T>(
+        IQueryable<T> source,
+        Expression<Func<T, int>> id,
+        Expression<Func<T, string>> name,
+        CancellationToken cancellationToken
+    )
+    {
+        var idGetter = id.Compile();
+        var nameGetter = name.Compile();
+        var rows = await source.ToListAsync(cancellationToken);
+        return rows
+            .OrderBy(x => nameGetter(x))
+            .Select(x => new LookupDto { Id = idGetter(x), Name = nameGetter(x) })
             .ToList();
-
-        return Task.FromResult<IReadOnlyList<LookupDto>>(values);
     }
 
     public Task<IReadOnlyList<ReportSearchResultDto>> SearchTermsAsync(
@@ -617,6 +660,17 @@ public sealed partial class ReportsApiService : IReportsApiService
     )
     {
         await ValidateLinkedIdsAsync(validIdsQuery, requestedIds, label, cancellationToken);
+    }
+
+    public async Task<IReadOnlyList<RecentReportDto>> GetRecentReportsAsync(
+        CancellationToken cancellationToken
+    )
+    {
+        return await _context.ReportObjectDocs.AsNoTracking()
+            .OrderByDescending(x => x.LastUpdateDateTime)
+            .Take(10)
+            .Select(x => new RecentReportDto { Id = x.ReportObjectId, Name = x.ReportObject.Name })
+            .ToListAsync(cancellationToken);
     }
 
     private void InvalidateReportCaches(

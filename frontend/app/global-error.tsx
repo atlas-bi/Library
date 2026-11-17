@@ -1,7 +1,6 @@
 "use client"
 
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
+import { useEffect } from "react"
 import { reportError } from "@/lib/error-reporting"
 
 export default function GlobalError({
@@ -11,7 +10,9 @@ export default function GlobalError({
   error: Error & { digest?: string }
   reset: () => void
 }) {
-  reportError(error, { boundary: "app/global-error" })
+  useEffect(() => {
+    reportError(error, { boundary: "app/global-error" })
+  }, [error])
 
   return (
     <html lang="en">
@@ -23,10 +24,19 @@ export default function GlobalError({
               An unexpected error occurred. Please retry or return to the home page.
             </p>
             <div className="flex gap-2">
-              <Button onClick={reset}>Retry</Button>
-              <Button asChild variant="outline">
-                <Link href="/">Home</Link>
-              </Button>
+              <button
+                className="inline-flex h-8 items-center justify-center rounded-lg border border-transparent bg-primary px-3 text-sm font-medium text-primary-foreground"
+                onClick={reset}
+                type="button"
+              >
+                Retry
+              </button>
+              <a
+                className="inline-flex h-8 items-center justify-center rounded-lg border border-border px-3 text-sm font-medium"
+                href="/"
+              >
+                Home
+              </a>
             </div>
           </div>
         </main>

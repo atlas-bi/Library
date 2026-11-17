@@ -64,3 +64,21 @@ export interface ProfileSubscriptionDto {
   lastRunTime?: string | null
   subscriptionTo?: string | null
 }
+
+/** A single option in a dynamic filter list (populated from the backend). */
+export interface ProfileFilterItemDto {
+  value: string
+  label: string
+  count: number
+}
+
+/** Response shape for GET /api/profile/filters */
+export interface ProfileFiltersResponseDto {
+  server: ProfileFilterItemDto[]
+  database: ProfileFilterItemDto[]
+  masterFile: ProfileFilterItemDto[]
+  visible: ProfileFilterItemDto[]
+  certification: ProfileFilterItemDto[]
+  availability: ProfileFilterItemDto[]
+  reportType: ProfileFilterItemDto[]
+}

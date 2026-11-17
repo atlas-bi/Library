@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using System.Threading;
 using System.Threading.Tasks;
 using Atlas_Web.Contracts.Api.Groups;
 using Atlas_Web.Controllers.Api;
@@ -303,6 +304,57 @@ public class GroupsApiControllerTests
         Assert.IsType<NotFoundResult>(detail.Result);
         Assert.IsType<NotFoundResult>(users.Result);
         Assert.IsType<NotFoundResult>(reports.Result);
+    }
+
+    [Fact]
+    public async Task SearchGroups_ReturnsTenMatchesByNameEmailOrAccount()
+    {
+        var options = new DbContextOptionsBuilder<Atlas_WebContext>()
+            .UseInMemoryDatabase(databaseName: "groups-api-search")
+            .Options;
+
+        await using var context = new Atlas_WebContext(options);
+        for (var i = 1; i <= 11; i++)
+        {
+            context.UserGroups.Add(
+                new UserGroup
+                {
+                    GroupId = i,
+                    GroupName = "Team " + i.ToString("00"),
+                    GroupEmail = "team" + i + "@example.com",
+                    AccountName = "TEAM" + i,
+                }
+            );
+        }
+
+        context.UserGroups.Add(
+            new UserGroup
+            {
+                GroupId = 20,
+                GroupName = "Finance Review",
+                GroupEmail = "finance@example.com",
+                AccountName = "FINANCE",
+            }
+        );
+        await context.SaveChangesAsync();
+
+        var service = new GroupsApiService(
+            context,
+            new ConfigurationBuilder().Build(),
+            new MemoryCache(new MemoryCacheOptions())
+        );
+
+        var byName = await service.SearchGroupsAsync("finance", CancellationToken.None);
+        var byAccount = await service.SearchGroupsAsync("TEAM11", CancellationToken.None);
+        var limited = await service.SearchGroupsAsync("", CancellationToken.None);
+
+        Assert.Equal(20, Assert.Single(byName).Id);
+        Assert.Equal("Finance Review", byName[0].Name);
+        Assert.Equal("finance@example.com", byName[0].Email);
+        Assert.Equal(11, Assert.Single(byAccount).Id);
+        Assert.Equal(10, limited.Count);
+        Assert.Equal(20, limited[0].Id);
+        Assert.DoesNotContain(limited, x => x.Id == 10 || x.Id == 11);
     }
 
     private static GroupsApiController BuildController(

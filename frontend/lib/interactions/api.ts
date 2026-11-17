@@ -95,7 +95,7 @@ export async function sendShareMail(
     }
   }
 
-  const res = await fetch(`${apiBase}/api/interactions/share-mail`, {
+  const res = await fetch(`${apiBase}/api/mail/messages`, {
     method: "POST",
     headers: {
       Authorization: `Bearer ${token}`,
@@ -169,20 +169,29 @@ export async function submitAccessRequest(
     }
   }
 
-  const res = await fetch(`${apiBase}/api/interactions/access-request`, {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(body),
-  })
+  try {
+    const res = await fetch(`${apiBase}/api/interactions/access-request`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body),
+    })
 
-  if (res.ok) {
-    return { ok: true, data: (await res.json()) as unknown }
+    if (res.ok) {
+      return { ok: true, data: (await res.json()) as unknown }
+    }
+
+    return { ok: false, message: await parseErrorMessage(res), code: toErrorCode(res.status) }
+  } catch (error) {
+    console.error("Failed to submit access request:", error)
+    return {
+      ok: false,
+      message: getUserFriendlyErrorMessage("service_unavailable"),
+      code: "service_unavailable",
+    }
   }
-
-  return { ok: false, message: await parseErrorMessage(res), code: toErrorCode(res.status) }
 }
 
 export async function searchInteractionRecipients(
@@ -201,6 +210,30 @@ export async function searchInteractionRecipients(
   const params = new URLSearchParams({ q: trimmed, includeGroups: String(includeGroups) })
   const result = await apiFetchJson<InteractionRecipientDto[]>(
     `${apiBase}/api/interactions/search/recipients?${params}`,
+    {
+      headers: { Authorization: `Bearer ${token}` },
+      cache: "no-store",
+    },
+  )
+
+  if (!result.ok) return []
+  return Array.isArray(result.data) ? result.data : []
+}
+
+/** SQL-backed director search (Director role only); max 20 results. */
+export async function searchDirectors(q: string): Promise<InteractionRecipientDto[]> {
+  const trimmed = q.trim()
+  if (!trimmed) return []
+
+  const token = await getToken()
+  if (!token) return []
+
+  const apiBase = getServerApiBase()
+  if (!apiBase) return []
+
+  const params = new URLSearchParams({ q: trimmed })
+  const result = await apiFetchJson<InteractionRecipientDto[]>(
+    `${apiBase}/api/interactions/search/directors?${params}`,
     {
       headers: { Authorization: `Bearer ${token}` },
       cache: "no-store",

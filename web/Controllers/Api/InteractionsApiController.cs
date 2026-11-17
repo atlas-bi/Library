@@ -79,6 +79,41 @@ public class InteractionsApiController : ControllerBase
         }
     }
 
+    [HttpPost("access-request")]
+    public async Task<ActionResult> SubmitAccessRequest(
+        [FromBody] AccessRequestRequestDto request,
+        CancellationToken cancellationToken = default
+    )
+    {
+        try
+        {
+            return Ok(
+                await _interactionsApiService.SubmitAccessRequestAsync(
+                    User,
+                    request,
+                    cancellationToken
+                )
+            );
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(new { error = ex.Message });
+        }
+        catch (HttpRequestException)
+        {
+            return StatusCode(502, new { error = "Access request could not be submitted." });
+        }
+    }
+
+    [HttpGet("search/directors")]
+    public async Task<ActionResult<IReadOnlyList<RecipientSearchResultDto>>> SearchDirectors(
+        [FromQuery] string q,
+        CancellationToken cancellationToken = default
+    )
+    {
+        return Ok(await _interactionsApiService.SearchDirectorsAsync(q, cancellationToken));
+    }
+
     [HttpGet("search/recipients")]
     public async Task<ActionResult<IReadOnlyList<RecipientSearchResultDto>>> SearchRecipients(
         [FromQuery] string q,

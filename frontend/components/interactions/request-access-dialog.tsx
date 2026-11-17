@@ -2,7 +2,7 @@
 
 import { Accessibility } from "lucide-react"
 import { useCallback, useEffect, useState, useTransition } from "react"
-import { searchRecipientsAction, submitAccessRequestAction } from "@/app/interactions/actions"
+import { searchDirectorsAction, submitAccessRequestAction } from "@/app/interactions/actions"
 import { InteractionTooltip } from "@/components/interactions/interaction-tooltip"
 import { Button } from "@/components/ui/button"
 import {
@@ -36,7 +36,7 @@ export function RequestAccessDialog({
   const [error, setError] = useState<string | null>(null)
   const [pending, startTransition] = useTransition()
 
-  const fetcher = useCallback((q: string) => searchRecipientsAction(q, false), [])
+  const fetcher = useCallback((q: string) => searchDirectorsAction(q), [])
 
   useEffect(() => {
     const trimmed = query.trim()

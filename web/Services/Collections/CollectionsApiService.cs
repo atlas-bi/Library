@@ -37,6 +37,9 @@ public interface ICollectionsApiService
         int id,
         CancellationToken cancellationToken
     );
+    Task<IReadOnlyList<RecentCollectionDto>> GetRecentCollectionsAsync(
+        CancellationToken cancellationToken
+    );
     Task<IReadOnlyList<CollectionSearchResultDto>> SearchTermsAsync(
         string search,
         CancellationToken cancellationToken
@@ -517,6 +520,17 @@ public sealed class CollectionsApiService : ICollectionsApiService
                 );
             }
         }
+    }
+
+    public async Task<IReadOnlyList<RecentCollectionDto>> GetRecentCollectionsAsync(
+        CancellationToken cancellationToken
+    )
+    {
+        return await _context.Collections.AsNoTracking()
+            .OrderByDescending(x => x.LastUpdateDate)
+            .Take(10)
+            .Select(x => new RecentCollectionDto { Id = x.CollectionId, Name = x.Name })
+            .ToListAsync(cancellationToken);
     }
 
     private void InvalidateCollectionCaches(

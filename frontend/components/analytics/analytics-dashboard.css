@@ -1,0 +1,22 @@
+.analytics-bar-table td,
+.analytics-bar-table th {
+  border-color: transparent;
+}
+
+.analytics-bar-percent {
+  min-width: 100px;
+}
+
+.analytics-bar-percent-fill {
+  background-color: rgb(38 128 235 / 10%);
+  border: 1px solid rgb(38 128 235 / 20%);
+  border-top-right-radius: 2px;
+  border-bottom-right-radius: 2px;
+  border-left: 1px solid #dbdbdb;
+}
+
+.analytics-bar-table tr:hover .analytics-bar-percent-fill {
+  background-color: rgb(38 128 235 / 20%);
+  border-color: rgb(38 128 235 / 30%);
+  border-left-color: #dbdbdb;
+}

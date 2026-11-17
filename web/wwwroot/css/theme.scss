@@ -103,7 +103,7 @@ pre,
   overflow-x: hidden;
   padding: 0;
   white-space: pre;
-  word-wrap: normal;
+  overflow-wrap: normal;
   font-family: $family-monospace;
 }
 
@@ -338,7 +338,7 @@ nav.is-sticky {
 }
 
 .is-wordbreak {
-  word-break: break-word;
+  overflow-wrap: anywhere;
 }
 
 code {
@@ -396,8 +396,8 @@ button.is-ghost:not(.button) {
 
 .has-shadow-gold {
   box-shadow:
-    0 0.5em 1em -0.125em rgba(255 215 0 / 10%),
-    0 0 0 1px rgba(255 215 0 / 2%);
+    0 0.5em 1em -0.125em rgb(255 215 0 / 10%),
+    0 0 0 1px rgb(255 215 0 / 2%);
   border: 1px solid rgb(255 215 0);
 }
 
@@ -477,8 +477,8 @@ button.is-ghost:not(.button) {
 }
 
 .bar-percent-fill {
-  background-color: rgba(38 128 235 / 10%);
-  border: 1px solid rgba(38 128 235 / 20%);
+  background-color: rgb(38 128 235 / 10%);
+  border: 1px solid rgb(38 128 235 / 20%);
   border-top-right-radius: 2px;
   border-bottom-right-radius: 2px;
   border-left: 1px solid $grey-light;
@@ -489,8 +489,8 @@ button.is-ghost:not(.button) {
 }
 
 .table.bar tr:hover .bar-percent-fill {
-  background-color: rgba(38 128 235 / 20%);
-  border: 1px solid rgba(38 128 235 / 30%);
+  background-color: rgb(38 128 235 / 20%);
+  border: 1px solid rgb(38 128 235 / 30%);
   border-left: 1px solid $grey-light;
 }
 

@@ -1,5 +1,6 @@
 "use server"
 
+import { revalidatePath } from "next/cache"
 import {
   createUserFolder,
   deleteUserFolder,
@@ -10,6 +11,7 @@ import {
   toggleUserFavorite,
   updateUserFavoriteFolderAssignment,
   updateUserFolder,
+  updateUserSettings,
 } from "@/lib/users/api"
 import type {
   CreateUserFavoriteFolderRequest,
@@ -18,6 +20,7 @@ import type {
   ToggleUserFavoriteRequest,
   UpdateUserFavoriteFolderAssignmentRequest,
   UpdateUserFavoriteFolderRequest,
+  UpdateUserSettingsRequest,
 } from "@/lib/users/types"
 
 export async function createUserFolderAction(
@@ -83,4 +86,11 @@ export async function removeUserSharedObjectAction(id: number) {
 
 export async function toggleAdminModeAction() {
   return toggleAdminMode()
+}
+
+export async function updateUserSettingsAction(body: UpdateUserSettingsRequest) {
+  const result = await updateUserSettings(body)
+  if (!result.ok) return { error: result.message }
+  revalidatePath("/users/settings")
+  return { data: {} }
 }

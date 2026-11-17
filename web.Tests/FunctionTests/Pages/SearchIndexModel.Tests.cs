@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
 using Xunit;
 
@@ -25,6 +26,89 @@ public class SearchIndexModelTests
         Assert.Equal(
             "name:(a)^12 OR name_split:(a)^6 OR description:(a)^5 OR description_split:(a)^3 OR (a)",
             result
+        );
+    }
+
+    [Fact]
+    public void BuildOptionalSearchString_SearchesNumbersWhenTheQueryHasALeadingComma()
+    {
+        var query = new QueryCollection();
+
+        var result = Atlas_Web.Pages.Search.IndexModel.BuildOptionalSearchString(",123", query);
+
+        Assert.Contains("name:(123)^12", result);
+        Assert.DoesNotContain(",123", result);
+    }
+
+    [Fact]
+    public void BuildOptionalSearchString_SplitsCommaSeparatedNumbers()
+    {
+        var query = new QueryCollection();
+
+        var result = Atlas_Web.Pages.Search.IndexModel.BuildOptionalSearchString("123, 456", query);
+
+        Assert.Contains("name:(123 456)^12", result);
+    }
+
+    [Fact]
+    public void ResolveSearchQuery_UsesQAliasWhenQueryMissing()
+    {
+        var requestQuery = new QueryCollection(
+            new Dictionary<string, Microsoft.Extensions.Primitives.StringValues>
+            {
+                ["q"] = "census",
+            }
+        );
+
+        var result = Atlas_Web.Pages.Search.IndexModel.ResolveSearchQuery(null, requestQuery);
+
+        Assert.Equal("census", result);
+    }
+
+    [Fact]
+    public void ResolveSearchQuery_PrefersQueryOverQAlias()
+    {
+        var requestQuery = new QueryCollection(
+            new Dictionary<string, Microsoft.Extensions.Primitives.StringValues>
+            {
+                ["q"] = "census",
+            }
+        );
+
+        var result = Atlas_Web.Pages.Search.IndexModel.ResolveSearchQuery("Patient Flow", requestQuery);
+
+        Assert.Equal("Patient Flow", result);
+    }
+
+    [Fact]
+    public void ShouldRedirectToHome_IsFalseWhenQAliasIsPresent()
+    {
+        var requestQuery = new QueryCollection(
+            new Dictionary<string, Microsoft.Extensions.Primitives.StringValues> { ["q"] = "census" }
+        );
+
+        var resolved = Atlas_Web.Pages.Search.IndexModel.ResolveSearchQuery(null, requestQuery);
+
+        Assert.Equal("census", resolved);
+        Assert.False(Atlas_Web.Pages.Search.IndexModel.ShouldRedirectToHome(resolved));
+    }
+
+    [Fact]
+    public void ShouldRedirectToHome_IsTrueWhenQueryMissing()
+    {
+        var requestQuery = new QueryCollection();
+
+        var resolved = Atlas_Web.Pages.Search.IndexModel.ResolveSearchQuery(null, requestQuery);
+
+        Assert.True(Atlas_Web.Pages.Search.IndexModel.ShouldRedirectToHome(resolved));
+    }
+
+    [Fact]
+    public void SearchRequestExcludedFilterKeys_IncludesQAlias()
+    {
+        Assert.Contains(
+            "q",
+            Atlas_Web.Pages.Search.IndexModel.SearchRequestExcludedFilterKeys
         );
     }
 }

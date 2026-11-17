@@ -18,6 +18,15 @@ public class GroupsApiController : ControllerBase
         _groupsApiService = groupsApiService;
     }
 
+    [HttpGet("search")]
+    public async Task<ActionResult<IReadOnlyList<GroupSearchResultDto>>> SearchGroups(
+        [FromQuery] string q,
+        CancellationToken cancellationToken = default
+    )
+    {
+        return Ok(await _groupsApiService.SearchGroupsAsync(q, cancellationToken));
+    }
+
     [HttpGet]
     public async Task<ActionResult<GroupListResponseDto>> GetGroups(
         CancellationToken cancellationToken = default

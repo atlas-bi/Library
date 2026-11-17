@@ -18,6 +18,15 @@ public class TermsApiController : ControllerBase
         _termsApiService = termsApiService;
     }
 
+    [HttpGet("recent")]
+    public async Task<ActionResult<RecentTermsDto>> GetRecentTerms(
+        CancellationToken cancellationToken = default
+    )
+    {
+        Response.Headers.CacheControl = "max-age=7200";
+        return Ok(await _termsApiService.GetRecentTermsAsync(cancellationToken));
+    }
+
     [HttpGet]
     public async Task<ActionResult<TermsListDto>> GetTerms(CancellationToken cancellationToken = default)
     {

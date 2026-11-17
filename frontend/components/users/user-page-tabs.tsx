@@ -45,7 +45,11 @@ export function UserPageTabs({
         setActiveTab(hashTab)
         return
       }
-      setActiveTab(getDefaultUserTab(isCurrentUser, visibleTabs))
+      const defaultTab = getDefaultUserTab(isCurrentUser, visibleTabs)
+      setActiveTab(defaultTab)
+      if (!window.location.hash) {
+        window.history.replaceState(null, "", `#${defaultTab}`)
+      }
     }
 
     syncFromHash()
@@ -55,7 +59,7 @@ export function UserPageTabs({
 
   return (
     <div className="space-y-5">
-      <UserSectionNav activeTab={activeTab} tabs={visibleTabs} onTabChange={setActiveTab} />
+      <UserSectionNav activeTab={activeTab} tabs={visibleTabs} onTabChangeAction={setActiveTab} />
       <UserTabPanel tab="stars" activeTab={activeTab}>
         {stars}
       </UserTabPanel>

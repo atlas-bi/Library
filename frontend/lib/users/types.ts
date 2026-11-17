@@ -1,3 +1,9 @@
+export type UserSearchResult = {
+  id: number
+  name: string
+  email?: string | null
+}
+
 export type UserPageUser = {
   id: number
   username?: string | null
@@ -256,4 +262,12 @@ export type ToggleUserFavoriteResponse = {
 
 export type ToggleAdminModeResponse = {
   adminEnabled?: string | null
+}
+
+export type UserSettings = {
+  shareNotificationEnabled: boolean
+}
+
+export type UpdateUserSettingsRequest = {
+  shareNotificationEnabled: boolean
 }

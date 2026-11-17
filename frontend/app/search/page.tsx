@@ -1,6 +1,8 @@
 import Link from "next/link"
 import { redirect } from "next/navigation"
 import type { ReactNode } from "react"
+import { SearchQueryStarButton } from "@/components/search/search-query-star-button"
+import { SearchResultStarButton } from "@/components/search/search-result-star-button"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -146,19 +148,24 @@ function renderHighlightSnippet(snippet: string) {
   return nodes
 }
 
-export default async function SearchPage({ searchParams }: { searchParams: SearchPageParams }) {
+export default async function SearchPage({
+  searchParams,
+}: {
+  searchParams: Promise<SearchPageParams>
+}) {
   const token = await getToken()
   if (!token) redirect("/auth/login")
 
   const user = await getCurrentUser()
   const canUseAdvancedSearch = !!user && hasPermission(user, "Show Advanced Search")
+  const resolvedSearchParams = await searchParams
 
-  const q = getSingleValue(searchParams.q) ?? ""
-  const type = normalizeSearchType(getSingleValue(searchParams.type))
-  const page = asPositiveInt(getSingleValue(searchParams.page), 1)
-  const pageSize = asPositiveInt(getSingleValue(searchParams.pageSize), 20)
-  const field = getSingleValue(searchParams.field)
-  const advancedRequested = getSingleValue(searchParams.advanced) === "Y"
+  const q = getSingleValue(resolvedSearchParams.q) ?? ""
+  const type = normalizeSearchType(getSingleValue(resolvedSearchParams.type))
+  const page = asPositiveInt(getSingleValue(resolvedSearchParams.page), 1)
+  const pageSize = asPositiveInt(getSingleValue(resolvedSearchParams.pageSize), 20)
+  const field = getSingleValue(resolvedSearchParams.field)
+  const advancedRequested = getSingleValue(resolvedSearchParams.advanced) === "Y"
 
   const requestParams: SearchPageParams = {
     q,
@@ -171,7 +178,7 @@ export default async function SearchPage({ searchParams }: { searchParams: Searc
   if (canUseAdvancedSearch && advancedRequested) requestParams.advanced = "Y"
 
   // Preserve all dynamic facet filters by passing every non-reserved param through.
-  Object.entries(searchParams).forEach(([key, value]) => {
+  Object.entries(resolvedSearchParams).forEach(([key, value]) => {
     if (!RESERVED_KEYS.has(key)) {
       requestParams[key] = value
     }
@@ -283,7 +290,7 @@ export default async function SearchPage({ searchParams }: { searchParams: Searc
         </Card>
 
         {data.facets.map((facet) => {
-          const selected = new Set(getFacetValues(searchParams, facet.key))
+          const selected = new Set(getFacetValues(resolvedSearchParams, facet.key))
           return (
             <Card key={facet.key}>
               <CardHeader>
@@ -346,7 +353,10 @@ export default async function SearchPage({ searchParams }: { searchParams: Searc
             qTime {data.qTime}
             ms
           </div>
-          {data.isAdvancedSearch ? <Badge>Advanced mode active</Badge> : null}
+          <div className="flex flex-wrap items-center gap-2">
+            {type === "query" && q.trim() ? <SearchQueryStarButton query={q} /> : null}
+            {data.isAdvancedSearch ? <Badge>Advanced mode active</Badge> : null}
+          </div>
         </div>
 
         {data.results.length === 0 ? (
@@ -381,7 +391,15 @@ export default async function SearchPage({ searchParams }: { searchParams: Searc
                     </CardTitle>
                     <div className="flex items-center gap-2">
                       <Badge variant="outline">{item.type}</Badge>
-                      {typeof item.isStarred === "boolean" ? (
+                      {item.type === "users" || item.type === "groups" ? (
+                        typeof item.isStarred === "boolean" ? (
+                          <SearchResultStarButton
+                            resultType={item.type}
+                            atlasId={item.atlasId}
+                            initialStarred={item.isStarred}
+                          />
+                        ) : null
+                      ) : typeof item.isStarred === "boolean" ? (
                         <Badge variant={item.isStarred ? "default" : "secondary"}>
                           {item.isStarred ? "Starred" : "Not starred"}
                         </Badge>
