@@ -54,7 +54,7 @@
     "gulp-replace": "^1.1.4",
     "gulp-sass": "6.0.1",
     "gulp-uglify": "3.0.2",
-    "jsdom": "^30.0.0",
+    "jsdom": "^31.0.0",
     "jsnlog": "2.30.0",
     "lint-staged": "^17.0.0",
     "markdown-it": "15.0.3",
@@ -135,7 +135,7 @@
       "path": "./node_modules/cz-conventional-changelog"
     }
   },
-  "version": "3.15.82",
+  "version": "3.15.83",
   "dependencies": {
     "@codemirror/lang-markdown": "^6.5.0",
     "@codemirror/view": "^6.43.5",
