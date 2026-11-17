@@ -6,8 +6,7 @@ using Atlas_Web.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.PixelFormats;
+using SkiaSharp;
 using Xunit;
 
 namespace web.Tests.FunctionTests.Controllers;
@@ -37,7 +36,7 @@ public class ReportImagesApiControllerTests
 
         var file = Assert.IsType<Microsoft.AspNetCore.Mvc.FileContentResult>(result);
         Assert.Equal("image/jpeg", file.ContentType);
-        using var image = Image.Load<Rgba32>(file.FileContents);
+        using var image = SKBitmap.Decode(file.FileContents);
         Assert.Equal(40, image.Width);
         Assert.Equal(20, image.Height);
     }
@@ -70,7 +69,7 @@ public class ReportImagesApiControllerTests
         var result = await controller.GetThumbnail(4, "25x25", 2, "jpeg");
 
         var file = Assert.IsType<Microsoft.AspNetCore.Mvc.FileContentResult>(result);
-        using var image = Image.Load<Rgba32>(file.FileContents);
+        using var image = SKBitmap.Decode(file.FileContents);
         Assert.Equal(50, image.Width);
         Assert.Equal(25, image.Height);
     }
@@ -182,11 +181,64 @@ public class ReportImagesApiControllerTests
         return Path.Combine(root, "wwwroot", "img", "report_placeholder.png");
     }
 
+    [Theory]
+    [InlineData("20x20", 40, 20)]
+    [InlineData("30x_", 30, 15)]
+    [InlineData("500x500", 80, 40)]
+    [InlineData("nonsense", 80, 40)]
+    [InlineData(null, 80, 40)]
+    public void Build_OnlyShrinksToTheRequestedSize(string size, int width, int height)
+    {
+        using var image = SKBitmap.Decode(ReportThumbnail.Build(Png(80, 40), size, "jpeg"));
+
+        Assert.Equal(width, image.Width);
+        Assert.Equal(height, image.Height);
+    }
+
+    [Fact]
+    public void Build_EncodesWebpWithTransparency()
+    {
+        var bytes = ReportThumbnail.Build(Png(80, 40), "20x20", "webp");
+
+        using var codec = SKCodec.Create(new MemoryStream(bytes));
+        Assert.Equal(SKEncodedImageFormat.Webp, codec.EncodedFormat);
+        using var image = SKBitmap.Decode(bytes);
+        Assert.Equal(0, image.GetPixel(5, 5).Alpha);
+    }
+
+    [Fact]
+    public void Build_PutsTransparentImagesOnWhiteForJpeg()
+    {
+        using var image = SKBitmap.Decode(ReportThumbnail.Build(Png(80, 40), "20x20", "jpeg"));
+
+        Assert.True(image.GetPixel(5, 5).Red > 250);
+    }
+
+    [Fact]
+    public void Build_ReadsGifUploads()
+    {
+        var gif = System.Convert.FromBase64String(
+            "R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+        );
+
+        using var image = SKBitmap.Decode(ReportThumbnail.Build(gif, "20x20", "jpeg"));
+
+        Assert.Equal(1, image.Width);
+    }
+
+    [Fact]
+    public void Build_RejectsDataThatIsNotAnImage()
+    {
+        Assert.Throws<InvalidDataException>(() =>
+            ReportThumbnail.Build(new byte[] { 1, 2, 3 }, "20x20", "jpeg")
+        );
+    }
+
     private static byte[] Png(int width, int height)
     {
-        using var image = new Image<Rgba32>(width, height);
-        using var stream = new MemoryStream();
-        image.SaveAsPng(stream);
-        return stream.ToArray();
+        using var image = new SKBitmap(width, height);
+        image.Erase(SKColors.Transparent);
+        using var encoded = image.Encode(SKEncodedImageFormat.Png, 100);
+        return encoded.ToArray();
     }
 }

@@ -1,13 +1,7 @@
-using System.Text.RegularExpressions;
 using Atlas_Web.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Formats.Jpeg;
-using SixLabors.ImageSharp.Formats.Webp;
-using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp.Processing;
 
 namespace Atlas_Web.Services;
 
@@ -61,17 +55,6 @@ public static class ReportImageRequests
 
 public sealed class ReportImageApiService : IReportImageApiService
 {
-    private static readonly Regex BothDimensions = new(
-        @"^\d+x\d+$",
-        RegexOptions.CultureInvariant,
-        TimeSpan.FromMilliseconds(100)
-    );
-    private static readonly Regex WidthOnly = new(
-        @"^\d+x_$",
-        RegexOptions.CultureInvariant,
-        TimeSpan.FromMilliseconds(100)
-    );
-
     private readonly Atlas_WebContext _context;
     private readonly IMemoryCache _cache;
     private readonly string _contentRoot;
@@ -129,7 +112,7 @@ public sealed class ReportImageApiService : IReportImageApiService
             return ReportImageResult.NotFound();
         }
 
-        var encoded = BuildImage(imageData, size, "jpeg");
+        var encoded = ReportThumbnail.Build(imageData, size, "jpeg");
         _cache.Set(cacheKey, encoded, TimeSpan.FromMinutes(20));
         return EncodeResult(encoded, "jpeg");
     }
@@ -147,7 +130,7 @@ public sealed class ReportImageApiService : IReportImageApiService
 
     private static ReportImageResult Encode(byte[] imageData, string size, string extension)
     {
-        return EncodeResult(BuildImage(imageData, size, extension), extension);
+        return EncodeResult(ReportThumbnail.Build(imageData, size, extension), extension);
     }
 
     private static ReportImageResult EncodeResult(byte[] bytes, string extension)
@@ -158,69 +141,5 @@ public sealed class ReportImageApiService : IReportImageApiService
             Bytes = bytes,
             ContentType = extension == "webp" ? "image/webp" : "image/jpeg",
         };
-    }
-
-    private static byte[] BuildImage(byte[] imageData, string size, string extension)
-    {
-        using Image image = Image.Load<Rgba32>(imageData);
-        Resize(image, size);
-
-        using var stream = new MemoryStream();
-        if (extension == "webp")
-        {
-            image.Save(stream, new WebpEncoder { Quality = 75 });
-        }
-        else
-        {
-            image.Save(stream, new JpegEncoder { Quality = 75 });
-        }
-
-        return stream.ToArray();
-    }
-
-    private static void Resize(Image image, string size)
-    {
-        if (string.IsNullOrEmpty(size) || image.Width <= 0 || image.Height <= 0)
-        {
-            return;
-        }
-
-        if (BothDimensions.IsMatch(size))
-        {
-            var parts = size.Split('x');
-            if (!int.TryParse(parts[0], out var width) || !int.TryParse(parts[1], out var height))
-            {
-                return;
-            }
-
-            var maxRatio = Math.Max(width / (float)image.Width, height / (float)image.Height);
-            if (maxRatio < 1)
-            {
-                image.Mutate(x =>
-                    x.Resize((int)(image.Width * maxRatio), (int)(image.Height * maxRatio))
-                );
-            }
-
-            return;
-        }
-
-        if (!WidthOnly.IsMatch(size))
-        {
-            return;
-        }
-
-        var widthPart = size.Split('x')[0];
-        if (!int.TryParse(widthPart, out var targetWidth))
-        {
-            return;
-        }
-
-        var widthRatio = targetWidth / (float)image.Width;
-        if (widthRatio < 1)
-        {
-            image.Mutate(x =>
-                x.Resize((int)(image.Width * widthRatio), (int)(image.Height * widthRatio))
-            );
-        }
     }
 }

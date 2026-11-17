@@ -12,8 +12,7 @@
     "chart.js",
     "open",
     "dompurify",
-    "gulp-autoprefixer",
-    "SixLabors.ImageSharp"
+    "gulp-autoprefixer"
   ],
   "baseBranchPatterns": ["dev"],
   "bumpVersion": "patch",
