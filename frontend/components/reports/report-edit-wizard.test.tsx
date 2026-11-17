@@ -66,7 +66,7 @@ describe("ReportEditWizard", () => {
     expect(screen.queryByLabelText("Developer description")).not.toBeInTheDocument()
   })
 
-  it("lists existing images on the images step using the thumb handler when source is null", async () => {
+  it("lists existing images on the images step via the reports thumbnail API when source is null", async () => {
     const user = userEvent.setup()
     const reportWithImages: ReportDetail = {
       ...report,
@@ -88,7 +88,7 @@ describe("ReportEditWizard", () => {
     const image = screen.getByAltText("Report image 99")
     expect(image).toHaveAttribute(
       "src",
-      "http://localhost:5000/data/img?handler=Thumb&id=-1&imgId=99&size=256x256",
+      "http://localhost:5000/api/reports/16/thumbnail?size=256x256&imgId=99",
     )
   })
 })
