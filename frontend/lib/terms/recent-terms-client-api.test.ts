@@ -5,6 +5,7 @@ import {
   normalizeRecentTerms,
   termDetailHref,
 } from "./recent-terms-client-api"
+import type { RecentTermDto } from "./types"
 
 const fetchMock = vi.fn<(input: RequestInfo | URL, init?: RequestInit) => Promise<Response>>()
 
@@ -46,8 +47,12 @@ describe("fetchRecentTerms", () => {
 
 describe("normalizeRecentTerms", () => {
   test("treats missing arrays as empty", () => {
-    expect(normalizeRecentTerms(undefined)).toEqual({ approved: [], pending: [] })
-    expect(normalizeRecentTerms({})).toEqual({ approved: [], pending: [] })
+    const missing: { approved: RecentTermDto[]; pending: RecentTermDto[] } =
+      normalizeRecentTerms(undefined)
+    const empty: { approved: RecentTermDto[]; pending: RecentTermDto[] } = normalizeRecentTerms({})
+
+    expect(missing).toEqual({ approved: [], pending: [] })
+    expect(empty).toEqual({ approved: [], pending: [] })
   })
 })
 
