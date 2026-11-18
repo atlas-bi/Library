@@ -1,6 +1,7 @@
 import { EntityCardFooter } from "@/components/interactions/entity-card-footer"
 import { ReportSnippetRunAction } from "@/components/interactions/report-snippet-run-action"
 import { ProfileAnalyticsPanel } from "@/components/profile/profile-analytics-panel"
+import { getReportImagePlaceholderPath, getReportThumbnailPath } from "@/lib/reports/report-image-url"
 import type { TermFeaturesDto, TermRelatedReportDto } from "@/lib/terms/types"
 import { truncateText } from "@/lib/text"
 import { SnippetMediaCard } from "./snippet-media-card"
@@ -35,6 +36,9 @@ export function TermRelatedReportCard({
           attachmentCount={report.attachmentCount}
         />
       }
+      imageSrc={getReportThumbnailPath(report.id, { size: "128x128" })}
+      imageFallbackSrc={getReportImagePlaceholderPath({ size: "128x128" })}
+      imageAlt={`${title} thumbnail`}
       excerpt={
         <>
           {excerpt} <span className="text-link font-medium">read more</span>
