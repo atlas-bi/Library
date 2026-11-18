@@ -1,3 +1,5 @@
+"use client"
+
 import { Award, ImageIcon } from "lucide-react"
 import Link from "next/link"
 import type { ReactNode } from "react"
