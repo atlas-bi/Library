@@ -587,7 +587,6 @@ public sealed partial class ReportsApiService
             )
             .Where(x => x.ReportObjectTypeId != 12)
             .Where(x => x.EpicMasterFile != "IDK")
-            .Where(x => x.DefaultVisibilityYn == "Y")
             .Where(x => (x.ReportObjectDoc.Hidden ?? "N") == "N")
             .Union(
                 _context.ReportObjects.Where(x =>
@@ -599,7 +598,6 @@ public sealed partial class ReportsApiService
                     )
                 )
                 .Where(x => x.EpicMasterFile == "IDB")
-                .Where(x => x.DefaultVisibilityYn == "Y")
                 .Where(x => (x.ReportObjectDoc.Hidden ?? "N") == "N")
             )
             .OrderBy(x => x.DisplayTitle ?? x.Name)
