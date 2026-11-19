@@ -1,3 +1,5 @@
+"use client"
+
 import { Award, ImageIcon } from "lucide-react"
 import Link from "next/link"
 import type { ReactNode } from "react"
@@ -5,15 +7,39 @@ import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { cn } from "@/lib/utils"
 
-export function SnippetThumbnail({ alt = "Preview" }: { alt?: string }) {
+export function SnippetThumbnail({
+  alt = "Preview",
+  src,
+  fallbackSrc,
+}: {
+  alt?: string
+  src?: string
+  fallbackSrc?: string
+}) {
+  if (!src) {
+    return (
+      <div
+        className="flex size-32 shrink-0 items-center justify-center rounded-md border bg-muted/50"
+        aria-hidden
+      >
+        <ImageIcon className="size-10 text-muted-foreground/60" />
+        <span className="sr-only">{alt}</span>
+      </div>
+    )
+  }
+
   return (
-    <div
-      className="flex size-32 shrink-0 items-center justify-center rounded-md border bg-muted/50"
-      aria-hidden
-    >
-      <ImageIcon className="size-10 text-muted-foreground/60" />
-      <span className="sr-only">{alt}</span>
-    </div>
+    <img
+      src={src}
+      alt={alt}
+      className="size-32 shrink-0 rounded-md border object-cover"
+      onError={(event) => {
+        const el = event.currentTarget
+        if (!fallbackSrc || el.dataset.atlasThumbFallback === "1") return
+        el.dataset.atlasThumbFallback = "1"
+        el.src = fallbackSrc
+      }}
+    />
   )
 }
 
@@ -26,6 +52,9 @@ export function SnippetMediaCard({
   headerLeading,
   showCertified = false,
   variant = "default",
+  imageSrc,
+  imageFallbackSrc,
+  imageAlt,
 }: {
   title: string
   href?: string
@@ -35,6 +64,9 @@ export function SnippetMediaCard({
   headerLeading?: ReactNode
   showCertified?: boolean
   variant?: "default" | "collection"
+  imageSrc?: string
+  imageFallbackSrc?: string
+  imageAlt?: string
 }) {
   const titleNode = href ? (
     <Link href={href} className="atlas-home-card-title hover:underline">
@@ -77,7 +109,7 @@ export function SnippetMediaCard({
       </CardHeader>
       <CardContent className="py-3">
         <div className="flex gap-4">
-          <SnippetThumbnail />
+          <SnippetThumbnail src={imageSrc} fallbackSrc={imageFallbackSrc} alt={imageAlt ?? title} />
           <div className="min-w-0 flex-1 text-sm leading-relaxed text-muted-foreground">
             {href ? (
               <Link href={href} className="block hover:text-foreground">
