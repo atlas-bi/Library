@@ -1,4 +1,4 @@
-import type { RecentTermsDto } from "@/lib/terms/types"
+import type { RecentTermDto, RecentTermsDto } from "@/lib/terms/types"
 
 export type FetchRecentTermsResult =
   | { ok: true; data: RecentTermsDto }
@@ -24,8 +24,8 @@ export async function fetchRecentTerms(): Promise<FetchRecentTermsResult> {
 }
 
 export function normalizeRecentTerms(data: RecentTermsDto | null | undefined): {
-  approved: RecentTermsDto["approved"]
-  pending: RecentTermsDto["pending"]
+  approved: RecentTermDto[]
+  pending: RecentTermDto[]
 } {
   return {
     approved: data?.approved ?? [],
