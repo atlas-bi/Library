@@ -1,4 +1,3 @@
-import Image from "next/image"
 import Link from "next/link"
 import { redirect } from "next/navigation"
 import { LibraryShell } from "@/components/layout/library-shell"
@@ -6,6 +5,7 @@ import { ProfileAnalyticsPanel } from "@/components/profile/profile-analytics-pa
 import { ReportActionRail } from "@/components/reports/report-action-rail"
 import { ReportDescriptionSection } from "@/components/reports/report-description-section"
 import { ReportDetailsTable } from "@/components/reports/report-details-table"
+import { ReportImagesSection } from "@/components/reports/report-images-section"
 import { ReportMaintenanceSection } from "@/components/reports/report-maintenance-section"
 import { ReportQuerySection } from "@/components/reports/report-query-section"
 import { ReportRelationshipsSection } from "@/components/reports/report-relationships-section"
@@ -243,26 +243,7 @@ export default async function ReportsPage({
             </p>
           ) : null}
 
-          {Array.isArray(report.images) && report.images.length > 0 ? (
-            <section id="images" className="space-y-4 scroll-mt-24">
-              <h2 className="text-2xl font-semibold text-[var(--atlas-home-text-strong)]">Images</h2>
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                {report.images.map((image) => (
-                  <div key={image.id} className="rounded-md border p-2">
-                    {image.source ? (
-                      <Image
-                        src={image.source}
-                        alt={`Report ${image.id}`}
-                        width={900}
-                        height={600}
-                        className="h-auto w-full"
-                      />
-                    ) : null}
-                  </div>
-                ))}
-              </div>
-            </section>
-          ) : null}
+          <ReportImagesSection report={report} />
 
           <ReportDescriptionSection report={report} />
           <ReportTermsSection report={report} />
