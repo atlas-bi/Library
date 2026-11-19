@@ -5,6 +5,7 @@ import { ProfileFullView } from "@/components/profile/profile-full-view"
 import { Button } from "@/components/ui/button"
 import { UserGroupsTable } from "@/components/users/user-groups-table"
 import { UserHistorySectionView } from "@/components/users/user-history-section"
+import { ScopedSiteAnalyticsCta } from "@/components/analytics/scoped-site-analytics-cta"
 import { UserPageTabs } from "@/components/users/user-page-tabs"
 import { UserRunListPanel } from "@/components/users/user-run-list-panel"
 import { UserStarsWorkspace } from "@/components/users/user-stars-workspace"
@@ -150,14 +151,7 @@ export default async function UsersPage({
         atlasHistory={<UserHistorySectionView history={history} />}
         analytics={
           page.permissions.canViewAnalytics ? (
-            <div className="space-y-4">
-              <p className="text-sm text-[var(--atlas-home-muted)]">
-                Site analytics for this user are available in the Analytics application.
-              </p>
-              <Button asChild variant="outline">
-                <Link href="/analytics">Open Analytics</Link>
-              </Button>
-            </div>
+            <ScopedSiteAnalyticsCta scope="user" id={resolvedId} />
           ) : (
             <div className="atlas-home-card px-6 py-7 text-sm text-[var(--atlas-home-text)]">
               Analytics are not available.
