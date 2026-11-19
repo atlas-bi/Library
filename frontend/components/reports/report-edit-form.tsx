@@ -129,6 +129,10 @@ export function ReportEditForm({
   const [fragilityTagIds, setFragilityTagIds] = useState<number[]>(
     (doc.fragilityTags ?? []).map((tag) => tag.id),
   )
+  const [serviceRequests, setServiceRequests] = useState(doc.serviceRequests ?? [])
+  const [newTicketNumber, setNewTicketNumber] = useState("")
+  const [newTicketUrl, setNewTicketUrl] = useState("")
+  const [newTicketDescription, setNewTicketDescription] = useState("")
   const [maintenanceComment, setMaintenanceComment] = useState("")
   const [maintenanceLogStatusId, setMaintenanceLogStatusId] = useState(() => {
     const first = lookupOptions.maintenanceLogStatuses[0]?.id
@@ -189,7 +193,14 @@ export function ReportEditForm({
     collectionIds: collectionRows.map((r) => r.id),
     fragilityTagIds,
     imageIds,
-    serviceRequestIds: [],
+    serviceRequestIds: serviceRequests.map((ticket) => ticket.id),
+    newServiceRequest: newTicketNumber.trim()
+      ? {
+          ticketNumber: newTicketNumber.trim(),
+          description: newTicketDescription.trim(),
+          ticketUrl: newTicketUrl.trim() || null,
+        }
+      : null,
     newMaintenanceLog: maintenanceComment.trim()
       ? {
           maintenanceLogStatusId,
@@ -488,6 +499,69 @@ export function ReportEditForm({
 
         {showMaintenance ? (
           <div className="space-y-4">
+            <div className="space-y-2">
+              <h3 className="text-sm font-semibold">Service requests</h3>
+              {serviceRequests.length > 0 ? (
+                <ul className="space-y-2">
+                  {serviceRequests.map((ticket) => (
+                    <li key={ticket.id} className="flex items-center justify-between gap-2 text-sm">
+                      <span>
+                        {ticket.ticketNumber || ticket.ticketUrl || `Request ${ticket.id}`}
+                        {ticket.description?.trim() ? (
+                          <span className="text-muted-foreground"> · {ticket.description}</span>
+                        ) : null}
+                      </span>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        aria-label={`Remove service request ${ticket.ticketNumber ?? ticket.id}`}
+                        onClick={() => {
+                          setServiceRequests((rows) => rows.filter((row) => row.id !== ticket.id))
+                        }}
+                      >
+                        Remove
+                      </Button>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="text-sm text-muted-foreground">No service requests linked.</p>
+              )}
+            </div>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div className="space-y-2">
+                <Label htmlFor="new-ticket-number">New service request ticket number</Label>
+                <Input
+                  id="new-ticket-number"
+                  value={newTicketNumber}
+                  onChange={(e) => {
+                    setNewTicketNumber(e.target.value)
+                  }}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="new-ticket-url">New service request link</Label>
+                <Input
+                  id="new-ticket-url"
+                  type="url"
+                  value={newTicketUrl}
+                  onChange={(e) => {
+                    setNewTicketUrl(e.target.value)
+                  }}
+                />
+              </div>
+              <div className="space-y-2 sm:col-span-2">
+                <Label htmlFor="new-ticket-description">New service request description</Label>
+                <Input
+                  id="new-ticket-description"
+                  value={newTicketDescription}
+                  onChange={(e) => {
+                    setNewTicketDescription(e.target.value)
+                  }}
+                />
+              </div>
+            </div>
             {lookupOptions.maintenanceLogStatuses.length > 0 ? (
               <div className="space-y-2">
                 <Label htmlFor="maintenance-status">Maintenance log status</Label>
