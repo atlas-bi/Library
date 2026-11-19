@@ -1,9 +1,23 @@
 import path from 'node:path';
 import type { NextConfig } from 'next';
 
+const legacyReportObjectRoutes = [
+    '/ReportObjects/Details',
+    '/ReportObjects/Detials',
+    '/reportobjects/details',
+    '/reportobjects/detials',
+];
+
 const nextConfig: NextConfig = {
     output: 'standalone',
     outputFileTracingRoot: path.join(__dirname, '..'),
+    async redirects() {
+        return legacyReportObjectRoutes.map((source) => ({
+            source,
+            destination: '/reports',
+            permanent: false,
+        }));
+    },
     async rewrites() {
         const apiBase = process.env.API_URL ?? process.env.NEXT_PUBLIC_API_URL;
         if (!apiBase) return [];
