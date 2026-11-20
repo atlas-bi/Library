@@ -10,6 +10,7 @@ import { UserPageTabs } from "@/components/users/user-page-tabs"
 import { UserRunListPanel } from "@/components/users/user-run-list-panel"
 import { UserStarsWorkspace } from "@/components/users/user-stars-workspace"
 import { UserSubscriptionsTable } from "@/components/users/user-subscriptions-table"
+import { loginPath } from "@/app/auth/return-path"
 import { getCurrentUser, getToken } from "@/lib/auth"
 import { getUserFriendlyErrorMessage } from "@/lib/errors"
 import {
@@ -45,18 +46,27 @@ export default async function UsersPage({
   searchParams: Promise<UsersSearchParams>
 }) {
   const token = await getToken()
-  if (!token) redirect("/auth/login")
+  if (!token) redirect(loginPath("/users"))
 
   const currentUser = await getCurrentUser()
   const resolvedSearchParams = await searchParams
   const idRaw = getSingleValue(resolvedSearchParams.id)
   const resolvedId = idRaw ? Number(idRaw) : Number(currentUser?.userId)
   if (!Number.isFinite(resolvedId) || resolvedId <= 0) {
-    redirect("/")
-  }
-
-  if (!idRaw && currentUser?.userId) {
-    redirect(`/users?id=${currentUser.userId}`)
+    return (
+      <LibraryShell
+        displayName={getShellDisplayName(currentUser)}
+        isSignedIn={Boolean(currentUser)}
+        isAdministrator={currentUser?.roles.includes("Administrator") ?? false}
+        adminEnabled={currentUser?.adminEnabled ?? false}
+      >
+        <h1 className="atlas-home-heading">Unable to load user profile</h1>
+        <p className="mb-4 text-sm text-[var(--atlas-home-muted)]">Missing or invalid user id.</p>
+        <Button asChild variant="outline">
+          <Link href="/users">Your profile</Link>
+        </Button>
+      </LibraryShell>
+    )
   }
 
   const [pageResult, starsResult, groupsResult, subscriptionsResult, historyResult] =

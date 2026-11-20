@@ -34,6 +34,29 @@ describe("auth public redirect origin", () => {
     expect(response.headers.get("location")).toBe("https://library.atlas.bi/")
   })
 
+  test("callback returns to the user route that started sign-in", () => {
+    process.env.AUTH_RETURN_URL_ORIGIN = "https://library.atlas.bi"
+
+    const response = callbackGet(
+      new Request(
+        "https://0.0.0.0:3000/auth/callback?token=test-token&returnTo=%2Fusers%2Fsettings",
+      ),
+    )
+
+    expect(response.headers.get("location")).toBe("https://library.atlas.bi/users/settings")
+    expect(response.cookies.get("atlas_token")?.value).toBe("test-token")
+  })
+
+  test("callback ignores an off-site return path", () => {
+    process.env.AUTH_RETURN_URL_ORIGIN = "https://library.atlas.bi"
+
+    const response = callbackGet(
+      new Request("https://0.0.0.0:3000/auth/callback?token=test-token&returnTo=https://evil.test"),
+    )
+
+    expect(response.headers.get("location")).toBe("https://library.atlas.bi/")
+  })
+
   test("logout redirects to configured public origin", () => {
     process.env.DEMO = "true"
     process.env.AUTH_RETURN_URL_ORIGIN = "https://library.atlas.bi"

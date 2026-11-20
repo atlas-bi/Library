@@ -64,8 +64,10 @@ describe("UserSettingsPage", () => {
   it("redirects unauthenticated users to login", async () => {
     getTokenMock.mockResolvedValue(null)
 
-    await expect(UserSettingsPage()).rejects.toThrow("NEXT_REDIRECT:/auth/login")
-    expect(redirectMock).toHaveBeenCalledWith("/auth/login")
+    await expect(UserSettingsPage()).rejects.toThrow(
+      "NEXT_REDIRECT:/auth/login?returnTo=%2Fusers%2Fsettings",
+    )
+    expect(redirectMock).toHaveBeenCalledWith("/auth/login?returnTo=%2Fusers%2Fsettings")
   })
 
   it("renders the settings panel when settings load successfully", async () => {

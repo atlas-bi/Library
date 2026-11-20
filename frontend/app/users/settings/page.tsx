@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import { redirect } from "next/navigation"
 import { LibraryShell } from "@/components/layout/library-shell"
 import { UserSettingsPanel } from "@/components/users/user-settings-panel"
+import { loginPath } from "@/app/auth/return-path"
 import { getCurrentUser, getToken } from "@/lib/auth"
 import { getUserFriendlyErrorMessage } from "@/lib/errors"
 import { getUserSettings } from "@/lib/users/api"
@@ -19,7 +20,7 @@ function getShellDisplayName(
 
 export default async function UserSettingsPage() {
   const token = await getToken()
-  if (!token) redirect("/auth/login")
+  if (!token) redirect(loginPath("/users/settings"))
 
   const currentUser = await getCurrentUser()
   const settingsResult = await getUserSettings()
