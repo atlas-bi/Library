@@ -8,6 +8,7 @@ import { GroupRunListPanel } from "@/components/groups/group-run-list-panel"
 import { GroupUsersTable } from "@/components/groups/group-users-table"
 import { HomeGroupsPanelView } from "@/components/home/home-groups-panel"
 import { LibraryShell } from "@/components/layout/library-shell"
+import { ScopedSiteAnalyticsCta } from "@/components/analytics/scoped-site-analytics-cta"
 import { ProfileAnalyticsPanel } from "@/components/profile/profile-analytics-panel"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -181,16 +182,7 @@ export default async function GroupsPage({
         reports={<GroupReportsTable reports={reports} />}
         activity={<ProfileAnalyticsPanel id={group.id} type="group" />}
         runList={<GroupRunListPanel groupId={group.id} reportTypeIds={reportTypeIds} />}
-        analytics={
-          <div className="space-y-4">
-            <p className="text-sm text-muted-foreground">
-              Site analytics for this group are available in the Analytics application.
-            </p>
-            <Button asChild variant="outline">
-              <Link href="/analytics">Open Analytics</Link>
-            </Button>
-          </div>
-        }
+        analytics={<ScopedSiteAnalyticsCta scope="group" id={group.id} className="space-y-4" />}
       />
     </LibraryShell>
   )
