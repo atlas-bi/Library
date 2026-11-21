@@ -85,10 +85,7 @@ describe("ReportEditWizard", () => {
     await user.click(screen.getByRole("link", { name: "Images" }))
 
     expect(window.location.hash).toBe("#images")
-    const image = screen.getByAltText("Report image 99")
-    expect(image).toHaveAttribute(
-      "src",
-      "http://localhost:5000/api/reports/16/thumbnail?size=256x256&imgId=99",
-    )
+    const image = screen.getByAltText("Screenshot 1")
+    expect(image).toHaveAttribute("src", "/api/reports/16/thumbnail?size=256x256&imgId=99")
   })
 })

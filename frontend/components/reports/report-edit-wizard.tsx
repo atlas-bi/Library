@@ -3,14 +3,10 @@
 import Link from "next/link"
 import { useCallback, useEffect, useMemo, useState } from "react"
 import { ReportEditForm } from "@/components/reports/report-edit-form"
-import { ReportImageUpload } from "@/components/reports/report-image-upload"
+import { ReportEditImagesSection } from "@/components/reports/report-edit-images-section"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
-import {
-  getReportImagePlaceholderUrl,
-  getReportThumbnailUrl,
-} from "@/lib/reports/report-image-url"
 import type { ReportDetail, ReportEditLookupOptions } from "@/lib/reports/types"
 
 export const REPORT_EDIT_WIZARD_STEPS = [
@@ -50,7 +46,6 @@ export function ReportEditWizard({
   const [step, setStep] = useState<ReportEditWizardStep>(() => getDefaultReportEditWizardStep())
   const title = report.displayTitle || report.displayName || report.name
   const doc = (report.document ?? {}) as Record<string, unknown>
-  const existingImages = report.images ?? []
 
   const maintenanceSummary = useMemo(() => {
     const schedule = doc.maintenanceSchedule as { name?: string } | undefined
@@ -114,7 +109,7 @@ export function ReportEditWizard({
                 }}
                 className={
                   step === wizardStep.id
-                    ? "text-[0.9rem] font-medium text-[var(--atlas-home-link)] hover:underline"
+                    ? "rounded-md bg-muted px-2.5 py-1 text-[0.9rem] font-semibold text-foreground"
                     : "text-[0.9rem] text-[var(--atlas-home-link)] hover:text-[var(--atlas-home-link-hover)] hover:underline"
                 }
                 aria-current={step === wizardStep.id ? "step" : undefined}
@@ -161,54 +156,23 @@ export function ReportEditWizard({
 
       {step === "images" ? (
         <section id="images" className="scroll-mt-24">
-          <Card>
-            <CardHeader>
-              <CardTitle>Images</CardTitle>
+          <Card className="border-[var(--atlas-home-border-soft)]">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-xl">Images</CardTitle>
+              <p className="text-sm font-normal text-muted-foreground">
+                Upload, reorder, or remove report screenshots (same as the legacy editor).
+              </p>
             </CardHeader>
-            <CardContent className="space-y-4">
-              {existingImages.length > 0 ? (
-                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                  {existingImages.map((image) => {
-                    const thumbSrc = getReportThumbnailUrl(report.id, {
-                      apiBase: publicApiBase,
-                      imageId: image.id,
-                      size: "256x256",
-                    })
-                    const placeholderSrc = getReportImagePlaceholderUrl({
-                      apiBase: publicApiBase,
-                      size: "256x256",
-                    })
-                    return (
-                      <div key={image.id} className="rounded-md border border-[var(--atlas-home-border-soft)] p-2">
-                        <img
-                          src={thumbSrc}
-                          alt={`Report image ${image.id}`}
-                          className="h-auto w-full max-h-64 rounded-md border border-[var(--atlas-home-border-soft)] object-cover"
-                          onError={(event) => {
-                            const el = event.currentTarget
-                            if (el.dataset.atlasThumbFallback === "1") {
-                              return
-                            }
-                            el.dataset.atlasThumbFallback = "1"
-                            el.src = placeholderSrc
-                          }}
-                        />
-                      </div>
-                    )
-                  })}
-                </div>
-              ) : (
-                <p className="text-sm text-muted-foreground">No images uploaded yet.</p>
-              )}
-              <ReportImageUpload reportId={report.id} />
-              <div className="flex flex-wrap gap-2">
-                <Button type="button" variant="outline" onClick={() => goToStep("meta")}>
-                  Back
-                </Button>
-                <Button type="button" onClick={() => goToStep("maintenance")}>
-                  Next
-                </Button>
-              </div>
+            <CardContent className="pt-2">
+              <ReportEditImagesSection
+                report={report}
+                onBack={() => {
+                  goToStep("meta")
+                }}
+                onContinue={() => {
+                  goToStep("maintenance")
+                }}
+              />
             </CardContent>
           </Card>
         </section>
