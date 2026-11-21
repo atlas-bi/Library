@@ -9,13 +9,16 @@ import { SnippetMediaCard } from "./snippet-media-card"
 export function ReportSnippetCard({
   report,
   features,
+  descriptionContent,
 }: {
   report: CollectionReportDto
   features?: CollectionFeatureFlagsDto | null
+  /** When set (e.g. search highlights), replaces the default description excerpt. */
+  descriptionContent?: React.ReactNode
 }) {
   const title = report.name?.trim() || `Report ${report.id}`
   const href = `/reports?id=${report.id}`
-  const excerpt = report.description?.trim()
+  const defaultExcerpt = report.description?.trim()
     ? truncateText(report.description)
     : "Open to view details."
   const tags = ["report", ...(report.canRun ? ["can run"] : [])]
@@ -40,9 +43,11 @@ export function ReportSnippetCard({
       imageFallbackSrc={getReportImagePlaceholderPath({ size: "128x128" })}
       imageAlt={`${title} thumbnail`}
       excerpt={
-        <>
-          {excerpt} <span className="text-link font-medium">read more</span>
-        </>
+        descriptionContent ?? (
+          <>
+            {defaultExcerpt} <span className="text-link font-medium">read more</span>
+          </>
+        )
       }
       footer={
         <EntityCardFooter

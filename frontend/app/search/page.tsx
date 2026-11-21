@@ -2,6 +2,7 @@ import Link from "next/link"
 import { redirect } from "next/navigation"
 import type { ReactNode } from "react"
 import { SearchQueryStarButton } from "@/components/search/search-query-star-button"
+import { SearchReportResultCard } from "@/components/search/search-report-result-card"
 import { SearchResultStarButton } from "@/components/search/search-result-star-button"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -373,6 +374,23 @@ export default async function SearchPage({
             )?.snippet
             const href = buildResultHref(item)
             const isExternal = item.type === "external"
+
+            if (item.type === "reports") {
+              const highlightedDescription = descriptionSnippet ? (
+                <p className="text-sm text-muted-foreground">
+                  {renderHighlightSnippet(descriptionSnippet)}{" "}
+                  <span className="text-link font-medium">read more</span>
+                </p>
+              ) : undefined
+
+              return (
+                <SearchReportResultCard
+                  key={item.id}
+                  result={item}
+                  descriptionContent={highlightedDescription}
+                />
+              )
+            }
 
             return (
               <Card key={item.id}>
