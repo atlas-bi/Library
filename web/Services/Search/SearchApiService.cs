@@ -198,6 +198,11 @@ public sealed class SearchApiService : ISearchApiService
         IDictionary<string, SolrNet.Impl.HighlightedSnippets> highlights
     )
     {
+        if (highlights is null)
+        {
+            return [];
+        }
+
         return highlights
             .Select(h => new HighlightDto
             {
