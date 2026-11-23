@@ -65,7 +65,7 @@
     "proxy-polyfill": "0.3.2",
     "regenerator-runtime": "^0.14.0",
     "rollup": "^4.0.0",
-    "semantic-release": "^25.0.0",
+    "semantic-release": "^26.0.0",
     "stylelint": "^18.0.0",
     "stylelint-config-prettier-scss": "1.0.0",
     "stylelint-config-standard-scss": "^18.0.0",
@@ -135,7 +135,7 @@
       "path": "./node_modules/cz-conventional-changelog"
     }
   },
-  "version": "3.15.87",
+  "version": "3.15.88",
   "dependencies": {
     "@codemirror/lang-markdown": "^6.5.0",
     "@codemirror/view": "^6.43.5",
