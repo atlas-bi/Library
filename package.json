@@ -85,7 +85,7 @@
     "url": "github:atlas-bi/atlas-bi-library"
   },
   "scripts": {
-    "install": "dotnet tool update --global dotnet-ef",
+    "install": "dotnet tool update --global dotnet-ef --version 9.0.23",
     "start": "gulp start",
     "dev": "run-p dev:* start",
     "frontend:dev": "next dev frontend -p 3001 --webpack",
