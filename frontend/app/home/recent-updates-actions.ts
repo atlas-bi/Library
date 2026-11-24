@@ -1,7 +1,10 @@
-"use server"
+'use server';
 
-import { loadRecentUpdates, type RecentUpdatesLoadResult } from "@/lib/home/recent-updates-api"
+import {
+    loadRecentUpdates,
+    type RecentUpdatesLoadResult,
+} from '@/lib/home/recent-updates-api';
 
 export async function loadRecentUpdatesAction(): Promise<RecentUpdatesLoadResult> {
-  return loadRecentUpdates()
+    return loadRecentUpdates();
 }

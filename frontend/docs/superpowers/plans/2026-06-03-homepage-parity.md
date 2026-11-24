@@ -13,6 +13,7 @@
 ### Task 1: Homepage data contracts
 
 **Files:**
+
 - Create: `lib/home/types.ts`
 - Create: `lib/home/constants.ts`
 - Test: `lib/home/constants.test.ts`
@@ -24,6 +25,7 @@
 ### Task 2: Homepage tab data fetchers
 
 **Files:**
+
 - Create: `lib/home/api.ts`
 - Modify: `lib/profile/api.ts`
 - Test: `lib/home/api.test.ts`
@@ -35,6 +37,7 @@
 ### Task 3: Lazy tab API routes
 
 **Files:**
+
 - Create: `app/api/home/stars/route.ts`
 - Create: `app/api/home/subscriptions/route.ts`
 - Create: `app/api/home/report-runs/route.ts`
@@ -48,6 +51,7 @@
 ### Task 4: Homepage shell and lazy tab client
 
 **Files:**
+
 - Create: `components/home/home-shell.tsx`
 - Create: `components/home/home-tabs-client.tsx`
 - Create: `components/home/home-tab-panel.tsx`
@@ -61,6 +65,7 @@
 ### Task 5: Homepage panel components and styling
 
 **Files:**
+
 - Create: `components/home/home-stars-panel.tsx`
 - Create: `components/home/home-subscriptions-panel.tsx`
 - Create: `components/home/home-run-list-panel.tsx`
@@ -75,6 +80,7 @@
 ### Task 6: Final verification
 
 **Files:**
+
 - Modify: `app/page.tsx`
 - Modify: `components/home/*`
 - Modify: `lib/home/*`
