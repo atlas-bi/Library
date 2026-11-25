@@ -5,6 +5,7 @@ import type {
     HomeGroupsPanel,
     HomeRunListPanel,
     HomeStarsPanel,
+    HomeStarsWorkspacePanel,
     HomeSubscriptionsPanel,
     HomeTabId,
     HomeTabsVisibility,
@@ -16,6 +17,7 @@ import {
     type UserStarsPayload,
 } from '@/lib/home/stars-mapper';
 import { getProfileRunList } from '@/lib/profile/api';
+import { getUserStars } from '@/lib/users/api';
 import type { UserSharedObjects } from '@/lib/users/types';
 
 type HomeResult<T> = {
@@ -103,9 +105,9 @@ export async function getHomeUserPageSummary(
 
 export async function getHomeStarsPanel(
     userId: number,
-): Promise<HomeResult<HomeStarsPanel>> {
+): Promise<HomeResult<HomeStarsPanel | HomeStarsWorkspacePanel>> {
     const [starsResult, sharedResult] = await Promise.all([
-        authorizedGet<UserStarsPayload>(`/api/users/${userId}/stars`),
+        getUserStars(userId),
         authorizedGet<UserSharedObjects>('/api/users/me/shared-objects'),
     ]);
 
@@ -120,8 +122,22 @@ export async function getHomeStarsPanel(
             shareDate: item.shareDate ?? undefined,
         })) ?? [];
 
+    if (starsResult.data.canEditWorkspace && starsResult.data.isCurrentUser) {
+        return {
+            data: {
+                kind: 'stars-workspace',
+                stars: starsResult.data,
+                sharedWithMe,
+            },
+            error: null,
+        };
+    }
+
     return {
-        data: mapUserStarsPayloadToPanel(starsResult.data, sharedWithMe),
+        data: mapUserStarsPayloadToPanel(
+            starsResult.data as UserStarsPayload,
+            sharedWithMe,
+        ),
         error: null,
     };
 }

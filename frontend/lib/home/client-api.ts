@@ -6,6 +6,7 @@ import type {
     HomeGroupsPanel,
     HomeRunListPanel,
     HomeStarsPanel,
+    HomeStarsWorkspacePanel,
     HomeSubscriptionsPanel,
     HomeTabId,
 } from '@/lib/home/types';
@@ -28,6 +29,14 @@ function isHomeStarsPanel(payload: unknown): payload is HomeStarsPanel {
         Array.isArray(panel.filters) &&
         Array.isArray(panel.cards)
     );
+}
+
+function isHomeStarsWorkspacePanel(
+    payload: unknown,
+): payload is HomeStarsWorkspacePanel {
+    if (!payload || typeof payload !== 'object') return false;
+    const panel = payload as Partial<HomeStarsWorkspacePanel>;
+    return panel.kind === 'stars-workspace' && panel.stars != null;
 }
 
 function normalizeSubscriptionsPanel(
@@ -117,11 +126,13 @@ export async function fetchHomeTabPanel(tabId: HomeTabId) {
         case 'stars':
             return {
                 ok: true as const,
-                data: isHomeStarsPanel(panelPayload)
+                data: isHomeStarsWorkspacePanel(panelPayload)
                     ? panelPayload
-                    : mapUserStarsPayloadToPanel(
-                          panelPayload as UserStarsPayload,
-                      ),
+                    : isHomeStarsPanel(panelPayload)
+                      ? panelPayload
+                      : mapUserStarsPayloadToPanel(
+                            panelPayload as UserStarsPayload,
+                        ),
             };
         case 'subscriptions':
             return {

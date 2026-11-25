@@ -1,3 +1,5 @@
+import type { UserStars } from '@/lib/users/types';
+
 export type HomeTabId = 'stars' | 'subscriptions' | 'report-runs' | 'groups';
 
 export type HomeTabDefinition = {
@@ -75,6 +77,12 @@ export type HomeStarsPanel = HomePanelBase & {
     suggestionHeading?: string;
 };
 
+export type HomeStarsWorkspacePanel = {
+    kind: 'stars-workspace';
+    stars: UserStars;
+    sharedWithMe?: HomeSharedWithMeItem[];
+};
+
 export type HomeSubscriptionsPanel = HomePanelBase & {
     kind: 'subscriptions';
     rows: Array<{
@@ -111,10 +119,11 @@ export type HomeGroupsPanel = HomePanelBase & {
 };
 
 export type HomePanelData =
-    | HomeStarsPanel
-    | HomeSubscriptionsPanel
-    | HomeRunListPanel
-    | HomeGroupsPanel;
+  | HomeStarsPanel
+  | HomeStarsWorkspacePanel
+  | HomeSubscriptionsPanel
+  | HomeRunListPanel
+  | HomeGroupsPanel;
 
 export type HomePanelResponse =
     { ok: true; data: HomePanelData } | { ok: false; error: string };

@@ -12,6 +12,7 @@ import {
   Waypoints,
 } from "lucide-react"
 import Link from "next/link"
+import { HomeSharedWithMeRail } from "@/components/home/home-shared-with-me-rail"
 import { HomeStarCardFooter } from "@/components/home/home-star-card-footer"
 import type { HomeStarCard, HomeStarsPanel } from "@/lib/home/types"
 
@@ -268,32 +269,7 @@ export function HomeStarsPanelView({
           )}
         </div>
 
-        {sharedWithMe.length > 0 ? (
-          <aside className="sticky top-20 self-start space-y-3 rounded-md border border-[var(--atlas-home-border-soft)] bg-white p-4">
-            <strong className="block text-sm text-[var(--atlas-home-text-strong)]">
-              Shared With Me
-            </strong>
-            <ul className="space-y-2 text-sm">
-              {sharedWithMe.map((item) => (
-                <li key={item.id}>
-                  {item.href ? (
-                    <Link href={item.href} className="text-[var(--atlas-home-link)] hover:underline">
-                      {item.name}
-                    </Link>
-                  ) : (
-                    item.name
-                  )}
-                  {item.sharedFrom ? (
-                    <div className="text-xs text-[var(--atlas-home-muted)]">
-                      Shared by {item.sharedFrom}
-                      {item.shareDate ? ` on ${item.shareDate}` : ""}
-                    </div>
-                  ) : null}
-                </li>
-              ))}
-            </ul>
-          </aside>
-        ) : null}
+        <HomeSharedWithMeRail items={sharedWithMe} />
       </div>
     </section>
   )

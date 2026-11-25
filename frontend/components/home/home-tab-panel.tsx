@@ -1,11 +1,14 @@
 import { HomeGroupsPanelView } from "@/components/home/home-groups-panel"
 import { HomeRunListPanelView } from "@/components/home/home-run-list-panel"
 import { HomeStarsPanelClient } from "@/components/home/home-stars-panel-client"
+import { HomeStarsWorkspacePanel } from "@/components/home/home-stars-workspace-panel"
 import { HomeSubscriptionsPanelView } from "@/components/home/home-subscriptions-panel"
 import type { HomePanelData } from "@/lib/home/types"
 
 export function HomeTabPanel({ panel }: { panel: HomePanelData }) {
   switch (panel.kind) {
+    case "stars-workspace":
+      return <HomeStarsWorkspacePanel stars={panel.stars} sharedWithMe={panel.sharedWithMe} />
     case "stars":
       return <HomeStarsPanelClient panel={panel} />
     case "subscriptions":
