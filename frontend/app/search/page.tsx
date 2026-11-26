@@ -1,12 +1,15 @@
+import { Filter, X } from "lucide-react"
 import Link from "next/link"
 import { redirect } from "next/navigation"
 import type { ReactNode } from "react"
+import { LibraryShell } from "@/components/layout/library-shell"
 import { SearchQueryStarButton } from "@/components/search/search-query-star-button"
+import { SearchReportResultCard } from "@/components/search/search-report-result-card"
 import { SearchResultStarButton } from "@/components/search/search-result-star-button"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { getCurrentUser, getToken, hasPermission } from "@/lib/auth"
+import { type AuthUser, getCurrentUser, getToken, hasPermission } from "@/lib/auth"
 import { getUserFriendlyErrorMessage } from "@/lib/errors"
 import { searchLibrary } from "@/lib/search/api"
 import { SEARCH_TYPES, type SearchResultDto, type SearchType } from "@/lib/search/types"
@@ -14,6 +17,42 @@ import { SEARCH_TYPES, type SearchResultDto, type SearchType } from "@/lib/searc
 type SearchPageParams = Record<string, string | string[] | undefined>
 
 const RESERVED_KEYS = new Set(["q", "type", "page", "pageSize", "field", "advanced"])
+
+function resolveDisplayName(user: AuthUser | null): string {
+  if (!user) return "Guest"
+  if (user.fullname && user.fullname !== "Guest") return user.fullname
+  return user.username || "Guest"
+}
+
+function getShellProps(user: AuthUser | null) {
+  return {
+    displayName: resolveDisplayName(user),
+    isSignedIn: !!user,
+    isAdministrator: !!user && user.roles.includes("Administrator"),
+    adminEnabled: user?.adminEnabled ?? false,
+  }
+}
+
+function buildClearFiltersHref(q: string, type: SearchType, field?: string): string {
+  const params = new URLSearchParams()
+  if (q.trim()) params.set("q", q)
+  params.set("type", type)
+  if (field) params.set("field", field)
+  const query = params.toString()
+  return query ? `/search?${query}` : "/search"
+}
+
+function getActiveFacetFilters(
+  params: SearchPageParams,
+): { key: string; values: string[] }[] {
+  return Object.entries(params)
+    .filter(([key]) => !RESERVED_KEYS.has(key))
+    .map(([key, value]) => ({
+      key,
+      values: typeof value === "string" ? [value] : Array.isArray(value) ? value.filter(Boolean) : [],
+    }))
+    .filter((entry) => entry.values.length > 0)
+}
 
 function getSingleValue(value: string | string[] | undefined): string | undefined {
   if (typeof value === "string") return value
@@ -110,6 +149,34 @@ function renderResultMeta(result: SearchResultDto) {
   return null
 }
 
+function SearchFilterTag({
+  label,
+  value,
+  removeHref,
+}: {
+  label: string
+  value: string
+  removeHref: string
+}) {
+  return (
+    <div className="flex items-stretch">
+      <span className="rounded-l-md border border-r-0 bg-muted px-2 py-1 text-xs text-muted-foreground">
+        {label}
+      </span>
+      <span className="flex items-center gap-1 rounded-r-md border border-[var(--atlas-home-border-soft)] bg-amber-100 px-2 py-1 text-xs font-medium text-amber-950">
+        {value}
+        <Link
+          href={removeHref}
+          className="inline-flex size-4 items-center justify-center rounded-sm hover:bg-amber-200/80"
+          aria-label={`Remove ${label} filter ${value}`}
+        >
+          <X className="size-3" aria-hidden />
+        </Link>
+      </span>
+    </div>
+  )
+}
+
 function renderHighlightSnippet(snippet: string) {
   const parts = snippet.split(/(<\/?em>)/g)
   let isEmphasized = false
@@ -184,11 +251,12 @@ export default async function SearchPage({
     }
   })
 
+  const shellProps = getShellProps(user)
   const result = await searchLibrary(requestParams)
   if (!result.data) {
     const message = getUserFriendlyErrorMessage(result.error ?? "unknown")
     return (
-      <div className="mx-auto max-w-6xl px-4 py-10">
+      <LibraryShell {...shellProps} searchPlaceholder="type to search..">
         <Card>
           <CardHeader>
             <CardTitle className="text-xl">Unable to load search</CardTitle>
@@ -200,7 +268,7 @@ export default async function SearchPage({
             </Button>
           </CardContent>
         </Card>
-      </div>
+      </LibraryShell>
     )
   }
 
@@ -223,12 +291,81 @@ export default async function SearchPage({
   const nextParams = new URLSearchParams(prevParams.toString())
   nextParams.set("page", String(Math.min(totalPages, data.page + 1)))
 
+  const activeFacets = getActiveFacetFilters(resolvedSearchParams)
+  const hasAppliedFilters =
+    activeFacets.length > 0 || !!field || (type !== "query" && type !== "reports")
+  const clearFiltersHref = buildClearFiltersHref(q, type)
+
   return (
-    <div className="mx-auto grid min-h-screen w-full max-w-7xl gap-6 px-4 py-8 lg:grid-cols-[280px_1fr]">
-      <aside className="space-y-4">
+    <LibraryShell {...shellProps} searchPlaceholder="type to search..">
+      <div className="mb-4 flex flex-wrap items-center gap-3">
+        <div className="flex items-center gap-2 text-sm font-semibold text-[var(--atlas-home-logo-text)]">
+          <Filter className="size-4" aria-hidden />
+          Filter Results
+        </div>
+        {type !== "query" ? (
+          <SearchFilterTag label="Type" value={type} removeHref={buildClearFiltersHref(q, "query", field)} />
+        ) : null}
+        {field ? (
+          <SearchFilterTag
+            label="Field"
+            value={data.filterFields.find((f) => f.key === field)?.label ?? field}
+            removeHref={buildClearFiltersHref(q, type)}
+          />
+        ) : null}
+        {activeFacets.flatMap((facet) =>
+          facet.values.map((value) => (
+            <SearchFilterTag
+              key={`${facet.key}-${value}`}
+              label={facet.key}
+              value={value}
+              removeHref={toHrefFromParams(
+                (() => {
+                  const params = new URLSearchParams()
+                  Object.entries(requestParams).forEach(([key, requestValue]) => {
+                    if (key === facet.key) {
+                      const remaining =
+                        typeof requestValue === "string"
+                          ? []
+                          : Array.isArray(requestValue)
+                            ? requestValue.filter((v) => v !== value)
+                            : []
+                      remaining.forEach((v) => {
+                        params.append(key, v)
+                      })
+                      return
+                    }
+                    if (typeof requestValue === "string") {
+                      params.append(key, requestValue)
+                    }
+                    if (Array.isArray(requestValue)) {
+                      requestValue.forEach((v) => {
+                        params.append(key, v)
+                      })
+                    }
+                  })
+                  params.set("page", "1")
+                  return params
+                })(),
+              )}
+            />
+          )),
+        )}
+        {hasAppliedFilters ? (
+          <Button asChild variant="outline" size="sm" className="h-8 gap-1 text-xs">
+            <Link href={clearFiltersHref}>
+              <X className="size-3.5" aria-hidden />
+              Clear All Filters
+            </Link>
+          </Button>
+        ) : null}
+      </div>
+
+      <div className="grid w-full gap-6 lg:grid-cols-[minmax(220px,280px)_1fr]">
+      <aside className="space-y-4 lg:sticky lg:top-[calc(var(--atlas-home-navbar-height)+1rem)] lg:max-h-[calc(100vh-var(--atlas-home-navbar-height)-2rem)] lg:overflow-y-auto">
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">Search</CardTitle>
+            <CardTitle className="text-base">Search filters</CardTitle>
           </CardHeader>
           <CardContent>
             <form method="get" className="space-y-3">
@@ -361,8 +498,22 @@ export default async function SearchPage({
 
         {data.results.length === 0 ? (
           <Card>
-            <CardContent className="py-10 text-center text-sm text-muted-foreground">
-              No search results found.
+            <CardContent className="space-y-4 py-10 text-center text-sm text-muted-foreground">
+              <h2 className="text-base font-semibold text-foreground">
+                Not finding what you are looking for?
+              </h2>
+              <p>
+                Are you searching for a private or hidden report? Try out the advanced search
+                filters!
+              </p>
+              <p>
+                Is it a new Hyperspace Report? Hyperspace reports typically are not imported until
+                the following business day.
+              </p>
+              <p>
+                Is it a new SSRS Report? SSRS reports typically take two hours to be loaded into
+                the search results.
+              </p>
             </CardContent>
           </Card>
         ) : (
@@ -373,6 +524,23 @@ export default async function SearchPage({
             )?.snippet
             const href = buildResultHref(item)
             const isExternal = item.type === "external"
+
+            if (item.type === "reports") {
+              const highlightedDescription = descriptionSnippet ? (
+                <p className="text-sm text-muted-foreground">
+                  {renderHighlightSnippet(descriptionSnippet)}{" "}
+                  <span className="text-link font-medium">read more</span>
+                </p>
+              ) : undefined
+
+              return (
+                <SearchReportResultCard
+                  key={item.id}
+                  result={item}
+                  descriptionContent={highlightedDescription}
+                />
+              )
+            }
 
             return (
               <Card key={item.id}>
@@ -433,6 +601,7 @@ export default async function SearchPage({
           </div>
         ) : null}
       </main>
-    </div>
+      </div>
+    </LibraryShell>
   )
 }
