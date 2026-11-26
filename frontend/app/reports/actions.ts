@@ -1,7 +1,6 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { redirect } from 'next/navigation';
 import {
     searchReportCollections,
     searchReportTerms,
@@ -32,7 +31,8 @@ export async function updateReportAction(
         return { error: result.message };
     }
     revalidatePath('/reports');
-    redirect(`/reports?id=${id}`);
+    revalidatePath('/reports/edit');
+    return undefined;
 }
 
 export async function uploadReportImageAction(

@@ -1,12 +1,28 @@
 import Link from "next/link"
 import { redirect } from "next/navigation"
+import { LibraryShell } from "@/components/layout/library-shell"
 import { ReportEditWizard } from "@/components/reports/report-edit-wizard"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { getPublicApiBase } from "@/lib/api-base"
-import { getCurrentUser, getToken, hasPermission } from "@/lib/auth"
+import { type AuthUser, getCurrentUser, getToken, hasPermission } from "@/lib/auth"
 import { getReportDetailById, getReportLookups } from "@/lib/reports/api"
 import type { ReportEditLookupOptions } from "@/lib/reports/types"
+
+function resolveDisplayName(user: AuthUser | null): string {
+  if (!user) return "Guest"
+  if (user.fullname && user.fullname !== "Guest") return user.fullname
+  return user.username || "Guest"
+}
+
+function getShellProps(user: AuthUser | null) {
+  return {
+    displayName: resolveDisplayName(user),
+    isSignedIn: !!user,
+    isAdministrator: !!user && user.roles.includes("Administrator"),
+    adminEnabled: user?.adminEnabled ?? false,
+  }
+}
 
 type EditSearchParams = { id?: string }
 
@@ -26,9 +42,10 @@ export default async function EditReportPage({
   if (!token) redirect("/auth/login")
 
   const user = await getCurrentUser()
+  const shellProps = getShellProps(user)
   if (!user || !hasPermission(user, "Edit Report Documentation")) {
     return (
-      <div className="mx-auto max-w-3xl px-4 py-10">
+      <LibraryShell {...shellProps} searchPlaceholder="search for reports..">
         <Card>
           <CardHeader>
             <CardTitle className="text-xl">Permission required</CardTitle>
@@ -42,7 +59,7 @@ export default async function EditReportPage({
             </Button>
           </CardContent>
         </Card>
-      </div>
+      </LibraryShell>
     )
   }
 
@@ -50,13 +67,13 @@ export default async function EditReportPage({
   const id = idRaw ? Number(idRaw) : NaN
   if (!Number.isFinite(id) || id <= 0) {
     return (
-      <div className="mx-auto max-w-3xl px-4 py-10">
-        <h1 className="text-2xl font-bold">Missing report</h1>
+      <LibraryShell {...shellProps} searchPlaceholder="search for reports..">
+        <h1 className="atlas-home-heading">Missing report</h1>
         <p className="mt-2 text-sm text-muted-foreground">Provide a valid report id in the URL.</p>
         <Button asChild className="mt-6" variant="outline">
           <Link href="/reports">Back to reports</Link>
         </Button>
-      </div>
+      </LibraryShell>
     )
   }
 
@@ -64,7 +81,7 @@ export default async function EditReportPage({
   const report = result.data
   if (!report) {
     return (
-      <div className="mx-auto max-w-3xl px-4 py-10">
+      <LibraryShell {...shellProps} searchPlaceholder="search for reports..">
         <Card>
           <CardHeader>
             <CardTitle className="text-xl">Unable to load report</CardTitle>
@@ -75,13 +92,13 @@ export default async function EditReportPage({
             </Button>
           </CardContent>
         </Card>
-      </div>
+      </LibraryShell>
     )
   }
 
   if (!report.canEditDocumentation) {
     return (
-      <div className="mx-auto max-w-3xl px-4 py-10">
+      <LibraryShell {...shellProps} searchPlaceholder="search for reports..">
         <Card>
           <CardHeader>
             <CardTitle className="text-xl">Editing not available</CardTitle>
@@ -95,7 +112,7 @@ export default async function EditReportPage({
             </Button>
           </CardContent>
         </Card>
-      </div>
+      </LibraryShell>
     )
   }
 
@@ -127,7 +144,7 @@ export default async function EditReportPage({
   const publicApiBase = getPublicApiBase()
 
   return (
-    <div className="mx-auto max-w-5xl px-4 py-8">
+    <LibraryShell {...shellProps} searchPlaceholder="search for reports..">
       <div className="mb-4 text-sm text-muted-foreground">
         <Link href={`/reports?id=${report.id}`} className="hover:underline">
           {report.displayTitle || report.displayName || report.name}
@@ -141,6 +158,6 @@ export default async function EditReportPage({
         lookupOptions={lookupOptions}
         publicApiBase={publicApiBase}
       />
-    </div>
+    </LibraryShell>
   )
 }
