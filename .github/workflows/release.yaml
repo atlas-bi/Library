@@ -19,7 +19,7 @@ jobs:
       - name: setup pnpm
         uses: pnpm/action-setup@0e279bb959325dab635dd2c09392533439d90093
         with:
-          version: 11.28.12
+          version: 11.28.13
       - name: setup node
         uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e
         with:
@@ -30,7 +30,7 @@ jobs:
       - name: Semantic Release
         uses: cycjimmy/semantic-release-action@1c8dbaa298552ad40802cf44320879943de90278
         with:
-          semantic_version: 25
+          semantic_version: 26
         env:
           NPM_CONFIG_LEGACY_PEER_DEPS: true
           NPM_CONFIG_AUDIT: false

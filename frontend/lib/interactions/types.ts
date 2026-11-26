@@ -1,62 +1,62 @@
 export type InteractionEntityType =
-  | "report"
-  | "collection"
-  | "term"
-  | "initiative"
-  | "user"
-  | "group"
-  | "search"
+    | 'report'
+    | 'collection'
+    | 'term'
+    | 'initiative'
+    | 'user'
+    | 'group'
+    | 'search';
 
 export interface StarToggleRequest {
-  type: InteractionEntityType
-  id: number
-  search?: string
+    type: InteractionEntityType;
+    id: number;
+    search?: string;
 }
 
 export interface StarToggleResponse {
-  type: string
-  id: number
-  isStarred: boolean
-  count: number
+    type: string;
+    id: number;
+    isStarred: boolean;
+    count: number;
 }
 
 export interface ShareRecipientInput {
-  userId: number
-  type: "u" | "g"
+    userId: number;
+    type: 'u' | 'g';
 }
 
 export interface ShareMailRequest {
-  draftId?: number
-  to: ShareRecipientInput[]
-  subject: string
-  message: string
-  text: string
-  share: boolean
-  shareName: string
-  shareUrl: string
+    draftId?: number;
+    to: ShareRecipientInput[];
+    subject: string;
+    message: string;
+    text: string;
+    share: boolean;
+    shareName: string;
+    shareUrl: string;
 }
 
 export interface ShareMailResponse {
-  message: string
-  recipientCount: number
-  shareCount: number
+    message: string;
+    recipientCount: number;
+    shareCount: number;
 }
 
 export interface FeedbackRequest {
-  reportName: string
-  reportUrl: string
-  description: string
+    reportName: string;
+    reportUrl: string;
+    description: string;
 }
 
 export interface AccessRequestRequest {
-  reportName: string
-  reportUrl: string
-  directorName: string
+    reportName: string;
+    reportUrl: string;
+    directorName: string;
 }
 
 export interface InteractionRecipientDto {
-  id: number
-  name: string
-  type: string
-  email?: string | null
+    id: number;
+    name: string;
+    type: string;
+    email?: string | null;
 }

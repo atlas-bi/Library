@@ -71,9 +71,9 @@ Special thanks to a few other tools used here.
 
 <a 
   href="https://automate.browserstack.com/public-build/bGhJNzFxaXI1MFFONmh2TlQwdW5MQXNyblFtYXorbEQxdU4wNnpqWFYzWT0tLVN1L2l1Mi9ueGFXQ0hIYmUxWll2c2c9PQ==--0a7425816259714011cafee8777c3fe2e15baaba">
-  <img 
+<img 
     src='https://automate.browserstack.com/badge.svg?badge_key=bGhJNzFxaXI1MFFONmh2TlQwdW5MQXNyblFtYXorbEQxdU4wNnpqWFYzWT0tLVN1L2l1Mi9ueGFXQ0hIYmUxWll2c2c9PQ==--0a7425816259714011cafee8777c3fe2e15baaba'/>
-  />
+/>
 </a>
 <img src="https://badgen.net/badge/icon/gitguardian?icon=gitguardian&label" 
   alt="gitguardian"> <img 

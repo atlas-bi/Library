@@ -16,7 +16,7 @@
     return parseFloat(a) || 0;
   }
   function f(a) {
-    for (var b = 0; a; ) ((b += a.offsetTop), (a = a.offsetParent));
+    for (var b = 0; a;) ((b += a.offsetTop), (a = a.offsetParent));
     return b;
   }
   function g() {
@@ -378,7 +378,7 @@
             b(c);
       },
       removeAll: function () {
-        for (; n.length; ) n[0].remove();
+        for (; n.length;) n[0].remove();
       },
     };
   (i || g(),
