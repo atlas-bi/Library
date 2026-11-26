@@ -2,7 +2,13 @@
   "$schema": "https://biomejs.dev/schemas/2.5.1/schema.json",
   "files": {
     "ignoreUnknown": true,
-    "includes": ["**/*", "!**/.next", "!**/node_modules", "!app/globals.css", "!public/*.svg"]
+    "includes": [
+      "**/*",
+      "!**/.next",
+      "!**/node_modules",
+      "!app/globals.css",
+      "!public/*.svg"
+    ]
   },
   "vcs": {
     "enabled": false

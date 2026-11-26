@@ -8,12 +8,7 @@
     ":rebaseStalePrs",
     "security:minimumReleaseAgeNpm"
   ],
-  "ignoreDeps": [
-    "chart.js",
-    "open",
-    "dompurify",
-    "gulp-autoprefixer"
-  ],
+  "ignoreDeps": ["chart.js", "open", "dompurify", "gulp-autoprefixer"],
   "baseBranchPatterns": ["dev"],
   "bumpVersion": "patch",
   "automergeType": "pr",

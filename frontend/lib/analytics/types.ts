@@ -1,114 +1,114 @@
 export type AnalyticsAccessHistoryPoint = {
-  date: string
-  pages: number
-  sessions: number
-  loadTime: number
-}
+    date: string;
+    pages: number;
+    sessions: number;
+    loadTime: number;
+};
 
 export type AnalyticsVisitsResponseDto = {
-  views: number
-  visitors: number
-  loadTime: number
-  accessHistory: AnalyticsAccessHistoryPoint[]
-}
+    views: number;
+    visitors: number;
+    loadTime: number;
+    accessHistory: AnalyticsAccessHistoryPoint[];
+};
 
 export type AnalyticsBarItemDto = {
-  key: string
-  href: string | null
-  titleOne: string
-  titleTwo: string
-  count: number
-  percent: number | null
-}
+    key: string;
+    href: string | null;
+    titleOne: string;
+    titleTwo: string;
+    count: number;
+    percent: number | null;
+};
 
 export type AnalyticsLiveUserDto = {
-  fullname: string
-  userId: number
-  sessionTime: string
-  pageTime: string
-  href: string
-  accessDateTime: string
-  updateTime: string
-  pages: number
-  sessionId: string
-}
+    fullname: string;
+    userId: number;
+    sessionTime: string;
+    pageTime: string;
+    href: string;
+    accessDateTime: string;
+    updateTime: string;
+    pages: number;
+    sessionId: string;
+};
 
 export type AnalyticsLiveUsersResponseDto = {
-  activeUsers: number
-  items: AnalyticsLiveUserDto[]
-}
+    activeUsers: number;
+    items: AnalyticsLiveUserDto[];
+};
 
 export type AnalyticsTraceDto = {
-  id: number
-  userId: number
-  userName: string
-  level: number | null
-  message: string
-  logger: string
-  logDateTime: string | null
-  handled: number | null
-  userAgent: string
-  referer: string
-}
+    id: number;
+    userId: number;
+    userName: string;
+    level: number | null;
+    message: string;
+    logger: string;
+    logDateTime: string | null;
+    handled: number | null;
+    userAgent: string;
+    referer: string;
+};
 
 export type AnalyticsErrorDto = {
-  id: number
-  userId: number
-  userName: string
-  statusCode: number | null
-  message: string
-  trace: string
-  logDateTime: string | null
-  handled: number | null
-  userAgent: string
-  referrer: string
-}
+    id: number;
+    userId: number;
+    userName: string;
+    statusCode: number | null;
+    message: string;
+    trace: string;
+    logDateTime: string | null;
+    handled: number | null;
+    userAgent: string;
+    referrer: string;
+};
 
 export type AnalyticsTraceListResponseDto = {
-  pages: number
-  currentPage: number
-  totalCount: number
-  unresolvedCount: number
-  items: AnalyticsTraceDto[]
-}
+    pages: number;
+    currentPage: number;
+    totalCount: number;
+    unresolvedCount: number;
+    items: AnalyticsTraceDto[];
+};
 
 export type AnalyticsErrorListResponseDto = {
-  pages: number
-  currentPage: number
-  totalCount: number
-  unresolvedCount: number
-  items: AnalyticsErrorDto[]
-}
+    pages: number;
+    currentPage: number;
+    totalCount: number;
+    unresolvedCount: number;
+    items: AnalyticsErrorDto[];
+};
 
 export type AnalyticsQueryFilters = {
-  startAt: number
-  endAt: number
-  userId?: number
-  groupId?: number
-}
+    startAt: number;
+    endAt: number;
+    userId?: number;
+    groupId?: number;
+};
 
 export type AnalyticsLogFilters = AnalyticsQueryFilters & {
-  page: number
-}
+    page: number;
+};
 
-import type { AnalyticsRangeId } from "./date-ranges"
+import type { AnalyticsRangeId } from './date-ranges';
 
 export type AnalyticsPageFilters = {
-  rangeId: AnalyticsRangeId
-  userId?: number
-  groupId?: number
-  tracePage: number
-  errorPage: number
-}
+    rangeId: AnalyticsRangeId;
+    userId?: number;
+    groupId?: number;
+    tracePage: number;
+    errorPage: number;
+};
 
 export type AnalyticsDashboardData = {
-  visits: AnalyticsVisitsResponseDto | null
-  browsers: AnalyticsBarItemDto[]
-  os: AnalyticsBarItemDto[]
-  resolution: AnalyticsBarItemDto[]
-  users: AnalyticsBarItemDto[]
-  loadTimes: AnalyticsBarItemDto[]
-  liveUsers: AnalyticsLiveUsersResponseDto | null
-  traces: AnalyticsTraceListResponseDto | null
-  errors: AnalyticsErrorListResponseDto | null
-}
+    visits: AnalyticsVisitsResponseDto | null;
+    browsers: AnalyticsBarItemDto[];
+    os: AnalyticsBarItemDto[];
+    resolution: AnalyticsBarItemDto[];
+    users: AnalyticsBarItemDto[];
+    loadTimes: AnalyticsBarItemDto[];
+    liveUsers: AnalyticsLiveUsersResponseDto | null;
+    traces: AnalyticsTraceListResponseDto | null;
+    errors: AnalyticsErrorListResponseDto | null;
+};

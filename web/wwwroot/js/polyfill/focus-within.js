@@ -7,11 +7,11 @@ function focusWithin(e, t) {
     if ((e.querySelector(':focus-within'), !a)) return i;
   } catch (e) {}
   function s() {
-    for (var t; (t = c.pop()); )
+    for (var t; (t = c.pop());)
       (r && t.removeAttribute(r), n && t.classList.remove(n));
     var a = e.activeElement;
     if (!/^(#document|HTML|BODY)$/.test(Object(a).nodeName))
-      for (; a && 1 === a.nodeType; )
+      for (; a && 1 === a.nodeType;)
         (r && a.setAttribute(r, ''),
           n && a.classList.add(n),
           c.push(a),

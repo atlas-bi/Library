@@ -1,39 +1,43 @@
 // Auth type definitions — mirrors the /api/auth/me response shape
 
 export const PERMISSIONS = [
-  "Edit Role Permissions",
-  "Edit User Permissions",
-  "Edit Group Permissions",
-  "Manage Report-Object Relationships",
-  "Approve Terms",
-  "Edit Report Documentation",
-  "Create New Terms",
-  "Edit Report-Object Relationships",
-  "Edit Terms",
-  "Show Advanced Search",
-  "Show Report-Object Relationships",
-  "Create Collection",
-  "Edit Collection",
-  "Delete Collection",
-  "Create Initiative",
-  "View Groups",
-  "View Other User",
-  "Manage Global Site Settings",
-  "Create Parameters",
-  "Delete Parameters",
-] as const
+    'Edit Role Permissions',
+    'Edit User Permissions',
+    'Edit Group Permissions',
+    'Manage Report-Object Relationships',
+    'Approve Terms',
+    'Edit Report Documentation',
+    'Create New Terms',
+    'Edit Report-Object Relationships',
+    'Edit Terms',
+    'Show Advanced Search',
+    'Show Report-Object Relationships',
+    'Create Collection',
+    'Edit Collection',
+    'Delete Collection',
+    'Create Initiative',
+    'View Groups',
+    'View Other User',
+    'Manage Global Site Settings',
+    'Create Parameters',
+    'Delete Parameters',
+] as const;
 
-export type Permission = (typeof PERMISSIONS)[number]
+export type Permission = (typeof PERMISSIONS)[number];
 
-export const KNOWN_ROLES = ["Term Administrator", "Report Writer", "Administrator"] as const
+export const KNOWN_ROLES = [
+    'Term Administrator',
+    'Report Writer',
+    'Administrator',
+] as const;
 
-export type KnownRole = (typeof KNOWN_ROLES)[number]
+export type KnownRole = (typeof KNOWN_ROLES)[number];
 
 export interface AuthUser {
-  username: string
-  fullname: string
-  userId: string
-  roles: string[]
-  permissions: Permission[]
-  adminEnabled: boolean
+    username: string;
+    fullname: string;
+    userId: string;
+    roles: string[];
+    permissions: Permission[];
+    adminEnabled: boolean;
 }
