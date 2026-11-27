@@ -151,19 +151,19 @@ export function HomeNavbarClient({
   return (
     <div
       ref={containerRef}
-      className="flex items-center gap-1 text-sm text-[var(--atlas-home-text)]"
+      className="flex shrink-0 items-center gap-1 text-sm text-[var(--atlas-home-text)]"
     >
       <div className="relative">
         <button
           type="button"
           aria-label="Tools menu"
-          className="atlas-home-navbar-link inline-flex cursor-pointer items-center gap-1 px-2 py-2"
+          className="atlas-home-navbar-link inline-flex cursor-pointer items-center gap-1 px-1.5 py-2 lg:px-2"
           onClick={() => toggleMenu("tools")}
           onMouseEnter={() => openMenuOnHover("tools")}
           onMouseLeave={scheduleCloseMenus}
         >
           <Wrench className="h-[1.1rem] w-[1.1rem]" strokeWidth={1.8} />
-          <ChevronDown className="h-3.5 w-3.5" strokeWidth={1.8} />
+          <ChevronDown className="hidden h-3.5 w-3.5 lg:block" strokeWidth={1.8} />
         </button>
         <DropdownMenu
           open={openMenu === "tools"}
@@ -178,13 +178,13 @@ export function HomeNavbarClient({
         <button
           type="button"
           aria-label="Library menu"
-          className="atlas-home-navbar-link inline-flex cursor-pointer items-center gap-1 px-2 py-2"
+          className="atlas-home-navbar-link inline-flex cursor-pointer items-center gap-1 px-1.5 py-2 lg:px-2"
           onClick={() => toggleMenu("library")}
           onMouseEnter={() => openMenuOnHover("library")}
           onMouseLeave={scheduleCloseMenus}
         >
           <List className="h-[1.1rem] w-[1.1rem]" strokeWidth={1.8} />
-          <ChevronDown className="h-3.5 w-3.5" strokeWidth={1.8} />
+          <ChevronDown className="hidden h-3.5 w-3.5 lg:block" strokeWidth={1.8} />
         </button>
         <DropdownMenu
           open={openMenu === "library"}
@@ -199,13 +199,13 @@ export function HomeNavbarClient({
         <button
           type="button"
           aria-label="User menu"
-          className="atlas-home-navbar-link inline-flex cursor-pointer items-center gap-1 px-2 py-2"
+          className="atlas-home-navbar-link inline-flex cursor-pointer items-center gap-1 px-1.5 py-2 lg:px-2"
           onClick={() => toggleMenu("user")}
           onMouseEnter={() => openMenuOnHover("user")}
           onMouseLeave={scheduleCloseMenus}
         >
           <UserRound className="h-[1.1rem] w-[1.1rem]" strokeWidth={1.8} />
-          <ChevronDown className="h-3.5 w-3.5" strokeWidth={1.8} />
+          <ChevronDown className="hidden h-3.5 w-3.5 lg:block" strokeWidth={1.8} />
         </button>
         <DropdownMenu
           open={openMenu === "user"}
@@ -229,7 +229,7 @@ export function HomeNavbarClient({
         <button
           type="button"
           onClick={handleAdminToggle}
-          className="ml-3 inline-flex cursor-pointer items-center gap-2"
+          className="ml-1 inline-flex cursor-pointer items-center gap-2 lg:ml-3"
         >
           <span
             className={`atlas-home-admin-toggle relative inline-flex h-7 w-12 items-center rounded-full ${
@@ -242,7 +242,9 @@ export function HomeNavbarClient({
               }`}
             />
           </span>
-          <strong className="text-base font-semibold text-[var(--atlas-home-title)]">Admin</strong>
+          <strong className="hidden text-base font-semibold text-[var(--atlas-home-title)] lg:inline">
+            Admin
+          </strong>
         </button>
       ) : null}
 

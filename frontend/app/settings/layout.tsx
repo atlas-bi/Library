@@ -33,7 +33,7 @@ export default async function SettingsLayout({ children }: { children: ReactNode
       isAdministrator={user?.roles?.includes("Administrator") ?? false}
       adminEnabled={user?.adminEnabled ?? false}
     >
-      <div className="max-w-[1280px] mx-auto py-8 px-4">
+      <div className="mx-auto w-full py-8">
         <div className="text-[14px] font-medium mb-4 flex items-center">
           <span className="text-[#363636]">Settings</span>
           <span className="text-[#dbdbdb] mx-2">/</span>

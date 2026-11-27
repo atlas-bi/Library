@@ -6,6 +6,7 @@ FROM base AS deps
 WORKDIR /app
 COPY package.json ./package.json
 COPY pnpm-lock.yaml ./pnpm-lock.yaml
+COPY pnpm-workspace.yaml ./pnpm-workspace.yaml
 COPY frontend ./frontend
 RUN pnpm install --ignore-scripts --frozen-lockfile
 
@@ -13,6 +14,7 @@ FROM base AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY package.json ./package.json
+COPY pnpm-workspace.yaml ./pnpm-workspace.yaml
 COPY frontend ./frontend
 ARG API_URL
 ARG NEXT_PUBLIC_API_URL
