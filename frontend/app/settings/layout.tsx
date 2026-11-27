@@ -37,7 +37,7 @@ export default async function SettingsLayout({ children }: { children: ReactNode
         <div className="text-[14px] font-medium mb-4 flex items-center">
           <span className="text-[#363636]">Settings</span>
           <span className="text-[#dbdbdb] mx-2">/</span>
-          <span className="text-[#485fc7]">Home</span>
+          <span className="text-brand-700">Home</span>
         </div>
 
         <h1 className="text-[40px] font-bold font-serif text-[#363636] mb-6 tracking-tight leading-tight">

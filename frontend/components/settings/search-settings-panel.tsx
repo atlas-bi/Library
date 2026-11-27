@@ -169,7 +169,7 @@ export function SearchSettingsPanel({ initialData }: Props) {
                       />
                       <button
                         type="button"
-                        className="px-4 py-1 bg-[#4a85e6] text-white rounded text-[13px] hover:bg-blue-600 transition-colors disabled:opacity-50 font-medium"
+                        className="px-4 py-1 bg-primary text-primary-foreground rounded text-[13px] hover:bg-brand-800 transition-colors disabled:opacity-50 font-medium"
                         onClick={() => handleSaveOverride(t.id)}
                         disabled={isPending}
                       >
