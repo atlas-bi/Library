@@ -35,17 +35,17 @@ export function SettingsTabController({ defaultTab, children }: Props) {
       const iconSpan = link.querySelector("span")
 
       if (isActive) {
-        link.classList.add("text-[#485fc7]", "bg-[#f5f5f5]")
+        link.classList.add("text-brand-700", "bg-brand-50")
         link.classList.remove("text-[#363636]", "hover:bg-[#f5f5f5]")
         if (iconSpan) {
-          iconSpan.classList.add("text-[#485fc7]")
+          iconSpan.classList.add("text-brand-700")
           iconSpan.classList.remove("text-[#4a4a4a]")
         }
       } else {
-        link.classList.remove("text-[#485fc7]", "bg-[#f5f5f5]")
+        link.classList.remove("text-brand-700", "bg-brand-50")
         link.classList.add("text-[#363636]", "hover:bg-[#f5f5f5]")
         if (iconSpan) {
-          iconSpan.classList.remove("text-[#485fc7]")
+          iconSpan.classList.remove("text-brand-700")
           iconSpan.classList.add("text-[#4a4a4a]")
         }
       }

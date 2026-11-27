@@ -1,4 +1,3 @@
-import Image from "next/image"
 import Link from "next/link"
 
 const footerSections = [
@@ -17,20 +16,14 @@ export function HomeFooter() {
 
   return (
     <footer className="atlas-home-footer mt-10 border-t border-[var(--atlas-home-border-soft)]">
-      <div className="mx-auto grid w-full max-w-[1280px] gap-5 px-4 py-7 md:grid-cols-[1fr_minmax(84px,1fr)_170px]">
+      <div className="container mx-auto grid w-full gap-5 px-4 py-7 sm:px-6 md:px-8 md:grid-cols-[1fr_minmax(84px,1fr)_170px]">
         <div className="space-y-2">
-          <Link href="/" className="atlas-home-brand flex items-center gap-2">
-            <Image
-              src="/favicon.ico"
-              alt="Atlas logo"
-              width={35}
-              height={35}
-              className="h-[35px] w-[35px]"
-            />
-            <h2 className="m-0 text-[0.95rem] leading-6 font-medium transition-colors">
-              <span className="atlas-home-brand-slash mx-1">/</span>
+          <Link href="/" className="group flex shrink-0 items-center">
+            <img src="/logo.svg" alt="Atlas logo" className="h-9 w-9 shrink-0" />
+            <span className="atlas-brand-lockup m-0 scroll-m-20 text-2xl font-medium text-slate-700 transition-colors hover:text-slate-900">
+              <span className="mx-2 text-slate-500 group-hover:text-sky-700">/</span>
               library
-            </h2>
+            </span>
           </Link>
           <p className="atlas-home-footer-subtitle mt-4 mb-2">
             Atlas was created by the Riverside Healthcare Analytics team.

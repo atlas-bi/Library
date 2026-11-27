@@ -188,7 +188,7 @@ export default async function SearchPage({
   if (!result.data) {
     const message = getUserFriendlyErrorMessage(result.error ?? "unknown")
     return (
-      <div className="mx-auto max-w-6xl px-4 py-10">
+      <div className="container mx-auto w-full py-10">
         <Card>
           <CardHeader>
             <CardTitle className="text-xl">Unable to load search</CardTitle>
@@ -224,7 +224,7 @@ export default async function SearchPage({
   nextParams.set("page", String(Math.min(totalPages, data.page + 1)))
 
   return (
-    <div className="mx-auto grid min-h-screen w-full max-w-7xl gap-6 px-4 py-8 lg:grid-cols-[280px_1fr]">
+    <div className="container mx-auto grid min-h-screen w-full gap-6 py-8 lg:grid-cols-[280px_1fr]">
       <aside className="space-y-4">
         <Card>
           <CardHeader>

@@ -1,6 +1,5 @@
 "use client"
 
-import { Search } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 
@@ -22,10 +21,7 @@ export function HomeSearchClient({ placeholder = "type to search.." }: { placeho
   }, [query, router])
 
   return (
-    <form action="/search" method="get" className="relative flex w-full items-center">
-      <div className="atlas-home-search-icon pointer-events-none absolute left-3">
-        <Search className="h-4 w-4" />
-      </div>
+    <form action="/search" method="get" className="w-full flex-1">
       <input
         type="text"
         name="q"
@@ -33,7 +29,7 @@ export function HomeSearchClient({ placeholder = "type to search.." }: { placeho
         onChange={(event) => setQuery(event.target.value)}
         placeholder={placeholder}
         maxLength={80}
-        className="atlas-home-search-shell h-10 w-full bg-white pl-10 pr-4 text-sm shadow-none outline-none"
+        className="inline-flex h-10 w-full items-center rounded-md border border-input bg-background px-4 py-2 text-sm font-normal text-muted-foreground shadow-none outline-none transition-colors placeholder:font-normal placeholder:text-muted-foreground hover:bg-accent hover:text-accent-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
       />
     </form>
   )
